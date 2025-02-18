@@ -26,5 +26,4 @@ Indien van toepassing, voeg een screenshot toe die het probleem duidelijk maakt.
 **Extra context**
 Voeg extra context over het probleem toe. Was je ergens bijzonder mee bezig of naar op zoek?
 
-**Labels**
-Voeg aan deze issue het juiste label toe, afhankelijk van frontend, backend, ...
+- [ ] Ik heb aan deze issue het juiste label toegekend, afhankelijk van frontend, backend, ...

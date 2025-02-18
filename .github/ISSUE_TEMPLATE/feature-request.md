@@ -16,5 +16,4 @@ Een duidelijke, beknopte beschrijving van wat je zou willen dat er gebeurt.
 **Extra context**
 Extra context of screenshots bij de feature.
 
-**Labels**
-Voeg aan deze issue het juiste label toe, afhankelijk van frontend, backend, ...
+- [ ] Ik heb aan deze issue het juiste label toegekend, afhankelijk van frontend, backend, ...
