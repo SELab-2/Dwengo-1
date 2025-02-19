@@ -1,0 +1,32 @@
+{
+  "name": "dwengo-1-backend",
+  "version": "0.0.1",
+  "description": "Backend for Dwengo-1",
+  "type": "module",
+  "private": true,
+  "main": "src/app.ts",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsx watch --env-file=.env.development.local src/app.ts",
+    "start": "node --env-file=.env dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SELab-2/Dwengo-1.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SELab-2/Dwengo-1/issues"
+  },
+  "homepage": "https://sel2-1.ugent.be/",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.4",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  }
+}
