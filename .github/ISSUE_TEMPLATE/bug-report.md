@@ -1,10 +1,9 @@
 ---
 name: Bug rapport
 about: Maak een bug rapport om fouten te signaleren
-title: "`error message` of beschrijving"
+title: '`error message` of beschrijving'
 labels: bug
 assignees: ''
-
 ---
 
 **Beschrijf de bug**
@@ -12,6 +11,7 @@ Een duidelijke, beknopte beschrijving van de bug.
 
 **Reproductie**
 Stappen om het gedrag te reproduceren:
+
 1. Ga naar '...'
 2. Klik op '....'
 3. Scroll naar beneden tot '....'

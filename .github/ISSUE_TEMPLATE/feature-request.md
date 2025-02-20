@@ -1,10 +1,9 @@
 ---
 name: Feature aanvragen
 about: Stel een feature voor
-title: "Korte beschrijving of naam"
+title: 'Korte beschrijving of naam'
 labels: enhancement
 assignees: ''
-
 ---
 
 **Is your feature request related to a problem? Please describe.**
