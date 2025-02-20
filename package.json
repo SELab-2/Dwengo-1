@@ -1,0 +1,38 @@
+{
+    "name": "dwengo-1-monorepo",
+    "version": "0.0.1",
+    "description": "Monorepo for Dwengo-1",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "npm run build --ws",
+        "format": "npm run format --ws",
+        "format-check": "npm run format-check --ws",
+        "lint": "npm run lint --ws",
+        "test:unit": "npm run test:unit --ws"
+    },
+    "workspaces": [
+        "backend",
+        "frontend"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/SELab-2/Dwengo-1.git"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/SELab-2/Dwengo-1/issues"
+    },
+    "homepage": "https://sel2-1.ugent.be/",
+    "devDependencies": {
+        "@eslint/compat": "^1.2.6",
+        "@eslint/js": "^9.20.0",
+        "@types/eslint-config-prettier": "^6.11.3",
+        "@typescript-eslint/eslint-plugin": "^8.24.1",
+        "@typescript-eslint/parser": "^8.24.1",
+        "eslint": "^9.20.1",
+        "eslint-config-prettier": "^10.0.1",
+        "jiti": "^2.4.2",
+        "typescript-eslint": "^8.24.1"
+    }
+}
