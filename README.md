@@ -45,3 +45,7 @@ hier overzichtsdiagram invoegen
 ```
 
 We maken gebruik van ... Meer informatie over deze ontwerpsbeslissingen kan je vinden in de [architectuurdocumentatie](./architectuur).
+
+## Bijdragen aan Dwengo-1
+
+Zie [CONTRIBUTING.md](./CONTRIBUTING.md) voor meer informatie over hoe je kan bijdragen aan Dwengo-1.
