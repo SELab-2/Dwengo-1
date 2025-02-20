@@ -43,6 +43,9 @@ build/Release
 node_modules/
 jspm_packages/
 
+# package-lock.json
+backend/package-lock.json
+
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 
@@ -641,7 +644,8 @@ FodyWeavers.xsd
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*

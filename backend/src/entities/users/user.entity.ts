@@ -1,9 +1,9 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
-@Entity()
+@Entity({abstract: true})
 export class User {
-    @PrimaryKey({ type: 'number' })
-    id!: number;
+    @PrimaryKey({type: "string"})
+    username!: string;
 
     @Property()
     firstName: string = '';
