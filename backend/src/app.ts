@@ -1,5 +1,7 @@
 import express, { Express, Response } from 'express';
 import initORM from './orm.js';
+import themeRoutes from "./routes/themes.js";
+
 
 const app: Express = express();
 const port: string | number = process.env.PORT || 3000;
@@ -7,9 +9,12 @@ const port: string | number = process.env.PORT || 3000;
 // TODO Replace with Express routes
 app.get('/', (_, res: Response) => {
     res.json({
-        message: 'Hello Dwengo!',
+        message: 'Hello Dwengo!🚀',
     });
 });
+
+app.use("/routes", themeRoutes);
+
 
 async function startServer() {
     await initORM();
