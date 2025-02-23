@@ -1,9 +1,10 @@
-import {Embeddable, Embedded, Entity, Enum, OneToMany, PrimaryKey, Property} from "@mikro-orm/core";
+import {Embeddable, Embedded, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property} from "@mikro-orm/core";
 import {Language} from "./language";
 import {Attachment} from "./attachment.entity";
+import {Teacher} from "../users/teacher.entity";
 
 @Entity()
-export class LearningObject {
+export class LearningObject<R> {
     @PrimaryKey({type: "string"})
     hruid!: string;
 
@@ -13,8 +14,8 @@ export class LearningObject {
     @PrimaryKey({type: "string"})
     version: number = "1";
 
-    @PrimaryKey({type: "string"})
-    author!: string;
+    @ManyToMany({entity: () => Teacher})
+    admins!: Teacher[];
 
     @Property({type: "string"})
     title!: string;
@@ -52,6 +53,9 @@ export class LearningObject {
     @Property({type: "integer"})
     estimatedTime!: number;
 
+    @Embedded({entity: () => ReturnValue})
+    returnValue: ReturnValue<R>;
+
     @Property({type: "bool"})
     available: boolean = true;
 
@@ -75,12 +79,12 @@ export class EducationalGoal {
 }
 
 @Embeddable()
-export class ReturnValue {
+export class ReturnValue<R> {
     @Property({type: "string"})
     callbackUrl: string;
 
     @Property({type: "json"})
-    callbackSchema: Object;
+    callbackSchema: R;
 }
 
 export enum ContentType {

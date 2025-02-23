@@ -1,5 +1,6 @@
-import {Embeddable, Embedded, Entity, Enum, OneToOne, PrimaryKey, Property} from "@mikro-orm/core";
+import {Embeddable, Embedded, Entity, Enum, ManyToMany, OneToOne, PrimaryKey, Property} from "@mikro-orm/core";
 import {Language} from "./language";
+import {Teacher} from "../users/teacher.entity";
 
 @Entity()
 export class LearningPath {
@@ -8,6 +9,9 @@ export class LearningPath {
 
     @Enum({items: () => Language, primary: true})
     language!: Language;
+
+    @ManyToMany({entity: () => Teacher})
+    admins!: Teacher[];
 
     @Property({type: "string"})
     title!: string;

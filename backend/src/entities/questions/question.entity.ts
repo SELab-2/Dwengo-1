@@ -1,12 +1,11 @@
-import {Student} from "../users/student.entity";
-import {Group} from "./group.entity";
 import {Entity, Enum, ManyToOne, PrimaryKey, Property} from "@mikro-orm/core";
 import {Language} from "../content/language";
+import {Student} from "../users/student.entity";
 
 @Entity()
-export class Submission<T> {
+export class Question {
     @ManyToOne({entity: () => Student, primary: true})
-    submitter!: Student;
+    author!: Student;
 
     @PrimaryKey({type: "string"})
     learningObjectHruid!: string;
@@ -15,14 +14,11 @@ export class Submission<T> {
     learningObjectLanguage!: Language;
 
     @PrimaryKey({type: "string"})
-    learningObjectVersion: number = "1";
+    learningObjectVersion!: number = "1";
 
     @PrimaryKey({type: "datetime"})
-    submissionTime: Date;
+    timestamp!: Date;
 
-    @ManyToOne({entity: () => Group, nullable: true})
-    onBehalfOf?: Group;
-
-    @Property({type: "json"})
-    content!: T;
+    @Property({type: "text"})
+    content!: string;
 }
