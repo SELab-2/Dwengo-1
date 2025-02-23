@@ -14,12 +14,12 @@ export class Assignment {
     @Property({type: "string"})
     title!: string;
 
-    @Property({type: "longtext"})
+    @Property({type: "text"})
     description!: string;
 
     @ManyToOne({entity: () => LearningPath})
     task!: LearningPath;
 
-    @OneToMany({entity: () => Group})
+    @OneToMany({entity: () => Group, mappedBy: "assignment"})
     groups!: Group[];
 }

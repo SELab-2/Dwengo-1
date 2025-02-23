@@ -10,6 +10,6 @@ export class Group {
     @PrimaryKey({type: "integer"})
     groupNumber!: number;
 
-    @ManyToMany({entity: Student})
+    @ManyToMany({entity: () => Student})
     members!: Student[];
 }

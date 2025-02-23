@@ -19,7 +19,7 @@ export class LearningObject {
     @Property({type: "string"})
     title!: string;
 
-    @Property({type: "longtext"})
+    @Property({type: "text"})
     description!: string;
 
     @Property({type: "string"})
@@ -58,7 +58,7 @@ export class LearningObject {
     @Property({type: "string", nullable: true})
     contentLocation?: string;
 
-    @OneToMany({entity: Attachment})
+    @OneToMany({entity: () => Attachment, mappedBy: "learningObject"})
     attachments: Attachment[] = [];
 
     @Property({type: "blob"})

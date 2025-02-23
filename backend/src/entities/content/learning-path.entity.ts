@@ -1,15 +1,18 @@
-import {Embeddable, Embedded, Entity, Enum, OneToOne, Property} from "@mikro-orm/core";
+import {Embeddable, Embedded, Entity, Enum, OneToOne, PrimaryKey, Property} from "@mikro-orm/core";
 import {Language} from "./language";
 
 @Entity()
 export class LearningPath {
-    @Enum({items: () => Language})
+    @PrimaryKey({type: "string"})
+    hruid!: string;
+
+    @Enum({items: () => Language, primary: true})
     language!: Language;
 
     @Property({type: "string"})
     title!: string;
 
-    @Property({type: "longtext"})
+    @Property({type: "text"})
     description!: string;
 
     @Property({type: "blob"})

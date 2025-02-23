@@ -1,6 +1,7 @@
-import {ManyToOne, PrimaryKey, Property} from "@mikro-orm/core";
+import {Entity, ManyToOne, PrimaryKey, Property} from "@mikro-orm/core";
 import {LearningObject} from "./learning-object.entity";
 
+@Entity()
 export class Attachment {
     @ManyToOne({entity: () => LearningObject, primary: true})
     learningObject!: LearningObject;
