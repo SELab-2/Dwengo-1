@@ -1,16 +1,26 @@
 services:
-  db:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-    ports:
-      - "5432:5432"
-    network_mode: "host"
-    volumes:
-        - postgres_data:/var/lib/postgresql/data
-        - ./backend/config/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    db:
+        image: postgres:latest
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: postgres
+        ports:
+            - '5432:5432'
+        network_mode: 'host'
+        volumes:
+            - dwengo_postgres_data:/var/lib/postgresql/data
+            - ./backend/config/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    logging:
+        image: grafana/loki:latest
+        ports:
+            - '3100:3100'
+            - '9095:9095'
+        network_mode: 'host'
+        volumes:
+            - ./config/loki-config.yml:/etc/loki/config.yaml
+        command: -config.file=/etc/loki/config.yaml
 
 volumes:
-    postgres_data:
+    dwengo_postgres_data:
