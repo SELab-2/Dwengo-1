@@ -1,8 +1,8 @@
-import {initializeTests} from "../testutils"
+import {setupTestApp} from "../setup-tests"
 import {Student} from "../../src/entities/users/student.entity";
 import {describe, it, expect, beforeAll} from "vitest";
-import {getRepository} from "../../src/orm";
 import {StudentRepository} from "../../src/data/users/student-repository";
+import {getStudentRepository} from "../../src/data/repositories";
 
 const username = "teststudent";
 const firstName = "John";
@@ -11,8 +11,8 @@ describe("StudentRepository", () => {
     let studentRepository: StudentRepository;
 
     beforeAll(async () => {
-        await initializeTests()
-        studentRepository = getRepository(Student) as StudentRepository;
+        setupTestApp();
+        studentRepository = getStudentRepository();
     });
 
     it("should return the queried student after he was added", async () => {

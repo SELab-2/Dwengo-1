@@ -1,4 +1,4 @@
-import {AnyEntity, EntityName, EntityRepository, MikroORM} from '@mikro-orm/core';
+import { EntityManager, MikroORM} from '@mikro-orm/core';
 import config from './mikro-orm.config.js';
 import {EnvVars, getEnvVar} from "./util/envvars";
 
@@ -17,10 +17,9 @@ export async function initORM(testingMode: boolean = false) {
         }
     }
 }
-
-export function getRepository<T extends AnyEntity>(entityName: EntityName<T>): EntityRepository<T> {
-    if (orm === undefined) {
-        throw new Error("ORM is not initialized yet");
+export function forkEntityManager(): EntityManager {
+    if (!orm) {
+        throw Error("Accessing the Entity Manager before the ORM is fully initialized.")
     }
-    return orm.em.fork().getRepository(entityName);
+    return orm.em.fork();
 }
