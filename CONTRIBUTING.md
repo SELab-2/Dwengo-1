@@ -24,41 +24,44 @@ Op die manier vermijd je onnodig werk.
 
 ## Workflow
 
-We zullen (verzachte versie van) [Gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) gebruiken.
-Lees [hier](TODO-wiki) meer over deze beslissing.
+Dit project maakt gebruik van (een minder strenge versie van) [Gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow).
+Dat betekent dat verschillende branches een verschillende rol hebben.
+Nieuwe branches worden aangemaakt vanuit `dev` en worden gemerged naar `dev`.
 
-Concreet betekent dit dat het project uit de volgende branches bestaat:
+Een overzicht:
 
-- `main`
-    - Incl. tags (`v1.2.3`)
-- `dev`
+- `main`: Hier worden enkel de releases gemerged. Elke merge naar `main` moet een release zijn, aangeduid met een tag (`v1.2.3`).
+- `dev`: Jouw branch hoort hiervan af te takken.
     - `feat/my-feat`: Voor features die uit geen of meer dan 1 issue bestaan
     - `feat/this-#x`: Voor features die aan een issue gelinkt kunnen worden
     - `fix/something-#x`: Voor (minder dringende) bug fixes. Bug fixes worden aan een issue gelinkt.
-- `release/x.y.z`: Release prep branch
+- `release/x.y.z`: Voorbereidingen voor een release. Hier worden enkel bug fixes en hotfixes gemerged.
+
+Lees [hier](https://github.com/SELab-2/Dwengo-1/wiki/Developmentstrategie-keuzes#gitflow) meer over de beslissing om Gitflow te gebruiken.
+
+We hebben ervoor gekozen om `main` en `dev` te beschermen.
+Zie ook [pull request](#pull-request).
 
 ## Coding conventions
 
-- Formatting: [Prettier](https://prettier.io/)
-- Linting: Maak gebruik van [ESLint](https://typescript-eslint.io/) of aan de hand van de [
-  `npm` commando's](package.json).
+Om de code consistent te houden, maken dit project gebruik van enkele tools:
 
-Voel je vrij om zelf commit hooks te installeren, maar we dwingen dit niet af.
+- Formatting: [Prettier](https://prettier.io/), zorgt ervoor dat de code consistent geformatteerd is.
+- Linting: [ESLint](https://typescript-eslint.io/), zorgt er o.a. voor dat de code geen "slechte" constructies bevat.
+
+Je kan ze handmatig uitvoeren met `npm run lint` en `npm run format`.
+
+Deze tools worden niet standaard automatisch uitgevoerd bij een commit.
+Automatisch uitvoeren bij een commit kan met [git hooks](https://git-scm.com/docs/githooks).
 
 ## Commits
 
-Om de geschiedenis van het project overzichtelijk te houden, maken we gebruik van [conventional commits](https://www.conventionalcommits.org/).
+**Conventionele commits**
 
-
-Concreet
+Dit project maakt gebruik van [conventional commits](https://www.conventionalcommits.org/).
 
 Dit betekent dat elke commit een duidelijke boodschap moet hebben, die volgens een bepaald formaat is opgesteld.
-
-Maken gebruik van [conventional commits](https://www.conventionalcommits.org/)
-
-Lees [hier](wiki) meer over deze beslissing
-
-Concreet:
+In het kort ziet dat er zo uit:
 
 ```
 <type>(<optional scope>): <description>
@@ -67,8 +70,11 @@ type options:
     feat, fix, refactor, test, docs, build, ci, chore, ...
 ```
 
-Als je een commit 'fixt', gebruik dan [
-`git commit --fixup`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---fixupamendrewordltcommitgt)
+Lees [hier](https://github.com/SELab-2/Dwengo-1/wiki/Developmentstrategie-keuzes#conventionele-commits) meer over de beslissing om conventionele commits te gebruiken.
+
+**Andere tips**
+
+Als je een commit 'fixt', gebruik dan [`git commit --fixup`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---fixupamendrewordltcommitgt)
 
 Als je een commit niet alleen hebt geschreven, maak dan een [commit met meerdere auteurs](https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors).
 
@@ -77,12 +83,23 @@ Als je een commit niet alleen hebt geschreven, maak dan een [commit met meerdere
 Eens je code hebt geschreven en gecommit, is het tijd om een pull request te maken.
 Het is fijn als je meteen ([draft](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests#draft-pull-requests)) pull requests maakt, zodat anderen kunnen meekijken en feedback kunnen geven.
 
-Als je aan visuele features werkt, voeg dan een screenshot van de omgeving van de feature toe, voor en nadat de feature
-geïmplementeerd werd.
+Om je op weg te helpen is er een [template](.github/PULL_REQUEST_TEMPLATE.md) voorzien.
+Door deze in te vullen, zorg je ervoor dat de reviewer een duidelijk beeld heeft van wat je hebt gedaan.
+
+Als je aan visuele features werkt, voeg dan een screenshot van de omgeving van de feature toe, voor en na dat de feature geïmplementeerd werd.
+
+**Branch protection**
 
 Je zult merken dat sommige branches [beschermd](https://docs.github.com/en/github/administering-a-repository/about-protected-branches) zijn.
 Dit betekent dat je niet zomaar kan mergen naar deze branches:
 
-- naar `main`: kan enkel vanuit `release/x.y.z`
-- naar `dev`: wordt nagekeken alvorens te mergen
-- elders: vrije keuze
+- `main`: kan enkel vanuit `release/x.y.z`
+- `dev`: wordt nagekeken alvorens te mergen
+
+Elders kan je vrij mergen.
+
+Het zou kunnen dat je code bepaalde checks moet doorstaan alvorens te mergen.
+Dit kan gaan van een simpele lint check tot een volledige test suite die moet slagen.
+Tag gerust een maintainer als je denkt dat je code klaar is om gemerged te worden.
+
+## Dankjewel!
