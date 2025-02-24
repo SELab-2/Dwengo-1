@@ -1,15 +1,15 @@
 const PREFIX = "DWENGO_";
 const DB_PREFIX = PREFIX + "DB_";
 
-type EnvVar = {[key: string]: {name: string, required?: boolean, defaultValue?: boolean}};
+type EnvVar = {key: string, required?: boolean, defaultValue?: any}
 
-export const EnvVars: EnvVar = {
-    DbHost: {key: DB_PREFIX + "HOST", required: true},
-    DbPort: {key: DB_PREFIX + "PORT", defaultValue: 5432},
-    DbName: {key: DB_PREFIX + "NAME", defaultValue: "dwengo"},
-    DbUsername: {key: DB_PREFIX + "USERNAME", required: true},
-    DbPassword: {key: DB_PREFIX + "PASSWORD", required: true},
-    DbUpdate: {key: DB_PREFIX + "UPDATE", defaultValue: false},
+export const EnvVars: {[key: string]: EnvVar} = {
+    "DbHost": {key: DB_PREFIX + "HOST", required: true},
+    "DbPort": {key: DB_PREFIX + "PORT", defaultValue: 5432},
+    "DbName": {key: DB_PREFIX + "NAME", defaultValue: "dwengo"},
+    "DbUsername": {key: DB_PREFIX + "USERNAME", required: true},
+    "DbPassword": {key: DB_PREFIX + "PASSWORD", required: true},
+    "DbUpdate": {key: DB_PREFIX + "UPDATE", defaultValue: false},
 } as const;
 
 /**

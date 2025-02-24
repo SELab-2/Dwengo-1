@@ -1,5 +1,5 @@
 import express, { Express, Response } from 'express';
-import initORM from './orm.js';
+import { initORM } from './orm.js';
 
 const app: Express = express();
 const port: string | number = process.env.PORT || 3000;
@@ -19,4 +19,4 @@ async function startServer() {
     });
 }
 
-startServer();
+await startServer();

@@ -1,10 +1,10 @@
-import { MikroORM } from '@mikro-orm/core';
+import {AnyEntity, EntityName, EntityRepository, MikroORM} from '@mikro-orm/core';
 import config from './mikro-orm.config.js';
 import {EnvVars, getEnvVar} from "./util/envvars";
 
-export default async function initORM() {
-    const orm = await MikroORM.init(config);
-
+let orm: MikroORM | undefined;
+export async function initORM(testingMode: boolean = false) {
+    orm = await MikroORM.init(config(testingMode));
     // Update the database scheme if necessary and enabled.
     if (getEnvVar(EnvVars.DbUpdate)) {
         await orm.schema.updateSchema();
@@ -16,4 +16,11 @@ export default async function initORM() {
                 "The following queries will then be executed:\n" + diff)
         }
     }
+}
+
+export function getRepository<T extends AnyEntity>(entityName: EntityName<T>): EntityRepository<T> {
+    if (orm === undefined) {
+        throw new Error("ORM is not initialized yet");
+    }
+    return orm.em.fork().getRepository(entityName);
 }
