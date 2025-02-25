@@ -1,5 +1,5 @@
 import express, { Express, Response } from 'express';
-import initORM from './orm.js';
+import { initORM } from './orm.js';
 
 import studentRouter from './routes/student';
 import groupRouter from './routes/group';
@@ -30,7 +30,7 @@ app.use('/login', loginRouter);
 
 
 async function startServer() {
-    await initORM();
+    //await initORM();
 
     app.listen(port, () => {
         console.log(`Server is running at http://localhost:${port}`);
