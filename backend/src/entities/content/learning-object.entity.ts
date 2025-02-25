@@ -4,7 +4,7 @@ import {Attachment} from "./attachment.entity";
 import {Teacher} from "../users/teacher.entity";
 
 @Entity()
-export class LearningObject<R> {
+export class LearningObject {
     @PrimaryKey({type: "string"})
     hruid!: string;
 
@@ -12,7 +12,7 @@ export class LearningObject<R> {
     language!: Language;
 
     @PrimaryKey({type: "string"})
-    version: number = "1";
+    version: string = "1";
 
     @ManyToMany({entity: () => Teacher})
     admins!: Teacher[];
@@ -54,7 +54,7 @@ export class LearningObject<R> {
     estimatedTime!: number;
 
     @Embedded({entity: () => ReturnValue})
-    returnValue: ReturnValue<R>;
+    returnValue!: ReturnValue;
 
     @Property({type: "bool"})
     available: boolean = true;
@@ -66,25 +66,25 @@ export class LearningObject<R> {
     attachments: Attachment[] = [];
 
     @Property({type: "blob"})
-    content: Buffer;
+    content!: Buffer;
 }
 
 @Embeddable()
 export class EducationalGoal {
     @Property({type: "string"})
-    source: string;
+    source!: string;
 
     @Property({type: "string"})
-    id: string;
+    id!: string;
 }
 
 @Embeddable()
-export class ReturnValue<R> {
+export class ReturnValue {
     @Property({type: "string"})
-    callbackUrl: string;
+    callbackUrl!: string;
 
     @Property({type: "json"})
-    callbackSchema: R;
+    callbackSchema!: string;
 }
 
 export enum ContentType {
