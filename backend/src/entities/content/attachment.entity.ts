@@ -7,7 +7,7 @@ export class Attachment {
     learningObject!: LearningObject;
 
     @PrimaryKey({type: "integer"})
-    no!: number;
+    sequenceNumber!: number;
 
     @Property({type: "string"})
     mimeType!: string;

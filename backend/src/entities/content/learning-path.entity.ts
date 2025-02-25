@@ -23,7 +23,7 @@ export class LearningPath {
     image!: string;
 
     @Embedded({entity: () => LearningPathNode, array: true})
-    nodes: LearningPathNode[];
+    nodes: LearningPathNode[] = [];
 }
 
 @Embeddable()
