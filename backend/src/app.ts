@@ -1,5 +1,5 @@
 import express, { Express, Response } from 'express';
-import { initORM } from './orm.js';
+import initORM from './orm.js';
 
 import studentRouter from './routes/student';
 import groupRouter from './routes/group';
