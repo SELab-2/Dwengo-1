@@ -5,9 +5,6 @@ import {Language} from "../content/language";
 
 @Entity()
 export class Submission<T> {
-    @ManyToOne({entity: () => Student, primary: true})
-    submitter!: Student;
-
     @PrimaryKey({type: "string"})
     learningObjectHruid!: string;
 
@@ -15,10 +12,16 @@ export class Submission<T> {
     learningObjectLanguage!: Language;
 
     @PrimaryKey({type: "string"})
-    learningObjectVersion: number = "1";
+    learningObjectVersion: string = "1";
 
-    @PrimaryKey({type: "datetime"})
-    submissionTime: Date;
+    @Property({type: "integer"})
+    submissionNumber!: number;
+
+    @ManyToOne({entity: () => Student})
+    submitter!: Student;
+
+    @Property({type: "datetime"})
+    submissionTime!: Date;
 
     @ManyToOne({entity: () => Group, nullable: true})
     onBehalfOf?: Group;

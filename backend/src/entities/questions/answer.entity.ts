@@ -11,9 +11,12 @@ export class Answer {
     @ManyToOne({entity: () => Question, primary: true})
     toQuestion!: Question;
 
-    @PrimaryKey({type: "datetime"})
-    timestamp: Date;
+    @PrimaryKey({type: "integer"})
+    sequenceNumber!: number;
+
+    @Property({type: "datetime"})
+    timestamp!: Date;
 
     @Property({type: "text"})
-    content: string;
+    content!: string;
 }

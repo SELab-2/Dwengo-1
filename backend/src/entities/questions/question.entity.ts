@@ -4,9 +4,6 @@ import {Student} from "../users/student.entity";
 
 @Entity()
 export class Question {
-    @ManyToOne({entity: () => Student, primary: true})
-    author!: Student;
-
     @PrimaryKey({type: "string"})
     learningObjectHruid!: string;
 
@@ -14,9 +11,15 @@ export class Question {
     learningObjectLanguage!: Language;
 
     @PrimaryKey({type: "string"})
-    learningObjectVersion!: number = "1";
+    learningObjectVersion: string = "1";
 
-    @PrimaryKey({type: "datetime"})
+    @PrimaryKey({type: "integer"})
+    sequenceNumber!: number;
+
+    @ManyToOne({entity: () => Student})
+    author!: Student;
+
+    @Property({type: "datetime"})
     timestamp!: Date;
 
     @Property({type: "text"})
