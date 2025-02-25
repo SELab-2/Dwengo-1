@@ -7,7 +7,7 @@ router.get('/:id', (req, res) => {
 })
 
 // the list of questions a group has made
-router.get('/:id/questions', (req, res) => {
+router.get('/:id/question', (req, res) => {
     res.send('questions');
 })
 
