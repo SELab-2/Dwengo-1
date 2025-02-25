@@ -1,7 +1,7 @@
 import {User} from "./user.entity";
 import {Collection, Entity, ManyToMany} from '@mikro-orm/core';
 import {Class} from "../classes/class.entity";
-import {Group} from "../assigments/group.entity";
+import {Group} from "../assignments/group.entity";
 import {StudentRepository} from "../../data/users/student-repository";
 
 @Entity({repository: () => StudentRepository})

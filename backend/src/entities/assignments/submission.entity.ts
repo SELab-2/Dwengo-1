@@ -4,7 +4,7 @@ import {Entity, Enum, ManyToOne, PrimaryKey, Property} from "@mikro-orm/core";
 import {Language} from "../content/language";
 
 @Entity()
-export class Submission<T> {
+export class Submission {
     @PrimaryKey({type: "string"})
     learningObjectHruid!: string;
 
@@ -14,7 +14,7 @@ export class Submission<T> {
     @PrimaryKey({type: "string"})
     learningObjectVersion: string = "1";
 
-    @Property({type: "integer"})
+    @PrimaryKey({type: "integer"})
     submissionNumber!: number;
 
     @ManyToOne({entity: () => Student})
@@ -27,5 +27,5 @@ export class Submission<T> {
     onBehalfOf?: Group;
 
     @Property({type: "json"})
-    content!: T;
+    content!: string;
 }
