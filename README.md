@@ -5,7 +5,7 @@
 OneDrive</a></span>
 <span><a href="https://www.figma.com/files/project/339220191" alt="Figma sjabloon">
 Figma</a></span>
-<span><a href="../Dwengo-opgave" alt="projectopgave">
+<span><a href="https://github.com/SELab-2/Dwengo-opgave" alt="projectopgave">
 Projectopgave</a></span>
 </p>
 
