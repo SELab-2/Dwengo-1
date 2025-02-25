@@ -20,7 +20,7 @@ export class Question {
     author!: Student;
 
     @Property({type: "datetime"})
-    timestamp!: Date;
+    timestamp: Date = new Date();
 
     @Property({type: "text"})
     content!: string;

@@ -15,7 +15,7 @@ export class Answer {
     sequenceNumber!: number;
 
     @Property({type: "datetime"})
-    timestamp!: Date;
+    timestamp: Date = new Date();
 
     @Property({type: "text"})
     content!: string;

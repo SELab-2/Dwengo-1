@@ -31,4 +31,13 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
             onBehalfOf: group,
         }, {orderBy: {submissionNumber: "DESC"}})
     }
+
+    public deleteSubmissionByLearningObjectAndSubmissionNumber(loId: LearningObjectIdentifier, submissionNumber: number): Promise<void> {
+        return this.deleteWhere({
+            learningObjectHruid: loId.hruid,
+            learningObjectLanguage: loId.language,
+            learningObjectVersion: loId.version,
+            submissionNumber: submissionNumber
+        })
+    }
 }
