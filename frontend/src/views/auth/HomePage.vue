@@ -1,9 +1,12 @@
 <script setup lang="ts">
-    import TheWelcome from "../components/TheWelcome.vue";
+
 </script>
 
 <template>
     <main>
-        <TheWelcome />
+        <b> Welcome to the dwengo homepage</b>
     </main>
 </template>
+<style scoped>
+
+</style>
