@@ -73,7 +73,7 @@ jobs:
           github.event.repository.name != 'main'
         uses: stefanzweifel/git-auto-commit-action@v5
         env:
-          GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           branch: ${{ github.event.pull_request.head.ref || github.head_ref || github.ref }}
           commit_message: "chore: fix linting issues"
