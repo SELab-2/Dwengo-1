@@ -22,7 +22,7 @@ jobs:
       contents: write
       # To write Super-linter status checks
       statuses: write
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64]
     steps:
       - uses: actions/checkout@v4
         with:
