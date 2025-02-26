@@ -1,7 +1,6 @@
 import express, { Express, Response } from 'express';
 import initORM from './orm.js';
-import themeRoutes from "./routes/themes.js";
-
+import themeRoutes from './routes/themes.js';
 
 const app: Express = express();
 const port: string | number = process.env.PORT || 3000;
@@ -13,8 +12,7 @@ app.get('/', (_, res: Response) => {
     });
 });
 
-app.use("/theme", themeRoutes);
-
+app.use('/theme', themeRoutes);
 
 async function startServer() {
     await initORM();
