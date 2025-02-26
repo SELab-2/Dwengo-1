@@ -35,7 +35,11 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: "dev"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FILTER_REGEX_EXCLUDE: ^.github/workflows/*
           LINTER_RULES_PATH: /
+          YAML_CONFIG_FILE: .yamllint
+          JAVASCRIPT_ES_CONFIG_FILE: eslint.config.ts
+          TYPESCRIPT_ES_CONFIG_FILE: tsconfig.json
           # Set your fix mode variables to true
           VALIDATE_HTML: true
           VALIDATE_HTML_PRETTIER: true
