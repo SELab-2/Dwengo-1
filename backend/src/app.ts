@@ -1,6 +1,6 @@
 import express, { Express, Response } from 'express';
 import { initORM } from './orm.js';
-import {EnvVars, getNumericEnvVar} from "./util/envvars.js";
+import { EnvVars, getNumericEnvVar } from './util/envvars.js';
 
 const app: Express = express();
 const port: string | number = getNumericEnvVar(EnvVars.Port);
