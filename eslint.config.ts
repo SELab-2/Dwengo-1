@@ -14,10 +14,6 @@ export default [
     prettierConfig,
     includeIgnoreFile(gitignorePath),
     {
-        languageOptions: {
-            ecmaVersion: 'latest',
-            sourceType: 'module',
-        },
         rules: {
             'no-await-in-loop': 'warn',
             'no-constructor-return': 'error',
