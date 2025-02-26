@@ -9,9 +9,20 @@ router.get('/:id', (req, res) => {
         group: '0',
         time: new Date(2025, 1, 1),
         content: 'Zijn alle gehele getallen groter dan 2 gelijk aan de som van 2 priemgetallen????',
-        answers: [ '0' ],
-        learningObject: [ '0' ],
+        learningObject: '0',
+        links: {
+            self: `${req.baseUrl}/${req.params.id}`,
+            answers: `${req.baseUrl}/${req.params.id}/answers`,
+        }
     });
+})
+
+router.get('/:id/answers', (req, res) => {
+    res.json({
+        answers: [
+            '0'
+        ],
+    })
 })
 
 export default router
