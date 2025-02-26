@@ -9,5 +9,6 @@
     "source.fixAll.eslint": "explicit"
   },
   "editor.formatOnSave": false,
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.configPath": "prettier.config.js"
 }
