@@ -1,7 +1,7 @@
 import express from 'express'
 const router = express.Router();
 
-// information about an question with id 'id'
+// information about a teacher
 router.get('/:id/', (req, res) => {
     res.json({
         id: req.params.id,
@@ -16,6 +16,7 @@ router.get('/:id/', (req, res) => {
     });
 })
 
+// the questions students asked a teacher
 router.get('/:id/questions', (req, res) => {
     res.json({
         questions: [
@@ -24,6 +25,7 @@ router.get('/:id/questions', (req, res) => {
     });
 });
 
+// invitations to other classes a teacher received
 router.get('/:id/invitations', (req, res) => {
     res.json({
         invitations: [
@@ -32,6 +34,7 @@ router.get('/:id/invitations', (req, res) => {
     });
 });
 
+// a list with ids of classes a teacher is in
 router.get('/:id/classes', (req, res) => {
     res.json({
         classes: [
