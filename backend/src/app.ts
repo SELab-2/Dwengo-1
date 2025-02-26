@@ -1,8 +1,9 @@
 import express, { Express, Response } from 'express';
 import { initORM } from './orm.js';
+import {EnvVars, getNumericEnvVar} from "./util/envvars.js";
 
 const app: Express = express();
-const port: string | number = process.env.PORT || 3000;
+const port: string | number = getNumericEnvVar(EnvVars.Port);
 
 // TODO Replace with Express routes
 app.get('/', (_, res: Response) => {
