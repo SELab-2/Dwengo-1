@@ -83,6 +83,6 @@ jobs:
         with:
           branch: ${{ github.event.pull_request.head.ref ||
                   github.head_ref || github.ref }}
-          commit_message: "chore: fix style (superlinter)"
+          commit_message: "style: fix linting issues (superlinter)"
           commit_user_name: super-linter
           commit_user_email: super-linter@super-linter.dev
