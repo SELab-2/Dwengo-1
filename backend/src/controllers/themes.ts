@@ -2,133 +2,13 @@ import fs from "fs";
 import path from "path";
 import yaml from "js-yaml";
 import { Request, Response } from "express";
-
-interface Theme {
-    title: string;
-    hruids: string[];
-}
+import { themes } from "../data/themes.js";
 
 interface Translations {
     curricula_page: {
         [key: string]: { title: string; description?: string }; // Optioneel veld description
     };
 }
-
-const themes: Theme[] = [
-    {
-        title: "kiks",
-        hruids: [
-            "pn_werking", "un_artificiele_intelligentie", "pn_klimaatverandering",
-            "kiks1_microscopie", "kiks2_practicum", "pn_digitalebeelden",
-            "kiks3_dl_basis", "kiks4_dl_gevorderd", "kiks5_classificatie",
-            "kiks6_regressie", "kiks7_ethiek", "kiks8_eindtermen"
-        ]
-    },
-    {
-        title: "art",
-        hruids: [
-            "pn_werking", "un_artificiele_intelligentie", "art1", "art2", "art3"
-        ]
-    },
-    {
-        title: "socialrobot",
-        hruids: [
-            "sr0_lkr", "sr0_lln", "sr1", "sr2", "sr3", "sr4"
-        ]
-    },
-    {
-        title: "agriculture",
-        hruids: [
-            "pn_werking", "un_artificiele_intelligentie", "agri_landbouw", "agri_lopendeband"
-        ]
-    },
-    {
-        title: "wegostem",
-        hruids: [
-            "wegostem"
-        ]
-    },
-    {
-        title: "computational_thinking",
-        hruids: [
-            "ct1_concepten", "ct2_concreet", "ct3_voorbeelden", "ct6_cases",
-            "ct9_impact", "ct10_bebras", "ct8_eindtermen", "ct7_historiek",
-            "ct5_kijkwijzer", "ct4_evaluatiekader"
-        ]
-    },
-    {
-        title: "math_with_python",
-        hruids: [
-            "pn_werking", "maths_pythagoras", "maths_spreidingsdiagrammen",
-            "maths_rechten", "maths_lineaireregressie", "maths_epidemie",
-            "pn_digitalebeelden", "maths_logica", "maths_parameters",
-            "maths_parabolen", "pn_regressie", "maths7_grafen", "maths8_statistiek"
-        ]
-    },
-    {
-        title: "python_programming",
-        hruids: [
-            "pn_werking", "pn_datatypes", "pn_operatoren", "pn_structuren",
-            "pn_functies", "art2", "stem_insectbooks", "un_algoenprog"
-        ]
-    },
-    {
-        title: "stem",
-        hruids: [
-            "pn_werking", "maths_spreidingsdiagrammen", "pn_digitalebeelden",
-            "maths_epidemie", "stem_ipadres", "pn_klimaatverandering",
-            "stem_rechten", "stem_lineaireregressie", "stem_insectbooks"
-        ]
-    },
-    {
-        title: "care",
-        hruids: [
-            "pn_werking", "un_artificiele_intelligentie", "aiz1_zorg", "aiz2_grafen",
-            "aiz3_unplugged", "aiz4_eindtermen", "aiz5_triage"
-        ]
-    },
-    {
-        title: "chatbot",
-        hruids: [
-            "pn_werking", "un_artificiele_intelligentie", "cb5_chatbotunplugged",
-            "cb1_chatbot", "cb2_sentimentanalyse", "cb3_vervoegmachine",
-            "cb4_eindtermen", "cb6"
-        ]
-    },
-    {
-        title: "physical_computing",
-        hruids: [
-            "pc_starttodwenguino", "pc_rijdenderobot", "pc_theremin",
-            "pc_leerlijn_introductie", "pc_leerlijn_invoer_verwerking_uitvoer",
-            "pc_leerlijn_basisprincipes_digitale_elektronica",
-            "pc_leerlijn_grafisch_naar_tekstueel", "pc_leerlijn_basis_programmeren",
-            "pc_leerlijn_van_µc_naar_plc", "pc_leerlijn_fiches_dwenguino",
-            "pc_leerlijn_seriele_monitor", "pc_leerlijn_bus_protocollen",
-            "pc_leerlijn_wifi", "pc_leerlijn_fiches_arduino",
-            "pc_leerlijn_project_lijnvolger", "pc_leerlijn_project_bluetooth",
-            "pc_leerlijn_hddclock", "pc_leerlijn_fysica_valbeweging",
-            "pc_leerlijn_luchtkwaliteit", "pc_leerlijn_weerstation",
-            "pc_leerlijn_g0", "pc_leerlijn_g1", "pc_leerlijn_g3", "pc_leerlijn_g4",
-            "pc_leerlijn_g5"
-        ]
-    },
-    {
-        title: "algorithms",
-        hruids: [
-            "art2", "anm1", "anm2", "anm3", "anm4", "anm11", "anm12", "anm13",
-            "anm14", "anm15", "anm16", "anm17", "maths_epidemie", "stem_insectbooks"
-        ]
-    },
-    {
-        title: "basics_ai",
-        hruids: [
-            "un_artificiele_intelligentie", "org-dwengo-waisda-taal-murder-mistery",
-            "art1", "org-dwengo-waisda-beelden-emoties-herkennen",
-            "org-dwengo-waisda-beelden-unplugged-fax-lp",
-            "org-dwengo-waisda-beelden-teachable-machine"
-        ]
-    }
-];
 
 /**
  * Laadt de vertalingen uit een YAML-bestand
