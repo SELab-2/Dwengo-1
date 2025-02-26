@@ -38,8 +38,8 @@ jobs:
           FILTER_REGEX_EXCLUDE: ^\.github/workflows/.*
           LINTER_RULES_PATH: /
           YAML_CONFIG_FILE: .yamllint
-          JAVASCRIPT_ES_CONFIG_FILE: eslint.config.ts
           TYPESCRIPT_ES_CONFIG_FILE: tsconfig.json
+          JAVASCRIPT_ES_CONFIG_FILE: eslint.config.ts
           # Set your fix mode variables to true
           VALIDATE_HTML: true
           VALIDATE_HTML_PRETTIER: true
