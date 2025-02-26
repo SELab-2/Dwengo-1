@@ -137,7 +137,7 @@ interface Translations {
 
 
 // Function to load translations from YAML files
-const loadTranslations = (language: string): Translations => {
+function loadTranslations(language: string): Translations {
     try {
         const filePath = path.join(process.cwd(), "_i18n", `${language}.yml`);
         const yamlFile = fs.readFileSync(filePath, "utf8");
