@@ -1,22 +1,21 @@
-import {Entity, ManyToOne, PrimaryKey, Property} from "@mikro-orm/core";
-import {Question} from "./question.entity";
-import {Teacher} from "../users/teacher.entity";
+import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import { Question } from './question.entity';
+import { Teacher } from '../users/teacher.entity';
 
 @Entity()
 export class Answer {
-
-    @ManyToOne({entity: () => Teacher, primary: true})
+    @ManyToOne({ entity: () => Teacher, primary: true })
     author!: Teacher;
 
-    @ManyToOne({entity: () => Question, primary: true})
+    @ManyToOne({ entity: () => Question, primary: true })
     toQuestion!: Question;
 
-    @PrimaryKey({type: "integer"})
+    @PrimaryKey({ type: 'integer' })
     sequenceNumber!: number;
 
-    @Property({type: "datetime"})
+    @Property({ type: 'datetime' })
     timestamp: Date = new Date();
 
-    @Property({type: "text"})
+    @Property({ type: 'text' })
     content!: string;
 }

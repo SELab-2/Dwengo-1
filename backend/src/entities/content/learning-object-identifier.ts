@@ -1,7 +1,9 @@
-import {Language} from "./language";
+import { Language } from './language';
 
 export class LearningObjectIdentifier {
-    constructor(public hruid: string, public language: Language, public version: string) {
-
-    }
+    constructor(
+        public hruid: string,
+        public language: Language,
+        public version: string
+    ) {}
 }

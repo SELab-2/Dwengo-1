@@ -1,97 +1,106 @@
-import {Embeddable, Embedded, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property} from "@mikro-orm/core";
-import {Language} from "./language";
-import {Attachment} from "./attachment.entity";
-import {Teacher} from "../users/teacher.entity";
+import {
+    Embeddable,
+    Embedded,
+    Entity,
+    Enum,
+    ManyToMany,
+    OneToMany,
+    PrimaryKey,
+    Property,
+} from '@mikro-orm/core';
+import { Language } from './language';
+import { Attachment } from './attachment.entity';
+import { Teacher } from '../users/teacher.entity';
 
 @Entity()
 export class LearningObject {
-    @PrimaryKey({type: "string"})
+    @PrimaryKey({ type: 'string' })
     hruid!: string;
 
-    @Enum({items: () => Language, primary: true})
+    @Enum({ items: () => Language, primary: true })
     language!: Language;
 
-    @PrimaryKey({type: "string"})
-    version: string = "1";
+    @PrimaryKey({ type: 'string' })
+    version: string = '1';
 
-    @ManyToMany({entity: () => Teacher})
+    @ManyToMany({ entity: () => Teacher })
     admins!: Teacher[];
 
-    @Property({type: "string"})
+    @Property({ type: 'string' })
     title!: string;
 
-    @Property({type: "text"})
+    @Property({ type: 'text' })
     description!: string;
 
-    @Property({type: "string"})
+    @Property({ type: 'string' })
     contentType!: string;
 
-    @Property({type: "array"})
+    @Property({ type: 'array' })
     keywords: string[] = [];
 
-    @Property({type: "array", nullable: true})
+    @Property({ type: 'array', nullable: true })
     targetAges?: number[];
 
-    @Property({type: "bool"})
+    @Property({ type: 'bool' })
     teacherExclusive: boolean = false;
 
-    @Property({type: "array"})
+    @Property({ type: 'array' })
     skosConcepts!: string[];
 
-    @Embedded({entity: () => EducationalGoal, array: true})
+    @Embedded({ entity: () => EducationalGoal, array: true })
     educationalGoals: EducationalGoal[] = [];
 
-    @Property({type: "string"})
-    copyright: string = ""
+    @Property({ type: 'string' })
+    copyright: string = '';
 
-    @Property({type: "string"})
-    license: string = ""
+    @Property({ type: 'string' })
+    license: string = '';
 
-    @Property({type: "smallint", nullable: true})
+    @Property({ type: 'smallint', nullable: true })
     difficulty?: number;
 
-    @Property({type: "integer"})
+    @Property({ type: 'integer' })
     estimatedTime!: number;
 
-    @Embedded({entity: () => ReturnValue})
+    @Embedded({ entity: () => ReturnValue })
     returnValue!: ReturnValue;
 
-    @Property({type: "bool"})
+    @Property({ type: 'bool' })
     available: boolean = true;
 
-    @Property({type: "string", nullable: true})
+    @Property({ type: 'string', nullable: true })
     contentLocation?: string;
 
-    @OneToMany({entity: () => Attachment, mappedBy: "learningObject"})
+    @OneToMany({ entity: () => Attachment, mappedBy: 'learningObject' })
     attachments: Attachment[] = [];
 
-    @Property({type: "blob"})
+    @Property({ type: 'blob' })
     content!: Buffer;
 }
 
 @Embeddable()
 export class EducationalGoal {
-    @Property({type: "string"})
+    @Property({ type: 'string' })
     source!: string;
 
-    @Property({type: "string"})
+    @Property({ type: 'string' })
     id!: string;
 }
 
 @Embeddable()
 export class ReturnValue {
-    @Property({type: "string"})
+    @Property({ type: 'string' })
     callbackUrl!: string;
 
-    @Property({type: "json"})
+    @Property({ type: 'json' })
     callbackSchema!: string;
 }
 
 export enum ContentType {
-    Markdown = "text/markdown",
-    Image = "image/image",
-    Mpeg = "audio/mpeg",
-    Pdf = "application/pdf",
-    Extern = "extern",
-    Blockly = "Blockly"
+    Markdown = 'text/markdown',
+    Image = 'image/image',
+    Mpeg = 'audio/mpeg',
+    Pdf = 'application/pdf',
+    Extern = 'extern',
+    Blockly = 'Blockly',
 }

@@ -1,15 +1,15 @@
-const PREFIX = "DWENGO_";
-const DB_PREFIX = PREFIX + "DB_";
+const PREFIX = 'DWENGO_';
+const DB_PREFIX = PREFIX + 'DB_';
 
-type EnvVar = {key: string, required?: boolean, defaultValue?: any}
+type EnvVar = { key: string; required?: boolean; defaultValue?: any };
 
-export const EnvVars: {[key: string]: EnvVar} = {
-    "DbHost": {key: DB_PREFIX + "HOST", required: true},
-    "DbPort": {key: DB_PREFIX + "PORT", defaultValue: 5432},
-    "DbName": {key: DB_PREFIX + "NAME", defaultValue: "dwengo"},
-    "DbUsername": {key: DB_PREFIX + "USERNAME", required: true},
-    "DbPassword": {key: DB_PREFIX + "PASSWORD", required: true},
-    "DbUpdate": {key: DB_PREFIX + "UPDATE", defaultValue: false},
+export const EnvVars: { [key: string]: EnvVar } = {
+    DbHost: { key: DB_PREFIX + 'HOST', required: true },
+    DbPort: { key: DB_PREFIX + 'PORT', defaultValue: 5432 },
+    DbName: { key: DB_PREFIX + 'NAME', defaultValue: 'dwengo' },
+    DbUsername: { key: DB_PREFIX + 'USERNAME', required: true },
+    DbPassword: { key: DB_PREFIX + 'PASSWORD', required: true },
+    DbUpdate: { key: DB_PREFIX + 'UPDATE', defaultValue: false },
 } as const;
 
 /**
@@ -27,7 +27,7 @@ export function getEnvVar(envVar: EnvVar): string {
     } else if (envVar.required) {
         throw new Error(`Missing environment variable: ${envVar.key}`);
     } else {
-        return envVar.defaultValue || "";
+        return envVar.defaultValue || '';
     }
 }
 
@@ -35,7 +35,9 @@ export function getNumericEnvVar(envVar: EnvVar): number {
     const valueString = getEnvVar(envVar);
     const value = parseInt(valueString);
     if (isNaN(value)) {
-        throw new Error(`Invalid value for environment variable ${envVar.key}: ${valueString}. Expected a number.`)
+        throw new Error(
+            `Invalid value for environment variable ${envVar.key}: ${valueString}. Expected a number.`
+        );
     } else {
         return value;
     }

@@ -1,17 +1,17 @@
-import {Entity, ManyToOne, PrimaryKey, Property} from "@mikro-orm/core";
-import {LearningObject} from "./learning-object.entity";
+import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import { LearningObject } from './learning-object.entity';
 
 @Entity()
 export class Attachment {
-    @ManyToOne({entity: () => LearningObject, primary: true})
+    @ManyToOne({ entity: () => LearningObject, primary: true })
     learningObject!: LearningObject;
 
-    @PrimaryKey({type: "integer"})
+    @PrimaryKey({ type: 'integer' })
     sequenceNumber!: number;
 
-    @Property({type: "string"})
+    @Property({ type: 'string' })
     mimeType!: string;
 
-    @Property({type: "blob"})
+    @Property({ type: 'blob' })
     content!: Buffer;
 }

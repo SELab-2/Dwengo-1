@@ -1,27 +1,27 @@
-import {Entity, Enum, ManyToOne, PrimaryKey, Property} from "@mikro-orm/core";
-import {Language} from "../content/language";
-import {Student} from "../users/student.entity";
+import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import { Language } from '../content/language';
+import { Student } from '../users/student.entity';
 
 @Entity()
 export class Question {
-    @PrimaryKey({type: "string"})
+    @PrimaryKey({ type: 'string' })
     learningObjectHruid!: string;
 
-    @Enum({items: () => Language, primary: true})
+    @Enum({ items: () => Language, primary: true })
     learningObjectLanguage!: Language;
 
-    @PrimaryKey({type: "string"})
-    learningObjectVersion: string = "1";
+    @PrimaryKey({ type: 'string' })
+    learningObjectVersion: string = '1';
 
-    @PrimaryKey({type: "integer"})
+    @PrimaryKey({ type: 'integer' })
     sequenceNumber!: number;
 
-    @ManyToOne({entity: () => Student})
+    @ManyToOne({ entity: () => Student })
     author!: Student;
 
-    @Property({type: "datetime"})
+    @Property({ type: 'datetime' })
     timestamp: Date = new Date();
 
-    @Property({type: "text"})
+    @Property({ type: 'text' })
     content!: string;
 }

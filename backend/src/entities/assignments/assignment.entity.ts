@@ -1,28 +1,35 @@
-import {Entity, Enum, ManyToOne, OneToMany, PrimaryKey, Property} from "@mikro-orm/core";
-import {Class} from "../classes/class.entity";
-import {Group} from "./group.entity"
-import {Language} from "../content/language";
+import {
+    Entity,
+    Enum,
+    ManyToOne,
+    OneToMany,
+    PrimaryKey,
+    Property,
+} from '@mikro-orm/core';
+import { Class } from '../classes/class.entity';
+import { Group } from './group.entity';
+import { Language } from '../content/language';
 
 @Entity()
 export class Assignment {
-    @ManyToOne({entity: () => Class, primary: true})
+    @ManyToOne({ entity: () => Class, primary: true })
     within!: Class;
 
-    @PrimaryKey({type: "number"})
+    @PrimaryKey({ type: 'number' })
     id!: number;
 
-    @Property({type: "string"})
+    @Property({ type: 'string' })
     title!: string;
 
-    @Property({type: "text"})
+    @Property({ type: 'text' })
     description!: string;
 
-    @Property({type: "string"})
+    @Property({ type: 'string' })
     learningPathHruid!: string;
 
-    @Enum({items: () => Language})
+    @Enum({ items: () => Language })
     learningPathLanguage!: Language;
 
-    @OneToMany({entity: () => Group, mappedBy: "assignment"})
+    @OneToMany({ entity: () => Group, mappedBy: 'assignment' })
     groups!: Group[];
 }
