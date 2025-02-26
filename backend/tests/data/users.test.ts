@@ -11,7 +11,7 @@ describe("StudentRepository", () => {
     let studentRepository: StudentRepository;
 
     beforeAll(async () => {
-        setupTestApp();
+        await setupTestApp();
         studentRepository = getStudentRepository();
     });
 
