@@ -3,20 +3,20 @@ import LoginPage from "@/views/LoginPage.vue";
 import HomePage from "@/views/HomePage.vue";
 import MenuBar from "@/components/MenuBar.vue";
 import StudentHomepage from "@/views/StudentHomepage.vue";
-import StudentAssignments from "@/views/assignment/StudentAssignments.vue";
-import StudentClasses from "@/views/class/StudentClasses.vue";
-import StudentDiscussions from "@/views/discussion/StudentDiscussions.vue";
+import StudentAssignments from "@/views/assignments/StudentAssignments.vue";
+import StudentClasses from "@/views/classes/StudentClasses.vue";
+import StudentDiscussions from "@/views/discussions/StudentDiscussions.vue";
 import TeacherHomepage from "@/views/TeacherHomepage.vue";
-import TeacherAssignments from "@/views/assignment/TeacherAssignments.vue";
-import TeacherClasses from "@/views/class/TeacherClasses.vue";
-import TeacherDiscussions from "@/views/discussion/TeacherDiscussions.vue";
-import SingleAssignment from "@/views/assignment/SingleAssignment.vue";
-import SingleClass from "@/views/class/SingleClass.vue";
-import SingleDiscussion from "@/views/discussion/SingleDiscussion.vue";
+import TeacherAssignments from "@/views/assignments/TeacherAssignments.vue";
+import TeacherClasses from "@/views/classes/TeacherClasses.vue";
+import TeacherDiscussions from "@/views/discussions/TeacherDiscussions.vue";
+import SingleAssignment from "@/views/assignments/SingleAssignment.vue";
+import SingleClass from "@/views/classes/SingleClass.vue";
+import SingleDiscussion from "@/views/discussions/SingleDiscussion.vue";
 import NotFound from "@/components/errors/NotFound.vue";
-import CreateClass from "@/views/class/CreateClass.vue";
-import CreateAssignment from "@/views/assignment/CreateAssignment.vue";
-import CreateDiscussion from "@/views/discussion/CreateDiscussion.vue";
+import CreateClass from "@/views/classes/CreateClass.vue";
+import CreateAssignment from "@/views/assignments/CreateAssignment.vue";
+import CreateDiscussion from "@/views/discussions/CreateDiscussion.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,12 +27,12 @@ const router = createRouter({
             component: HomePage,
         },
         {
-            path: "/:role/login",
+            path: "/login",
             name: "LoginPage",
             component: LoginPage
         },
         {
-            path: "/:role/register",
+            path: "/register",
             name: "RegisterPage",
             component: () => {}
         },
