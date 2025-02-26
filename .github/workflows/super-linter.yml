@@ -35,6 +35,7 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: "dev"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LINTER_RULES_PATH: /
           # Set your fix mode variables to true
           VALIDATE_HTML: true
           VALIDATE_HTML_PRETTIER: true
