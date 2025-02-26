@@ -1,6 +1,6 @@
-import { DwengoEntityRepository } from '../dwengo-entity-repository';
-import { Assignment } from '../../entities/assignments/assignment.entity';
-import { Class } from '../../entities/classes/class.entity';
+import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
+import { Assignment } from '../../entities/assignments/assignment.entity.js';
+import { Class } from '../../entities/classes/class.entity.js';
 
 export class AssignmentRepository extends DwengoEntityRepository<Assignment> {
     public findByClassAndId(

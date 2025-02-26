@@ -1,6 +1,6 @@
-import { DwengoEntityRepository } from '../dwengo-entity-repository';
-import { LearningPath } from '../../entities/content/learning-path.entity';
-import { Language } from '../../entities/content/language';
+import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
+import { LearningPath } from '../../entities/content/learning-path.entity.js';
+import { Language } from '../../entities/content/language.js';
 
 export class LearningPathRepository extends DwengoEntityRepository<LearningPath> {
     public findByHruidAndLanguage(

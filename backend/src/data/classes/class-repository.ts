@@ -1,5 +1,5 @@
-import { DwengoEntityRepository } from '../dwengo-entity-repository';
-import { Class } from '../../entities/classes/class.entity';
+import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
+import { Class } from '../../entities/classes/class.entity.js';
 
 export class ClassRepository extends DwengoEntityRepository<Class> {
     public findById(id: string): Promise<Class | null> {

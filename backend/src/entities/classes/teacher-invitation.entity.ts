@@ -1,6 +1,6 @@
 import { Entity, ManyToOne } from '@mikro-orm/core';
-import { Teacher } from '../users/teacher.entity';
-import { Class } from './class.entity';
+import { Teacher } from '../users/teacher.entity.js';
+import { Class } from './class.entity.js';
 
 /**
  * Invitation of a teacher into a class (in order to teach it).

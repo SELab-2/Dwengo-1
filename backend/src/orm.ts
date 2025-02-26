@@ -1,6 +1,6 @@
 import { EntityManager, MikroORM } from '@mikro-orm/core';
 import config from './mikro-orm.config.js';
-import { EnvVars, getEnvVar } from './util/envvars';
+import { EnvVars, getEnvVar } from './util/envvars.js';
 
 let orm: MikroORM | undefined;
 export async function initORM(testingMode: boolean = false) {

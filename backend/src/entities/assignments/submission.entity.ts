@@ -1,7 +1,7 @@
-import { Student } from '../users/student.entity';
-import { Group } from './group.entity';
+import { Student } from '../users/student.entity.js';
+import { Group } from './group.entity.js';
 import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
-import { Language } from '../content/language';
+import { Language } from '../content/language.js';
 
 @Entity()
 export class Submission {

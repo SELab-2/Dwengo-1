@@ -1,8 +1,8 @@
-import { User } from './user.entity';
+import { User } from './user.entity.js';
 import { Collection, Entity, ManyToMany } from '@mikro-orm/core';
-import { Class } from '../classes/class.entity';
-import { Group } from '../assignments/group.entity';
-import { StudentRepository } from '../../data/users/student-repository';
+import { Class } from '../classes/class.entity.js';
+import { Group } from '../assignments/group.entity.js';
+import { StudentRepository } from '../../data/users/student-repository.js';
 
 @Entity({ repository: () => StudentRepository })
 export class Student extends User {

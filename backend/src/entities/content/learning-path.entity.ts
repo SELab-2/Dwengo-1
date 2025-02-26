@@ -8,8 +8,8 @@ import {
     PrimaryKey,
     Property,
 } from '@mikro-orm/core';
-import { Language } from './language';
-import { Teacher } from '../users/teacher.entity';
+import { Language } from './language.js';
+import { Teacher } from '../users/teacher.entity.js';
 
 @Entity()
 export class LearningPath {

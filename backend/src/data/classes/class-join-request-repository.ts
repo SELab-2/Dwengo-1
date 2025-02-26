@@ -1,7 +1,7 @@
-import { DwengoEntityRepository } from '../dwengo-entity-repository';
-import { Class } from '../../entities/classes/class.entity';
-import { ClassJoinRequest } from '../../entities/classes/class-join-request.entity';
-import { Student } from '../../entities/users/student.entity';
+import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
+import { Class } from '../../entities/classes/class.entity.js';
+import { ClassJoinRequest } from '../../entities/classes/class-join-request.entity.js';
+import { Student } from '../../entities/users/student.entity.js';
 
 export class ClassJoinRequestRepository extends DwengoEntityRepository<ClassJoinRequest> {
     public findAllRequestsBy(requester: Student): Promise<ClassJoinRequest[]> {

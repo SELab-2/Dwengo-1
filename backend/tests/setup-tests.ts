@@ -1,4 +1,4 @@
-import {initORM} from "../src/orm";
+import {initORM} from "../src/orm.js";
 import dotenv from "dotenv";
 
 export async function setupTestApp() {

@@ -1,6 +1,6 @@
 import { Entity, ManyToMany, ManyToOne, PrimaryKey } from '@mikro-orm/core';
-import { Assignment } from './assignment.entity';
-import { Student } from '../users/student.entity';
+import { Assignment } from './assignment.entity.js';
+import { Student } from '../users/student.entity.js';
 
 @Entity()
 export class Group {

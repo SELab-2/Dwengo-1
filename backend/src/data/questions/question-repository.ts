@@ -1,7 +1,7 @@
-import { DwengoEntityRepository } from '../dwengo-entity-repository';
-import { Question } from '../../entities/questions/question.entity';
-import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier';
-import { Student } from '../../entities/users/student.entity';
+import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
+import { Question } from '../../entities/questions/question.entity.js';
+import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
+import { Student } from '../../entities/users/student.entity.js';
 
 export class QuestionRepository extends DwengoEntityRepository<Question> {
     public createQuestion(question: {

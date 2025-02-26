@@ -1,6 +1,6 @@
-import { DwengoEntityRepository } from '../dwengo-entity-repository';
-import { LearningObject } from '../../entities/content/learning-object.entity';
-import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier';
+import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
+import { LearningObject } from '../../entities/content/learning-object.entity.js';
+import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 
 export class LearningObjectRepository extends DwengoEntityRepository<LearningObject> {
     public findByIdentifier(

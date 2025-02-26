@@ -1,7 +1,7 @@
-import { DwengoEntityRepository } from '../dwengo-entity-repository';
-import { Class } from '../../entities/classes/class.entity';
-import { TeacherInvitation } from '../../entities/classes/teacher-invitation.entity';
-import { Teacher } from '../../entities/users/teacher.entity';
+import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
+import { Class } from '../../entities/classes/class.entity.js';
+import { TeacherInvitation } from '../../entities/classes/teacher-invitation.entity.js';
+import { Teacher } from '../../entities/users/teacher.entity.js';
 
 export class TeacherInvitationRepository extends DwengoEntityRepository<TeacherInvitation> {
     public findAllInvitationsForClass(

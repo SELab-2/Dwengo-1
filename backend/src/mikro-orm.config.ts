@@ -1,6 +1,6 @@
 import { Options } from '@mikro-orm/core';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { EnvVars, getEnvVar, getNumericEnvVar } from './util/envvars';
+import { EnvVars, getEnvVar, getNumericEnvVar } from './util/envvars.js';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 
 const entities = ['dist/**/*.entity.js'];

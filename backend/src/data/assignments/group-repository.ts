@@ -1,6 +1,6 @@
-import { DwengoEntityRepository } from '../dwengo-entity-repository';
-import { Group } from '../../entities/assignments/group.entity';
-import { Assignment } from '../../entities/assignments/assignment.entity';
+import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
+import { Group } from '../../entities/assignments/group.entity.js';
+import { Assignment } from '../../entities/assignments/assignment.entity.js';
 
 export class GroupRepository extends DwengoEntityRepository<Group> {
     public findByAssignmentAndGroupNumber(

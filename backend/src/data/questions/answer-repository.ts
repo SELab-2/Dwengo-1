@@ -1,7 +1,7 @@
-import { DwengoEntityRepository } from '../dwengo-entity-repository';
-import { Answer } from '../../entities/questions/answer.entity';
-import { Question } from '../../entities/questions/question.entity';
-import { Teacher } from '../../entities/users/teacher.entity';
+import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
+import { Answer } from '../../entities/questions/answer.entity.js';
+import { Question } from '../../entities/questions/question.entity.js';
+import { Teacher } from '../../entities/users/teacher.entity.js';
 
 export class AnswerRepository extends DwengoEntityRepository<Answer> {
     public createAnswer(answer: {

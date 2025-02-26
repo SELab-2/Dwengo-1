@@ -1,6 +1,6 @@
 import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
-import { Language } from '../content/language';
-import { Student } from '../users/student.entity';
+import { Language } from '../content/language.js';
+import { Student } from '../users/student.entity.js';
 
 @Entity()
 export class Question {

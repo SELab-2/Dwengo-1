@@ -1,5 +1,5 @@
 import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
-import { LearningObject } from './learning-object.entity';
+import { LearningObject } from './learning-object.entity.js';
 
 @Entity()
 export class Attachment {

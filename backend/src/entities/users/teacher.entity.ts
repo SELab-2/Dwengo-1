@@ -1,6 +1,6 @@
 import { Collection, Entity, ManyToMany } from '@mikro-orm/core';
-import { User } from './user.entity';
-import { Class } from '../classes/class.entity';
+import { User } from './user.entity.js';
+import { Class } from '../classes/class.entity.js';
 
 @Entity()
 export class Teacher extends User {

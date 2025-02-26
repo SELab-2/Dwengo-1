@@ -1,8 +1,8 @@
-import {setupTestApp} from "../setup-tests"
-import {Student} from "../../src/entities/users/student.entity";
+import {setupTestApp} from "../setup-tests.js"
+import {Student} from "../../src/entities/users/student.entity.js";
 import {describe, it, expect, beforeAll} from "vitest";
-import {StudentRepository} from "../../src/data/users/student-repository";
-import {getStudentRepository} from "../../src/data/repositories";
+import {StudentRepository} from "../../src/data/users/student-repository.js";
+import {getStudentRepository} from "../../src/data/repositories.js";
 
 const username = "teststudent";
 const firstName = "John";

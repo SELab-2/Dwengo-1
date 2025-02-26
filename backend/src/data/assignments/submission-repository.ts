@@ -1,8 +1,8 @@
-import { DwengoEntityRepository } from '../dwengo-entity-repository';
-import { Group } from '../../entities/assignments/group.entity';
-import { Submission } from '../../entities/assignments/submission.entity';
-import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier';
-import { Student } from '../../entities/users/student.entity';
+import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
+import { Group } from '../../entities/assignments/group.entity.js';
+import { Submission } from '../../entities/assignments/submission.entity.js';
+import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
+import { Student } from '../../entities/users/student.entity.js';
 
 export class SubmissionRepository extends DwengoEntityRepository<Submission> {
     public findSubmissionByLearningObjectAndSubmissionNumber(
