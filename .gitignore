@@ -58,6 +58,9 @@ web_modules/
 # Optional stylelint cache
 .stylelintcache
 
+# Super-Linter-Output
+super-linter-output/
+
 # Microbundle cache
 .rpt2_cache/
 .rts2_cache_cjs/
@@ -641,7 +644,8 @@ FodyWeavers.xsd
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
