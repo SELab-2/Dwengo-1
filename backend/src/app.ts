@@ -30,7 +30,7 @@ app.use('/login', loginRouter);
 
 
 async function startServer() {
-    //await initORM();
+    await initORM();
 
     app.listen(port, () => {
         console.log(`Server is running at http://localhost:${port}`);
