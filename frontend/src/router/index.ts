@@ -32,11 +32,6 @@ const router = createRouter({
             component: LoginPage
         },
         {
-            path: "/register",
-            name: "RegisterPage",
-            component: () => {}
-        },
-        {
             path: "/student/:id",
             component: MenuBar,
             children: [
