@@ -131,9 +131,10 @@ interface Theme {
 
 interface Translations {
     curricula_page: {
-        [key: string]: { title: string };
+        [key: string]: { title: string; description?: string }; // Description is nu optioneel
     };
 }
+
 
 // Function to load translations from YAML files
 const loadTranslations = (language: string): Translations => {
@@ -143,29 +144,32 @@ const loadTranslations = (language: string): Translations => {
         return yaml.load(yamlFile) as Translations;
     } catch (error) {
         console.error(`Kan vertaling niet laden voor ${language}, fallback naar Nederlands`);
+        console.error("error", error);
         const fallbackPath = path.join(process.cwd(), "_i18n", "nl.yml");
         return yaml.load(fs.readFileSync(fallbackPath, "utf8")) as Translations;
     }
 };
 
 // **GET /themes** → Returns a list of all themes as { theme: "key", translation: "Title in requested language" }
-router.get("/themes", (req: Request, res: Response) => {
+router.get("", (req: Request, res: Response) => {
     const language = (req.query.language as string)?.toLowerCase() || "nl"; // Default: Nederlands
     const translations = loadTranslations(language);
 
-    const themeList = (themes as Theme[]).map((theme) => ({
+    const themeList = (themes as Theme[]).map((theme) => {return {
         key: theme.title,  // The original key
-        theme: translations.curricula_page[theme.title]?.title || theme.title
-    }));
+        title: translations.curricula_page[theme.title]?.title || theme.title,
+        description: translations.curricula_page[theme.title]?.description,
+        image: `https://dwengo.org/images/curricula/logo_${theme.title}.png`
+    }});
     res.json(themeList);
 });
 
 // **GET /themes/:theme** → Returns hruids for a theme
-router.get("/themes/:theme", (req: Request, res: Response) => {
+router.get("/:theme", (req: Request, res: Response) => {
     const themeKey = req.params.theme; // This is the `title` in themes_hruids.json
 
     // Find the theme in the JSON list
-    const theme = (themes as Theme[]).find((t) => t.title === themeKey);
+    const theme = (themes as Theme[]).find((t) => {return t.title === themeKey});
 
     if (theme) {
         res.json(theme.hruids);

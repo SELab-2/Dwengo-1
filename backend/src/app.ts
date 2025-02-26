@@ -13,11 +13,11 @@ app.get('/', (_, res: Response) => {
     });
 });
 
-app.use("/routes", themeRoutes);
+app.use("/theme", themeRoutes);
 
 
 async function startServer() {
-    await initORM();
+    //Await initORM();
 
     app.listen(port, () => {
         console.log(`Server is running at http://localhost:${port}`);
