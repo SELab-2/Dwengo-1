@@ -1,6 +1,22 @@
 import express from 'express'
 const router = express.Router();
 
+// information about a student's profile
+router.get('/:id', (req, res) => {
+    res.json({
+        id: req.params.id,
+        firstName: 'Jimmy',
+        lastName: 'Faster',
+        username: 'JimmyFaster2',
+        endpoints: {
+            classes: `/student/${req.params.id}/classes`,
+            questions: `/student/${req.params.id}/submissions`,
+            invitations: `/student/${req.params.id}/assignments`,
+            groups: `/student/${req.params.id}/groups`,
+        },
+    });
+});
+
 // the list of classes a student is in
 router.get('/:id/classes', (req, res) => {
     res.json({
