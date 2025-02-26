@@ -1,6 +1,4 @@
 import {createRouter, createWebHistory} from "vue-router";
-import LoginPage from "@/views/LoginPage.vue";
-import HomePage from "@/views/HomePage.vue";
 import MenuBar from "@/components/MenuBar.vue";
 import StudentHomepage from "@/views/StudentHomepage.vue";
 import StudentAssignments from "@/views/assignments/StudentAssignments.vue";
