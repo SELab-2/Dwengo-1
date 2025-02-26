@@ -34,15 +34,28 @@ jobs:
           DEFAULT_BRANCH: "dev"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Set your fix mode variables to true
+          VALIDATE_HTML: true
+          VALIDATE_HTML_PRETTIER: true
           FIX_HTML_PRETTIER: true
+          VALIDATE_YAML: true
+          VALIDATE_YAML_PRETTIER: true
           FIX_YAML_PRETTIER: true
+          VALIDATE_JAVASCRIPT_ES: true
+          VALIDATE_JAVASCRIPT_PRETTIER: true
           FIX_JAVASCRIPT_ES: true
           FIX_JAVASCRIPT_PRETTIER: true
+          VALIDATE_JSON: true
+          VALIDATE_JSON_PRETTIER: true
           FIX_JSON_PRETTIER: true
           FIX_JSON: true
+          VALIDATE_TYPESCRIPT_ES: true
+          VALIDATE_TYPESCRIPT_PRETTIER: true
           FIX_TYPESCRIPT_ES: true
           FIX_TYPESCRIPT_PRETTIER: true
+          VALIDATE_VUE_PRETTIER: true
           FIX_VUE_PRETTIER: true
+          VALIDATE_CSS: true
+          VALIDATE_CSS_PRETTIER: true
           FIX_CSS: true
           FIX_CSS_PRETTIER: true
           # To reuse the same Super-linter configuration that you use in the
@@ -52,9 +65,11 @@ jobs:
         # Run only on:
         # - Pull requests
         # - Not on the default branch
+        # - Not on main branch
         if: >
           github.event_name == 'pull_request' &&
-          github.ref_name != github.event.repository.default_branch
+          github.ref_name != github.event.repository.default_branch &&
+          github.event.repository.name != 'main'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: ${{ github.event.pull_request.head.ref || github.head_ref || github.ref }}
