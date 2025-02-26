@@ -1,23 +1,22 @@
 import {createRouter, createWebHistory} from "vue-router";
-import LoginPage from "@/views/auth/LoginPage.vue";
-import RegisterPage from "@/views/auth/RegisterPage.vue";
-import HomePage from "@/views/auth/HomePage.vue";
+import LoginPage from "@/views/LoginPage.vue";
+import HomePage from "@/views/HomePage.vue";
 import MenuBar from "@/components/MenuBar.vue";
-import StudentHomepage from "@/views/student/StudentHomepage.vue";
-import StudentAssignments from "@/views/student/StudentAssignments.vue";
-import StudentClasses from "@/views/student/StudentClasses.vue";
-import StudentDiscussions from "@/views/student/StudentDiscussions.vue";
-import TeacherHomepage from "@/views/teacher/TeacherHomepage.vue";
-import TeacherAssignments from "@/views/teacher/TeacherAssignments.vue";
-import TeacherClasses from "@/views/teacher/TeacherClasses.vue";
-import TeacherDiscussions from "@/views/teacher/TeacherDiscussions.vue";
-import SingleAssignment from "@/views/resources/assignment/SingleAssignment.vue";
-import SingleClass from "@/views/resources/class/SingleClass.vue";
-import SingleDiscussion from "@/views/resources/discussion/SingleDiscussion.vue";
+import StudentHomepage from "@/views/StudentHomepage.vue";
+import StudentAssignments from "@/views/assignment/StudentAssignments.vue";
+import StudentClasses from "@/views/class/StudentClasses.vue";
+import StudentDiscussions from "@/views/discussion/StudentDiscussions.vue";
+import TeacherHomepage from "@/views/TeacherHomepage.vue";
+import TeacherAssignments from "@/views/assignment/TeacherAssignments.vue";
+import TeacherClasses from "@/views/class/TeacherClasses.vue";
+import TeacherDiscussions from "@/views/discussion/TeacherDiscussions.vue";
+import SingleAssignment from "@/views/assignment/SingleAssignment.vue";
+import SingleClass from "@/views/class/SingleClass.vue";
+import SingleDiscussion from "@/views/discussion/SingleDiscussion.vue";
 import NotFound from "@/components/errors/NotFound.vue";
-import CreateClass from "@/views/resources/class/CreateClass.vue";
-import CreateAssignment from "@/views/resources/assignment/CreateAssignment.vue";
-import CreateDiscussion from "@/views/resources/discussion/CreateDiscussion.vue";
+import CreateClass from "@/views/class/CreateClass.vue";
+import CreateAssignment from "@/views/assignment/CreateAssignment.vue";
+import CreateDiscussion from "@/views/discussion/CreateDiscussion.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,7 +34,7 @@ const router = createRouter({
         {
             path: "/:role/register",
             name: "RegisterPage",
-            component: RegisterPage
+            component: () => {}
         },
         {
             path: "/student/:id",
