@@ -17,7 +17,7 @@ app.use("/theme", themeRoutes);
 
 
 async function startServer() {
-    //Await initORM();
+    await initORM();
 
     app.listen(port, () => {
         console.log(`Server is running at http://localhost:${port}`);
