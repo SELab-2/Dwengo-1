@@ -14,7 +14,7 @@ export default [
     prettierConfig,
     includeIgnoreFile(gitignorePath),
     {
-        languageOptions: {
+        parserOptions: {
             ecmaVersion: 'latest',
             sourceType: 'module',
         },
