@@ -8,10 +8,11 @@ router.get('/:id/', (req, res) => {
         firstName: 'John',
         lastName: 'Doe',
         username: 'JohnDoe1',
-        endpoints: {
-            classes: `/teacher/${req.params.id}/classes`,
-            questions: `/teacher/${req.params.id}/questions`,
-            invitations: `/teacher/${req.params.id}/invitations`,
+        links: {
+            self: `${req.baseUrl}/${req.params.id}`,
+            classes: `${req.baseUrl}/${req.params.id}/classes`,
+            questions: `${req.baseUrl}/${req.params.id}/questions`,
+            invitations: `${req.baseUrl}/${req.params.id}/invitations`,
         },
     });
 })
