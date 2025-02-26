@@ -1,5 +1,5 @@
 import pluginJs from '@eslint/js';
-import tseslint from 'typescript-eslint';
+import tseslint from '@typescript-eslint/eslint-plugin';
 import prettierConfig from 'eslint-config-prettier';
 
 import { includeIgnoreFile } from '@eslint/compat';
@@ -37,7 +37,6 @@ export default [
             'no-unreachable-loop': 'warn',
             'no-use-before-define': 'error',
             'no-useless-assignment': 'error',
-
             'arrow-body-style': ['warn', 'always'],
             'block-scoped-var': 'warn',
             camelcase: 'warn',
