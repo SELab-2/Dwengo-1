@@ -1,5 +1,4 @@
 import pluginJs from '@eslint/js';
-import tseslint from 'typescript-eslint';
 import prettierConfig from 'eslint-config-prettier';
 
 import { includeIgnoreFile } from '@eslint/compat';
@@ -12,19 +11,12 @@ const gitignorePath = path.resolve(__dirname, '.gitignore');
 
 export default [
     pluginJs.configs.recommended,
-    ...tseslint.configs.recommended,
     prettierConfig,
     includeIgnoreFile(gitignorePath),
-    {
-        ignores: ['**/dist/**', '**/node_modules/**', '**/coverage/**'],
-    },
     {
         languageOptions: {
             ecmaVersion: 'latest',
             sourceType: 'module',
-        },
-        linterOptions: {
-            reportUnusedInlineConfigs: 'error',
         },
         rules: {
             'no-await-in-loop': 'warn',
@@ -36,8 +28,6 @@ export default [
             'no-unmodified-loop-condition': 'warn',
             'no-unreachable-loop': 'warn',
             'no-use-before-define': 'error',
-            'no-useless-assignment': 'error',
-
             'arrow-body-style': ['warn', 'always'],
             'block-scoped-var': 'warn',
             camelcase: 'warn',

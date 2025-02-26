@@ -38,7 +38,7 @@ jobs:
           FILTER_REGEX_EXCLUDE: \.github\/workflows\/.*
           LINTER_RULES_PATH: /
           YAML_CONFIG_FILE: .yamllint
-          TYPESCRIPT_ES_CONFIG_FILE: tsconfig.json
+          TYPESCRIPT_ES_CONFIG_FILE: eslint.config.ts
           JAVASCRIPT_ES_CONFIG_FILE: eslint.config.ts
           # Set your fix mode variables to true
           VALIDATE_HTML: true
@@ -83,6 +83,6 @@ jobs:
         with:
           branch: ${{ github.event.pull_request.head.ref ||
                   github.head_ref || github.ref }}
-          commit_message: "chore: fix linting issues"
+          commit_message: "chore: fix style (superlinter)"
           commit_user_name: super-linter
           commit_user_email: super-linter@super-linter.dev
