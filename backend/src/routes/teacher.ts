@@ -1,8 +1,18 @@
 import express from 'express'
 const router = express.Router();
 
+// root endpoint used to search objects
+router.get('/', (req, res) => {
+    res.json({
+        teachers: [
+            '0',
+            '1',
+        ]
+    });
+});
+
 // information about a teacher
-router.get('/:id/', (req, res) => {
+router.get('/:id', (req, res) => {
     res.json({
         id: req.params.id,
         firstName: 'John',

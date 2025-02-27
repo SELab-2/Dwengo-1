@@ -1,6 +1,16 @@
 import express from 'express'
 const router = express.Router();
 
+// root endpoint used to search objects
+router.get('/', (req, res) => {
+    res.json({
+        groups: [
+            '0',
+            '1',
+        ]
+    });
+});
+
 // information about a group (members, ... [TODO DOC])
 router.get('/:id', (req, res) => {
     res.json({
