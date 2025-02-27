@@ -1,10 +1,9 @@
-import express from 'express'
+import express from 'express';
+import { getThemes, getThemeByTitle } from '../controllers/themes.js';
+
 const router = express.Router();
 
-// I'm not sure what's supposed to be here 
-// https://github.com/SELab-2/Dwengo-1/issues/24
-router.get('/', (req, res) => {
-    res.send('themes route');
-})
+router.get('/', getThemes);
+router.get('/:theme', getThemeByTitle);
 
-export default router
+export default router;
