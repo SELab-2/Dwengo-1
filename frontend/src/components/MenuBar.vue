@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { computed } from "vue";
     import { useRoute } from "vue-router";
+    import { ref } from "vue";
     import dwengo_logo from "../../../assets/img/dwengo-groen-zwart.svg";
 
     const route = useRoute();
@@ -16,6 +17,14 @@
         .split(" ")
         .map((n) => n[0])
         .join("");
+
+    const languages = ref([
+        { name: "English", code: "en" },
+        { name: "Nederlands", code: "nl" },
+    ]);
+
+    // logic to change the language of the website to the selected language
+    const changeLanguage = (langCode: string) => {};
 </script>
 
 <template>
@@ -59,12 +68,41 @@
                             >discussions</router-link
                         >
                     </li>
+                    <li>
+                        <v-menu open-on-hover>
+                            <template v-slot:activator="{ props }">
+                                <v-btn
+                                    v-bind="props"
+                                    icon
+                                    variant="text"
+                                >
+                                    <v-icon
+                                        icon="mdi-translate"
+                                        size="small"
+                                        color="#0e6942"
+                                    ></v-icon>
+                                </v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item
+                                    v-for="(language, index) in languages"
+                                    :key="index"
+                                    @click="changeLanguage(language.code)"
+                                >
+                                    <v-list-item-title>{{ language.name }}</v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
+                    </li>
                 </ul>
             </div>
             <div class="right">
                 <li>
                     <router-link :to="`/login`">
-                        <v-tooltip text="log out">
+                        <v-tooltip
+                            text="log out"
+                            location="bottom"
+                        >
                             <template v-slot:activator="{ props }">
                                 <v-icon
                                     v-bind="props"
