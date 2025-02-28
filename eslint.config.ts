@@ -16,7 +16,7 @@ export default [
     prettierConfig,
     includeIgnoreFile(gitignorePath),
     {
-        ignores: ['**/dist/**', '**/.node_modules/**', '**/coverage/**', '/.github/**'],
+        ignores: ['**/dist/**', '**/.node_modules/**', '**/coverage/**', '**/.github/**'],
         files: [
             "**/*.ts",
             "**/*.cts",
