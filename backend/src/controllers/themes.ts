@@ -25,7 +25,6 @@ function loadTranslations(language: string): Translations {
     }
 }
 
-
 export function getThemes(req: Request, res: Response) {
     const language = (req.query.language as string)?.toLowerCase() || 'nl';
     const translations = loadTranslations(language);
@@ -42,7 +41,6 @@ export function getThemes(req: Request, res: Response) {
 
     res.json(themeList);
 }
-
 
 export function getThemeByTitle(req: Request, res: Response) {
     const themeKey = req.params.theme;
