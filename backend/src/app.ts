@@ -1,5 +1,7 @@
 import express, { Express, Response } from 'express';
-import initORM from './orm.js';
+import { initORM } from './orm.js';
+import { EnvVars, getNumericEnvVar } from './util/envvars.js';
+
 import themeRoutes from './routes/themes.js';
 
 import studentRouter from './routes/student';
@@ -11,7 +13,7 @@ import questionRouter from './routes/question';
 import loginRouter from './routes/login';
 
 const app: Express = express();
-const port: string | number = process.env.PORT || 3000;
+const port: string | number = getNumericEnvVar(EnvVars.Port);
 
 
 // TODO Replace with Express routes
@@ -39,4 +41,4 @@ async function startServer() {
     });
 }
 
-startServer();
+await startServer();
