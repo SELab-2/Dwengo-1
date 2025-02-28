@@ -1,5 +1,22 @@
 # translate theme pages
 
+strengths:
+    title: Unsere Stärken
+    innovative: Innovativ
+    research_based: Forschungsbasiert
+    inclusive: Inclusiv
+    socially_relevant: Gesellschaftlich relevant
+    innovative_text: Wir fügen ständig neue Projekte hinzu und gebrauchen neue Methoden für alle unsere Projekte.
+    research_based_text: Alle Lernpakete basieren auf fundierter wissenschaftlicher Forschung.
+    inclusive_text: Wir konzentrieren uns darauf, alle Kinder zu erreichen, mit besonderem Augenmerk auf die Geschlechterinklusion und die soziale Inklusion.
+    socially_relevant_text: Wir suchen Projekte, die zu aktuellen Ereignissen und gesellschaftlichen Themen passen.
+    summary: We develop innovative workshops and educational resources, and we provide them to students around the globe in collaboration with teachers and volunteers. Our train-the-trainer sessions enable them to bring our hands-on workshops to the students.
+    main: Wir fügen kontinuierlich neue Projekte und Methoden zu all unseren Projekten hinzu. Für diese Projekte suchen wir immer nach einem gesellschaftlich relevanten Thema. Darüber hinaus stellen wir sicher, dass unser didaktisches Material auf wissenschaftlicher Forschung basiert, und wir achten immer auf Inklusivität.
+    quote:
+        text: Du machst etwas Praktisches, du lernst mit Hardware zu arbeiten und du kannst etwas Neues schaffen.
+        name: Matthias und Bruno
+        affiliation: 4. Jahr der weiterführenden Schule
+
 curricula_page:
     title: Unsere Unterrichtsthemen
     read_more: Lees meer
