@@ -34,8 +34,9 @@ jobs:
         run: npm ci
 
       - name: Run linters
-        uses: wearerequired/lint-action@v2
+        uses: rkuykendall/lint-action@master
         with:
+          auto_fix: true
           eslint: true
-          eslint_args: "--debug --config eslint.config.ts ./"
+          eslint_args: "--debug --config eslint.config.ts"
           prettier: true
