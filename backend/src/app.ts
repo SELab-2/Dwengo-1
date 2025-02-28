@@ -12,6 +12,8 @@ import classRouter from './routes/class';
 import questionRouter from './routes/question';
 import loginRouter from './routes/login';
 
+import homeRouter from './routes/home.js';
+
 const app: Express = express();
 const port: string | number = getNumericEnvVar(EnvVars.Port);
 
@@ -32,6 +34,8 @@ app.use('/question', questionRouter);
 app.use('/login', loginRouter);
 
 app.use('/theme', themeRoutes);
+
+app.use('/home', homeRouter);
 
 async function startServer() {
     await initORM();

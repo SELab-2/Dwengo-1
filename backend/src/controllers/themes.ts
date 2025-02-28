@@ -1,31 +1,11 @@
-import fs from 'fs';
-import path from 'path';
-import yaml from 'js-yaml';
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
+import { loadTranslations } from "../util/translationHelper.js";
 
 interface Translations {
     curricula_page: {
-        [key: string]: { title: string; description?: string }; // Optioneel veld description
+        [key: string]: { title: string; description?: string };
     };
-}
-
-/**
- * Laadt de vertalingen uit een YAML-bestand
- */
-function loadTranslations(language: string): Translations {
-    try {
-        const filePath = path.join(process.cwd(), '_i18n', `${language}.yml`);
-        const yamlFile = fs.readFileSync(filePath, 'utf8');
-        return yaml.load(yamlFile) as Translations;
-    } catch (error) {
-        console.error(
-            `Kan vertaling niet laden voor ${language}, fallback naar Nederlands`
-        );
-        console.error(error);
-        const fallbackPath = path.join(process.cwd(), '_i18n', 'nl.yml');
-        return yaml.load(fs.readFileSync(fallbackPath, 'utf8')) as Translations;
-    }
 }
 
 /**
@@ -33,7 +13,7 @@ function loadTranslations(language: string): Translations {
  */
 export function getThemes(req: Request, res: Response) {
     const language = (req.query.language as string)?.toLowerCase() || 'nl';
-    const translations = loadTranslations(language);
+    const translations = loadTranslations<Translations>(language);
 
     const themeList = themes.map((theme) => {
         return {
