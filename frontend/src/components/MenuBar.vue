@@ -64,11 +64,16 @@
             <div class="right">
                 <li>
                     <router-link :to="`/login`">
-                        <v-icon
-                            icon="mdi-logout"
-                            size="x-large"
-                            color="#0e6942"
-                        ></v-icon>
+                        <v-tooltip text="log out">
+                            <template v-slot:activator="{ props }">
+                                <v-icon
+                                    v-bind="props"
+                                    icon="mdi-logout"
+                                    size="x-large"
+                                    color="#0e6942"
+                                ></v-icon>
+                            </template>
+                        </v-tooltip>
                     </router-link>
                 </li>
                 <li>
