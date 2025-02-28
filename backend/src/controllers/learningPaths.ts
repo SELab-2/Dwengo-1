@@ -1,16 +1,7 @@
 import { Request, Response } from "express";
 import axios from "axios";
 import { themes } from "../data/themes.js";
-import dotenv from "dotenv";
-
-// Load environment variables
-dotenv.config();
-
-// Get API base URL from environment variables
-const DWENGO_API_BASE = process.env.DWENGO_API_BASE as string;
-if (!DWENGO_API_BASE) {
-    throw new Error("DWENGO_API_BASE is not defined in the .env file");
-}
+import { DWENGO_API_BASE } from "../config/config.js";
 
 /**
  * Fetch learning paths for a given list of HRUIDs.
