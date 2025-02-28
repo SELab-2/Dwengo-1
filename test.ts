@@ -4,6 +4,6 @@ async function test_Function() {
 
 for (let index = 0; index < 100; index++) {
         await test_Function();
-    let a = "test";
+    const a = "test";
 }
 
