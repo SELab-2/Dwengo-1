@@ -38,5 +38,6 @@ jobs:
         with:
           auto_fix: true
           eslint: true
-          eslint_args: "--debug --config eslint.config.ts"
+          eslint_args: "--config eslint.config.ts"
           prettier: true
+          commit_message: "style: fix linting issues met lint-action"
