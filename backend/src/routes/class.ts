@@ -1,6 +1,16 @@
 import express from 'express'
 const router = express.Router();
 
+// root endpoint used to search objects
+router.get('/', (req, res) => {
+    res.json({
+        classes: [
+            '0',
+            '1',
+        ]
+    });
+});
+
 // information about an class with id 'id'
 router.get('/:id', (req, res) => {
     res.json({
@@ -8,9 +18,37 @@ router.get('/:id', (req, res) => {
         displayName: 'Klas 4B',
         teachers: [ '0' ],
         students: [ '0' ],
-        assignments: [ '0' ],
         joinRequests: [ '0' ],
-        invitations: [ '0' ],
+        links: {
+            self: `${req.baseUrl}/${req.params.id}`,
+            classes: `${req.baseUrl}/${req.params.id}/invitations`,
+            questions: `${req.baseUrl}/${req.params.id}/assignments`,
+            students: `${req.baseUrl}/${req.params.id}/students`,
+        }
+    });
+})
+
+router.get('/:id/invitations', (req, res) => {
+    res.json({
+        invitations: [ 
+            '0'
+        ],
+    });
+})
+
+router.get('/:id/assignments', (req, res) => {
+    res.json({
+        assignments: [ 
+            '0'
+        ],
+    });
+})
+
+router.get('/:id/students', (req, res) => {
+    res.json({
+        students: [ 
+            '0'
+        ],
     });
 })
 
