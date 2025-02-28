@@ -37,5 +37,5 @@ jobs:
         uses: wearerequired/lint-action@v2
         with:
           eslint: true
-          eslint_args: "--config eslint.config.ts"
+          eslint_args: "--config eslint.config.ts ./"
           prettier: true
