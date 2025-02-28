@@ -5,15 +5,17 @@
 
     const route = useRoute();
 
+    // instantiate variables to use in html to render right
+    // links and content dependent on the role (student or teacher)
     const isTeacher = route.path.includes("teacher");
+    const userId = computed(() => route.params.id as string);
+
     const role = isTeacher ? "teacher" : "student";
-    const name = "Kurt Cobain"; //TODO: naam opvragen
+    const name = "Kurt Cobain";
     const initials = name
         .split(" ")
         .map((n) => n[0])
         .join("");
-
-    const userId = computed(() => route.params.id as string);
 </script>
 
 <template>
@@ -61,7 +63,6 @@
             </div>
             <div class="right">
                 <li>
-                    <!-- TODO: log out when clicked -->
                     <router-link :to="`/login`">
                         <v-icon
                             icon="mdi-logout"
