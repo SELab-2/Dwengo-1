@@ -7,7 +7,11 @@
 
     const isTeacher = route.path.includes("teacher");
     const role = isTeacher ? "teacher" : "student";
-    const name = "Bob Debouwer"; // TODO: naam opvragen
+    const name = "Kurt Cobain"; //TODO: naam opvragen
+    const initials = name
+        .split(" ")
+        .map((n) => n[0])
+        .join("");
 
     const userId = computed(() => route.params.id as string);
 </script>
@@ -15,46 +19,66 @@
 <template>
     <main>
         <nav class="menu">
-            <ul>
+            <div class="left">
+                <ul>
+                    <li>
+                        <router-link
+                            :to="`/${role}/${userId}`"
+                            class="dwengo_home"
+                        >
+                            <img
+                                class="dwengo_logo"
+                                :src="dwengo_logo"
+                            />
+                            <p class="caption">
+                                {{ role }}
+                            </p>
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link
+                            :to="`/${role}/${userId}/assignment`"
+                            class="menu_item"
+                        >
+                            assignments
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link
+                            :to="`/${role}/${userId}/class`"
+                            class="menu_item"
+                            >classes</router-link
+                        >
+                    </li>
+                    <li>
+                        <router-link
+                            :to="`/${role}/${userId}/discussion`"
+                            class="menu_item"
+                            >discussions</router-link
+                        >
+                    </li>
+                </ul>
+            </div>
+            <div class="right">
                 <li>
-                    <router-link
-                        :to="`/${role}/${userId}`"
-                        class="dwengo_home"
-                    >
-                        <img
-                            class="dwengo_logo"
-                            :src="dwengo_logo"
-                        />
-                        <p class="caption">
-                            {{ role }}
-                        </p>
+                    <!-- TODO: log out when clicked -->
+                    <router-link :to="`/login`">
+                        <v-icon
+                            icon="mdi-logout"
+                            size="x-large"
+                            color="#0e6942"
+                        ></v-icon>
                     </router-link>
                 </li>
                 <li>
-                    <router-link
-                        :to="`/${role}/${userId}/assignment`"
-                        class="menu_item"
-                    >
-                        assignments
-                    </router-link>
-                </li>
-                <li>
-                    <router-link
-                        :to="`/${role}/${userId}/class`"
-                        class="menu_item"
-                        >classes</router-link
+                    <v-avatar
+                        size="large"
+                        color="#0e6942"
+                        style="font-size: large; font-weight: bold"
+                        >{{ initials }}</v-avatar
                     >
                 </li>
-                <li>
-                    <router-link
-                        :to="`/${role}/${userId}/discussion`"
-                        class="menu_item"
-                        >discussions</router-link
-                    >
-                </li>
-                <li>log out</li>
-                <li class="initials">initials</li>
-            </ul>
+            </div>
         </nav>
     </main>
 </template>
@@ -62,6 +86,17 @@
 <style scoped>
     .menu {
         background-color: #f6faf2;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .right {
+        align-items: center;
+        padding: 10px;
+    }
+
+    .right li {
+        margin-left: 15px;
     }
 
     nav ul {
@@ -69,13 +104,12 @@
         list-style-type: none;
         margin: 0;
         padding: 0;
-        gap: 10px;
+        gap: 15px;
         align-items: center;
     }
 
     li {
         display: inline;
-        float: left;
     }
 
     .dwengo_home {
@@ -95,6 +129,7 @@
     .menu_item {
         color: #0e6942;
         text-decoration: none;
+        font-size: large;
     }
 
     nav a.router-link-active {
