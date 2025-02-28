@@ -17,24 +17,30 @@ function filterLearningObjectMetadata(data: any, htmlUrl: string) {
         version: data.version,
 
         title: data.title,
-        html_url: htmlUrl,
+        htmlUrl,
         // Html content object
         language: data.language,
         difficulty: data.difficulty,
-        estimated_time: data.estimated_time,
+        estimatedTime: data.estimated_time,
         available: data.available,
-        teacher_exclusive: data.teacher_exclusive,
-        educational_goals: data.educational_goals,
+        teacherExclusive: data.teacher_exclusive,
+        educationalGoals: data.educational_goals,
         // List with learningObjects
         keywords: data.keywords,
         // For search
         description: data.description,
         // For search (not an actual description)
-        target_ages: data.target_ages,
+        targetAges: data.target_ages,
+        contentType: data.content_type,
+        // Text/plain, text/md, image/image-block,
+        // Image/image/, audio/mpeg or extern
+        contentLocation: data.content_location,
+        // If content type extern
 
         // Skos concepts needed ??
-        // Content type needed ??
-        // Content location ??
+        // Return value needed ??
+        // Callback_url to send response
+        // Callback_scheme
     };
 }
 
