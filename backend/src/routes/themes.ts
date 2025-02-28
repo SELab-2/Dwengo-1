@@ -3,11 +3,11 @@ import { getThemes, getThemeByTitle } from '../controllers/themes.js';
 
 const router = express.Router();
 
-// query: language
+// Query: language
 //  Route to fetch list of {key, title, description, image} themes in their respective language
 router.get('/', getThemes);
 
-// arg: theme (key)
+// Arg: theme (key)
 //  Route to fetch list of hruids based on theme
 router.get('/:theme', getThemeByTitle);
 

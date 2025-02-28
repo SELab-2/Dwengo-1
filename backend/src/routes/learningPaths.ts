@@ -1,23 +1,28 @@
-import express from "express";
-import { getLearningPathsFromIds, getLearningPathsByTheme, getAllLearningPaths, searchLearningPaths } from "../controllers/learningPaths.js";
+import express from 'express';
+import {
+    getLearningPathsFromIds,
+    getLearningPathsByTheme,
+    getAllLearningPaths,
+    searchLearningPaths,
+} from '../controllers/learningPaths.js';
 
 const router = express.Router();
 
-// query: language
+// Query: language
 // Route to fetch learning paths based on a list of HRUIDs
-router.get("/", getLearningPathsFromIds);
+router.get('/', getLearningPathsFromIds);
 
-// query: language
+// Query: language
 // Route to fetch all possible learning paths
-router.get("/all", getAllLearningPaths);
+router.get('/all', getAllLearningPaths);
 
-// query: language
+// Query: language
 // Route to fetch learning paths based on a searchterm
-router.get("/search", searchLearningPaths);
+router.get('/search', searchLearningPaths);
 
-// arg: theme id
-// query: language
+// Arg: theme id
+// Query: language
 // Route to fetch learning paths based on a theme
-router.get("/theme/:theme", getLearningPathsByTheme);
+router.get('/theme/:theme', getLearningPathsByTheme);
 
 export default router;

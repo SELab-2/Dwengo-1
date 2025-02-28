@@ -1,9 +1,8 @@
 // Can be placed in dotenv but found it redundant
 
-// import dotenv from "dotenv";
+// Import dotenv from "dotenv";
 
 // Load .env file
-// dotenv.config();
+// Dotenv.config();
 
-export const DWENGO_API_BASE = "https://dwengo.org/backend/api";
-
+export const DWENGO_API_BASE = 'https://dwengo.org/backend/api';
