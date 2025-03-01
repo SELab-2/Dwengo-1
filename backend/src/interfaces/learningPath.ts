@@ -1,8 +1,23 @@
-export interface LearningPathResponse {
-    success: boolean;
-    source: string;
-    data: LearningPath[] | null;
-    message?: string;
+export interface Transition {
+    default: boolean;
+    _id: string;
+    next: {
+        _id: string;
+        hruid: string;
+        version: number;
+        language: string;
+    };
+}
+
+export interface LearningObjectNode {
+    _id: string;
+    learningobject_hruid: string;
+    version: number;
+    language: string;
+    start_node?: boolean;
+    transitions: Transition[];
+    created_at: string;
+    updatedAt: string;
 }
 
 export interface LearningPath {
@@ -22,26 +37,14 @@ export interface LearningPath {
     __order: number;
 }
 
-export interface LearningObjectNode {
-    _id: string;
-    learningobject_hruid: string;
-    version: number;
-    language: string;
-    start_node?: boolean;
-    transitions: Transition[];
-    created_at: string;
-    updatedAt: string;
+export interface EducationalGoal {
+    source: string;
+    id: string;
 }
 
-export interface Transition {
-    default: boolean;
-    _id: string;
-    next: {
-        _id: string;
-        hruid: string;
-        version: number;
-        language: string;
-    };
+export interface ReturnValue {
+    callback_url: string;
+    callback_schema: Record<string, any>;
 }
 
 export interface LearningObjectMetadata {
@@ -65,16 +68,6 @@ export interface LearningObjectMetadata {
     return_value?: ReturnValue;
 }
 
-export interface EducationalGoal {
-    source: string;
-    id: string;
-}
-
-export interface ReturnValue {
-    callback_url: string;
-    callback_schema: Record<string, any>;
-}
-
 export interface FilteredLearningObject {
     key: string;
     _id: string;
@@ -95,4 +88,11 @@ export interface FilteredLearningObject {
     contentLocation?: string;
     skosConcepts?: string[];
     returnValue?: ReturnValue;
+}
+
+export interface LearningPathResponse {
+    success: boolean;
+    source: string;
+    data: LearningPath[] | null;
+    message?: string;
 }

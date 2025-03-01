@@ -50,12 +50,12 @@ export async function getLearningObjectsFromPath(
                     `Metadata for Learning Object HRUID "${node.learningobject_hruid}" (version ${node.version}, language ${language})`
                 );
 
-                if (!metadata) return null;
+                if (!metadata) {return null;}
 
                 const htmlUrl = `${DWENGO_API_BASE}/learningObject/getRaw?hruid=${node.learningobject_hruid}&version=${node.version}&language=${language}`;
                 return filterLearningObjectMetadata(metadata, htmlUrl);
             })
-        ).then((objects) => objects.filter((obj): obj is FilteredLearningObject => obj !== null));
+        ).then((objects) => {return objects.filter((obj): obj is FilteredLearningObject => {return obj !== null})});
     } catch (error) {
         console.error('Error fetching learning objects:', error);
         return [];

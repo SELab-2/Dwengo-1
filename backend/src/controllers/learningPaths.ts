@@ -3,6 +3,7 @@ import { themes } from '../data/themes.js';
 import {DWENGO_API_BASE, FALLBACK_LANG} from '../config.js';
 import { fetchWithLogging } from "../util/apiHelper.js";
 import { fetchLearningPaths } from "../services/learningPaths.js";
+import {LearningPath} from "../interfaces/learningPath";
 
 /**
  * Fetch learning paths based on HRUIDs or return all if no HRUIDs are provided.
@@ -14,13 +15,13 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
         const hruids = req.query.hruids; // Can be string or array
         const language = (req.query.language as string) || FALLBACK_LANG;
 
-        let hruidList: string[] = [];
+        let hruidList: string[];
 
         if (hruids) {
             hruidList = Array.isArray(hruids) ? hruids.map(String) : [String(hruids)];
         } else {
             // If no hruids are provided, fetch ALL learning paths
-            hruidList = themes.flatMap((theme) => theme.hruids);
+            hruidList = themes.flatMap((theme) => {return theme.hruids});
         }
 
         const learningPaths = await fetchLearningPaths(hruidList, language, `HRUIDs: ${hruidList.join(', ')}`);
@@ -41,7 +42,7 @@ export async function getLearningPathsByTheme(req: Request, res: Response): Prom
         const themeKey = req.params.theme;
         const language = (req.query.language as string) || FALLBACK_LANG;
 
-        const theme = themes.find((t) => t.title === themeKey);
+        const theme = themes.find((t) => {return t.title === themeKey});
         if (!theme) {
             console.error(`⚠️ WARNING: Theme "${themeKey}" not found.`);
             res.status(404).json({ error: 'Theme not found' });
@@ -75,7 +76,7 @@ export async function searchLearningPaths(req: Request, res: Response): Promise<
         const apiUrl = `${DWENGO_API_BASE}/learningPath/search`;
         const params = { all: query, language };
 
-        const searchResults = await fetchWithLogging<any>(apiUrl, `Search learning paths with query "${query}"`, params);
+        const searchResults = await fetchWithLogging<LearningPath[]>(apiUrl, `Search learning paths with query "${query}"`, params);
         res.json(searchResults ?? []);
     } catch (error) {
         console.error('❌ Unexpected error searching learning paths:', error);
