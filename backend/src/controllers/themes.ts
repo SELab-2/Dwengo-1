@@ -17,7 +17,7 @@ function loadTranslations(language: string): Translations {
         return yaml.load(yamlFile) as Translations;
     } catch (error) {
         console.error(
-            `Cant load for language: ${language}, fallen back on dutch`
+            `Cannot load translation for: ${language}, fallen back to Dutch`
         );
         console.error(error);
         const fallbackPath = path.join(process.cwd(), '_i18n', 'nl.yml');

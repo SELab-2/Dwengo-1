@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { DWENGO_API_BASE } from '../config/config.js';
+import { fetchWithLogging } from "../util/apiHelper.js";
 
 interface LearningObjectNode {
     _id: string;
@@ -18,7 +19,7 @@ function filterLearningObjectMetadata(data: any, htmlUrl: string) {
 
         title: data.title,
         htmlUrl,
-        // Html content object
+        // Url to fetch html content
         language: data.language,
         difficulty: data.difficulty,
         estimatedTime: data.estimated_time,
@@ -50,15 +51,18 @@ export async function getLearningObjectsFromPath(
 ) {
     try {
         const learningPathUrl = `${DWENGO_API_BASE}/learningPath/${hruid}/${language}`;
-        const learningPathResponse = await axios.get(learningPathUrl);
-        const nodes = learningPathResponse.data.nodes;
+        const learningPathData = await fetchWithLogging<{ nodes: LearningObjectNode[] }>(
+            learningPathUrl,
+            `Learning path for HRUID "${hruid}" in language "${language}"`
+        );
 
-        if (!nodes || nodes.length === 0) {
-            throw new Error('No learning objects found in this learning path.');
+        if (!learningPathData || !learningPathData.nodes || learningPathData.nodes.length === 0) {
+            console.error(`⚠️ WARNING: Learning path "${hruid}" exists but contains no learning objects.`);
+            return [];
         }
 
         return await Promise.all(
-            nodes.map(async (node: LearningObjectNode) => {
+            learningPathData.nodes.map(async (node: LearningObjectNode) => {
                 const metadataUrl = `${DWENGO_API_BASE}/learningObject/getMetadata?hruid=${node.learningobject_hruid}&version=${node.version}&language=${language}`;
                 const metadataResponse = await axios.get(metadataUrl);
 
@@ -72,6 +76,5 @@ export async function getLearningObjectsFromPath(
         );
     } catch (error) {
         console.error('Error fetching learning objects:', error);
-        throw new Error('Failed to fetch learning objects.');
     }
 }

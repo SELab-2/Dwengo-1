@@ -8,6 +8,8 @@ import {
 
 const router = express.Router();
 
+// DWENGO learning paths
+
 // Query: hruids(list), language
 // Route to fetch learning paths based on a list of HRUIDs
 // Example: http://localhost:3000/learningPath?hruids=pn_werking&hruids=art1
