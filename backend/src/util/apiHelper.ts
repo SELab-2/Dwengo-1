@@ -1,4 +1,4 @@
-import axios, {AxiosRequestConfig} from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 
 // !!!! when logger is done -> change
 
@@ -14,8 +14,8 @@ import axios, {AxiosRequestConfig} from 'axios';
 export async function fetchWithLogging<T>(
     url: string,
     description: string,
-    params?: Record<string,any>
-):  Promise<T | null> {
+    params?: Record<string, any>
+): Promise<T | null> {
     try {
         const config: AxiosRequestConfig = params ? { params } : {};
 
@@ -24,12 +24,19 @@ export async function fetchWithLogging<T>(
     } catch (error: any) {
         if (error.response) {
             if (error.response.status === 404) {
-                console.error(`❌ ERROR: ${description} not found (404) at "${url}".`);
+                console.error(
+                    `❌ ERROR: ${description} not found (404) at "${url}".`
+                );
             } else {
-                console.error(`❌ ERROR: Failed to fetch ${description}. Status: ${error.response.status} - ${error.response.statusText} (URL: "${url}")`);
+                console.error(
+                    `❌ ERROR: Failed to fetch ${description}. Status: ${error.response.status} - ${error.response.statusText} (URL: "${url}")`
+                );
             }
         } else {
-            console.error(`❌ ERROR: Network or unexpected error when fetching ${description}:`, error.message);
+            console.error(
+                `❌ ERROR: Network or unexpected error when fetching ${description}:`,
+                error.message
+            );
         }
         return null;
     }

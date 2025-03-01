@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getLearningObjectsFromPath } from '../services/learningObjects.js';
-import {FALLBACK_LANG} from "../config";
+import { FALLBACK_LANG } from '../config';
 
 export async function getAllLearningObjects(
     req: Request,

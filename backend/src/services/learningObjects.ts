@@ -1,10 +1,16 @@
 import { DWENGO_API_BASE } from '../config.js';
-import { fetchWithLogging } from "../util/apiHelper.js";
-import {FilteredLearningObject, LearningObjectMetadata, LearningObjectNode} from "../interfaces/learningPath.js";
-import {fetchLearningPaths} from "./learningPaths.js";
+import { fetchWithLogging } from '../util/apiHelper.js';
+import {
+    FilteredLearningObject,
+    LearningObjectMetadata,
+    LearningObjectNode,
+} from '../interfaces/learningPath.js';
+import { fetchLearningPaths } from './learningPaths.js';
 
-
-function filterLearningObjectMetadata(data: LearningObjectMetadata, htmlUrl: string) : FilteredLearningObject {
+function filterLearningObjectMetadata(
+    data: LearningObjectMetadata,
+    htmlUrl: string
+): FilteredLearningObject {
     return {
         key: data.hruid, // Hruid learningObject (not path)
         _id: data._id,
@@ -31,12 +37,22 @@ function filterLearningObjectMetadata(data: LearningObjectMetadata, htmlUrl: str
 export async function getLearningObjectsFromPath(
     hruid: string,
     language: string
-):  Promise<FilteredLearningObject[]> {
+): Promise<FilteredLearningObject[]> {
     try {
-        const learningPathResponse = await fetchLearningPaths([hruid], language, `Learning path for HRUID "${hruid}"`);
+        const learningPathResponse = await fetchLearningPaths(
+            [hruid],
+            language,
+            `Learning path for HRUID "${hruid}"`
+        );
 
-        if (!learningPathResponse.success || !learningPathResponse.data || learningPathResponse.data.length === 0) {
-            console.error(`⚠️ WARNING: Learning path "${hruid}" exists but contains no learning objects.`);
+        if (
+            !learningPathResponse.success ||
+            !learningPathResponse.data ||
+            learningPathResponse.data.length === 0
+        ) {
+            console.error(
+                `⚠️ WARNING: Learning path "${hruid}" exists but contains no learning objects.`
+            );
             return [];
         }
 
@@ -50,12 +66,18 @@ export async function getLearningObjectsFromPath(
                     `Metadata for Learning Object HRUID "${node.learningobject_hruid}" (version ${node.version}, language ${language})`
                 );
 
-                if (!metadata) {return null;}
+                if (!metadata) {
+                    return null;
+                }
 
                 const htmlUrl = `${DWENGO_API_BASE}/learningObject/getRaw?hruid=${node.learningobject_hruid}&version=${node.version}&language=${language}`;
                 return filterLearningObjectMetadata(metadata, htmlUrl);
             })
-        ).then((objects) => {return objects.filter((obj): obj is FilteredLearningObject => {return obj !== null})});
+        ).then((objects) => {
+            return objects.filter((obj): obj is FilteredLearningObject => {
+                return obj !== null;
+            });
+        });
     } catch (error) {
         console.error('Error fetching learning objects:', error);
         return [];

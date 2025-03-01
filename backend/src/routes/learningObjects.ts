@@ -8,7 +8,7 @@ const router = express.Router();
 // Arg: hruid learningPath
 // Query: language
 // Route to fetch list of learning objects based on hruid of learning path
-// example: http://localhost:3000/learningObject/un_artificiele_intelligentie
+// Example: http://localhost:3000/learningObject/un_artificiele_intelligentie
 router.get('/:hruid', getAllLearningObjects);
 
 export default router;
