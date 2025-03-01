@@ -3,7 +3,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
-import { FALLBACK_LANG } from '../config';
+import { FALLBACK_LANG } from '../config.js';
 
 interface Translations {
     curricula_page: {
