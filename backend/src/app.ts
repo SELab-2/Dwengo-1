@@ -6,13 +6,13 @@ import themeRoutes from './routes/themes.js';
 import learningPathRoutes from './routes/learningPaths.js';
 import learningObjectRoutes from './routes/learningObjects.js';
 
-import studentRouter from './routes/student';
-import groupRouter from './routes/group';
-import assignmentRouter from './routes/assignment';
-import submissionRouter from './routes/submission';
-import classRouter from './routes/class';
-import questionRouter from './routes/question';
-import loginRouter from './routes/login';
+import studentRouter from './routes/student.js';
+import groupRouter from './routes/group.js';
+import assignmentRouter from './routes/assignment.js';
+import submissionRouter from './routes/submission.js';
+import classRouter from './routes/class.js';
+import questionRouter from './routes/question.js';
+import loginRouter from './routes/login.js';
 
 const app: Express = express();
 const port: string | number = getNumericEnvVar(EnvVars.Port);
