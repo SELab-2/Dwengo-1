@@ -1,7 +1,7 @@
 import express from 'express'
 const router = express.Router();
 
-// root endpoint used to search objects
+// Root endpoint used to search objects
 router.get('/', (req, res) => {
     res.json({
         teachers: [
@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
     });
 });
 
-// information about a teacher
+// Information about a teacher
 router.get('/:id', (req, res) => {
     res.json({
         id: req.params.id,
@@ -27,7 +27,7 @@ router.get('/:id', (req, res) => {
     });
 })
 
-// the questions students asked a teacher
+// The questions students asked a teacher
 router.get('/:id/questions', (req, res) => {
     res.json({
         questions: [
@@ -36,7 +36,7 @@ router.get('/:id/questions', (req, res) => {
     });
 });
 
-// invitations to other classes a teacher received
+// Invitations to other classes a teacher received
 router.get('/:id/invitations', (req, res) => {
     res.json({
         invitations: [
@@ -45,7 +45,7 @@ router.get('/:id/invitations', (req, res) => {
     });
 });
 
-// a list with ids of classes a teacher is in
+// A list with ids of classes a teacher is in
 router.get('/:id/classes', (req, res) => {
     res.json({
         classes: [

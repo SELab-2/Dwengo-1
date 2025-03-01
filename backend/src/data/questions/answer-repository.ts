@@ -9,7 +9,7 @@ export class AnswerRepository extends DwengoEntityRepository<Answer> {
         author: Teacher;
         content: string;
     }): Promise<Answer> {
-        let answerEntity = new Answer();
+        const answerEntity = new Answer();
         answerEntity.toQuestion = answer.toQuestion;
         answerEntity.author = answer.author;
         answerEntity.content = answer.content;

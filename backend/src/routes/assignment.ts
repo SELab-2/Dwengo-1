@@ -1,7 +1,7 @@
 import express from 'express'
 const router = express.Router();
 
-// root endpoint used to search objects
+// Root endpoint used to search objects
 router.get('/', (req, res) => {
     res.json({
         assignments: [
@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
     });
 });
 
-// information about an assignment with id 'id'
+// Information about an assignment with id 'id'
 router.get('/:id', (req, res) => {
     res.json({
         id: req.params.id,

@@ -4,6 +4,6 @@ import { Class } from '../classes/class.entity.js';
 
 @Entity()
 export class Teacher extends User {
-    @ManyToMany(() => Class)
+    @ManyToMany(() => {return Class})
     classes!: Collection<Class>;
 }
