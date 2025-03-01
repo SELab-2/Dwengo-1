@@ -29,8 +29,6 @@
     const changeLanguage = (langCode: string) => {
         console.log(langCode);
     };
-
-    console.log(userId, role, initials, languages, changeLanguage);
 </script>
 
 <template>
