@@ -41,14 +41,14 @@ router.get('/:id/submissions', (req, res) => {
     });
 })
 
-  
+
 // the list of assignments a student has
 router.get('/:id/assignments', (req, res) => {
     res.json({
         assignments: [ '0' ],
     });
 })
-  
+
 // the list of groups a student is in
 router.get('/:id/groups', (req, res) => {
     res.json({

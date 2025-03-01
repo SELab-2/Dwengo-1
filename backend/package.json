@@ -20,6 +20,8 @@
         "@mikro-orm/reflection": "6.4.6",
         "dotenv": "^16.4.7",
         "express": "^5.0.1",
+        "express-jwt": "^8.5.1",
+        "jwks-rsa": "^3.1.0",
         "uuid": "^11.1.0",
         "js-yaml": "^4.1.0",
         "@types/js-yaml": "^4.0.9"

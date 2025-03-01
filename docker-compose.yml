@@ -9,6 +9,24 @@ services:
       - "5431:5432"
     volumes:
         - postgres_data:/var/lib/postgresql/data
-
+  idp: # Bron: https://medium.com/@fingervinicius/easy-running-keycloak-with-docker-compose-b0d7a4ee2358
+      image: quay.io/keycloak/keycloak:latest
+      environment:
+          KC_HOSTNAME: localhost
+          KC_HOSTNAME_PORT: 7080
+          KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
+          KEYCLOAK_ADMIN: admin
+          KEYCLOAK_ADMIN_PASSWORD: admin
+          KC_HEALTH_ENABLED: "true"
+          KC_LOG_LEVEL: info
+      healthcheck:
+          test: [ "CMD", "curl", "-f", "http://localhost:7080/health/ready" ]
+          interval: 15s
+          timeout: 2s
+          retries: 15
+      command: ["start-dev", "--http-port", "7080", "--https-port", "7443"]
+      ports:
+       - "7080:7080"
+       - "7443:7443"
 volumes:
     postgres_data:

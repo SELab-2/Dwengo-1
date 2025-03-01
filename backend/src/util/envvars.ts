@@ -1,5 +1,8 @@
 const PREFIX = 'DWENGO_';
 const DB_PREFIX = PREFIX + 'DB_';
+const IDP_PREFIX = PREFIX + 'AUTH_';
+const STUDENT_IDP_PREFIX = IDP_PREFIX + 'STUDENT_';
+const TEACHER_IDP_PREFIX = IDP_PREFIX + 'TEACHER_';
 
 type EnvVar = { key: string; required?: boolean; defaultValue?: any };
 
@@ -11,6 +14,11 @@ export const EnvVars: { [key: string]: EnvVar } = {
     DbUsername: { key: DB_PREFIX + 'USERNAME', required: true },
     DbPassword: { key: DB_PREFIX + 'PASSWORD', required: true },
     DbUpdate: { key: DB_PREFIX + 'UPDATE', defaultValue: false },
+    IdpStudentUrl: { key: STUDENT_IDP_PREFIX + 'URL', required: true },
+    IdpStudentJwksEndpoint: { key: STUDENT_IDP_PREFIX + 'JWKS_ENDPOINT', required: true },
+    IdpTeacherUrl: { key: TEACHER_IDP_PREFIX + 'URL', required: true },
+    IdpTeacherJwksEndpoint: { key: TEACHER_IDP_PREFIX + 'JWKS_ENDPOINT', required: true },
+    IdpAudience: { key: IDP_PREFIX + 'AUDIENCE', defaultValue: 'account' }
 } as const;
 
 /**

@@ -11,6 +11,7 @@ import submissionRouter from './routes/submission.js';
 import classRouter from './routes/class.js';
 import questionRouter from './routes/question.js';
 import loginRouter from './routes/login.js';
+import {authenticateUser} from "./middleware/auth/auth";
 
 const app: Express = express();
 const port: string | number = getNumericEnvVar(EnvVars.Port);
@@ -22,6 +23,8 @@ app.get('/', (_, res: Response) => {
         message: 'Hello Dwengo!🚀',
     });
 });
+
+app.use(authenticateUser);
 
 app.use('/student', studentRouter);
 app.use('/group', groupRouter);
