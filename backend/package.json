@@ -21,7 +21,6 @@
         "dotenv": "^16.4.7",
         "express": "^5.0.1",
         "uuid": "^11.1.0",
-        "express": "^5.0.1",
         "js-yaml": "^4.1.0",
         "@types/js-yaml": "^4.0.9"
     },
