@@ -1,8 +1,7 @@
 import express from 'express';
 import {
-    getLearningPathsFromIds,
+    getLearningPaths,
     getLearningPathsByTheme,
-    getAllLearningPaths,
     searchLearningPaths,
 } from '../controllers/learningPaths.js';
 
@@ -10,14 +9,15 @@ const router = express.Router();
 
 // DWENGO learning paths
 
-// Query: hruids(list), language
-// Route to fetch learning paths based on a list of HRUIDs
-// Example: http://localhost:3000/learningPath?hruids=pn_werking&hruids=art1
-router.get('/', getLearningPathsFromIds);
+// Unified route for fetching learning paths
+// Route 1: Query: hruid (list), language
+// Fetch learning paths based on hruid list
+// Example 1: http://localhost:3000/learningPath?hruids=pn_werking&hruids=art1
 
-// Query: language
-// Route to fetch all possible learning paths
-router.get('/all', getAllLearningPaths);
+// Route 2: no query
+// Fetch all learning paths
+// Example 2: http://localhost:3000/learningPath (
+router.get('/', getLearningPaths);
 
 // Query: language
 // Route to fetch learning paths based on a searchterm
