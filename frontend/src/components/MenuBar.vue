@@ -1,50 +1,36 @@
 <script setup lang="ts">
-    import { ref, type Ref } from "vue";
+    import { ref } from "vue";
     import { useRoute } from "vue-router";
     import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
 
     const route = useRoute();
 
-    type Language = {
-        name: string;
-        code: string;
-    };
-
-    declare global {
-        interface Window {
-            userId: string;
-            role: string;
-            name: string;
-            initials: string;
-            languages: Ref<Language[]>;
-            changeLanguage: (langCode: string) => void;
-        }
-    }
-
     // Instantiate variables to use in html to render right
     // Links and content dependent on the role (student or teacher)
     const isTeacher = route.path.includes("teacher");
 
-    window.userId = route.params.id as string;
+    const userId = route.params.id as string;
 
-    window.role = isTeacher ? "teacher" : "student";
-    window.name = "Kurt Cobain";
-    window.initials = window.name
+    const role = isTeacher ? "teacher" : "student";
+    const name = "Kurt Cobain";
+    const initials = name
         .split(" ")
         .map((n) => {
             return n[0];
         })
         .join("");
 
-    window.languages = ref<Language[]>([
+    const languages = ref([
         { name: "English", code: "en" },
         { name: "Nederlands", code: "nl" },
     ]);
 
     // Logic to change the language of the website to the selected language
-    window.changeLanguage = (langCode: string) => {
+    const changeLanguage = (langCode: string) => {
         console.log(langCode);
     };
+
+    console.log(userId, role, initials, languages, changeLanguage);
 </script>
 
 <template>
