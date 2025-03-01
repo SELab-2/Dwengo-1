@@ -15,21 +15,22 @@ function config(testingMode: boolean = false): Options {
 
             // Workaround: vitest: `TypeError: Unknown file extension ".ts"` (ERR_UNKNOWN_FILE_EXTENSION)
             // (see https://mikro-orm.io/docs/guide/project-setup#testing-the-endpoint)
-            dynamicImportProvider: (id) => {return import(id)},
+            dynamicImportProvider: (id) => {
+                return import(id);
+            },
         };
-    } 
-        return {
-            driver: PostgreSqlDriver,
-            host: getEnvVar(EnvVars.DbHost),
-            port: getNumericEnvVar(EnvVars.DbPort),
-            dbName: getEnvVar(EnvVars.DbName),
-            user: getEnvVar(EnvVars.DbUsername),
-            password: getEnvVar(EnvVars.DbPassword),
-            entities: entities,
-            entitiesTs: entitiesTs,
-            debug: true,
-        };
-    
+    }
+    return {
+        driver: PostgreSqlDriver,
+        host: getEnvVar(EnvVars.DbHost),
+        port: getNumericEnvVar(EnvVars.DbPort),
+        dbName: getEnvVar(EnvVars.DbName),
+        user: getEnvVar(EnvVars.DbUsername),
+        password: getEnvVar(EnvVars.DbPassword),
+        entities: entities,
+        entitiesTs: entitiesTs,
+        debug: true,
+    };
 }
 
 export default config;

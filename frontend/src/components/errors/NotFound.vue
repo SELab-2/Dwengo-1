@@ -1,11 +1,7 @@
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <template>
     <b>404 - Page Not Found</b>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
