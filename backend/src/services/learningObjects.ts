@@ -1,70 +1,51 @@
-import axios from 'axios';
 import { DWENGO_API_BASE } from '../config/config.js';
 import { fetchWithLogging } from "../util/apiHelper.js";
+import {FilteredLearningObject, LearningObjectMetadata, LearningObjectNode} from "../interfaces/learningPath.js";
+import {fetchLearningPaths} from "./learningPaths.js";
 
-interface LearningObjectNode {
-    _id: string;
-    learningobject_hruid: string;
-    version: number;
-    language: string;
-}
 
-function filterLearningObjectMetadata(data: any, htmlUrl: string) {
+function filterLearningObjectMetadata(data: LearningObjectMetadata, htmlUrl: string) : FilteredLearningObject {
     return {
-        key: data.hruid,
-        // Hruid learningObject (not path)
+        key: data.hruid, // Hruid learningObject (not path)
         _id: data._id,
         uuid: data.uuid,
         version: data.version,
-
         title: data.title,
-        htmlUrl,
-        // Url to fetch html content
+        htmlUrl, // Url to fetch html content
         language: data.language,
         difficulty: data.difficulty,
         estimatedTime: data.estimated_time,
         available: data.available,
         teacherExclusive: data.teacher_exclusive,
-        educationalGoals: data.educational_goals,
-        // List with learningObjects
-        keywords: data.keywords,
-        // For search
-        description: data.description,
-        // For search (not an actual description)
+        educationalGoals: data.educational_goals, // List with learningObjects
+        keywords: data.keywords, // For search
+        description: data.description, // For search (not an actual description)
         targetAges: data.target_ages,
-        contentType: data.content_type,
-        // Text/plain, text/md, image/image-block,
-        // Image/image/, audio/mpeg or extern
-        contentLocation: data.content_location,
-        // If content type extern
-
-        // Skos concepts needed ??
-        // Return value needed ??
-        // Callback_url to send response
-        // Callback_scheme
+        contentType: data.content_type, // Markdown, image, audio, etc.
+        contentLocation: data.content_location, // If content type extern
+        skosConcepts: data.skos_concepts,
+        returnValue: data.return_value, // Callback response information
     };
 }
 
 export async function getLearningObjectsFromPath(
     hruid: string,
     language: string
-) {
+):  Promise<FilteredLearningObject[]> {
     try {
-        const learningPathUrl = `${DWENGO_API_BASE}/learningPath/${hruid}/${language}`;
-        const learningPathData = await fetchWithLogging<{ nodes: LearningObjectNode[] }>(
-            learningPathUrl,
-            `Learning path for HRUID "${hruid}" in language "${language}"`
-        );
+        const learningPathResponse = await fetchLearningPaths([hruid], language, `Learning path for HRUID "${hruid}"`);
 
-        if (!learningPathData || !learningPathData.nodes || learningPathData.nodes.length === 0) {
+        if (!learningPathResponse.success || !learningPathResponse.data || learningPathResponse.data.length === 0) {
             console.error(`⚠️ WARNING: Learning path "${hruid}" exists but contains no learning objects.`);
             return [];
         }
 
+        const nodes: LearningObjectNode[] = learningPathResponse.data[0].nodes;
+
         return await Promise.all(
-            learningPathData.nodes.map(async (node: LearningObjectNode) => {
+            nodes.map(async (node) => {
                 const metadataUrl = `${DWENGO_API_BASE}/learningObject/getMetadata?hruid=${node.learningobject_hruid}&version=${node.version}&language=${language}`;
-                const metadata = await fetchWithLogging(
+                const metadata = await fetchWithLogging<LearningObjectMetadata>(
                     metadataUrl,
                     `Metadata for Learning Object HRUID "${node.learningobject_hruid}" (version ${node.version}, language ${language})`
                 );
@@ -74,8 +55,9 @@ export async function getLearningObjectsFromPath(
                 const htmlUrl = `${DWENGO_API_BASE}/learningObject/getRaw?hruid=${node.learningobject_hruid}&version=${node.version}&language=${language}`;
                 return filterLearningObjectMetadata(metadata, htmlUrl);
             })
-        );
+        ).then((objects) => objects.filter((obj): obj is FilteredLearningObject => obj !== null));
     } catch (error) {
         console.error('Error fetching learning objects:', error);
+        return [];
     }
 }

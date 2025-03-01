@@ -1,7 +1,7 @@
 export interface LearningPathResponse {
     success: boolean;
     source: string;
-    data: any[] | null;
+    data: LearningPath[] | null;
     message?: string;
 }
 
@@ -22,8 +22,7 @@ export interface LearningPath {
     __order: number;
 }
 
-
-interface LearningObjectNode {
+export interface LearningObjectNode {
     _id: string;
     learningobject_hruid: string;
     version: number;
@@ -34,7 +33,7 @@ interface LearningObjectNode {
     updatedAt: string;
 }
 
-interface Transition {
+export interface Transition {
     default: boolean;
     _id: string;
     next: {
@@ -43,4 +42,57 @@ interface Transition {
         version: number;
         language: string;
     };
+}
+
+export interface LearningObjectMetadata {
+    _id: string;
+    uuid: string;
+    hruid: string;
+    version: number;
+    language: string;
+    title: string;
+    description: string;
+    difficulty: number;
+    estimated_time: number;
+    available: boolean;
+    teacher_exclusive: boolean;
+    educational_goals: EducationalGoal[];
+    keywords: string[];
+    target_ages: number[];
+    content_type: string; // Markdown, image, etc.
+    content_location?: string;
+    skos_concepts?: string[];
+    return_value?: ReturnValue;
+}
+
+export interface EducationalGoal {
+    source: string;
+    id: string;
+}
+
+export interface ReturnValue {
+    callback_url: string;
+    callback_schema: Record<string, any>;
+}
+
+export interface FilteredLearningObject {
+    key: string;
+    _id: string;
+    uuid: string;
+    version: number;
+    title: string;
+    htmlUrl: string;
+    language: string;
+    difficulty: number;
+    estimatedTime: number;
+    available: boolean;
+    teacherExclusive: boolean;
+    educationalGoals: EducationalGoal[];
+    keywords: string[];
+    description: string;
+    targetAges: number[];
+    contentType: string;
+    contentLocation?: string;
+    skosConcepts?: string[];
+    returnValue?: ReturnValue;
 }
