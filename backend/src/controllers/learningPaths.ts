@@ -1,100 +1,68 @@
 import { Request, Response } from 'express';
-import axios from 'axios';
 import { themes } from '../data/themes.js';
 import { DWENGO_API_BASE } from '../config/config.js';
+import { fetchWithLogging } from "../util/apiHelper.js";
+import { fetchLearningPaths } from "../services/learningPaths.js";
 
 /**
- * Fetch learning paths for a given list of HRUIDs.
- * This function sends a request to the Dwengo API with the provided HRUIDs.
+ * Fetch learning paths based on HRUIDs or return all if no HRUIDs are provided.
+ * - If `hruids` are given -> fetch specific learning paths.
+ * - If `hruids` is missing -> return all available learning paths.
  */
-export async function getLearningPathsFromIds(
-    req: Request,
-    res: Response
-): Promise<void> {
+export async function getLearningPaths(req: Request, res: Response): Promise<void> {
     try {
-        const { hruids } = req.query;
-        const language = (req.query.language as string) || 'nl'; // Default to Dutch
+        const hruids = req.query.hruids; // Can be string or array
+        const language = (req.query.language as string) || 'nl';
 
-        if (!hruids) {
-            res.status(400).json({
-                error: 'Missing required parameter: hruids',
-            });
-            return;
+        let hruidList: string[] = [];
+
+        if (hruids) {
+            hruidList = Array.isArray(hruids) ? hruids.map(String) : [String(hruids)];
+        } else {
+            // If no hruids are provided, fetch ALL learning paths
+            hruidList = themes.flatMap((theme) => theme.hruids);
         }
 
-        // Convert the input to an array if it's a string
-        const hruidList = Array.isArray(hruids) ? hruids : [hruids];
+        const learningPaths = await fetchLearningPaths(hruidList, language, `HRUIDs: ${hruidList.join(', ')}`);
 
-        // Request learning paths from Dwengo API
-        const response = await axios.get(
-            `${DWENGO_API_BASE}/learningPath/getPathsFromIdList`,
-            {
-                params: {
-                    pathIdList: JSON.stringify({ hruids: hruidList }),
-                    language,
-                },
-            }
-        );
-
-        res.json(response.data);
+        res.json(learningPaths);
     } catch (error) {
-        console.error('Error fetching learning paths:', error);
+        console.error('❌ Unexpected error fetching learning paths:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 }
 
+
 /**
  * Fetch all learning paths for a specific theme.
- * First retrieves the HRUIDs associated with the theme,
- * then fetches the corresponding learning paths from the Dwengo API.
  */
-export async function getLearningPathsByTheme(
-    req: Request,
-    res: Response
-): Promise<void> {
+export async function getLearningPathsByTheme(req: Request, res: Response): Promise<void> {
     try {
         const themeKey = req.params.theme;
-        const language = (req.query.language as string) || 'nl'; // Default to Dutch
+        const language = (req.query.language as string) || 'nl';
 
-        // Find the theme by its title
-        const theme = themes.find((t) => {
-            return t.title === themeKey;
-        });
-
+        const theme = themes.find((t) => t.title === themeKey);
         if (!theme) {
+            console.error(`⚠️ WARNING: Theme "${themeKey}" not found.`);
             res.status(404).json({ error: 'Theme not found' });
             return;
         }
 
-        // Extract HRUIDs from the theme
-        const hruidList = theme.hruids;
-
-        // Request learning paths from Dwengo API using the extracted HRUIDs
-        const response = await axios.get(
-            `${DWENGO_API_BASE}/learningPath/getPathsFromIdList`,
-            {
-                params: {
-                    pathIdList: JSON.stringify({ hruids: hruidList }),
-                    language,
-                },
-            }
-        );
-
+        const response = await fetchLearningPaths(theme.hruids, language, `theme "${themeKey}"`);
         res.json({
             theme: themeKey,
-            hruids: hruidList,
-            learningPaths: response.data,
+            hruids: theme.hruids,
+            ...response,
         });
     } catch (error) {
-        console.error('Error fetching learning paths for theme:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('❌ Unexpected error fetching learning paths by theme:', error);
     }
 }
 
-export async function searchLearningPaths(
-    req: Request,
-    res: Response
-): Promise<void> {
+/**
+ * Search learning paths by query.
+ */
+export async function searchLearningPaths(req: Request, res: Response): Promise<void> {
     try {
         const query = req.query.query as string;
         const language = (req.query.language as string) || 'nl';
@@ -104,51 +72,12 @@ export async function searchLearningPaths(
             return;
         }
 
-        const response = await axios.get(
-            `${DWENGO_API_BASE}/learningPath/search`,
-            {
-                params: { all: query, language },
-            }
-        );
+        const apiUrl = `${DWENGO_API_BASE}/learningPath/search`;
+        const params = { all: query, language };
 
-        res.json(response.data);
+        const searchResults = await fetchWithLogging<any>(apiUrl, `Search learning paths with query "${query}"`, params);
+        res.json(searchResults ?? []);
     } catch (error) {
-        console.error('Error searching learning paths:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-}
-
-export async function getAllLearningPaths(
-    req: Request,
-    res: Response
-): Promise<void> {
-    try {
-        const language = (req.query.language as string) || 'nl'; // Default to Dutch
-
-        // Collect all HRUIDs from all themes
-        const allHruids: string[] = themes.flatMap((theme) => {
-            return theme.hruids;
-        });
-
-        if (allHruids.length === 0) {
-            res.status(404).json({ error: 'No HRUIDs found in themes' });
-            return;
-        }
-
-        // Call the Dwengo API with all HRUIDs combined
-        const response = await axios.get(
-            `${DWENGO_API_BASE}/learningPath/getPathsFromIdList`,
-            {
-                params: {
-                    pathIdList: JSON.stringify({ hruids: allHruids }),
-                    language,
-                },
-            }
-        );
-
-        res.json(response.data);
-    } catch (error) {
-        console.error('Error fetching all learning paths:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('❌ Unexpected error searching learning paths:', error);
     }
 }

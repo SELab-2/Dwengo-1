@@ -64,14 +64,15 @@ export async function getLearningObjectsFromPath(
         return await Promise.all(
             learningPathData.nodes.map(async (node: LearningObjectNode) => {
                 const metadataUrl = `${DWENGO_API_BASE}/learningObject/getMetadata?hruid=${node.learningobject_hruid}&version=${node.version}&language=${language}`;
-                const metadataResponse = await axios.get(metadataUrl);
+                const metadata = await fetchWithLogging(
+                    metadataUrl,
+                    `Metadata for Learning Object HRUID "${node.learningobject_hruid}" (version ${node.version}, language ${language})`
+                );
+
+                if (!metadata) return null;
 
                 const htmlUrl = `${DWENGO_API_BASE}/learningObject/getRaw?hruid=${node.learningobject_hruid}&version=${node.version}&language=${language}`;
-
-                return filterLearningObjectMetadata(
-                    metadataResponse.data,
-                    htmlUrl
-                );
+                return filterLearningObjectMetadata(metadata, htmlUrl);
             })
         );
     } catch (error) {
