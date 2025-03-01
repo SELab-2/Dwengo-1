@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Image Test</title>
+    <script>
+        function convertBase64ToImageSrc(base64String) {
+            return base64String.startsWith("data:image")
+                ? base64String
+                : `data:image/png;base64,${base64String}`;
+        }
+
+        async function loadImage() {
+            try {
+                const response = await fetch('base64Sample.txt');
+                const base64String = await response.text();
+
+                if (!base64String.trim()) {
+                    console.error("❌ No Base64 data found in the file");
+                    return;
+                }
+
+                console.log("📸 Base64 Data (first 50 chars):", base64String.substring(0, 50) + "...");
+
+                const imgElement = document.getElementById('imagePreview');
+                imgElement.src = convertBase64ToImageSrc(base64String);
+                imgElement.alt = "Base64 Test Image";
+
+                // Handle load event
+                imgElement.onload = () => {
+                    console.log("✅ Image loaded successfully!");
+                };
+
+                imgElement.onerror = () => {
+                    console.error("❌ Image failed to load!");
+                };
+
+            } catch (error) {
+                console.error("❌ Error fetching Base64 image:", error);
+            }
+        }
+
+        window.onload = loadImage;
+    </script>
+</head>
+<body>
+<h1>Base64 Image Test</h1>
+<p>This page will fetch and display a Base64 image from <code>tests/base64.txt</code>.</p>
+<img id="imagePreview" src="" alt="Loading image..." width="300">
+</body>
+</html>
