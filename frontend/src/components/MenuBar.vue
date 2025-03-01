@@ -1,30 +1,50 @@
 <script setup lang="ts">
-    import { computed } from "vue";
+    import { ref, type Ref } from "vue";
     import { useRoute } from "vue-router";
-    import { ref } from "vue";
-    import dwengo_logo from "../../../assets/img/dwengo-groen-zwart.svg";
+    import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
 
     const route = useRoute();
 
-    // instantiate variables to use in html to render right
-    // links and content dependent on the role (student or teacher)
-    const isTeacher = route.path.includes("teacher");
-    const userId = computed(() => route.params.id as string);
+    type Language = {
+        name: string;
+        code: string;
+    };
 
-    const role = isTeacher ? "teacher" : "student";
-    const name = "Kurt Cobain";
-    const initials = name
+    declare global {
+        interface Window {
+            userId: string;
+            role: string;
+            name: string;
+            initials: string;
+            languages: Ref<Language[]>;
+            changeLanguage: (langCode: string) => void;
+        }
+    }
+
+    // Instantiate variables to use in html to render right
+    // Links and content dependent on the role (student or teacher)
+    const isTeacher = route.path.includes("teacher");
+
+    window.userId = route.params.id as string;
+
+    window.role = isTeacher ? "teacher" : "student";
+    window.name = "Kurt Cobain";
+    window.initials = window.name
         .split(" ")
-        .map((n) => n[0])
+        .map((n) => {
+            return n[0];
+        })
         .join("");
 
-    const languages = ref([
+    window.languages = ref<Language[]>([
         { name: "English", code: "en" },
         { name: "Nederlands", code: "nl" },
     ]);
 
-    // logic to change the language of the website to the selected language
-    const changeLanguage = (langCode: string) => {};
+    // Logic to change the language of the website to the selected language
+    window.changeLanguage = (langCode: string) => {
+        console.log(langCode);
+    };
 </script>
 
 <template>
@@ -39,7 +59,7 @@
                         >
                             <img
                                 class="dwengo_logo"
-                                :src="dwengo_logo"
+                                :src="dwengoLogo"
                             />
                             <p class="caption">
                                 {{ role }}
