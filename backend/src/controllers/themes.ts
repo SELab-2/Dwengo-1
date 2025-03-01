@@ -3,6 +3,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
+import {FALLBACK_LANG} from "../config";
 
 interface Translations {
     curricula_page: {
@@ -26,7 +27,7 @@ function loadTranslations(language: string): Translations {
 }
 
 export function getThemes(req: Request, res: Response) {
-    const language = (req.query.language as string)?.toLowerCase() || 'nl';
+    const language = (req.query.language as string)?.toLowerCase() || FALLBACK_LANG;
     const translations = loadTranslations(language);
 
     const themeList = themes.map((theme) => {

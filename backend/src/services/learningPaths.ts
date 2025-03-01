@@ -1,5 +1,5 @@
 import { fetchWithLogging } from "../util/apiHelper.js";
-import { DWENGO_API_BASE } from "../config/config.js";
+import { DWENGO_API_BASE } from "../config.js";
 import {LearningPath, LearningPathResponse} from "../interfaces/learningPath.js";
 
 export async function fetchLearningPaths(

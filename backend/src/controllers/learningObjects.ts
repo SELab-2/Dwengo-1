@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { getLearningObjectsFromPath } from '../services/learningObjects.js';
+import {FALLBACK_LANG} from "../config";
 
 export async function getAllLearningObjects(
     req: Request,
@@ -7,7 +8,7 @@ export async function getAllLearningObjects(
 ): Promise<void> {
     try {
         const { hruid } = req.params;
-        const language = (req.query.language as string) || 'nl'; // Default to Dutch;
+        const language = (req.query.language as string) || FALLBACK_LANG;
 
         if (!language) {
             res.status(400).json({

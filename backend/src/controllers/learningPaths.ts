@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
-import { DWENGO_API_BASE } from '../config/config.js';
+import {DWENGO_API_BASE, FALLBACK_LANG} from '../config.js';
 import { fetchWithLogging } from "../util/apiHelper.js";
 import { fetchLearningPaths } from "../services/learningPaths.js";
 
@@ -12,7 +12,7 @@ import { fetchLearningPaths } from "../services/learningPaths.js";
 export async function getLearningPaths(req: Request, res: Response): Promise<void> {
     try {
         const hruids = req.query.hruids; // Can be string or array
-        const language = (req.query.language as string) || 'nl';
+        const language = (req.query.language as string) || FALLBACK_LANG;
 
         let hruidList: string[] = [];
 
@@ -39,7 +39,7 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
 export async function getLearningPathsByTheme(req: Request, res: Response): Promise<void> {
     try {
         const themeKey = req.params.theme;
-        const language = (req.query.language as string) || 'nl';
+        const language = (req.query.language as string) || FALLBACK_LANG;
 
         const theme = themes.find((t) => t.title === themeKey);
         if (!theme) {
@@ -65,7 +65,7 @@ export async function getLearningPathsByTheme(req: Request, res: Response): Prom
 export async function searchLearningPaths(req: Request, res: Response): Promise<void> {
     try {
         const query = req.query.query as string;
-        const language = (req.query.language as string) || 'nl';
+        const language = (req.query.language as string) || FALLBACK_LANG;
 
         if (!query) {
             res.status(400).json({ error: 'Missing search query' });

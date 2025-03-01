@@ -1,4 +1,4 @@
-import { DWENGO_API_BASE } from '../config/config.js';
+import { DWENGO_API_BASE } from '../config.js';
 import { fetchWithLogging } from "../util/apiHelper.js";
 import {FilteredLearningObject, LearningObjectMetadata, LearningObjectNode} from "../interfaces/learningPath.js";
 import {fetchLearningPaths} from "./learningPaths.js";
