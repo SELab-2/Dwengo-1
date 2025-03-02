@@ -16,7 +16,6 @@ export function responseTimeLogger(req: Request, res: Response, time: number) {
         status: status,
         responseTime: Number(time),
         labels: {
-            origin: 'api',
             type: 'responseTime',
         },
     });

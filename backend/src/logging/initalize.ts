@@ -1,43 +1,45 @@
 import { createLogger, format, Logger, transports } from 'winston';
 import LokiTransport from 'winston-loki';
 import { LokiLabels } from 'loki-logger-ts';
+import { LOG_LEVEL, LOKI_HOST } from '../config.js';
 
-const LoggingLevel = 'development' === process.env.NODE_ENV ? 'debug' : 'info';
-const Host = 'http://localhost:3102';
 const Labels: LokiLabels = {
     source: 'Dwengo-Backend',
-    job: 'Dwengo-Backend',
+    service: 'API',
     host: 'localhost',
 };
 
 let logger: Logger;
 
-function initializeLogger() {
+function initializeLogger(): Logger {
     if (logger !== undefined) {
         return logger;
     }
 
     const lokiTransport: LokiTransport = new LokiTransport({
-        host: Host,
+        host: LOKI_HOST,
         labels: Labels,
-        level: LoggingLevel,
+        level: LOG_LEVEL,
         json: true,
         format: format.combine(format.timestamp(), format.json()),
         onConnectionError: (err) => {
+            // eslint-disable-next-line no-console
             console.error(`Connection error: ${err}`);
         },
     });
 
     const consoleTransport = new transports.Console({
-        level: LoggingLevel,
-        format: format.combine(format.simple(), format.colorize()),
+        level: LOG_LEVEL,
+        format: format.combine(format.cli(), format.colorize()),
     });
 
     logger = createLogger({
         transports: [lokiTransport, consoleTransport],
     });
 
-    logger.debug('Logger initialized');
+    logger.debug(
+        `Logger initialized with level ${LOG_LEVEL}, Loki host ${LOKI_HOST}`
+    );
     return logger;
 }
 
