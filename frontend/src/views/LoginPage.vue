@@ -17,6 +17,8 @@
                         <li class="title">login</li>
                         <li>
                             <v-btn
+                                density="comfortable"
+                                size="large"
                                 class="button"
                                 :to="`/teacher/${userId}`"
                             >
@@ -30,6 +32,8 @@
                         </li>
                         <li>
                             <v-btn
+                                density="comfortable"
+                                size="large"
                                 class="button"
                                 :to="`/student/${userId}`"
                             >
@@ -63,12 +67,11 @@
 
     ul {
         list-style: none;
-        align-items: center;
+        text-align: center;
     }
 
     li {
-        padding: 20px;
-        align-items: center;
+        padding: 10px;
     }
 
     .button {
@@ -77,7 +80,7 @@
 
     .container {
         background-color: white;
-        width: 350px;
+        width: 300px;
         height: 400px;
     }
 
