@@ -1,6 +1,6 @@
 import { DefaultLogger, LogContext, LoggerNamespace } from '@mikro-orm/core';
 import { Logger } from 'winston';
-import { getLogger } from './initalize';
+import { getLogger } from './initalize.js';
 import { LokiLabels } from 'loki-logger-ts';
 
 export class MikroOrmLogger extends DefaultLogger {
