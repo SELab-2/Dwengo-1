@@ -24,8 +24,8 @@ app.get('/', (_, res: Response) => {
     });
 });
 
-app.use(authenticateUser);
 app.use(cors);
+app.use(authenticateUser);
 
 app.use('/student', studentRouter);
 app.use('/group', groupRouter);

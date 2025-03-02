@@ -3,6 +3,7 @@ const DB_PREFIX = PREFIX + 'DB_';
 const IDP_PREFIX = PREFIX + 'AUTH_';
 const STUDENT_IDP_PREFIX = IDP_PREFIX + 'STUDENT_';
 const TEACHER_IDP_PREFIX = IDP_PREFIX + 'TEACHER_';
+const CORS_PREFIX = PREFIX + 'CORS_';
 
 type EnvVar = { key: string; required?: boolean; defaultValue?: any };
 
@@ -21,7 +22,8 @@ export const EnvVars: { [key: string]: EnvVar } = {
     IdpTeacherClientId: { key: TEACHER_IDP_PREFIX + 'CLIENT_ID', required: true },
     IdpTeacherJwksEndpoint: { key: TEACHER_IDP_PREFIX + 'JWKS_ENDPOINT', required: true },
     IdpAudience: { key: IDP_PREFIX + 'AUDIENCE', defaultValue: 'account' },
-    CorsAllowedOrigins: { key: PREFIX + 'CORS_ALLOWED_ORIGINS', defaultValue: ''}
+    CorsAllowedOrigins: { key: CORS_PREFIX + 'ALLOWED_ORIGINS', defaultValue: ''},
+    CorsAllowedHeaders: { key: CORS_PREFIX + 'ALLOWED_HEADERS', defaultValue: 'Authorization,Content-Type'}
 } as const;
 
 /**

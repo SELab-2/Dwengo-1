@@ -1,7 +1,8 @@
 import axios from "axios";
+import {apiConfig} from "@/config.ts";
 
 const apiClient = axios.create({
-    baseURL: window.location.hostname == "localhost" ? "http://localhost:3000" : window.location.origin,
+    baseURL: apiConfig.baseUrl,
     headers: {
         "Content-Type": "application/json",
     },
