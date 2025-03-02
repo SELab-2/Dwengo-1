@@ -7,12 +7,12 @@ import type {AuthState, Role, UserManagersForRoles} from "@/services/auth/auth-t
 import {User, UserManager} from "oidc-client-ts";
 import {loadAuthConfig} from "@/services/auth/auth-config-loader.ts";
 import authStorage from "./auth-storage.ts"
-import {useRouter} from "vue-router";
 import {loginRoute} from "@/config.ts";
 import apiClient from "@/services/api-client.ts";
+import router from "@/router";
+import type {AxiosError} from "axios";
 
 const authConfig = await loadAuthConfig();
-const router = useRouter();
 
 const userManagers: UserManagersForRoles = {
     student: new UserManager(authConfig.student),
@@ -115,11 +115,15 @@ apiClient.interceptors.request.use(async (reqConfig) => {
 // Registering interceptor to refresh the token when a request failed because it was expired.
 apiClient.interceptors.response.use(
     response => response,
-    async (error) => {
+    async (error: AxiosError<{message?: string}>) => {
         if (error.response?.status === 401) {
-            console.log("Access token expired, trying to refresh...");
-            await renewToken();
-            return apiClient(error.config); // Retry the request
+            if (error.response!.data.message === "token_expired") {
+                console.log("Access token expired, trying to refresh...");
+                await renewToken();
+                return apiClient(error.config!); // Retry the request
+            } else { // Apparently, the user got a 401 because he was not logged in yet at all. Redirect him to login.
+                await initiateLogin()
+            }
         }
         return Promise.reject(error);
     }
