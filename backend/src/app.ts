@@ -10,12 +10,12 @@ import assignmentRouter from './routes/assignment.js';
 import submissionRouter from './routes/submission.js';
 import classRouter from './routes/class.js';
 import questionRouter from './routes/question.js';
-import loginRouter from './routes/login.js';
+import authRouter from './routes/auth.js';
 import {authenticateUser} from "./middleware/auth/auth";
+import cors from "./middleware/cors";
 
 const app: Express = express();
 const port: string | number = getNumericEnvVar(EnvVars.Port);
-
 
 // TODO Replace with Express routes
 app.get('/', (_, res: Response) => {
@@ -25,6 +25,7 @@ app.get('/', (_, res: Response) => {
 });
 
 app.use(authenticateUser);
+app.use(cors);
 
 app.use('/student', studentRouter);
 app.use('/group', groupRouter);
@@ -32,8 +33,7 @@ app.use('/assignment', assignmentRouter);
 app.use('/submission', submissionRouter);
 app.use('/class', classRouter);
 app.use('/question', questionRouter);
-app.use('/login', loginRouter);
-
+app.use('/auth', authRouter);
 app.use('/theme', themeRoutes);
 
 async function startServer() {

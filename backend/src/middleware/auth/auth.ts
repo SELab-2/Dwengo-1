@@ -58,7 +58,6 @@ const verifyJwtToken = expressjwt({
  * Get an object with information about the authenticated user from a given authenticated request.
  */
 function getAuthenticationInfo(req: AuthenticatedRequest): AuthenticationInfo | undefined {
-    console.log("hi");
     if (!req.jwtPayload) {
         return;
     }
