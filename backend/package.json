@@ -11,15 +11,21 @@
         "format": "prettier --write src/",
         "format-check": "prettier --check src/",
         "lint": "eslint . --fix",
-        "test:unit": "vitest --run"
+        "test:unit": "vitest"
     },
     "dependencies": {
         "@mikro-orm/core": "^6.4.6",
         "@mikro-orm/postgresql": "^6.4.6",
         "@mikro-orm/reflection": "^6.4.6",
+        "@mikro-orm/sqlite": "6.4.6",
+        "@types/js-yaml": "^4.0.9",
+        "axios": "^1.8.1",
         "dotenv": "^16.4.7",
         "express": "^5.0.1",
+        "js-yaml": "^4.1.0",
+        "loki-logger-ts": "^1.0.2",
         "response-time": "^2.3.3",
+        "uuid": "^11.1.0",
         "winston": "^3.17.0",
         "winston-loki": "^6.1.3"
     },
