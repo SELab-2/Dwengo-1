@@ -44,3 +44,15 @@ export async function fetchLearningPaths(
         data: learningPaths,
     };
 }
+
+
+export async function searchLearningPaths(
+    query: string,
+    language: string
+):  Promise<LearningPath[]>  {
+    const apiUrl = `${DWENGO_API_BASE}/learningPath/search`;
+    const params = { all: query, language };
+
+    const searchResults = await fetchWithLogging<LearningPath[]>(apiUrl, `Search learning paths with query "${query}"`, params);
+    return searchResults ?? [];
+}
