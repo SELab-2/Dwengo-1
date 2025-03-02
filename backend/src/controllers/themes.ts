@@ -1,11 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
-import { Logger } from 'winston';
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
-import { getLogger } from '../logging/initalize.js';
+import { getLogger, Logger } from '../logging/initalize.js';
 
 const logger: Logger = getLogger();
 

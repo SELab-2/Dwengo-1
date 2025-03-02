@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { getLogger } from '../logging/initalize.js';
-import { Logger } from 'winston';
+import { getLogger, Logger } from '../logging/initalize.js';
 
 const logger: Logger = getLogger();
 

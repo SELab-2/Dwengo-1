@@ -12,10 +12,9 @@ import submissionRouter from './routes/submission.js';
 import classRouter from './routes/class.js';
 import questionRouter from './routes/question.js';
 import loginRouter from './routes/login.js';
-import { getLogger } from './logging/initalize.js';
+import { getLogger, Logger } from './logging/initalize.js';
 import { responseTimeLogger } from './logging/responseTimeLogger.js';
 import responseTime from 'response-time';
-import { Logger } from 'winston';
 import { EnvVars, getNumericEnvVar } from './util/envvars.js';
 
 const logger: Logger = getLogger();

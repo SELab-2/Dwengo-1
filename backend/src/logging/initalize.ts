@@ -1,7 +1,18 @@
-import { createLogger, format, Logger, transports } from 'winston';
+import {
+    createLogger,
+    format,
+    Logger as WinstonLogger,
+    transports,
+} from 'winston';
 import LokiTransport from 'winston-loki';
 import { LokiLabels } from 'loki-logger-ts';
 import { LOG_LEVEL, LOKI_HOST } from '../config.js';
+
+export class Logger extends WinstonLogger {
+    constructor() {
+        super();
+    }
+}
 
 const Labels: LokiLabels = {
     source: 'Dwengo-Backend',

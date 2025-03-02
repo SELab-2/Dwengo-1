@@ -1,5 +1,4 @@
-import { getLogger } from './initalize.js';
-import { Logger } from 'winston';
+import { getLogger, Logger } from './initalize.js';
 import { Request, Response } from 'express';
 
 export function responseTimeLogger(req: Request, res: Response, time: number) {

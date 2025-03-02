@@ -1,8 +1,7 @@
 import { EntityManager, MikroORM } from '@mikro-orm/core';
 import config from './mikro-orm.config.js';
 import { EnvVars, getEnvVar } from './util/envvars.js';
-import { getLogger } from './logging/initalize.js';
-import { Logger } from 'winston';
+import { getLogger, Logger } from './logging/initalize.js';
 
 let orm: MikroORM | undefined;
 export async function initORM(testingMode: boolean = false) {
