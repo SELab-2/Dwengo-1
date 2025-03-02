@@ -1,9 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
+import { Logger } from 'winston';
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
+import { getLogger } from '../logging/initalize.js';
+
+const logger: Logger = getLogger();
 
 interface Translations {
     curricula_page: {
@@ -17,10 +21,10 @@ function loadTranslations(language: string): Translations {
         const yamlFile = fs.readFileSync(filePath, 'utf8');
         return yaml.load(yamlFile) as Translations;
     } catch (error) {
-        console.error(
+        logger.error(
             `Cannot load translation for: ${language}, fallen back to Dutch`
         );
-        console.error(error);
+        logger.error(error);
         const fallbackPath = path.join(process.cwd(), '_i18n', 'nl.yml');
         return yaml.load(fs.readFileSync(fallbackPath, 'utf8')) as Translations;
     }

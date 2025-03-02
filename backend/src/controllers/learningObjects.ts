@@ -6,6 +6,7 @@ import {
 } from '../services/learningObjects.js';
 import { FALLBACK_LANG } from '../config.js';
 import { FilteredLearningObject } from '../interfaces/learningPath';
+import { getLogger } from '../logging/initalize';
 
 export async function getAllLearningObjects(
     req: Request,
@@ -33,7 +34,7 @@ export async function getAllLearningObjects(
 
         res.json(learningObjects);
     } catch (error) {
-        console.error('Error fetching learning objects:', error);
+        getLogger().error('Error fetching learning objects:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 }
@@ -54,7 +55,7 @@ export async function getLearningObject(
         const learningObject = await getLearningObjectById(hruid, language);
         res.json(learningObject);
     } catch (error) {
-        console.error('Error fetching learning object:', error);
+        getLogger().error('Error fetching learning object:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 }

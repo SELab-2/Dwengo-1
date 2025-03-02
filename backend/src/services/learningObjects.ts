@@ -7,6 +7,10 @@ import {
     LearningPathResponse,
 } from '../interfaces/learningPath.js';
 import { fetchLearningPaths } from './learningPaths.js';
+import { getLogger } from '../logging/initalize.js';
+import { Logger } from 'winston';
+
+const logger: Logger = getLogger();
 
 function filterData(
     data: LearningObjectMetadata,
@@ -49,7 +53,7 @@ export async function getLearningObjectById(
     );
 
     if (!metadata) {
-        console.error(`⚠️ WARNING: Learning object "${hruid}" not found.`);
+        logger.error(`⚠️ WARNING: Learning object "${hruid}" not found.`);
         return null;
     }
 
@@ -77,7 +81,7 @@ async function fetchLearningObjects(
             !learningPathResponse.success ||
             !learningPathResponse.data?.length
         ) {
-            console.error(
+            logger.error(
                 `⚠️ WARNING: Learning path "${hruid}" exists but contains no learning objects.`
             );
             return [];
@@ -104,7 +108,7 @@ async function fetchLearningObjects(
             });
         });
     } catch (error) {
-        console.error('❌ Error fetching learning objects:', error);
+        logger.error('❌ Error fetching learning objects:', error);
         return [];
     }
 }

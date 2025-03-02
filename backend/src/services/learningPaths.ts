@@ -4,6 +4,10 @@ import {
     LearningPath,
     LearningPathResponse,
 } from '../interfaces/learningPath.js';
+import { getLogger } from '../logging/initalize.js';
+import { Logger } from 'winston';
+
+const logger: Logger = getLogger();
 
 export async function fetchLearningPaths(
     hruids: string[],
@@ -29,7 +33,7 @@ export async function fetchLearningPaths(
     );
 
     if (!learningPaths || learningPaths.length === 0) {
-        console.error(`⚠️ WARNING: No learning paths found for ${source}.`);
+        logger.error(`⚠️ WARNING: No learning paths found for ${source}.`);
         return {
             success: false,
             source,
