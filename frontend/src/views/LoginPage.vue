@@ -14,7 +14,7 @@
                 />
                 <div class="container">
                     <ul>
-                        <li>login</li>
+                        <li class="title">login</li>
                         <li>
                             <v-btn
                                 class="button"
@@ -79,5 +79,11 @@
         background-color: white;
         width: 350px;
         height: 400px;
+    }
+
+    .title {
+        font-weight: bold;
+        font-size: xx-large;
+        text-transform: uppercase;
     }
 </style>
