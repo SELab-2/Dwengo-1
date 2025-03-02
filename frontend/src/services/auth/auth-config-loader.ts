@@ -1,6 +1,9 @@
 import apiClient from "@/services/api-client.ts";
 import type {FrontendAuthConfig} from "@/services/auth/auth-types.ts";
 
+/**
+ * Fetch the authentication configuration from the backend.
+ */
 export async function loadAuthConfig() {
     const authConfig = (await apiClient.get<FrontendAuthConfig>("auth/config")).data;
     return {

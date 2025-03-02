@@ -6,16 +6,22 @@ import {computed, reactive} from "vue";
 import type {AuthState, Role, UserManagersForRoles} from "@/services/auth/auth-types.ts";
 import {User, UserManager} from "oidc-client-ts";
 import {loadAuthConfig} from "@/services/auth/auth-config-loader.ts";
-import {configureApiClientAuthInterceptors} from "@/services/auth/auth-api-client-interceptors.ts";
 import authStorage from "./auth-storage.ts"
+import {useRouter} from "vue-router";
+import {loginRoute} from "@/config.ts";
+import apiClient from "@/services/api-client.ts";
 
 const authConfig = await loadAuthConfig();
+const router = useRouter();
 
 const userManagers: UserManagersForRoles = {
     student: new UserManager(authConfig.student),
     teacher: new UserManager(authConfig.teacher),
 };
 
+/**
+ * Load the information about who is currently logged in from the IDP.
+ */
 async function loadUser(): Promise<User | null> {
     const activeRole = authStorage.getActiveRole();
     if (!activeRole) {
@@ -28,6 +34,9 @@ async function loadUser(): Promise<User | null> {
     return user;
 }
 
+/**
+ * Information about the current authentication state.
+ */
 const authState = reactive<AuthState>({
     user: null,
     accessToken: null,
@@ -36,34 +45,56 @@ const authState = reactive<AuthState>({
 
 const isLoggedIn = computed(() => authState.user !== null);
 
+/**
+ * Redirect the user to the login page where he/she can choose whether to log in as a student or teacher.
+ */
+async function initiateLogin() {
+    await router.push(loginRoute);
+}
+
+/**
+ * Redirect the user to the IDP for the given role so that he can log in there.
+ * Only call this function when the user is not logged in yet!
+ */
 async function loginAs(role: Role): Promise<void> {
     // Storing it in local storage so that it won't be lost when redirecting outside of the app.
     authStorage.setActiveRole(role);
     await userManagers[role].signinRedirect();
 }
 
+/**
+ * To be called when the user is redirected to the callback-endpoint by the IDP after a successful login.
+ */
 async function handleLoginCallback(): Promise<void> {
     const activeRole = authStorage.getActiveRole();
     if (!activeRole) {
-        throw new Error("Can't renew the token: Not logged in!");
+        throw new Error("Login callback received, but the user is not logging in!");
     }
     authState.user = await userManagers[activeRole].signinCallback() || null;
 }
 
+/**
+ * Refresh an expired authorization token.
+ */
 async function renewToken() {
     const activeRole = authStorage.getActiveRole();
     if (!activeRole) {
-        throw new Error("Can't renew the token: Not logged in!");
+        console.log("Can't renew the token: Not logged in!");
+        await initiateLogin();
+        return;
     }
     try {
         return await userManagers[activeRole].signinSilent();
     } catch (error) {
         console.log("Can't renew the token:");
         console.log(error);
-        await loginAs(activeRole);
+        await initiateLogin();
     }
 }
 
+/**
+ * End the session of the current user.
+ */
 async function logout(): Promise<void> {
     const activeRole = authStorage.getActiveRole();
     if (activeRole) {
@@ -72,6 +103,26 @@ async function logout(): Promise<void> {
     }
 }
 
-configureApiClientAuthInterceptors(authState, renewToken);
+// Registering interceptor to add the authorization header to each request when the user is logged in.
+apiClient.interceptors.request.use(async (reqConfig) => {
+    const token = authState?.user?.access_token;
+    if (token) {
+        reqConfig.headers.Authorization = `Bearer ${token}`;
+    }
+    return reqConfig;
+}, (error) => Promise.reject(error));
 
-export default {authState, isLoggedIn, loadUser, handleLoginCallback, loginAs, logout};
+// Registering interceptor to refresh the token when a request failed because it was expired.
+apiClient.interceptors.response.use(
+    response => response,
+    async (error) => {
+        if (error.response?.status === 401) {
+            console.log("Access token expired, trying to refresh...");
+            await renewToken();
+            return apiClient(error.config); // Retry the request
+        }
+        return Promise.reject(error);
+    }
+);
+
+export default {authState, isLoggedIn, initiateLogin, loadUser, handleLoginCallback, loginAs, logout};
