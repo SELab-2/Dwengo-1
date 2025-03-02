@@ -7,7 +7,12 @@ export class Question {
     @PrimaryKey({ type: 'string' })
     learningObjectHruid!: string;
 
-    @Enum({ items: () => {return Language}, primary: true })
+    @Enum({
+        items: () => {
+            return Language;
+        },
+        primary: true,
+    })
     learningObjectLanguage!: Language;
 
     @PrimaryKey({ type: 'string' })
@@ -16,7 +21,11 @@ export class Question {
     @PrimaryKey({ type: 'integer' })
     sequenceNumber!: number;
 
-    @ManyToOne({ entity: () => {return Student} })
+    @ManyToOne({
+        entity: () => {
+            return Student;
+        },
+    })
     author!: Student;
 
     @Property({ type: 'datetime' })

@@ -4,10 +4,20 @@ import { Teacher } from '../users/teacher.entity';
 
 @Entity()
 export class Answer {
-    @ManyToOne({ entity: () => {return Teacher}, primary: true })
+    @ManyToOne({
+        entity: () => {
+            return Teacher;
+        },
+        primary: true,
+    })
     author!: Teacher;
 
-    @ManyToOne({ entity: () => {return Question}, primary: true })
+    @ManyToOne({
+        entity: () => {
+            return Question;
+        },
+        primary: true,
+    })
     toQuestion!: Question;
 
     @PrimaryKey({ type: 'integer' })

@@ -22,7 +22,6 @@ const logger: Logger = getLogger();
 const app: Express = express();
 const port: string | number = getNumericEnvVar(EnvVars.Port);
 
-
 app.use(express.json());
 app.use(responseTime(responseTimeLogger));
 

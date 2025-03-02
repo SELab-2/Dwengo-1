@@ -1,4 +1,4 @@
-import express from 'express'
+import express from 'express';
 const router = express.Router();
 
 // Returns login paths for IDP
@@ -9,6 +9,6 @@ router.get('/', (req, res) => {
         leerkracht: '/login-leerkracht',
         leerling: '/login-leerling',
     });
-})
+});
 
-export default router
+export default router;

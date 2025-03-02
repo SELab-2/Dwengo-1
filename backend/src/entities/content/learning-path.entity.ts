@@ -16,10 +16,19 @@ export class LearningPath {
     @PrimaryKey({ type: 'string' })
     hruid!: string;
 
-    @Enum({ items: () => {return Language}, primary: true })
+    @Enum({
+        items: () => {
+            return Language;
+        },
+        primary: true,
+    })
     language!: Language;
 
-    @ManyToMany({ entity: () => {return Teacher} })
+    @ManyToMany({
+        entity: () => {
+            return Teacher;
+        },
+    })
     admins!: Teacher[];
 
     @Property({ type: 'string' })
@@ -31,7 +40,12 @@ export class LearningPath {
     @Property({ type: 'blob' })
     image!: string;
 
-    @Embedded({ entity: () => {return LearningPathNode}, array: true })
+    @Embedded({
+        entity: () => {
+            return LearningPathNode;
+        },
+        array: true,
+    })
     nodes: LearningPathNode[] = [];
 }
 
@@ -40,7 +54,11 @@ export class LearningPathNode {
     @Property({ type: 'string' })
     learningObjectHruid!: string;
 
-    @Enum({ items: () => {return Language} })
+    @Enum({
+        items: () => {
+            return Language;
+        },
+    })
     language!: Language;
 
     @Property({ type: 'string' })
@@ -52,7 +70,12 @@ export class LearningPathNode {
     @Property({ type: 'bool' })
     startNode!: boolean;
 
-    @Embedded({ entity: () => {return LearningPathTransition}, array: true })
+    @Embedded({
+        entity: () => {
+            return LearningPathTransition;
+        },
+        array: true,
+    })
     transitions!: LearningPathTransition[];
 }
 
@@ -61,6 +84,10 @@ export class LearningPathTransition {
     @Property({ type: 'string' })
     condition!: string;
 
-    @OneToOne({ entity: () => {return LearningPathNode} })
+    @OneToOne({
+        entity: () => {
+            return LearningPathNode;
+        },
+    })
     next!: LearningPathNode;
 }

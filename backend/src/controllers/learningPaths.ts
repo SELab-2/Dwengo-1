@@ -57,7 +57,10 @@ export async function getLearningPaths(
         );
         res.json(learningPaths.data);
     } catch (error) {
-        getLogger().error('❌ Unexpected error fetching learning paths:', error);
+        getLogger().error(
+            '❌ Unexpected error fetching learning paths:',
+            error
+        );
         res.status(500).json({ error: 'Internal server error' });
     }
 }
