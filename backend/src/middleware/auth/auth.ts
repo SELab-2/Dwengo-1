@@ -29,7 +29,7 @@ const idpConfigs = {
 /**
  * Express middleware which verifies the JWT Bearer token if one is given in the request.
  */
-export const authenticateUser = expressjwt({
+const verifyJwtToken = expressjwt({
     secret: async (_: express.Request, token: jwt.Jwt | undefined) => {
         if (!token?.payload || !(token.payload as JwtPayload).iss) {
             throw new Error("Invalid token");
@@ -50,18 +50,19 @@ export const authenticateUser = expressjwt({
     },
     audience: getEnvVar(EnvVars.IdpAudience),
     algorithms: ["RS256"],
-    credentialsRequired: false
+    credentialsRequired: false,
+    requestProperty: "jwtPayload"
 });
 
 /**
  * Get an object with information about the authenticated user from a given authenticated request.
  */
 function getAuthenticationInfo(req: AuthenticatedRequest): AuthenticationInfo | undefined {
-    if (!req.auth) {
+    console.log("hi");
+    if (!req.jwtPayload) {
         return;
     }
-
-    let issuer = req.auth.issuer;
+    let issuer = req.jwtPayload.iss;
     let accountType: "student" | "teacher";
 
     if (issuer === idpConfigs.student.issuer) {
@@ -71,16 +72,26 @@ function getAuthenticationInfo(req: AuthenticatedRequest): AuthenticationInfo | 
     } else {
         return;
     }
-
     return {
         accountType: accountType,
-        username: req.auth["preferred_username"]!,
-        name: req.auth["name"],
-        firstName: req.auth["given_name"],
-        lastName: req.auth["family_name"],
-        email: req.auth["email"],
+        username: req.jwtPayload["preferred_username"]!,
+        name: req.jwtPayload["name"],
+        firstName: req.jwtPayload["given_name"],
+        lastName: req.jwtPayload["family_name"],
+        email: req.jwtPayload["email"],
     }
 }
+
+/**
+ * Add the AuthenticationInfo object with the information about the current authentication to the request in order
+ * to avoid that the routers have to deal with the JWT token.
+ */
+const addAuthenticationInfo = (req: AuthenticatedRequest, res: express.Response, next: express.NextFunction) => {
+    req.auth = getAuthenticationInfo(req);
+    next();
+};
+
+export const authenticateUser = [verifyJwtToken, addAuthenticationInfo];
 
 /**
  * Middleware which rejects unauthenticated users (with HTTP 401) and authenticated users which do not fulfill
@@ -88,12 +99,11 @@ function getAuthenticationInfo(req: AuthenticatedRequest): AuthenticationInfo | 
  * @param accessCondition Predicate over the current AuthenticationInfo. Access is only granted when this evaluates
  *                        to true.
  */
-const authorize = (accessCondition: (auth: AuthenticationInfo) => boolean) => {
+export const authorize = (accessCondition: (auth: AuthenticationInfo) => boolean) => {
     return (req: AuthenticatedRequest, res: express.Response, next: express.NextFunction): void => {
-        let authInfo = getAuthenticationInfo(req);
-        if (!authInfo) {
+        if (!req.auth) {
             res.status(401).json({ message: "Unauthorized" });
-        } else if (!accessCondition(authInfo)) {
+        } else if (!accessCondition(req.auth)) {
             res.status(403).json({ message: "Forbidden" });
         } else {
             next();

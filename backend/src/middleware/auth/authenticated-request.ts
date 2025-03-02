@@ -1,6 +1,9 @@
 import { Request } from "express";
 import { JwtPayload } from "jsonwebtoken";
+import {AuthenticationInfo} from "./authentication-info";
 
 export interface AuthenticatedRequest extends Request {
-    auth?: JwtPayload; // Optional, as req.auth might be undefined if authentication is optional
+    // Properties are optional since the user is not necessarily authenticated.
+    jwtPayload?: JwtPayload;
+    auth?: AuthenticationInfo;
 }
