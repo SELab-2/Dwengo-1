@@ -1,5 +1,8 @@
 import express from 'express';
-import {getAllLearningObjects, getLearningObject} from '../controllers/learningObjects.js';
+import {
+    getAllLearningObjects,
+    getLearningObject,
+} from '../controllers/learningObjects.js';
 
 const router = express.Router();
 
@@ -14,7 +17,6 @@ const router = express.Router();
 // Route 2: list of object data
 // Example 2: http://localhost:3000/learningObject?full=true&hruid=un_artificiele_intelligentie
 router.get('/', getAllLearningObjects);
-
 
 // Parameter: hruid of learning object
 // Query: language
