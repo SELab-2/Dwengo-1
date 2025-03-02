@@ -17,18 +17,28 @@
                         <li>login</li>
                         <li>
                             <v-btn
+                                class="button"
                                 :to="`/teacher/${userId}`"
-                                append-icon="$vuetify"
                             >
                                 teacher
+                                <v-icon
+                                    end
+                                    size="x-large"
+                                    >mdi-menu-right</v-icon
+                                >
                             </v-btn>
                         </li>
                         <li>
                             <v-btn
+                                class="button"
                                 :to="`/student/${userId}`"
-                                append-icon="$vuetify"
                             >
                                 student
+                                <v-icon
+                                    end
+                                    size="x-large"
+                                    >mdi-menu-right</v-icon
+                                >
                             </v-btn>
                         </li>
                     </ul>
@@ -59,6 +69,10 @@
     li {
         padding: 20px;
         align-items: center;
+    }
+
+    .button {
+        background-color: #f6faf2;
     }
 
     .container {
