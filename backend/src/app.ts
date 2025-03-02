@@ -3,6 +3,8 @@ import { initORM } from './orm.js';
 import { EnvVars, getNumericEnvVar } from './util/envvars.js';
 
 import themeRoutes from './routes/themes.js';
+import learningPathRoutes from './routes/learningPaths.js';
+import learningObjectRoutes from './routes/learningObjects.js';
 
 import studentRouter from './routes/student.js';
 import groupRouter from './routes/group.js';
@@ -32,6 +34,8 @@ app.use('/question', questionRouter);
 app.use('/login', loginRouter);
 
 app.use('/theme', themeRoutes);
+app.use('/learningPath', learningPathRoutes);
+app.use('/learningObject', learningObjectRoutes);
 
 async function startServer() {
     await initORM();
