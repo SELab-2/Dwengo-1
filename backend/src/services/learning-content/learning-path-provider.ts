@@ -1,4 +1,4 @@
-import {LearningContent, LearningPathResponse} from "../../interfaces/learningContent";
+import {LearningPath, LearningPathResponse} from "../../interfaces/learning-content";
 
 /**
  * Generic interface for a service which provides access to learning paths from a data source.
@@ -12,5 +12,5 @@ export interface LearningPathProvider {
     /**
      * Search learning paths in the data source using the given search string.
      */
-    searchLearningPaths(query: string, language: string): Promise<LearningContent[]>;
+    searchLearningPaths(query: string, language: string): Promise<LearningPath[]>;
 }

@@ -1,9 +1,9 @@
 import { fetchWithLogging } from '../../../util/apiHelper.js';
 import { DWENGO_API_BASE } from '../../../config.js';
 import {
-    LearningContent,
+    LearningPath,
     LearningPathResponse,
-} from '../../../interfaces/learningContent.js';
+} from '../../../interfaces/learning-content.js';
 import {LearningPathProvider} from "../learning-path-provider";
 
 const dwengoApiLearningPathProvider: LearningPathProvider = {
@@ -24,7 +24,7 @@ const dwengoApiLearningPathProvider: LearningPathProvider = {
         const apiUrl = `${DWENGO_API_BASE}/learningPath/getPathsFromIdList`;
         const params = { pathIdList: JSON.stringify({ hruids }), language };
 
-        const learningPaths = await fetchWithLogging<LearningContent[]>(
+        const learningPaths = await fetchWithLogging<LearningPath[]>(
             apiUrl,
             `Learning paths for ${source}`,
             params
@@ -49,11 +49,11 @@ const dwengoApiLearningPathProvider: LearningPathProvider = {
     async searchLearningPaths(
         query: string,
         language: string
-    ): Promise<LearningContent[]> {
+    ): Promise<LearningPath[]> {
         const apiUrl = `${DWENGO_API_BASE}/learningPath/search`;
         const params = { all: query, language };
 
-        const searchResults = await fetchWithLogging<LearningContent[]>(
+        const searchResults = await fetchWithLogging<LearningPath[]>(
             apiUrl,
             `Search learning paths with query "${query}"`,
             params
