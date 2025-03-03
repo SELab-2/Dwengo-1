@@ -1,11 +1,7 @@
 import { Request, Response } from 'express';
-import {
-    getLearningObjectById,
-    getLearningObjectIdsFromPath,
-    getLearningObjectsFromPath,
-} from '../services/learning-content/dwengo-api/dwengo-api-learning-object-provider.js';
 import { FALLBACK_LANG } from '../config.js';
 import { FilteredLearningObject } from '../interfaces/learningContent';
+import learningObjectService from "../services/learning-content/learning-object-service";
 
 export async function getAllLearningObjects(
     req: Request,
@@ -23,9 +19,9 @@ export async function getAllLearningObjects(
 
         let learningObjects: FilteredLearningObject[] | string[];
         if (full) {
-            learningObjects = await getLearningObjectsFromPath(hruid, language);
+            learningObjects = await learningObjectService.getLearningObjectsFromPath(hruid, language);
         } else {
-            learningObjects = await getLearningObjectIdsFromPath(
+            learningObjects = await learningObjectService.getLearningObjectIdsFromPath(
                 hruid,
                 language
             );
@@ -51,7 +47,7 @@ export async function getLearningObject(
             return;
         }
 
-        const learningObject = await getLearningObjectById(hruid, language);
+        const learningObject = await learningObjectService.getLearningObjectById(hruid, language);
         res.json(learningObject);
     } catch (error) {
         console.error('Error fetching learning object:', error);

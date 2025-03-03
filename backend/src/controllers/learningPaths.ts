@@ -1,10 +1,7 @@
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
-import {
-    fetchLearningPaths,
-    searchLearningPaths,
-} from '../services/learning-content/dwengo-api/dwengo-api-learning-path-provider.js';
+import learningPathService from "../services/learning-content/learning-path-service";
 /**
  * Fetch learning paths based on query parameters.
  */
@@ -37,7 +34,7 @@ export async function getLearningPaths(
                 return;
             }
         } else if (searchQuery) {
-            const searchResults = await searchLearningPaths(
+            const searchResults = await learningPathService.searchLearningPaths(
                 searchQuery,
                 language
             );
@@ -49,7 +46,7 @@ export async function getLearningPaths(
             });
         }
 
-        const learningPaths = await fetchLearningPaths(
+        const learningPaths = await learningPathService.fetchLearningPaths(
             hruidList,
             language,
             `HRUIDs: ${hruidList.join(', ')}`
