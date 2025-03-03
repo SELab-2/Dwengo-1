@@ -4,7 +4,7 @@ import { FALLBACK_LANG } from '../config.js';
 import {
     fetchLearningPaths,
     searchLearningPaths,
-} from '../services/learningPaths.js';
+} from '../services/learning-content/dwengo-api/dwengo-api-learning-path-provider.js';
 /**
  * Fetch learning paths based on query parameters.
  */

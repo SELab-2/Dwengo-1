@@ -20,7 +20,7 @@ export interface LearningObjectNode {
     updatedAt: string;
 }
 
-export interface LearningPath {
+export interface LearningContent {
     _id: string;
     language: string;
     hruid: string;
@@ -93,6 +93,6 @@ export interface FilteredLearningObject {
 export interface LearningPathResponse {
     success: boolean;
     source: string;
-    data: LearningPath[] | null;
+    data: LearningContent[] | null;
     message?: string;
 }

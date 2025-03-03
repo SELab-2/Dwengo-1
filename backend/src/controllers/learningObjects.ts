@@ -3,9 +3,9 @@ import {
     getLearningObjectById,
     getLearningObjectIdsFromPath,
     getLearningObjectsFromPath,
-} from '../services/learningObjects.js';
+} from '../services/learning-content/dwengo-api/dwengo-api-learning-object-provider.js';
 import { FALLBACK_LANG } from '../config.js';
-import { FilteredLearningObject } from '../interfaces/learningPath';
+import { FilteredLearningObject } from '../interfaces/learningContent';
 
 export async function getAllLearningObjects(
     req: Request,
