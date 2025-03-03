@@ -1,5 +1,23 @@
 # translate theme pages
 
+strengths:
+    title: Our strengths
+    innovative: Innovative
+    research_based: Research-based
+    inclusive: Inclusive
+    socially_relevant: Socially relevant
+    innovative_text: We continuously add new projects and apply new methodologies in our projects.
+    research_based_text: All learning materials of Dwengo are based on profound scientific research.
+    inclusive_text: We target all children, making gender inclusion and accessibility for disadvantaged children a priority.
+    socially_relevant_text: We look for projects that fit current events and are socially relevant.
+    summary: We develop innovative workshops and educational resources, and we provide them to students around the globe in collaboration with teachers and volunteers. Our train-the-trainer sessions enable them to bring our hands-on workshops to the students.
+    main: We continuously add new projects and methodologies to all our projects. For these projects, we always look for a socially relevant theme. Additionally, we ensure that our didactic material is based on scientific research and always keep an eye on inclusivity.
+    quote:
+        text: You make something practical, learn how to use the hardware and create something new.
+        name: Matthias and Bruno
+        affiliation: Grade 10
+
+
 curricula_page:
     title: Our teaching topics
     read_more: Read more
