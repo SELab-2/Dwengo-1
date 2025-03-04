@@ -1,3 +1,5 @@
+import {Language} from "../entities/content/language";
+
 export interface Transition {
     default: boolean;
     _id: string;
@@ -7,6 +9,12 @@ export interface Transition {
         version: number;
         language: string;
     };
+}
+
+export interface LearningObjectIdentifier {
+    hruid: string;
+    language: Language;
+    version?: string;
 }
 
 export interface LearningObjectNode {
@@ -20,7 +28,7 @@ export interface LearningObjectNode {
     updatedAt: string;
 }
 
-export interface LearningContent {
+export interface LearningPath {
     _id: string;
     language: string;
     hruid: string;
@@ -35,6 +43,11 @@ export interface LearningContent {
     min_age: number;
     max_age: number;
     __order: number;
+}
+
+export interface LearningPathIdentifier {
+    hruid: string;
+    language: Language;
 }
 
 export interface EducationalGoal {
@@ -93,6 +106,6 @@ export interface FilteredLearningObject {
 export interface LearningPathResponse {
     success: boolean;
     source: string;
-    data: LearningContent[] | null;
+    data: LearningPath[] | null;
     message?: string;
 }

@@ -11,6 +11,8 @@ export const EnvVars: { [key: string]: EnvVar } = {
     DbUsername: { key: DB_PREFIX + 'USERNAME', required: true },
     DbPassword: { key: DB_PREFIX + 'PASSWORD', required: true },
     DbUpdate: { key: DB_PREFIX + 'UPDATE', defaultValue: false },
+    LearningContentRepoApiBaseUrl: { key: PREFIX + "LEARNING_CONTENT_REPO_API_BASE_URL", defaultValue: "https://dwengo.org/backend/api"},
+    FallbackLanguage: { key: PREFIX + "FALLBACK_LANGUAGE", defaultValue: "nl" },
 } as const;
 
 /**

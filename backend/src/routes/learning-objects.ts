@@ -1,8 +1,8 @@
 import express from 'express';
 import {
     getAllLearningObjects,
-    getLearningObject,
-} from '../controllers/learningObjects.js';
+    getLearningObject, getLearningObjectHTML,
+} from '../controllers/learning-objects.js';
 
 const router = express.Router();
 
@@ -23,5 +23,11 @@ router.get('/', getAllLearningObjects);
 // Route to fetch data of one learning object based on its hruid
 // Example: http://localhost:3000/learningObject/un_ai7
 router.get('/:hruid', getLearningObject);
+
+// Parameter: hruid of learning object
+// Query: language, version (optional)
+// Route to fetch the HTML rendering of one learning object based on its hruid.
+// Example: http://localhost:3000/learningObject/un_ai7/html
+router.get('/:hruid/html', getLearningObjectHTML);
 
 export default router;

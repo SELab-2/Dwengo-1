@@ -5,6 +5,8 @@
 // Load .env file
 // Dotenv.config();
 
-export const DWENGO_API_BASE = 'https://dwengo.org/backend/api';
+import {EnvVars, getEnvVar} from "./util/envvars";
 
-export const FALLBACK_LANG = 'nl';
+export const DWENGO_API_BASE = getEnvVar(EnvVars.LearningContentRepoApiBaseUrl);
+
+export const FALLBACK_LANG = getEnvVar(EnvVars.FallbackLanguage);

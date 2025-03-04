@@ -27,7 +27,7 @@ const dwengoApiLearningPathProvider: LearningPathProvider = {
         const learningPaths = await fetchWithLogging<LearningPath[]>(
             apiUrl,
             `Learning paths for ${source}`,
-            params
+            { params }
         );
 
         if (!learningPaths || learningPaths.length === 0) {
@@ -56,7 +56,7 @@ const dwengoApiLearningPathProvider: LearningPathProvider = {
         const searchResults = await fetchWithLogging<LearningPath[]>(
             apiUrl,
             `Search learning paths with query "${query}"`,
-            params
+            { params }
         );
         return searchResults ?? [];
     }
