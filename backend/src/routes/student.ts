@@ -1,4 +1,6 @@
 import express from 'express'
+import { getStudentById } from '../services/students';
+import { getStudent } from '../controllers/students';
 const router = express.Router();
 
 // root endpoint used to search objects
@@ -12,20 +14,7 @@ router.get('/', (req, res) => {
 });
 
 // information about a student's profile
-router.get('/:id', (req, res) => {
-    res.json({
-        id: req.params.id,
-        firstName: 'Jimmy',
-        lastName: 'Faster',
-        username: 'JimmyFaster2',
-        endpoints: {
-            classes: `/student/${req.params.id}/classes`,
-            questions: `/student/${req.params.id}/submissions`,
-            invitations: `/student/${req.params.id}/assignments`,
-            groups: `/student/${req.params.id}/groups`,
-        },
-    });
-});
+router.get('/:id', getStudent);
 
 // the list of classes a student is in
 router.get('/:id/classes', (req, res) => {
@@ -53,6 +42,13 @@ router.get('/:id/assignments', (req, res) => {
 router.get('/:id/groups', (req, res) => {
     res.json({
         groups: [ '0' ],
+    });
+})
+
+// a list of questions a user has created
+router.get('/:id/questions', (req, res) => {
+    res.json({
+        questions: [ '0' ],
     });
 })
 
