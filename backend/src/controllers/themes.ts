@@ -1,39 +1,17 @@
-import fs from 'fs';
-import path from 'path';
-import yaml from 'js-yaml';
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
+import { loadTranslations } from "../util/translationHelper.js";
 import { FALLBACK_LANG } from '../config.js';
-import { getLogger, Logger } from '../logging/initalize.js';
-
-const logger: Logger = getLogger();
 
 interface Translations {
     curricula_page: {
-        [key: string]: { title: string; description?: string }; // Optioneel veld description
+        [key: string]: { title: string; description?: string };
     };
 }
 
-function loadTranslations(language: string): Translations {
-    try {
-        const filePath = path.join(process.cwd(), '_i18n', `${language}.yml`);
-        const yamlFile = fs.readFileSync(filePath, 'utf8');
-        return yaml.load(yamlFile) as Translations;
-    } catch (error) {
-        logger.error(
-            `Cannot load translation for: ${language}, fallen back to Dutch`
-        );
-        logger.error(error);
-        const fallbackPath = path.join(process.cwd(), '_i18n', 'nl.yml');
-        return yaml.load(fs.readFileSync(fallbackPath, 'utf8')) as Translations;
-    }
-}
-
 export function getThemes(req: Request, res: Response) {
-    const language =
-        (req.query.language as string)?.toLowerCase() || FALLBACK_LANG;
-    const translations = loadTranslations(language);
-
+    const language = (req.query.language as string)?.toLowerCase() || 'nl';
+    const translations = loadTranslations<Translations>(language);
     const themeList = themes.map((theme) => {
         return {
             key: theme.title,
