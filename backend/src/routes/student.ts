@@ -1,27 +1,15 @@
 import express from 'express'
-import { getStudentById } from '../services/students';
-import { getStudent } from '../controllers/students';
+import { getAllStudentsHandler, getStudentClassesHandler, getStudentHandler } from '../controllers/students';
 const router = express.Router();
 
 // root endpoint used to search objects
-router.get('/', (req, res) => {
-    res.json({
-        students: [
-            '0',
-            '1',
-        ]
-    });
-});
+router.get('/', getAllStudentsHandler);
 
 // information about a student's profile
-router.get('/:id', getStudent);
+router.get('/:id', getStudentHandler);
 
 // the list of classes a student is in
-router.get('/:id/classes', (req, res) => {
-    res.json({
-        classes: [ '0' ],
-    });
-})
+router.get('/:id/classes', getStudentClassesHandler);
 
 // the list of submissions a student has made
 router.get('/:id/submissions', (req, res) => {

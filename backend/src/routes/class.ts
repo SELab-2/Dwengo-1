@@ -19,7 +19,7 @@ router.get('/:id', (req, res) => {
         teachers: [ '0' ],
         students: [ '0' ],
         joinRequests: [ '0' ],
-        links: {
+        endpoints: {
             self: `${req.baseUrl}/${req.params.id}`,
             classes: `${req.baseUrl}/${req.params.id}/invitations`,
             questions: `${req.baseUrl}/${req.params.id}/assignments`,
