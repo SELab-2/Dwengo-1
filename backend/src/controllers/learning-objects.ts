@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { FALLBACK_LANG } from '../config.js';
 import {FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier} from '../interfaces/learning-content';
-import learningObjectService from "../services/learning-content/learning-object-service";
+import learningObjectService from "../services/learning-objects/learning-object-service";
 import {EnvVars, getEnvVar} from "../util/envvars";
 import {Language} from "../entities/content/language";
 import {BadRequestException} from "../exceptions";

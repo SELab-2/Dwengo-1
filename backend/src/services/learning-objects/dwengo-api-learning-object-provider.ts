@@ -1,13 +1,13 @@
-import { DWENGO_API_BASE } from '../../../config.js';
-import { fetchWithLogging } from '../../../util/apiHelper.js';
+import { DWENGO_API_BASE } from '../../config.js';
+import { fetchWithLogging } from '../../util/apiHelper.js';
 import {
     FilteredLearningObject, LearningObjectIdentifier,
     LearningObjectMetadata,
     LearningObjectNode, LearningPathIdentifier,
     LearningPathResponse,
-} from '../../../interfaces/learning-content.js';
-import dwengoApiLearningPathProvider from './dwengo-api-learning-path-provider.js';
-import {LearningObjectProvider} from "../learning-object-provider";
+} from '../../interfaces/learning-content.js';
+import dwengoApiLearningPathProvider from '../learning-paths/dwengo-api-learning-path-provider.js';
+import {LearningObjectProvider} from "./learning-object-provider";
 
 /**
  * Helper function to convert the learning object metadata retrieved from the API to a FilteredLearningObject which

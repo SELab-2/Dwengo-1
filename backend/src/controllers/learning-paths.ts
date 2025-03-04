@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
-import learningPathService from "../services/learning-content/learning-path-service";
+import learningPathService from "../services/learning-paths/learning-path-service";
 import {NotFoundException} from "../exceptions";
 
 /**

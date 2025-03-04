@@ -1,5 +1,5 @@
 import {LearningPath, LearningPathResponse} from "../../interfaces/learning-content";
-import dwengoApiLearningPathProvider from "./dwengo-api/dwengo-api-learning-path-provider";
+import dwengoApiLearningPathProvider from "./dwengo-api-learning-path-provider";
 
 /**
  * Service providing access to data about learning paths from the appropriate data source (database or Dwengo-api)

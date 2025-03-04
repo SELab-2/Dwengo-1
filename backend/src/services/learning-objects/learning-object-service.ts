@@ -3,7 +3,7 @@ import {
     LearningObjectIdentifier,
     LearningPathIdentifier
 } from "../../interfaces/learning-content";
-import dwengoApiLearningObjectProvider from "./dwengo-api/dwengo-api-learning-object-provider";
+import dwengoApiLearningObjectProvider from "./dwengo-api-learning-object-provider";
 import {LearningObjectProvider} from "./learning-object-provider";
 
 function getProvider(id: LearningObjectIdentifier): LearningObjectProvider {
