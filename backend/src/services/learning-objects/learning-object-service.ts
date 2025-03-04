@@ -5,9 +5,15 @@ import {
 } from "../../interfaces/learning-content";
 import dwengoApiLearningObjectProvider from "./dwengo-api-learning-object-provider";
 import {LearningObjectProvider} from "./learning-object-provider";
+import {EnvVars, getEnvVar} from "../../util/envvars";
+import databaseLearningObjectProvider from "./database-learning-object-provider";
 
 function getProvider(id: LearningObjectIdentifier): LearningObjectProvider {
-    return dwengoApiLearningObjectProvider
+    if (id.hruid.startsWith(getEnvVar(EnvVars.UserContentPrefix))) {
+        return databaseLearningObjectProvider;
+    } else {
+        return dwengoApiLearningObjectProvider;
+    }
 }
 
 /**
