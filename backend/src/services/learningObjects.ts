@@ -52,7 +52,7 @@ export async function getLearningObjectById(
     );
 
     if (!metadata) {
-        logger.error(`⚠️ WARNING: Learning object "${hruid}" not found.`);
+        logger.warn(`⚠️ WARNING: Learning object "${hruid}" not found.`);
         return null;
     }
 
@@ -80,7 +80,7 @@ async function fetchLearningObjects(
             !learningPathResponse.success ||
             !learningPathResponse.data?.length
         ) {
-            logger.error(
+            logger.warn(
                 `⚠️ WARNING: Learning path "${hruid}" exists but contains no learning objects.`
             );
             return [];

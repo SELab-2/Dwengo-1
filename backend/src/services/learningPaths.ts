@@ -32,7 +32,7 @@ export async function fetchLearningPaths(
     );
 
     if (!learningPaths || learningPaths.length === 0) {
-        logger.error(`⚠️ WARNING: No learning paths found for ${source}.`);
+        logger.warn(`⚠️ WARNING: No learning paths found for ${source}.`);
         return {
             success: false,
             source,
