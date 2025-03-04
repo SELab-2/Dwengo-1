@@ -25,16 +25,16 @@ export async function fetchWithLogging<T>(
     } catch (error: any) {
         if (error.response) {
             if (error.response.status === 404) {
-                logger.error(
+                logger.debug(
                     `❌ ERROR: ${description} not found (404) at "${url}".`
                 );
             } else {
-                logger.error(
+                logger.debug(
                     `❌ ERROR: Failed to fetch ${description}. Status: ${error.response.status} - ${error.response.statusText} (URL: "${url}")`
                 );
             }
         } else {
-            logger.error(
+            logger.debug(
                 `❌ ERROR: Network or unexpected error when fetching ${description}:`,
                 error.message
             );
