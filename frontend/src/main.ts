@@ -14,6 +14,11 @@ const app = createApp(App);
 
 app.use(router);
 
+const link = document.createElement("link");
+link.rel = "stylesheet";
+link.href = "https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css";
+document.head.appendChild(link);
+
 const vuetify = createVuetify({
     components,
     directives,
