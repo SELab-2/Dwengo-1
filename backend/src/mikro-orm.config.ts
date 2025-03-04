@@ -24,11 +24,20 @@ import { Answer } from './entities/questions/answer.entity.js';
 import { Question } from './entities/questions/question.entity.js';
 
 const entities = [
-    User, Student, Teacher,
-    Assignment, Group, Submission,
-    Class, ClassJoinRequest, TeacherInvitation,
-    Attachment, LearningObject, LearningPath,
-    Answer, Question
+    User,
+    Student,
+    Teacher,
+    Assignment,
+    Group,
+    Submission,
+    Class,
+    ClassJoinRequest,
+    TeacherInvitation,
+    Attachment,
+    LearningObject,
+    LearningPath,
+    Answer,
+    Question,
 ];
 
 function config(testingMode: boolean = false): Options {
@@ -41,7 +50,9 @@ function config(testingMode: boolean = false): Options {
 
             // Workaround: vitest: `TypeError: Unknown file extension ".ts"` (ERR_UNKNOWN_FILE_EXTENSION)
             // (see https://mikro-orm.io/docs/guide/project-setup#testing-the-endpoint)
-            dynamicImportProvider: (id) => {return import(id)},
+            dynamicImportProvider: (id) => {
+                return import(id);
+            },
         };
     }
     return {
