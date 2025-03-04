@@ -1,15 +1,15 @@
-import {EnvVars, getEnvVar} from "../util/envvars";
-
-type FrontendAuthConfig = {
-    student: FrontendIdpConfig,
-    teacher: FrontendIdpConfig
-}
+import {EnvVars, getEnvVar} from "../util/envvars.js";
 
 type FrontendIdpConfig = {
     authority: string,
     clientId: string,
     scope: string,
     responseType: string
+}
+
+type FrontendAuthConfig = {
+    student: FrontendIdpConfig,
+    teacher: FrontendIdpConfig
 }
 
 const SCOPE = "openid profile email";

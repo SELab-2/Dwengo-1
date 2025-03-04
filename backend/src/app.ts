@@ -11,8 +11,8 @@ import submissionRouter from './routes/submission.js';
 import classRouter from './routes/class.js';
 import questionRouter from './routes/question.js';
 import authRouter from './routes/auth.js';
-import {authenticateUser} from "./middleware/auth/auth";
-import cors from "./middleware/cors";
+import {authenticateUser} from "./middleware/auth/auth.js";
+import cors from "./middleware/cors.js";
 
 const app: Express = express();
 const port: string | number = getNumericEnvVar(EnvVars.Port);

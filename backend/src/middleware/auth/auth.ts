@@ -5,7 +5,7 @@ import jwksClient from 'jwks-rsa';
 import * as express from "express";
 import * as jwt from "jsonwebtoken";
 import {AuthenticatedRequest} from "./authenticated-request.js";
-import {AuthenticationInfo} from "./authentication-info";
+import {AuthenticationInfo} from "./authentication-info.js";
 
 function createJwksClient(uri: string): jwksClient.JwksClient {
     return jwksClient({
