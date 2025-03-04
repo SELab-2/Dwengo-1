@@ -1,6 +1,6 @@
 import { getClassRepository, getStudentRepository } from "../data/repositories";
 import { Class } from "../entities/classes/class.entity";
-import { ClassDTO } from "../interfaces/classes";
+import { ClassDTO, mapToClassDTO } from "../interfaces/classes";
 import { StudentDTO } from "../interfaces/students";
 
 export async function getAllStudents(): Promise<StudentDTO[]> {
@@ -46,20 +46,11 @@ async function fetchStudentClasses(username: string): Promise<Class[]> {
 
 export async function getStudentClasses(username: string): Promise<ClassDTO[]> {
     const classes = await fetchStudentClasses(username);
-
-    return classes.map((cls: Class): ClassDTO => {
-        return {
-            id: cls.classId,
-            displayName: cls.displayName,
-            teachers: cls.teachers.map(teacher => teacher.username),
-            students: cls.students.map(student => student.username),
-            joinRequests: [], // TODO
-        }
-    });
+    return classes.map(mapToClassDTO);
 }
 
 export async function getStudentClassIds(username: string): Promise<string[]> {
     const classes = await fetchStudentClasses(username);
-    return classes.map(cls => cls.classId); // class is a native keyword
+    return classes.map(cls => cls.classId); // 'class' is a native keyword
 }
 

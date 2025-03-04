@@ -1,6 +1,4 @@
-import { ClassJoinRequest } from "../entities/classes/class-join-request.entity";
-import { Student } from "../entities/users/student.entity";
-import { Teacher } from "../entities/users/teacher.entity";
+import { Class } from "../entities/classes/class.entity";
 
 export interface ClassDTO {
     id: string;
@@ -9,9 +7,19 @@ export interface ClassDTO {
     students: string[];
     joinRequests: string[];
     endpoints?: {
-        classes: string;
-        questions: string;
+        self: string;
         invitations: string;
-        groups: string;
+        assignments: string;
+        students: string;
     };
 }
+
+export function mapToClassDTO(cls: Class): ClassDTO {
+    return {
+        id: cls.classId,
+        displayName: cls.displayName,
+        teachers: cls.teachers.map(teacher => teacher.username),
+        students: cls.students.map(student => student.username),
+        joinRequests: [], // TODO
+    }
+};

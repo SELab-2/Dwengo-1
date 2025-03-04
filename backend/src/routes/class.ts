@@ -1,4 +1,5 @@
 import express from 'express'
+import { getClassHandler } from '../controllers/classes';
 const router = express.Router();
 
 // root endpoint used to search objects
@@ -12,21 +13,7 @@ router.get('/', (req, res) => {
 });
 
 // information about an class with id 'id'
-router.get('/:id', (req, res) => {
-    res.json({
-        id: req.params.id,
-        displayName: 'Klas 4B',
-        teachers: [ '0' ],
-        students: [ '0' ],
-        joinRequests: [ '0' ],
-        endpoints: {
-            self: `${req.baseUrl}/${req.params.id}`,
-            classes: `${req.baseUrl}/${req.params.id}/invitations`,
-            questions: `${req.baseUrl}/${req.params.id}/assignments`,
-            students: `${req.baseUrl}/${req.params.id}/students`,
-        }
-    });
-})
+router.get('/:id', getClassHandler);
 
 router.get('/:id/invitations', (req, res) => {
     res.json({
