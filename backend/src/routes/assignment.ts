@@ -1,5 +1,8 @@
 import express from 'express'
-const router = express.Router();
+import { getAssignmentHandler } from '../controllers/assignments';
+const router = express.Router({ mergeParams: true });
+
+
 
 // root endpoint used to search objects
 router.get('/', (req, res) => {
@@ -12,20 +15,7 @@ router.get('/', (req, res) => {
 });
 
 // information about an assignment with id 'id'
-router.get('/:id', (req, res) => {
-    res.json({
-        id: req.params.id,
-        title: 'Dit is een test assignment',
-        description: 'Een korte beschrijving',
-        groups: [ '0' ],
-        learningPath: '0',
-        class: '0',
-        links: {
-            self: `${req.baseUrl}/${req.params.id}`,
-            submissions: `${req.baseUrl}/${req.params.id}`,
-        },
-    });
-})
+router.get('/:id', getAssignmentHandler);
 
 router.get('/:id/submissions', (req, res) => {
     res.json({

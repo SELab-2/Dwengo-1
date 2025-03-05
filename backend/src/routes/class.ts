@@ -1,5 +1,7 @@
 import express from 'express'
 import { getAllClassesHandler, getClassHandler, getClassStudentsHandler } from '../controllers/classes';
+import assignmentRouter from './assignment.js';
+
 const router = express.Router();
 
 // root endpoint used to search objects
@@ -16,14 +18,8 @@ router.get('/:id/invitations', (req, res) => {
     });
 })
 
-router.get('/:id/assignments', (req, res) => {
-    res.json({
-        assignments: [ 
-            '0'
-        ],
-    });
-})
-
 router.get('/:id/students', getClassStudentsHandler);
+
+router.use('/:classid/assignments', assignmentRouter);
 
 export default router

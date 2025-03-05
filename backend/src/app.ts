@@ -8,7 +8,6 @@ import learningObjectRoutes from './routes/learningObjects.js';
 
 import studentRouter from './routes/student.js';
 import groupRouter from './routes/group.js';
-import assignmentRouter from './routes/assignment.js';
 import submissionRouter from './routes/submission.js';
 import classRouter from './routes/class.js';
 import questionRouter from './routes/question.js';
@@ -27,7 +26,6 @@ app.get('/', (_, res: Response) => {
 
 app.use('/student', studentRouter);
 app.use('/group', groupRouter);
-app.use('/assignment', assignmentRouter);
 app.use('/submission', submissionRouter);
 app.use('/class', classRouter);
 app.use('/question', questionRouter);
