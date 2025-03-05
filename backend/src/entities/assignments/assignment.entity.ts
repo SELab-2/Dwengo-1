@@ -9,8 +9,9 @@ import {
 import { Class } from '../classes/class.entity.js';
 import { Group } from './group.entity.js';
 import { Language } from '../content/language.js';
+import { AssignmentRepository } from '../../data/assignments/assignment-repository.js';
 
-@Entity()
+@Entity({ repository: () => AssignmentRepository })
 export class Assignment {
     @ManyToOne({ entity: () => Class, primary: true })
     within!: Class;
