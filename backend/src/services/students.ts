@@ -30,14 +30,7 @@ async function fetchStudentClasses(username: string): Promise<Class[]> {
     if (!student) return [];
 
     const classRepository = getClassRepository();
-    // a weird error when running npm run dev occurs when using .findByStudent
-    // the error says that the function could not be found which is weird
-    // because typescript does not throw any errors
-    const classes = await classRepository.find(
-        { students: student },
-        { populate: ["students", "teachers"] } // voegt student en teacher objecten toe
-    )
-    // const classes = await classRepository.findByStudent(student);
+    const classes = await classRepository.findByStudent(student);
 
     if (!classes) return [];
 
