@@ -1,5 +1,22 @@
 import { getClassRepository } from "../data/repositories";
+import { Class } from "../entities/classes/class.entity";
 import { ClassDTO, mapToClassDTO } from "../interfaces/classes";
+import { mapToStudentDTO, StudentDTO } from "../interfaces/students";
+
+export async function getAllClasses(full: boolean): Promise<ClassDTO[] | string[]> {
+    const classRepository = getClassRepository();
+    const classes = await classRepository.find({}, { populate: ["students", "teachers"] });
+
+    if (!classes) {
+        return [];
+    }
+    
+    if (full) {
+        return classes.map(mapToClassDTO);
+    } else {
+        return classes.map((cls) => cls.classId);
+    }
+}
 
 export async function getClass(classId: string): Promise<ClassDTO | null> {
     const classRepository = getClassRepository();
@@ -8,5 +25,20 @@ export async function getClass(classId: string): Promise<ClassDTO | null> {
     if (!cls) return null;
     else {
         return mapToClassDTO(cls);
+    }
+}
+
+export async function getClassStudents(classId: string, full: boolean): Promise<StudentDTO[] | string[]> {
+    const classRepository = getClassRepository();
+    const cls = await classRepository.findById(classId);
+
+    if (!cls) {
+        return [];
+    }
+
+    if (full) {
+        return cls.students.map(mapToStudentDTO);
+    } else {
+        return cls.students.map((student) => student.username);
     }
 }

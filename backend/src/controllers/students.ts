@@ -1,17 +1,18 @@
 import { Request, Response } from 'express';
-import { getStudent, getStudentClasses, getStudentClassIds } from '../services/students';
+import { getAllStudents, getStudent, getStudentClasses, getStudentClassIds } from '../services/students';
 import { ClassDTO } from '../interfaces/classes';
 
+// TODO: accept arguments (full, ...)
+// TODO: endpoints
 export async function getAllStudentsHandler (
     req: Request,
     res: Response,
 ): Promise<void> {
     try {
+        const students = await getAllStudents();
+
         res.json({
-            students: [
-                '0',
-                '1',
-            ]
+            students: students
         });
     } catch (error) {
         console.error('Error fetching learning objects:', error);

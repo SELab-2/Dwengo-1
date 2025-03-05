@@ -1,26 +1,26 @@
 import { getClassRepository, getStudentRepository } from "../data/repositories";
 import { Class } from "../entities/classes/class.entity";
+import { Student } from "../entities/users/student.entity";
 import { ClassDTO, mapToClassDTO } from "../interfaces/classes";
-import { StudentDTO } from "../interfaces/students";
+import { StudentDTO, mapToStudentDTO } from "../interfaces/students";
+
 
 export async function getAllStudents(): Promise<StudentDTO[]> {
-    // TODO
-    return [];
+    const studentRepository = getStudentRepository();
+    const students = await studentRepository.find({});
+
+    return students.map(mapToStudentDTO);
 }
 
 export async function getStudent(username: string): Promise<StudentDTO | null> {
     const studentRepository = getStudentRepository();
     const student = await studentRepository.findByUsername(username);
 
-    if (!student) return null;
-    else {
-        return {
-            id: student.username,
-            username: student.username,
-            firstName: student.firstName,
-            lastName: student.lastName,
-        }
+    if  (!student) { 
+        return null; 
     }
+
+    return mapToStudentDTO(student);
 }
 
 async function fetchStudentClasses(username: string): Promise<Class[]> {

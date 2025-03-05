@@ -4,7 +4,10 @@ import { Student } from '../../entities/users/student.entity.js';
 
 export class ClassRepository extends DwengoEntityRepository<Class> {
     public findById(id: string): Promise<Class | null> {
-        return this.findOne({ classId: id });
+        return this.findOne(
+            { classId: id },
+            { populate: ["students", "teachers"] },
+        );
     }
     public deleteById(id: string): Promise<void> {
         return this.deleteWhere({ classId: id });

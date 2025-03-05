@@ -1,3 +1,5 @@
+import { Student } from "../entities/users/student.entity";
+
 export interface StudentDTO {
     id: string;
     username: string;
@@ -8,5 +10,14 @@ export interface StudentDTO {
         questions: string;
         invitations: string;
         groups: string;
+    };
+}
+
+export function mapToStudentDTO(student: Student): StudentDTO {
+    return {
+        id: student.username,
+        username: student.username,
+        firstName: student.firstName,
+        lastName: student.lastName,
     };
 }
