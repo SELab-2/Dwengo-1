@@ -17,7 +17,6 @@ import loginRouter from './routes/login.js';
 const app: Express = express();
 const port: string | number = getNumericEnvVar(EnvVars.Port);
 
-
 // TODO Replace with Express routes
 app.get('/', (_, res: Response) => {
     res.json({

@@ -7,12 +7,27 @@ import { Class } from './class.entity.js';
  */
 @Entity()
 export class TeacherInvitation {
-    @ManyToOne({ entity: () => Teacher, primary: true })
+    @ManyToOne({
+        entity: () => {
+            return Teacher;
+        },
+        primary: true,
+    })
     sender!: Teacher;
 
-    @ManyToOne({ entity: () => Teacher, primary: true })
+    @ManyToOne({
+        entity: () => {
+            return Teacher;
+        },
+        primary: true,
+    })
     receiver!: Teacher;
 
-    @ManyToOne({ entity: () => Class, primary: true })
+    @ManyToOne({
+        entity: () => {
+            return Class;
+        },
+        primary: true,
+    })
     class!: Class;
 }
