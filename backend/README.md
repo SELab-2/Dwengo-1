@@ -20,3 +20,10 @@ npm run dev
 npm run build
 npm run start
 ```
+
+## Keycloak configuratie
+
+Tijdens development is het voldoende om gebruik te maken van de keycloak configuratie die automatisch ingeladen wordt.
+
+Voor productie is het ten sterkste aangeraden om keycloak manueel te configureren.
+Voor meer informatie, zie de [administrator-handleiding](https://github.com/SELab-2/Dwengo-1/wiki/Administrator:-Productie-omgeving#installatie-en-server-configuratie).
