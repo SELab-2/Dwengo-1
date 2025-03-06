@@ -50,6 +50,7 @@ De tech-stack bestaat uit:
 
 - **Frontend**: TypeScript + Vue.js + Vuetify
 - **Backend**: TypeScript + Node.js + Express.js + TypeORM + PostgreSQL
+- **Identity provider**: Keycloak
 
 Voor meer informatie over de keuze van deze tech-stack, zie [designkeuzes](https://github.com/SELab-2/Dwengo-1/wiki/Developer:-Design-keuzes).
 
