@@ -48,7 +48,7 @@ function config(testingMode: boolean = false): Options {
             driver: SqliteDriver,
             dbName: getEnvVar(EnvVars.DbName),
             entities: entities,
-            // entitiesTs: entitiesTs,
+            // EntitiesTs: entitiesTs,
 
             // Workaround: vitest: `TypeError: Unknown file extension ".ts"` (ERR_UNKNOWN_FILE_EXTENSION)
             // (see https://mikro-orm.io/docs/guide/project-setup#testing-the-endpoint)
@@ -66,7 +66,7 @@ function config(testingMode: boolean = false): Options {
         user: getEnvVar(EnvVars.DbUsername),
         password: getEnvVar(EnvVars.DbPassword),
         entities: entities,
-        // entitiesTs: entitiesTs,
+        // EntitiesTs: entitiesTs,
 
         // Logging
         debug: LOG_LEVEL === 'debug',
