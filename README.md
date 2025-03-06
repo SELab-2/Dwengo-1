@@ -21,6 +21,10 @@ en lessen kunnen samenstellen hun leerlingen en hun vooruitgang kunnen opvolgen.
 
 ## Installatie
 
+Om de applicatie in te stellen voor een productieomgeving, volg de [installatiehandleiding](https://github.com/SELab-2/Dwengo-1/wiki/Administrator:-Productie-omgeving).
+
+Alternatief kan je één van de volgende methodes gebruiken om de applicatie lokaal te draaien.
+
 ### Quick start
 
 1. Installeer Docker en Docker Compose op je systeem (zie [Docker](https://docs.docker.com/get-docker/) en [Docker Compose](https://docs.docker.com/compose/)).
@@ -47,7 +51,7 @@ De tech-stack bestaat uit:
 - **Frontend**: TypeScript + Vue.js + Vuetify
 - **Backend**: TypeScript + Node.js + Express.js + TypeORM + PostgreSQL
 
-Voor meer informatie over de keuze van deze tech-stack, zie [designkeuzes](https://github.com/SELab-2/Dwengo-1/wiki/Design-keuzes).
+Voor meer informatie over de keuze van deze tech-stack, zie [designkeuzes](https://github.com/SELab-2/Dwengo-1/wiki/Developer:-Design-keuzes).
 
 ## Bijdragen aan Dwengo-1
 
