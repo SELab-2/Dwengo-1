@@ -44,7 +44,7 @@ export default [
             'no-use-before-define': 'error',
             'no-useless-assignment': 'error',
 
-            'arrow-body-style': ['warn', 'always'],
+            'arrow-body-style': ['warn', 'as-needed'],
             'block-scoped-var': 'warn',
             camelcase: 'warn',
             'capitalized-comments': 'warn',

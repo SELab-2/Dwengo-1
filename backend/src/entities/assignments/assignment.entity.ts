@@ -12,12 +12,7 @@ import { Language } from '../content/language.js';
 
 @Entity()
 export class Assignment {
-    @ManyToOne({
-        entity: () => {
-            return Class;
-        },
-        primary: true,
-    })
+    @ManyToOne({ entity: () => Class, primary: true })
     within!: Class;
 
     @PrimaryKey({ type: 'number' })
@@ -32,18 +27,9 @@ export class Assignment {
     @Property({ type: 'string' })
     learningPathHruid!: string;
 
-    @Enum({
-        items: () => {
-            return Language;
-        },
-    })
+    @Enum({ items: () => Language })
     learningPathLanguage!: Language;
 
-    @OneToMany({
-        entity: () => {
-            return Group;
-        },
-        mappedBy: 'assignment',
-    })
+    @OneToMany({ entity: () => Group, mappedBy: 'assignment' })
     groups!: Group[];
 }
