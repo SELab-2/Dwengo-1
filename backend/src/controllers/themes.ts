@@ -12,12 +12,11 @@ export function getThemes(req: Request, res: Response) {
     const language = (req.query.language as string)?.toLowerCase() || 'nl';
     const translations = loadTranslations<Translations>(language);
     const themeList = themes.map((theme) => ({
-            key: theme.title,
-            title:
-                translations.curricula_page[theme.title]?.title || theme.title,
-            description: translations.curricula_page[theme.title]?.description,
-            image: `https://dwengo.org/images/curricula/logo_${theme.title}.png`,
-        }));
+        key: theme.title,
+        title: translations.curricula_page[theme.title]?.title || theme.title,
+        description: translations.curricula_page[theme.title]?.description,
+        image: `https://dwengo.org/images/curricula/logo_${theme.title}.png`,
+    }));
 
     res.json(themeList);
 }

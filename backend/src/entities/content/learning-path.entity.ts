@@ -1,13 +1,4 @@
-import {
-    Embeddable,
-    Embedded,
-    Entity,
-    Enum,
-    ManyToMany,
-    OneToOne,
-    PrimaryKey,
-    Property,
-} from '@mikro-orm/core';
+import { Embeddable, Embedded, Entity, Enum, ManyToMany, OneToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { Language } from './language.js';
 import { Teacher } from '../users/teacher.entity.js';
 

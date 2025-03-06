@@ -15,8 +15,8 @@ const vueConfig = defineConfigWithVueTs(
         name: "app/files-to-lint",
         files: ["**/*.{ts,mts,tsx,vue}"],
         rules: {
-            'no-useless-assignment': 'off' // Depend on `no-unused-vars` to catch this
-        }
+            "no-useless-assignment": "off", // Depend on `no-unused-vars` to catch this
+        },
     },
 
     {

@@ -1,9 +1,4 @@
-import {
-    AnyEntity,
-    EntityManager,
-    EntityName,
-    EntityRepository,
-} from '@mikro-orm/core';
+import { AnyEntity, EntityManager, EntityName, EntityRepository } from '@mikro-orm/core';
 import { forkEntityManager } from '../orm.js';
 import { StudentRepository } from './users/student-repository.js';
 import { Student } from '../entities/users/student.entity.js';
@@ -43,9 +38,7 @@ export function transactional<T>(f: () => Promise<T>) {
     entityManager?.transactional(f);
 }
 
-function repositoryGetter<T extends AnyEntity, R extends EntityRepository<T>>(
-    entity: EntityName<T>,
-): () => R {
+function repositoryGetter<T extends AnyEntity, R extends EntityRepository<T>>(entity: EntityName<T>): () => R {
     let cachedRepo: R | undefined;
     return (): R => {
         if (!cachedRepo) {
