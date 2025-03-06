@@ -29,13 +29,20 @@ Alternatief kan je één van de volgende methodes gebruiken om de applicatie lok
 
 1. Installeer Docker en Docker Compose op je systeem (zie [Docker](https://docs.docker.com/get-docker/) en [Docker Compose](https://docs.docker.com/compose/)).
 2. Clone deze repository.
+3. In de backend, kopieer `.env.example` (of `.env.development.example`) naar `.env` en pas de variabelen aan waar nodig.
 3. Voer `docker compose up` uit in de root van de repository.
+4. Optioneel: Configureer de applicatie aan de hand van de [configuratiehandleiding](https://github.com/SELab-2/Dwengo-1/wiki/Administrator:-Productie-omgeving#dwengo-1-configuratie).
 
 ```bash
 docker compose version
 git clone https://github.com/SELab-2/Dwengo-1.git
-cd Dwengo-1
+cd Dwengo-1/backend
+cp .env.example .env
+# Pas .env aan
+nano .env
+cd ..
 docker compose up
+# Configureer de applicatie
 ```
 
 ### Handmatige installatie
