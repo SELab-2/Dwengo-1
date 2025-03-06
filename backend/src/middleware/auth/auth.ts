@@ -6,11 +6,26 @@ import * as express from "express";
 import * as jwt from "jsonwebtoken";
 import {AuthenticatedRequest} from "./authenticated-request.js";
 import {AuthenticationInfo} from "./authentication-info.js";
+import {ForbiddenException, UnauthorizedException} from "../../exceptions";
+
+const JWKS_CACHE = true;
+const JWKS_RATE_LIMIT = true;
+const REQUEST_PROPERTY_FOR_JWT_PAYLOAD = "jwtPayload";
+const JWT_ALGORITHM = "RS256"; // Not configurable via env vars since supporting other algorithms would
+                                        // require additional libraries to be added.
+
+const JWT_PROPERTY_NAMES = {
+    username: "preferred_username",
+    firstName: "given_name",
+    lastName: "family_name",
+    name: "name",
+    email: "email"
+};
 
 function createJwksClient(uri: string): jwksClient.JwksClient {
     return jwksClient({
-        cache: true,
-        rateLimit: true,
+        cache: JWKS_CACHE,
+        rateLimit: JWKS_RATE_LIMIT,
         jwksUri: uri,
     });
 }
@@ -49,9 +64,9 @@ const verifyJwtToken = expressjwt({
         return signingKey.getPublicKey();
     },
     audience: getEnvVar(EnvVars.IdpAudience),
-    algorithms: ["RS256"],
+    algorithms: [JWT_ALGORITHM],
     credentialsRequired: false,
-    requestProperty: "jwtPayload"
+    requestProperty: REQUEST_PROPERTY_FOR_JWT_PAYLOAD
 });
 
 /**
@@ -73,11 +88,11 @@ function getAuthenticationInfo(req: AuthenticatedRequest): AuthenticationInfo | 
     }
     return {
         accountType: accountType,
-        username: req.jwtPayload["preferred_username"]!,
-        name: req.jwtPayload["name"],
-        firstName: req.jwtPayload["given_name"],
-        lastName: req.jwtPayload["family_name"],
-        email: req.jwtPayload["email"],
+        username: req.jwtPayload[JWT_PROPERTY_NAMES.username]!,
+        name: req.jwtPayload[JWT_PROPERTY_NAMES.name],
+        firstName: req.jwtPayload[JWT_PROPERTY_NAMES.firstName],
+        lastName: req.jwtPayload[JWT_PROPERTY_NAMES.lastName],
+        email: req.jwtPayload[JWT_PROPERTY_NAMES.email],
     }
 }
 
@@ -101,9 +116,9 @@ export const authenticateUser = [verifyJwtToken, addAuthenticationInfo];
 export const authorize = (accessCondition: (auth: AuthenticationInfo) => boolean) => {
     return (req: AuthenticatedRequest, res: express.Response, next: express.NextFunction): void => {
         if (!req.auth) {
-            res.status(401).json({ message: "Unauthorized" });
+            throw new UnauthorizedException();
         } else if (!accessCondition(req.auth)) {
-            res.status(403).json({ message: "Forbidden" });
+            throw new ForbiddenException();
         } else {
             next();
         }
