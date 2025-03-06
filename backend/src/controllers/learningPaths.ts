@@ -5,6 +5,7 @@ import {
     fetchLearningPaths,
     searchLearningPaths,
 } from '../services/learningPaths.js';
+import { getLogger } from '../logging/initalize.js';
 /**
  * Fetch learning paths based on query parameters.
  */
@@ -56,7 +57,10 @@ export async function getLearningPaths(
         );
         res.json(learningPaths.data);
     } catch (error) {
-        console.error('❌ Unexpected error fetching learning paths:', error);
+        getLogger().error(
+            '❌ Unexpected error fetching learning paths:',
+            error
+        );
         res.status(500).json({ error: 'Internal server error' });
     }
 }

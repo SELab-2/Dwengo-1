@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import { getLogger, Logger } from '../logging/initalize.js';
 
-// !!!! when logger is done -> change
+const logger: Logger = getLogger();
 
 /**
  * Utility function to fetch data from an API endpoint with error handling.
@@ -24,16 +25,16 @@ export async function fetchWithLogging<T>(
     } catch (error: any) {
         if (error.response) {
             if (error.response.status === 404) {
-                console.error(
+                logger.debug(
                     `❌ ERROR: ${description} not found (404) at "${url}".`
                 );
             } else {
-                console.error(
+                logger.debug(
                     `❌ ERROR: Failed to fetch ${description}. Status: ${error.response.status} - ${error.response.statusText} (URL: "${url}")`
                 );
             }
         } else {
-            console.error(
+            logger.debug(
                 `❌ ERROR: Network or unexpected error when fetching ${description}:`,
                 error.message
             );

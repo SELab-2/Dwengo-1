@@ -1,10 +1,12 @@
-// Can be placed in dotenv but found it redundant
+export const FALLBACK_LANG: string = 'nl';
 
-// Import dotenv from "dotenv";
+// API
 
-// Load .env file
-// Dotenv.config();
+export const DWENGO_API_BASE: string = 'https://dwengo.org/backend/api';
 
-export const DWENGO_API_BASE = 'https://dwengo.org/backend/api';
+// Logging
 
-export const FALLBACK_LANG = 'nl';
+export const LOG_LEVEL: string =
+    'development' === process.env.NODE_ENV ? 'debug' : 'info';
+export const LOKI_HOST: string =
+    process.env.LOKI_HOST || 'http://localhost:3102';

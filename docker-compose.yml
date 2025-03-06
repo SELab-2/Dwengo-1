@@ -8,7 +8,28 @@ services:
         ports:
             - '5431:5432'
         volumes:
-            - postgres_data:/var/lib/postgresql/data
+            - dwengo_postgres_data:/var/lib/postgresql/data
+
+    logging:
+        image: grafana/loki:latest
+        ports:
+            - '3102:3102'
+            - '9095:9095'
+        volumes:
+            - ./config/loki/config.yml:/etc/loki/config.yaml
+            - dwengo_loki_data:/loki
+        command: -config.file=/etc/loki/config.yaml
+        restart: unless-stopped
+
+    dashboards:
+        image: grafana/grafana:latest
+        ports:
+            - '3100:3000'
+        volumes:
+            - dwengo_grafana_data:/var/lib/grafana
+        restart: unless-stopped
 
 volumes:
-    postgres_data:
+    dwengo_postgres_data:
+    dwengo_loki_data:
+    dwengo_grafana_data:
