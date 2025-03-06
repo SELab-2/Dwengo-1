@@ -26,11 +26,20 @@ import { Answer } from './entities/questions/answer.entity.js';
 import { Question } from './entities/questions/question.entity.js';
 
 const entities = [
-    User, Student, Teacher,
-    Assignment, Group, Submission,
-    Class, ClassJoinRequest, TeacherInvitation,
-    Attachment, LearningObject, LearningPath,
-    Answer, Question
+    User,
+    Student,
+    Teacher,
+    Assignment,
+    Group,
+    Submission,
+    Class,
+    ClassJoinRequest,
+    TeacherInvitation,
+    Attachment,
+    LearningObject,
+    LearningPath,
+    Answer,
+    Question,
 ];
 
 function config(testingMode: boolean = false): Options {
@@ -57,7 +66,7 @@ function config(testingMode: boolean = false): Options {
         user: getEnvVar(EnvVars.DbUsername),
         password: getEnvVar(EnvVars.DbPassword),
         entities: entities,
-        //entitiesTs: entitiesTs,
+        // entitiesTs: entitiesTs,
 
         // Logging
         debug: LOG_LEVEL === 'debug',
