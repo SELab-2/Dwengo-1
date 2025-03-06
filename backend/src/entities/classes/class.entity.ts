@@ -17,13 +17,9 @@ export class Class {
     @Property({ type: 'string' })
     displayName!: string;
 
-    @ManyToMany(() => {
-        return Teacher;
-    })
+    @ManyToMany(() => Teacher)
     teachers!: Collection<Teacher>;
 
-    @ManyToMany(() => {
-        return Student;
-    })
+    @ManyToMany(() => Student)
     students!: Collection<Student>;
 }

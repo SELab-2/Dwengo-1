@@ -5,24 +5,18 @@ import { Class } from './class.entity.js';
 @Entity()
 export class ClassJoinRequest {
     @ManyToOne({
-        entity: () => {
-            return Student;
-        },
+        entity: () => Student,
         primary: true,
     })
     requester!: Student;
 
     @ManyToOne({
-        entity: () => {
-            return Class;
-        },
+        entity: () => Class,
         primary: true,
     })
     class!: Class;
 
-    @Enum(() => {
-        return ClassJoinRequestStatus;
-    })
+    @Enum(() => ClassJoinRequestStatus)
     status!: ClassJoinRequestStatus;
 }
 

@@ -26,9 +26,7 @@ export async function getLearningPaths(
                 ? hruids.map(String)
                 : [String(hruids)];
         } else if (themeKey) {
-            const theme = themes.find((t) => {
-                return t.title === themeKey;
-            });
+            const theme = themes.find((t) => t.title === themeKey);
             if (theme) {
                 hruidList = theme.hruids;
             } else {
@@ -45,9 +43,7 @@ export async function getLearningPaths(
             res.json(searchResults);
             return;
         } else {
-            hruidList = themes.flatMap((theme) => {
-                return theme.hruids;
-            });
+            hruidList = themes.flatMap((theme) => theme.hruids);
         }
 
         const learningPaths = await fetchLearningPaths(

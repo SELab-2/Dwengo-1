@@ -52,9 +52,7 @@ function config(testingMode: boolean = false): Options {
 
             // Workaround: vitest: `TypeError: Unknown file extension ".ts"` (ERR_UNKNOWN_FILE_EXTENSION)
             // (see https://mikro-orm.io/docs/guide/project-setup#testing-the-endpoint)
-            dynamicImportProvider: (id) => {
-                return import(id);
-            },
+            dynamicImportProvider: (id) => import(id),
         };
     }
 
@@ -70,9 +68,7 @@ function config(testingMode: boolean = false): Options {
 
         // Logging
         debug: LOG_LEVEL === 'debug',
-        loggerFactory: (options: LoggerOptions) => {
-            return new MikroOrmLogger(options);
-        },
+        loggerFactory: (options: LoggerOptions) => new MikroOrmLogger(options),
     };
 }
 

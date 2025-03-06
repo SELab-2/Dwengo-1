@@ -9,9 +9,7 @@ export class Submission {
     learningObjectHruid!: string;
 
     @Enum({
-        items: () => {
-            return Language;
-        },
+        items: () => Language,
         primary: true,
     })
     learningObjectLanguage!: Language;
@@ -23,9 +21,7 @@ export class Submission {
     submissionNumber!: number;
 
     @ManyToOne({
-        entity: () => {
-            return Student;
-        },
+        entity: () => Student,
     })
     submitter!: Student;
 
@@ -33,9 +29,7 @@ export class Submission {
     submissionTime!: Date;
 
     @ManyToOne({
-        entity: () => {
-            return Group;
-        },
+        entity: () => Group,
         nullable: true,
     })
     onBehalfOf?: Group;

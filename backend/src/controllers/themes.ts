@@ -11,24 +11,20 @@ interface Translations {
 export function getThemes(req: Request, res: Response) {
     const language = (req.query.language as string)?.toLowerCase() || 'nl';
     const translations = loadTranslations<Translations>(language);
-    const themeList = themes.map((theme) => {
-        return {
+    const themeList = themes.map((theme) => ({
             key: theme.title,
             title:
                 translations.curricula_page[theme.title]?.title || theme.title,
             description: translations.curricula_page[theme.title]?.description,
             image: `https://dwengo.org/images/curricula/logo_${theme.title}.png`,
-        };
-    });
+        }));
 
     res.json(themeList);
 }
 
 export function getThemeByTitle(req: Request, res: Response) {
     const themeKey = req.params.theme;
-    const theme = themes.find((t) => {
-        return t.title === themeKey;
-    });
+    const theme = themes.find((t) => t.title === themeKey);
 
     if (theme) {
         res.json(theme.hruids);

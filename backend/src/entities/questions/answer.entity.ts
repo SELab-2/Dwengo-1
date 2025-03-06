@@ -5,17 +5,13 @@ import { Teacher } from '../users/teacher.entity.js';
 @Entity()
 export class Answer {
     @ManyToOne({
-        entity: () => {
-            return Teacher;
-        },
+        entity: () => Teacher,
         primary: true,
     })
     author!: Teacher;
 
     @ManyToOne({
-        entity: () => {
-            return Question;
-        },
+        entity: () => Question,
         primary: true,
     })
     toQuestion!: Question;

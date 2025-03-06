@@ -4,9 +4,7 @@ import { LearningObject } from './learning-object.entity.js';
 @Entity()
 export class Attachment {
     @ManyToOne({
-        entity: () => {
-            return LearningObject;
-        },
+        entity: () => LearningObject,
         primary: true,
     })
     learningObject!: LearningObject;
