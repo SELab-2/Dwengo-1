@@ -1,4 +1,4 @@
-import type {Role} from "@/services/auth/auth-types.ts";
+import type {Role} from "@/services/auth/auth.d.ts";
 
 export default {
     /**

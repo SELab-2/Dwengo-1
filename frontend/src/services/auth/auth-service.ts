@@ -3,7 +3,7 @@
  */
 
 import {computed, reactive} from "vue";
-import type {AuthState, Role, UserManagersForRoles} from "@/services/auth/auth-types.ts";
+import type {AuthState, Role, UserManagersForRoles} from "@/services/auth/auth.d.ts";
 import {User, UserManager} from "oidc-client-ts";
 import {loadAuthConfig} from "@/services/auth/auth-config-loader.ts";
 import authStorage from "./auth-storage.ts"
