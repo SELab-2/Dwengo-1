@@ -4,7 +4,7 @@ import { FALLBACK_LANG } from '../config.js';
 import {
     fetchLearningPaths,
     searchLearningPaths,
-} from '../services/learningPaths.js';
+} from '../services/learning-paths.js';
 /**
  * Fetch learning paths based on query parameters.
  */

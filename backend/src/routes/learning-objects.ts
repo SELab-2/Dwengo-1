@@ -2,7 +2,7 @@ import express from 'express';
 import {
     getAllLearningObjects,
     getLearningObject,
-} from '../controllers/learningObjects.js';
+} from '../controllers/learning-objects.js';
 
 const router = express.Router();
 

@@ -13,6 +13,15 @@ import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
 import { LearningObjectRepository } from '../../data/content/learning-object-repository.js';
 
+@Embeddable()
+export class ReturnValue {
+    @Property({ type: 'string' })
+    callbackUrl!: string;
+
+    @Property({ type: 'json' })
+    callbackSchema!: string;
+}
+
 @Entity({ repository: () => LearningObjectRepository })
 export class LearningObject {
     @PrimaryKey({ type: 'string' })
@@ -86,15 +95,6 @@ export class EducationalGoal {
 
     @Property({ type: 'string' })
     id!: string;
-}
-
-@Embeddable()
-export class ReturnValue {
-    @Property({ type: 'string' })
-    callbackUrl!: string;
-
-    @Property({ type: 'json' })
-    callbackSchema!: string;
 }
 
 export enum ContentType {
