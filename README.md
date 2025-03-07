@@ -10,7 +10,7 @@ Projectopgave</a></span>
 </p>
 
 <ul align="center" style="list-style-type: none">
-<li>Projectleider: Fransisco Van Langenhove (<a href="https://github.com/Gabriellvl">@Gabriellvl</a>)</li>
+<li>Projectleider: Fransisco Gabriel Van Langenhove (<a href="https://github.com/Gabriellvl">@Gabriellvl</a>)</li>
 <li>Technische lead: Tibo De Peuter (<a href="https://github.com/tdpeuter">@tdpeuter</a>)</li>
 <li>Systeembeheerder: Timo De Meyst (<a href="https://github.com/kloep1">@kloep1</a>)</li>
 <li>Customer relations officer: Adriaan Jacquet (<a href="https://github.com/WhisperinCheetah">@WhisperinCheetah</a>)</li>
