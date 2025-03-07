@@ -16,17 +16,17 @@ describe('TeacherRepository', () => {
     });
 
     it('should not return a teacher because username does not exist', async() => {
-        const student = await TeacherRepository.findByUsername('test');
+        const teacher = await TeacherRepository.findByUsername('test');
 
-        expect(student).toBeNull();
+        expect(teacher).toBeNull();
     });
 
     it('should return teacher from the datbase', async() => {
-        const student = await TeacherRepository.findByUsername('Tool');
+        const teacher = await TeacherRepository.findByUsername('Tool');
 
-        expect(student).toBeTruthy();
-        expect(student?.firstName).toBe('Maynard');
-        expect(student?.lastName).toBe('Keenan');
+        expect(teacher).toBeTruthy();
+        expect(teacher?.firstName).toBe('Maynard');
+        expect(teacher?.lastName).toBe('Keenan');
     })
 
     it('should return the queried teacher after he was added', async () => {
@@ -34,18 +34,18 @@ describe('TeacherRepository', () => {
             new Teacher(username, firstName, lastName)
         );
 
-        const retrievedStudent =
+        const retrievedTeacher =
             await TeacherRepository.findByUsername(username);
-        expect(retrievedStudent).toBeTruthy();
-        expect(retrievedStudent?.firstName).toBe(firstName);
-        expect(retrievedStudent?.lastName).toBe(lastName);
+        expect(retrievedTeacher).toBeTruthy();
+        expect(retrievedTeacher?.firstName).toBe(firstName);
+        expect(retrievedTeacher?.lastName).toBe(lastName);
     });
 
-    it('should no longer return the queried student after he was removed again', async () => {
+    it('should no longer return the queried teacher after he was removed again', async () => {
         await TeacherRepository.deleteByUsername(username);
 
-        const retrievedStudent =
+        const retrievedTeacher =
             await TeacherRepository.findByUsername(username);
-        expect(retrievedStudent).toBeNull();
+        expect(retrievedTeacher).toBeNull();
     });
 });
