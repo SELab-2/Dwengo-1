@@ -1,5 +1,10 @@
 import express from 'express'
-import {createTeacherHandler, deleteTeacherHandler, getTeacherHandler} from "../controllers/teachers.js";
+import {
+    createTeacherHandler,
+    deleteTeacherHandler,
+    getTeacherClassHandler,
+    getTeacherHandler, getTeacherStudentHandler
+} from "../controllers/teachers.js";
 const router = express.Router();
 
 // root endpoint used to search objects
@@ -8,6 +13,10 @@ router.get('/', getTeacherHandler);
 router.post('/', createTeacherHandler);
 
 router.delete('/:username', deleteTeacherHandler);
+
+router.get('/:username/classes', getTeacherClassHandler);
+
+router.get('/:username/students', getTeacherStudentHandler);
 
 // the questions students asked a teacher
 router.get('/:id/questions', (req, res) => {

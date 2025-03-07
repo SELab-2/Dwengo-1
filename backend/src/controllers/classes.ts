@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getAllClasses, getClass, getClassStudents } from '../services/class';
+import {getAllClasses, getClass, getClassStudents, getClassStudentsIds} from '../services/class';
 import { ClassDTO } from '../interfaces/classes';
 
 export async function getAllClassesHandler(
@@ -48,7 +48,10 @@ export async function getClassStudentsHandler(
     const classId = req.params.id;
     const full = req.query.full === "true";
 
-    const students = await getClassStudents(classId, full);
+    let students;
+
+    if (full) students = await getClassStudents(classId);
+    else students = await getClassStudentsIds(classId);
 
     res.json({
         students: students,

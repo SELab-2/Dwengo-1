@@ -10,7 +10,7 @@ export async function getAllClasses(full: boolean): Promise<ClassDTO[] | string[
     if (!classes) {
         return [];
     }
-    
+
     if (full) {
         return classes.map(mapToClassDTO);
     } else {
@@ -28,17 +28,21 @@ export async function getClass(classId: string): Promise<ClassDTO | null> {
     }
 }
 
-export async function getClassStudents(classId: string, full: boolean): Promise<StudentDTO[] | string[]> {
+async function fetchClassStudents(classId: string, full: boolean): Promise<StudentDTO[] | string[]> {
     const classRepository = getClassRepository();
     const cls = await classRepository.findById(classId);
 
-    if (!cls) {
+    if (!cls)
         return [];
-    }
 
-    if (full) {
-        return cls.students.map(mapToStudentDTO);
-    } else {
-        return cls.students.map((student) => student.username);
-    }
+    return cls.students.map(mapToStudentDTO);
 }
+
+export async function getClassStudents(classId: string): Promise<StudentDTO[]> {
+    return await fetchClassStudents(classId);
+}
+
+export async function getClassStudentsIds(classId: string): Promise<string[]> {
+    return await fetchClassStudents(classId).map((student) => student.username);
+}
+
