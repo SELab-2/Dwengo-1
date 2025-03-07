@@ -1,31 +1,13 @@
 import express from 'express'
+import {createTeacherHandler, deleteTeacherHandler, getTeacherHandler} from "../controllers/teachers.js";
 const router = express.Router();
 
 // root endpoint used to search objects
-router.get('/', (req, res) => {
-    res.json({
-        teachers: [
-            '0',
-            '1',
-        ]
-    });
-});
+router.get('/', getTeacherHandler);
 
-// information about a teacher
-router.get('/:id', (req, res) => {
-    res.json({
-        id: req.params.id,
-        firstName: 'John',
-        lastName: 'Doe',
-        username: 'JohnDoe1',
-        links: {
-            self: `${req.baseUrl}/${req.params.id}`,
-            classes: `${req.baseUrl}/${req.params.id}/classes`,
-            questions: `${req.baseUrl}/${req.params.id}/questions`,
-            invitations: `${req.baseUrl}/${req.params.id}/invitations`,
-        },
-    });
-})
+router.post('/', createTeacherHandler);
+
+router.delete('/:username', deleteTeacherHandler);
 
 // the questions students asked a teacher
 router.get('/:id/questions', (req, res) => {

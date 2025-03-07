@@ -7,6 +7,7 @@ import learningPathRoutes from './routes/learning-paths.js';
 import learningObjectRoutes from './routes/learning-objects.js';
 
 import studentRoutes from './routes/students.js';
+import teacherRoutes from './routes/teachers.js'
 import groupRoutes from './routes/groups.js';
 import submissionRoutes from './routes/submissions.js';
 import classRoutes from './routes/classes.js';
@@ -16,6 +17,8 @@ const app: Express = express();
 const port: string | number = getNumericEnvVar(EnvVars.Port);
 
 
+app.use(express.json());
+
 // TODO Replace with Express routes
 app.get('/', (_, res: Response) => {
     res.json({
@@ -24,6 +27,7 @@ app.get('/', (_, res: Response) => {
 });
 
 app.use('/student', studentRoutes);
+app.use('/teacher', teacherRoutes);
 app.use('/group', groupRoutes);
 app.use('/submission', submissionRoutes);
 app.use('/class', classRoutes);

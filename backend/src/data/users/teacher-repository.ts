@@ -5,6 +5,9 @@ export class TeacherRepository extends DwengoEntityRepository<Teacher> {
     public findByUsername(username: string): Promise<Teacher | null> {
         return this.findOne({ username: username });
     }
+    public addTeacher(teacher: Teacher): Promise<void> {
+        return this.save(teacher);
+    }
     public deleteByUsername(username: string): Promise<void> {
         return this.deleteWhere({ username: username });
     }
