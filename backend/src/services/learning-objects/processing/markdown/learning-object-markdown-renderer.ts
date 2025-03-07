@@ -1,0 +1,102 @@
+import PdfProcessor from "../pdf/pdf-processor.js";
+import AudioProcessor from "../audio/audio-processor.js";
+import ExternProcessor from "../extern/extern-processor.js";
+import InlineImageProcessor from "../image/inline-image-processor.js";
+import {RendererObject, Tokens} from "marked";
+import {getUrlStringForLearningObject, isValidHttpUrl} from "../../../../util/links";
+import {ProcessingError} from "../processing-error";
+import {LearningObjectIdentifier} from "../../../../interfaces/learning-content";
+import {Language} from "../../../../entities/content/language";
+import Image = Tokens.Image;
+import Heading = Tokens.Heading;
+import Link = Tokens.Link;
+
+const prefixes = {
+    learningObject: '@learning-object',
+    pdf: '@pdf',
+    audio: '@audio',
+    extern: '@extern',
+    video: '@youtube',
+    notebook: '@notebook',
+    blockly: '@blockly',
+};
+
+function extractLearningObjectIdFromHref(href: string): LearningObjectIdentifier {
+    const [hruid, language, version] = href.split(/\/(.+)/, 2)[1].split("/");
+    return {hruid, language: language as Language, version};
+}
+
+/**
+ * An extension for the renderer of the Marked Markdown renderer which adds support for
+ * - a custom heading,
+ * - links to other learning objects,
+ * - embeddings of other learning objects.
+ */
+ const dwengoMarkedRenderer: RendererObject = {
+    heading(heading: Heading) {
+        const text = heading.text;
+        const level = heading.depth;
+        const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
+
+        return `
+            <h${level}>
+                <a name="${escapedText}" class="anchor" href="#${escapedText}">
+                <span class="header-link"></span>
+                </a>
+                ${text}
+            </h${level}>`;
+    },
+
+    // When the syntax for a link is used => [text](href "title")
+    // render a custom link when the prefix for a learning object is used.
+    link(link: Link) {
+        const href = link.href;
+        const title = link.title || "";
+        const text = link.text;
+
+        if (href.startsWith(prefixes.learningObject)) {
+            // link to learning-object
+            const learningObjectId = extractLearningObjectIdFromHref(href);
+            return `
+            <a href="${getUrlStringForLearningObject(learningObjectId)}]" target="_blank" title="${title}">${text}</a>
+        `;
+        } else {
+            // any other link
+            if (!isValidHttpUrl(href)) {
+                throw new ProcessingError("Link is not a valid HTTP URL!");
+            }
+            return `<a href="${href}" target="_blank" title="${title}">${text}</a>`;
+        }
+    },
+
+    // When the syntax for an image is used => ![text](href "title")
+    // render a learning object, pdf, audio or video if a prefix is used.
+    image(img: Image) {
+        const href = img.href;
+        if (href.startsWith(prefixes.learningObject)) {
+            // embedded learning-object
+            const learningObjectId = extractLearningObjectIdFromHref(href);
+            return `
+                <learning-object hruid="${learningObjectId.hruid}" language="${learningObjectId.language}" version="${learningObjectId.version}"/>
+            `; // Placeholder for the learning object since we cannot fetch its HTML here (this has to be a sync function!)
+        } else if (href.startsWith(prefixes.pdf)) {
+            // embedded pdf
+            let proc = new PdfProcessor();
+            return proc.render(href.split(/\/(.+)/, 2)[1]);
+        } else if (href.startsWith(prefixes.audio)) {
+            // embedded audio
+            let proc = new AudioProcessor();
+            return proc.render(href.split(/\/(.+)/, 2)[1]);
+        } else if (href.startsWith(prefixes.extern) || href.startsWith(prefixes.video) || href.startsWith(prefixes.notebook)) {
+            // embedded youtube video or notebook (or other extern content)
+            let proc = new ExternProcessor();
+            return proc.render(href.split(/\/(.+)/, 2)[1]);
+        } else {
+            // embedded image
+            let proc = new InlineImageProcessor();
+            return proc.render(href)
+        }
+    },
+}
+
+export default dwengoMarkedRenderer;

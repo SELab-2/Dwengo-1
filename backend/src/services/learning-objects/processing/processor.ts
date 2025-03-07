@@ -1,6 +1,6 @@
 import {LearningObject} from "../../../entities/content/learning-object.entity";
 import {ProcessingError} from "./processing-error";
-import {DwengoContentType} from "./content_type";
+import {DwengoContentType} from "./content-type";
 
 /**
  * Abstract base class for all processors.
@@ -19,7 +19,9 @@ abstract class Processor<T> {
      * @return Rendered HTML-string
      * @throws ProcessingError if the rendering fails.
      */
-    abstract render(toRender: T): string;
+    render(toRender: T): string {
+        return this.renderFn(toRender);
+    }
 
     /**
      * Render a learning object with the content type for which this processor is responsible.
@@ -34,6 +36,15 @@ abstract class Processor<T> {
         }
         return this.renderLearningObjectFn(toRender);
     }
+
+    /**
+     * Function which actually renders the content.
+     *
+     * @param toRender Content to be rendered
+     * @return Rendered HTML as a string
+     * @protected
+     */
+    protected abstract renderFn(toRender: T): string;
 
     /**
      * Function which actually executes the rendering of a learning object.

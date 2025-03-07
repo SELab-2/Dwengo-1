@@ -1,0 +1,28 @@
+/**
+ * Based on https://github.com/dwengovzw/Learning-Object-Repository/blob/main/app/processors/pdf/pdf_processor.js
+ */
+
+import Processor from "../processor.js";
+import DOMPurify from 'isomorphic-dompurify';
+import {DwengoContentType} from "../content-type.js";
+import {isValidHttpUrl} from "../../../../util/links.js";
+import {ProcessingError} from "../processing-error.js";
+
+class PdfProcessor extends Processor<string> {
+    constructor() {
+        super(DwengoContentType.APPLICATION_PDF);
+    }
+
+    override renderFn(pdfUrl: string) {
+        if (!isValidHttpUrl(pdfUrl)) {
+            throw new ProcessingError(`PDF URL is invalid: ${pdfUrl}`);
+        }
+
+        return DOMPurify.sanitize(`
+            <embed src="${pdfUrl}" type="application/pdf" width="100%" height="800px"/>
+            `, { ADD_TAGS: ["embed"] }
+        );
+    }
+}
+
+export default PdfProcessor;

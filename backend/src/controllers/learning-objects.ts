@@ -5,6 +5,8 @@ import learningObjectService from "../services/learning-objects/learning-object-
 import {EnvVars, getEnvVar} from "../util/envvars";
 import {Language} from "../entities/content/language";
 import {BadRequestException} from "../exceptions";
+import attachmentService from "../services/learning-objects/attachment-service";
+import {NotFoundError} from "@mikro-orm/core";
 
 function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIdentifier {
     if (!req.params.hruid) {
@@ -59,4 +61,15 @@ export async function getLearningObjectHTML(req: Request, res: Response): Promis
 
     const learningObject = await learningObjectService.getLearningObjectHTML(learningObjectId);
     res.send(learningObject);
+}
+
+export async function getAttachment(req: Request, res: Response): Promise<void> {
+    const learningObjectId = getLearningObjectIdentifierFromRequest(req);
+    const name = req.params.attachmentName;
+    const attachment = await attachmentService.getAttachment(learningObjectId, name);
+
+    if (!attachment) {
+        throw new NotFoundError(`Attachment ${name} not found`);
+    }
+    res.setHeader("Content-Type", attachment.mimeType).send(attachment.content)
 }

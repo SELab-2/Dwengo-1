@@ -11,7 +11,7 @@ import {
 import { Language } from './language.js';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
-import {DwengoContentType} from "../../services/learning-objects/processing/content_type";
+import {DwengoContentType} from "../../services/learning-objects/processing/content-type";
 
 @Entity()
 export class LearningObject {
