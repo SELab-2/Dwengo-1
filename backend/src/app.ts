@@ -11,7 +11,6 @@ import groupRouter from './routes/group.js';
 import submissionRouter from './routes/submission.js';
 import classRouter from './routes/class.js';
 import questionRouter from './routes/question.js';
-import loginRouter from './routes/login.js';
 
 const app: Express = express();
 const port: string | number = getNumericEnvVar(EnvVars.Port);
@@ -29,7 +28,6 @@ app.use('/group', groupRouter);
 app.use('/submission', submissionRouter);
 app.use('/class', classRouter);
 app.use('/question', questionRouter);
-app.use('/login', loginRouter);
 
 app.use('/theme', themeRoutes);
 app.use('/learningPath', learningPathRoutes);
