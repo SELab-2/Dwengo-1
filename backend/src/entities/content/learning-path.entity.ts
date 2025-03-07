@@ -1,13 +1,4 @@
-import {
-    Embeddable,
-    Embedded,
-    Entity,
-    Enum,
-    ManyToMany,
-    OneToOne,
-    PrimaryKey,
-    Property,
-} from '@mikro-orm/core';
+import { Embeddable, Embedded, Entity, Enum, ManyToMany, OneToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { Language } from './language.js';
 import { Teacher } from '../users/teacher.entity.js';
 
@@ -17,17 +8,13 @@ export class LearningPath {
     hruid!: string;
 
     @Enum({
-        items: () => {
-            return Language;
-        },
+        items: () => Language,
         primary: true,
     })
     language!: Language;
 
     @ManyToMany({
-        entity: () => {
-            return Teacher;
-        },
+        entity: () => Teacher,
     })
     admins!: Teacher[];
 
@@ -41,9 +28,7 @@ export class LearningPath {
     image!: string;
 
     @Embedded({
-        entity: () => {
-            return LearningPathNode;
-        },
+        entity: () => LearningPathNode,
         array: true,
     })
     nodes: LearningPathNode[] = [];
@@ -55,9 +40,7 @@ export class LearningPathNode {
     learningObjectHruid!: string;
 
     @Enum({
-        items: () => {
-            return Language;
-        },
+        items: () => Language,
     })
     language!: Language;
 
@@ -71,9 +54,7 @@ export class LearningPathNode {
     startNode!: boolean;
 
     @Embedded({
-        entity: () => {
-            return LearningPathTransition;
-        },
+        entity: () => LearningPathTransition,
         array: true,
     })
     transitions!: LearningPathTransition[];
@@ -85,9 +66,7 @@ export class LearningPathTransition {
     condition!: string;
 
     @OneToOne({
-        entity: () => {
-            return LearningPathNode;
-        },
+        entity: () => LearningPathNode,
     })
     next!: LearningPathNode;
 }

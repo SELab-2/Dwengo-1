@@ -1,13 +1,4 @@
-import {
-    Embeddable,
-    Embedded,
-    Entity,
-    Enum,
-    ManyToMany,
-    OneToMany,
-    PrimaryKey,
-    Property,
-} from '@mikro-orm/core';
+import { Embeddable, Embedded, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Language } from './language.js';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
@@ -18,9 +9,7 @@ export class LearningObject {
     hruid!: string;
 
     @Enum({
-        items: () => {
-            return Language;
-        },
+        items: () => Language,
         primary: true,
     })
     language!: Language;
@@ -29,9 +18,7 @@ export class LearningObject {
     version: string = '1';
 
     @ManyToMany({
-        entity: () => {
-            return Teacher;
-        },
+        entity: () => Teacher,
     })
     admins!: Teacher[];
 
@@ -57,9 +44,7 @@ export class LearningObject {
     skosConcepts!: string[];
 
     @Embedded({
-        entity: () => {
-            return EducationalGoal;
-        },
+        entity: () => EducationalGoal,
         array: true,
     })
     educationalGoals: EducationalGoal[] = [];
@@ -77,9 +62,7 @@ export class LearningObject {
     estimatedTime!: number;
 
     @Embedded({
-        entity: () => {
-            return ReturnValue;
-        },
+        entity: () => ReturnValue,
     })
     returnValue!: ReturnValue;
 
@@ -90,9 +73,7 @@ export class LearningObject {
     contentLocation?: string;
 
     @OneToMany({
-        entity: () => {
-            return Attachment;
-        },
+        entity: () => Attachment,
         mappedBy: 'learningObject',
     })
     attachments: Attachment[] = [];

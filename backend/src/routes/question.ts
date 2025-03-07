@@ -15,8 +15,7 @@ router.get('/:id', (req, res) => {
         student: '0',
         group: '0',
         time: new Date(2025, 1, 1),
-        content:
-            'Zijn alle gehele getallen groter dan 2 gelijk aan de som van 2 priemgetallen????',
+        content: 'Zijn alle gehele getallen groter dan 2 gelijk aan de som van 2 priemgetallen????',
         learningObject: '0',
         links: {
             self: `${req.baseUrl}/${req.params.id}`,

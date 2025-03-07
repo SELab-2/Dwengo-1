@@ -1,9 +1,4 @@
-import {
-    createLogger,
-    format,
-    Logger as WinstonLogger,
-    transports,
-} from 'winston';
+import { createLogger, format, Logger as WinstonLogger, transports } from 'winston';
 import LokiTransport from 'winston-loki';
 import { LokiLabels } from 'loki-logger-ts';
 import { LOG_LEVEL, LOKI_HOST } from '../config.js';
@@ -48,9 +43,7 @@ function initializeLogger(): Logger {
         transports: [lokiTransport, consoleTransport],
     });
 
-    logger.debug(
-        `Logger initialized with level ${LOG_LEVEL}, Loki host ${LOKI_HOST}`
-    );
+    logger.debug(`Logger initialized with level ${LOG_LEVEL}, Loki host ${LOKI_HOST}`);
     return logger;
 }
 

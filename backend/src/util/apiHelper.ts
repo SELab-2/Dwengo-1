@@ -12,11 +12,7 @@ const logger: Logger = getLogger();
  * @param params
  * @returns The response data if successful, or null if an error occurs.
  */
-export async function fetchWithLogging<T>(
-    url: string,
-    description: string,
-    params?: Record<string, any>
-): Promise<T | null> {
+export async function fetchWithLogging<T>(url: string, description: string, params?: Record<string, any>): Promise<T | null> {
     try {
         const config: AxiosRequestConfig = params ? { params } : {};
 
@@ -25,19 +21,14 @@ export async function fetchWithLogging<T>(
     } catch (error: any) {
         if (error.response) {
             if (error.response.status === 404) {
-                logger.debug(
-                    `❌ ERROR: ${description} not found (404) at "${url}".`
-                );
+                logger.debug(`❌ ERROR: ${description} not found (404) at "${url}".`);
             } else {
                 logger.debug(
                     `❌ ERROR: Failed to fetch ${description}. Status: ${error.response.status} - ${error.response.statusText} (URL: "${url}")`
                 );
             }
         } else {
-            logger.debug(
-                `❌ ERROR: Network or unexpected error when fetching ${description}:`,
-                error.message
-            );
+            logger.debug(`❌ ERROR: Network or unexpected error when fetching ${description}:`, error.message);
         }
         return null;
     }

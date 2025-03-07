@@ -16,12 +16,9 @@ describe('StudentRepository', () => {
     });
 
     it('should return the queried student after he was added', async () => {
-        await studentRepository.insert(
-            new Student(username, firstName, lastName)
-        );
+        await studentRepository.insert(new Student(username, firstName, lastName));
 
-        const retrievedStudent =
-            await studentRepository.findByUsername(username);
+        const retrievedStudent = await studentRepository.findByUsername(username);
         expect(retrievedStudent).toBeTruthy();
         expect(retrievedStudent?.firstName).toBe(firstName);
         expect(retrievedStudent?.lastName).toBe(lastName);
@@ -30,8 +27,7 @@ describe('StudentRepository', () => {
     it('should no longer return the queried student after he was removed again', async () => {
         await studentRepository.deleteByUsername(username);
 
-        const retrievedStudent =
-            await studentRepository.findByUsername(username);
+        const retrievedStudent = await studentRepository.findByUsername(username);
         expect(retrievedStudent).toBeNull();
     });
 });

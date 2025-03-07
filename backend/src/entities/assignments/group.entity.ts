@@ -5,9 +5,7 @@ import { Student } from '../users/student.entity.js';
 @Entity()
 export class Group {
     @ManyToOne({
-        entity: () => {
-            return Assignment;
-        },
+        entity: () => Assignment,
         primary: true,
     })
     assignment!: Assignment;
@@ -16,9 +14,7 @@ export class Group {
     groupNumber!: number;
 
     @ManyToMany({
-        entity: () => {
-            return Student;
-        },
+        entity: () => Student,
     })
     members!: Student[];
 }

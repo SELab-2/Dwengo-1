@@ -3,10 +3,7 @@ import { Attachment } from '../../entities/content/attachment.entity.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
 
 export class AttachmentRepository extends DwengoEntityRepository<Attachment> {
-    public findByLearningObjectAndNumber(
-        learningObject: LearningObject,
-        sequenceNumber: number
-    ) {
+    public findByLearningObjectAndNumber(learningObject: LearningObject, sequenceNumber: number) {
         return this.findOne({
             learningObject: learningObject,
             sequenceNumber: sequenceNumber,

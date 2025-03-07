@@ -1,17 +1,10 @@
 import { Request, Response } from 'express';
-import {
-    getLearningObjectById,
-    getLearningObjectIdsFromPath,
-    getLearningObjectsFromPath,
-} from '../services/learningObjects.js';
+import { getLearningObjectById, getLearningObjectIdsFromPath, getLearningObjectsFromPath } from '../services/learningObjects.js';
 import { FALLBACK_LANG } from '../config.js';
 import { FilteredLearningObject } from '../interfaces/learningPath.js';
 import { getLogger } from '../logging/initalize.js';
 
-export async function getAllLearningObjects(
-    req: Request,
-    res: Response
-): Promise<void> {
+export async function getAllLearningObjects(req: Request, res: Response): Promise<void> {
     try {
         const hruid = req.query.hruid as string;
         const full = req.query.full === 'true';
@@ -26,10 +19,7 @@ export async function getAllLearningObjects(
         if (full) {
             learningObjects = await getLearningObjectsFromPath(hruid, language);
         } else {
-            learningObjects = await getLearningObjectIdsFromPath(
-                hruid,
-                language
-            );
+            learningObjects = await getLearningObjectIdsFromPath(hruid, language);
         }
 
         res.json(learningObjects);
@@ -39,10 +29,7 @@ export async function getAllLearningObjects(
     }
 }
 
-export async function getLearningObject(
-    req: Request,
-    res: Response
-): Promise<void> {
+export async function getLearningObject(req: Request, res: Response): Promise<void> {
     try {
         const { hruid } = req.params;
         const language = (req.query.language as string) || FALLBACK_LANG;

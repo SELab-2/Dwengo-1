@@ -8,9 +8,7 @@ export class Question {
     learningObjectHruid!: string;
 
     @Enum({
-        items: () => {
-            return Language;
-        },
+        items: () => Language,
         primary: true,
     })
     learningObjectLanguage!: Language;
@@ -22,9 +20,7 @@ export class Question {
     sequenceNumber!: number;
 
     @ManyToOne({
-        entity: () => {
-            return Student;
-        },
+        entity: () => Student,
     })
     author!: Student;
 
