@@ -2,10 +2,10 @@ services:
     web:
         build: ./frontend
         depends_on:
-        - api
+            - api
         ports:
-        - "443:443"
-        - "80:80"
+            - '443:443'
+            - '80:80'
     api:
         build: ./backend
     db:
