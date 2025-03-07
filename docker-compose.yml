@@ -8,6 +8,8 @@ services:
             - '80:80'
     api:
         build: ./backend
+        ports:
+            - '2002:2002'
     db:
         image: postgres:latest
         environment:
