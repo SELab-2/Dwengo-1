@@ -11,6 +11,7 @@ import {
 import { Language } from './language.js';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
+import {DwengoContentType} from "../../services/learning-objects/processing/content_type";
 
 @Entity()
 export class LearningObject {
@@ -33,7 +34,7 @@ export class LearningObject {
     description!: string;
 
     @Property({ type: 'string' })
-    contentType!: string;
+    contentType!: DwengoContentType;
 
     @Property({ type: 'array' })
     keywords: string[] = [];
@@ -94,13 +95,4 @@ export class ReturnValue {
 
     @Property({ type: 'json' })
     callbackSchema!: string;
-}
-
-export enum ContentType {
-    Markdown = 'text/markdown',
-    Image = 'image/image',
-    Mpeg = 'audio/mpeg',
-    Pdf = 'application/pdf',
-    Extern = 'extern',
-    Blockly = 'Blockly',
 }

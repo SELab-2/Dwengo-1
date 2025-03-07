@@ -24,7 +24,6 @@
         "express": "^5.0.1",
         "uuid": "^11.1.0",
         "js-yaml": "^4.1.0",
-        "@types/js-yaml": "^4.0.9"
     },
     "devDependencies": {
         "@mikro-orm/cli": "^6.4.6",
