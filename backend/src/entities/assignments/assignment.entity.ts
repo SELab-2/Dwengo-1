@@ -10,6 +10,41 @@ import { Class } from '../classes/class.entity.js';
 import { Group } from './group.entity.js';
 import { Language } from '../content/language.js';
 
+/**
+ * @swagger
+ * tags:
+ *   name: Assignment
+ *   description: Assignment management
+ * components:
+ *   schemas:
+ *     Assignment:
+ *       type: object
+ *       properties:
+ *         within:
+ *           $ref: '#/components/schemas/Class'
+ *         id:
+ *           type: number
+ *         title:
+ *           type: string
+ *         description:
+ *           type: string
+ *         learningPathHruid:
+ *           type: string
+ *         learningPathLanguage:
+ *           $ref: '#/components/schemas/Language'
+ *         groups:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Group'
+ *       required:
+ *         - within
+ *         - id
+ *         - title
+ *         - description
+ *         - learningPathHruid
+ *         - learningPathLanguage
+ *         - groups
+ */
 @Entity()
 export class Assignment {
     @ManyToOne({

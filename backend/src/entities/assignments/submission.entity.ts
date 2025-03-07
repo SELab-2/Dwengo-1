@@ -3,6 +3,39 @@ import { Group } from './group.entity.js';
 import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { Language } from '../content/language.js';
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Submission:
+ *       type: object
+ *       properties:
+ *         learningObjectHruid:
+ *           type: string
+ *         learningObjectLanguage:
+ *           $ref: '#/components/schemas/Language'
+ *         learningObjectVersion:
+ *           type: string
+ *           default: '1'
+ *         submissionNumber:
+ *           type: number
+ *         submitter:
+ *           $ref: '#/components/schemas/Student'
+ *         submissionTime:
+ *           type: string
+ *           format: date-time
+ *         onBehalfOf:
+ *           $ref: '#/components/schemas/Group'
+ *         content:
+ *           type: string
+ *       required:
+ *         - learningObjectHruid
+ *         - learningObjectLanguage
+ *         - submissionNumber
+ *         - submitter
+ *         - submissionTime
+ *         - content
+ */
 @Entity()
 export class Submission {
     @PrimaryKey({ type: 'string' })
