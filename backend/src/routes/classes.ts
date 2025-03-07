@@ -1,6 +1,6 @@
 import express from 'express'
 import { getAllClassesHandler, getClassHandler, getClassStudentsHandler } from '../controllers/classes';
-import assignmentRouter from './assignment.js';
+import assignmentRouter from './assignments.js';
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ router.get('/:id', getClassHandler);
 
 router.get('/:id/invitations', (req, res) => {
     res.json({
-        invitations: [ 
+        invitations: [
             '0'
         ],
     });
