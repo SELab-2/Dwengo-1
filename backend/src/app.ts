@@ -16,6 +16,8 @@ import { getLogger, Logger } from './logging/initalize.js';
 import { responseTimeLogger } from './logging/responseTimeLogger.js';
 import responseTime from 'response-time';
 import { EnvVars, getNumericEnvVar } from './util/envvars.js';
+import swaggerMiddleware from "./swagger";
+import swaggerUi from "swagger-ui-express";
 
 const logger: Logger = getLogger();
 
@@ -23,7 +25,6 @@ const app: Express = express();
 const port: string | number = getNumericEnvVar(EnvVars.Port);
 
 app.use(express.json());
-app.use(responseTime(responseTimeLogger));
 
 // TODO Replace with Express routes
 app.get('/', (_, res: Response) => {
@@ -33,17 +34,24 @@ app.get('/', (_, res: Response) => {
     });
 });
 
-app.use('/student', studentRouter);
-app.use('/group', groupRouter);
-app.use('/assignment', assignmentRouter);
-app.use('/submission', submissionRouter);
-app.use('/class', classRouter);
-app.use('/question', questionRouter);
-app.use('/login', loginRouter);
+// Routes
+app.use('/student', studentRouter /* #swagger.tags = ['Student'] */);
+app.use('/group', groupRouter /* #swagger.tags = ['Group'] */);
+app.use('/assignment', assignmentRouter /* #swagger.tags = ['Assignment'] */);
+app.use('/submission', submissionRouter /* #swagger.tags = ['Submission'] */);
+app.use('/class', classRouter /* #swagger.tags = ['Class'] */);
+app.use('/question', questionRouter /* #swagger.tags = ['Question'] */);
+app.use('/login', loginRouter /* #swagger.tags = ['Login'] */);
 
-app.use('/theme', themeRoutes);
-app.use('/learningPath', learningPathRoutes);
-app.use('/learningObject', learningObjectRoutes);
+app.use('/theme', themeRoutes /* #swagger.tags = ['Theme'] */);
+app.use('/learningPath', learningPathRoutes /* #swagger.tags = ['Learning Path'] */);
+app.use('/learningObject', learningObjectRoutes /* #swagger.tags = ['Learning Object'] */);
+
+// Add response time loggin
+app.use(responseTime(responseTimeLogger));
+
+// Swagger UI for API documentation
+app.use('/api-docs', swaggerUi.serve, swaggerMiddleware);
 
 async function startServer() {
     await initORM();
