@@ -15,6 +15,20 @@ describe('StudentRepository', () => {
         studentRepository = getStudentRepository();
     });
 
+    it('should not return a student because username does not exist', async() => {
+        const student = await studentRepository.findByUsername('test');
+
+        expect(student).toBeNull();
+    });
+
+    it('should return student from the datbase', async() => {
+        const student = await studentRepository.findByUsername('DireStraits');
+
+        expect(student).toBeTruthy();
+        expect(student?.firstName).toBe('Mark');
+        expect(student?.lastName).toBe('Knopfler');
+    })
+
     it('should return the queried student after he was added', async () => {
         await studentRepository.insert(
             new Student(username, firstName, lastName)
