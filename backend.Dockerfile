@@ -6,7 +6,9 @@ COPY ./backend/package*.json ./
 
 RUN npm install
 
-COPY ./backend .
+COPY ./backend ./backend
+
+WORKDIR /app/backend
 
 EXPOSE 2002
 
