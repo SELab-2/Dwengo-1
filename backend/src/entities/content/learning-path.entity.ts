@@ -11,6 +11,46 @@ import {
 import { Language } from './language.js';
 import { Teacher } from '../users/teacher.entity.js';
 
+/**
+ * @swagger
+ * tags:
+ *   name: LearningPath
+ *   description: API for managing learning paths
+ * components:
+ *   schemas:
+ *     LearningPath:
+ *       type: object
+ *       required:
+ *         - hruid
+ *         - language
+ *         - admins
+ *         - title
+ *         - description
+ *         - image
+ *       properties:
+ *         hruid:
+ *           type: string
+ *           description: Human readable identifier
+ *         language:
+ *           description: Language of the learning path
+ *           schema:
+ *             $ref: '#/components/schemas/Language'
+ *         admins:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Teacher'
+ *         title:
+ *           type: string
+ *         description:
+ *           type: string
+ *         image:
+ *           type: string
+ *         nodes:
+ *           type: array
+ *           items:
+ *             schema:
+ *               $ref: '#/components/schemas/LearningPathNode'
+ */
 @Entity()
 export class LearningPath {
     @PrimaryKey({ type: 'string' })

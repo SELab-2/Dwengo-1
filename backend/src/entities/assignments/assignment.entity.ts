@@ -35,7 +35,21 @@ import { Language } from '../content/language.js';
  *         groups:
  *           type: array
  *           items:
- *             $ref: '#/components/schemas/Group'
+ *             type: string
+ *             description: ID of a group
+ *         links:
+ *           type: object
+ *           properties:
+ *             self:
+ *               type: string
+ *               description: Path to the assignment
+ *               example: '/assignment/0'
+ *             submissions:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 description: Path to the submissions for this assignment
+ *                 example: '/assignment/0/submissions'
  *       required:
  *         - within
  *         - id

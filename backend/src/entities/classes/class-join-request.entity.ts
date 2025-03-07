@@ -2,6 +2,10 @@ import { Entity, Enum, ManyToOne } from '@mikro-orm/core';
 import { Student } from '../users/student.entity.js';
 import { Class } from './class.entity.js';
 
+/**
+ * @swagger
+ * tags: [Class]
+ */
 @Entity()
 export class ClassJoinRequest {
     @ManyToOne({

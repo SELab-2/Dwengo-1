@@ -2,6 +2,10 @@ import express from 'express';
 const router = express.Router();
 
 // Root endpoint used to search objects
+/**
+ * @swagger
+ * /question
+ */
 router.get('/', (req, res) => {
     res.json({
         questions: ['0', '1'],

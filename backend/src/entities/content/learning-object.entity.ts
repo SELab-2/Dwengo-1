@@ -12,6 +12,80 @@ import { Language } from './language.js';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
 
+/**
+ * @swagger
+ * tags:
+ *   name: LearningObject
+ *   description: API for managing learning objects
+ * components:
+ *   schemas:
+ *     LearningObject:
+ *       type: object
+ *       properties:
+ *         hruid:
+ *           type: string
+ *         language:
+ *           $ref: '#/components/schemas/Language'
+ *         version:
+ *           type: string
+ *           default: '1'
+ *         admins:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Teacher'
+ *         title:
+ *           type: string
+ *         description:
+ *           type: string
+ *         contentType:
+ *           type: string
+ *         keywords:
+ *           type: array
+ *           items:
+ *             type: string
+ *         targetAges:
+ *           type: array
+ *           items:
+ *             type: integer
+ *           nullable: true
+ *         teacherExclusive:
+ *           type: boolean
+ *           default: false
+ *         skosConcepts:
+ *           type: array
+ *           items:
+ *             type: string
+ *         educationalGoals:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/EducationalGoal'
+ *         copyright:
+ *           type: string
+ *           default: ''
+ *         license:
+ *           type: string
+ *           default: ''
+ *         difficulty:
+ *           type: integer
+ *           nullable: true
+ *         estimatedTime:
+ *           type: integer
+ *         returnValue:
+ *           $ref: '#/components/schemas/ReturnValue'
+ *         available:
+ *           type: boolean
+ *           default: true
+ *         contentLocation:
+ *           type: string
+ *           nullable: true
+ *         attachments:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Attachment'
+ *         content:
+ *           type: string
+ *           format: binary
+ */
 @Entity()
 export class LearningObject {
     @PrimaryKey({ type: 'string' })
@@ -101,6 +175,18 @@ export class LearningObject {
     content!: Buffer;
 }
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     EducationalGoal:
+ *       type: object
+ *       properties:
+ *         source:
+ *           type: string
+ *         id:
+ *           type: string
+ */
 @Embeddable()
 export class EducationalGoal {
     @Property({ type: 'string' })
@@ -110,6 +196,22 @@ export class EducationalGoal {
     id!: string;
 }
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ReturnValue:
+ *       type: object
+ *       properties:
+ *         callbackUrl:
+ *           type: string
+ *           format: uri
+ *         callbackSchema:
+ *           type: string
+ *       required:
+ *         - callbackUrl
+ *         - callbackSchema
+ */
 @Embeddable()
 export class ReturnValue {
     @Property({ type: 'string' })

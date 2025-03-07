@@ -1,9 +1,11 @@
 import { fetchWithLogging } from '../util/apiHelper.js';
 import { DWENGO_API_BASE } from '../config.js';
 import {
-    LearningPath,
     LearningPathResponse,
 } from '../interfaces/learningPath.js';
+import {
+    LearningPath
+} from '../entities/content/learning-path.entity.js';
 import { getLogger, Logger } from '../logging/initalize.js';
 
 const logger: Logger = getLogger();
