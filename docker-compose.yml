@@ -1,4 +1,13 @@
 services:
+    web:
+        build: ./frontend
+        depends_on:
+        - api
+        ports:
+        - "443:443"
+        - "80:80"
+    api:
+        build: ./backend
     db:
         image: postgres:latest
         environment:
