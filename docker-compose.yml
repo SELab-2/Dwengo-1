@@ -1,13 +1,15 @@
 services:
     web:
-        build: ./frontend
+        build:
+            dockerfile: ./frontend.Dockerfile
         depends_on:
             - api
         ports:
             - '443:443'
             - '80:80'
     api:
-        build: ./backend
+        build:
+            dockerfile: ./backend.Dockerfile
         ports:
             - '2002:2002'
     db:
