@@ -16,6 +16,8 @@ import { getLogger, Logger } from './logging/initalize.js';
 import { responseTimeLogger } from './logging/responseTimeLogger.js';
 import responseTime from 'response-time';
 import { EnvVars, getNumericEnvVar } from './util/envvars.js';
+import swaggerUi from 'swagger-ui-express';
+import swaggerMiddleware from './swagger';
 
 const logger: Logger = getLogger();
 
@@ -23,7 +25,6 @@ const app: Express = express();
 const port: string | number = getNumericEnvVar(EnvVars.Port);
 
 app.use(express.json());
-app.use(responseTime(responseTimeLogger));
 
 // TODO Replace with Express routes
 app.get('/', (_, res: Response) => {
@@ -33,6 +34,7 @@ app.get('/', (_, res: Response) => {
     });
 });
 
+// Routes
 app.use('/student', studentRouter);
 app.use('/group', groupRouter);
 app.use('/assignment', assignmentRouter);
@@ -44,6 +46,12 @@ app.use('/login', loginRouter);
 app.use('/theme', themeRoutes);
 app.use('/learningPath', learningPathRoutes);
 app.use('/learningObject', learningObjectRoutes);
+
+// Add response time logging
+app.use(responseTime(responseTimeLogger));
+
+// Swagger UI for API documentation
+app.use('/api-docs', swaggerUi.serve, swaggerMiddleware);
 
 async function startServer() {
     await initORM();
