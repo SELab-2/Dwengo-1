@@ -15,19 +15,19 @@ describe('StudentRepository', () => {
         studentRepository = getStudentRepository();
     });
 
-    it('should not return a student because username does not exist', async() => {
+    it('should not return a student because username does not exist', async () => {
         const student = await studentRepository.findByUsername('test');
 
         expect(student).toBeNull();
     });
 
-    it('should return student from the datbase', async() => {
-        const student = await studentRepository.findByUsername('DireStraits');
+    it('should return student from the datbase', async () => {
+        const student = await studentRepository.findByUsername('Noordkaap');
 
         expect(student).toBeTruthy();
-        expect(student?.firstName).toBe('Mark');
-        expect(student?.lastName).toBe('Knopfler');
-    })
+        expect(student?.firstName).toBe('Stijn');
+        expect(student?.lastName).toBe('Meuris');
+    });
 
     it('should return the queried student after he was added', async () => {
         await studentRepository.insert(
@@ -42,10 +42,10 @@ describe('StudentRepository', () => {
     });
 
     it('should no longer return the queried student after he was removed again', async () => {
-        await studentRepository.deleteByUsername(username);
+        await studentRepository.deleteByUsername('Nirvana');
 
         const retrievedStudent =
-            await studentRepository.findByUsername(username);
+            await studentRepository.findByUsername('Nirvana');
         expect(retrievedStudent).toBeNull();
     });
 });

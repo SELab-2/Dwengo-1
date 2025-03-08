@@ -12,22 +12,22 @@ describe('ClassRepository', () => {
     });
 
     it('should return nothing because id does not exist', async () => {
-        const classVar = await ClassRepository.findById('id');
+        const classVar = await ClassRepository.findById('test_id');
 
         expect(classVar).toBeNull();
     });
 
     it('should return requested class', async () => {
-        const classVar = await ClassRepository.findById('class_id01');
+        const classVar = await ClassRepository.findById('id01');
 
         expect(classVar).toBeTruthy();
         expect(classVar?.displayName).toBe('class01');
     });
 
     it('class should be gone after deletion', async () => {
-        await ClassRepository.deleteById('class_id01');
+        await ClassRepository.deleteById('id04');
 
-        const classVar = await ClassRepository.findById('class_id01');
+        const classVar = await ClassRepository.findById('id04');
 
         expect(classVar).toBeNull();
     });

@@ -15,19 +15,19 @@ describe('TeacherRepository', () => {
         TeacherRepository = getTeacherRepository();
     });
 
-    it('should not return a teacher because username does not exist', async() => {
+    it('should not return a teacher because username does not exist', async () => {
         const teacher = await TeacherRepository.findByUsername('test');
 
         expect(teacher).toBeNull();
     });
 
-    it('should return teacher from the datbase', async() => {
-        const teacher = await TeacherRepository.findByUsername('Tool');
+    it('should return teacher from the datbase', async () => {
+        const teacher = await TeacherRepository.findByUsername('FooFighters');
 
         expect(teacher).toBeTruthy();
-        expect(teacher?.firstName).toBe('Maynard');
-        expect(teacher?.lastName).toBe('Keenan');
-    })
+        expect(teacher?.firstName).toBe('Dave');
+        expect(teacher?.lastName).toBe('Grohl');
+    });
 
     it('should return the queried teacher after he was added', async () => {
         await TeacherRepository.insert(
@@ -42,10 +42,10 @@ describe('TeacherRepository', () => {
     });
 
     it('should no longer return the queried teacher after he was removed again', async () => {
-        await TeacherRepository.deleteByUsername(username);
+        await TeacherRepository.deleteByUsername('ZesdeMetaal');
 
         const retrievedTeacher =
-            await TeacherRepository.findByUsername(username);
+            await TeacherRepository.findByUsername('ZesdeMetaal');
         expect(retrievedTeacher).toBeNull();
     });
 });
