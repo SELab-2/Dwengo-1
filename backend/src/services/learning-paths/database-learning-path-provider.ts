@@ -157,8 +157,13 @@ const databaseLearningPathProvider: LearningPathProvider = {
     /**
      * Search learning paths in the database using the given search string.
      */
-    searchLearningPaths(query: string, language: string): Promise<LearningPath[]> {
-        return Promise.resolve([]); // TODO
+    async searchLearningPaths(query: string, language: Language): Promise<LearningPath[]> {
+        const searchResults = await learningPathRepo.findByQueryStringAndLanguage(query, language);
+        return await Promise.all(
+            searchResults.map((result, index) =>
+                convertLearningPath(result, index)
+            )
+        );
     }
 }
 
