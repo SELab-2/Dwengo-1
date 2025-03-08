@@ -1,7 +1,7 @@
 import { getClassRepository } from "../data/repositories";
 import { Class } from "../entities/classes/class.entity";
-import { ClassDTO, mapToClassDTO } from "../interfaces/classes";
-import { mapToStudentDTO, StudentDTO } from "../interfaces/students";
+import { ClassDTO, mapToClassDTO } from "../interfaces/class";
+import { mapToStudentDTO, StudentDTO } from "../interfaces/student";
 
 export async function getAllClasses(full: boolean): Promise<ClassDTO[] | string[]> {
     const classRepository = getClassRepository();

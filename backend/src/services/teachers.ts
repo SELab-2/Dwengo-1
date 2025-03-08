@@ -1,9 +1,9 @@
 import {getClassRepository, getTeacherRepository} from "../data/repositories.js";
 import {mapToTeacher, mapToTeacherDTO, TeacherDTO} from "../interfaces/teacher.js";
 import { Teacher } from "../entities/users/teacher.entity";
-import {ClassDTO, mapToClassDTO} from "../interfaces/classes";
+import {ClassDTO, mapToClassDTO} from "../interfaces/class";
 import {getClassStudents, getClassStudentsIds} from "./class";
-import {StudentDTO} from "../interfaces/students";
+import {StudentDTO} from "../interfaces/student";
 
 
 async function fetchAllTeachers(): Promise<TeacherDTO[]> {

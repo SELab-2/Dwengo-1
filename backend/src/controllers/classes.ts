@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import {getAllClasses, getClass, getClassStudents, getClassStudentsIds} from '../services/class';
-import { ClassDTO } from '../interfaces/classes';
+import { ClassDTO } from '../interfaces/class';
 
 export async function getAllClassesHandler(
     req: Request,

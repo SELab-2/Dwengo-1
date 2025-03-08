@@ -9,8 +9,8 @@ import {
     getAllTeachersIds, getStudentsByTeacher, getStudentIdsByTeacher
 } from '../services/teachers.js';
 import {TeacherDTO} from "../interfaces/teacher";
-import {ClassDTO} from "../interfaces/classes";
-import {StudentDTO} from "../interfaces/students";
+import {ClassDTO} from "../interfaces/class";
+import {StudentDTO} from "../interfaces/student";
 
 export async function getTeacherHandler(req: Request, res: Response): Promise<void> {
     try {

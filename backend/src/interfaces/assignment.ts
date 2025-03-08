@@ -1,6 +1,6 @@
 import { Assignment } from "../entities/assignments/assignment.entity";
 import { Class } from "../entities/classes/class.entity";
-import { GroupDTO } from "./groups";
+import { GroupDTO } from "./group";
 
 export interface AssignmentDTO {
     id: number,

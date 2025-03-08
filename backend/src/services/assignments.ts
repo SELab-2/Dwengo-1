@@ -1,5 +1,5 @@
 import { getAssignmentRepository, getClassRepository } from "../data/repositories";
-import { AssignmentDTO, mapToAssignmentDTO } from "../interfaces/assignments";
+import { AssignmentDTO, mapToAssignmentDTO } from "../interfaces/assignment";
 
 export async function getAssignment(classid: string, id: number): Promise<AssignmentDTO | null> {
     const classRepository = getClassRepository();
@@ -8,7 +8,7 @@ export async function getAssignment(classid: string, id: number): Promise<Assign
     if (!cls) {
         return null;
     }
-    
+
     const assignmentRepository = getAssignmentRepository();
     const assignment = await assignmentRepository.findByClassAndId(cls, id);
 

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getAllStudents, getStudent, getStudentClasses, getStudentClassIds } from '../services/students';
-import { ClassDTO } from '../interfaces/classes';
+import { ClassDTO } from '../interfaces/class';
 
 // TODO: accept arguments (full, ...)
 // TODO: endpoints
@@ -27,7 +27,7 @@ export async function getStudentHandler(
     try {
         const username = req.params.id;
         const student = await getStudent(username);
-    
+
         if (!student) {
             res.status(404).json({ error: "Student not found" });
             return;
