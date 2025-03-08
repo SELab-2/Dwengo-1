@@ -476,45 +476,45 @@ export async function setupTestApp() {
 
     learningObject02.attachments = [attachment01];
 
-    // const question01 = em.create(Question, {
-    //     learningObjectLanguage: Language.English,
-    //     learningObjectVersion: '1',
-    //     learningObjectHruid: 'id05',
-    //     sequenceNumber: 1,
-    //     author: student01,
-    //     timestamp: new Date(),
-    //     content: 'question',
-    // });
+    const question01 = em.create(Question, {
+        learningObjectLanguage: Language.English,
+        learningObjectVersion: '1',
+        learningObjectHruid: 'id05',
+        sequenceNumber: 1,
+        author: student01,
+        timestamp: new Date(),
+        content: 'question',
+    });
 
-    // const question02 = em.create(Question, {
-    //     learningObjectLanguage: Language.English,
-    //     learningObjectVersion: '1',
-    //     learningObjectHruid: 'id05',
-    //     sequenceNumber: 2,
-    //     author: student03,
-    //     timestamp: new Date(),
-    //     content: 'question',
-    // });
+    const question02 = em.create(Question, {
+        learningObjectLanguage: Language.English,
+        learningObjectVersion: '1',
+        learningObjectHruid: 'id05',
+        sequenceNumber: 2,
+        author: student03,
+        timestamp: new Date(),
+        content: 'question',
+    });
 
-    // const question03 = em.create(Question, {
-    //     learningObjectLanguage: Language.English,
-    //     learningObjectVersion: '1',
-    //     learningObjectHruid: 'id04',
-    //     sequenceNumber: 1,
-    //     author: student01,
-    //     timestamp: new Date(),
-    //     content: 'question',
-    // });
+    const question03 = em.create(Question, {
+        learningObjectLanguage: Language.English,
+        learningObjectVersion: '1',
+        learningObjectHruid: 'id04',
+        sequenceNumber: 1,
+        author: student01,
+        timestamp: new Date(),
+        content: 'question',
+    });
 
-    // const question04 = em.create(Question, {
-    //     learningObjectLanguage: Language.English,
-    //     learningObjectVersion: '1',
-    //     learningObjectHruid: 'id01',
-    //     sequenceNumber: 1,
-    //     author: student02,
-    //     timestamp: new Date(),
-    //     content: 'question',
-    // });
+    const question04 = em.create(Question, {
+        learningObjectLanguage: Language.English,
+        learningObjectVersion: '1',
+        learningObjectHruid: 'id01',
+        sequenceNumber: 1,
+        author: student02,
+        timestamp: new Date(),
+        content: 'question',
+    });
 
     // const answer01 = em.create(Answer, {
     //     author: teacher01,
@@ -631,5 +631,9 @@ export async function setupTestApp() {
         group02,
         group03,
         group04,
+        question01,
+        question02,
+        question03,
+        question04,
     ]);
 }
