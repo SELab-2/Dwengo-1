@@ -362,35 +362,35 @@ export async function setupTestApp() {
         students: studentsClass04,
     });
 
-    // const assignment01 = em.create(Assignment, {
-    //     within: class01,
-    //     id: 1,
-    //     title: 'dire straits',
-    //     description: 'reading',
-    //     learningPathHruid: 'id02',
-    //     learningPathLanguage: Language.English,
-    //     groups: [],
-    // });
+    const assignment01 = em.create(Assignment, {
+        within: class01,
+        id: 1,
+        title: 'dire straits',
+        description: 'reading',
+        learningPathHruid: 'id02',
+        learningPathLanguage: Language.English,
+        groups: [],
+    });
 
-    // const assignment02 = em.create(Assignment, {
-    //     within: class02,
-    //     id: 2,
-    //     title: 'tool',
-    //     description: 'reading',
-    //     learningPathHruid: 'id01',
-    //     learningPathLanguage: Language.English,
-    //     groups: [],
-    // });
+    const assignment02 = em.create(Assignment, {
+        within: class02,
+        id: 2,
+        title: 'tool',
+        description: 'reading',
+        learningPathHruid: 'id01',
+        learningPathLanguage: Language.English,
+        groups: [],
+    });
 
-    // const assignment03 = em.create(Assignment, {
-    //     within: class01,
-    //     id: 3,
-    //     title: 'delete',
-    //     description: 'will be deleted',
-    //     learningPathHruid: 'id02',
-    //     learningPathLanguage: Language.English,
-    //     groups: [],
-    // });
+    const assignment03 = em.create(Assignment, {
+        within: class01,
+        id: 3,
+        title: 'delete',
+        description: 'will be deleted',
+        learningPathHruid: 'id02',
+        learningPathLanguage: Language.English,
+        groups: [],
+    });
 
     // const group01 = em.create(Group, {
     //     assignment: assignment01,
@@ -626,5 +626,7 @@ export async function setupTestApp() {
         teacherInvitation02,
         teacherInvitation03,
         teacherInvitation04,
+        assignment01,
+        assignment03,
     ]);
 }
