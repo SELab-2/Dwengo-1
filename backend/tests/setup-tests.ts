@@ -392,34 +392,32 @@ export async function setupTestApp() {
         groups: [],
     });
 
-    // const group01 = em.create(Group, {
-    //     assignment: assignment01,
-    //     groupNumber: 1,
-    //     members: [student01, student02],
-    // });
+    const group01 = em.create(Group, {
+        assignment: assignment01,
+        groupNumber: 1,
+        members: [student01, student02],
+    });
 
-    // const group02 = em.create(Group, {
-    //     assignment: assignment01,
-    //     groupNumber: 2,
-    //     members: [student03, student04],
-    // });
+    const group02 = em.create(Group, {
+        assignment: assignment01,
+        groupNumber: 2,
+        members: [student03, student04],
+    });
 
-    // const group03 = em.create(Group, {
-    //     assignment: assignment01,
-    //     groupNumber: 3,
-    //     members: [student05, student06],
-    // });
+    const group03 = em.create(Group, {
+        assignment: assignment01,
+        groupNumber: 3,
+        members: [student05, student06],
+    });
 
-    // const group04 = em.create(Group, {
-    //     assignment: assignment02,
-    //     groupNumber: 1,
-    //     members: [student04],
-    // });
+    const group04 = em.create(Group, {
+        assignment: assignment02,
+        groupNumber: 4,
+        members: [student04],
+    });
 
-    // assignment01.groups.push(group01);
-    // assignment01.groups.push(group02);
-    // assignment01.groups.push(group03);
-    // assignment02.groups.push(group04);
+    assignment01.groups = [group01, group02, group03];
+    assignment02.groups = [group04];
 
     const teacherInvitation01 = em.create(TeacherInvitation, {
         sender: teacher02,
@@ -627,6 +625,11 @@ export async function setupTestApp() {
         teacherInvitation03,
         teacherInvitation04,
         assignment01,
+        assignment02,
         assignment03,
+        group01,
+        group02,
+        group03,
+        group04,
     ]);
 }
