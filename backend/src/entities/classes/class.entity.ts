@@ -8,8 +8,13 @@ import {
 import { v4 } from 'uuid';
 import { Teacher } from '../users/teacher.entity.js';
 import { Student } from '../users/student.entity.js';
+import { ClassRepository } from '../../data/classes/class-repository.js';
 
-@Entity()
+@Entity({
+    repository: () => {
+        return ClassRepository;
+    },
+})
 export class Class {
     @PrimaryKey()
     classId = v4();
