@@ -3,7 +3,7 @@ import AudioProcessor from "../audio/audio-processor.js";
 import ExternProcessor from "../extern/extern-processor.js";
 import InlineImageProcessor from "../image/inline-image-processor.js";
 import {RendererObject, Tokens} from "marked";
-import {getUrlStringForLearningObject, isValidHttpUrl} from "../../../../util/links";
+import {getUrlStringForLearningObjectHTML, isValidHttpUrl} from "../../../../util/links";
 import {ProcessingError} from "../processing-error";
 import {LearningObjectIdentifier} from "../../../../interfaces/learning-content";
 import {Language} from "../../../../entities/content/language";
@@ -58,7 +58,7 @@ function extractLearningObjectIdFromHref(href: string): LearningObjectIdentifier
             // link to learning-object
             const learningObjectId = extractLearningObjectIdFromHref(href);
             return `
-            <a href="${getUrlStringForLearningObject(learningObjectId)}]" target="_blank" title="${title}">${text}</a>
+            <a href="${getUrlStringForLearningObjectHTML(learningObjectId)}]" target="_blank" title="${title}">${text}</a>
         `;
         } else {
             // any other link

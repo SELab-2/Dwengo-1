@@ -14,7 +14,7 @@ export interface Transition {
 export interface LearningObjectIdentifier {
     hruid: string;
     language: Language;
-    version?: string;
+    version?: number;
 }
 
 export interface LearningObjectNode {

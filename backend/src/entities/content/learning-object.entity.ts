@@ -12,6 +12,7 @@ import { Language } from './language.js';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
 import {DwengoContentType} from "../../services/learning-objects/processing/content-type";
+import {v4} from "uuid";
 
 @Entity()
 export class LearningObject {
@@ -21,8 +22,11 @@ export class LearningObject {
     @Enum({ items: () => Language, primary: true })
     language!: Language;
 
-    @PrimaryKey({ type: 'string' })
-    version: string = '1';
+    @PrimaryKey({ type: 'number' })
+    version: number = 1;
+
+    @Property({type: 'uuid', unique: true})
+    uuid = v4();
 
     @ManyToMany({ entity: () => Teacher })
     admins!: Teacher[];

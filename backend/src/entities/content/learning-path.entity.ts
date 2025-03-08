@@ -43,8 +43,8 @@ export class LearningPathNode {
     @Enum({ items: () => Language })
     language!: Language;
 
-    @Property({ type: 'string' })
-    version!: string;
+    @Property({ type: 'number' })
+    version!: number;
 
     @Property({ type: 'longtext' })
     instruction!: string;

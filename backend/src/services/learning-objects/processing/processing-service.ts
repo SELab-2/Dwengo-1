@@ -15,8 +15,10 @@ import Processor from "./processor";
 import {DwengoContentType} from "./content-type";
 import {LearningObjectIdentifier} from "../../../interfaces/learning-content";
 import {Language} from "../../../entities/content/language";
+import {replaceAsync} from "../../../util/async";
 
 const EMBEDDED_LEARNING_OBJECT_PLACEHOLDER = /<learning-object hruid="([^"]+)" language="([^"]+)" version="([^"]+)"\/>/g;
+const LEARNING_OBJECT_DOES_NOT_EXIST = "<div class='non-existing-learning-object' />";
 
 class ProcessingService {
     private processors!: Map<DwengoContentType, Processor<any>>;
@@ -48,15 +50,28 @@ class ProcessingService {
      *                                     by placeholders.
      * @returns Rendered HTML for this LearningObject as a string.
      */
-    render(learningObject: LearningObject, fetchEmbeddedLearningObjects?: (loId: LearningObjectIdentifier) => LearningObject): string {
+    async render(
+        learningObject: LearningObject,
+        fetchEmbeddedLearningObjects?: (loId: LearningObjectIdentifier) => Promise<LearningObject | null>
+    ): Promise<string> {
         let html = this.processors.get(learningObject.contentType)!.renderLearningObject(learningObject);
         if (fetchEmbeddedLearningObjects) {
             // Replace all embedded learning objects.
-            return html.replace(
+            return replaceAsync(
+                html,
                 EMBEDDED_LEARNING_OBJECT_PLACEHOLDER,
-                (_, hruid: string, language: string, version: string): string => {
+                async (_, hruid: string, language: string, version: string): Promise<string> => {
                     // Fetch the embedded learning object...
-                    const learningObject = fetchEmbeddedLearningObjects({hruid, language: language as Language, version})
+                    const learningObject = await fetchEmbeddedLearningObjects({
+                        hruid,
+                        language: language as Language,
+                        version: parseInt(version)
+                    });
+
+                    // If it does not exist, replace it by a placeholder.
+                    if (!learningObject) {
+                        return LEARNING_OBJECT_DOES_NOT_EXIST;
+                    }
 
                     // ... and render it.
                     return this.render(learningObject);
@@ -67,4 +82,4 @@ class ProcessingService {
     }
 }
 
-export default ProcessingService;
+export default new ProcessingService();
