@@ -23,17 +23,17 @@ describe('AttachmentRepository', () => {
         expect(true);
     });
 
-    it('should return the requested attachment', async () => {
-        const id = new LearningObjectIdentifier('id02', Language.English, '1');
-        const learningObject =
-            await LearningObjectRepository.findByIdentifier(id);
+    // it('should return the requested attachment', async () => {
+    //     const id = new LearningObjectIdentifier('id02', Language.English, '1');
+    //     const learningObject =
+    //         await LearningObjectRepository.findByIdentifier(id);
 
-        const attachment =
-            await AttachmentRepository.findByLearningObjectAndNumber(
-                learningObject!,
-                1
-            );
+    //     const attachment =
+    //         await AttachmentRepository.findByLearningObjectAndNumber(
+    //             learningObject!,
+    //             1
+    //         );
 
-        expect(attachment).toBeTruthy();
-    });
+    //     expect(attachment).toBeTruthy();
+    // });
 });

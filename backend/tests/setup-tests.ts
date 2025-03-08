@@ -1,6 +1,10 @@
 import { Assignment } from '../src/entities/assignments/assignment.entity.js';
 import { Group } from '../src/entities/assignments/group.entity.js';
 import { Submission } from '../src/entities/assignments/submission.entity.js';
+import {
+    ClassJoinRequest,
+    ClassJoinRequestStatus,
+} from '../src/entities/classes/class-join-request.entity.js';
 import { Class } from '../src/entities/classes/class.entity.js';
 import { TeacherInvitation } from '../src/entities/classes/teacher-invitation.entity.js';
 import { Attachment } from '../src/entities/content/attachment.entity.js';
@@ -76,11 +80,11 @@ export async function setupTestApp() {
         lastName: 'Grohl',
     });
 
-    // const teacher02 = em.create(Teacher, {
-    //     username: 'LimppBizkit',
-    //     firstName: 'Fred',
-    //     lastName: 'Durst',
-    // });
+    const teacher02 = em.create(Teacher, {
+        username: 'LimppBizkit',
+        firstName: 'Fred',
+        lastName: 'Durst',
+    });
 
     const teacher03 = em.create(Teacher, {
         username: 'Staind',
@@ -331,23 +335,23 @@ export async function setupTestApp() {
         students: studentsClass01,
     });
 
-    // const studentsClass02: Array<Student> = [student01, student02, student04];
-    // const teacherClass02: Array<Teacher> = [teacher02];
-    // const class02 = em.create(Class, {
-    //     classId: 'id02',
-    //     displayName: 'class02',
-    //     teachers: teacherClass02,
-    //     students: studentsClass02,
-    // });
+    const studentsClass02: Array<Student> = [student01, student02, student04];
+    const teacherClass02: Array<Teacher> = [teacher02];
+    const class02 = em.create(Class, {
+        classId: 'id02',
+        displayName: 'class02',
+        teachers: teacherClass02,
+        students: studentsClass02,
+    });
 
-    // const studentsClass03: Array<Student> = [student02, student03, student04];
-    // const teacherClass03: Array<Teacher> = [teacher03];
-    // const class03 = em.create(Class, {
-    //     classId: 'id03',
-    //     displayName: 'class03',
-    //     teachers: teacherClass03,
-    //     students: studentsClass03,
-    // });
+    const studentsClass03: Array<Student> = [student02, student03, student04];
+    const teacherClass03: Array<Teacher> = [teacher03];
+    const class03 = em.create(Class, {
+        classId: 'id03',
+        displayName: 'class03',
+        teachers: teacherClass03,
+        students: studentsClass03,
+    });
 
     const studentsClass04: Array<Student> = [student01, student02];
     const teacherClass04: Array<Teacher> = [teacher03];
@@ -440,6 +444,30 @@ export async function setupTestApp() {
     //     receiver: teacher02,
     //     class: class01,
     // });
+
+    const classJoinRequest01 = em.create(ClassJoinRequest, {
+        requester: student05,
+        class: class02,
+        status: ClassJoinRequestStatus.Open,
+    });
+
+    const classJoinRequest02 = em.create(ClassJoinRequest, {
+        requester: student03,
+        class: class02,
+        status: ClassJoinRequestStatus.Open,
+    });
+
+    const classJoinRequest03 = em.create(ClassJoinRequest, {
+        requester: student05,
+        class: class03,
+        status: ClassJoinRequestStatus.Open,
+    });
+
+    const classJoinRequest04 = em.create(ClassJoinRequest, {
+        requester: student04,
+        class: class03,
+        status: ClassJoinRequestStatus.Open,
+    });
 
     const attachment01 = em.create(Attachment, {
         learningObject: learningObject02,
@@ -575,9 +603,12 @@ export async function setupTestApp() {
         student06,
         student07,
         teacher01,
+        teacher02,
         teacher03,
         teacher04,
         class01,
+        class02,
+        class03,
         class04,
         learningObject01,
         learningObject02,
@@ -587,5 +618,9 @@ export async function setupTestApp() {
         learningPath01,
         learningPath02,
         attachment01,
+        classJoinRequest01,
+        classJoinRequest02,
+        classJoinRequest03,
+        classJoinRequest04,
     ]);
 }
