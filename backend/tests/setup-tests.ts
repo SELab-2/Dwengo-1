@@ -81,7 +81,7 @@ export async function setupTestApp() {
     });
 
     const teacher02 = em.create(Teacher, {
-        username: 'LimppBizkit',
+        username: 'LimpBizkit',
         firstName: 'Fred',
         lastName: 'Durst',
     });
@@ -421,29 +421,29 @@ export async function setupTestApp() {
     // assignment01.groups.push(group03);
     // assignment02.groups.push(group04);
 
-    // const teacher_invitation01 = em.create(TeacherInvitation, {
-    //     sender: teacher02,
-    //     receiver: teacher01,
-    //     class: class02,
-    // });
+    const teacherInvitation01 = em.create(TeacherInvitation, {
+        sender: teacher02,
+        receiver: teacher01,
+        class: class02,
+    });
 
-    // const teacher_invitation02 = em.create(TeacherInvitation, {
-    //     sender: teacher02,
-    //     receiver: teacher03,
-    //     class: class02,
-    // });
+    const teacherInvitation02 = em.create(TeacherInvitation, {
+        sender: teacher02,
+        receiver: teacher03,
+        class: class02,
+    });
 
-    // const teacher_invitation03 = em.create(TeacherInvitation, {
-    //     sender: teacher03,
-    //     receiver: teacher01,
-    //     class: class03,
-    // });
+    const teacherInvitation03 = em.create(TeacherInvitation, {
+        sender: teacher03,
+        receiver: teacher01,
+        class: class03,
+    });
 
-    // const teacher_invitation04 = em.create(TeacherInvitation, {
-    //     sender: teacher01,
-    //     receiver: teacher02,
-    //     class: class01,
-    // });
+    const teacherInvitation04 = em.create(TeacherInvitation, {
+        sender: teacher01,
+        receiver: teacher02,
+        class: class01,
+    });
 
     const classJoinRequest01 = em.create(ClassJoinRequest, {
         requester: student05,
@@ -622,5 +622,9 @@ export async function setupTestApp() {
         classJoinRequest02,
         classJoinRequest03,
         classJoinRequest04,
+        teacherInvitation01,
+        teacherInvitation02,
+        teacherInvitation03,
+        teacherInvitation04,
     ]);
 }
