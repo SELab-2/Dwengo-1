@@ -1,5 +1,6 @@
 import { Language } from '../src/entities/content/language.js';
 import { ContentType, LearningObject, ReturnValue } from '../src/entities/content/learning-object.entity.js';
+import { LearningPath, LearningPathNode, LearningPathTransition } from '../src/entities/content/learning-path.entity.js';
 import { Student } from '../src/entities/users/student.entity.js';
 import { Teacher } from '../src/entities/users/teacher.entity.js';
 import { forkEntityManager, initORM } from '../src/orm.js';
@@ -23,11 +24,11 @@ export async function setupTestApp() {
 
     await em.persistAndFlush([teacher01, teacher02, teacher03]);
 
-    const admins01 = [teacher01];
-    const returnValue = new ReturnValue();
+    const admins01 : Array<Teacher> = [teacher01];
+    const returnValue : ReturnValue = new ReturnValue();
     returnValue.callbackSchema = '';
     returnValue.callbackUrl = '';
-    const buffer01 = new Buffer("there's a shadow just behind me, shrouding every step i take, making every promise empty pointing every finger at me");
+    const buffer01 : Buffer = new Buffer("there's a shadow just behind me, shrouding every step i take, making every promise empty pointing every finger at me");
     const learningObject01 = em.create(LearningObject, {
         hruid: 'hruid_object01',
         language: Language.English,
@@ -50,13 +51,36 @@ export async function setupTestApp() {
         content: buffer01
     });
 
-    const admins02 = [teacher02];
-    const buffer02 = new Buffer("cause it's always raining in my head, forget all the things I should have had said so I speak to you in riddles, because my words get in my way")
+    const buffer02 = new Buffer("I've been crawling on my belly clearing out what could've been I've been wallowing in my own confused and insecure delusions");
     const learningObject02 = em.create(LearningObject, {
         hruid: 'hruid_object02',
         language: Language.English,
         version: '1',
-        admins: admins02,
+        admins: admins01,
+        title: 'Aenema',
+        description: 'second album',
+        contentType: ContentType.Markdown,
+        keywords: [],
+        teacherExclusive: false,
+        skosConcepts: [],
+        educationalGoals: [],
+        copyright: '',
+        license: '',
+        estimatedTime: 80,
+        returnValue: returnValue,
+        available: true,
+        contentLocation: '',
+        attachments: [],
+        content: buffer02
+    });
+
+    const admins03 : Array<Teacher> = [teacher02];
+    const buffer03 = new Buffer("cause it's always raining in my head, forget all the things I should have had said so I speak to you in riddles, because my words get in my way")
+    const learningObject03 = em.create(LearningObject, {
+        hruid: 'hruid_object03',
+        language: Language.English,
+        version: '1',
+        admins: admins03,
         title: 'Break the cycle',
         description: 'second album',
         contentType: ContentType.Markdown,
@@ -71,9 +95,48 @@ export async function setupTestApp() {
         available: true,
         contentLocation: '',
         attachments: [],
-        content: buffer02
+        content: buffer03
     });
 
-    await em.persistAndFlush([learningObject01, learningObject02]);
+    await em.persistAndFlush([learningObject01, learningObject02, learningObject03]);
 
+    const learningPathNode01 : LearningPathNode = new LearningPathNode();
+    const learningPathNode02 : LearningPathNode = new LearningPathNode();
+
+    const transitions01 : LearningPathTransition = new LearningPathTransition();
+    const transitions02 : LearningPathTransition = new LearningPathTransition();
+    
+    transitions01.condition = 'true';
+    transitions01.next = learningPathNode02;
+    
+    transitions02.condition = 'true';
+    transitions02.next = learningPathNode01;
+    
+    learningPathNode01.instruction = '';
+    learningPathNode01.language = Language.English;
+    learningPathNode01.learningObjectHruid = 'hruid_object01';
+    learningPathNode01.startNode = true;
+    learningPathNode01.transitions = [transitions01];
+    learningPathNode01.version = '1';
+    
+    learningPathNode02.instruction = '';
+    learningPathNode02.language = Language.English;
+    learningPathNode02.learningObjectHruid = 'hruid_object02';
+    learningPathNode02.startNode = false;
+    learningPathNode02.transitions = [transitions02];
+    learningPathNode02.version = '1';
+
+
+    const nodes : Array<LearningPathNode> = []
+    const learningPath01 = em.create(LearningPath, {
+        hruid: 'hruid_path01',
+        language: Language.English,
+        admins: admins01,
+        title: 'repertoire Tool',
+        description: 'all about Tool',
+        image: '',
+        nodes: nodes
+    });
+
+    await em.persistAndFlush([learningPath01]);
 }
