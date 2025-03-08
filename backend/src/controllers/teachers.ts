@@ -2,15 +2,16 @@ import { Request, Response } from 'express';
 import {
     createTeacher,
     deleteTeacher,
-    fetchTeacherByUsername,
+    getTeacherByUsername,
     getClassesByTeacher,
     getClassIdsByTeacher,
     getAllTeachers,
-    getAllTeachersIds, getStudentsByTeacher, getStudentIdsByTeacher
+    getAllTeachersIds, getStudentsByTeacher, getStudentIdsByTeacher, getQuestionsByTeacher, getQuestionIdsByTeacher
 } from '../services/teachers.js';
 import {TeacherDTO} from "../interfaces/teacher";
 import {ClassDTO} from "../interfaces/class";
 import {StudentDTO} from "../interfaces/student";
+import {QuestionDTO, QuestionId} from "../interfaces/question";
 
 export async function getTeacherHandler(req: Request, res: Response): Promise<void> {
     try {
@@ -18,7 +19,7 @@ export async function getTeacherHandler(req: Request, res: Response): Promise<vo
         const username = req.query.username as string;
 
         if (username){
-            const teacher = await fetchTeacherByUsername(username);
+            const teacher = await getTeacherByUsername(username);
             if (!teacher){
                 res.status(404).json({ error: `Teacher with username '${username}' not found.` });
                 return;
@@ -128,3 +129,27 @@ export async function getTeacherStudentHandler(req: Request, res: Response): Pro
         res.status(500).json({ error: 'Internal server error' });
     }
 }
+
+export async function getTeacherQuestionHandler(req: Request, res: Response): Promise<void> {
+    try {
+        const username = req.params.username as string;
+        const full = req.query.full === 'true';
+
+        if (!username) {
+            res.status(400).json({ error: 'Missing required field: username' });
+            return;
+        }
+
+        let questions: QuestionDTO[] | QuestionId[];
+
+        if (full) questions = await getQuestionsByTeacher(username);
+        else questions = await getQuestionIdsByTeacher(username);
+
+        res.status(201).json(questions);
+    } catch (error) {
+        console.error('Error fetching questions by teacher:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+

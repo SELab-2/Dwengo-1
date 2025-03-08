@@ -1,9 +1,15 @@
-import {getClassRepository, getTeacherRepository} from "../data/repositories.js";
+import {
+    getClassRepository,
+    getLearningObjectRepository,
+    getQuestionRepository,
+    getTeacherRepository
+} from "../data/repositories.js";
 import {mapToTeacher, mapToTeacherDTO, TeacherDTO} from "../interfaces/teacher.js";
 import { Teacher } from "../entities/users/teacher.entity";
 import {ClassDTO, mapToClassDTO} from "../interfaces/class";
 import {getClassStudents, getClassStudentsIds} from "./class";
 import {StudentDTO} from "../interfaces/student";
+import {mapToQuestionDTO, QuestionDTO, QuestionId} from "../interfaces/question";
 
 
 async function fetchAllTeachers(): Promise<TeacherDTO[]> {
@@ -29,7 +35,7 @@ export async function createTeacher(teacherData: TeacherDTO): Promise<Teacher> {
     return newTeacher;
 }
 
-export async function fetchTeacherByUsername(username: string): Promise<TeacherDTO | null> {
+export async function getTeacherByUsername(username: string): Promise<TeacherDTO | null> {
     const teacherRepository = getTeacherRepository();
     const teacher = await teacherRepository.findByUsername(username);
 
@@ -83,6 +89,43 @@ export async function getStudentsByTeacher(username: string): Promise<StudentDTO
 export async function getStudentIdsByTeacher(): Promise<string[]> {
     return await fetchStudentsByTeacher(username).map((student) => student.username);
 }
+
+async function fetchTeacherQuestions(username: string): Promise<QuestionDTO[]> {
+    const learningObjectRepository = getLearningObjectRepository();
+    const questionRepository = getQuestionRepository();
+
+    const teacher = getTeacherByUsername(username);
+    if (!teacher) {
+        throw new Error(`Teacher with username '${username}' not found.`);
+    }
+
+    // Find all learning objects that this teacher manages
+    const learningObjects = await learningObjectRepository.findAllByTeacher(teacher);
+
+    // Fetch all questions related to these learning objects
+    const questions = await questionRepository.findAllByLearningObjects(learningObjects);
+
+    return questions.map(mapToQuestionDTO);
+}
+
+export async function getQuestionsByTeacher(username: string): Promise<QuestionDTO[]> {
+    return await fetchTeacherQuestions(username);
+}
+
+export async function getQuestionIdsByTeacher(username: string): Promise<QuestionId[]> {
+    const questions = await fetchTeacherQuestions(username);
+
+    return questions.map((question) => ({
+        learningObjectHruid: question.learningObjectHruid,
+        learningObjectLanguage: question.learningObjectLanguage,
+        learningObjectVersion: question.learningObjectVersion,
+        sequenceNumber: question.sequenceNumber
+    }));
+}
+
+
+
+
 
 
 

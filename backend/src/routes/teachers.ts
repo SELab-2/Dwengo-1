@@ -3,7 +3,7 @@ import {
     createTeacherHandler,
     deleteTeacherHandler,
     getTeacherClassHandler,
-    getTeacherHandler, getTeacherStudentHandler
+    getTeacherHandler, getTeacherQuestionHandler, getTeacherStudentHandler
 } from "../controllers/teachers.js";
 const router = express.Router();
 
@@ -18,14 +18,7 @@ router.get('/:username/classes', getTeacherClassHandler);
 
 router.get('/:username/students', getTeacherStudentHandler);
 
-// the questions students asked a teacher
-router.get('/:id/questions', (req, res) => {
-    res.json({
-        questions: [
-            '0'
-        ],
-    });
-});
+router.get('/:username/questions', getTeacherQuestionHandler);
 
 // invitations to other classes a teacher received
 router.get('/:id/invitations', (req, res) => {
@@ -36,14 +29,6 @@ router.get('/:id/invitations', (req, res) => {
     });
 });
 
-// a list with ids of classes a teacher is in
-router.get('/:id/classes', (req, res) => {
-    res.json({
-        classes: [
-            '0'
-        ],
-    });
-});
 
 
 export default router
