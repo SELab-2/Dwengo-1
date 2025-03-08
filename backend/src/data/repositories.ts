@@ -80,7 +80,7 @@ export const getClassJoinRequestRepository = repositoryGetter<
 export const getTeacherInvitationRepository = repositoryGetter<
     TeacherInvitation,
     TeacherInvitationRepository
->(TeacherInvitationRepository);
+>(TeacherInvitation);
 
 /* Assignments */
 export const getAssignmentRepository = repositoryGetter<

@@ -1,7 +1,8 @@
-import { getClassRepository } from "../data/repositories";
+import { getClassRepository, getTeacherInvitationRepository } from "../data/repositories";
 import { Class } from "../entities/classes/class.entity";
 import { ClassDTO, mapToClassDTO } from "../interfaces/classes";
 import { mapToStudentDTO, StudentDTO } from "../interfaces/students";
+import { mapToTeacherInvitationDTO, mapToTeacherInvitationDTOIds, TeacherInvitationDTO } from "../interfaces/teacher-invitation";
 
 export async function getAllClasses(full: boolean): Promise<ClassDTO[] | string[]> {
     const classRepository = getClassRepository();
@@ -41,4 +42,28 @@ export async function getClassStudents(classId: string, full: boolean): Promise<
     } else {
         return cls.students.map((student) => student.username);
     }
+}
+
+export async function getClassTeacherInvitations(classId: string, full: boolean): Promise<TeacherInvitationDTO[]> {
+    const classRepository = getClassRepository();
+    const cls = await classRepository.findById(classId);
+
+    if (!cls) {
+        return [];
+    }
+
+    const teacherInvitationRepository = getTeacherInvitationRepository();
+    const invitations = await teacherInvitationRepository.findAllInvitationsForClass(cls);
+
+    console.log(invitations);
+
+    if (!invitations) {
+        return [];
+    }
+
+    if (full) {
+        return invitations.map(mapToTeacherInvitationDTO);
+    }
+
+    return invitations.map(mapToTeacherInvitationDTOIds);
 }

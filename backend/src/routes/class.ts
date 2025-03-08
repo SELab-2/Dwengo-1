@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAllClassesHandler, getClassHandler, getClassStudentsHandler } from '../controllers/classes';
+import { getAllClassesHandler, getClassHandler, getClassStudentsHandler, getTeacherInvitationsHandler } from '../controllers/classes';
 import assignmentRouter from './assignment.js';
 
 const router = express.Router();
@@ -10,13 +10,7 @@ router.get('/', getAllClassesHandler);
 // information about an class with id 'id'
 router.get('/:id', getClassHandler);
 
-router.get('/:id/invitations', (req, res) => {
-    res.json({
-        invitations: [ 
-            '0'
-        ],
-    });
-})
+router.get('/:id/teacher-invitations', getTeacherInvitationsHandler);
 
 router.get('/:id/students', getClassStudentsHandler);
 
