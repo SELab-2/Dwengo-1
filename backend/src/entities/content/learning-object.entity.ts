@@ -11,8 +11,13 @@ import {
 import { Language } from './language.js';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
+import { LearningObjectRepository } from '../../data/content/learning-object-repository.js';
 
-@Entity()
+@Entity({
+    repository: () => {
+        return LearningObjectRepository;
+    },
+})
 export class LearningObject {
     @PrimaryKey({ type: 'string' })
     hruid!: string;
