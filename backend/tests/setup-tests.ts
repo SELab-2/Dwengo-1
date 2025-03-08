@@ -441,14 +441,14 @@ export async function setupTestApp() {
     //     class: class01,
     // });
 
-    // const attachment01 = em.create(Attachment, {
-    //     learningObject: learningObject02,
-    //     sequenceNumber: 1,
-    //     mimeType: '',
-    //     content: Buffer.from(''),
-    // });
+    const attachment01 = em.create(Attachment, {
+        learningObject: learningObject02,
+        sequenceNumber: 1,
+        mimeType: '',
+        content: Buffer.from(''),
+    });
 
-    // learningObject02.attachments.push(attachment01);
+    learningObject02.attachments = [attachment01];
 
     // const question01 = em.create(Question, {
     //     learningObjectLanguage: Language.English,
@@ -586,5 +586,6 @@ export async function setupTestApp() {
         learningObject05,
         learningPath01,
         learningPath02,
+        attachment01,
     ]);
 }
