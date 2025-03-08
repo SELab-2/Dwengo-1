@@ -1,8 +1,13 @@
 import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { Language } from '../content/language.js';
 import { Student } from '../users/student.entity.js';
+import { QuestionRepository } from '../../data/questions/question-repository.js';
 
-@Entity()
+@Entity({
+    repository: () => {
+        return QuestionRepository;
+    },
+})
 export class Question {
     @PrimaryKey({ type: 'string' })
     learningObjectHruid!: string;
