@@ -5,6 +5,7 @@ import {
 import dwengoApiLearningPathProvider from "./dwengo-api-learning-path-provider";
 import databaseLearningPathProvider from "./database-learning-path-provider";
 import {EnvVars, getEnvVar} from "../../util/envvars";
+import {Language} from "../../entities/content/language";
 
 const userContentPrefix = getEnvVar(EnvVars.UserContentPrefix);
 const allProviders = [dwengoApiLearningPathProvider, databaseLearningPathProvider]
@@ -16,7 +17,7 @@ const learningPathService = {
     /**
      * Fetch the learning paths with the given hruids from the data source.
      */
-    async fetchLearningPaths(hruids: string[], language: string, source: string): Promise<LearningPathResponse> {
+    async fetchLearningPaths(hruids: string[], language: Language, source: string): Promise<LearningPathResponse> {
         const userContentHruids = hruids.filter(hruid => hruid.startsWith(userContentPrefix));
         const nonUserContentHruids = hruids.filter(hruid => !hruid.startsWith(userContentPrefix));
 
@@ -35,7 +36,7 @@ const learningPathService = {
     /**
      * Search learning paths in the data source using the given search string.
      */
-    async searchLearningPaths(query: string, language: string): Promise<LearningPath[]> {
+    async searchLearningPaths(query: string, language: Language): Promise<LearningPath[]> {
         const providerResponses = await Promise.all(
             allProviders.map(
                 provider => provider.searchLearningPaths(query, language)

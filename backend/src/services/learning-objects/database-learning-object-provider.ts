@@ -14,7 +14,7 @@ import {NotFoundError} from "@mikro-orm/core";
 const learningObjectRepo = getLearningObjectRepository();
 const learningPathRepo = getLearningPathRepository();
 
-function filter(learningObject: LearningObject | null): FilteredLearningObject | null {
+function convertLearningObject(learningObject: LearningObject | null): FilteredLearningObject | null {
     if (!learningObject) {
         return null;
     }
@@ -59,7 +59,7 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
      */
     async getLearningObjectById(id: LearningObjectIdentifier): Promise<FilteredLearningObject | null> {
         const learningObject = await findLearningObjectEntityById(id);
-        return filter(learningObject);
+        return convertLearningObject(learningObject);
     },
 
     /**
@@ -110,7 +110,7 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
                 return learningObject;
             })
         );
-        return learningObjects.filter(it => it !== null);
+        return learningObjects.filter(it => it !== null); // TODO: Determine this based on the submissions of the user.
     }
 }
 

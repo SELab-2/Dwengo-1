@@ -54,6 +54,12 @@ export class LearningPathNode {
 
     @Embedded({ entity: () => LearningPathTransition, array: true })
     transitions!: LearningPathTransition[];
+
+    @Property({ length: 3 })
+    createdAt: Date = new Date();
+
+    @Property({ length: 3, onUpdate: () => new Date() })
+    updatedAt: Date = new Date();
 }
 
 @Embeddable()
