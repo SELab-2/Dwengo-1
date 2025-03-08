@@ -7,10 +7,13 @@ export class GroupRepository extends DwengoEntityRepository<Group> {
         assignment: Assignment,
         groupNumber: number
     ): Promise<Group | null> {
-        return this.findOne({
+        return this.findOne(
+        {
             assignment: assignment,
             groupNumber: groupNumber,
-        });
+        },
+        { populate: ["members"] },
+    );
     }
     public findAllGroupsForAssignment(
         assignment: Assignment

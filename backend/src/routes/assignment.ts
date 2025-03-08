@@ -1,8 +1,8 @@
 import express from 'express'
 import { getAssignmentHandler } from '../controllers/assignments';
+import groupRouter from './group.js';
+
 const router = express.Router({ mergeParams: true });
-
-
 
 // root endpoint used to search objects
 router.get('/', (req, res) => {
@@ -25,14 +25,6 @@ router.get('/:id/submissions', (req, res) => {
     });
 });
 
-router.get('/:id/groups', (req, res) => {
-    res.json({
-        groups: [
-            '0'
-        ],
-    });
-});
-
 router.get('/:id/questions', (req, res) => {
     res.json({
         questions: [
@@ -40,5 +32,7 @@ router.get('/:id/questions', (req, res) => {
         ],
     });
 });
+
+router.use('/:assignmentid/groups', groupRouter);
 
 export default router

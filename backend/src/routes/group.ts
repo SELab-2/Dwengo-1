@@ -1,5 +1,6 @@
 import express from 'express'
-const router = express.Router();
+import { getGroupHandler } from '../controllers/groups';
+const router = express.Router({ mergeParams: true });
 
 // root endpoint used to search objects
 router.get('/', (req, res) => {
@@ -12,17 +13,7 @@ router.get('/', (req, res) => {
 });
 
 // information about a group (members, ... [TODO DOC])
-router.get('/:id', (req, res) => {
-    res.json({
-        id: req.params.id,
-        assignment: '0',
-        students: [ '0' ],
-        submissions: [ '0' ],
-        // reference to other endpoint
-        // should be less hardcoded
-        questions: `/group/${req.params.id}/question`, 
-    });
-})
+router.get('/:groupid', getGroupHandler);
 
 // the list of questions a group has made
 router.get('/:id/question', (req, res) => {
