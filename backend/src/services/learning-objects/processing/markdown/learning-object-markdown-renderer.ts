@@ -23,7 +23,11 @@ const prefixes = {
 
 function extractLearningObjectIdFromHref(href: string): LearningObjectIdentifier {
     const [hruid, language, version] = href.split(/\/(.+)/, 2)[1].split("/");
-    return {hruid, language: language as Language, version};
+    return {
+        hruid,
+        language: language as Language,
+        version: parseInt(version)
+    };
 }
 
 /**
