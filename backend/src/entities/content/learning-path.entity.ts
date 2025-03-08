@@ -10,8 +10,9 @@ import {
 } from '@mikro-orm/core';
 import { Language } from './language.js';
 import { Teacher } from '../users/teacher.entity.js';
+import {LearningPathRepository} from "../../data/content/learning-path-repository";
 
-@Entity()
+@Entity({repository: () => LearningPathRepository})
 export class LearningPath {
     @PrimaryKey({ type: 'string' })
     hruid!: string;

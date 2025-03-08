@@ -13,8 +13,9 @@ import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
 import {DwengoContentType} from "../../services/learning-objects/processing/content-type";
 import {v4} from "uuid";
+import {LearningObjectRepository} from "../../data/content/learning-object-repository";
 
-@Entity()
+@Entity({repository: () => LearningObjectRepository})
 export class LearningObject {
     @PrimaryKey({ type: 'string' })
     hruid!: string;
