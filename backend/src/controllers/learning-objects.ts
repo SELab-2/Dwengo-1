@@ -5,7 +5,7 @@ import {
     getLearningObjectsFromPath,
 } from '../services/learning-objects.js';
 import { FALLBACK_LANG } from '../config.js';
-import { FilteredLearningObject } from '../interfaces/learning-path';
+import { FilteredLearningObject } from '../interfaces/learning-path.js';
 
 export async function getAllLearningObjects(
     req: Request,

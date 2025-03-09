@@ -1,6 +1,6 @@
-import { UserRepository } from "../data/users/user-repository.js";
-import { UserDTO, mapToUser, mapToUserDTO } from "../interfaces/user.js";
-import {User} from "../entities/users/user.entity.js";
+import { UserRepository } from '../data/users/user-repository.js';
+import { UserDTO, mapToUser, mapToUserDTO } from '../interfaces/user.js';
+import { User } from '../entities/users/user.entity.js';
 
 export class UserService<T extends User> {
     protected repository: UserRepository<T>;
@@ -16,11 +16,13 @@ export class UserService<T extends User> {
 
     async getAllUserIds(): Promise<string[]> {
         const users = await this.getAllUsers();
-        return users.map((user) => user.username);
+        return users.map((user) => {
+            return user.username;
+        });
     }
 
     async getUserByUsername(username: string): Promise<UserDTO | null> {
-        const user = await this.repository.findByUsername(username)
+        const user = await this.repository.findByUsername(username);
         return user ? mapToUserDTO(user) : null;
     }
 
@@ -32,8 +34,10 @@ export class UserService<T extends User> {
 
     async deleteUser(username: string): Promise<UserDTO | null> {
         const user = await this.getUserByUsername(username);
-        if (!user) return null;
-        await this.repository.deleteByUsername(username)
+        if (!user) {
+            return null;
+        }
+        await this.repository.deleteByUsername(username);
         return mapToUserDTO(user);
     }
 }

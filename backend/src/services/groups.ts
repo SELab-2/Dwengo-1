@@ -1,11 +1,19 @@
-import { getAssignmentRepository, getClassRepository, getGroupRepository } from "../data/repositories.js";
-import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from "../interfaces/groups.js";
+import {
+    getAssignmentRepository,
+    getClassRepository,
+    getGroupRepository,
+} from '../data/repositories.js';
+import {
+    GroupDTO,
+    mapToGroupDTO,
+    mapToGroupDTOId,
+} from '../interfaces/group.js';
 
 export async function getGroup(
     classId: string,
     assignmentNumber: number,
     groupNumber: number,
-    full: boolean,
+    full: boolean
 ): Promise<GroupDTO | null> {
     const classRepository = getClassRepository();
     const cls = await classRepository.findById(classId);
@@ -15,14 +23,20 @@ export async function getGroup(
     }
 
     const assignmentRepository = getAssignmentRepository();
-    const assignment = await assignmentRepository.findByClassAndId(cls, assignmentNumber);
+    const assignment = await assignmentRepository.findByClassAndId(
+        cls,
+        assignmentNumber
+    );
 
     if (!assignment) {
         return null;
     }
 
     const groupRepository = getGroupRepository();
-    const group = await groupRepository.findByAssignmentAndGroupNumber(assignment, groupNumber);
+    const group = await groupRepository.findByAssignmentAndGroupNumber(
+        assignment,
+        groupNumber
+    );
 
     if (!group) {
         return null;
@@ -38,7 +52,7 @@ export async function getGroup(
 export async function getAllGroups(
     classId: string,
     assignmentNumber: number,
-    full: boolean,
+    full: boolean
 ): Promise<GroupDTO[]> {
     const classRepository = getClassRepository();
     const cls = await classRepository.findById(classId);
@@ -48,7 +62,10 @@ export async function getAllGroups(
     }
 
     const assignmentRepository = getAssignmentRepository();
-    const assignment = await assignmentRepository.findByClassAndId(cls, assignmentNumber);
+    const assignment = await assignmentRepository.findByClassAndId(
+        cls,
+        assignmentNumber
+    );
 
     if (!assignment) {
         return [];

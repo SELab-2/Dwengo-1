@@ -1,11 +1,23 @@
-import { getClassRepository } from "../data/repositories";
-import { Class } from "../entities/classes/class.entity";
-import { ClassDTO, mapToClassDTO } from "../interfaces/class";
-import { mapToStudentDTO, StudentDTO } from "../interfaces/student";
+import {
+    getClassRepository,
+    getTeacherInvitationRepository,
+} from '../data/repositories.js';
+import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
+import { mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
+import {
+    mapToTeacherInvitationDTO,
+    mapToTeacherInvitationDTOIds,
+    TeacherInvitationDTO,
+} from '../interfaces/teacher-invitation.js';
 
-export async function getAllClasses(full: boolean): Promise<ClassDTO[] | string[]> {
+export async function getAllClasses(
+    full: boolean
+): Promise<ClassDTO[] | string[]> {
     const classRepository = getClassRepository();
-    const classes = await classRepository.find({}, { populate: ["students", "teachers"] });
+    const classes = await classRepository.find(
+        {},
+        { populate: ['students', 'teachers'] }
+    );
 
     if (!classes) {
         return [];
@@ -13,27 +25,30 @@ export async function getAllClasses(full: boolean): Promise<ClassDTO[] | string[
 
     if (full) {
         return classes.map(mapToClassDTO);
-    } else {
-        return classes.map((cls) => cls.classId);
     }
+    return classes.map((cls) => {
+        return cls.classId;
+    });
 }
 
 export async function getClass(classId: string): Promise<ClassDTO | null> {
     const classRepository = getClassRepository();
     const cls = await classRepository.findById(classId);
 
-    if (!cls) return null;
-    else {
-        return mapToClassDTO(cls);
+    if (!cls) {
+        return null;
     }
+
+    return mapToClassDTO(cls);
 }
 
-async function fetchClassStudents(classId: string, full: boolean): Promise<StudentDTO[] | string[]> {
+async function fetchClassStudents(classId: string): Promise<StudentDTO[]> {
     const classRepository = getClassRepository();
     const cls = await classRepository.findById(classId);
 
-    if (!cls)
+    if (!cls) {
         return [];
+    }
 
     return cls.students.map(mapToStudentDTO);
 }
@@ -43,6 +58,36 @@ export async function getClassStudents(classId: string): Promise<StudentDTO[]> {
 }
 
 export async function getClassStudentsIds(classId: string): Promise<string[]> {
-    return await fetchClassStudents(classId).map((student) => student.username);
+    const students: StudentDTO[] = await fetchClassStudents(classId);
+    return students.map((student) => {
+        return student.username;
+    });
 }
 
+export async function getClassTeacherInvitations(
+    classId: string,
+    full: boolean
+): Promise<TeacherInvitationDTO[]> {
+    const classRepository = getClassRepository();
+    const cls = await classRepository.findById(classId);
+
+    if (!cls) {
+        return [];
+    }
+
+    const teacherInvitationRepository = getTeacherInvitationRepository();
+    const invitations =
+        await teacherInvitationRepository.findAllInvitationsForClass(cls);
+
+    console.log(invitations);
+
+    if (!invitations) {
+        return [];
+    }
+
+    if (full) {
+        return invitations.map(mapToTeacherInvitationDTO);
+    }
+
+    return invitations.map(mapToTeacherInvitationDTOIds);
+}

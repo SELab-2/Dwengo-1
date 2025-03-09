@@ -7,7 +7,7 @@ import learningPathRoutes from './routes/learning-paths.js';
 import learningObjectRoutes from './routes/learning-objects.js';
 
 import studentRoutes from './routes/students.js';
-import teacherRoutes from './routes/teachers.js'
+import teacherRoutes from './routes/teachers.js';
 import groupRoutes from './routes/groups.js';
 import submissionRoutes from './routes/submissions.js';
 import classRoutes from './routes/classes.js';

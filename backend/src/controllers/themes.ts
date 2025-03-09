@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
-import { loadTranslations } from "../util/translation-helper.js";
-import { FALLBACK_LANG } from '../config.js';
+import { loadTranslations } from '../util/translation-helper.js';
 
 interface Translations {
     curricula_page: {

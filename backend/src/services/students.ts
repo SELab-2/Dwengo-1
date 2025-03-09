@@ -1,8 +1,11 @@
-import { getClassRepository, getStudentRepository } from "../data/repositories.js";
-import { Class } from "../entities/classes/class.entity.js";
-import { Student } from "../entities/users/student.entity.js";
-import { ClassDTO, mapToClassDTO } from "../interfaces/classes.js";
-import {UserService} from "./users.js";
+import {
+    getClassRepository,
+    getStudentRepository,
+} from '../data/repositories.js';
+import { Class } from '../entities/classes/class.entity.js';
+import { Student } from '../entities/users/student.entity.js';
+import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
+import { UserService } from './users.js';
 
 export class StudentService extends UserService<Student> {
     constructor() {
@@ -14,12 +17,16 @@ async function fetchStudentClasses(username: string): Promise<Class[]> {
     const studentRepository = getStudentRepository();
     const student = await studentRepository.findByUsername(username);
 
-    if (!student) return [];
+    if (!student) {
+        return [];
+    }
 
     const classRepository = getClassRepository();
     const classes = await classRepository.findByStudent(student);
 
-    if (!classes) return [];
+    if (!classes) {
+        return [];
+    }
 
     return classes;
 }
@@ -31,6 +38,7 @@ export async function getStudentClasses(username: string): Promise<ClassDTO[]> {
 
 export async function getStudentClassIds(username: string): Promise<string[]> {
     const classes = await fetchStudentClasses(username);
-    return classes.map(cls => cls.classId); // 'class' is a native keyword
+    return classes.map((cls) => {
+        return cls.classId;
+    }); // 'class' is a native keyword
 }
-

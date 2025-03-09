@@ -2,7 +2,7 @@ import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { Question } from '../../entities/questions/question.entity.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { Student } from '../../entities/users/student.entity.js';
-import {LearningObject} from "../../entities/content/learning-object.entity";
+import { LearningObject } from '../../entities/content/learning-object.entity';
 
 export class QuestionRepository extends DwengoEntityRepository<Question> {
     public createQuestion(question: {
@@ -10,7 +10,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         author: Student;
         content: string;
     }): Promise<Question> {
-        let questionEntity = new Question();
+        const questionEntity = new Question();
         questionEntity.learningObjectHruid = question.loId.hruid;
         questionEntity.learningObjectLanguage = question.loId.language;
         questionEntity.learningObjectVersion = question.loId.version;
@@ -44,12 +44,16 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         });
     }
 
-    public async findAllByLearningObjects(learningObjects: LearningObject[]): Promise<Question[]> {
-        const objectIdentifiers = learningObjects.map(lo => ({
+    public async findAllByLearningObjects(
+        learningObjects: LearningObject[]
+    ): Promise<Question[]> {
+        const objectIdentifiers = learningObjects.map((lo) => {
+            return {
                 learningObjectHruid: lo.hruid,
                 learningObjectLanguage: lo.language,
-                learningObjectVersion: lo.version
-            }));
+                learningObjectVersion: lo.version,
+            };
+        });
 
         return this.findAll({
             where: { $or: objectIdentifiers },

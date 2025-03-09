@@ -3,15 +3,31 @@ import { Student } from '../users/student.entity.js';
 import { Class } from './class.entity.js';
 import { ClassJoinRequestRepository } from '../../data/classes/class-join-request-repository.js';
 
-@Entity({ repository: () => ClassJoinRequestRepository })
+@Entity({
+    repository: () => {
+        return ClassJoinRequestRepository;
+    },
+})
 export class ClassJoinRequest {
-    @ManyToOne({ entity: () => Student, primary: true })
+    @ManyToOne({
+        entity: () => {
+            return Student;
+        },
+        primary: true,
+    })
     requester!: Student;
 
-    @ManyToOne({ entity: () => Class, primary: true })
+    @ManyToOne({
+        entity: () => {
+            return Class;
+        },
+        primary: true,
+    })
     class!: Class;
 
-    @Enum(() => ClassJoinRequestStatus)
+    @Enum(() => {
+        return ClassJoinRequestStatus;
+    })
     status!: ClassJoinRequestStatus;
 }
 

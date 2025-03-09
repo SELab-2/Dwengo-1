@@ -1,6 +1,4 @@
-import {Question} from "../entities/questions/question.entity";
-import {Enum, PrimaryKey} from "@mikro-orm/core";
-import {Language} from "../entities/content/language";
+import { Question } from '../entities/questions/question.entity.js';
 
 export interface QuestionDTO {
     learningObjectHruid: string;
@@ -34,8 +32,17 @@ export function mapToQuestionDTO(question: Question): QuestionDTO {
 }
 
 export interface QuestionId {
-    learningObjectHruid: string,
-    learningObjectLanguage: Language,
-    learningObjectVersion: string,
-    sequenceNumber: number
+    learningObjectHruid: string;
+    learningObjectLanguage: string;
+    learningObjectVersion: string;
+    sequenceNumber: number;
+}
+
+export function mapToQuestionId(question: QuestionDTO): QuestionId {
+    return {
+        learningObjectHruid: question.learningObjectHruid,
+        learningObjectLanguage: question.learningObjectLanguage,
+        learningObjectVersion: question.learningObjectVersion,
+        sequenceNumber: question.sequenceNumber,
+    };
 }

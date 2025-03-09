@@ -24,11 +24,20 @@ import { Answer } from './entities/questions/answer.entity.js';
 import { Question } from './entities/questions/question.entity.js';
 
 const entities = [
-    User, Student, Teacher,
-    Assignment, Group, Submission,
-    Class, ClassJoinRequest, TeacherInvitation,
-    Attachment, LearningObject, LearningPath,
-    Answer, Question
+    User,
+    Student,
+    Teacher,
+    Assignment,
+    Group,
+    Submission,
+    Class,
+    ClassJoinRequest,
+    TeacherInvitation,
+    Attachment,
+    LearningObject,
+    LearningPath,
+    Answer,
+    Question,
 ];
 
 function config(testingMode: boolean = false): Options {
@@ -37,25 +46,26 @@ function config(testingMode: boolean = false): Options {
             driver: SqliteDriver,
             dbName: getEnvVar(EnvVars.DbName),
             entities: entities,
-            // entitiesTs: entitiesTs,
+            // EntitiesTs: entitiesTs,
 
             // Workaround: vitest: `TypeError: Unknown file extension ".ts"` (ERR_UNKNOWN_FILE_EXTENSION)
             // (see https://mikro-orm.io/docs/guide/project-setup#testing-the-endpoint)
-            dynamicImportProvider: (id) => import(id),
-        };
-    } else {
-        return {
-            driver: PostgreSqlDriver,
-            host: getEnvVar(EnvVars.DbHost),
-            port: getNumericEnvVar(EnvVars.DbPort),
-            dbName: getEnvVar(EnvVars.DbName),
-            user: getEnvVar(EnvVars.DbUsername),
-            password: getEnvVar(EnvVars.DbPassword),
-            entities: entities,
-            //entitiesTs: entitiesTs,
-            debug: true,
+            dynamicImportProvider: (id) => {
+                return import(id);
+            },
         };
     }
+    return {
+        driver: PostgreSqlDriver,
+        host: getEnvVar(EnvVars.DbHost),
+        port: getNumericEnvVar(EnvVars.DbPort),
+        dbName: getEnvVar(EnvVars.DbName),
+        user: getEnvVar(EnvVars.DbUsername),
+        password: getEnvVar(EnvVars.DbPassword),
+        entities: entities,
+        //EntitiesTs: entitiesTs,
+        debug: true,
+    };
 }
 
 export default config;

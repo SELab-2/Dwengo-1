@@ -22,18 +22,31 @@ export class ReturnValue {
     callbackSchema!: string;
 }
 
-@Entity({ repository: () => LearningObjectRepository })
+@Entity({
+    repository: () => {
+        return LearningObjectRepository;
+    },
+})
 export class LearningObject {
     @PrimaryKey({ type: 'string' })
     hruid!: string;
 
-    @Enum({ items: () => Language, primary: true })
+    @Enum({
+        items: () => {
+            return Language;
+        },
+        primary: true,
+    })
     language!: Language;
 
     @PrimaryKey({ type: 'string' })
     version: string = '1';
 
-    @ManyToMany({ entity: () => Teacher })
+    @ManyToMany({
+        entity: () => {
+            return Teacher;
+        },
+    })
     admins!: Teacher[];
 
     @Property({ type: 'string' })
@@ -57,7 +70,12 @@ export class LearningObject {
     @Property({ type: 'array' })
     skosConcepts!: string[];
 
-    @Embedded({ entity: () => EducationalGoal, array: true })
+    @Embedded({
+        entity: () => {
+            return EducationalGoal;
+        },
+        array: true,
+    })
     educationalGoals: EducationalGoal[] = [];
 
     @Property({ type: 'string' })
@@ -72,7 +90,11 @@ export class LearningObject {
     @Property({ type: 'integer' })
     estimatedTime!: number;
 
-    @Embedded({ entity: () => ReturnValue })
+    @Embedded({
+        entity: () => {
+            return ReturnValue;
+        },
+    })
     returnValue!: ReturnValue;
 
     @Property({ type: 'bool' })
@@ -81,7 +103,12 @@ export class LearningObject {
     @Property({ type: 'string', nullable: true })
     contentLocation?: string;
 
-    @OneToMany({ entity: () => Attachment, mappedBy: 'learningObject' })
+    @OneToMany({
+        entity: () => {
+            return Attachment;
+        },
+        mappedBy: 'learningObject',
+    })
     attachments: Attachment[] = [];
 
     @Property({ type: 'blob' })

@@ -10,7 +10,11 @@ import { Teacher } from '../users/teacher.entity.js';
 import { Student } from '../users/student.entity.js';
 import { ClassRepository } from '../../data/classes/class-repository.js';
 
-@Entity({ repository: () => ClassRepository })
+@Entity({
+    repository: () => {
+        return ClassRepository;
+    },
+})
 export class Class {
     @PrimaryKey()
     classId = v4();
@@ -18,9 +22,13 @@ export class Class {
     @Property({ type: 'string' })
     displayName!: string;
 
-    @ManyToMany(() => Teacher)
+    @ManyToMany(() => {
+        return Teacher;
+    })
     teachers!: Collection<Teacher>;
 
-    @ManyToMany(() => Student)
+    @ManyToMany(() => {
+        return Student;
+    })
     students!: Collection<Student>;
 }

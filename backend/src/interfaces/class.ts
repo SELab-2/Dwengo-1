@@ -1,4 +1,4 @@
-import { Class } from "../entities/classes/class.entity.js";
+import { Class } from '../entities/classes/class.entity.js';
 
 export interface ClassDTO {
     id: string;
@@ -18,8 +18,12 @@ export function mapToClassDTO(cls: Class): ClassDTO {
     return {
         id: cls.classId,
         displayName: cls.displayName,
-        teachers: cls.teachers.map(teacher => teacher.username),
-        students: cls.students.map(student => student.username),
+        teachers: cls.teachers.map((teacher) => {
+            return teacher.username;
+        }),
+        students: cls.students.map((student) => {
+            return student.username;
+        }),
         joinRequests: [], // TODO
-    }
-};
+    };
+}

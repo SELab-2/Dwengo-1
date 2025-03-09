@@ -12,15 +12,28 @@ import { Language } from './language.js';
 import { Teacher } from '../users/teacher.entity.js';
 import { LearningPathRepository } from '../../data/content/learning-path-repository.js';
 
-@Entity({ repository: () => LearningPathRepository })
+@Entity({
+    repository: () => {
+        return LearningPathRepository;
+    },
+})
 export class LearningPath {
     @PrimaryKey({ type: 'string' })
     hruid!: string;
 
-    @Enum({ items: () => Language, primary: true })
+    @Enum({
+        items: () => {
+            return Language;
+        },
+        primary: true,
+    })
     language!: Language;
 
-    @ManyToMany({ entity: () => Teacher })
+    @ManyToMany({
+        entity: () => {
+            return Teacher;
+        },
+    })
     admins!: Teacher[];
 
     @Property({ type: 'string' })
@@ -32,7 +45,12 @@ export class LearningPath {
     @Property({ type: 'blob' })
     image!: string;
 
-    @Embedded({ entity: () => LearningPathNode, array: true })
+    @Embedded({
+        entity: () => {
+            return LearningPathNode;
+        },
+        array: true,
+    })
     nodes: LearningPathNode[] = [];
 }
 
@@ -41,7 +59,11 @@ export class LearningPathNode {
     @Property({ type: 'string' })
     learningObjectHruid!: string;
 
-    @Enum({ items: () => Language })
+    @Enum({
+        items: () => {
+            return Language;
+        },
+    })
     language!: Language;
 
     @Property({ type: 'string' })
@@ -53,7 +75,12 @@ export class LearningPathNode {
     @Property({ type: 'bool' })
     startNode!: boolean;
 
-    @Embedded({ entity: () => LearningPathTransition, array: true })
+    @Embedded({
+        entity: () => {
+            return LearningPathTransition;
+        },
+        array: true,
+    })
     transitions!: LearningPathTransition[];
 }
 
@@ -62,6 +89,10 @@ export class LearningPathTransition {
     @Property({ type: 'string' })
     condition!: string;
 
-    @OneToOne({ entity: () => LearningPathNode })
+    @OneToOne({
+        entity: () => {
+            return LearningPathNode;
+        },
+    })
     next!: LearningPathNode;
 }

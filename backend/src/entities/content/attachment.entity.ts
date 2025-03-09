@@ -2,9 +2,18 @@ import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { LearningObject } from './learning-object.entity.js';
 import { AttachmentRepository } from '../../data/content/attachment-repository.js';
 
-@Entity({ repository: () => AttachmentRepository })
+@Entity({
+    repository: () => {
+        return AttachmentRepository;
+    },
+})
 export class Attachment {
-    @ManyToOne({ entity: () => LearningObject, primary: true })
+    @ManyToOne({
+        entity: () => {
+            return LearningObject;
+        },
+        primary: true,
+    })
     learningObject!: LearningObject;
 
     @PrimaryKey({ type: 'integer' })
