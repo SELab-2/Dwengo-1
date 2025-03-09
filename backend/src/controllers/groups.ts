@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getAllGroups, getGroup } from '../services/groups';
+import { getAllGroups, getGroup } from '../services/groups.js';
 
 // typescript is annoywith with parameter forwarding from class.ts
 interface GroupParams {

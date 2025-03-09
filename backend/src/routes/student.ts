@@ -1,12 +1,24 @@
 import express from 'express'
-import { getAllStudentsHandler, getStudentAssignmentsHandler, getStudentClassesHandler, getStudentHandler } from '../controllers/students';
+import {
+    createStudentHandler, deleteStudentHandler,
+    getAllStudentsHandler,
+    getStudentAssignmentsHandler,
+    getStudentClassesHandler,
+    getStudentHandler
+} from '../controllers/students.js';
 const router = express.Router();
 
 // root endpoint used to search objects
 router.get('/', getAllStudentsHandler);
 
+router.post('/', createStudentHandler);
+
+router.delete('/:username', deleteStudentHandler);
+
 // information about a student's profile
-router.get('/:id', getStudentHandler);
+router.get('/:username', getStudentHandler);
+
+
 
 // the list of classes a student is in
 router.get('/:id/classes', getStudentClassesHandler);
@@ -18,10 +30,10 @@ router.get('/:id/submissions', (req, res) => {
     });
 })
 
-  
+
 // the list of assignments a student has
 router.get('/:id/assignments', getStudentAssignmentsHandler);
-  
+
 // the list of groups a student is in
 router.get('/:id/groups', (req, res) => {
     res.json({

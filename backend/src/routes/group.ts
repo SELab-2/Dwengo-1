@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAllGroupsHandler, getGroupHandler } from '../controllers/groups';
+import { getAllGroupsHandler, getGroupHandler } from '../controllers/groups.js';
 const router = express.Router({ mergeParams: true });
 
 // root endpoint used to search objects

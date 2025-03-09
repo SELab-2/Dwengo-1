@@ -1,5 +1,5 @@
-import { getAssignmentRepository, getClassRepository } from "../data/repositories";
-import { AssignmentDTO, mapToAssignmentDTO, mapToAssignmentDTOId } from "../interfaces/assignments";
+import { getAssignmentRepository, getClassRepository } from "../data/repositories.js";
+import { AssignmentDTO, mapToAssignmentDTO, mapToAssignmentDTOId } from "../interfaces/assignments.js";
 
 export async function getAllAssignments(classid: string, full: boolean): Promise<AssignmentDTO[]> {
     const classRepository = getClassRepository();
@@ -8,7 +8,7 @@ export async function getAllAssignments(classid: string, full: boolean): Promise
     if (!cls) {
         return [];
     }
-    
+
     const assignmentRepository = getAssignmentRepository();
     const assignments = await assignmentRepository.findAllAssignmentsInClass(cls);
 
@@ -26,7 +26,7 @@ export async function getAssignment(classid: string, id: number): Promise<Assign
     if (!cls) {
         return null;
     }
-    
+
     const assignmentRepository = getAssignmentRepository();
     const assignment = await assignmentRepository.findByClassAndId(cls, id);
 

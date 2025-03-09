@@ -59,7 +59,7 @@ function repositoryGetter<T extends AnyEntity, R extends EntityRepository<T>>(
 }
 
 /* Users */
-export const getUserRepository = repositoryGetter<User, UserRepository>(User);
+export const getUserRepository = repositoryGetter<User, UserRepository<User>>(User);
 export const getStudentRepository = repositoryGetter<
     Student,
     StudentRepository

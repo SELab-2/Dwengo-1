@@ -1,8 +1,7 @@
-import { getClassRepository, getTeacherInvitationRepository } from "../data/repositories";
-import { Class } from "../entities/classes/class.entity";
-import { ClassDTO, mapToClassDTO } from "../interfaces/classes";
-import { mapToStudentDTO, StudentDTO } from "../interfaces/students";
-import { mapToTeacherInvitationDTO, mapToTeacherInvitationDTOIds, TeacherInvitationDTO } from "../interfaces/teacher-invitation";
+import { getClassRepository, getTeacherInvitationRepository } from "../data/repositories.js";
+import { ClassDTO, mapToClassDTO } from "../interfaces/classes.js";
+import { mapToStudentDTO, StudentDTO } from "../interfaces/students.js";
+import { mapToTeacherInvitationDTO, mapToTeacherInvitationDTOIds, TeacherInvitationDTO } from "../interfaces/teacher-invitation.js";
 
 export async function getAllClasses(full: boolean): Promise<ClassDTO[] | string[]> {
     const classRepository = getClassRepository();
@@ -11,7 +10,7 @@ export async function getAllClasses(full: boolean): Promise<ClassDTO[] | string[
     if (!classes) {
         return [];
     }
-    
+
     if (full) {
         return classes.map(mapToClassDTO);
     } else {

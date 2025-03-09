@@ -1,4 +1,4 @@
-import { Teacher } from "../entities/users/teacher.entity";
+import { Teacher } from "../entities/users/teacher.entity.js";
 
 export interface TeacherDTO {
     id: string;

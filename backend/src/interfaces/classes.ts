@@ -1,4 +1,4 @@
-import { Class } from "../entities/classes/class.entity";
+import { Class } from "../entities/classes/class.entity.js";
 
 export interface ClassDTO {
     id: string;

@@ -1,6 +1,6 @@
-import { Group } from "../entities/assignments/group.entity";
-import { AssignmentDTO, mapToAssignmentDTO } from "./assignments";
-import { mapToStudentDTO, StudentDTO } from "./students";
+import { Group } from "../entities/assignments/group.entity.js";
+import { AssignmentDTO, mapToAssignmentDTO } from "./assignments.js";
+import { mapToStudentDTO, StudentDTO } from "./students.js";
 
 export interface GroupDTO {
     assignment: number | AssignmentDTO,
@@ -10,7 +10,7 @@ export interface GroupDTO {
 
 export function mapToGroupDTO(group: Group): GroupDTO {
     return {
-        assignment: mapToAssignmentDTO(group.assignment, group.assignment.within),
+        assignment: mapToAssignmentDTO(group.assignment), // ERROR: , group.assignment.within),
         groupNumber: group.groupNumber,
         members: group.members.map(mapToStudentDTO),
     }

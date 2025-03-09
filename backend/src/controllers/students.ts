@@ -1,52 +1,32 @@
 import { Request, Response } from 'express';
-import { getAllStudents, getStudent, getStudentClasses, getStudentClassIds } from '../services/students';
-import { ClassDTO } from '../interfaces/classes';
-import { getAllAssignments } from '../services/assignments';
+import {
+    getStudentClasses,
+    getStudentClassIds,
+    StudentService
+} from '../services/students.js';
+import { ClassDTO } from '../interfaces/classes.js';
+import { getAllAssignments } from '../services/assignments.js';
+import {createUserHandler, deleteUserHandler, getAllUsersHandler, getUserHandler} from "./users.js";
+import { Student } from "../entities/users/student.entity.js";
 
 // TODO: accept arguments (full, ...)
 // TODO: endpoints
-export async function getAllStudentsHandler (
-    req: Request,
-    res: Response,
-): Promise<void> {
-    try {
-        const students = await getAllStudents();
-
-        res.json({
-            students: students
-        });
-    } catch (error) {
-        console.error('Error fetching learning objects:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+export async function getAllStudentsHandler (req: Request, res: Response): Promise<void> {
+    await getAllUsersHandler<Student>(req, res, new StudentService());
 }
 
-export async function getStudentHandler(
-    req: Request,
-    res: Response,
-): Promise<void> {
-    try {
-        const username = req.params.id;
-        const student = await getStudent(username);
-    
-        if (!student) {
-            res.status(404).json({ error: "Student not found" });
-            return;
-        } else {
-            student.endpoints = {
-                classes: `/student/${req.params.id}/classes`,
-                questions: `/student/${req.params.id}/submissions`,
-                invitations: `/student/${req.params.id}/assignments`,
-                groups: `/student/${req.params.id}/groups`,
-            }
-            res.json(student);
-        }
-
-    } catch (error) {
-        console.error('Error fetching learning objects:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+export async function getStudentHandler(req: Request, res: Response): Promise<void> {
+    await getUserHandler<Student>(req, res, new StudentService());
 }
+
+export async function createStudentHandler(req: Request, res: Response): Promise<void> {
+    await createUserHandler<Student>(req, res, new StudentService(), Student);
+}
+
+export async function deleteStudentHandler(req: Request, res: Response): Promise<void> {
+    await deleteUserHandler<Student>(req, res, new StudentService());
+}
+
 
 export async function getStudentClassesHandler (
     req: Request,
@@ -75,6 +55,7 @@ export async function getStudentClassesHandler (
     }
 }
 
+// TODO
 // Might not be fully correct depending on if
 // a class has an assignment, that all students
 // have this assignment.
@@ -93,3 +74,5 @@ export async function getStudentAssignmentsHandler(
         assignments: assignments
     });
 }
+
+

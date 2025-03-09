@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAllAssignmentsHandler, getAssignmentHandler } from '../controllers/assignments';
+import { getAllAssignmentsHandler, getAssignmentHandler } from '../controllers/assignments.js';
 import groupRouter from './group.js';
 
 const router = express.Router({ mergeParams: true });

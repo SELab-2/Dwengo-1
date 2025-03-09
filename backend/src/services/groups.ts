@@ -1,9 +1,9 @@
-import { getAssignmentRepository, getClassRepository, getGroupRepository } from "../data/repositories";
-import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from "../interfaces/groups";
+import { getAssignmentRepository, getClassRepository, getGroupRepository } from "../data/repositories.js";
+import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from "../interfaces/groups.js";
 
 export async function getGroup(
-    classId: string, 
-    assignmentNumber: number, 
+    classId: string,
+    assignmentNumber: number,
     groupNumber: number,
     full: boolean,
 ): Promise<GroupDTO | null> {

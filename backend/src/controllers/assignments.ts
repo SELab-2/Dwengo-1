@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { getAllAssignments, getAssignment } from '../services/assignments';
+import { getAllAssignments, getAssignment } from '../services/assignments.js';
 
 // typescript is annoy with with parameter forwarding from class.ts
 interface AssignmentParams {

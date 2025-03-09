@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAllClassesHandler, getClassHandler, getClassStudentsHandler, getTeacherInvitationsHandler } from '../controllers/classes';
+import { getAllClassesHandler, getClassHandler, getClassStudentsHandler, getTeacherInvitationsHandler } from '../controllers/classes.js';
 import assignmentRouter from './assignment.js';
 
 const router = express.Router();

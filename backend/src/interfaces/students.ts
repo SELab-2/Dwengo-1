@@ -1,4 +1,4 @@
-import { Student } from "../entities/users/student.entity";
+import { Student } from "../entities/users/student.entity.js";
 
 export interface StudentDTO {
     id: string;
@@ -20,4 +20,13 @@ export function mapToStudentDTO(student: Student): StudentDTO {
         firstName: student.firstName,
         lastName: student.lastName,
     };
+}
+
+export function mapToStudent(studentData: StudentDTO): Student {
+    const student = new Student();
+    student.username = studentData.username;
+    student.firstName = studentData.firstName;
+    student.lastName = studentData.lastName;
+
+    return student;
 }

@@ -1,6 +1,5 @@
-import { Assignment } from "../entities/assignments/assignment.entity";
-import { Class } from "../entities/classes/class.entity";
-import { GroupDTO, mapToGroupDTO } from "./groups";
+import { Assignment } from "../entities/assignments/assignment.entity.js";
+import { GroupDTO, mapToGroupDTO } from "./groups.js";
 
 export interface AssignmentDTO {
     id: number,

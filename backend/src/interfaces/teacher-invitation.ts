@@ -1,6 +1,6 @@
-import { TeacherInvitation } from "../entities/classes/teacher-invitation.entity";
-import { ClassDTO, mapToClassDTO } from "./classes";
-import { mapToTeacherDTO, TeacherDTO } from "./teacher";
+import { TeacherInvitation } from "../entities/classes/teacher-invitation.entity.js";
+import { ClassDTO, mapToClassDTO } from "./classes.js";
+import { mapToTeacherDTO, TeacherDTO } from "./teacher.js";
 
 export interface TeacherInvitationDTO {
     sender: string | TeacherDTO,
