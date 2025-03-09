@@ -540,57 +540,57 @@ export async function setupTestApp() {
         content: 'answer',
     });
 
-    // const submission01 = em.create(Submission, {
-    //     learningObjectHruid: 'id03',
-    //     learningObjectLanguage: Language.English,
-    //     learningObjectVersion: '1',
-    //     submissionNumber: 1,
-    //     submitter: student01,
-    //     submissionTime: new Date(2025, 2, 20),
-    //     onBehalfOf: group01,
-    //     content: '',
-    // });
+    const submission01 = em.create(Submission, {
+        learningObjectHruid: 'id03',
+        learningObjectLanguage: Language.English,
+        learningObjectVersion: '1',
+        submissionNumber: 1,
+        submitter: student01,
+        submissionTime: new Date(2025, 2, 20),
+        onBehalfOf: group01,
+        content: 'sub1',
+    });
 
-    // const submission02 = em.create(Submission, {
-    //     learningObjectHruid: 'id03',
-    //     learningObjectLanguage: Language.English,
-    //     learningObjectVersion: '1',
-    //     submissionNumber: 1,
-    //     submitter: student01,
-    //     submissionTime: new Date(2025, 2, 25),
-    //     onBehalfOf: group01,
-    //     content: '',
-    // });
+    const submission02 = em.create(Submission, {
+        learningObjectHruid: 'id03',
+        learningObjectLanguage: Language.English,
+        learningObjectVersion: '1',
+        submissionNumber: 2,
+        submitter: student01,
+        submissionTime: new Date(2025, 2, 25),
+        onBehalfOf: group01,
+        content: '',
+    });
 
-    // const submission03 = em.create(Submission, {
-    //     learningObjectHruid: 'id02',
-    //     learningObjectLanguage: Language.English,
-    //     learningObjectVersion: '1',
-    //     submissionNumber: 1,
-    //     submitter: student01,
-    //     submissionTime: new Date(2025, 2, 20),
-    //     content: '',
-    // });
+    const submission03 = em.create(Submission, {
+        learningObjectHruid: 'id02',
+        learningObjectLanguage: Language.English,
+        learningObjectVersion: '1',
+        submissionNumber: 1,
+        submitter: student01,
+        submissionTime: new Date(2025, 2, 20),
+        content: '',
+    });
 
-    // const submission04 = em.create(Submission, {
-    //     learningObjectHruid: 'id02',
-    //     learningObjectLanguage: Language.English,
-    //     learningObjectVersion: '1',
-    //     submissionNumber: 1,
-    //     submitter: student01,
-    //     submissionTime: new Date(2025, 2, 25),
-    //     content: '',
-    // });
+    const submission04 = em.create(Submission, {
+        learningObjectHruid: 'id02',
+        learningObjectLanguage: Language.English,
+        learningObjectVersion: '1',
+        submissionNumber: 2,
+        submitter: student01,
+        submissionTime: new Date(2025, 2, 25),
+        content: '',
+    });
 
-    // const submission05 = em.create(Submission, {
-    //     learningObjectHruid: 'id01',
-    //     learningObjectLanguage: Language.English,
-    //     learningObjectVersion: '1',
-    //     submissionNumber: 1,
-    //     submitter: student02,
-    //     submissionTime: new Date(2025, 2, 20),
-    //     content: '',
-    // });
+    const submission05 = em.create(Submission, {
+        learningObjectHruid: 'id01',
+        learningObjectLanguage: Language.English,
+        learningObjectVersion: '1',
+        submissionNumber: 1,
+        submitter: student02,
+        submissionTime: new Date(2025, 2, 20),
+        content: '',
+    });
 
     await em.persistAndFlush([
         student01,
@@ -638,5 +638,10 @@ export async function setupTestApp() {
         answer01,
         answer02,
         answer03,
+        submission01,
+        submission02,
+        submission03,
+        submission04,
+        submission05,
     ]);
 }
