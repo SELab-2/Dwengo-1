@@ -11,7 +11,9 @@ import assignmentRouter from './routes/assignment.js';
 import submissionRouter from './routes/submission.js';
 import classRouter from './routes/class.js';
 import questionRouter from './routes/question.js';
-import loginRouter from './routes/login.js';
+import authRouter from './routes/auth.js';
+import {authenticateUser} from './middleware/auth/auth.js';
+import cors from './middleware/cors.js';
 import { getLogger, Logger } from './logging/initalize.js';
 import { responseTimeLogger } from './logging/responseTimeLogger.js';
 import responseTime from 'response-time';
@@ -25,6 +27,10 @@ const app: Express = express();
 const port: string | number = getNumericEnvVar(EnvVars.Port);
 
 app.use(express.json());
+app.use(cors);
+app.use(authenticateUser);
+// Add response time logging
+app.use(responseTime(responseTimeLogger));
 
 // TODO Replace with Express routes
 app.get('/', (_, res: Response) => {
@@ -41,14 +47,11 @@ app.use('/assignment', assignmentRouter /* #swagger.tags = ['Assignment'] */);
 app.use('/submission', submissionRouter /* #swagger.tags = ['Submission'] */);
 app.use('/class', classRouter /* #swagger.tags = ['Class'] */);
 app.use('/question', questionRouter /* #swagger.tags = ['Question'] */);
-app.use('/login', loginRouter /* #swagger.tags = ['Login'] */);
-
+app.use('/auth', authRouter /* #swagger.tags = ['Auth'] */);
 app.use('/theme', themeRoutes /* #swagger.tags = ['Theme'] */);
+
 app.use('/learningPath', learningPathRoutes /* #swagger.tags = ['Learning Path'] */);
 app.use('/learningObject', learningObjectRoutes /* #swagger.tags = ['Learning Object'] */);
-
-// Add response time loggin
-app.use(responseTime(responseTimeLogger));
 
 // Swagger UI for API documentation
 app.use('/api-docs', swaggerUi.serve, swaggerMiddleware);

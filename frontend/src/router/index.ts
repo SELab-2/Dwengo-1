@@ -15,6 +15,7 @@ import NotFound from "@/components/errors/NotFound.vue";
 import CreateClass from "@/views/classes/CreateClass.vue";
 import CreateAssignment from "@/views/assignments/CreateAssignment.vue";
 import CreateDiscussion from "@/views/discussions/CreateDiscussion.vue";
+import CallbackPage from "@/views/CallbackPage.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,10 @@ const router = createRouter({
             component: () => {
                 return import("../views/LoginPage.vue");
             },
+        },
+        {
+            path: "/callback",
+            component: CallbackPage
         },
         {
             path: "/student/:id",
