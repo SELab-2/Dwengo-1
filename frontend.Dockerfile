@@ -10,6 +10,8 @@ RUN npm run build
 
 # production stage
 FROM nginx:stable AS production-stage
+COPY ./nginx/nginx.conf /etc/nginx/
 COPY --from=build-stage /app/frontend/dist /usr/share/nginx/html
 EXPOSE 80
+EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]

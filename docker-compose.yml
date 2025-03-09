@@ -7,6 +7,8 @@ services:
         ports:
             - '443:443'
             - '80:80'
+        volumes:
+            - ssl:/etc/letsencrypt/live/sel2-1.ugent.be/
     api:
         build:
             dockerfile: ./backend.Dockerfile
@@ -46,3 +48,4 @@ volumes:
     dwengo_postgres_data:
     dwengo_loki_data:
     dwengo_grafana_data:
+    ssl:
