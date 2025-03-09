@@ -4,7 +4,7 @@ import {getLearningPathRepository} from "../../../src/data/repositories";
 import {LearningPathRepository} from "../../../src/data/content/learning-path-repository";
 import example from "../../test-assets/learning-paths/pn-werking-example";
 import {LearningPath} from "../../../src/entities/content/learning-path.entity";
-import {expectToBeCorrectEntity} from "../../test-utils/expect-to-be-correct-entity";
+import {expectToBeCorrectEntity} from "../../test-utils/expectations";
 import {Language} from "../../../src/entities/content/language";
 
 function expectToHaveFoundPrecisely(expected: LearningPath, result: LearningPath[]): void {

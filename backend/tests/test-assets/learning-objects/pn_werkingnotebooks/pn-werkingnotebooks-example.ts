@@ -41,10 +41,7 @@ const example: LearningObjectExample = {
 
         let returnValue = new ReturnValue();
         returnValue.callbackUrl = "callback_url_example";
-        returnValue.callbackSchema = `{
-                                  att: "test",
-                                  att2: "test2"
-                              }`;
+        returnValue.callbackSchema = '{"att": "test", "att2": "test2"}';
 
         learningObject.returnValue = returnValue;
         learningObject.available = true;

@@ -7,13 +7,13 @@ import {
     Transition
 } from "../../interfaces/learning-content";
 import {
-    LearningPath as LearningPathEntity,
-    LearningPathNode,
-    LearningPathTransition
+    LearningPath as LearningPathEntity
 } from "../../entities/content/learning-path.entity"
 import {getLearningPathRepository} from "../../data/repositories";
 import {Language} from "../../entities/content/language";
 import learningObjectService from "../learning-objects/learning-object-service";
+import { LearningPathNode } from "../../entities/content/learning-path-node.entity";
+import {LearningPathTransition} from "../../entities/content/learning-path-transition.entity";
 
 /**
  * Fetches the corresponding learning object for each of the nodes and creates a map that maps each node to its
@@ -55,13 +55,15 @@ async function convertLearningPath(learningPath: LearningPathEntity, order: numb
     const keywords =
         nodesToLearningObjects.values().flatMap(it => it.keywords || []).toArray();
 
+    const image = learningPath.image ? learningPath.image.toString("base64") : undefined;
+
     return {
         _id: `${learningPath.hruid}/${learningPath.language}`, // for backwards compatibility with the original Dwengo API.
         __order: order,
         hruid: learningPath.hruid,
         language: learningPath.language,
         description: learningPath.description,
-        image: learningPath.image,
+        image: image,
         title: learningPath.title,
         nodes: convertNodes(nodesToLearningObjects),
         num_nodes: learningPath.nodes.length,

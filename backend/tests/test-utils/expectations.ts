@@ -1,4 +1,7 @@
 import {AssertionError} from "node:assert";
+import {LearningObject} from "../../src/entities/content/learning-object.entity";
+import {FilteredLearningObject} from "../../src/interfaces/learning-content";
+import { expect } from "vitest";
 
 // Ignored properties because they belang for example to the class, not to the entity itself.
 const IGNORE_PROPERTIES = ["parent"];
@@ -59,4 +62,32 @@ export function expectToBeCorrectEntity<T extends object>(
             }
         }
     }
+}
+
+/**
+ * Checks that filtered is the correct representation of original as FilteredLearningObject.
+ * @param filtered the representation as FilteredLearningObject
+ * @param original the original entity added to the database
+ */
+export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearningObject, original: LearningObject) {
+    expect(filtered.uuid).toEqual(original.uuid);
+    expect(filtered.version).toEqual(original.version);
+    expect(filtered.language).toEqual(original.language);
+    expect(filtered.keywords).toEqual(original.keywords);
+    expect(filtered.key).toEqual(original.hruid);
+    expect(filtered.targetAges).toEqual(original.targetAges);
+    expect(filtered.title).toEqual(original.title);
+    expect(!!filtered.teacherExclusive).toEqual(original.teacherExclusive) // !!: Workaround: MikroORM with SQLite returns 0 and 1 instead of booleans.
+    expect(filtered.skosConcepts).toEqual(original.skosConcepts);
+    expect(filtered.estimatedTime).toEqual(original.estimatedTime);
+    expect(filtered.educationalGoals).toEqual(original.educationalGoals);
+    expect(filtered.difficulty).toEqual(original.difficulty || 1);
+    expect(filtered.description).toEqual(original.description);
+    expect(filtered.returnValue?.callback_url).toEqual(original.returnValue.callbackUrl);
+    expect(filtered.returnValue?.callback_schema).toEqual(JSON.parse(original.returnValue.callbackSchema));
+    expect(filtered.contentType).toEqual(original.contentType);
+    expect(filtered.contentLocation).toEqual(original.contentLocation || null);
+    expect(filtered.htmlUrl).toContain(`/${original.hruid}/html`);
+    expect(filtered.htmlUrl).toContain(`language=${original.language}`);
+    expect(filtered.htmlUrl).toContain(`version=${original.version}`);
 }

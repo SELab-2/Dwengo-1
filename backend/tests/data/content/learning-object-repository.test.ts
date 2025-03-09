@@ -4,7 +4,7 @@ import {setupTestApp} from "../../setup-tests";
 import {getLearningObjectRepository} from "../../../src/data/repositories";
 import example from "../../test-assets/learning-objects/pn_werkingnotebooks/pn-werkingnotebooks-example.js"
 import {LearningObject} from "../../../src/entities/content/learning-object.entity";
-import {expectToBeCorrectEntity} from "../../test-utils/expect-to-be-correct-entity";
+import {expectToBeCorrectEntity} from "../../test-utils/expectations";
 
 describe("LearningObjectRepository", () => {
     let learningObjectRepository: LearningObjectRepository;
@@ -28,7 +28,6 @@ describe("LearningObjectRepository", () => {
             version: exampleLearningObject.version
         });
         expect(result).toBeInstanceOf(LearningObject);
-        console.log(result);
         expectToBeCorrectEntity({
             name: "actual",
             entity: result!
