@@ -17,7 +17,37 @@ const doc = {
         {
             url: 'https://sel2-1.ugent.be/api'
         }
-    ]
+    ],
+    components: {
+        securitySchemes: {
+            student: {
+                type: 'oauth2',
+                flows: {
+                    implicit: {
+                        authorizationUrl: 'http://localhost:7080/realms/student/protocol/openid-connect/auth',
+                        scopes: {
+                            openid: 'openid',
+                            profile: 'profile',
+                            email: 'email'
+                        }
+                    }
+                }
+            },
+            teacher: {
+                type: 'oauth2',
+                flows: {
+                    implicit: {
+                        authorizationUrl: 'http://localhost:7080/realms/teacher/protocol/openid-connect/auth',
+                        scopes: {
+                            openid: 'openid',
+                            profile: 'profile',
+                            email: 'email'
+                        }
+                    }
+                }
+            }
+        }
+    }
 };
 
 const outputFile = './swagger.json';

@@ -520,10 +520,10 @@
         }
       }
     },
-    "/login/": {
+    "/auth/config": {
       "get": {
         "tags": [
-          "Login"
+          "Auth"
         ],
         "description": "",
         "responses": {
@@ -531,6 +531,63 @@
             "description": "OK"
           }
         }
+      }
+    },
+    "/auth/testAuthenticatedOnly": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "student": []
+          },
+          {
+            "teacher": []
+          }
+        ]
+      }
+    },
+    "/auth/testStudentsOnly": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "student": []
+          }
+        ]
+      }
+    },
+    "/auth/testTeachersOnly": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "teacher": []
+          }
+        ]
       }
     },
     "/theme/": {
@@ -704,6 +761,36 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "student": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "http://localhost:7080/realms/student/protocol/openid-connect/auth",
+            "scopes": {
+              "openid": "openid",
+              "profile": "profile",
+              "email": "email"
+            }
+          }
+        }
+      },
+      "teacher": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "http://localhost:7080/realms/teacher/protocol/openid-connect/auth",
+            "scopes": {
+              "openid": "openid",
+              "profile": "profile",
+              "email": "email"
+            }
           }
         }
       }

@@ -551,7 +551,7 @@
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-jwt",
-    "redirectUris" : [ "urn:ietf:wg:oauth:2.0:oob", "http://localhost:5173/*", "http://localhost:5173" ],
+    "redirectUris" : [ "urn:ietf:wg:oauth:2.0:oob", "http://localhost:5173/*", "http://localhost:5173", "http://localhost:3000/api-docs/oauth2-redirect.html" ],
     "webOrigins" : [ "+" ],
     "notBefore" : 0,
     "bearerOnly" : false,
