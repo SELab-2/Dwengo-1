@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { getAllStudents, getStudent, getStudentClasses, getStudentClassIds } from '../services/students';
 import { ClassDTO } from '../interfaces/classes';
+import { getAllAssignments } from '../services/assignments';
 
 // TODO: accept arguments (full, ...)
 // TODO: endpoints
@@ -72,4 +73,23 @@ export async function getStudentClassesHandler (
         console.error('Error fetching learning objects:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
+}
+
+// Might not be fully correct depending on if
+// a class has an assignment, that all students
+// have this assignment.
+export async function getStudentAssignmentsHandler(
+    req: Request,
+    res: Response,
+): Promise<void> {
+    const full = req.query.full === 'true';
+    const username = req.params.id;
+
+    const classes = await getStudentClasses(username);
+
+    const assignments = (await Promise.all(classes.map(async cls => await getAllAssignments(cls.id, full)))).flat();
+
+    res.json({
+        assignments: assignments
+    });
 }

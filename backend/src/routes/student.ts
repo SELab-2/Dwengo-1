@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAllStudentsHandler, getStudentClassesHandler, getStudentHandler } from '../controllers/students';
+import { getAllStudentsHandler, getStudentAssignmentsHandler, getStudentClassesHandler, getStudentHandler } from '../controllers/students';
 const router = express.Router();
 
 // root endpoint used to search objects
@@ -20,11 +20,7 @@ router.get('/:id/submissions', (req, res) => {
 
   
 // the list of assignments a student has
-router.get('/:id/assignments', (req, res) => {
-    res.json({
-        assignments: [ '0' ],
-    });
-})
+router.get('/:id/assignments', getStudentAssignmentsHandler);
   
 // the list of groups a student is in
 router.get('/:id/groups', (req, res) => {

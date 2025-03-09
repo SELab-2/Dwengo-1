@@ -1,5 +1,23 @@
 import { getAssignmentRepository, getClassRepository } from "../data/repositories";
-import { AssignmentDTO, mapToAssignmentDTO } from "../interfaces/assignments";
+import { AssignmentDTO, mapToAssignmentDTO, mapToAssignmentDTOId } from "../interfaces/assignments";
+
+export async function getAllAssignments(classid: string, full: boolean): Promise<AssignmentDTO[]> {
+    const classRepository = getClassRepository();
+    const cls = await classRepository.findById(classid);
+
+    if (!cls) {
+        return [];
+    }
+    
+    const assignmentRepository = getAssignmentRepository();
+    const assignments = await assignmentRepository.findAllAssignmentsInClass(cls);
+
+    if (full) {
+        return assignments.map(mapToAssignmentDTO);
+    }
+
+    return assignments.map(mapToAssignmentDTOId);
+}
 
 export async function getAssignment(classid: string, id: number): Promise<AssignmentDTO | null> {
     const classRepository = getClassRepository();
@@ -16,5 +34,5 @@ export async function getAssignment(classid: string, id: number): Promise<Assign
         return null;
     }
 
-    return mapToAssignmentDTO(assignment, cls);
+    return mapToAssignmentDTO(assignment);
 }

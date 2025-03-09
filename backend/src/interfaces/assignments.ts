@@ -1,6 +1,6 @@
 import { Assignment } from "../entities/assignments/assignment.entity";
 import { Class } from "../entities/classes/class.entity";
-import { GroupDTO } from "./groups";
+import { GroupDTO, mapToGroupDTO } from "./groups";
 
 export interface AssignmentDTO {
     id: number,
@@ -9,17 +9,29 @@ export interface AssignmentDTO {
     description: string,
     learningPath: string,
     language: string,
-    groups?: GroupDTO[], // TODO
+    groups?: GroupDTO[] | string[], // TODO
 }
 
-export function mapToAssignmentDTO(assignment: Assignment, cls: Class): AssignmentDTO {
+export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTO {
     return {
         id: assignment.id,
-        class: cls.classId,
+        class: assignment.within.classId,
         title: assignment.title,
         description: assignment.description,
         learningPath: assignment.learningPathHruid,
         language: assignment.learningPathLanguage,
-        //groups: assignment.groups.map(mapToGroupDTO),
+        // groups: assignment.groups.map(group => group.groupNumber),
+    }
+}
+
+export function mapToAssignmentDTO(assignment: Assignment): AssignmentDTO {
+    return {
+        id: assignment.id,
+        class: assignment.within.classId,
+        title: assignment.title,
+        description: assignment.description,
+        learningPath: assignment.learningPathHruid,
+        language: assignment.learningPathLanguage,
+        // groups: assignment.groups.map(mapToGroupDTO),
     };
 }

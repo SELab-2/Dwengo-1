@@ -1,10 +1,24 @@
 import { Request, Response } from 'express'
-import { getAssignment } from '../services/assignments';
+import { getAllAssignments, getAssignment } from '../services/assignments';
 
-// typescript is annoywith with parameter forwarding from class.ts
+// typescript is annoy with with parameter forwarding from class.ts
 interface AssignmentParams {
     classid: string;
     id: string;
+}
+
+export async function getAllAssignmentsHandler(
+    req: Request<AssignmentParams>,
+    res: Response,
+): Promise<void> {
+    const classid = req.params.classid;
+    const full = req.query.full === 'true';
+
+    const assignments = await getAllAssignments(classid, full);
+
+    res.json({
+        assignments: assignments,
+    });
 }
 
 export async function getAssignmentHandler(
