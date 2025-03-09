@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import MenuBar from "@/components/MenuBar.vue";
 import StudentHomepage from "@/views/StudentHomepage.vue";
 import StudentAssignments from "@/views/assignments/StudentAssignments.vue";
@@ -23,12 +23,12 @@ const router = createRouter({
         {
             path: "/",
             name: "home",
-            component: () => {return import("../views/HomePage.vue")},
+            component: () => import("../views/HomePage.vue"),
         },
         {
             path: "/login",
             name: "LoginPage",
-            component: () => {return import("../views/LoginPage.vue")}
+            component: () => import("../views/LoginPage.vue"),
         },
         {
             path: "/callback",
@@ -41,24 +41,24 @@ const router = createRouter({
                 {
                     path: "home",
                     name: "StudentHomePage",
-                    component: StudentHomepage
+                    component: StudentHomepage,
                 },
                 {
                     path: "assignment",
                     name: "StudentAssignments",
-                    component: StudentAssignments
+                    component: StudentAssignments,
                 },
                 {
                     path: "class",
                     name: "StudentClasses",
-                    component: StudentClasses
+                    component: StudentClasses,
                 },
                 {
                     path: "discussion",
                     name: "StudentDiscussions",
-                    component: StudentDiscussions
+                    component: StudentDiscussions,
                 },
-            ]
+            ],
         },
 
         {
@@ -68,56 +68,54 @@ const router = createRouter({
                 {
                     path: "home",
                     name: "TeacherHomepage",
-                    component: TeacherHomepage
+                    component: TeacherHomepage,
                 },
                 {
                     path: "assignment",
                     name: "TeacherAssignments",
-                    component: TeacherAssignments
+                    component: TeacherAssignments,
                 },
                 {
                     path: "class",
                     name: "TeacherClasses",
-                    component: TeacherClasses
+                    component: TeacherClasses,
                 },
                 {
                     path: "discussion",
                     name: "TeacherDiscussions",
-                    component: TeacherDiscussions
+                    component: TeacherDiscussions,
                 },
-            ]
+            ],
         },
         {
             path: "/assignment/create",
             name: "CreateAssigment",
-            component: CreateAssignment
-
+            component: CreateAssignment,
         },
         {
             path: "/assignment/:id",
             name: "SingleAssigment",
-            component: SingleAssignment
-
+            component: SingleAssignment,
         },
         {
             path: "/class/create",
             name: "CreateClass",
-            component: CreateClass
+            component: CreateClass,
         },
         {
             path: "/class/:id",
             name: "SingleClass",
-            component: SingleClass
+            component: SingleClass,
         },
         {
             path: "/discussion/create",
             name: "CreateDiscussion",
-            component: CreateDiscussion
+            component: CreateDiscussion,
         },
         {
             path: "/discussion/:id",
             name: "SingleDiscussion",
-            component: SingleDiscussion
+            component: SingleDiscussion,
         },
         {
             path: "/:catchAll(.*)",

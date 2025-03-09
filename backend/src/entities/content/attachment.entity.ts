@@ -3,7 +3,10 @@ import { LearningObject } from './learning-object.entity.js';
 
 @Entity()
 export class Attachment {
-    @ManyToOne({ entity: () => LearningObject, primary: true })
+    @ManyToOne({
+        entity: () => LearningObject,
+        primary: true,
+    })
     learningObject!: LearningObject;
 
     @PrimaryKey({ type: 'integer' })

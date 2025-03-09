@@ -1,7 +1,7 @@
-import {initORM} from "../src/orm.js";
-import dotenv from "dotenv";
+import { initORM } from '../src/orm.js';
+import dotenv from 'dotenv';
 
 export async function setupTestApp() {
-    dotenv.config({path: ".env.test"});
+    dotenv.config({ path: '.env.test' });
     await initORM(true);
 }

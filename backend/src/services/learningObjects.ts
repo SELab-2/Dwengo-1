@@ -1,0 +1,91 @@
+import { DWENGO_API_BASE } from '../config.js';
+import { fetchWithLogging } from '../util/apiHelper.js';
+import { FilteredLearningObject, LearningObjectMetadata, LearningObjectNode, LearningPathResponse } from '../interfaces/learningPath.js';
+import { fetchLearningPaths } from './learningPaths.js';
+import { getLogger, Logger } from '../logging/initalize.js';
+
+const logger: Logger = getLogger();
+
+function filterData(data: LearningObjectMetadata, htmlUrl: string): FilteredLearningObject {
+    return {
+        key: data.hruid, // Hruid learningObject (not path)
+        _id: data._id,
+        uuid: data.uuid,
+        version: data.version,
+        title: data.title,
+        htmlUrl, // Url to fetch html content
+        language: data.language,
+        difficulty: data.difficulty,
+        estimatedTime: data.estimated_time,
+        available: data.available,
+        teacherExclusive: data.teacher_exclusive,
+        educationalGoals: data.educational_goals, // List with learningObjects
+        keywords: data.keywords, // For search
+        description: data.description, // For search (not an actual description)
+        targetAges: data.target_ages,
+        contentType: data.content_type, // Markdown, image, audio, etc.
+        contentLocation: data.content_location, // If content type extern
+        skosConcepts: data.skos_concepts,
+        returnValue: data.return_value, // Callback response information
+    };
+}
+
+/**
+ * Fetches a single learning object by its HRUID
+ */
+export async function getLearningObjectById(hruid: string, language: string): Promise<FilteredLearningObject | null> {
+    const metadataUrl = `${DWENGO_API_BASE}/learningObject/getMetadata?hruid=${hruid}&language=${language}`;
+    const metadata = await fetchWithLogging<LearningObjectMetadata>(
+        metadataUrl,
+        `Metadata for Learning Object HRUID "${hruid}" (language ${language})`
+    );
+
+    if (!metadata) {
+        logger.warn(`⚠️ WARNING: Learning object "${hruid}" not found.`);
+        return null;
+    }
+
+    const htmlUrl = `${DWENGO_API_BASE}/learningObject/getRaw?hruid=${hruid}&language=${language}`;
+    return filterData(metadata, htmlUrl);
+}
+
+/**
+ * Generic function to fetch learning objects (full data or just HRUIDs)
+ */
+async function fetchLearningObjects(hruid: string, full: boolean, language: string): Promise<FilteredLearningObject[] | string[]> {
+    try {
+        const learningPathResponse: LearningPathResponse = await fetchLearningPaths([hruid], language, `Learning path for HRUID "${hruid}"`);
+
+        if (!learningPathResponse.success || !learningPathResponse.data?.length) {
+            logger.warn(`⚠️ WARNING: Learning path "${hruid}" exists but contains no learning objects.`);
+            return [];
+        }
+
+        const nodes: LearningObjectNode[] = learningPathResponse.data[0].nodes;
+
+        if (!full) {
+            return nodes.map((node) => node.learningobject_hruid);
+        }
+
+        return await Promise.all(nodes.map(async (node) => getLearningObjectById(node.learningobject_hruid, language))).then((objects) =>
+            objects.filter((obj): obj is FilteredLearningObject => obj !== null)
+        );
+    } catch (error) {
+        logger.error('❌ Error fetching learning objects:', error);
+        return [];
+    }
+}
+
+/**
+ * Fetch full learning object data (metadata)
+ */
+export async function getLearningObjectsFromPath(hruid: string, language: string): Promise<FilteredLearningObject[]> {
+    return (await fetchLearningObjects(hruid, true, language)) as FilteredLearningObject[];
+}
+
+/**
+ * Fetch only learning object HRUIDs
+ */
+export async function getLearningObjectIdsFromPath(hruid: string, language: string): Promise<string[]> {
+    return (await fetchLearningObjects(hruid, false, language)) as string[];
+}

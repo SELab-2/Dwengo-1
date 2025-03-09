@@ -49,9 +49,7 @@ export function getNumericEnvVar(envVar: EnvVar): number {
     const valueString = getEnvVar(envVar);
     const value = parseInt(valueString);
     if (isNaN(value)) {
-        throw new Error(
-            `Invalid value for environment variable ${envVar.key}: ${valueString}. Expected a number.`
-        );
+        throw new Error(`Invalid value for environment variable ${envVar.key}: ${valueString}. Expected a number.`);
     } else {
         return value;
     }
