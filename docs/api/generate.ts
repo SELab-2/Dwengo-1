@@ -13,9 +13,11 @@ const doc = {
     servers: [
         {
             url: 'http://localhost:3000/',
+            description: 'Development server'
         },
         {
-            url: 'https://sel2-1.ugent.be/api'
+            url: 'https://sel2-1.ugent.be/api',
+            description: 'Production server'
         }
     ],
     components: {
