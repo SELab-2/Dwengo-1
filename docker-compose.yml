@@ -9,7 +9,7 @@ services:
             - '443:443'
             - '80:80'
         volumes:
-            - ssl:/etc/letsencrypt/live/sel2-1.ugent.be/
+            - ssl:/etc/letsencrypt/
     api:
         build:
             context: .
