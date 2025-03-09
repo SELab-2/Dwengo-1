@@ -9,7 +9,7 @@ services:
             - '443:443'
             - '80:80'
         volumes:
-            - ssl:/etc/letsencrypt/
+            - /etc/letsencrypt/:/etc/letsencrypt/:ro
     api:
         build:
             context: .
