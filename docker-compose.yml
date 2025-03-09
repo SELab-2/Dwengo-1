@@ -1,6 +1,7 @@
 services:
     web:
         build:
+            context: .
             dockerfile: ./frontend.Dockerfile
         depends_on:
             - api
@@ -11,6 +12,7 @@ services:
             - ssl:/etc/letsencrypt/live/sel2-1.ugent.be/
     api:
         build:
+            context: .
             dockerfile: ./backend.Dockerfile
         ports:
             - '2002:2002'
