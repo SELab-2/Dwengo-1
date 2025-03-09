@@ -2,13 +2,13 @@
  * Based on https://github.com/dwengovzw/Learning-Object-Repository/blob/main/app/processors/pdf/pdf_processor.js
  */
 
-import Processor from "../processor.js";
 import DOMPurify from 'isomorphic-dompurify';
 import {DwengoContentType} from "../content-type.js";
 import {isValidHttpUrl} from "../../../../util/links.js";
 import {ProcessingError} from "../processing-error.js";
+import {StringProcessor} from "../string-processor";
 
-class PdfProcessor extends Processor<string> {
+class PdfProcessor extends StringProcessor {
     constructor() {
         super(DwengoContentType.APPLICATION_PDF);
     }

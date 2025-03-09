@@ -45,7 +45,7 @@ const example: LearningObjectExample = {
 
         learningObject.returnValue = returnValue;
         learningObject.available = true;
-        learningObject.content = loadTestAsset(`${ASSETS_PREFIX}/dwengo.png`);
+        learningObject.content = loadTestAsset(`${ASSETS_PREFIX}/content.md`);
 
         return learningObject
     },
@@ -66,6 +66,7 @@ const example: LearningObjectExample = {
             att.content = loadTestAsset(`${ASSETS_PREFIX}/Knop.png`)
             return att;
         }
-    }
+    },
+    getHTMLRendering: () => loadTestAsset(`${ASSETS_PREFIX}/rendering.html`).toString()
 }
 export default example;

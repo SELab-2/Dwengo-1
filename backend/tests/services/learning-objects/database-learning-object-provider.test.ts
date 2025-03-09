@@ -25,28 +25,34 @@ describe("DatabaseLearningObjectProvider", () => {
         await setupTestApp();
         exampleLearningObject = await initExampleData();
     });
-
-    it("should return the learning object when it is queried by its id", async () => {
-        const result: FilteredLearningObject | null = await databaseLearningObjectProvider.getLearningObjectById(exampleLearningObject);
-        expect(result).toBeTruthy();
-        expectToBeCorrectFilteredLearningObject(result!, exampleLearningObject);
-    });
-
-    it("should return the learning object when it is queried by only hruid and language (but not version)", async () => {
-        const result: FilteredLearningObject | null = await databaseLearningObjectProvider.getLearningObjectById({
-            hruid: exampleLearningObject.hruid,
-            language: exampleLearningObject.language
+    describe("getLearningObjectById", () => {
+        it("should return the learning object when it is queried by its id", async () => {
+            const result: FilteredLearningObject | null = await databaseLearningObjectProvider.getLearningObjectById(exampleLearningObject);
+            expect(result).toBeTruthy();
+            expectToBeCorrectFilteredLearningObject(result!, exampleLearningObject);
         });
-        expect(result).toBeTruthy();
-        expectToBeCorrectFilteredLearningObject(result!, exampleLearningObject);
-    });
 
-    it("should return null when queried with an id that does not exist", async () => {
-        const result: FilteredLearningObject | null = await databaseLearningObjectProvider.getLearningObjectById({
-            hruid: "non_existing_hruid",
-            language: Language.Dutch
+        it("should return the learning object when it is queried by only hruid and language (but not version)", async () => {
+            const result: FilteredLearningObject | null = await databaseLearningObjectProvider.getLearningObjectById({
+                hruid: exampleLearningObject.hruid,
+                language: exampleLearningObject.language
+            });
+            expect(result).toBeTruthy();
+            expectToBeCorrectFilteredLearningObject(result!, exampleLearningObject);
         });
-        expect(result).toBeNull();
-    });
 
+        it("should return null when queried with an id that does not exist", async () => {
+            const result: FilteredLearningObject | null = await databaseLearningObjectProvider.getLearningObjectById({
+                hruid: "non_existing_hruid",
+                language: Language.Dutch
+            });
+            expect(result).toBeNull();
+        });
+    });
+    describe("getLearningObjectHTML", () => {
+        it("should return the correct rendering of the learning object", async () => {
+            const result = await databaseLearningObjectProvider.getLearningObjectHTML(exampleLearningObject);
+            expect(result).toEqual(example.getHTMLRendering());
+        });
+    });
 });

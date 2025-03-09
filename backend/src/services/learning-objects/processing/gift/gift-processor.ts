@@ -2,7 +2,6 @@
  * Based on https://github.com/dwengovzw/Learning-Object-Repository/blob/main/app/processors/gift/gift_processor.js
  */
 
-import Processor from "../processor.js";
 import DOMPurify from 'isomorphic-dompurify';
 import {GIFTQuestion, parse} from "gift-pegjs"
 import {DwengoContentType} from "../content-type";
@@ -15,8 +14,9 @@ import {MatchingQuestionRenderer} from "./question-renderers/matching-question-r
 import {NumericalQuestionRenderer} from "./question-renderers/numerical-question-renderer";
 import {ShortQuestionRenderer} from "./question-renderers/short-question-renderer";
 import {TrueFalseQuestionRenderer} from "./question-renderers/true-false-question-renderer";
+import {StringProcessor} from "../string-processor";
 
-class GiftProcessor extends Processor<string> {
+class GiftProcessor extends StringProcessor {
 
     private renderers: RendererMap = {
         Category: new CategoryQuestionRenderer(),

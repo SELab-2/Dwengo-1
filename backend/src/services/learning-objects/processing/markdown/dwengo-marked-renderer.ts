@@ -42,45 +42,43 @@ function extractLearningObjectIdFromHref(href: string): LearningObjectIdentifier
  * - embeddings of other learning objects.
  */
  const dwengoMarkedRenderer: RendererObject = {
-    heading(heading: Heading) {
+    heading(heading: Heading): string {
         const text = heading.text;
         const level = heading.depth;
         const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
 
-        return `
-            <h${level}>
-                <a name="${escapedText}" class="anchor" href="#${escapedText}">
-                <span class="header-link"></span>
-                </a>
-                ${text}
-            </h${level}>`;
+        return `<h${level}>\n` +
+               `    <a name="${escapedText}" class="anchor" href="#${escapedText}">\n` +
+               `        <span class="header-link"></span>\n` +
+               `    </a>\n` +
+               `    ${text}\n` +
+               `</h${level}>\n`
     },
 
     // When the syntax for a link is used => [text](href "title")
     // render a custom link when the prefix for a learning object is used.
-    link(link: Link) {
+    link(link: Link): string {
         const href = link.href;
         const title = link.title || "";
-        const text = link.text;
+        const text = marked.parseInline(link.text); // There could for example be an image in the link.
 
         if (href.startsWith(prefixes.learningObject)) {
             // link to learning-object
             const learningObjectId = extractLearningObjectIdFromHref(href);
-            return `
-            <a href="${getUrlStringForLearningObjectHTML(learningObjectId)}]" target="_blank" title="${title}">${text}</a>
-        `;
+            return `<a href="${getUrlStringForLearningObjectHTML(learningObjectId)}" target="_blank" title="${title}">${text}</a>`;
         } else {
             // any other link
             if (!isValidHttpUrl(href)) {
                 throw new ProcessingError("Link is not a valid HTTP URL!");
             }
+            //<a href="https://kiks.ilabt.imec.be/hub/tmplogin?id=0101" title="Notebooks Werking"><img src="Knop.png" alt="" title="Knop"></a>
             return `<a href="${href}" target="_blank" title="${title}">${text}</a>`;
         }
     },
 
     // When the syntax for an image is used => ![text](href "title")
     // render a learning object, pdf, audio or video if a prefix is used.
-    image(img: Image) {
+    image(img: Image): string {
         const href = img.href;
         if (href.startsWith(prefixes.learningObject)) {
             // embedded learning-object

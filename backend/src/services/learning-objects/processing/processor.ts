@@ -48,7 +48,6 @@ abstract class Processor<T> {
 
     /**
      * Function which actually executes the rendering of a learning object.
-     * By default, this just means rendering the content in the content property of the learning object.
      *
      * When implementing this function, we may assume that we are responsible for the content type of the learning
      * object.
@@ -56,9 +55,7 @@ abstract class Processor<T> {
      * @param toRender Learning object to render
      * @protected
      */
-    protected renderLearningObjectFn(toRender: LearningObject): string {
-        return this.render(toRender.content as T);
-    }
+    protected abstract renderLearningObjectFn(toRender: LearningObject): string;
 }
 
 export default Processor;

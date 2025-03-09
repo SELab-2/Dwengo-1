@@ -2,13 +2,13 @@
  * Based on https://github.com/dwengovzw/Learning-Object-Repository/blob/main/app/processors/extern/extern_processor.js
  */
 
-import Processor from "../processor.js";
 import DOMPurify from 'isomorphic-dompurify';
 import {ProcessingError} from "../processing-error";
 import {isValidHttpUrl} from "../../../../util/links";
 import {DwengoContentType} from "../content-type";
+import {StringProcessor} from "../string-processor";
 
-class ExternProcessor extends Processor<string> {
+class ExternProcessor extends StringProcessor {
     constructor() {
         super(DwengoContentType.EXTERN);
     }

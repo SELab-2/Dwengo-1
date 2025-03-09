@@ -2,7 +2,7 @@ import {LearningObjectIdentifier} from "../interfaces/learning-content";
 
 export function isValidHttpUrl(url: string): boolean {
     try {
-        const parsedUrl = new URL(url);
+        const parsedUrl = new URL(url, "http://test.be");
         return parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:";
     } catch (e) {
         return false;

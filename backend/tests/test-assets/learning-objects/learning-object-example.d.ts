@@ -3,5 +3,6 @@ import {Attachment} from "../../../src/entities/content/attachment.entity";
 
 type LearningObjectExample = {
     createLearningObject: () => LearningObject,
-    createAttachment: {[key: string]: (owner: LearningObject) => Attachment}
+    createAttachment: {[key: string]: (owner: LearningObject) => Attachment},
+    getHTMLRendering: () => string
 };
