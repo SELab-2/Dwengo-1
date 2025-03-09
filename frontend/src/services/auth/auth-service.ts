@@ -2,15 +2,15 @@
  * Service for all authentication- and authorization-related tasks.
  */
 
-import {computed, reactive} from "vue";
-import type {AuthState, Role, UserManagersForRoles} from "@/services/auth/auth.d.ts";
-import {User, UserManager} from "oidc-client-ts";
-import {loadAuthConfig} from "@/services/auth/auth-config-loader.ts";
-import authStorage from "./auth-storage.ts"
-import {loginRoute} from "@/config.ts";
+import { computed, reactive } from "vue";
+import type { AuthState, Role, UserManagersForRoles } from "@/services/auth/auth.d.ts";
+import { User, UserManager } from "oidc-client-ts";
+import { loadAuthConfig } from "@/services/auth/auth-config-loader.ts";
+import authStorage from "./auth-storage.ts";
+import { loginRoute } from "@/config.ts";
 import apiClient from "@/services/api-client.ts";
 import router from "@/router";
-import type {AxiosError} from "axios";
+import type { AxiosError } from "axios";
 
 const authConfig = await loadAuthConfig();
 
@@ -40,7 +40,7 @@ async function loadUser(): Promise<User | null> {
 const authState = reactive<AuthState>({
     user: null,
     accessToken: null,
-    activeRole: authStorage.getActiveRole() || null
+    activeRole: authStorage.getActiveRole() || null,
 });
 
 const isLoggedIn = computed(() => authState.user !== null);
@@ -70,7 +70,7 @@ async function handleLoginCallback(): Promise<void> {
     if (!activeRole) {
         throw new Error("Login callback received, but the user is not logging in!");
     }
-    authState.user = await userManagers[activeRole].signinCallback() || null;
+    authState.user = (await userManagers[activeRole].signinCallback()) || null;
 }
 
 /**
@@ -104,29 +104,31 @@ async function logout(): Promise<void> {
 }
 
 // Registering interceptor to add the authorization header to each request when the user is logged in.
-apiClient.interceptors.request.use(async (reqConfig) => {
-    const token = authState?.user?.access_token;
-    if (token) {
-        reqConfig.headers.Authorization = `Bearer ${token}`;
-    }
-    return reqConfig;
-}, (error) => Promise.reject(error));
+apiClient.interceptors.request.use(
+    async (reqConfig) => {
+        const token = authState?.user?.access_token;
+        if (token) {
+            reqConfig.headers.Authorization = `Bearer ${token}`;
+        }
+        return reqConfig;
+    },
+    (error) => Promise.reject(error),
+);
 
 // Registering interceptor to refresh the token when a request failed because it was expired.
 apiClient.interceptors.response.use(
-    response => response,
-    async (error: AxiosError<{message?: string}>) => {
+    (response) => response,
+    async (error: AxiosError<{ message?: string }>) => {
         if (error.response?.status === 401) {
             if (error.response!.data.message === "token_expired") {
                 console.log("Access token expired, trying to refresh...");
                 await renewToken();
                 return apiClient(error.config!); // Retry the request
-            }  // Apparently, the user got a 401 because he was not logged in yet at all. Redirect him to login.
-                await initiateLogin()
-            
+            } // Apparently, the user got a 401 because he was not logged in yet at all. Redirect him to login.
+            await initiateLogin();
         }
         return Promise.reject(error);
-    }
+    },
 );
 
-export default {authState, isLoggedIn, initiateLogin, loadUser, handleLoginCallback, loginAs, logout};
+export default { authState, isLoggedIn, initiateLogin, loadUser, handleLoginCallback, loginAs, logout };

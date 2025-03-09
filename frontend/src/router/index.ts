@@ -32,7 +32,7 @@ const router = createRouter({
         },
         {
             path: "/callback",
-            component: CallbackPage
+            component: CallbackPage,
         },
         {
             path: "/student/:id",

@@ -1,4 +1,4 @@
-import type {Role} from "@/services/auth/auth.d.ts";
+import type { Role } from "@/services/auth/auth.d.ts";
 
 export default {
     /**
@@ -22,5 +22,5 @@ export default {
      */
     deleteActiveRole() {
         localStorage.removeItem("activeRole");
-    }
-}
+    },
+};
