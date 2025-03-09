@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
-import {FALLBACK_LANG} from "../config.js";
+import { FALLBACK_LANG } from "../config.js";
 
 export function loadTranslations<T>(language: string): T {
     try {

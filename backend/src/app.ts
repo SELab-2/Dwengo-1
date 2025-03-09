@@ -3,18 +3,20 @@ import { initORM } from './orm.js';
 import { EnvVars, getNumericEnvVar } from './util/envvars.js';
 
 import themeRoutes from './routes/themes.js';
-import learningPathRoutes from './routes/learningPaths.js';
-import learningObjectRoutes from './routes/learningObjects.js';
+import learningPathRoutes from './routes/learning-paths.js';
+import learningObjectRoutes from './routes/learning-objects.js';
 
-import studentRouter from './routes/student.js';
-import groupRouter from './routes/group.js';
-import submissionRouter from './routes/submission.js';
-import classRouter from './routes/class.js';
-import questionRouter from './routes/question.js';
-import loginRouter from './routes/login.js';
+import studentRoutes from './routes/students.js';
+import teacherRoutes from './routes/teachers.js'
+import groupRoutes from './routes/groups.js';
+import submissionRoutes from './routes/submissions.js';
+import classRoutes from './routes/classes.js';
+import questionRoutes from './routes/questions.js';
 
 const app: Express = express();
 const port: string | number = getNumericEnvVar(EnvVars.Port);
+
+app.use(express.json());
 
 app.use(express.json());
 
@@ -25,12 +27,12 @@ app.get('/', (_, res: Response) => {
     });
 });
 
-app.use('/student', studentRouter);
-app.use('/group', groupRouter);
-app.use('/submission', submissionRouter);
-app.use('/class', classRouter);
-app.use('/question', questionRouter);
-app.use('/login', loginRouter);
+app.use('/student', studentRoutes);
+app.use('/teacher', teacherRoutes);
+app.use('/group', groupRoutes);
+app.use('/submission', submissionRoutes);
+app.use('/class', classRoutes);
+app.use('/question', questionRoutes);
 
 app.use('/theme', themeRoutes);
 app.use('/learningPath', learningPathRoutes);
