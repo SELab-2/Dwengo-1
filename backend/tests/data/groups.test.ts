@@ -52,19 +52,20 @@ describe('GroupRepository', () => {
         expect(groups).toHaveLength(3);
     });
 
-    // it('should not find removed group', async () => {
-    //     const class_ = await ClassRepository.findById('id02');
-    //     const assignment = await AssignmentRepository.findByClassAndId(
-    //         class_!,
-    //         1
-    //     );
-    //     await GroupRepository.deleteByAssignmentAndGroupNumber(assignment!, 1);
+    it('should not find removed group', async () => {
+        const class_ = await ClassRepository.findById('id02');
+        const assignment = await AssignmentRepository.findByClassAndId(
+            class_!,
+            2
+        );
 
-    //     const group = await GroupRepository.findByAssignmentAndGroupNumber(
-    //         assignment!,
-    //         1
-    //     );
+        await GroupRepository.deleteByAssignmentAndGroupNumber(assignment!, 1);
 
-    //     expect(group).toBeNull();
-    // });
+        const group = await GroupRepository.findByAssignmentAndGroupNumber(
+            assignment!,
+            1
+        );
+
+        expect(group).toBeNull();
+    });
 });
