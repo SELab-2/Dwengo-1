@@ -1,6 +1,7 @@
 import {AssertionError} from "node:assert";
 import {LearningObject} from "../../src/entities/content/learning-object.entity";
-import {FilteredLearningObject} from "../../src/interfaces/learning-content";
+import {FilteredLearningObject, LearningPath} from "../../src/interfaces/learning-content";
+import {LearningPath as LearningPathEntity} from "../../src/entities/content/learning-path.entity"
 import { expect } from "vitest";
 
 // Ignored properties because they belang for example to the class, not to the entity itself.
@@ -90,4 +91,17 @@ export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearni
     expect(filtered.htmlUrl).toContain(`/${original.hruid}/html`);
     expect(filtered.htmlUrl).toContain(`language=${original.language}`);
     expect(filtered.htmlUrl).toContain(`version=${original.version}`);
+}
+
+/**
+ * Check that a learning path returned by a LearningPathRetriever, the LearningPathService or an API endpoint
+ * is a correct representation of the given learning path entity.
+ *
+ * @param learningPath The learning path returned by the retriever, service or endpoint
+ * @param expectedEntity The expected entity
+ */
+export function expectToBeCorrectLearningPath(learningPath: LearningPath, expectedEntity: LearningPathEntity) {
+    expect(learningPath.hruid).toEqual(expectedEntity.hruid);
+    expect(learningPath.language).toEqual(expectedEntity.language);
+    expect(learningPath.description).toEqual(expectedEntity.description);
 }
