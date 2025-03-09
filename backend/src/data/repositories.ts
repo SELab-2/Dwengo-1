@@ -116,4 +116,4 @@ export const getLearningPathRepository = repositoryGetter<
 export const getAttachmentRepository = repositoryGetter<
     Attachment,
     AttachmentRepository
->(Assignment);
+>(Attachment);
