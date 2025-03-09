@@ -516,29 +516,29 @@ export async function setupTestApp() {
         content: 'question',
     });
 
-    // const answer01 = em.create(Answer, {
-    //     author: teacher01,
-    //     toQuestion: question02,
-    //     sequenceNumber: 1,
-    //     timestamp: new Date(),
-    //     content: 'answer',
-    // });
+    const answer01 = em.create(Answer, {
+        author: teacher01,
+        toQuestion: question02,
+        sequenceNumber: 1,
+        timestamp: new Date(),
+        content: 'answer',
+    });
 
-    // const answer02 = em.create(Answer, {
-    //     author: teacher01,
-    //     toQuestion: question02,
-    //     sequenceNumber: 2,
-    //     timestamp: new Date(),
-    //     content: 'answer2',
-    // });
+    const answer02 = em.create(Answer, {
+        author: teacher01,
+        toQuestion: question02,
+        sequenceNumber: 2,
+        timestamp: new Date(),
+        content: 'answer2',
+    });
 
-    // const answer03 = em.create(Answer, {
-    //     author: teacher02,
-    //     toQuestion: question04,
-    //     sequenceNumber: 1,
-    //     timestamp: new Date(),
-    //     content: 'answer',
-    // });
+    const answer03 = em.create(Answer, {
+        author: teacher02,
+        toQuestion: question04,
+        sequenceNumber: 1,
+        timestamp: new Date(),
+        content: 'answer',
+    });
 
     // const submission01 = em.create(Submission, {
     //     learningObjectHruid: 'id03',
@@ -635,5 +635,8 @@ export async function setupTestApp() {
         question02,
         question03,
         question04,
+        answer01,
+        answer02,
+        answer03,
     ]);
 }
