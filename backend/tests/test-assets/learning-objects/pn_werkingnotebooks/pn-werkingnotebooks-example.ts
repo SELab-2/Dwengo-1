@@ -1,0 +1,74 @@
+import {LearningObjectExample} from "../learning-object-example";
+import {Language} from "../../../../src/entities/content/language";
+import {DwengoContentType} from "../../../../src/services/learning-objects/processing/content-type";
+import {loadTestAsset} from "../../../test-utils/load-test-asset";
+import {EducationalGoal, LearningObject, ReturnValue} from "../../../../src/entities/content/learning-object.entity";
+import {Attachment} from "../../../../src/entities/content/attachment.entity";
+import {EnvVars, getEnvVar} from "../../../../src/util/envvars";
+
+const ASSETS_PREFIX = "learning-objects/pn_werkingnotebooks/";
+
+const example: LearningObjectExample = {
+    createLearningObject: ()=>  {
+        let learningObject = new LearningObject();
+        learningObject.hruid = `${getEnvVar(EnvVars.UserContentPrefix)}pn_werkingnotebooks`;
+        learningObject.version = 3;
+        learningObject.language = Language.Dutch;
+        learningObject.title = "Werken met notebooks";
+        learningObject.description = "Leren werken met notebooks";
+        learningObject.keywords = ["Python", "KIKS", "Wiskunde", "STEM", "AI"]
+
+        let educationalGoal1 = new EducationalGoal();
+        educationalGoal1.source = "Source";
+        educationalGoal1.id = "id";
+
+        let educationalGoal2 = new EducationalGoal();
+        educationalGoal2.source = "Source2";
+        educationalGoal2.id = "id2";
+
+        learningObject.educationalGoals = [educationalGoal1, educationalGoal2];
+        learningObject.admins = [];
+        learningObject.contentType = DwengoContentType.TEXT_MARKDOWN;
+        learningObject.teacherExclusive = false;
+        learningObject.skosConcepts = [
+            'http://ilearn.ilabt.imec.be/vocab/curr1/s-vaktaal',
+            'http://ilearn.ilabt.imec.be/vocab/curr1/s-digitale-media-en-toepassingen',
+            'http://ilearn.ilabt.imec.be/vocab/curr1/s-computers-en-systemen'
+        ];
+        learningObject.copyright = "dwengo";
+        learningObject.license = "dwengo";
+        learningObject.estimatedTime = 10;
+
+        let returnValue = new ReturnValue();
+        returnValue.callbackUrl = "callback_url_example";
+        returnValue.callbackSchema = `{
+                                  att: "test",
+                                  att2: "test2"
+                              }`;
+
+        learningObject.returnValue = returnValue;
+        learningObject.available = true;
+        learningObject.content = loadTestAsset(`${ASSETS_PREFIX}/dwengo.png`);
+
+        return learningObject
+    },
+    createAttachment: {
+        dwengoLogo: (learningObject) => {
+            let att = new Attachment();
+            att.learningObject = learningObject;
+            att.name = "dwengo.png";
+            att.mimeType = "image/png";
+            att.content = loadTestAsset(`${ASSETS_PREFIX}/dwengo.png`)
+            return att;
+        },
+        knop: (learningObject) => {
+            let att = new Attachment();
+            att.learningObject = learningObject;
+            att.name = "Knop.png";
+            att.mimeType = "image/png";
+            att.content = loadTestAsset(`${ASSETS_PREFIX}/Knop.png`)
+            return att;
+        }
+    }
+}
+export default example;

@@ -24,5 +24,4 @@ export class LearningObjectRepository extends DwengoEntityRepository<LearningObj
             }
         });
     }
-    // This repository is read-only for now since creating own learning object is an extension feature.
 }

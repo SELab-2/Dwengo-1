@@ -35,9 +35,9 @@ class ProcessingService {
             new GiftProcessor()
         ];
 
-        processors.forEach(processor => {
-            this.processors.set(processor.contentType, processor);
-        });
+        this.processors = new Map(
+            processors.map(processor => [processor.contentType, processor])
+        )
     }
 
     /**

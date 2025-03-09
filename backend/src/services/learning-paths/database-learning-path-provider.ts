@@ -15,8 +15,6 @@ import {getLearningPathRepository} from "../../data/repositories";
 import {Language} from "../../entities/content/language";
 import learningObjectService from "../learning-objects/learning-object-service";
 
-const learningPathRepo = getLearningPathRepository();
-
 /**
  * Fetches the corresponding learning object for each of the nodes and creates a map that maps each node to its
  * corresponding learning object.
@@ -138,6 +136,8 @@ const databaseLearningPathProvider: LearningPathProvider = {
      * Fetch the learning paths with the given hruids from the database.
      */
     async fetchLearningPaths(hruids: string[], language: Language, source: string): Promise<LearningPathResponse> {
+        const learningPathRepo = getLearningPathRepository();
+
         const learningPaths = await Promise.all(
             hruids.map(hruid => learningPathRepo.findByHruidAndLanguage(hruid, language))
         );
@@ -158,6 +158,8 @@ const databaseLearningPathProvider: LearningPathProvider = {
      * Search learning paths in the database using the given search string.
      */
     async searchLearningPaths(query: string, language: Language): Promise<LearningPath[]> {
+        const learningPathRepo = getLearningPathRepository();
+
         const searchResults = await learningPathRepo.findByQueryStringAndLanguage(query, language);
         return await Promise.all(
             searchResults.map((result, index) =>

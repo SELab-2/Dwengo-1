@@ -2,10 +2,10 @@ import {getAttachmentRepository} from "../../data/repositories";
 import {Attachment} from "../../entities/content/attachment.entity";
 import {LearningObjectIdentifier} from "../../interfaces/learning-content";
 
-const attachmentRepo = getAttachmentRepository();
-
 const attachmentService = {
     getAttachment(learningObjectId: LearningObjectIdentifier, attachmentName: string): Promise<Attachment | null> {
+        const attachmentRepo = getAttachmentRepository();
+
         if (learningObjectId.version) {
             return attachmentRepo.findByLearningObjectIdAndName({
                 hruid: learningObjectId.hruid,

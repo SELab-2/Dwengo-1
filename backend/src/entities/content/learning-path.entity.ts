@@ -1,16 +1,14 @@
 import {
-    Embeddable,
-    Embedded,
     Entity,
     Enum,
-    ManyToMany,
-    OneToOne,
+    ManyToMany, OneToMany,
     PrimaryKey,
     Property,
 } from '@mikro-orm/core';
 import { Language } from './language.js';
 import { Teacher } from '../users/teacher.entity.js';
 import {LearningPathRepository} from "../../data/content/learning-path-repository";
+import {LearningPathNode} from "./learning-path-node.entity";
 
 @Entity({repository: () => LearningPathRepository})
 export class LearningPath {
@@ -29,45 +27,9 @@ export class LearningPath {
     @Property({ type: 'text' })
     description!: string;
 
-    @Property({ type: 'blob' })
-    image!: string;
+    @Property({ type: 'blob', nullable: true })
+    image: Buffer | null = null;
 
-    @Embedded({ entity: () => LearningPathNode, array: true })
+    @OneToMany({ entity: () => LearningPathNode, mappedBy: "learningPath" })
     nodes: LearningPathNode[] = [];
-}
-
-@Embeddable()
-export class LearningPathNode {
-    @Property({ type: 'string' })
-    learningObjectHruid!: string;
-
-    @Enum({ items: () => Language })
-    language!: Language;
-
-    @Property({ type: 'number' })
-    version!: number;
-
-    @Property({ type: 'longtext' })
-    instruction!: string;
-
-    @Property({ type: 'bool' })
-    startNode!: boolean;
-
-    @Embedded({ entity: () => LearningPathTransition, array: true })
-    transitions!: LearningPathTransition[];
-
-    @Property({ length: 3 })
-    createdAt: Date = new Date();
-
-    @Property({ length: 3, onUpdate: () => new Date() })
-    updatedAt: Date = new Date();
-}
-
-@Embeddable()
-export class LearningPathTransition {
-    @Property({ type: 'string' })
-    condition!: string;
-
-    @OneToOne({ entity: () => LearningPathNode })
-    next!: LearningPathNode;
 }

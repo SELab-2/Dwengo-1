@@ -1,6 +1,5 @@
 /**
  * Based on https://github.com/dwengovzw/Learning-Object-Repository/blob/main/app/processors/markdown/markdown_processor.js
- * and https://github.com/dwengovzw/Learning-Object-Repository/blob/main/app/processors/markdown/learing_object_markdown_renderer.js [sic!]
  */
 
 import {marked} from 'marked'
@@ -8,7 +7,7 @@ import Processor from '../processor.js';
 import InlineImageProcessor from '../image/inline-image-processor.js';
 import {DwengoContentType} from "../content-type";
 import {ProcessingError} from "../processing-error";
-import dwengoMarkedRenderer from "./learning-object-markdown-renderer";
+import dwengoMarkedRenderer from "./dwengo-marked-renderer";
 
 class MarkdownProcessor extends Processor<string> {
     constructor() {

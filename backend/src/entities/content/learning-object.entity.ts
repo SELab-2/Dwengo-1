@@ -45,7 +45,7 @@ export class LearningObject {
     keywords: string[] = [];
 
     @Property({ type: 'array', nullable: true })
-    targetAges?: number[];
+    targetAges?: number[] = [];
 
     @Property({ type: 'bool' })
     teacherExclusive: boolean = false;

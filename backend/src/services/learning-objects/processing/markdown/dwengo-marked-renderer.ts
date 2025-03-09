@@ -1,15 +1,20 @@
+/**
+ * Based on https://github.com/dwengovzw/Learning-Object-Repository/blob/main/app/processors/markdown/learing_object_markdown_renderer.js [sic!]
+ */
 import PdfProcessor from "../pdf/pdf-processor.js";
 import AudioProcessor from "../audio/audio-processor.js";
 import ExternProcessor from "../extern/extern-processor.js";
 import InlineImageProcessor from "../image/inline-image-processor.js";
-import {RendererObject, Tokens} from "marked";
+import * as marked from "marked";
 import {getUrlStringForLearningObjectHTML, isValidHttpUrl} from "../../../../util/links";
 import {ProcessingError} from "../processing-error";
 import {LearningObjectIdentifier} from "../../../../interfaces/learning-content";
 import {Language} from "../../../../entities/content/language";
-import Image = Tokens.Image;
-import Heading = Tokens.Heading;
-import Link = Tokens.Link;
+
+import Image = marked.Tokens.Image;
+import Heading = marked.Tokens.Heading;
+import Link = marked.Tokens.Link;
+import RendererObject = marked.RendererObject;
 
 const prefixes = {
     learningObject: '@learning-object',

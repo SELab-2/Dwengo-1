@@ -11,8 +11,6 @@ import {getUrlStringForLearningObject} from "../../util/links";
 import processingService from "./processing/processing-service";
 import {NotFoundError} from "@mikro-orm/core";
 
-const learningObjectRepo = getLearningObjectRepository();
-const learningPathRepo = getLearningPathRepository();
 
 function convertLearningObject(learningObject: LearningObject | null): FilteredLearningObject | null {
     if (!learningObject) {
@@ -45,6 +43,8 @@ function convertLearningObject(learningObject: LearningObject | null): FilteredL
 }
 
 function findLearningObjectEntityById(id: LearningObjectIdentifier): Promise<LearningObject | null> {
+    const learningObjectRepo = getLearningObjectRepository();
+
     return learningObjectRepo.findLatestByHruidAndLanguage(
         id.hruid, id.language as Language
     );
@@ -66,6 +66,8 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
      * Obtain a HTML-rendering of the learning object with the given identifier (as a string).
      */
     async getLearningObjectHTML(id: LearningObjectIdentifier): Promise<string | null> {
+        const learningObjectRepo = getLearningObjectRepository();
+
         const learningObject  = await learningObjectRepo.findLatestByHruidAndLanguage(
             id.hruid, id.language as Language
         );
@@ -82,6 +84,8 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
      * Fetch the HRUIDs of all learning objects on this path.
      */
     async getLearningObjectIdsFromPath(id: LearningPathIdentifier): Promise<string[]> {
+        const learningPathRepo = getLearningPathRepository();
+
         const learningPath = await learningPathRepo.findByHruidAndLanguage(id.hruid, id.language);
         if (!learningPath) {
             throw new NotFoundError("The learning path with the given ID could not be found.");
@@ -93,6 +97,8 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
      * Fetch the full metadata of all learning objects on this path.
      */
     async getLearningObjectsFromPath(id: LearningPathIdentifier): Promise<FilteredLearningObject[]> {
+        const learningPathRepo = getLearningPathRepository();
+
         const learningPath = await learningPathRepo.findByHruidAndLanguage(id.hruid, id.language);
         if (!learningPath) {
             throw new NotFoundError("The learning path with the given ID could not be found.");
