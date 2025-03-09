@@ -4,24 +4,16 @@ import { TeacherInvitation } from '../../entities/classes/teacher-invitation.ent
 import { Teacher } from '../../entities/users/teacher.entity.js';
 
 export class TeacherInvitationRepository extends DwengoEntityRepository<TeacherInvitation> {
-    public findAllInvitationsForClass(
-        clazz: Class
-    ): Promise<TeacherInvitation[]> {
+    public findAllInvitationsForClass(clazz: Class): Promise<TeacherInvitation[]> {
         return this.findAll({ where: { class: clazz } });
     }
     public findAllInvitationsBy(sender: Teacher): Promise<TeacherInvitation[]> {
         return this.findAll({ where: { sender: sender } });
     }
-    public findAllInvitationsFor(
-        receiver: Teacher
-    ): Promise<TeacherInvitation[]> {
+    public findAllInvitationsFor(receiver: Teacher): Promise<TeacherInvitation[]> {
         return this.findAll({ where: { receiver: receiver } });
     }
-    public deleteBy(
-        clazz: Class,
-        sender: Teacher,
-        receiver: Teacher
-    ): Promise<void> {
+    public deleteBy(clazz: Class, sender: Teacher, receiver: Teacher): Promise<void> {
         return this.deleteWhere({
             sender: sender,
             receiver: receiver,

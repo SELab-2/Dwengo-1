@@ -5,19 +5,13 @@ import { Group } from '../assignments/group.entity.js';
 import { StudentRepository } from '../../data/users/student-repository.js';
 
 @Entity({
-    repository: () => {
-        return StudentRepository;
-    },
+    repository: () => StudentRepository,
 })
 export class Student extends User {
-    @ManyToMany(() => {
-        return Class;
-    })
+    @ManyToMany(() => Class)
     classes!: Collection<Class>;
 
-    @ManyToMany(() => {
-        return Group;
-    })
+    @ManyToMany(() => Group)
     groups!: Collection<Group>;
 
     constructor(

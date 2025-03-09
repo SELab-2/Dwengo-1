@@ -1,9 +1,4 @@
-import {
-    AnyEntity,
-    EntityManager,
-    EntityName,
-    EntityRepository,
-} from '@mikro-orm/core';
+import { AnyEntity, EntityManager, EntityName, EntityRepository } from '@mikro-orm/core';
 import { forkEntityManager } from '../orm.js';
 import { StudentRepository } from './users/student-repository.js';
 import { Student } from '../entities/users/student.entity.js';
@@ -43,9 +38,7 @@ export function transactional<T>(f: () => Promise<T>) {
     entityManager?.transactional(f);
 }
 
-function repositoryGetter<T extends AnyEntity, R extends EntityRepository<T>>(
-    entity: EntityName<T>
-): () => R {
+function repositoryGetter<T extends AnyEntity, R extends EntityRepository<T>>(entity: EntityName<T>): () => R {
     let cachedRepo: R | undefined;
     return (): R => {
         if (!cachedRepo) {
@@ -60,60 +53,24 @@ function repositoryGetter<T extends AnyEntity, R extends EntityRepository<T>>(
 
 /* Users */
 export const getUserRepository = repositoryGetter<User, UserRepository>(User);
-export const getStudentRepository = repositoryGetter<
-    Student,
-    StudentRepository
->(Student);
-export const getTeacherRepository = repositoryGetter<
-    Teacher,
-    TeacherRepository
->(Teacher);
+export const getStudentRepository = repositoryGetter<Student, StudentRepository>(Student);
+export const getTeacherRepository = repositoryGetter<Teacher, TeacherRepository>(Teacher);
 
 /* Classes */
-export const getClassRepository = repositoryGetter<Class, ClassRepository>(
-    Class
-);
-export const getClassJoinRequestRepository = repositoryGetter<
-    ClassJoinRequest,
-    ClassJoinRequestRepository
->(ClassJoinRequest);
-export const getTeacherInvitationRepository = repositoryGetter<
-    TeacherInvitation,
-    TeacherInvitationRepository
->(TeacherInvitationRepository);
+export const getClassRepository = repositoryGetter<Class, ClassRepository>(Class);
+export const getClassJoinRequestRepository = repositoryGetter<ClassJoinRequest, ClassJoinRequestRepository>(ClassJoinRequest);
+export const getTeacherInvitationRepository = repositoryGetter<TeacherInvitation, TeacherInvitationRepository>(TeacherInvitationRepository);
 
 /* Assignments */
-export const getAssignmentRepository = repositoryGetter<
-    Assignment,
-    AssignmentRepository
->(Assignment);
-export const getGroupRepository = repositoryGetter<Group, GroupRepository>(
-    Group
-);
-export const getSubmissionRepository = repositoryGetter<
-    Submission,
-    SubmissionRepository
->(Submission);
+export const getAssignmentRepository = repositoryGetter<Assignment, AssignmentRepository>(Assignment);
+export const getGroupRepository = repositoryGetter<Group, GroupRepository>(Group);
+export const getSubmissionRepository = repositoryGetter<Submission, SubmissionRepository>(Submission);
 
 /* Questions and answers */
-export const getQuestionRepository = repositoryGetter<
-    Question,
-    QuestionRepository
->(Question);
-export const getAnswerRepository = repositoryGetter<Answer, AnswerRepository>(
-    Answer
-);
+export const getQuestionRepository = repositoryGetter<Question, QuestionRepository>(Question);
+export const getAnswerRepository = repositoryGetter<Answer, AnswerRepository>(Answer);
 
 /* Learning content */
-export const getLearningObjectRepository = repositoryGetter<
-    LearningObject,
-    LearningObjectRepository
->(LearningObject);
-export const getLearningPathRepository = repositoryGetter<
-    LearningPath,
-    LearningPathRepository
->(LearningPath);
-export const getAttachmentRepository = repositoryGetter<
-    Attachment,
-    AttachmentRepository
->(Assignment);
+export const getLearningObjectRepository = repositoryGetter<LearningObject, LearningObjectRepository>(LearningObject);
+export const getLearningPathRepository = repositoryGetter<LearningPath, LearningPathRepository>(LearningPath);
+export const getAttachmentRepository = repositoryGetter<Attachment, AttachmentRepository>(Assignment);

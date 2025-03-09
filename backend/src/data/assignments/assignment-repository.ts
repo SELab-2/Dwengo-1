@@ -3,10 +3,7 @@ import { Assignment } from '../../entities/assignments/assignment.entity.js';
 import { Class } from '../../entities/classes/class.entity.js';
 
 export class AssignmentRepository extends DwengoEntityRepository<Assignment> {
-    public findByClassAndId(
-        within: Class,
-        id: number
-    ): Promise<Assignment | null> {
+    public findByClassAndId(within: Class, id: number): Promise<Assignment | null> {
         return this.findOne({ within: within, id: id });
     }
     public findAllAssignmentsInClass(within: Class): Promise<Assignment[]> {

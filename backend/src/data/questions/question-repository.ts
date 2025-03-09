@@ -4,11 +4,7 @@ import { LearningObjectIdentifier } from '../../entities/content/learning-object
 import { Student } from '../../entities/users/student.entity.js';
 
 export class QuestionRepository extends DwengoEntityRepository<Question> {
-    public createQuestion(question: {
-        loId: LearningObjectIdentifier;
-        author: Student;
-        content: string;
-    }): Promise<Question> {
+    public createQuestion(question: { loId: LearningObjectIdentifier; author: Student; content: string }): Promise<Question> {
         const questionEntity = new Question();
         questionEntity.learningObjectHruid = question.loId.hruid;
         questionEntity.learningObjectLanguage = question.loId.language;
@@ -17,9 +13,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         questionEntity.content = question.content;
         return this.insert(questionEntity);
     }
-    public findAllQuestionsAboutLearningObject(
-        loId: LearningObjectIdentifier
-    ): Promise<Question[]> {
+    public findAllQuestionsAboutLearningObject(loId: LearningObjectIdentifier): Promise<Question[]> {
         return this.findAll({
             where: {
                 learningObjectHruid: loId.hruid,
@@ -31,10 +25,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
             },
         });
     }
-    public removeQuestionByLearningObjectAndSequenceNumber(
-        loId: LearningObjectIdentifier,
-        sequenceNumber: number
-    ): Promise<void> {
+    public removeQuestionByLearningObjectAndSequenceNumber(loId: LearningObjectIdentifier, sequenceNumber: number): Promise<void> {
         return this.deleteWhere({
             learningObjectHruid: loId.hruid,
             learningObjectLanguage: loId.language,
