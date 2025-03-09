@@ -27,7 +27,7 @@ async function loadUser(): Promise<User | null> {
     if (!activeRole) {
         return null;
     }
-    let user = await userManagers[activeRole].getUser();
+    const user = await userManagers[activeRole].getUser();
     authState.user = user;
     authState.accessToken = user?.access_token || null;
     authState.activeRole = activeRole || null;
@@ -121,9 +121,9 @@ apiClient.interceptors.response.use(
                 console.log("Access token expired, trying to refresh...");
                 await renewToken();
                 return apiClient(error.config!); // Retry the request
-            } else { // Apparently, the user got a 401 because he was not logged in yet at all. Redirect him to login.
+            }  // Apparently, the user got a 401 because he was not logged in yet at all. Redirect him to login.
                 await initiateLogin()
-            }
+            
         }
         return Promise.reject(error);
     }
