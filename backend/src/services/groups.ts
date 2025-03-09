@@ -34,3 +34,34 @@ export async function getGroup(
 
     return mapToGroupDTOId(group);
 }
+
+export async function getAllGroups(
+    classId: string,
+    assignmentNumber: number,
+    full: boolean,
+): Promise<GroupDTO[]> {
+    const classRepository = getClassRepository();
+    const cls = await classRepository.findById(classId);
+
+    if (!cls) {
+        return [];
+    }
+
+    const assignmentRepository = getAssignmentRepository();
+    const assignment = await assignmentRepository.findByClassAndId(cls, assignmentNumber);
+
+    if (!assignment) {
+        return [];
+    }
+
+    const groupRepository = getGroupRepository();
+    const groups = await groupRepository.findAllGroupsForAssignment(assignment);
+
+    if (full) {
+        console.log('full');
+        console.log(groups);
+        return groups.map(mapToGroupDTO);
+    }
+
+    return groups.map(mapToGroupDTOId);
+}

@@ -1,16 +1,9 @@
 import express from 'express'
-import { getGroupHandler } from '../controllers/groups';
+import { getAllGroupsHandler, getGroupHandler } from '../controllers/groups';
 const router = express.Router({ mergeParams: true });
 
 // root endpoint used to search objects
-router.get('/', (req, res) => {
-    res.json({
-        groups: [
-            '0',
-            '1',
-        ]
-    });
-});
+router.get('/', getAllGroupsHandler);
 
 // information about a group (members, ... [TODO DOC])
 router.get('/:groupid', getGroupHandler);

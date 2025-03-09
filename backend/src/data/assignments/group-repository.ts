@@ -18,7 +18,11 @@ export class GroupRepository extends DwengoEntityRepository<Group> {
     public findAllGroupsForAssignment(
         assignment: Assignment
     ): Promise<Group[]> {
-        return this.findAll({ where: { assignment: assignment } });
+        return this.findAll({ 
+            where: { assignment: assignment }, 
+            populate: ["members"] 
+        },
+        );
     }
     public deleteByAssignmentAndGroupNumber(
         assignment: Assignment,
