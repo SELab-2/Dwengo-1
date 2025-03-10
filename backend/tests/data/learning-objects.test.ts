@@ -6,11 +6,11 @@ import { LearningObjectIdentifier } from '../../src/entities/content/learning-ob
 import { Language } from '../../src/entities/content/language';
 
 describe('LearningObjectRepository', () => {
-    let LearningObjectRepository: LearningObjectRepository;
+    let learningObjectRepository: LearningObjectRepository;
 
     beforeAll(async () => {
         await setupTestApp();
-        LearningObjectRepository = getLearningObjectRepository();
+        learningObjectRepository = getLearningObjectRepository();
     });
 
     const id01 = new LearningObjectIdentifier('id01', Language.English, '1');
@@ -18,7 +18,7 @@ describe('LearningObjectRepository', () => {
 
     it('should return the learning object that matches identifier 1', async () => {
         const learningObject =
-            await LearningObjectRepository.findByIdentifier(id01);
+            await learningObjectRepository.findByIdentifier(id01);
 
         expect(learningObject).toBeTruthy();
         expect(learningObject?.title).toBe('Undertow');
@@ -27,7 +27,7 @@ describe('LearningObjectRepository', () => {
 
     it('should return nothing because the identifier does not exist in the database', async () => {
         const learningObject =
-            await LearningObjectRepository.findByIdentifier(id02);
+            await learningObjectRepository.findByIdentifier(id02);
 
         expect(learningObject).toBeNull();
     });

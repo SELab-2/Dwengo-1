@@ -13,21 +13,21 @@ import { Question } from '../../src/entities/questions/question.entity';
 import { TeacherRepository } from '../../src/data/users/teacher-repository';
 
 describe('AnswerRepository', () => {
-    let AnswerRepository: AnswerRepository;
-    let QuestionRepository: QuestionRepository;
-    let TeacherRepository: TeacherRepository;
+    let answerRepository: AnswerRepository;
+    let questionRepository: QuestionRepository;
+    let teacherRepository: TeacherRepository;
 
     beforeAll(async () => {
         await setupTestApp();
-        AnswerRepository = getAnswerRepository();
-        QuestionRepository = getQuestionRepository();
-        TeacherRepository = getTeacherRepository();
+        answerRepository = getAnswerRepository();
+        questionRepository = getQuestionRepository();
+        teacherRepository = getTeacherRepository();
     });
 
     it('should find all answers to a question', async () => {
         const id = new LearningObjectIdentifier('id05', Language.English, '1');
         const questions =
-            await QuestionRepository.findAllQuestionsAboutLearningObject(id);
+            await questionRepository.findAllQuestionsAboutLearningObject(id);
         let question: Question;
         if (questions[0].sequenceNumber == 2) {
             question = questions[0];
@@ -35,7 +35,7 @@ describe('AnswerRepository', () => {
             question = questions[1];
         }
         const answers =
-            await AnswerRepository.findAllAnswersToQuestion(question);
+            await answerRepository.findAllAnswersToQuestion(question);
 
         expect(answers).toBeTruthy();
         expect(answers).toHaveLength(2);
@@ -69,14 +69,14 @@ describe('AnswerRepository', () => {
     it('should not find a removed answer', async () => {
         const id = new LearningObjectIdentifier('id04', Language.English, '1');
         const questions =
-            await QuestionRepository.findAllQuestionsAboutLearningObject(id);
+            await questionRepository.findAllQuestionsAboutLearningObject(id);
 
-        await AnswerRepository.removeAnswerByQuestionAndSequenceNumber(
+        await answerRepository.removeAnswerByQuestionAndSequenceNumber(
             questions[0],
             1
         );
 
-        const emptyList = await AnswerRepository.findAllAnswersToQuestion(
+        const emptyList = await answerRepository.findAllAnswersToQuestion(
             questions[0]
         );
 

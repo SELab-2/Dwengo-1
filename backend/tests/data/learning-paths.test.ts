@@ -5,16 +5,16 @@ import { setupTestApp } from '../setup-tests';
 import { Language } from '../../src/entities/content/language';
 
 describe('LearningPathRepository', () => {
-    let LearningPathRepository: LearningPathRepository;
+    let learningPathRepository: LearningPathRepository;
 
     beforeAll(async () => {
         await setupTestApp();
-        LearningPathRepository = getLearningPathRepository();
+        learningPathRepository = getLearningPathRepository();
     });
 
     it('should return nothing because no match for hruid and language', async () => {
         const learningPath =
-            await LearningPathRepository.findByHruidAndLanguage(
+            await learningPathRepository.findByHruidAndLanguage(
                 'test_id',
                 Language.Dutch
             );
@@ -24,7 +24,7 @@ describe('LearningPathRepository', () => {
 
     it('should return requested learning path', async () => {
         const learningPath =
-            await LearningPathRepository.findByHruidAndLanguage(
+            await learningPathRepository.findByHruidAndLanguage(
                 'id01',
                 Language.English
             );

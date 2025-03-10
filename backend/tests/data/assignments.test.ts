@@ -8,18 +8,18 @@ import {
 import { ClassRepository } from '../../src/data/classes/class-repository';
 
 describe('AssignmentRepository', () => {
-    let AssignmentRepository: AssignmentRepository;
-    let ClassRepository: ClassRepository;
+    let assignmentRepository: AssignmentRepository;
+    let classRepository: ClassRepository;
 
     beforeAll(async () => {
         await setupTestApp();
-        AssignmentRepository = getAssignmentRepository();
-        ClassRepository = getClassRepository();
+        assignmentRepository = getAssignmentRepository();
+        classRepository = getClassRepository();
     });
 
     it('should return the requested assignment', async () => {
-        const class_ = await ClassRepository.findById('id02');
-        const assignment = await AssignmentRepository.findByClassAndId(
+        const class_ = await classRepository.findById('id02');
+        const assignment = await assignmentRepository.findByClassAndId(
             class_!,
             2
         );
@@ -29,19 +29,19 @@ describe('AssignmentRepository', () => {
     });
 
     it('should return all assignments for a class', async () => {
-        const class_ = await ClassRepository.findById('id02');
+        const class_ = await classRepository.findById('id02');
         const assignments =
-            await AssignmentRepository.findAllAssignmentsInClass(class_!);
+            await assignmentRepository.findAllAssignmentsInClass(class_!);
 
         expect(assignments).toBeTruthy();
         expect(assignments).toHaveLength(1);
     });
 
     it('should not find removed assignment', async () => {
-        const class_ = await ClassRepository.findById('id01');
-        await AssignmentRepository.deleteByClassAndId(class_!, 3);
+        const class_ = await classRepository.findById('id01');
+        await assignmentRepository.deleteByClassAndId(class_!, 3);
 
-        const assignment = await AssignmentRepository.findByClassAndId(
+        const assignment = await assignmentRepository.findByClassAndId(
             class_!,
             3
         );

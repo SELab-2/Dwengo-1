@@ -11,25 +11,25 @@ import { ClassRepository } from '../../src/data/classes/class-repository';
 import { Class } from '../../src/entities/classes/class.entity';
 
 describe('GroupRepository', () => {
-    let GroupRepository: GroupRepository;
-    let AssignmentRepository: AssignmentRepository;
-    let ClassRepository: ClassRepository;
+    let groupRepository: GroupRepository;
+    let assignmentRepository: AssignmentRepository;
+    let classRepository: ClassRepository;
 
     beforeAll(async () => {
         await setupTestApp();
-        GroupRepository = getGroupRepository();
-        AssignmentRepository = getAssignmentRepository();
-        ClassRepository = getClassRepository();
+        groupRepository = getGroupRepository();
+        assignmentRepository = getAssignmentRepository();
+        classRepository = getClassRepository();
     });
 
     it('should return the requested group', async () => {
-        const class_ = await ClassRepository.findById('id01');
-        const assignment = await AssignmentRepository.findByClassAndId(
+        const class_ = await classRepository.findById('id01');
+        const assignment = await assignmentRepository.findByClassAndId(
             class_!,
             1
         );
 
-        const group = await GroupRepository.findByAssignmentAndGroupNumber(
+        const group = await groupRepository.findByAssignmentAndGroupNumber(
             assignment!,
             1
         );
@@ -38,13 +38,13 @@ describe('GroupRepository', () => {
     });
 
     it('should return all groups for assignment', async () => {
-        const class_ = await ClassRepository.findById('id01');
-        const assignment = await AssignmentRepository.findByClassAndId(
+        const class_ = await classRepository.findById('id01');
+        const assignment = await assignmentRepository.findByClassAndId(
             class_!,
             1
         );
 
-        const groups = await GroupRepository.findAllGroupsForAssignment(
+        const groups = await groupRepository.findAllGroupsForAssignment(
             assignment!
         );
 
@@ -53,15 +53,15 @@ describe('GroupRepository', () => {
     });
 
     it('should not find removed group', async () => {
-        const class_ = await ClassRepository.findById('id02');
-        const assignment = await AssignmentRepository.findByClassAndId(
+        const class_ = await classRepository.findById('id02');
+        const assignment = await assignmentRepository.findByClassAndId(
             class_!,
             2
         );
 
-        await GroupRepository.deleteByAssignmentAndGroupNumber(assignment!, 1);
+        await groupRepository.deleteByAssignmentAndGroupNumber(assignment!, 1);
 
-        const group = await GroupRepository.findByAssignmentAndGroupNumber(
+        const group = await groupRepository.findByAssignmentAndGroupNumber(
             assignment!,
             1
         );

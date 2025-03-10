@@ -10,22 +10,22 @@ import { LearningObjectIdentifier } from '../../src/entities/content/learning-ob
 import { Language } from '../../src/entities/content/language';
 
 describe('AttachmentRepository', () => {
-    let AttachmentRepository: AttachmentRepository;
-    let LearningObjectRepository: LearningObjectRepository;
+    let attachmentRepository: AttachmentRepository;
+    let learningObjectRepository: LearningObjectRepository;
 
     beforeAll(async () => {
         await setupTestApp();
-        AttachmentRepository = getAttachmentRepository();
-        LearningObjectRepository = getLearningObjectRepository();
+        attachmentRepository = getAttachmentRepository();
+        learningObjectRepository = getLearningObjectRepository();
     });
 
     it('should return the requested attachment', async () => {
         const id = new LearningObjectIdentifier('id02', Language.English, '1');
         const learningObject =
-            await LearningObjectRepository.findByIdentifier(id);
+            await learningObjectRepository.findByIdentifier(id);
 
         const attachment =
-            await AttachmentRepository.findByLearningObjectAndNumber(
+            await attachmentRepository.findByLearningObjectAndNumber(
                 learningObject!,
                 1
             );

@@ -8,21 +8,21 @@ const username = 'testteacher';
 const firstName = 'John';
 const lastName = 'Doe';
 describe('TeacherRepository', () => {
-    let TeacherRepository: TeacherRepository;
+    let teacherRepository: TeacherRepository;
 
     beforeAll(async () => {
         await setupTestApp();
-        TeacherRepository = getTeacherRepository();
+        teacherRepository = getTeacherRepository();
     });
 
     it('should not return a teacher because username does not exist', async () => {
-        const teacher = await TeacherRepository.findByUsername('test');
+        const teacher = await teacherRepository.findByUsername('test');
 
         expect(teacher).toBeNull();
     });
 
     it('should return teacher from the datbase', async () => {
-        const teacher = await TeacherRepository.findByUsername('FooFighters');
+        const teacher = await teacherRepository.findByUsername('FooFighters');
 
         expect(teacher).toBeTruthy();
         expect(teacher?.firstName).toBe('Dave');
@@ -30,22 +30,22 @@ describe('TeacherRepository', () => {
     });
 
     it('should return the queried teacher after he was added', async () => {
-        await TeacherRepository.insert(
+        await teacherRepository.insert(
             new Teacher(username, firstName, lastName)
         );
 
         const retrievedTeacher =
-            await TeacherRepository.findByUsername(username);
+            await teacherRepository.findByUsername(username);
         expect(retrievedTeacher).toBeTruthy();
         expect(retrievedTeacher?.firstName).toBe(firstName);
         expect(retrievedTeacher?.lastName).toBe(lastName);
     });
 
     it('should no longer return the queried teacher after he was removed again', async () => {
-        await TeacherRepository.deleteByUsername('ZesdeMetaal');
+        await teacherRepository.deleteByUsername('ZesdeMetaal');
 
         const retrievedTeacher =
-            await TeacherRepository.findByUsername('ZesdeMetaal');
+            await teacherRepository.findByUsername('ZesdeMetaal');
         expect(retrievedTeacher).toBeNull();
     });
 });

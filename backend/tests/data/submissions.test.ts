@@ -19,25 +19,25 @@ import { AssignmentRepository } from '../../src/data/assignments/assignment-repo
 import { ClassRepository } from '../../src/data/classes/class-repository';
 
 describe('SubmissionRepository', () => {
-    let SubmissionRepository: SubmissionRepository;
-    let StudentRepository: StudentRepository;
-    let GroupRepository: GroupRepository;
-    let AssignmentRepository: AssignmentRepository;
-    let ClassRepository: ClassRepository;
+    let submissionRepository: SubmissionRepository;
+    let studentRepository: StudentRepository;
+    let groupRepository: GroupRepository;
+    let assignmentRepository: AssignmentRepository;
+    let classRepository: ClassRepository;
 
     beforeAll(async () => {
         await setupTestApp();
-        SubmissionRepository = getSubmissionRepository();
-        StudentRepository = getStudentRepository();
-        GroupRepository = getGroupRepository();
-        AssignmentRepository = getAssignmentRepository();
-        ClassRepository = getClassRepository();
+        submissionRepository = getSubmissionRepository();
+        studentRepository = getStudentRepository();
+        groupRepository = getGroupRepository();
+        assignmentRepository = getAssignmentRepository();
+        classRepository = getClassRepository();
     });
 
     it('should find the requested submission', async () => {
         const id = new LearningObjectIdentifier('id03', Language.English, '1');
         const submission =
-            await SubmissionRepository.findSubmissionByLearningObjectAndSubmissionNumber(
+            await submissionRepository.findSubmissionByLearningObjectAndSubmissionNumber(
                 id,
                 1
             );
@@ -48,9 +48,9 @@ describe('SubmissionRepository', () => {
 
     it('should find the most recent submission for a student', async () => {
         const id = new LearningObjectIdentifier('id02', Language.English, '1');
-        const student = await StudentRepository.findByUsername('Noordkaap');
+        const student = await studentRepository.findByUsername('Noordkaap');
         const submission =
-            await SubmissionRepository.findMostRecentSubmissionForStudent(
+            await submissionRepository.findMostRecentSubmissionForStudent(
                 id,
                 student!
             );
@@ -61,17 +61,17 @@ describe('SubmissionRepository', () => {
 
     it('should find the most recent submission for a group', async () => {
         const id = new LearningObjectIdentifier('id03', Language.English, '1');
-        const class_ = await ClassRepository.findById('id01');
-        const assignment = await AssignmentRepository.findByClassAndId(
+        const class_ = await classRepository.findById('id01');
+        const assignment = await assignmentRepository.findByClassAndId(
             class_!,
             1
         );
-        const group = await GroupRepository.findByAssignmentAndGroupNumber(
+        const group = await groupRepository.findByAssignmentAndGroupNumber(
             assignment!,
             1
         );
         const submission =
-            await SubmissionRepository.findMostRecentSubmissionForGroup(
+            await submissionRepository.findMostRecentSubmissionForGroup(
                 id,
                 group!
             );
@@ -82,13 +82,13 @@ describe('SubmissionRepository', () => {
 
     it('should not find a deleted submission', async () => {
         const id = new LearningObjectIdentifier('id01', Language.English, '1');
-        await SubmissionRepository.deleteSubmissionByLearningObjectAndSubmissionNumber(
+        await submissionRepository.deleteSubmissionByLearningObjectAndSubmissionNumber(
             id,
             1
         );
 
         const submission =
-            await SubmissionRepository.findSubmissionByLearningObjectAndSubmissionNumber(
+            await submissionRepository.findSubmissionByLearningObjectAndSubmissionNumber(
                 id,
                 1
             );

@@ -13,21 +13,21 @@ import { Language } from '../../src/entities/content/language';
 import { Question } from '../../src/entities/questions/question.entity';
 
 describe('QuestionRepository', () => {
-    let QuestionRepository: QuestionRepository;
-    let StudentRepository: StudentRepository;
-    let LearningObjectRepository: LearningObjectRepository;
+    let questionRepository: QuestionRepository;
+    let studentRepository: StudentRepository;
+    let learningObjectRepository: LearningObjectRepository;
 
     beforeAll(async () => {
         await setupTestApp();
-        QuestionRepository = getQuestionRepository();
-        StudentRepository = getStudentRepository();
-        LearningObjectRepository = getLearningObjectRepository();
+        questionRepository = getQuestionRepository();
+        studentRepository = getStudentRepository();
+        learningObjectRepository = getLearningObjectRepository();
     });
 
     it('should return all questions part of the given learning object', async () => {
         const id = new LearningObjectIdentifier('id05', Language.English, '1');
         const questions =
-            await QuestionRepository.findAllQuestionsAboutLearningObject(id);
+            await questionRepository.findAllQuestionsAboutLearningObject(id);
 
         expect(questions).toBeTruthy();
         expect(questions).toHaveLength(2);
@@ -50,13 +50,13 @@ describe('QuestionRepository', () => {
 
     it('should not find removed question', async () => {
         const id = new LearningObjectIdentifier('id04', Language.English, '1');
-        await QuestionRepository.removeQuestionByLearningObjectAndSequenceNumber(
+        await questionRepository.removeQuestionByLearningObjectAndSequenceNumber(
             id,
             1
         );
 
         const question =
-            await QuestionRepository.findAllQuestionsAboutLearningObject(id);
+            await questionRepository.findAllQuestionsAboutLearningObject(id);
 
         expect(question).toHaveLength(0);
     });
