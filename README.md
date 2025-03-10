@@ -49,6 +49,12 @@ De tech-stack bestaat uit:
 
 Voor meer informatie over de keuze van deze tech-stack, zie [designkeuzes](https://github.com/SELab-2/Dwengo-1/wiki/Design-keuzes).
 
+## Testen
+Voer volgende commando's uit om de <frontend/backend> te testen:
+```
+npm run test
+```
+
 ## Bijdragen aan Dwengo-1
 
 Zie [CONTRIBUTING.md](./CONTRIBUTING.md) voor meer informatie over hoe je kan bijdragen aan Dwengo-1.
