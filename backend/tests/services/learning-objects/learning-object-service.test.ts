@@ -11,7 +11,7 @@ import {EnvVars, getEnvVar} from "../../../src/util/envvars";
 const TEST_LEARNING_OBJECT_TITLE = "Test title";
 const EXPECTED_DWENGO_LEARNING_OBJECT_TITLE = "Werken met notebooks";
 const DWENGO_TEST_LEARNING_OBJECT_ID: LearningObjectIdentifier = {
-    hruid: "pn-werkingnotebooks",
+    hruid: "pn_werkingnotebooks",
     language: Language.Dutch,
     version: 3
 };
