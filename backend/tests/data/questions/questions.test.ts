@@ -1,16 +1,16 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { setupTestApp } from '../setup-tests';
-import { QuestionRepository } from '../../src/data/questions/question-repository';
+import { setupTestApp } from '../../setup-tests';
+import { QuestionRepository } from '../../../src/data/questions/question-repository';
 import {
     getLearningObjectRepository,
     getQuestionRepository,
     getStudentRepository,
-} from '../../src/data/repositories';
-import { StudentRepository } from '../../src/data/users/student-repository';
-import { LearningObjectRepository } from '../../src/data/content/learning-object-repository';
-import { LearningObjectIdentifier } from '../../src/entities/content/learning-object-identifier';
-import { Language } from '../../src/entities/content/language';
-import { Question } from '../../src/entities/questions/question.entity';
+} from '../../../src/data/repositories';
+import { StudentRepository } from '../../../src/data/users/student-repository';
+import { LearningObjectRepository } from '../../../src/data/content/learning-object-repository';
+import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
+import { Language } from '../../../src/entities/content/language';
+import { Question } from '../../../src/entities/questions/question.entity';
 
 describe('QuestionRepository', () => {
     let questionRepository: QuestionRepository;

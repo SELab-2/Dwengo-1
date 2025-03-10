@@ -1,11 +1,11 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { setupTestApp } from '../setup-tests';
-import { AssignmentRepository } from '../../src/data/assignments/assignment-repository';
+import { setupTestApp } from '../../setup-tests';
+import { AssignmentRepository } from '../../../src/data/assignments/assignment-repository';
 import {
     getAssignmentRepository,
     getClassRepository,
-} from '../../src/data/repositories';
-import { ClassRepository } from '../../src/data/classes/class-repository';
+} from '../../../src/data/repositories';
+import { ClassRepository } from '../../../src/data/classes/class-repository';
 
 describe('AssignmentRepository', () => {
     let assignmentRepository: AssignmentRepository;

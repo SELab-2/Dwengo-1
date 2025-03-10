@@ -1,13 +1,13 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { setupTestApp } from '../setup-tests';
+import { setupTestApp } from '../../setup-tests';
 import {
     getClassRepository,
     getTeacherInvitationRepository,
     getTeacherRepository,
-} from '../../src/data/repositories';
-import { TeacherInvitationRepository } from '../../src/data/classes/teacher-invitation-repository';
-import { TeacherRepository } from '../../src/data/users/teacher-repository';
-import { ClassRepository } from '../../src/data/classes/class-repository';
+} from '../../../src/data/repositories';
+import { TeacherInvitationRepository } from '../../../src/data/classes/teacher-invitation-repository';
+import { TeacherRepository } from '../../../src/data/users/teacher-repository';
+import { ClassRepository } from '../../../src/data/classes/class-repository';
 
 describe('ClassRepository', () => {
     let teacherInvitationRepository: TeacherInvitationRepository;

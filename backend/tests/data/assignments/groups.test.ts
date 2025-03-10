@@ -1,14 +1,13 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { setupTestApp } from '../setup-tests';
-import { GroupRepository } from '../../src/data/assignments/group-repository';
+import { setupTestApp } from '../../setup-tests';
+import { GroupRepository } from '../../../src/data/assignments/group-repository';
 import {
     getAssignmentRepository,
     getClassRepository,
     getGroupRepository,
-} from '../../src/data/repositories';
-import { AssignmentRepository } from '../../src/data/assignments/assignment-repository';
-import { ClassRepository } from '../../src/data/classes/class-repository';
-import { Class } from '../../src/entities/classes/class.entity';
+} from '../../../src/data/repositories';
+import { AssignmentRepository } from '../../../src/data/assignments/assignment-repository';
+import { ClassRepository } from '../../../src/data/classes/class-repository';
 
 describe('GroupRepository', () => {
     let groupRepository: GroupRepository;

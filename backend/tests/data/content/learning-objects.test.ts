@@ -1,9 +1,9 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { LearningObjectRepository } from '../../src/data/content/learning-object-repository';
-import { getLearningObjectRepository } from '../../src/data/repositories';
-import { setupTestApp } from '../setup-tests';
-import { LearningObjectIdentifier } from '../../src/entities/content/learning-object-identifier';
-import { Language } from '../../src/entities/content/language';
+import { LearningObjectRepository } from '../../../src/data/content/learning-object-repository';
+import { getLearningObjectRepository } from '../../../src/data/repositories';
+import { setupTestApp } from '../../setup-tests';
+import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
+import { Language } from '../../../src/entities/content/language';
 
 describe('LearningObjectRepository', () => {
     let learningObjectRepository: LearningObjectRepository;

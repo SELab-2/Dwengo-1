@@ -1,8 +1,8 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { getLearningPathRepository } from '../../src/data/repositories';
-import { LearningPathRepository } from '../../src/data/content/learning-path-repository';
-import { setupTestApp } from '../setup-tests';
-import { Language } from '../../src/entities/content/language';
+import { getLearningPathRepository } from '../../../src/data/repositories';
+import { LearningPathRepository } from '../../../src/data/content/learning-path-repository';
+import { setupTestApp } from '../../setup-tests';
+import { Language } from '../../../src/entities/content/language';
 
 describe('LearningPathRepository', () => {
     let learningPathRepository: LearningPathRepository;

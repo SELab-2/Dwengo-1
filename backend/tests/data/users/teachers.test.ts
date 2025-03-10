@@ -1,8 +1,8 @@
-import { setupTestApp } from '../setup-tests.js';
 import { describe, it, expect, beforeAll } from 'vitest';
-import { TeacherRepository } from '../../src/data/users/teacher-repository.js';
-import { Teacher } from '../../src/entities/users/teacher.entity.js';
-import { getTeacherRepository } from '../../src/data/repositories.js';
+import { TeacherRepository } from '../../../src/data/users/teacher-repository';
+import { setupTestApp } from '../../setup-tests';
+import { getTeacherRepository } from '../../../src/data/repositories';
+import { Teacher } from '../../../src/entities/users/teacher.entity';
 
 const username = 'testteacher';
 const firstName = 'John';

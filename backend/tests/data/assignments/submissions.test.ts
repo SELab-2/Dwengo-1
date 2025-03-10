@@ -1,22 +1,19 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { setupTestApp } from '../setup-tests';
-import { SubmissionRepository } from '../../src/data/assignments/submission-repository';
+import { setupTestApp } from '../../setup-tests';
+import { SubmissionRepository } from '../../../src/data/assignments/submission-repository';
 import {
     getAssignmentRepository,
     getClassRepository,
     getGroupRepository,
     getStudentRepository,
     getSubmissionRepository,
-} from '../../src/data/repositories';
-import { LearningObject } from '../../src/entities/content/learning-object.entity';
-import { LearningObjectIdentifier } from '../../src/entities/content/learning-object-identifier';
-import { Language } from '../../src/entities/content/language';
-import { subscribe } from 'diagnostics_channel';
-import { Student } from '../../src/entities/users/student.entity';
-import { StudentRepository } from '../../src/data/users/student-repository';
-import { GroupRepository } from '../../src/data/assignments/group-repository';
-import { AssignmentRepository } from '../../src/data/assignments/assignment-repository';
-import { ClassRepository } from '../../src/data/classes/class-repository';
+} from '../../../src/data/repositories';
+import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
+import { Language } from '../../../src/entities/content/language';
+import { StudentRepository } from '../../../src/data/users/student-repository';
+import { GroupRepository } from '../../../src/data/assignments/group-repository';
+import { AssignmentRepository } from '../../../src/data/assignments/assignment-repository';
+import { ClassRepository } from '../../../src/data/classes/class-repository';
 
 describe('SubmissionRepository', () => {
     let submissionRepository: SubmissionRepository;
