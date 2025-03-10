@@ -28,38 +28,34 @@ describe('AnswerRepository', () => {
         const id = new LearningObjectIdentifier('id05', Language.English, '1');
         const questions =
             await questionRepository.findAllQuestionsAboutLearningObject(id);
-        let question: Question;
-        if (questions[0].sequenceNumber == 2) {
-            question = questions[0];
-        } else {
-            question = questions[1];
-        }
+
+        const question = questions.filter((it) => it.sequenceNumber == 2)[0];
+
         const answers =
             await answerRepository.findAllAnswersToQuestion(question);
 
         expect(answers).toBeTruthy();
         expect(answers).toHaveLength(2);
+        expect(answers[0].content).toBeOneOf(['answer', 'answer2']);
+        expect(answers[1].content).toBeOneOf(['answer', 'answer2']);
     });
 
     // it('should create an answer to a question', async () => {
-    //     const teacher = await TeacherRepository.findByUsername('FooFighters');
+    //     const teacher = await teacherRepository.findByUsername('FooFighters');
     //     const id = new LearningObjectIdentifier('id05', Language.English, '1');
     //     const questions =
-    //         await QuestionRepository.findAllQuestionsAboutLearningObject(id);
-    //     let question: Question;
-    //     if (questions[0].sequenceNumber == 1) {
-    //         question = questions[0];
-    //     } else {
-    //         question = questions[1];
-    //     }
-    //     await AnswerRepository.createAnswer({
+    //         await questionRepository.findAllQuestionsAboutLearningObject(id);
+
+    //     const question = questions[0];
+
+    //     await answerRepository.createAnswer({
     //         toQuestion: question,
     //         author: teacher!,
     //         content: 'created answer',
     //     });
 
     //     const answers =
-    //         await AnswerRepository.findAllAnswersToQuestion(question);
+    //         await answerRepository.findAllAnswersToQuestion(question);
 
     //     expect(answers).toBeTruthy();
     //     expect(answers).toHaveLength(1);

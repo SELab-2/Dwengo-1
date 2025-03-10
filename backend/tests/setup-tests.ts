@@ -537,7 +537,7 @@ export async function setupTestApp() {
         toQuestion: question04,
         sequenceNumber: 1,
         timestamp: new Date(),
-        content: 'answer',
+        content: 'answer3',
     });
 
     const submission01 = em.create(Submission, {
