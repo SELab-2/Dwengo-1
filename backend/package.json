@@ -19,7 +19,7 @@
         "@mikro-orm/reflection": "^6.4.6",
         "@mikro-orm/sqlite": "6.4.6",
         "@types/js-yaml": "^4.0.9",
-        "axios": "^1.8.1",
+        "axios": "^1.8.2",
         "dotenv": "^16.4.7",
         "express": "^5.0.1",
         "express-jwt": "^8.5.1",
