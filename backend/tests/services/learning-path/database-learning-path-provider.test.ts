@@ -62,4 +62,32 @@ describe("DatabaseLearningPathProvider", () => {
             expect(result.success).toBe(false);
         });
     });
+
+    describe("searchLearningPaths", () => {
+        it("returns the correct learning path when queried with a substring of its title", async () => {
+            const result = await databaseLearningPathProvider.searchLearningPaths(
+                example.learningPath.title.substring(2, 6),
+                example.learningPath.language
+            );
+            expect(result.length).toBe(1);
+            expect(result[0].title).toBe(example.learningPath.title);
+            expect(result[0].description).toBe(example.learningPath.description);
+        });
+        it("returns the correct learning path when queried with a substring of the description", async () => {
+            const result = await databaseLearningPathProvider.searchLearningPaths(
+                example.learningPath.description.substring(5, 12),
+                example.learningPath.language
+            );
+            expect(result.length).toBe(1);
+            expect(result[0].title).toBe(example.learningPath.title);
+            expect(result[0].description).toBe(example.learningPath.description);
+        });
+        it("returns an empty result when queried with a text which is not a substring of the title or the description of a learning path", async () => {
+            const result = await databaseLearningPathProvider.searchLearningPaths(
+                "substring which does not occur in the title or the description of a learning object",
+                example.learningPath.language
+            );
+            expect(result.length).toBe(0);
+        });
+    });
 });
