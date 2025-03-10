@@ -3,7 +3,7 @@ import {LearningObject} from "../../../src/entities/content/learning-object.enti
 import {setupTestApp} from "../../setup-tests";
 import {LearningPath} from "../../../src/entities/content/learning-path.entity";
 import {getLearningObjectRepository, getLearningPathRepository} from "../../../src/data/repositories";
-import learningObjectExample from "../../test-assets/learning-objects/pn_werkingnotebooks/pn-werkingnotebooks-example";
+import learningObjectExample from "../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example";
 import learningPathExample from "../../test-assets/learning-paths/pn-werking-example"
 import databaseLearningPathProvider from "../../../src/services/learning-paths/database-learning-path-provider";
 import {expectToBeCorrectLearningPath} from "../../test-utils/expectations";

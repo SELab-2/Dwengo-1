@@ -2,7 +2,7 @@ import {beforeAll, describe, expect, it} from "vitest";
 import {setupTestApp} from "../../setup-tests";
 import {LearningObject} from "../../../src/entities/content/learning-object.entity";
 import {getLearningObjectRepository} from "../../../src/data/repositories";
-import learningObjectExample from "../../test-assets/learning-objects/pn_werkingnotebooks/pn-werkingnotebooks-example";
+import learningObjectExample from "../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example";
 import learningObjectService from "../../../src/services/learning-objects/learning-object-service";
 import {LearningObjectIdentifier} from "../../../src/interfaces/learning-content";
 import {Language} from "../../../src/entities/content/language";
@@ -11,7 +11,7 @@ import {EnvVars, getEnvVar} from "../../../src/util/envvars";
 const TEST_LEARNING_OBJECT_TITLE = "Test title";
 const EXPECTED_DWENGO_LEARNING_OBJECT_TITLE = "Werken met notebooks";
 const DWENGO_TEST_LEARNING_OBJECT_ID: LearningObjectIdentifier = {
-    hruid: "pn_werkingnotebooks",
+    hruid: "pn-werkingnotebooks",
     language: Language.Dutch,
     version: 3
 };

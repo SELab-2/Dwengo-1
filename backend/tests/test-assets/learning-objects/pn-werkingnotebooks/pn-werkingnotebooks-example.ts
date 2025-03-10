@@ -6,7 +6,7 @@ import {EducationalGoal, LearningObject, ReturnValue} from "../../../../src/enti
 import {Attachment} from "../../../../src/entities/content/attachment.entity";
 import {EnvVars, getEnvVar} from "../../../../src/util/envvars";
 
-const ASSETS_PREFIX = "learning-objects/pn_werkingnotebooks/";
+const ASSETS_PREFIX = "learning-objects/pn-werkingnotebooks/";
 
 const example: LearningObjectExample = {
     createLearningObject: ()=>  {

@@ -1,7 +1,7 @@
 import {beforeAll, describe, expect, it} from "vitest";
 import {setupTestApp} from "../../setup-tests";
 import {getLearningObjectRepository} from "../../../src/data/repositories";
-import example from "../../test-assets/learning-objects/pn_werkingnotebooks/pn-werkingnotebooks-example";
+import example from "../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example";
 import {LearningObject} from "../../../src/entities/content/learning-object.entity";
 import databaseLearningObjectProvider from "../../../src/services/learning-objects/database-learning-object-provider";
 import {
