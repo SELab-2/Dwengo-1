@@ -35,6 +35,7 @@ describe('AssignmentRepository', () => {
 
         expect(assignments).toBeTruthy();
         expect(assignments).toHaveLength(1);
+        expect(assignments[0].title).toBe('tool');
     });
 
     it('should not find removed assignment', async () => {

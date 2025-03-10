@@ -35,14 +35,14 @@ describe('QuestionRepository', () => {
 
     // it('should create new question', async () => {
     //     const id = new LearningObjectIdentifier('id03', Language.English, '1');
-    //     const student = await StudentRepository.findByUsername('Noordkaap');
-    //     await QuestionRepository.createQuestion({
+    //     const student = await studentRepository.findByUsername('Noordkaap');
+    //     await questionRepository.createQuestion({
     //         loId: id,
     //         author: student!,
     //         content: 'question?',
     //     });
     //     const question =
-    //         await QuestionRepository.findAllQuestionsAboutLearningObject(id);
+    //         await questionRepository.findAllQuestionsAboutLearningObject(id);
 
     //     expect(question).toBeTruthy();
     //     expect(question).toHaveLength(1);
