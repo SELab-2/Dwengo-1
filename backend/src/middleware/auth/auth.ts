@@ -12,7 +12,7 @@ const JWKS_CACHE = true;
 const JWKS_RATE_LIMIT = true;
 const REQUEST_PROPERTY_FOR_JWT_PAYLOAD = "jwtPayload";
 const JWT_ALGORITHM = "RS256"; // Not configurable via env vars since supporting other algorithms would
-                                        // require additional libraries to be added.
+                                        // Require additional libraries to be added.
 
 const JWT_PROPERTY_NAMES = {
     username: "preferred_username",
@@ -50,9 +50,9 @@ const verifyJwtToken = expressjwt({
             throw new Error("Invalid token");
         }
 
-        let issuer = (token.payload as JwtPayload).iss;
+        const issuer = (token.payload as JwtPayload).iss;
 
-        let idpConfig = Object.values(idpConfigs).find(config => config.issuer === issuer);
+        const idpConfig = Object.values(idpConfigs).find(config => {return config.issuer === issuer});
         if (!idpConfig) {
             throw new Error("Issuer not accepted.");
         }
@@ -76,7 +76,7 @@ function getAuthenticationInfo(req: AuthenticatedRequest): AuthenticationInfo | 
     if (!req.jwtPayload) {
         return;
     }
-    let issuer = req.jwtPayload.iss;
+    const issuer = req.jwtPayload.iss;
     let accountType: "student" | "teacher";
 
     if (issuer === idpConfigs.student.issuer) {
@@ -128,14 +128,14 @@ export const authorize = (accessCondition: (auth: AuthenticationInfo) => boolean
 /**
  * Middleware which rejects all unauthenticated users, but accepts all authenticated users.
  */
-export const authenticatedOnly = authorize(_ => true);
+export const authenticatedOnly = authorize(_ => {return true});
 
 /**
  * Middleware which rejects requests from unauthenticated users or users that aren't students.
  */
-export const studentsOnly = authorize(auth => auth.accountType === "student");
+export const studentsOnly = authorize(auth => {return auth.accountType === "student"});
 
 /**
  * Middleware which rejects requests from unauthenticated users or users that aren't teachers.
  */
-export const teachersOnly = authorize(auth => auth.accountType === "teacher");
+export const teachersOnly = authorize(auth => {return auth.accountType === "teacher"});

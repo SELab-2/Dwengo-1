@@ -27,7 +27,7 @@ async function loadUser(): Promise<User | null> {
     if (!activeRole) {
         return null;
     }
-    let user = await userManagers[activeRole].getUser();
+    const user = await userManagers[activeRole].getUser();
     authState.user = user;
     authState.accessToken = user?.access_token || null;
     authState.activeRole = activeRole || null;
@@ -43,7 +43,7 @@ const authState = reactive<AuthState>({
     activeRole: authStorage.getActiveRole() || null
 });
 
-const isLoggedIn = computed(() => authState.user !== null);
+const isLoggedIn = computed(() => {return authState.user !== null});
 
 /**
  * Redirect the user to the login page where he/she can choose whether to log in as a student or teacher.
@@ -110,20 +110,20 @@ apiClient.interceptors.request.use(async (reqConfig) => {
         reqConfig.headers.Authorization = `Bearer ${token}`;
     }
     return reqConfig;
-}, (error) => Promise.reject(error));
+}, (error) => {return Promise.reject(error)});
 
 // Registering interceptor to refresh the token when a request failed because it was expired.
 apiClient.interceptors.response.use(
-    response => response,
+    response => {return response},
     async (error: AxiosError<{message?: string}>) => {
         if (error.response?.status === 401) {
             if (error.response!.data.message === "token_expired") {
                 console.log("Access token expired, trying to refresh...");
                 await renewToken();
                 return apiClient(error.config!); // Retry the request
-            } else { // Apparently, the user got a 401 because he was not logged in yet at all. Redirect him to login.
+            }  // Apparently, the user got a 401 because he was not logged in yet at all. Redirect him to login.
                 await initiateLogin()
-            }
+            
         }
         return Promise.reject(error);
     }
