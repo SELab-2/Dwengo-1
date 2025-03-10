@@ -1,6 +1,7 @@
 import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { Group } from '../../entities/assignments/group.entity.js';
 import { Assignment } from '../../entities/assignments/assignment.entity.js';
+import { Student } from '../../entities/users/student.entity.js';
 
 export class GroupRepository extends DwengoEntityRepository<Group> {
     public findByAssignmentAndGroupNumber(
@@ -22,6 +23,14 @@ export class GroupRepository extends DwengoEntityRepository<Group> {
             where: { assignment: assignment },
             populate: ['members'],
         });
+    }
+    public findAllGroupsWithStudent(
+        student: Student
+    ): Promise<Group[]> {
+        return this.find(
+            { members: student },
+            { populate: ['members'] }
+        )
     }
     public deleteByAssignmentAndGroupNumber(
         assignment: Assignment,

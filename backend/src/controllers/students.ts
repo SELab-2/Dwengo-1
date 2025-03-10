@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import {
+    getStudentAssignments,
     getStudentClasses,
-    getStudentClassIds,
+    getStudentGroups,
     StudentService,
 } from '../services/students.js';
 import { ClassDTO } from '../interfaces/class.js';
@@ -52,12 +53,7 @@ export async function getStudentClassesHandler(
         const full = req.query.full === 'true';
         const username = req.params.id;
 
-        let classes: ClassDTO[] | string[];
-        if (full) {
-            classes = await getStudentClasses(username);
-        } else {
-            classes = await getStudentClassIds(username);
-        }
+        const classes = await getStudentClasses(username, full);
 
         res.json({
             classes: classes,
@@ -85,17 +81,23 @@ export async function getStudentAssignmentsHandler(
     const full = req.query.full === 'true';
     const username = req.params.id;
 
-    const classes = await getStudentClasses(username);
-
-    const assignments = (
-        await Promise.all(
-            classes.map(async (cls) => {
-                return await getAllAssignments(cls.id, full);
-            })
-        )
-    ).flat();
+    const assignments = getStudentAssignments(username, full);
 
     res.json({
         assignments: assignments,
+    });
+}
+
+export async function getStudentGroupsHandler(
+    req: Request,
+    res: Response,
+): Promise<void> {
+    const full = req.query.full === 'true';
+    const username = req.params.id;
+
+    const groups = await getStudentGroups(username, full);
+    
+    res.json({
+        groups: groups,
     });
 }
