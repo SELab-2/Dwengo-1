@@ -65,7 +65,7 @@ export interface LearningObjectMetadata {
     uuid: string;
     hruid: string;
     version: number;
-    language: string;
+    language: Language;
     title: string;
     description: string;
     difficulty: number;

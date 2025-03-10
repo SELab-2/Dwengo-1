@@ -107,7 +107,7 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
             }
         );
 
-        if (!metadata) {
+        if (!metadata || typeof metadata !== "object") {
             console.error(`⚠️ WARNING: Learning object "${id.hruid}" not found.`);
             return null;
         }
