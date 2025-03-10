@@ -52,7 +52,7 @@ Voor meer informatie over de keuze van deze tech-stack, zie [designkeuzes](https
 ## Testen
 Voer volgende commando's uit om de <frontend/backend> te testen:
 ```
-npm run test
+npm run test:unit
 ```
 
 ## Bijdragen aan Dwengo-1
