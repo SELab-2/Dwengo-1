@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    import {useRouter} from "vue-router";
-    import {onMounted} from "vue";
-    import auth from "../services/auth/auth-service.ts"
+    import { useRouter } from "vue-router";
+    import { onMounted } from "vue";
+    import auth from "../services/auth/auth-service.ts";
 
     const router = useRouter();
 
@@ -19,6 +19,4 @@
     <p>Logging you in...</p>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

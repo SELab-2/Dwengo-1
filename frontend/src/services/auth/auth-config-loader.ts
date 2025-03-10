@@ -1,5 +1,5 @@
 import apiClient from "@/services/api-client.ts";
-import type {FrontendAuthConfig} from "@/services/auth/auth.d.ts";
+import type { FrontendAuthConfig } from "@/services/auth/auth.d.ts";
 
 /**
  * Fetch the authentication configuration from the backend.
@@ -22,6 +22,6 @@ export async function loadAuthConfig() {
             response_type: authConfig.teacher.responseType,
             scope: authConfig.teacher.scope,
             post_logout_redirect_uri: window.location.origin,
-        }
+        },
     };
 }

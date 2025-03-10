@@ -16,14 +16,32 @@ export const EnvVars: { [key: string]: EnvVar } = {
     DbPassword: { key: DB_PREFIX + 'PASSWORD', required: true },
     DbUpdate: { key: DB_PREFIX + 'UPDATE', defaultValue: false },
     IdpStudentUrl: { key: STUDENT_IDP_PREFIX + 'URL', required: true },
-    IdpStudentClientId: { key: STUDENT_IDP_PREFIX + 'CLIENT_ID', required: true },
-    IdpStudentJwksEndpoint: { key: STUDENT_IDP_PREFIX + 'JWKS_ENDPOINT', required: true },
+    IdpStudentClientId: {
+        key: STUDENT_IDP_PREFIX + 'CLIENT_ID',
+        required: true,
+    },
+    IdpStudentJwksEndpoint: {
+        key: STUDENT_IDP_PREFIX + 'JWKS_ENDPOINT',
+        required: true,
+    },
     IdpTeacherUrl: { key: TEACHER_IDP_PREFIX + 'URL', required: true },
-    IdpTeacherClientId: { key: TEACHER_IDP_PREFIX + 'CLIENT_ID', required: true },
-    IdpTeacherJwksEndpoint: { key: TEACHER_IDP_PREFIX + 'JWKS_ENDPOINT', required: true },
+    IdpTeacherClientId: {
+        key: TEACHER_IDP_PREFIX + 'CLIENT_ID',
+        required: true,
+    },
+    IdpTeacherJwksEndpoint: {
+        key: TEACHER_IDP_PREFIX + 'JWKS_ENDPOINT',
+        required: true,
+    },
     IdpAudience: { key: IDP_PREFIX + 'AUDIENCE', defaultValue: 'account' },
-    CorsAllowedOrigins: { key: CORS_PREFIX + 'ALLOWED_ORIGINS', defaultValue: ''},
-    CorsAllowedHeaders: { key: CORS_PREFIX + 'ALLOWED_HEADERS', defaultValue: 'Authorization,Content-Type'}
+    CorsAllowedOrigins: {
+        key: CORS_PREFIX + 'ALLOWED_ORIGINS',
+        defaultValue: '',
+    },
+    CorsAllowedHeaders: {
+        key: CORS_PREFIX + 'ALLOWED_HEADERS',
+        defaultValue: 'Authorization,Content-Type',
+    },
 } as const;
 
 /**

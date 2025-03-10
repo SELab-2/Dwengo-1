@@ -12,14 +12,14 @@ import submissionRouter from './routes/submission.js';
 import classRouter from './routes/class.js';
 import questionRouter from './routes/question.js';
 import authRouter from './routes/auth.js';
-import {authenticateUser} from './middleware/auth/auth.js';
+import { authenticateUser } from './middleware/auth/auth.js';
 import cors from './middleware/cors.js';
 import { getLogger, Logger } from './logging/initalize.js';
 import { responseTimeLogger } from './logging/responseTimeLogger.js';
 import responseTime from 'response-time';
 import { EnvVars, getNumericEnvVar } from './util/envvars.js';
-import swaggerMiddleware from "./swagger";
-import swaggerUi from "swagger-ui-express";
+import swaggerMiddleware from './swagger';
+import swaggerUi from 'swagger-ui-express';
 
 const logger: Logger = getLogger();
 
@@ -50,8 +50,14 @@ app.use('/question', questionRouter /* #swagger.tags = ['Question'] */);
 app.use('/auth', authRouter /* #swagger.tags = ['Auth'] */);
 app.use('/theme', themeRoutes /* #swagger.tags = ['Theme'] */);
 
-app.use('/learningPath', learningPathRoutes /* #swagger.tags = ['Learning Path'] */);
-app.use('/learningObject', learningObjectRoutes /* #swagger.tags = ['Learning Object'] */);
+app.use(
+    '/learningPath',
+    learningPathRoutes /* #swagger.tags = ['Learning Path'] */
+);
+app.use(
+    '/learningObject',
+    learningObjectRoutes /* #swagger.tags = ['Learning Object'] */
+);
 
 // Swagger UI for API documentation
 app.use('/api-docs', swaggerUi.serve, swaggerMiddleware);

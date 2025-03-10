@@ -1,801 +1,735 @@
 {
-  "openapi": "3.1.0",
-  "info": {
-    "version": "0.1.0",
-    "title": "Dwengo-1 Backend API",
-    "description": "Dwengo-1 Backend API using Express, based on VZW Dwengo",
-    "license": {
-      "name": "MIT",
-      "url": "https://github.com/SELab-2/Dwengo-1/blob/336496ab6352ee3f8bf47490c90b5cf81526cef6/LICENSE"
-    }
-  },
-  "servers": [
-    {
-      "url": "http://localhost:3000/",
-      "description": "Development server"
-    },
-    {
-      "url": "https://sel2-1.ugent.be/api",
-      "description": "Production server"
-    }
-  ],
-  "paths": {
-    "/": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
+    "openapi": "3.1.0",
+    "info": {
+        "version": "0.1.0",
+        "title": "Dwengo-1 Backend API",
+        "description": "Dwengo-1 Backend API using Express, based on VZW Dwengo",
+        "license": {
+            "name": "MIT",
+            "url": "https://github.com/SELab-2/Dwengo-1/blob/336496ab6352ee3f8bf47490c90b5cf81526cef6/LICENSE"
         }
-      }
     },
-    "/student/": {
-      "get": {
-        "tags": [
-          "Student"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/student/{id}": {
-      "get": {
-        "tags": [
-          "Student"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/student/{id}/classes": {
-      "get": {
-        "tags": [
-          "Student"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/student/{id}/submissions": {
-      "get": {
-        "tags": [
-          "Student"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/student/{id}/assignments": {
-      "get": {
-        "tags": [
-          "Student"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/student/{id}/groups": {
-      "get": {
-        "tags": [
-          "Student"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/group/": {
-      "get": {
-        "tags": [
-          "Group"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/group/{id}": {
-      "get": {
-        "tags": [
-          "Group"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/group/{id}/question": {
-      "get": {
-        "tags": [
-          "Group"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/assignment/": {
-      "get": {
-        "tags": [
-          "Assignment"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/assignment/{id}": {
-      "get": {
-        "tags": [
-          "Assignment"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/assignment/{id}/submissions": {
-      "get": {
-        "tags": [
-          "Assignment"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/assignment/{id}/groups": {
-      "get": {
-        "tags": [
-          "Assignment"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/assignment/{id}/questions": {
-      "get": {
-        "tags": [
-          "Assignment"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/submission/": {
-      "get": {
-        "tags": [
-          "Submission"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/submission/{id}": {
-      "get": {
-        "tags": [
-          "Submission"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/class/": {
-      "get": {
-        "tags": [
-          "Class"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/class/{id}": {
-      "get": {
-        "tags": [
-          "Class"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/class/{id}/invitations": {
-      "get": {
-        "tags": [
-          "Class"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/class/{id}/assignments": {
-      "get": {
-        "tags": [
-          "Class"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/class/{id}/students": {
-      "get": {
-        "tags": [
-          "Class"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/question/": {
-      "get": {
-        "tags": [
-          "Question"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/question/{id}": {
-      "get": {
-        "tags": [
-          "Question"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/question/{id}/answers": {
-      "get": {
-        "tags": [
-          "Question"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/auth/config": {
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/auth/testAuthenticatedOnly": {
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
+    "servers": [
+        {
+            "url": "http://localhost:3000/",
+            "description": "Development server"
         },
-        "security": [
-          {
-            "student": []
-          },
-          {
-            "teacher": []
-          }
-        ]
-      }
-    },
-    "/auth/testStudentsOnly": {
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
+        {
+            "url": "https://sel2-1.ugent.be/api",
+            "description": "Production server"
+        }
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
         },
-        "security": [
-          {
-            "student": []
-          }
-        ]
-      }
-    },
-    "/auth/testTeachersOnly": {
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
+        "/student/": {
+            "get": {
+                "tags": ["Student"],
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
         },
-        "security": [
-          {
-            "teacher": []
-          }
-        ]
-      }
-    },
-    "/theme/": {
-      "get": {
-        "tags": [
-          "Theme"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "language",
-            "in": "query",
-            "schema": {
-              "type": "string"
+        "/student/{id}": {
+            "get": {
+                "tags": ["Student"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
+        },
+        "/student/{id}/classes": {
+            "get": {
+                "tags": ["Student"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/student/{id}/submissions": {
+            "get": {
+                "tags": ["Student"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/student/{id}/assignments": {
+            "get": {
+                "tags": ["Student"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/student/{id}/groups": {
+            "get": {
+                "tags": ["Student"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/group/": {
+            "get": {
+                "tags": ["Group"],
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/group/{id}": {
+            "get": {
+                "tags": ["Group"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/group/{id}/question": {
+            "get": {
+                "tags": ["Group"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/assignment/": {
+            "get": {
+                "tags": ["Assignment"],
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/assignment/{id}": {
+            "get": {
+                "tags": ["Assignment"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/assignment/{id}/submissions": {
+            "get": {
+                "tags": ["Assignment"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/assignment/{id}/groups": {
+            "get": {
+                "tags": ["Assignment"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/assignment/{id}/questions": {
+            "get": {
+                "tags": ["Assignment"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/submission/": {
+            "get": {
+                "tags": ["Submission"],
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/submission/{id}": {
+            "get": {
+                "tags": ["Submission"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/class/": {
+            "get": {
+                "tags": ["Class"],
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/class/{id}": {
+            "get": {
+                "tags": ["Class"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/class/{id}/invitations": {
+            "get": {
+                "tags": ["Class"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/class/{id}/assignments": {
+            "get": {
+                "tags": ["Class"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/class/{id}/students": {
+            "get": {
+                "tags": ["Class"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/question/": {
+            "get": {
+                "tags": ["Question"],
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/question/{id}": {
+            "get": {
+                "tags": ["Question"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/question/{id}/answers": {
+            "get": {
+                "tags": ["Question"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/auth/config": {
+            "get": {
+                "tags": ["Auth"],
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/auth/testAuthenticatedOnly": {
+            "get": {
+                "tags": ["Auth"],
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "student": []
+                    },
+                    {
+                        "teacher": []
+                    }
+                ]
+            }
+        },
+        "/auth/testStudentsOnly": {
+            "get": {
+                "tags": ["Auth"],
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "student": []
+                    }
+                ]
+            }
+        },
+        "/auth/testTeachersOnly": {
+            "get": {
+                "tags": ["Auth"],
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "teacher": []
+                    }
+                ]
+            }
+        },
+        "/theme/": {
+            "get": {
+                "tags": ["Theme"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/theme/{theme}": {
+            "get": {
+                "tags": ["Theme"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "theme",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/learningPath/": {
+            "get": {
+                "tags": ["Learning Path"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "hruid",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "theme",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/learningObject/": {
+            "get": {
+                "tags": ["Learning Object"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "hruid",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "full",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/learningObject/{hruid}": {
+            "get": {
+                "tags": ["Learning Object"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "hruid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
         }
-      }
     },
-    "/theme/{theme}": {
-      "get": {
-        "tags": [
-          "Theme"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "theme",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+    "components": {
+        "securitySchemes": {
+            "student": {
+                "type": "oauth2",
+                "flows": {
+                    "implicit": {
+                        "authorizationUrl": "http://localhost:7080/realms/student/protocol/openid-connect/auth",
+                        "scopes": {
+                            "openid": "openid",
+                            "profile": "profile",
+                            "email": "email"
+                        }
+                    }
+                }
+            },
+            "teacher": {
+                "type": "oauth2",
+                "flows": {
+                    "implicit": {
+                        "authorizationUrl": "http://localhost:7080/realms/teacher/protocol/openid-connect/auth",
+                        "scopes": {
+                            "openid": "openid",
+                            "profile": "profile",
+                            "email": "email"
+                        }
+                    }
+                }
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
-          }
         }
-      }
-    },
-    "/learningPath/": {
-      "get": {
-        "tags": [
-          "Learning Path"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "hruid",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "theme",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "search",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "language",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/learningObject/": {
-      "get": {
-        "tags": [
-          "Learning Object"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "hruid",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "full",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "language",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/learningObject/{hruid}": {
-      "get": {
-        "tags": [
-          "Learning Object"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "hruid",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "language",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
     }
-  },
-  "components": {
-    "securitySchemes": {
-      "student": {
-        "type": "oauth2",
-        "flows": {
-          "implicit": {
-            "authorizationUrl": "http://localhost:7080/realms/student/protocol/openid-connect/auth",
-            "scopes": {
-              "openid": "openid",
-              "profile": "profile",
-              "email": "email"
-            }
-          }
-        }
-      },
-      "teacher": {
-        "type": "oauth2",
-        "flows": {
-          "implicit": {
-            "authorizationUrl": "http://localhost:7080/realms/teacher/protocol/openid-connect/auth",
-            "scopes": {
-              "openid": "openid",
-              "profile": "profile",
-              "email": "email"
-            }
-          }
-        }
-      }
-    }
-  }
 }

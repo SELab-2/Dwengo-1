@@ -1,4 +1,4 @@
-import swaggerAutogen from "swagger-autogen";
+import swaggerAutogen from 'swagger-autogen';
 
 const doc = {
     info: {
@@ -7,18 +7,18 @@ const doc = {
         description: 'Dwengo-1 Backend API using Express, based on VZW Dwengo',
         license: {
             name: 'MIT',
-            url: 'https://github.com/SELab-2/Dwengo-1/blob/336496ab6352ee3f8bf47490c90b5cf81526cef6/LICENSE'
-        }
+            url: 'https://github.com/SELab-2/Dwengo-1/blob/336496ab6352ee3f8bf47490c90b5cf81526cef6/LICENSE',
+        },
     },
     servers: [
         {
             url: 'http://localhost:3000/',
-            description: 'Development server'
+            description: 'Development server',
         },
         {
             url: 'https://sel2-1.ugent.be/api',
-            description: 'Production server'
-        }
+            description: 'Production server',
+        },
     ],
     components: {
         securitySchemes: {
@@ -26,35 +26,35 @@ const doc = {
                 type: 'oauth2',
                 flows: {
                     implicit: {
-                        authorizationUrl: 'http://localhost:7080/realms/student/protocol/openid-connect/auth',
+                        authorizationUrl:
+                            'http://localhost:7080/realms/student/protocol/openid-connect/auth',
                         scopes: {
                             openid: 'openid',
                             profile: 'profile',
-                            email: 'email'
-                        }
-                    }
-                }
+                            email: 'email',
+                        },
+                    },
+                },
             },
             teacher: {
                 type: 'oauth2',
                 flows: {
                     implicit: {
-                        authorizationUrl: 'http://localhost:7080/realms/teacher/protocol/openid-connect/auth',
+                        authorizationUrl:
+                            'http://localhost:7080/realms/teacher/protocol/openid-connect/auth',
                         scopes: {
                             openid: 'openid',
                             profile: 'profile',
-                            email: 'email'
-                        }
-                    }
-                }
-            }
-        }
-    }
+                            email: 'email',
+                        },
+                    },
+                },
+            },
+        },
+    },
 };
 
 const outputFile = './swagger.json';
-const routes = [
-    '../../backend/src/app.ts'
-];
+const routes = ['../../backend/src/app.ts'];
 
 swaggerAutogen({ openapi: '3.1.0' })(outputFile, routes, doc);
