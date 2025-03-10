@@ -20,7 +20,7 @@
         "vue-router": "^4.5.0",
         "vuetify": "^3.7.12",
         "oidc-client-ts": "^3.1.0",
-        "axios": "^1.8.1"
+        "axios": "^1.8.2"
     },
     "devDependencies": {
         "@playwright/test": "^1.50.1",
