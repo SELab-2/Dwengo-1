@@ -33,6 +33,8 @@ import { LearningPath } from '../entities/content/learning-path.entity.js';
 import { LearningPathRepository } from './content/learning-path-repository.js';
 import { AttachmentRepository } from './content/attachment-repository.js';
 import { Attachment } from '../entities/content/attachment.entity.js';
+import {LearningPathNode} from "../entities/content/learning-path-node.entity";
+import {LearningPathTransition} from "../entities/content/learning-path-transition.entity";
 
 let entityManager: EntityManager | undefined;
 
@@ -113,6 +115,8 @@ export const getLearningPathRepository = repositoryGetter<
     LearningPath,
     LearningPathRepository
 >(LearningPath);
+export const getLearningPathNodeRepository = repositoryGetter(LearningPathNode);
+export const getLearningPathTransitionRepository = repositoryGetter(LearningPathTransition);
 export const getAttachmentRepository = repositoryGetter<
     Attachment,
     AttachmentRepository

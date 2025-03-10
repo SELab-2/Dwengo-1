@@ -7,7 +7,10 @@ export class LearningPathRepository extends DwengoEntityRepository<LearningPath>
         hruid: string,
         language: Language
     ): Promise<LearningPath | null> {
-        return this.findOne({ hruid: hruid, language: language });
+        return this.findOne(
+            { hruid: hruid, language: language },
+            { populate: ["nodes", "nodes.transitions"] }
+        );
     }
 
     /**
@@ -25,8 +28,8 @@ export class LearningPathRepository extends DwengoEntityRepository<LearningPath>
                     { title: { $like: `%${query}%`} },
                     { description: { $like: `%${query}%`} }
                 ]
-            }
+            },
+            populate: ["nodes", "nodes.transitions"]
         });
     }
-    // This repository is read-only for now since creating own learning object is an extension feature.
 }

@@ -99,9 +99,66 @@ export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearni
  *
  * @param learningPath The learning path returned by the retriever, service or endpoint
  * @param expectedEntity The expected entity
+ * @param learningObjectsOnPath The learning objects on LearningPath. Necessary since some information in
+ *                              the learning path returned from the API endpoint
  */
-export function expectToBeCorrectLearningPath(learningPath: LearningPath, expectedEntity: LearningPathEntity) {
+export function expectToBeCorrectLearningPath(
+    learningPath: LearningPath,
+    expectedEntity: LearningPathEntity,
+    learningObjectsOnPath: FilteredLearningObject[]
+) {
     expect(learningPath.hruid).toEqual(expectedEntity.hruid);
     expect(learningPath.language).toEqual(expectedEntity.language);
     expect(learningPath.description).toEqual(expectedEntity.description);
+    expect(learningPath.title).toEqual(expectedEntity.title);
+
+    const keywords = new Set(learningObjectsOnPath.flatMap(it => it.keywords || []));
+    expect(new Set(learningPath.keywords.split(' '))).toEqual(keywords)
+
+    const targetAges = new Set(learningObjectsOnPath.flatMap(it => it.targetAges || []));
+    expect(new Set(learningPath.target_ages)).toEqual(targetAges);
+    expect(learningPath.min_age).toEqual(Math.min(...targetAges));
+    expect(learningPath.max_age).toEqual(Math.max(...targetAges));
+
+    expect(learningPath.num_nodes).toEqual(expectedEntity.nodes.length);
+    expect(learningPath.image || null).toEqual(expectedEntity.image);
+
+    let expectedLearningPathNodes = new Map(
+        expectedEntity.nodes.map(node => [
+            {learningObjectHruid: node.learningObjectHruid, language: node.language, version: node.version},
+            {startNode: node.startNode, transitions: node.transitions}
+        ])
+    );
+
+    for (let node of learningPath.nodes) {
+        const nodeKey = {
+            learningObjectHruid: node.learningobject_hruid,
+            language: node.language,
+            version: node.version
+        };
+        expect(expectedLearningPathNodes.keys()).toContainEqual(nodeKey);
+        let expectedNode = [...expectedLearningPathNodes.entries()]
+            .filter(([key, _]) =>
+                key.learningObjectHruid === nodeKey.learningObjectHruid
+                && key.language === node.language
+                && key.version === node.version
+            )[0][1]
+        expect(node.start_node).toEqual(expectedNode?.startNode);
+
+        expect(
+            new Set(node.transitions.map(it => it.next.hruid))
+        ).toEqual(
+            new Set(expectedNode.transitions.map(it => it.next.learningObjectHruid))
+        );
+        expect(
+            new Set(node.transitions.map(it => it.next.language))
+        ).toEqual(
+            new Set(expectedNode.transitions.map(it => it.next.language))
+        );
+        expect(
+            new Set(node.transitions.map(it => it.next.version))
+        ).toEqual(
+            new Set(expectedNode.transitions.map(it => it.next.version))
+        );
+    }
 }

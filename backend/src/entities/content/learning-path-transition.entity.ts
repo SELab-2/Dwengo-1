@@ -3,7 +3,7 @@ import {LearningPathNode} from "./learning-path-node.entity";
 
 @Entity()
 export class LearningPathTransition {
-    @ManyToOne({entity: () => LearningPathNode })
+    @ManyToOne({entity: () => LearningPathNode, primary: true })
     node!: LearningPathNode;
 
     @PrimaryKey({ type: 'numeric' })

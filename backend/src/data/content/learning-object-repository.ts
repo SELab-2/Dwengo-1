@@ -7,21 +7,30 @@ export class LearningObjectRepository extends DwengoEntityRepository<LearningObj
     public findByIdentifier(
         identifier: LearningObjectIdentifier
     ): Promise<LearningObject | null> {
-        return this.findOne({
-            hruid: identifier.hruid,
-            language: identifier.language,
-            version: identifier.version,
-        });
+        return this.findOne(
+            {
+                hruid: identifier.hruid,
+                language: identifier.language,
+                version: identifier.version,
+            },
+            {
+                populate: ["keywords"]
+            }
+        );
     }
 
     public findLatestByHruidAndLanguage(hruid: string, language: Language) {
-        return this.findOne({
-            hruid: hruid,
-            language: language
-        }, {
-            orderBy: {
-                version: "DESC"
+        return this.findOne(
+            {
+                hruid: hruid,
+                language: language
+            },
+            {
+                populate: ["keywords"],
+                orderBy: {
+                    version: "DESC"
+                }
             }
-        });
+        );
     }
 }

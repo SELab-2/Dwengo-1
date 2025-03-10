@@ -21,7 +21,7 @@ export interface LearningObjectNode {
     _id: string;
     learningobject_hruid: string;
     version: number;
-    language: string;
+    language: Language;
     start_node?: boolean;
     transitions: Transition[];
     created_at: string;
@@ -88,7 +88,7 @@ export interface FilteredLearningObject {
     version: number;
     title: string;
     htmlUrl: string;
-    language: string;
+    language: Language;
     difficulty: number;
     estimatedTime: number;
     available: boolean;

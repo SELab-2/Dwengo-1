@@ -5,10 +5,11 @@ import {LearningPathTransition} from "./learning-path-transition.entity";
 
 @Entity()
 export class LearningPathNode {
+
     @ManyToOne({ entity: () => LearningPath, primary: true })
     learningPath!: LearningPath;
 
-    @PrimaryKey({ type: "numeric", autoincrement: true })
+    @PrimaryKey({ type: "integer", autoincrement: true })
     nodeNumber!: number;
 
     @Property({ type: 'string' })
