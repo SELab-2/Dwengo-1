@@ -14,8 +14,8 @@ import {LearningPath} from "../../../src/entities/content/learning-path.entity";
 async function initExampleData(): Promise<{learningObject: LearningObject, learningPath: LearningPath}> {
     const learningObjectRepo = getLearningObjectRepository();
     const learningPathRepo = getLearningPathRepository();
-    let learningObject = learningObjectExample.createLearningObject();
-    let learningPath = learningPathExample.createLearningPath();
+    const learningObject = learningObjectExample.createLearningObject();
+    const learningPath = learningPathExample.createLearningPath();
     await learningObjectRepo.save(learningObject);
     await learningPathRepo.save(learningPath);
     return { learningObject, learningPath };
@@ -29,7 +29,7 @@ describe('DatabaseLearningObjectProvider', () => {
 
     beforeAll(async () => {
         await setupTestApp();
-        let exampleData = await initExampleData();
+        const exampleData = await initExampleData();
         exampleLearningObject = exampleData.learningObject;
         exampleLearningPath = exampleData.learningPath;
     });
