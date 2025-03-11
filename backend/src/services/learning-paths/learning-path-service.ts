@@ -19,14 +19,24 @@ const learningPathService = {
      * @param source
      * @param personalizedFor If this is set, a learning path personalized for the given group or student will be returned.
      */
-    async fetchLearningPaths(hruids: string[], language: Language, source: string, personalizedFor?: PersonalizationTarget): Promise<LearningPathResponse> {
+    async fetchLearningPaths(
+        hruids: string[],
+        language: Language,
+        source: string,
+        personalizedFor?: PersonalizationTarget
+    ): Promise<LearningPathResponse> {
         const userContentHruids = hruids.filter((hruid) => hruid.startsWith(userContentPrefix));
         const nonUserContentHruids = hruids.filter((hruid) => !hruid.startsWith(userContentPrefix));
 
         const userContentLearningPaths = await databaseLearningPathProvider.fetchLearningPaths(userContentHruids, language, source, personalizedFor);
-        const nonUserContentLearningPaths = await dwengoApiLearningPathProvider.fetchLearningPaths(nonUserContentHruids, language, source, personalizedFor);
+        const nonUserContentLearningPaths = await dwengoApiLearningPathProvider.fetchLearningPaths(
+            nonUserContentHruids,
+            language,
+            source,
+            personalizedFor
+        );
 
-        let result = (userContentLearningPaths.data || []).concat(nonUserContentLearningPaths.data || []);
+        const result = (userContentLearningPaths.data || []).concat(nonUserContentLearningPaths.data || []);
 
         return {
             data: result,
