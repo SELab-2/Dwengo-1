@@ -5,7 +5,8 @@ import { LearningPath } from '../../../src/entities/content/learning-path.entity
 import {
     getLearningObjectRepository,
     getLearningPathRepository,
-    getStudentRepository, getSubmissionRepository
+    getStudentRepository,
+    getSubmissionRepository,
 } from '../../../src/data/repositories';
 import learningObjectExample from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example';
 import learningPathExample from '../../test-assets/learning-paths/pn-werking-example';
@@ -16,10 +17,10 @@ import learningObjectService from '../../../src/services/learning-objects/learni
 import { Language } from '../../../src/entities/content/language';
 import {
     ConditionTestLearningPathAndLearningObjects,
-    createConditionTestLearningPathAndLearningObjects
-} from "../../test-assets/learning-paths/test-conditions-example";
-import {Student} from "../../../src/entities/users/student.entity";
-import {LearningObjectNode, LearningPathResponse} from "../../../src/interfaces/learning-content";
+    createConditionTestLearningPathAndLearningObjects,
+} from '../../test-assets/learning-paths/test-conditions-example';
+import { Student } from '../../../src/entities/users/student.entity';
+import { LearningObjectNode, LearningPathResponse } from '../../../src/interfaces/learning-content';
 
 async function initExampleData(): Promise<{ learningObject: LearningObject; learningPath: LearningPath }> {
     const learningObjectRepo = getLearningObjectRepository();
@@ -32,9 +33,9 @@ async function initExampleData(): Promise<{ learningObject: LearningObject; lear
 }
 
 async function initPersonalizationTestData(): Promise<{
-    learningContent: ConditionTestLearningPathAndLearningObjects,
-    studentA: Student,
-    studentB: Student
+    learningContent: ConditionTestLearningPathAndLearningObjects;
+    studentA: Student;
+    studentB: Student;
 }> {
     const studentRepo = getStudentRepository();
     const submissionRepo = getSubmissionRepository();
@@ -49,9 +50,9 @@ async function initPersonalizationTestData(): Promise<{
     console.log(await getSubmissionRepository().findAll({}));
 
     const studentA = studentRepo.create({
-        username: "student_a",
-        firstName: "Aron",
-        lastName: "Student"
+        username: 'student_a',
+        firstName: 'Aron',
+        lastName: 'Student',
     });
     await studentRepo.save(studentA);
     const submissionA = submissionRepo.create({
@@ -61,14 +62,14 @@ async function initPersonalizationTestData(): Promise<{
         submissionNumber: 0,
         submitter: studentA,
         submissionTime: new Date(),
-        content: '[0]'
+        content: '[0]',
     });
     await submissionRepo.save(submissionA);
 
     const studentB = studentRepo.create({
-        username: "student_b",
-        firstName: "Bill",
-        lastName: "Student"
+        username: 'student_b',
+        firstName: 'Bill',
+        lastName: 'Student',
     });
     await studentRepo.save(studentB);
     const submissionB = submissionRepo.create({
@@ -78,7 +79,7 @@ async function initPersonalizationTestData(): Promise<{
         submissionNumber: 1,
         submitter: studentB,
         submissionTime: new Date(),
-        content: '[1]'
+        content: '[1]',
     });
     await submissionRepo.save(submissionB);
 
@@ -86,16 +87,19 @@ async function initPersonalizationTestData(): Promise<{
         learningContent: learningContent,
         studentA: studentA,
         studentB: studentB,
-    }
+    };
 }
 
-function expectBranchingObjectNode(result: LearningPathResponse, persTestData: {
-    learningContent: ConditionTestLearningPathAndLearningObjects;
-    studentA: Student;
-    studentB: Student
-}): LearningObjectNode {
+function expectBranchingObjectNode(
+    result: LearningPathResponse,
+    persTestData: {
+        learningContent: ConditionTestLearningPathAndLearningObjects;
+        studentA: Student;
+        studentB: Student;
+    }
+): LearningObjectNode {
     const branchingObjectMatches = result.data![0].nodes.filter(
-        it => it.learningobject_hruid === persTestData.learningContent.branchingObject.hruid
+        (it) => it.learningobject_hruid === persTestData.learningContent.branchingObject.hruid
     );
     expect(branchingObjectMatches.length).toBe(1);
     return branchingObjectMatches[0];
@@ -104,7 +108,7 @@ function expectBranchingObjectNode(result: LearningPathResponse, persTestData: {
 describe('DatabaseLearningPathProvider', () => {
     let learningObjectRepo: LearningObjectRepository;
     let example: { learningObject: LearningObject; learningPath: LearningPath };
-    let persTestData: { learningContent: ConditionTestLearningPathAndLearningObjects, studentA: Student, studentB: Student }
+    let persTestData: { learningContent: ConditionTestLearningPathAndLearningObjects; studentA: Student; studentB: Student };
 
     beforeAll(async () => {
         await setupTestApp();
@@ -137,13 +141,13 @@ describe('DatabaseLearningPathProvider', () => {
 
             expectToBeCorrectLearningPath(result.data![0], example.learningPath, learningObjectsOnPath);
         });
-        it("returns the correct personalized learning path", async () => {
+        it('returns the correct personalized learning path', async () => {
             // For student A:
             let result = await databaseLearningPathProvider.fetchLearningPaths(
                 [persTestData.learningContent.learningPath.hruid],
                 persTestData.learningContent.learningPath.language,
                 'the source',
-                {type: 'student', student: persTestData.studentA}
+                { type: 'student', student: persTestData.studentA }
             );
             expect(result.success).toBeTruthy();
             expect(result.data?.length).toBe(1);
@@ -151,25 +155,17 @@ describe('DatabaseLearningPathProvider', () => {
             // There should be exactly one branching object
             let branchingObject = expectBranchingObjectNode(result, persTestData);
 
-            expect(
-                branchingObject
-                    .transitions
-                    .filter(it => it.next.hruid === persTestData.learningContent.finalObject.hruid)
-                    .length
-            ).toBe(0); // StudentA picked the first option, therefore, there should be no direct path to the final object.
-            expect(
-                branchingObject
-                    .transitions
-                    .filter(it => it.next.hruid === persTestData.learningContent.extraExerciseObject.hruid)
-                    .length
-            ).toBe(1); // There should however be a path to the extra exercise object.
+            expect(branchingObject.transitions.filter((it) => it.next.hruid === persTestData.learningContent.finalObject.hruid).length).toBe(0); // StudentA picked the first option, therefore, there should be no direct path to the final object.
+            expect(branchingObject.transitions.filter((it) => it.next.hruid === persTestData.learningContent.extraExerciseObject.hruid).length).toBe(
+                1
+            ); // There should however be a path to the extra exercise object.
 
             // For student B:
             result = await databaseLearningPathProvider.fetchLearningPaths(
                 [persTestData.learningContent.learningPath.hruid],
                 persTestData.learningContent.learningPath.language,
                 'the source',
-                {type: 'student', student: persTestData.studentB}
+                { type: 'student', student: persTestData.studentB }
             );
             expect(result.success).toBeTruthy();
             expect(result.data?.length).toBe(1);
@@ -178,18 +174,10 @@ describe('DatabaseLearningPathProvider', () => {
             branchingObject = expectBranchingObjectNode(result, persTestData);
 
             // However, now the student picks the other option.
-            expect(
-                branchingObject
-                    .transitions
-                    .filter(it => it.next.hruid === persTestData.learningContent.finalObject.hruid)
-                    .length
-            ).toBe(1); // StudentB picked the second option, therefore, there should be a direct path to the final object.
-            expect(
-                branchingObject
-                    .transitions
-                    .filter(it => it.next.hruid === persTestData.learningContent.extraExerciseObject.hruid)
-                    .length
-            ).toBe(0); // There should not be a path anymore to the extra exercise object.
+            expect(branchingObject.transitions.filter((it) => it.next.hruid === persTestData.learningContent.finalObject.hruid).length).toBe(1); // StudentB picked the second option, therefore, there should be a direct path to the final object.
+            expect(branchingObject.transitions.filter((it) => it.next.hruid === persTestData.learningContent.extraExerciseObject.hruid).length).toBe(
+                0
+            ); // There should not be a path anymore to the extra exercise object.
         });
         it('returns a non-successful response if a non-existing learning path is queried', async () => {
             const result = await databaseLearningPathProvider.fetchLearningPaths(

@@ -3,17 +3,17 @@ import { Language } from '../../../src/entities/content/language';
 import testMultipleChoiceExample from '../learning-objects/test-multiple-choice/test-multiple-choice-example';
 import { dummyLearningObject } from '../learning-objects/dummy/dummy-learning-object-example';
 import { createLearningPathNode, createLearningPathTransition } from './learning-path-utils';
-import {LearningObject} from "../../../src/entities/content/learning-object.entity";
-import {EnvVars, getEnvVar} from "../../../src/util/envvars";
+import { LearningObject } from '../../../src/entities/content/learning-object.entity';
+import { EnvVars, getEnvVar } from '../../../src/util/envvars';
 
 export type ConditionTestLearningPathAndLearningObjects = {
-    branchingObject: LearningObject,
-    extraExerciseObject: LearningObject,
-    finalObject: LearningObject,
-    learningPath: LearningPath
+    branchingObject: LearningObject;
+    extraExerciseObject: LearningObject;
+    finalObject: LearningObject;
+    learningPath: LearningPath;
 };
 
-export function createConditionTestLearningPathAndLearningObjects(){
+export function createConditionTestLearningPathAndLearningObjects() {
     const learningPath = new LearningPath();
     learningPath.hruid = `${getEnvVar(EnvVars.UserContentPrefix)}test_conditions`;
     learningPath.language = Language.English;

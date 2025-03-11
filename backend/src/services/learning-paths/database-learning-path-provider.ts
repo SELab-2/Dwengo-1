@@ -97,9 +97,10 @@ async function convertNodes(
                 learningobject_hruid: node.learningObjectHruid,
                 version: learningObject.version,
                 transitions: node.transitions
-                    .filter((trans) =>
-                        !personalizedFor || isTransitionPossible(trans, optionalJsonStringToObject(lastSubmission?.content))  // If we want a personalized learning path, remove all transitions that aren't possible.
-                    ).map((trans, i) => convertTransition(trans, i, nodesToLearningObjects)), // Then convert all the transition
+                    .filter(
+                        (trans) => !personalizedFor || isTransitionPossible(trans, optionalJsonStringToObject(lastSubmission?.content)) // If we want a personalized learning path, remove all transitions that aren't possible.
+                    )
+                    .map((trans, i) => convertTransition(trans, i, nodesToLearningObjects)), // Then convert all the transition
             };
         })
         .toArray();
@@ -112,9 +113,8 @@ async function convertNodes(
 function optionalJsonStringToObject(jsonString?: string): object | null {
     if (!jsonString) {
         return null;
-    } 
-        return JSON.parse(jsonString);
-    
+    }
+    return JSON.parse(jsonString);
 }
 
 /**
