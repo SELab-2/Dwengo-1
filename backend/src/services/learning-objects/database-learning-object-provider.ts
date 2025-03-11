@@ -1,17 +1,12 @@
-import {LearningObjectProvider} from "./learning-object-provider";
-import {
-    FilteredLearningObject,
-    LearningObjectIdentifier,
-    LearningPathIdentifier
-} from "../../interfaces/learning-content";
-import {getLearningObjectRepository, getLearningPathRepository} from "../../data/repositories";
-import {Language} from "../../entities/content/language";
-import {LearningObject} from "../../entities/content/learning-object.entity";
-import {getUrlStringForLearningObject} from "../../util/links";
-import processingService from "./processing/processing-service";
-import {NotFoundError} from "@mikro-orm/core";
-import learningObjectService from "./learning-object-service";
-
+import { LearningObjectProvider } from './learning-object-provider';
+import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../../interfaces/learning-content';
+import { getLearningObjectRepository, getLearningPathRepository } from '../../data/repositories';
+import { Language } from '../../entities/content/language';
+import { LearningObject } from '../../entities/content/learning-object.entity';
+import { getUrlStringForLearningObject } from '../../util/links';
+import processingService from './processing/processing-service';
+import { NotFoundError } from '@mikro-orm/core';
+import learningObjectService from './learning-object-service';
 
 function convertLearningObject(learningObject: LearningObject | null): FilteredLearningObject | null {
     if (!learningObject) {
@@ -110,8 +105,8 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
                 return learningObject;
             })
         );
-        return learningObjects.filter(it => it !== null);
-    }
+        return learningObjects.filter((it) => it !== null);
+    },
 };
 
 export default databaseLearningObjectProvider;
