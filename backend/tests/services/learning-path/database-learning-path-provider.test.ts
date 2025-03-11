@@ -94,7 +94,7 @@ function expectBranchingObjectNode(result: LearningPathResponse, persTestData: {
     studentA: Student;
     studentB: Student
 }): LearningObjectNode {
-    let branchingObjectMatches = result.data![0].nodes.filter(
+    const branchingObjectMatches = result.data![0].nodes.filter(
         it => it.learningobject_hruid === persTestData.learningContent.branchingObject.hruid
     );
     expect(branchingObjectMatches.length).toBe(1);
@@ -156,7 +156,7 @@ describe('DatabaseLearningPathProvider', () => {
                     .transitions
                     .filter(it => it.next.hruid === persTestData.learningContent.finalObject.hruid)
                     .length
-            ).toBe(0); // studentA picked the first option, therefore, there should be no direct path to the final object.
+            ).toBe(0); // StudentA picked the first option, therefore, there should be no direct path to the final object.
             expect(
                 branchingObject
                     .transitions
@@ -183,7 +183,7 @@ describe('DatabaseLearningPathProvider', () => {
                     .transitions
                     .filter(it => it.next.hruid === persTestData.learningContent.finalObject.hruid)
                     .length
-            ).toBe(1); // studentB picked the second option, therefore, there should be a direct path to the final object.
+            ).toBe(1); // StudentB picked the second option, therefore, there should be a direct path to the final object.
             expect(
                 branchingObject
                     .transitions

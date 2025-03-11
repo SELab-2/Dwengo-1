@@ -112,9 +112,9 @@ async function convertNodes(
 function optionalJsonStringToObject(jsonString?: string): object | null {
     if (!jsonString) {
         return null;
-    } else {
+    } 
         return JSON.parse(jsonString);
-    }
+    
 }
 
 /**
