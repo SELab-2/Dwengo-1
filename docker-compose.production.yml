@@ -106,3 +106,6 @@ volumes:
     dwengo_letsencrypt:
     dwengo_loki_data:
     dwengo_grafana_data:
+
+networks:
+    dwengo-1:
