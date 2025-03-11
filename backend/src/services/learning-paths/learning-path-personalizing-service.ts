@@ -43,7 +43,7 @@ function transitionPossible(transition: LearningPathTransition, submitted: objec
  */
 const learningPathPersonalizingService = {
     async calculatePersonalizedTrajectory(nodes: LearningPathNode[], pathFor: {student?: Student, group?: Group}): Promise<LearningPathNode[]> {
-        let trajectory: LearningPathNode[] = [];
+        const trajectory: LearningPathNode[] = [];
 
         // Always start with the start node.
         let currentNode = nodes.filter(it => it.startNode)[0];
@@ -51,17 +51,17 @@ const learningPathPersonalizingService = {
 
         while (true) {
             // At every node, calculate all the possible next transitions.
-            let lastSubmission = await getLastRelevantSubmission(currentNode, pathFor);
-            let submitted = lastSubmission === null ? null : JSON.parse(lastSubmission.content);
-            let possibleTransitions = currentNode.transitions
+            const lastSubmission = await getLastRelevantSubmission(currentNode, pathFor);
+            const submitted = lastSubmission === null ? null : JSON.parse(lastSubmission.content);
+            const possibleTransitions = currentNode.transitions
                 .filter(it => transitionPossible(it, submitted));
 
             if (possibleTransitions.length === 0) { // If there are none, the trajectory has ended.
                 return trajectory;
-            } else { // Otherwise, take the first possible transition.
+            }  // Otherwise, take the first possible transition.
                 currentNode = possibleTransitions[0].node;
                 trajectory.push(currentNode);
-            }
+            
         }
     }
 };

@@ -12,8 +12,8 @@ import {FilteredLearningObject} from "../../../src/interfaces/learning-content";
 import {Language} from "../../../src/entities/content/language";
 
 async function initExampleData(): Promise<LearningObject> {
-    let learningObjectRepo = getLearningObjectRepository();
-    let exampleLearningObject = createExampleLearningObjectWithAttachments(example);
+    const learningObjectRepo = getLearningObjectRepository();
+    const exampleLearningObject = createExampleLearningObjectWithAttachments(example);
     await learningObjectRepo.insert(exampleLearningObject);
     return exampleLearningObject;
 }

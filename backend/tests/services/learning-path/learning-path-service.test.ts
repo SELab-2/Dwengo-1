@@ -11,8 +11,8 @@ import learningPathService from "../../../src/services/learning-paths/learning-p
 async function initExampleData(): Promise<{ learningObject: LearningObject, learningPath: LearningPath }> {
     const learningObjectRepo = getLearningObjectRepository();
     const learningPathRepo = getLearningPathRepository();
-    let learningObject = learningObjectExample.createLearningObject();
-    let learningPath = learningPathExample.createLearningPath();
+    const learningObject = learningObjectExample.createLearningObject();
+    const learningPath = learningPathExample.createLearningPath();
     await learningObjectRepo.save(learningObject);
     await learningPathRepo.save(learningPath);
     return { learningObject, learningPath };
@@ -76,7 +76,7 @@ describe("LearningPathService", () => {
                 ).length
             ).toBe(1);
 
-            // but should not only find that one.
+            // But should not only find that one.
             expect(result.length).not.toBeLessThan(2);
         });
         it("should still return results from the Dwengo API even though there are no matches in the database", async () => {
@@ -88,7 +88,7 @@ describe("LearningPathService", () => {
             // Should find something...
             expect(result.length).not.toBe(0);
 
-            // but not the example learning path.
+            // But not the example learning path.
             expect(
                 result.filter(it =>
                     it.hruid === example.learningPath.hruid && it.title === example.learningPath.title

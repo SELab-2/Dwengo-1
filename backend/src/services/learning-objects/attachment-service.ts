@@ -12,9 +12,9 @@ const attachmentService = {
                 language: learningObjectId.language,
                 version: learningObjectId.version,
             }, attachmentName);
-        } else {
+        } 
             return attachmentRepo.findByMostRecentVersionOfLearningObjectAndName(learningObjectId.hruid, learningObjectId.language, attachmentName);
-        }
+        
     }
 }
 

@@ -19,5 +19,5 @@ export async function replaceAsync(str: string, regex: RegExp, replacementFn: (m
     const replacements: string[] = (await Promise.all(promises));
 
     // Second run through matches: Replace them by their previously computed replacements.
-    return str.replace(regex, () => replacements.pop()!!);
+    return str.replace(regex, () => replacements.pop()!);
 }

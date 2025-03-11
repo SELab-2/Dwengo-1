@@ -5,7 +5,7 @@ import {createLearningPathNode, createLearningPathTransition} from "./learning-p
 import {LearningPathNode} from "../../../src/entities/content/learning-path-node.entity";
 
 function createNodes(learningPath: LearningPath): LearningPathNode[] {
-    let nodes = [
+    const nodes = [
         createLearningPathNode(learningPath, 0, "u_pn_werkingnotebooks", 3, Language.Dutch, true),
         createLearningPathNode(learningPath, 1, "pn_werkingnotebooks2", 3, Language.Dutch, false),
         createLearningPathNode(learningPath, 2, "pn_werkingnotebooks3", 3, Language.Dutch, false),

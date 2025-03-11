@@ -22,7 +22,7 @@ class ExternProcessor extends StringProcessor {
 
         // If a seperate youtube-processor would be added, this code would need to move to that processor
         // Converts youtube urls to youtube-embed urls
-        let match = /(.*youtube.com\/)watch\?v=(.*)/.exec(externURL)
+        const match = /(.*youtube.com\/)watch\?v=(.*)/.exec(externURL)
         if (match) {
             externURL = match[1] + "embed/" + match[2];
         }

@@ -11,10 +11,10 @@ import {LearningObjectIdentifier} from "../../../src/entities/content/learning-o
 const NEWER_TEST_SUFFIX = "nEweR";
 
 function createTestLearningObjects(learningObjectRepo: LearningObjectRepository): {older: LearningObject, newer: LearningObject} {
-    let olderExample = example.createLearningObject();
+    const olderExample = example.createLearningObject();
     learningObjectRepo.save(olderExample);
 
-    let newerExample = example.createLearningObject();
+    const newerExample = example.createLearningObject();
     newerExample.title = "Newer example";
     newerExample.version = 100;
 
@@ -40,7 +40,7 @@ describe("AttachmentRepository", () => {
             .values(example.createAttachment)
             .map(fn => fn(exampleLearningObjects.older));
 
-        for (let attachment of attachmentsOlderLearningObject) {
+        for (const attachment of attachmentsOlderLearningObject) {
             attachmentRepo.save(attachment);
         }
     });

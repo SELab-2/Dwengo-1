@@ -10,7 +10,7 @@ const ASSETS_PREFIX = "learning-objects/pn-werkingnotebooks/";
 
 const example: LearningObjectExample = {
     createLearningObject: ()=>  {
-        let learningObject = new LearningObject();
+        const learningObject = new LearningObject();
         learningObject.hruid = `${getEnvVar(EnvVars.UserContentPrefix)}pn_werkingnotebooks`;
         learningObject.version = 3;
         learningObject.language = Language.Dutch;
@@ -18,11 +18,11 @@ const example: LearningObjectExample = {
         learningObject.description = "Leren werken met notebooks";
         learningObject.keywords = ["Python", "KIKS", "Wiskunde", "STEM", "AI"]
 
-        let educationalGoal1 = new EducationalGoal();
+        const educationalGoal1 = new EducationalGoal();
         educationalGoal1.source = "Source";
         educationalGoal1.id = "id";
 
-        let educationalGoal2 = new EducationalGoal();
+        const educationalGoal2 = new EducationalGoal();
         educationalGoal2.source = "Source2";
         educationalGoal2.id = "id2";
 
@@ -39,7 +39,7 @@ const example: LearningObjectExample = {
         learningObject.license = "dwengo";
         learningObject.estimatedTime = 10;
 
-        let returnValue = new ReturnValue();
+        const returnValue = new ReturnValue();
         returnValue.callbackUrl = "callback_url_example";
         returnValue.callbackSchema = '{"att": "test", "att2": "test2"}';
 
@@ -51,7 +51,7 @@ const example: LearningObjectExample = {
     },
     createAttachment: {
         dwengoLogo: (learningObject) => {
-            let att = new Attachment();
+            const att = new Attachment();
             att.learningObject = learningObject;
             att.name = "dwengo.png";
             att.mimeType = "image/png";
@@ -59,7 +59,7 @@ const example: LearningObjectExample = {
             return att;
         },
         knop: (learningObject) => {
-            let att = new Attachment();
+            const att = new Attachment();
             att.learningObject = learningObject;
             att.name = "Knop.png";
             att.mimeType = "image/png";

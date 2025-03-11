@@ -68,23 +68,15 @@ async function fetchLearningObjects(
         const nodes: LearningObjectNode[] = learningPathResponse.data[0].nodes;
 
         if (!full) {
-            return nodes.map((node) => {
-                return node.learningobject_hruid;
-            });
+            return nodes.map((node) => node.learningobject_hruid);
         }
 
         return await Promise.all(
-            nodes.map(async (node) => {
-                return dwengoApiLearningObjectProvider.getLearningObjectById({
+            nodes.map(async (node) => dwengoApiLearningObjectProvider.getLearningObjectById({
                     hruid: node.learningobject_hruid,
                     language: learningPathId.language
-                });
-            })
-        ).then((objects) => {
-            return objects.filter((obj): obj is FilteredLearningObject => {
-                return obj !== null;
-            });
-        });
+                }))
+        ).then((objects) => objects.filter((obj): obj is FilteredLearningObject => obj !== null));
     } catch (error) {
         console.error('❌ Error fetching learning objects:', error);
         return [];
@@ -98,7 +90,7 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
     async getLearningObjectById(
         id: LearningObjectIdentifier
     ): Promise<FilteredLearningObject | null> {
-        let metadataUrl = `${DWENGO_API_BASE}/learningObject/getMetadata`;
+        const metadataUrl = `${DWENGO_API_BASE}/learningObject/getMetadata`;
         const metadata = await fetchWithLogging<LearningObjectMetadata>(
             metadataUrl,
             `Metadata for Learning Object HRUID "${id.hruid}" (language ${id.language})`,

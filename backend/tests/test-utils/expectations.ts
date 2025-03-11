@@ -22,7 +22,7 @@ export function expectToBeCorrectEntity<T extends object>(
     if (!expected.name) {
         expected.name = "expected";
     }
-    for (let property in expected.entity) {
+    for (const property in expected.entity) {
         if (
             property !in IGNORE_PROPERTIES
             && expected.entity[property] !== undefined // If we don't expect a certain value for a property, we assume it can be filled in by the database however it wants.
@@ -34,10 +34,10 @@ export function expectToBeCorrectEntity<T extends object>(
                 });
             }
             if (typeof expected.entity[property] === "boolean") { // Sometimes, booleans get represented by numbers 0 and 1 in the objects actual from the database.
-                if (!!expected.entity[property] !== !!actual.entity[property]) {
+                if (Boolean(expected.entity[property]) !== Boolean(actual.entity[property])) {
                     throw new AssertionError({
                         message: `${property} was ${expected.entity[property]} in ${expected.name},
-                        but ${actual.entity[property]} (${!!expected.entity[property]}) in ${actual.name}`
+                        but ${actual.entity[property]} (${Boolean(expected.entity[property])}) in ${actual.name}`
                     });
                 }
             } else if (typeof expected.entity[property] !== typeof actual.entity[property]) {
@@ -78,7 +78,7 @@ export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearni
     expect(filtered.key).toEqual(original.hruid);
     expect(filtered.targetAges).toEqual(original.targetAges);
     expect(filtered.title).toEqual(original.title);
-    expect(!!filtered.teacherExclusive).toEqual(original.teacherExclusive) // !!: Workaround: MikroORM with SQLite returns 0 and 1 instead of booleans.
+    expect(Boolean(filtered.teacherExclusive)).toEqual(original.teacherExclusive) // !!: Workaround: MikroORM with SQLite returns 0 and 1 instead of booleans.
     expect(filtered.skosConcepts).toEqual(original.skosConcepts);
     expect(filtered.estimatedTime).toEqual(original.estimatedTime);
     expect(filtered.educationalGoals).toEqual(original.educationalGoals);
@@ -123,21 +123,21 @@ export function expectToBeCorrectLearningPath(
     expect(learningPath.num_nodes).toEqual(expectedEntity.nodes.length);
     expect(learningPath.image || null).toEqual(expectedEntity.image);
 
-    let expectedLearningPathNodes = new Map(
+    const expectedLearningPathNodes = new Map(
         expectedEntity.nodes.map(node => [
             {learningObjectHruid: node.learningObjectHruid, language: node.language, version: node.version},
             {startNode: node.startNode, transitions: node.transitions}
         ])
     );
 
-    for (let node of learningPath.nodes) {
+    for (const node of learningPath.nodes) {
         const nodeKey = {
             learningObjectHruid: node.learningobject_hruid,
             language: node.language,
             version: node.version
         };
         expect(expectedLearningPathNodes.keys()).toContainEqual(nodeKey);
-        let expectedNode = [...expectedLearningPathNodes.entries()]
+        const expectedNode = [...expectedLearningPathNodes.entries()]
             .filter(([key, _]) =>
                 key.learningObjectHruid === nodeKey.learningObjectHruid
                 && key.language === node.language

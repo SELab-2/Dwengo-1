@@ -11,9 +11,9 @@ import databaseLearningObjectProvider from "./database-learning-object-provider"
 function getProvider(id: LearningObjectIdentifier): LearningObjectProvider {
     if (id.hruid.startsWith(getEnvVar(EnvVars.UserContentPrefix))) {
         return databaseLearningObjectProvider;
-    } else {
+    } 
         return dwengoApiLearningObjectProvider;
-    }
+    
 }
 
 /**

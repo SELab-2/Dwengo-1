@@ -4,7 +4,7 @@ import {LearningPathNode} from "../../../src/entities/content/learning-path-node
 import {LearningPath} from "../../../src/entities/content/learning-path.entity";
 
 export function createLearningPathTransition(node: LearningPathNode, transitionNumber: number, condition: string | null, to: LearningPathNode) {
-    let trans = new LearningPathTransition();
+    const trans = new LearningPathTransition();
     trans.node = node;
     trans.transitionNumber = transitionNumber;
     trans.condition = condition || "true";
@@ -20,7 +20,7 @@ export function createLearningPathNode(
     language: Language,
     startNode: boolean
 ) {
-    let node = new LearningPathNode();
+    const node = new LearningPathNode();
     node.learningPath = learningPath;
     node.nodeNumber = nodeNumber;
     node.learningObjectHruid = learningObjectHruid;

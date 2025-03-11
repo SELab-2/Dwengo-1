@@ -27,7 +27,7 @@ class MarkdownProcessor extends StringProcessor {
     }
 
     replaceLinks(html: string) {
-        let proc = new InlineImageProcessor();
+        const proc = new InlineImageProcessor();
         html = html.replace(/<img.*?src="(.*?)".*?(alt="(.*?)")?.*?(title="(.*?)")?.*?>/g, (
             match: string,
             src: string,
@@ -35,9 +35,7 @@ class MarkdownProcessor extends StringProcessor {
             altText: string,
             title: string,
             titleText: string
-        ) => {
-            return proc.render(src);
-        });
+        ) => proc.render(src));
         return html;
     }
 }

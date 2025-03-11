@@ -38,9 +38,9 @@ class GiftProcessor extends StringProcessor {
 
         let html = "<div class='learning-object-gift'>\n";
         let i = 1;
-        for (let question of quizQuestions) {
+        for (const question of quizQuestions) {
             html += `    <div class='gift-question' id='gift-q${i}'>\n`;
-            html += "        " + this.renderQuestion(question, i).replaceAll(/\n(.+)/g, "\n        $1"); // replace for indentation.
+            html += "        " + this.renderQuestion(question, i).replaceAll(/\n(.+)/g, "\n        $1"); // Replace for indentation.
             html += `    </div>\n`;
             i++;
         }

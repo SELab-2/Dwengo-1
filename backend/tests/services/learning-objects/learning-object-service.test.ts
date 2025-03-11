@@ -18,7 +18,7 @@ const DWENGO_TEST_LEARNING_OBJECT_ID: LearningObjectIdentifier = {
 
 async function initExampleData(): Promise<LearningObject> {
     const learningObjectRepo = getLearningObjectRepository();
-    let learningObject = learningObjectExample.createLearningObject();
+    const learningObject = learningObjectExample.createLearningObject();
     learningObject.title = TEST_LEARNING_OBJECT_TITLE
     await learningObjectRepo.save(learningObject);
     return learningObject;

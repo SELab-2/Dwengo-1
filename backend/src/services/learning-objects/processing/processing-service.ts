@@ -54,7 +54,7 @@ class ProcessingService {
         learningObject: LearningObject,
         fetchEmbeddedLearningObjects?: (loId: LearningObjectIdentifier) => Promise<LearningObject | null>
     ): Promise<string> {
-        let html = this.processors.get(learningObject.contentType)!.renderLearningObject(learningObject);
+        const html = this.processors.get(learningObject.contentType)!.renderLearningObject(learningObject);
         if (fetchEmbeddedLearningObjects) {
             // Replace all embedded learning objects.
             return replaceAsync(

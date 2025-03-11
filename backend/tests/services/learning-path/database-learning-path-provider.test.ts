@@ -14,8 +14,8 @@ import {Language} from "../../../src/entities/content/language";
 async function initExampleData(): Promise<{ learningObject: LearningObject, learningPath: LearningPath }> {
     const learningObjectRepo = getLearningObjectRepository();
     const learningPathRepo = getLearningPathRepository();
-    let learningObject = learningObjectExample.createLearningObject();
-    let learningPath = learningPathExample.createLearningPath();
+    const learningObject = learningObjectExample.createLearningObject();
+    const learningPath = learningPathExample.createLearningPath();
     await learningObjectRepo.save(learningObject);
     await learningPathRepo.save(learningPath);
     return { learningObject, learningPath };
@@ -55,7 +55,7 @@ describe("DatabaseLearningPathProvider", () => {
         it("returns a non-successful response if a non-existing learning path is queried", async () => {
             const result = await databaseLearningPathProvider.fetchLearningPaths(
                 [example.learningPath.hruid],
-                Language.Abkhazian, // wrong language
+                Language.Abkhazian, // Wrong language
                 "the source"
             );
 

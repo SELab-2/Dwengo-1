@@ -22,7 +22,7 @@ import {LearningPathTransition} from "../../entities/content/learning-path-trans
  */
 async function getLearningObjectsForNodes(nodes: LearningPathNode[]): Promise<Map<LearningPathNode, FilteredLearningObject>> {
     // Fetching the corresponding learning object for each of the nodes and creating a map that maps each node to
-    // its corresponding learning object.
+    // Its corresponding learning object.
     const nullableNodesToLearningObjects = new Map<LearningPathNode, FilteredLearningObject | null>(
         await Promise.all(
             nodes.map(node =>
@@ -58,7 +58,7 @@ async function convertLearningPath(learningPath: LearningPathEntity, order: numb
     const image = learningPath.image ? learningPath.image.toString("base64") : undefined;
 
     return {
-        _id: `${learningPath.hruid}/${learningPath.language}`, // for backwards compatibility with the original Dwengo API.
+        _id: `${learningPath.hruid}/${learningPath.language}`, // For backwards compatibility with the original Dwengo API.
         __order: order,
         hruid: learningPath.hruid,
         language: learningPath.language,
