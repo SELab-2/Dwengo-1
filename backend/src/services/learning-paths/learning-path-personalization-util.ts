@@ -1,11 +1,11 @@
-import {LearningPathNode} from "../../entities/content/learning-path-node.entity";
-import {Student} from "../../entities/users/student.entity";
-import {Group} from "../../entities/assignments/group.entity";
-import {Submission} from "../../entities/assignments/submission.entity";
-import {getSubmissionRepository} from "../../data/repositories";
-import {LearningObjectIdentifier} from "../../entities/content/learning-object-identifier";
-import {LearningPathTransition} from "../../entities/content/learning-path-transition.entity";
-import {JSONPath} from "jsonpath-plus";
+import { LearningPathNode } from '../../entities/content/learning-path-node.entity';
+import { Student } from '../../entities/users/student.entity';
+import { Group } from '../../entities/assignments/group.entity';
+import { Submission } from '../../entities/assignments/submission.entity';
+import { getSubmissionRepository } from '../../data/repositories';
+import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier';
+import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity';
+import { JSONPath } from 'jsonpath-plus';
 
 export type PersonalizationTarget = { type: 'student'; student: Student } | { type: 'group'; group: Group };
 /**
@@ -20,11 +20,9 @@ export async function getLastSubmissionForCustomizationTarget(node: LearningPath
     };
     if (pathFor.type === 'group') {
         return await submissionRepo.findMostRecentSubmissionForGroup(learningObjectId, pathFor.group);
-    } 
-        return await submissionRepo.findMostRecentSubmissionForStudent(learningObjectId, pathFor.student);
-    
+    }
+    return await submissionRepo.findMostRecentSubmissionForStudent(learningObjectId, pathFor.student);
 }
-
 
 /**
  * Checks whether the condition of the given transaction is fulfilled by the given submission.

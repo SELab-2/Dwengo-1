@@ -3,7 +3,7 @@ import dwengoApiLearningPathProvider from './dwengo-api-learning-path-provider';
 import databaseLearningPathProvider from './database-learning-path-provider';
 import { EnvVars, getEnvVar } from '../../util/envvars';
 import { Language } from '../../entities/content/language';
-import {PersonalizationTarget} from "./learning-path-personalizing-service";
+import { PersonalizationTarget } from './learning-path-personalizing-service';
 
 const userContentPrefix = getEnvVar(EnvVars.UserContentPrefix);
 const allProviders = [dwengoApiLearningPathProvider, databaseLearningPathProvider];
@@ -19,12 +19,22 @@ const learningPathService = {
      * @param source
      * @param personalizedFor If this is set, a learning path personalized for the given group or student will be returned.
      */
-    async fetchLearningPaths(hruids: string[], language: Language, source: string, personalizedFor?: PersonalizationTarget): Promise<LearningPathResponse> {
+    async fetchLearningPaths(
+        hruids: string[],
+        language: Language,
+        source: string,
+        personalizedFor?: PersonalizationTarget
+    ): Promise<LearningPathResponse> {
         const userContentHruids = hruids.filter((hruid) => hruid.startsWith(userContentPrefix));
         const nonUserContentHruids = hruids.filter((hruid) => !hruid.startsWith(userContentPrefix));
 
         const userContentLearningPaths = await databaseLearningPathProvider.fetchLearningPaths(userContentHruids, language, source, personalizedFor);
-        const nonUserContentLearningPaths = await dwengoApiLearningPathProvider.fetchLearningPaths(nonUserContentHruids, language, source, personalizedFor);
+        const nonUserContentLearningPaths = await dwengoApiLearningPathProvider.fetchLearningPaths(
+            nonUserContentHruids,
+            language,
+            source,
+            personalizedFor
+        );
 
         const result = (userContentLearningPaths.data || []).concat(nonUserContentLearningPaths.data || []);
 

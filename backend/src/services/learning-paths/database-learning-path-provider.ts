@@ -6,11 +6,7 @@ import { Language } from '../../entities/content/language';
 import learningObjectService from '../learning-objects/learning-object-service';
 import { LearningPathNode } from '../../entities/content/learning-path-node.entity';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity';
-import {
-    getLastSubmissionForCustomizationTarget,
-    isTransitionPossible,
-    PersonalizationTarget
-} from "./learning-path-personalization-util";
+import { getLastSubmissionForCustomizationTarget, isTransitionPossible, PersonalizationTarget } from './learning-path-personalization-util';
 
 /**
  * Fetches the corresponding learning object for each of the nodes and creates a map that maps each node to its
@@ -69,7 +65,7 @@ async function convertLearningPath(learningPath: LearningPathEntity, order: numb
         title: learningPath.title,
         nodes: convertedNodes,
         num_nodes: learningPath.nodes.length,
-        num_nodes_left: convertedNodes.filter(it => !it.done).length,
+        num_nodes_left: convertedNodes.filter((it) => !it.done).length,
         keywords: keywords.join(' '),
         target_ages: targetAges,
         max_age: Math.max(...targetAges),
@@ -83,10 +79,13 @@ async function convertLearningPath(learningPath: LearningPathEntity, order: numb
  * @param nodesToLearningObjects
  * @param personalizedFor
  */
-async function convertNodes(nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>, personalizedFor?: PersonalizationTarget): Promise<LearningObjectNode[]> {
+async function convertNodes(
+    nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>,
+    personalizedFor?: PersonalizationTarget
+): Promise<LearningObjectNode[]> {
     const nodesPromise = nodesToLearningObjects
         .entries()
-        .map(async(entry) => {
+        .map(async (entry) => {
             const [node, learningObject] = entry;
             const lastSubmission = personalizedFor ? await getLastSubmissionForCustomizationTarget(node, personalizedFor) : null;
             return {
@@ -98,7 +97,7 @@ async function convertNodes(nodesToLearningObjects: Map<LearningPathNode, Filter
                 learningobject_hruid: node.learningObjectHruid,
                 version: learningObject.version,
                 transitions: node.transitions
-                    .filter(trans => !personalizedFor || isTransitionPossible(trans, lastSubmission)) // If we want a personalized learning path, remove all transitions that aren't possible.
+                    .filter((trans) => !personalizedFor || isTransitionPossible(trans, lastSubmission)) // If we want a personalized learning path, remove all transitions that aren't possible.
                     .map((trans, i) => convertTransition(trans, i, nodesToLearningObjects)), // Then convert all the transition
             };
         })
@@ -143,14 +142,17 @@ const databaseLearningPathProvider: LearningPathProvider = {
     /**
      * Fetch the learning paths with the given hruids from the database.
      */
-    async fetchLearningPaths(hruids: string[], language: Language, source: string, personalizedFor?: PersonalizationTarget): Promise<LearningPathResponse> {
+    async fetchLearningPaths(
+        hruids: string[],
+        language: Language,
+        source: string,
+        personalizedFor?: PersonalizationTarget
+    ): Promise<LearningPathResponse> {
         const learningPathRepo = getLearningPathRepository();
 
-        const learningPaths = (
-            await Promise.all(
-                hruids.map((hruid) => learningPathRepo.findByHruidAndLanguage(hruid, language))
-            )
-        ).filter((learningPath) => learningPath !== null);
+        const learningPaths = (await Promise.all(hruids.map((hruid) => learningPathRepo.findByHruidAndLanguage(hruid, language)))).filter(
+            (learningPath) => learningPath !== null
+        );
         const filteredLearningPaths = await Promise.all(
             learningPaths.map((learningPath, index) => convertLearningPath(learningPath, index, personalizedFor))
         );
