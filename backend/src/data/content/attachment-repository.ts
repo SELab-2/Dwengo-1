@@ -1,13 +1,10 @@
 import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { Attachment } from '../../entities/content/attachment.entity.js';
-import {Language} from "../../entities/content/language";
-import {LearningObjectIdentifier} from "../../entities/content/learning-object-identifier";
+import { Language } from '../../entities/content/language';
+import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier';
 
 export class AttachmentRepository extends DwengoEntityRepository<Attachment> {
-    public findByLearningObjectIdAndName(
-        learningObjectId: LearningObjectIdentifier,
-        name: string
-    ): Promise<Attachment | null> {
+    public findByLearningObjectIdAndName(learningObjectId: LearningObjectIdentifier, name: string): Promise<Attachment | null> {
         return this.findOne({
             learningObject: {
                 hruid: learningObjectId.hruid,
@@ -18,24 +15,23 @@ export class AttachmentRepository extends DwengoEntityRepository<Attachment> {
         });
     }
 
-    public findByMostRecentVersionOfLearningObjectAndName(
-        hruid: string,
-        language: Language,
-        attachmentName: string
-    ): Promise<Attachment | null> {
-        return this.findOne({
-            learningObject: {
-                hruid: hruid,
-                language: language
-            },
-            name: attachmentName
-        }, {
-            orderBy: {
+    public findByMostRecentVersionOfLearningObjectAndName(hruid: string, language: Language, attachmentName: string): Promise<Attachment | null> {
+        return this.findOne(
+            {
                 learningObject: {
-                    version: 'DESC'
-                }
+                    hruid: hruid,
+                    language: language,
+                },
+                name: attachmentName,
+            },
+            {
+                orderBy: {
+                    learningObject: {
+                        version: 'DESC',
+                    },
+                },
             }
-        });
+        );
     }
     // This repository is read-only for now since creating own learning object is an extension feature.
 }

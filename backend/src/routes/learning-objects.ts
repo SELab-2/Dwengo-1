@@ -1,8 +1,5 @@
 import express from 'express';
-import {
-    getAllLearningObjects, getAttachment,
-    getLearningObject, getLearningObjectHTML,
-} from '../controllers/learning-objects.js';
+import { getAllLearningObjects, getAttachment, getLearningObject, getLearningObjectHTML } from '../controllers/learning-objects.js';
 
 const router = express.Router();
 

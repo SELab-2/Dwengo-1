@@ -1,22 +1,22 @@
 import { DWENGO_API_BASE } from '../../config.js';
 import { fetchWithLogging } from '../../util/apiHelper.js';
 import {
-    FilteredLearningObject, LearningObjectIdentifier,
+    FilteredLearningObject,
+    LearningObjectIdentifier,
     LearningObjectMetadata,
-    LearningObjectNode, LearningPathIdentifier,
+    LearningObjectNode,
+    LearningPathIdentifier,
     LearningPathResponse,
 } from '../../interfaces/learning-content.js';
 import dwengoApiLearningPathProvider from '../learning-paths/dwengo-api-learning-path-provider.js';
-import {LearningObjectProvider} from "./learning-object-provider";
+import { LearningObjectProvider } from './learning-object-provider';
 
 /**
  * Helper function to convert the learning object metadata retrieved from the API to a FilteredLearningObject which
  * our API should return.
  * @param data
  */
-function filterData(
-    data: LearningObjectMetadata
-): FilteredLearningObject {
+function filterData(data: LearningObjectMetadata): FilteredLearningObject {
     return {
         key: data.hruid, // Hruid learningObject (not path)
         _id: data._id,
@@ -43,48 +43,33 @@ function filterData(
 /**
  * Generic helper function to fetch all learning objects from a given path (full data or just HRUIDs)
  */
-async function fetchLearningObjects(
-    learningPathId: LearningPathIdentifier,
-    full: boolean
-): Promise<FilteredLearningObject[] | string[]> {
+async function fetchLearningObjects(learningPathId: LearningPathIdentifier, full: boolean): Promise<FilteredLearningObject[] | string[]> {
     try {
-        const learningPathResponse: LearningPathResponse =
-            await dwengoApiLearningPathProvider.fetchLearningPaths(
-                [learningPathId.hruid],
-                learningPathId.language,
-                `Learning path for HRUID "${learningPathId.hruid}"`
-            );
+        const learningPathResponse: LearningPathResponse = await dwengoApiLearningPathProvider.fetchLearningPaths(
+            [learningPathId.hruid],
+            learningPathId.language,
+            `Learning path for HRUID "${learningPathId.hruid}"`
+        );
 
-        if (
-            !learningPathResponse.success ||
-            !learningPathResponse.data?.length
-        ) {
-            console.error(
-                `⚠️ WARNING: Learning path "${learningPathId.hruid}" exists but contains no learning objects.`
-            );
+        if (!learningPathResponse.success || !learningPathResponse.data?.length) {
+            console.error(`⚠️ WARNING: Learning path "${learningPathId.hruid}" exists but contains no learning objects.`);
             return [];
         }
 
         const nodes: LearningObjectNode[] = learningPathResponse.data[0].nodes;
 
         if (!full) {
-            return nodes.map((node) => {
-                return node.learningobject_hruid;
-            });
+            return nodes.map((node) => node.learningobject_hruid);
         }
 
         return await Promise.all(
-            nodes.map(async (node) => {
-                return dwengoApiLearningObjectProvider.getLearningObjectById({
+            nodes.map(async (node) =>
+                dwengoApiLearningObjectProvider.getLearningObjectById({
                     hruid: node.learningobject_hruid,
-                    language: learningPathId.language
-                });
-            })
-        ).then((objects) => {
-            return objects.filter((obj): obj is FilteredLearningObject => {
-                return obj !== null;
-            });
-        });
+                    language: learningPathId.language,
+                })
+            )
+        ).then((objects) => objects.filter((obj): obj is FilteredLearningObject => obj !== null));
     } catch (error) {
         console.error('❌ Error fetching learning objects:', error);
         return [];
@@ -95,19 +80,17 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
     /**
      * Fetches a single learning object by its HRUID
      */
-    async getLearningObjectById(
-        id: LearningObjectIdentifier
-    ): Promise<FilteredLearningObject | null> {
-        let metadataUrl = `${DWENGO_API_BASE}/learningObject/getMetadata`;
+    async getLearningObjectById(id: LearningObjectIdentifier): Promise<FilteredLearningObject | null> {
+        const metadataUrl = `${DWENGO_API_BASE}/learningObject/getMetadata`;
         const metadata = await fetchWithLogging<LearningObjectMetadata>(
             metadataUrl,
             `Metadata for Learning Object HRUID "${id.hruid}" (language ${id.language})`,
             {
-                params: id
+                params: id,
             }
         );
 
-        if (!metadata || typeof metadata !== "object") {
+        if (!metadata || typeof metadata !== 'object') {
             console.error(`⚠️ WARNING: Learning object "${id.hruid}" not found.`);
             return null;
         }
@@ -119,10 +102,7 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
      * Fetch full learning object data (metadata)
      */
     async getLearningObjectsFromPath(id: LearningPathIdentifier): Promise<FilteredLearningObject[]> {
-        return (await fetchLearningObjects(
-            id,
-            true,
-        )) as FilteredLearningObject[];
+        return (await fetchLearningObjects(id, true)) as FilteredLearningObject[];
     },
 
     /**
@@ -138,13 +118,9 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
      */
     async getLearningObjectHTML(id: LearningObjectIdentifier): Promise<string | null> {
         const htmlUrl = `${DWENGO_API_BASE}/learningObject/getRaw`;
-        const html = await fetchWithLogging<string>(
-            htmlUrl,
-            `Metadata for Learning Object HRUID "${id.hruid}" (language ${id.language})`,
-            {
-                params: id
-            }
-        );
+        const html = await fetchWithLogging<string>(htmlUrl, `Metadata for Learning Object HRUID "${id.hruid}" (language ${id.language})`, {
+            params: id,
+        });
 
         if (!html) {
             console.error(`⚠️ WARNING: Learning object "${id.hruid}" not found.`);
@@ -152,7 +128,7 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
         }
 
         return html;
-    }
+    },
 };
 
 export default dwengoApiLearningObjectProvider;

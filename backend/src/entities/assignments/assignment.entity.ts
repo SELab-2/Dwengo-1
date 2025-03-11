@@ -2,9 +2,9 @@ import { Entity, Enum, ManyToOne, OneToMany, PrimaryKey, Property } from '@mikro
 import { Class } from '../classes/class.entity.js';
 import { Group } from './group.entity.js';
 import { Language } from '../content/language.js';
-import {AssignmentRepository} from "../../data/assignments/assignment-repository";
+import { AssignmentRepository } from '../../data/assignments/assignment-repository';
 
-@Entity({repository: () => AssignmentRepository})
+@Entity({ repository: () => AssignmentRepository })
 export class Assignment {
     @ManyToOne({ entity: () => Class, primary: true })
     within!: Class;

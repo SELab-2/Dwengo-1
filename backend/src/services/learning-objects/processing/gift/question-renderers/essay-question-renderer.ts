@@ -1,9 +1,9 @@
-import {GIFTQuestionRenderer} from "./gift-question-renderer";
-import {Essay} from "gift-pegjs";
+import { GIFTQuestionRenderer } from './gift-question-renderer';
+import { Essay } from 'gift-pegjs';
 
 export class EssayQuestionRenderer extends GIFTQuestionRenderer<Essay> {
     render(question: Essay, questionNumber: number): string {
-        let renderedHtml = "";
+        let renderedHtml = '';
         if (question.title) {
             renderedHtml += `<h2 class='gift-title' id='gift-q${questionNumber}-title'>${question.title}</h2>\n`;
         }

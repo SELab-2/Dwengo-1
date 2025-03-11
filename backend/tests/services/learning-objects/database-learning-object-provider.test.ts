@@ -23,7 +23,7 @@ async function initExampleData(): Promise<{learningObject: LearningObject, learn
 
 const EXPECTED_TITLE_FROM_DWENGO_LEARNING_OBJECT = "Notebook opslaan";
 
-describe("DatabaseLearningObjectProvider", () => {
+describe('DatabaseLearningObjectProvider', () => {
     let exampleLearningObject: LearningObject;
     let exampleLearningPath: LearningPath;
 
@@ -33,32 +33,32 @@ describe("DatabaseLearningObjectProvider", () => {
         exampleLearningObject = exampleData.learningObject;
         exampleLearningPath = exampleData.learningPath;
     });
-    describe("getLearningObjectById", () => {
-        it("should return the learning object when it is queried by its id", async () => {
+    describe('getLearningObjectById', () => {
+        it('should return the learning object when it is queried by its id', async () => {
             const result: FilteredLearningObject | null = await databaseLearningObjectProvider.getLearningObjectById(exampleLearningObject);
             expect(result).toBeTruthy();
             expectToBeCorrectFilteredLearningObject(result!, exampleLearningObject);
         });
 
-        it("should return the learning object when it is queried by only hruid and language (but not version)", async () => {
+        it('should return the learning object when it is queried by only hruid and language (but not version)', async () => {
             const result: FilteredLearningObject | null = await databaseLearningObjectProvider.getLearningObjectById({
                 hruid: exampleLearningObject.hruid,
-                language: exampleLearningObject.language
+                language: exampleLearningObject.language,
             });
             expect(result).toBeTruthy();
             expectToBeCorrectFilteredLearningObject(result!, exampleLearningObject);
         });
 
-        it("should return null when queried with an id that does not exist", async () => {
+        it('should return null when queried with an id that does not exist', async () => {
             const result: FilteredLearningObject | null = await databaseLearningObjectProvider.getLearningObjectById({
-                hruid: "non_existing_hruid",
-                language: Language.Dutch
+                hruid: 'non_existing_hruid',
+                language: Language.Dutch,
             });
             expect(result).toBeNull();
         });
     });
-    describe("getLearningObjectHTML", () => {
-        it("should return the correct rendering of the learning object", async () => {
+    describe('getLearningObjectHTML', () => {
+        it('should return the correct rendering of the learning object', async () => {
             const result = await databaseLearningObjectProvider.getLearningObjectHTML(exampleLearningObject);
             expect(result).toEqual(example.getHTMLRendering());
         });

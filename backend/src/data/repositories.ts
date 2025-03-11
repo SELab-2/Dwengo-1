@@ -28,8 +28,8 @@ import { LearningPath } from '../entities/content/learning-path.entity.js';
 import { LearningPathRepository } from './content/learning-path-repository.js';
 import { AttachmentRepository } from './content/attachment-repository.js';
 import { Attachment } from '../entities/content/attachment.entity.js';
-import {LearningPathNode} from "../entities/content/learning-path-node.entity";
-import {LearningPathTransition} from "../entities/content/learning-path-transition.entity";
+import { LearningPathNode } from '../entities/content/learning-path-node.entity';
+import { LearningPathTransition } from '../entities/content/learning-path-transition.entity';
 
 let entityManager: EntityManager | undefined;
 
@@ -73,17 +73,8 @@ export const getQuestionRepository = repositoryGetter<Question, QuestionReposito
 export const getAnswerRepository = repositoryGetter<Answer, AnswerRepository>(Answer);
 
 /* Learning content */
-export const getLearningObjectRepository = repositoryGetter<
-    LearningObject,
-    LearningObjectRepository
->(LearningObject);
-export const getLearningPathRepository = repositoryGetter<
-    LearningPath,
-    LearningPathRepository
->(LearningPath);
+export const getLearningObjectRepository = repositoryGetter<LearningObject, LearningObjectRepository>(LearningObject);
+export const getLearningPathRepository = repositoryGetter<LearningPath, LearningPathRepository>(LearningPath);
 export const getLearningPathNodeRepository = repositoryGetter(LearningPathNode);
 export const getLearningPathTransitionRepository = repositoryGetter(LearningPathTransition);
-export const getAttachmentRepository = repositoryGetter<
-    Attachment,
-    AttachmentRepository
->(Attachment);
+export const getAttachmentRepository = repositoryGetter<Attachment, AttachmentRepository>(Attachment);

@@ -1,6 +1,6 @@
-import {GIFTQuestionRenderer} from "./gift-question-renderer";
-import {Category} from "gift-pegjs";
-import {ProcessingError} from "../../processing-error";
+import { GIFTQuestionRenderer } from './gift-question-renderer';
+import { Category } from 'gift-pegjs';
+import { ProcessingError } from '../../processing-error';
 
 export class CategoryQuestionRenderer extends GIFTQuestionRenderer<Category> {
     render(question: Category, questionNumber: number): string {

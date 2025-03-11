@@ -5,12 +5,11 @@
  */
 
 import DOMPurify from 'isomorphic-dompurify';
-import {type} from "node:os";
-import {DwengoContentType} from "../content-type";
-import {StringProcessor} from "../string-processor";
+import { type } from 'node:os';
+import { DwengoContentType } from '../content-type';
+import { StringProcessor } from '../string-processor';
 
 class AudioProcessor extends StringProcessor {
-
     constructor() {
         super(DwengoContentType.AUDIO_MPEG);
     }

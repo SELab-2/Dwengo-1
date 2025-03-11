@@ -1,9 +1,9 @@
-import {GIFTQuestionRenderer} from "./gift-question-renderer";
-import {MultipleChoice} from "gift-pegjs";
+import { GIFTQuestionRenderer } from './gift-question-renderer';
+import { MultipleChoice } from 'gift-pegjs';
 
 export class MultipleChoiceQuestionRenderer extends GIFTQuestionRenderer<MultipleChoice> {
     render(question: MultipleChoice, questionNumber: number): string {
-        let renderedHtml = "";
+        let renderedHtml = '';
         if (question.title) {
             renderedHtml += `<h2 class='gift-title' id='gift-q${questionNumber}-title'>${question.title}</h2>\n`;
         }
@@ -11,7 +11,7 @@ export class MultipleChoiceQuestionRenderer extends GIFTQuestionRenderer<Multipl
             renderedHtml += `<p class='gift-stem' id='gift-q${questionNumber}-stem'>${question.stem.text}</p>\n`;
         }
         let i = 0;
-        for (let choice of question.choices) {
+        for (const choice of question.choices) {
             renderedHtml += `<div class="gift-choice-div">\n`;
             renderedHtml += `    <input type='radio' id='gift-q${questionNumber}-choice-${i}' name='gift-q${questionNumber}-choices' value="${i}"/>\n`;
             renderedHtml += `    <label for='gift-q${questionNumber}-choice-${i}'>${choice.text}</label>\n`;

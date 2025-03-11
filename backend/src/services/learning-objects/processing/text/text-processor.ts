@@ -3,8 +3,8 @@
  */
 
 import DOMPurify from 'isomorphic-dompurify';
-import {DwengoContentType} from "../content-type.js";
-import {StringProcessor} from "../string-processor";
+import { DwengoContentType } from '../content-type.js';
+import { StringProcessor } from '../string-processor';
 
 class TextProcessor extends StringProcessor {
     constructor() {

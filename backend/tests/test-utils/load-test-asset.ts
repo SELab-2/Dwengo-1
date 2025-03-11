@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "node:path";
+import fs from 'fs';
+import path from 'node:path';
 
 /**
  * Load the asset at the given path.

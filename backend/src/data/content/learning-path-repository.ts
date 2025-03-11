@@ -1,16 +1,10 @@
-import {DwengoEntityRepository} from '../dwengo-entity-repository.js';
-import {LearningPath} from '../../entities/content/learning-path.entity.js';
-import {Language} from '../../entities/content/language.js';
+import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
+import { LearningPath } from '../../entities/content/learning-path.entity.js';
+import { Language } from '../../entities/content/language.js';
 
 export class LearningPathRepository extends DwengoEntityRepository<LearningPath> {
-    public findByHruidAndLanguage(
-        hruid: string,
-        language: Language
-    ): Promise<LearningPath | null> {
-        return this.findOne(
-            { hruid: hruid, language: language },
-            { populate: ["nodes", "nodes.transitions"] }
-        );
+    public findByHruidAndLanguage(hruid: string, language: Language): Promise<LearningPath | null> {
+        return this.findOne({ hruid: hruid, language: language }, { populate: ['nodes', 'nodes.transitions'] });
     }
 
     /**
@@ -24,12 +18,9 @@ export class LearningPathRepository extends DwengoEntityRepository<LearningPath>
         return this.findAll({
             where: {
                 language: language,
-                $or: [
-                    { title: { $like: `%${query}%`} },
-                    { description: { $like: `%${query}%`} }
-                ]
+                $or: [{ title: { $like: `%${query}%` } }, { description: { $like: `%${query}%` } }],
             },
-            populate: ["nodes", "nodes.transitions"]
+            populate: ['nodes', 'nodes.transitions'],
         });
     }
 }

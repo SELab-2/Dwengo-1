@@ -5,10 +5,10 @@
  */
 
 import DOMPurify from 'isomorphic-dompurify';
-import {DwengoContentType} from "../content-type.js";
-import {isValidHttpUrl} from "../../../../util/links.js";
-import {ProcessingError} from "../processing-error.js";
-import {StringProcessor} from "../string-processor";
+import { DwengoContentType } from '../content-type.js';
+import { isValidHttpUrl } from '../../../../util/links.js';
+import { ProcessingError } from '../processing-error.js';
+import { StringProcessor } from '../string-processor';
 
 class PdfProcessor extends StringProcessor {
     constructor() {
@@ -20,9 +20,11 @@ class PdfProcessor extends StringProcessor {
             throw new ProcessingError(`PDF URL is invalid: ${pdfUrl}`);
         }
 
-        return DOMPurify.sanitize(`
+        return DOMPurify.sanitize(
+            `
             <embed src="${pdfUrl}" type="application/pdf" width="100%" height="800px"/>
-            `, { ADD_TAGS: ["embed"] }
+            `,
+            { ADD_TAGS: ['embed'] }
         );
     }
 }
