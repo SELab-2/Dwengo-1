@@ -1,9 +1,9 @@
-import {GIFTQuestionRenderer} from "./gift-question-renderer";
-import {MultipleChoice} from "gift-pegjs";
+import { GIFTQuestionRenderer } from './gift-question-renderer';
+import { MultipleChoice } from 'gift-pegjs';
 
 export class MultipleChoiceQuestionRenderer extends GIFTQuestionRenderer<MultipleChoice> {
     render(question: MultipleChoice, questionNumber: number): string {
-        let renderedHtml = "";
+        let renderedHtml = '';
         if (question.title) {
             renderedHtml += `<h2 class='gift-title' id='gift-q${questionNumber}-title'>${question.title}</h2>\n`;
         }

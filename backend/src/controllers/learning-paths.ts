@@ -1,16 +1,13 @@
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
-import learningPathService from "../services/learning-paths/learning-path-service";
-import {NotFoundException} from "../exceptions";
+import learningPathService from '../services/learning-paths/learning-path-service';
+import { NotFoundException } from '../exceptions';
 
 /**
  * Fetch learning paths based on query parameters.
  */
-export async function getLearningPaths(
-    req: Request,
-    res: Response
-): Promise<void> {
+export async function getLearningPaths(req: Request, res: Response): Promise<void> {
     const hruids = req.query.hruid;
     const themeKey = req.query.theme as string;
     const searchQuery = req.query.search as string;
@@ -19,9 +16,7 @@ export async function getLearningPaths(
     let hruidList;
 
     if (hruids) {
-        hruidList = Array.isArray(hruids)
-            ? hruids.map(String)
-            : [String(hruids)];
+        hruidList = Array.isArray(hruids) ? hruids.map(String) : [String(hruids)];
     } else if (themeKey) {
         const theme = themes.find((t) => t.title === themeKey);
         if (theme) {
@@ -30,20 +25,13 @@ export async function getLearningPaths(
             throw new NotFoundException(`Theme "${themeKey}" not found.`);
         }
     } else if (searchQuery) {
-        const searchResults = await learningPathService.searchLearningPaths(
-            searchQuery,
-            language
-        );
+        const searchResults = await learningPathService.searchLearningPaths(searchQuery, language);
         res.json(searchResults);
         return;
     } else {
         hruidList = themes.flatMap((theme) => theme.hruids);
     }
 
-    const learningPaths = await learningPathService.fetchLearningPaths(
-        hruidList,
-        language,
-        `HRUIDs: ${hruidList.join(', ')}`
-    );
+    const learningPaths = await learningPathService.fetchLearningPaths(hruidList, language, `HRUIDs: ${hruidList.join(', ')}`);
     res.json(learningPaths.data);
 }

@@ -1,12 +1,10 @@
 import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
-import {Language} from "../../entities/content/language";
+import { Language } from '../../entities/content/language';
 
 export class LearningObjectRepository extends DwengoEntityRepository<LearningObject> {
-    public findByIdentifier(
-        identifier: LearningObjectIdentifier
-    ): Promise<LearningObject | null> {
+    public findByIdentifier(identifier: LearningObjectIdentifier): Promise<LearningObject | null> {
         return this.findOne(
             {
                 hruid: identifier.hruid,
@@ -14,7 +12,7 @@ export class LearningObjectRepository extends DwengoEntityRepository<LearningObj
                 version: identifier.version,
             },
             {
-                populate: ["keywords"]
+                populate: ['keywords'],
             }
         );
     }
@@ -23,13 +21,13 @@ export class LearningObjectRepository extends DwengoEntityRepository<LearningObj
         return this.findOne(
             {
                 hruid: hruid,
-                language: language
+                language: language,
             },
             {
-                populate: ["keywords"],
+                populate: ['keywords'],
                 orderBy: {
-                    version: "DESC"
-                }
+                    version: 'DESC',
+                },
             }
         );
     }

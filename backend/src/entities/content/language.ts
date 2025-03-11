@@ -182,5 +182,5 @@ export enum Language {
     Yiddish = 'yi',
     Yoruba = 'yo',
     Zhuang = 'za',
-    Zulu = 'zu'
+    Zulu = 'zu',
 }

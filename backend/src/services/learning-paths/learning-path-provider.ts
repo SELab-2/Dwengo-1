@@ -1,5 +1,5 @@
-import {LearningPath, LearningPathResponse} from "../../interfaces/learning-content";
-import {Language} from "../../entities/content/language";
+import { LearningPath, LearningPathResponse } from '../../interfaces/learning-content';
+import { Language } from '../../entities/content/language';
 
 /**
  * Generic interface for a service which provides access to learning paths from a data source.

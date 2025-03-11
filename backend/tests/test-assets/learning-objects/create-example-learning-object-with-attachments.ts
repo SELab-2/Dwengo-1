@@ -1,5 +1,5 @@
-import {LearningObjectExample} from "./learning-object-example";
-import {LearningObject} from "../../../src/entities/content/learning-object.entity";
+import { LearningObjectExample } from './learning-object-example';
+import { LearningObject } from '../../../src/entities/content/learning-object.entity';
 
 export function createExampleLearningObjectWithAttachments(example: LearningObjectExample): LearningObject {
     const learningObject = example.createLearningObject();

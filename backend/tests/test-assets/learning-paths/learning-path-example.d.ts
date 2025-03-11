@@ -1,3 +1,3 @@
 type LearningPathExample = {
-    createLearningPath: () => LearningPath
+    createLearningPath: () => LearningPath;
 };

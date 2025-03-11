@@ -1,4 +1,4 @@
-import {GIFTQuestion} from "gift-pegjs";
+import { GIFTQuestion } from 'gift-pegjs';
 
 /**
  * Subclasses of this class are renderers which can render a specific type of GIFT questions to HTML.

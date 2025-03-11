@@ -1,4 +1,4 @@
-import {Language} from "../entities/content/language";
+import { Language } from '../entities/content/language';
 
 export interface Transition {
     default: boolean;

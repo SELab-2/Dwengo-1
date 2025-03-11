@@ -1,5 +1,5 @@
-import Processor from "./processor";
-import {LearningObject} from "../../../entities/content/learning-object.entity";
+import Processor from './processor';
+import { LearningObject } from '../../../entities/content/learning-object.entity';
 
 export abstract class StringProcessor extends Processor<string> {
     /**
@@ -14,6 +14,6 @@ export abstract class StringProcessor extends Processor<string> {
      * @protected
      */
     protected renderLearningObjectFn(toRender: LearningObject): string {
-        return this.render(toRender.content.toString("ascii"));
+        return this.render(toRender.content.toString('ascii'));
     }
 }

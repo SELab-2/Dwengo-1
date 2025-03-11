@@ -2,11 +2,11 @@ import { Embeddable, Embedded, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, 
 import { Language } from './language.js';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
-import {DwengoContentType} from "../../services/learning-objects/processing/content-type";
-import {v4} from "uuid";
-import {LearningObjectRepository} from "../../data/content/learning-object-repository";
+import { DwengoContentType } from '../../services/learning-objects/processing/content-type';
+import { v4 } from 'uuid';
+import { LearningObjectRepository } from '../../data/content/learning-object-repository';
 
-@Entity({repository: () => LearningObjectRepository})
+@Entity({ repository: () => LearningObjectRepository })
 export class LearningObject {
     @PrimaryKey({ type: 'string' })
     hruid!: string;
@@ -20,7 +20,7 @@ export class LearningObject {
     @PrimaryKey({ type: 'number' })
     version: number = 1;
 
-    @Property({type: 'uuid', unique: true})
+    @Property({ type: 'uuid', unique: true })
     uuid = v4();
 
     @ManyToMany({

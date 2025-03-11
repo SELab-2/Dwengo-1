@@ -17,9 +17,9 @@ export async function fetchWithLogging<T>(
     url: string,
     description: string,
     options?: {
-        params?: Record<string, any>,
-        query?: Record<string, any>,
-        responseType?: "json" | "text",
+        params?: Record<string, any>;
+        query?: Record<string, any>;
+        responseType?: 'json' | 'text';
     }
 ): Promise<T | null> {
     try {

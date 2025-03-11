@@ -1,12 +1,12 @@
 import { Entity, ManyToOne } from '@mikro-orm/core';
 import { Teacher } from '../users/teacher.entity.js';
 import { Class } from './class.entity.js';
-import {TeacherInvitationRepository} from "../../data/classes/teacher-invitation-repository";
+import { TeacherInvitationRepository } from '../../data/classes/teacher-invitation-repository';
 
 /**
  * Invitation of a teacher into a class (in order to teach it).
  */
-@Entity({repository: () => TeacherInvitationRepository})
+@Entity({ repository: () => TeacherInvitationRepository })
 export class TeacherInvitation {
     @ManyToOne({
         entity: () => Teacher,

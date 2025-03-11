@@ -1,15 +1,15 @@
 /**
  * Based on https://github.com/dwengovzw/Learning-Object-Repository/blob/main/app/processors/markdown/learing_object_markdown_renderer.js [sic!]
  */
-import PdfProcessor from "../pdf/pdf-processor.js";
-import AudioProcessor from "../audio/audio-processor.js";
-import ExternProcessor from "../extern/extern-processor.js";
-import InlineImageProcessor from "../image/inline-image-processor.js";
-import * as marked from "marked";
-import {getUrlStringForLearningObjectHTML, isValidHttpUrl} from "../../../../util/links";
-import {ProcessingError} from "../processing-error";
-import {LearningObjectIdentifier} from "../../../../interfaces/learning-content";
-import {Language} from "../../../../entities/content/language";
+import PdfProcessor from '../pdf/pdf-processor.js';
+import AudioProcessor from '../audio/audio-processor.js';
+import ExternProcessor from '../extern/extern-processor.js';
+import InlineImageProcessor from '../image/inline-image-processor.js';
+import * as marked from 'marked';
+import { getUrlStringForLearningObjectHTML, isValidHttpUrl } from '../../../../util/links';
+import { ProcessingError } from '../processing-error';
+import { LearningObjectIdentifier } from '../../../../interfaces/learning-content';
+import { Language } from '../../../../entities/content/language';
 
 import Image = marked.Tokens.Image;
 import Heading = marked.Tokens.Heading;
@@ -27,11 +27,11 @@ const prefixes = {
 };
 
 function extractLearningObjectIdFromHref(href: string): LearningObjectIdentifier {
-    const [hruid, language, version] = href.split(/\/(.+)/, 2)[1].split("/");
+    const [hruid, language, version] = href.split(/\/(.+)/, 2)[1].split('/');
     return {
         hruid,
         language: language as Language,
-        version: parseInt(version)
+        version: parseInt(version),
     };
 }
 
@@ -41,39 +41,40 @@ function extractLearningObjectIdFromHref(href: string): LearningObjectIdentifier
  * - links to other learning objects,
  * - embeddings of other learning objects.
  */
- const dwengoMarkedRenderer: RendererObject = {
+const dwengoMarkedRenderer: RendererObject = {
     heading(heading: Heading): string {
         const text = heading.text;
         const level = heading.depth;
         const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
 
-        return `<h${level}>\n` +
-               `    <a name="${escapedText}" class="anchor" href="#${escapedText}">\n` +
-               `        <span class="header-link"></span>\n` +
-               `    </a>\n` +
-               `    ${text}\n` +
-               `</h${level}>\n`
+        return (
+            `<h${level}>\n` +
+            `    <a name="${escapedText}" class="anchor" href="#${escapedText}">\n` +
+            `        <span class="header-link"></span>\n` +
+            `    </a>\n` +
+            `    ${text}\n` +
+            `</h${level}>\n`
+        );
     },
 
     // When the syntax for a link is used => [text](href "title")
     // Render a custom link when the prefix for a learning object is used.
     link(link: Link): string {
         const href = link.href;
-        const title = link.title || "";
+        const title = link.title || '';
         const text = marked.parseInline(link.text); // There could for example be an image in the link.
 
         if (href.startsWith(prefixes.learningObject)) {
             // Link to learning-object
             const learningObjectId = extractLearningObjectIdFromHref(href);
             return `<a href="${getUrlStringForLearningObjectHTML(learningObjectId)}" target="_blank" title="${title}">${text}</a>`;
-        } 
-            // Any other link
-            if (!isValidHttpUrl(href)) {
-                throw new ProcessingError("Link is not a valid HTTP URL!");
-            }
-            //<a href="https://kiks.ilabt.imec.be/hub/tmplogin?id=0101" title="Notebooks Werking"><img src="Knop.png" alt="" title="Knop"></a>
-            return `<a href="${href}" target="_blank" title="${title}">${text}</a>`;
-        
+        }
+        // Any other link
+        if (!isValidHttpUrl(href)) {
+            throw new ProcessingError('Link is not a valid HTTP URL!');
+        }
+        //<a href="https://kiks.ilabt.imec.be/hub/tmplogin?id=0101" title="Notebooks Werking"><img src="Knop.png" alt="" title="Knop"></a>
+        return `<a href="${href}" target="_blank" title="${title}">${text}</a>`;
     },
 
     // When the syntax for an image is used => ![text](href "title")
@@ -98,12 +99,11 @@ function extractLearningObjectIdFromHref(href: string): LearningObjectIdentifier
             // Embedded youtube video or notebook (or other extern content)
             const proc = new ExternProcessor();
             return proc.render(href.split(/\/(.+)/, 2)[1]);
-        } 
-            // Embedded image
-            const proc = new InlineImageProcessor();
-            return proc.render(href)
-        
+        }
+        // Embedded image
+        const proc = new InlineImageProcessor();
+        return proc.render(href);
     },
-}
+};
 
 export default dwengoMarkedRenderer;

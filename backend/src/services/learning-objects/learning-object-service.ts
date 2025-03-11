@@ -1,19 +1,14 @@
-import {
-    FilteredLearningObject,
-    LearningObjectIdentifier,
-    LearningPathIdentifier
-} from "../../interfaces/learning-content";
-import dwengoApiLearningObjectProvider from "./dwengo-api-learning-object-provider";
-import {LearningObjectProvider} from "./learning-object-provider";
-import {EnvVars, getEnvVar} from "../../util/envvars";
-import databaseLearningObjectProvider from "./database-learning-object-provider";
+import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../../interfaces/learning-content';
+import dwengoApiLearningObjectProvider from './dwengo-api-learning-object-provider';
+import { LearningObjectProvider } from './learning-object-provider';
+import { EnvVars, getEnvVar } from '../../util/envvars';
+import databaseLearningObjectProvider from './database-learning-object-provider';
 
 function getProvider(id: LearningObjectIdentifier): LearningObjectProvider {
     if (id.hruid.startsWith(getEnvVar(EnvVars.UserContentPrefix))) {
         return databaseLearningObjectProvider;
-    } 
-        return dwengoApiLearningObjectProvider;
-    
+    }
+    return dwengoApiLearningObjectProvider;
 }
 
 /**
@@ -46,7 +41,7 @@ const learningObjectService = {
      */
     getLearningObjectHTML(id: LearningObjectIdentifier): Promise<string | null> {
         return getProvider(id).getLearningObjectHTML(id);
-    }
+    },
 };
 
 export default learningObjectService;
