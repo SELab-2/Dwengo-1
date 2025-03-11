@@ -14,6 +14,10 @@ const example: LearningObjectExample = {
         learningObject.title = 'Essay question for testing';
         learningObject.description = 'This essay question was only created for testing purposes.';
         learningObject.contentType = DwengoContentType.GIFT;
+        learningObject.returnValue = {
+            callbackUrl: `/learningObject/${learningObject.hruid}/submissions`,
+            callbackSchema: '["antwoord vraag 1"]'
+        }
         learningObject.content = loadTestAsset('learning-objects/test-essay/content.txt');
         return learningObject;
     },

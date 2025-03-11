@@ -47,7 +47,7 @@ export class LearningObject {
     teacherExclusive: boolean = false;
 
     @Property({ type: 'array' })
-    skosConcepts!: string[];
+    skosConcepts: string[] = [];
 
     @Embedded({
         entity: () => EducationalGoal,
@@ -64,8 +64,8 @@ export class LearningObject {
     @Property({ type: 'smallint', nullable: true })
     difficulty?: number;
 
-    @Property({ type: 'integer' })
-    estimatedTime!: number;
+    @Property({ type: 'integer', nullable: true })
+    estimatedTime?: number;
 
     @Embedded({
         entity: () => ReturnValue,

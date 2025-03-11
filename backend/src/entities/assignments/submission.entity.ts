@@ -15,8 +15,8 @@ export class Submission {
     })
     learningObjectLanguage!: Language;
 
-    @PrimaryKey({ type: 'string' })
-    learningObjectVersion: string = '1';
+    @PrimaryKey({ type: 'numeric' })
+    learningObjectVersion: number = 1;
 
     @PrimaryKey({ type: 'integer' })
     submissionNumber!: number;

@@ -14,6 +14,10 @@ const example: LearningObjectExample = {
         learningObject.title = 'Multiple choice question for testing';
         learningObject.description = 'This multiple choice question was only created for testing purposes.';
         learningObject.contentType = DwengoContentType.GIFT;
+        learningObject.returnValue = {
+            callbackUrl: `/learningObject/${learningObject.hruid}/submissions`,
+            callbackSchema: '["antwoord vraag 1"]'
+        }
         learningObject.content = loadTestAsset('learning-objects/test-multiple-choice/content.txt');
         return learningObject;
     },

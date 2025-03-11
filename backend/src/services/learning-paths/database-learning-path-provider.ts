@@ -97,12 +97,24 @@ async function convertNodes(
                 learningobject_hruid: node.learningObjectHruid,
                 version: learningObject.version,
                 transitions: node.transitions
-                    .filter((trans) => !personalizedFor || isTransitionPossible(trans, lastSubmission)) // If we want a personalized learning path, remove all transitions that aren't possible.
-                    .map((trans, i) => convertTransition(trans, i, nodesToLearningObjects)), // Then convert all the transition
+                    .filter((trans) =>
+                        !personalizedFor || isTransitionPossible(trans, optionalJsonStringToObject(lastSubmission?.content))  // If we want a personalized learning path, remove all transitions that aren't possible.
+                    ).map((trans, i) => convertTransition(trans, i, nodesToLearningObjects)), // Then convert all the transition
             };
         })
         .toArray();
     return await Promise.all(nodesPromise);
+}
+
+/**
+ * Helper method to convert a json string to an object, or null if it is undefined.
+ */
+function optionalJsonStringToObject(jsonString?: string): object | null {
+    if (!jsonString) {
+        return null;
+    } else {
+        return JSON.parse(jsonString);
+    }
 }
 
 /**
