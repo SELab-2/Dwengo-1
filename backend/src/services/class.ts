@@ -79,10 +79,6 @@ export async function getClassTeacherInvitations(
     const invitations =
         await teacherInvitationRepository.findAllInvitationsForClass(cls);
 
-    if (!invitations) {
-        return [];
-    }
-
     if (full) {
         return invitations.map(mapToTeacherInvitationDTO);
     }
