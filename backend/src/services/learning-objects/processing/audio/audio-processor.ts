@@ -1,5 +1,7 @@
 /**
  * Based on https://github.com/dwengovzw/Learning-Object-Repository/blob/main/app/processors/audio/audio_processor.js
+ *
+ * WARNING: The support for audio learning objects is currently still experimental.
  */
 
 import DOMPurify from 'isomorphic-dompurify';

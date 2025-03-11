@@ -1,5 +1,7 @@
 /**
  * Based on https://github.com/dwengovzw/Learning-Object-Repository/blob/main/app/processors/pdf/pdf_processor.js
+ *
+ * WARNING: The support for PDF learning objects is currently still experimental.
  */
 
 import DOMPurify from 'isomorphic-dompurify';

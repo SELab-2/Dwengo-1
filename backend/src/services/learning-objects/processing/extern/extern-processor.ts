@@ -1,5 +1,7 @@
 /**
  * Based on https://github.com/dwengovzw/Learning-Object-Repository/blob/main/app/processors/extern/extern_processor.js
+ *
+ * WARNING: The support for external content is currently still experimental.
  */
 
 import DOMPurify from 'isomorphic-dompurify';

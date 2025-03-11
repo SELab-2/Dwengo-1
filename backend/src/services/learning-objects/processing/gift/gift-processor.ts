@@ -36,18 +36,22 @@ class GiftProcessor extends StringProcessor {
     override renderFn(giftString: string) {
         const quizQuestions: GIFTQuestion[] = parse(giftString);
 
-        let html = "<div class='gift'>";
+        let html = "<div class='learning-object-gift'>\n";
+        let i = 1;
         for (let question of quizQuestions) {
-            html += this.renderQuestion(question);
+            html += `    <div class='gift-question' id='gift-q${i}'>\n`;
+            html += "        " + this.renderQuestion(question, i).replaceAll(/\n(.+)/g, "\n        $1"); // replace for indentation.
+            html += `    </div>\n`;
+            i++;
         }
-        html += "</div>"
+        html += "</div>\n"
 
         return DOMPurify.sanitize(html);
     }
 
-    private renderQuestion<T extends GIFTQuestion>(question: T): string {
+    private renderQuestion<T extends GIFTQuestion>(question: T, questionNumber: number): string {
         const renderer = this.renderers[question.type] as GIFTQuestionRenderer<T>;
-        return renderer.render(question);
+        return renderer.render(question, questionNumber);
     }
 }
 

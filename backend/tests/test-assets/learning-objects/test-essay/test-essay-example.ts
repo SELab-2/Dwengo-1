@@ -8,17 +8,17 @@ import {DwengoContentType} from "../../../../src/services/learning-objects/proce
 const example: LearningObjectExample = {
     createLearningObject: () => {
         const learningObject = new LearningObject();
-        learningObject.hruid = `${getEnvVar(EnvVars.UserContentPrefix)}test_multiple_choice`;
+        learningObject.hruid = `${getEnvVar(EnvVars.UserContentPrefix)}test_essay`;
         learningObject.language = Language.English;
         learningObject.version = 1;
-        learningObject.title = "Multiple choice question for testing";
-        learningObject.description = "This multiple choice question was only created for testing purposes.";
+        learningObject.title = "Essay question for testing";
+        learningObject.description = "This essay question was only created for testing purposes.";
         learningObject.contentType = DwengoContentType.GIFT;
-        learningObject.content = loadTestAsset("learning-objects/test-multiple-choice/content.txt");
+        learningObject.content = loadTestAsset("learning-objects/test-essay/content.txt");
         return learningObject;
     },
     createAttachment: {},
-    getHTMLRendering: () => loadTestAsset("learning-objects/test-multiple-choice/rendering.html").toString()
+    getHTMLRendering: () => loadTestAsset("learning-objects/test-essay/rendering.html").toString()
 };
 
 export default example;
