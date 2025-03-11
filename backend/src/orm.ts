@@ -1,9 +1,15 @@
 import { EntityManager, MikroORM } from '@mikro-orm/core';
 import config from './mikro-orm.config.js';
 import { EnvVars, getEnvVar } from './util/envvars.js';
+import { getLogger, Logger } from './logging/initalize.js';
 
 let orm: MikroORM | undefined;
 export async function initORM(testingMode: boolean = false) {
+    const logger: Logger = getLogger();
+
+    logger.info('Initializing ORM');
+    logger.debug('MikroORM config is', config);
+
     orm = await MikroORM.init(config(testingMode));
     // Update the database scheme if necessary and enabled.
     if (getEnvVar(EnvVars.DbUpdate)) {
@@ -22,9 +28,7 @@ export async function initORM(testingMode: boolean = false) {
 }
 export function forkEntityManager(): EntityManager {
     if (!orm) {
-        throw Error(
-            'Accessing the Entity Manager before the ORM is fully initialized.'
-        );
+        throw Error('Accessing the Entity Manager before the ORM is fully initialized.');
     }
     return orm.em.fork();
 }

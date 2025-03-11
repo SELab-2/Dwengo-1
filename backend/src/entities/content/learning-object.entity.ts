@@ -1,13 +1,4 @@
-import {
-    Embeddable,
-    Embedded,
-    Entity,
-    Enum,
-    ManyToMany,
-    OneToMany,
-    PrimaryKey,
-    Property,
-} from '@mikro-orm/core';
+import { Embeddable, Embedded, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Language } from './language.js';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
@@ -20,7 +11,10 @@ export class LearningObject {
     @PrimaryKey({ type: 'string' })
     hruid!: string;
 
-    @Enum({ items: () => Language, primary: true })
+    @Enum({
+        items: () => Language,
+        primary: true,
+    })
     language!: Language;
 
     @PrimaryKey({ type: 'number' })
@@ -29,7 +23,9 @@ export class LearningObject {
     @Property({type: 'uuid', unique: true})
     uuid = v4();
 
-    @ManyToMany({ entity: () => Teacher })
+    @ManyToMany({
+        entity: () => Teacher,
+    })
     admins!: Teacher[];
 
     @Property({ type: 'string' })
@@ -53,7 +49,10 @@ export class LearningObject {
     @Property({ type: 'array' })
     skosConcepts!: string[];
 
-    @Embedded({ entity: () => EducationalGoal, array: true })
+    @Embedded({
+        entity: () => EducationalGoal,
+        array: true,
+    })
     educationalGoals: EducationalGoal[] = [];
 
     @Property({ type: 'string' })
@@ -68,7 +67,9 @@ export class LearningObject {
     @Property({ type: 'integer' })
     estimatedTime!: number;
 
-    @Embedded({ entity: () => ReturnValue })
+    @Embedded({
+        entity: () => ReturnValue,
+    })
     returnValue!: ReturnValue;
 
     @Property({ type: 'bool' })
@@ -77,7 +78,10 @@ export class LearningObject {
     @Property({ type: 'string', nullable: true })
     contentLocation?: string;
 
-    @OneToMany({ entity: () => Attachment, mappedBy: 'learningObject' })
+    @OneToMany({
+        entity: () => Attachment,
+        mappedBy: 'learningObject',
+    })
     attachments: Attachment[] = [];
 
     @Property({ type: 'blob' })

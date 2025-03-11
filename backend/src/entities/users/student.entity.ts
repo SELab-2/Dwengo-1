@@ -4,7 +4,9 @@ import { Class } from '../classes/class.entity.js';
 import { Group } from '../assignments/group.entity.js';
 import { StudentRepository } from '../../data/users/student-repository.js';
 
-@Entity({ repository: () => StudentRepository })
+@Entity({
+    repository: () => StudentRepository,
+})
 export class Student extends User {
     @ManyToMany(() => Class)
     classes!: Collection<Class>;

@@ -9,7 +9,10 @@ export class Submission {
     @PrimaryKey({ type: 'string' })
     learningObjectHruid!: string;
 
-    @Enum({ items: () => Language, primary: true })
+    @Enum({
+        items: () => Language,
+        primary: true,
+    })
     learningObjectLanguage!: Language;
 
     @PrimaryKey({ type: 'string' })
@@ -18,13 +21,18 @@ export class Submission {
     @PrimaryKey({ type: 'integer' })
     submissionNumber!: number;
 
-    @ManyToOne({ entity: () => Student })
+    @ManyToOne({
+        entity: () => Student,
+    })
     submitter!: Student;
 
     @Property({ type: 'datetime' })
     submissionTime!: Date;
 
-    @ManyToOne({ entity: () => Group, nullable: true })
+    @ManyToOne({
+        entity: () => Group,
+        nullable: true,
+    })
     onBehalfOf?: Group;
 
     @Property({ type: 'json' })

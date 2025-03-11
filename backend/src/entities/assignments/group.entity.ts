@@ -5,12 +5,17 @@ import {GroupRepository} from "../../data/assignments/group-repository";
 
 @Entity({repository: () => GroupRepository})
 export class Group {
-    @ManyToOne({ entity: () => Assignment, primary: true })
+    @ManyToOne({
+        entity: () => Assignment,
+        primary: true,
+    })
     assignment!: Assignment;
 
     @PrimaryKey({ type: 'integer' })
     groupNumber!: number;
 
-    @ManyToMany({ entity: () => Student })
+    @ManyToMany({
+        entity: () => Student,
+    })
     members!: Student[];
 }

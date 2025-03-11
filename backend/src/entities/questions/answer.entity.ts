@@ -5,10 +5,16 @@ import {AnswerRepository} from "../../data/questions/answer-repository";
 
 @Entity({repository: () => AnswerRepository})
 export class Answer {
-    @ManyToOne({ entity: () => Teacher, primary: true })
+    @ManyToOne({
+        entity: () => Teacher,
+        primary: true,
+    })
     author!: Teacher;
 
-    @ManyToOne({ entity: () => Question, primary: true })
+    @ManyToOne({
+        entity: () => Question,
+        primary: true,
+    })
     toQuestion!: Question;
 
     @PrimaryKey({ type: 'integer' })

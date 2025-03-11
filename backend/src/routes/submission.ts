@@ -1,17 +1,14 @@
-import express from 'express'
+import express from 'express';
 const router = express.Router();
 
-// root endpoint used to search objects
+// Root endpoint used to search objects
 router.get('/', (req, res) => {
     res.json({
-        submissions: [
-            '0',
-            '1',
-        ]
+        submissions: ['0', '1'],
     });
 });
 
-// information about an submission with id 'id'
+// Information about an submission with id 'id'
 router.get('/:id', (req, res) => {
     res.json({
         id: req.params.id,
@@ -21,6 +18,6 @@ router.get('/:id', (req, res) => {
         content: 'Wortel 2 is rationeel',
         learningObject: '0',
     });
-})
+});
 
-export default router
+export default router;

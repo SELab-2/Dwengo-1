@@ -1,17 +1,14 @@
-import express from 'express'
+import express from 'express';
 const router = express.Router();
 
-// root endpoint used to search objects
+// Root endpoint used to search objects
 router.get('/', (req, res) => {
     res.json({
-        questions: [
-            '0',
-            '1',
-        ]
+        questions: ['0', '1'],
     });
 });
 
-// information about an question with id 'id'
+// Information about an question with id 'id'
 router.get('/:id', (req, res) => {
     res.json({
         id: req.params.id,
@@ -23,16 +20,14 @@ router.get('/:id', (req, res) => {
         links: {
             self: `${req.baseUrl}/${req.params.id}`,
             answers: `${req.baseUrl}/${req.params.id}/answers`,
-        }
+        },
     });
-})
+});
 
 router.get('/:id/answers', (req, res) => {
     res.json({
-        answers: [
-            '0'
-        ],
-    })
-})
+        answers: ['0'],
+    });
+});
 
-export default router
+export default router;

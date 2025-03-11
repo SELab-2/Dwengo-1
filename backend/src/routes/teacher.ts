@@ -1,17 +1,14 @@
-import express from 'express'
+import express from 'express';
 const router = express.Router();
 
-// root endpoint used to search objects
+// Root endpoint used to search objects
 router.get('/', (req, res) => {
     res.json({
-        teachers: [
-            '0',
-            '1',
-        ]
+        teachers: ['0', '1'],
     });
 });
 
-// information about a teacher
+// Information about a teacher
 router.get('/:id', (req, res) => {
     res.json({
         id: req.params.id,
@@ -25,34 +22,27 @@ router.get('/:id', (req, res) => {
             invitations: `${req.baseUrl}/${req.params.id}/invitations`,
         },
     });
-})
+});
 
-// the questions students asked a teacher
+// The questions students asked a teacher
 router.get('/:id/questions', (req, res) => {
     res.json({
-        questions: [
-            '0'
-        ],
+        questions: ['0'],
     });
 });
 
-// invitations to other classes a teacher received
+// Invitations to other classes a teacher received
 router.get('/:id/invitations', (req, res) => {
     res.json({
-        invitations: [
-            '0'
-        ],
+        invitations: ['0'],
     });
 });
 
-// a list with ids of classes a teacher is in
+// A list with ids of classes a teacher is in
 router.get('/:id/classes', (req, res) => {
     res.json({
-        classes: [
-            '0'
-        ],
+        classes: ['0'],
     });
 });
 
-
-export default router
+export default router;
