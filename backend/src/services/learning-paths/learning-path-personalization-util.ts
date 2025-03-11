@@ -2,12 +2,7 @@ import { LearningPathNode } from '../../entities/content/learning-path-node.enti
 import { Student } from '../../entities/users/student.entity';
 import { Group } from '../../entities/assignments/group.entity';
 import { Submission } from '../../entities/assignments/submission.entity';
-import {
-    getClassRepository,
-    getGroupRepository,
-    getStudentRepository,
-    getSubmissionRepository
-} from '../../data/repositories';
+import { getClassRepository, getGroupRepository, getStudentRepository, getSubmissionRepository } from '../../data/repositories';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity';
 import { JSONPath } from 'jsonpath-plus';
@@ -23,12 +18,11 @@ export async function personalizedForStudent(username: string): Promise<Personal
     const student = await getStudentRepository().findByUsername(username);
     if (student) {
         return {
-            type: "student",
-            student: student
-        }
-    } 
-        return undefined;
-    
+            type: 'student',
+            student: student,
+        };
+    }
+    return undefined;
 }
 
 /**
@@ -38,7 +32,11 @@ export async function personalizedForStudent(username: string): Promise<Personal
  * @param assignmentNumber Number of the assignment for which this group was created
  * @param groupNumber Number of the group for which we want to personalize the learning path.
  */
-export async function personalizedForGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<PersonalizationTarget | undefined> {
+export async function personalizedForGroup(
+    classId: string,
+    assignmentNumber: number,
+    groupNumber: number
+): Promise<PersonalizationTarget | undefined> {
     const clazz = await getClassRepository().findById(classId);
     if (!clazz) {
         return undefined;
@@ -48,16 +46,15 @@ export async function personalizedForGroup(classId: string, assignmentNumber: nu
             within: clazz,
             id: assignmentNumber,
         },
-        groupNumber: groupNumber
-    })
+        groupNumber: groupNumber,
+    });
     if (group) {
         return {
-            type: "group",
-            group: group
-        }
-    } 
-        return undefined;
-    
+            type: 'group',
+            group: group,
+        };
+    }
+    return undefined;
 }
 
 /**

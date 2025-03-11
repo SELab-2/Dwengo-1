@@ -2,12 +2,9 @@ import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
 import learningPathService from '../services/learning-paths/learning-path-service';
-import {BadRequestException, NotFoundException} from '../exceptions';
-import {Language} from "../entities/content/language";
-import {
-    PersonalizationTarget, personalizedForGroup,
-    personalizedForStudent
-} from "../services/learning-paths/learning-path-personalization-util";
+import { BadRequestException, NotFoundException } from '../exceptions';
+import { Language } from '../entities/content/language';
+import { PersonalizationTarget, personalizedForGroup, personalizedForStudent } from '../services/learning-paths/learning-path-personalization-util';
 
 /**
  * Fetch learning paths based on query parameters.
@@ -26,10 +23,10 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
     let personalizationTarget: PersonalizationTarget | undefined;
 
     if (forStudent) {
-        personalizationTarget = await personalizedForStudent(forStudent)
+        personalizationTarget = await personalizedForStudent(forStudent);
     } else if (forGroupNo) {
         if (!assignmentNo || !classId) {
-            throw new BadRequestException("If forGroupNo is specified, assignmentNo and classId must also be specified.");
+            throw new BadRequestException('If forGroupNo is specified, assignmentNo and classId must also be specified.');
         }
         personalizationTarget = await personalizedForGroup(classId, parseInt(assignmentNo), parseInt(forGroupNo));
     }
@@ -53,6 +50,11 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
         hruidList = themes.flatMap((theme) => theme.hruids);
     }
 
-    const learningPaths = await learningPathService.fetchLearningPaths(hruidList, language as Language, `HRUIDs: ${hruidList.join(', ')}`, personalizationTarget);
+    const learningPaths = await learningPathService.fetchLearningPaths(
+        hruidList,
+        language as Language,
+        `HRUIDs: ${hruidList.join(', ')}`,
+        personalizationTarget
+    );
     res.json(learningPaths.data);
 }
