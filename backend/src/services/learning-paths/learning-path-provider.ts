@@ -1,6 +1,6 @@
 import { LearningPath, LearningPathResponse } from '../../interfaces/learning-content';
 import { Language } from '../../entities/content/language';
-import {PersonalizationTarget} from "./learning-path-personalizing-service";
+import {PersonalizationTarget} from "./learning-path-personalization-util";
 
 /**
  * Generic interface for a service which provides access to learning paths from a data source.
@@ -14,5 +14,5 @@ export interface LearningPathProvider {
     /**
      * Search learning paths in the data source using the given search string.
      */
-    searchLearningPaths(query: string, language: Language): Promise<LearningPath[]>;
+    searchLearningPaths(query: string, language: Language, personalizedFor?: PersonalizationTarget): Promise<LearningPath[]>;
 }
