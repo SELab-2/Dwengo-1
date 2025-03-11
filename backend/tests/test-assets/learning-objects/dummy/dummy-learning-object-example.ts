@@ -22,6 +22,6 @@ export function dummyLearningObject(hruid: string, language: Language, title: st
             return learningObject;
         },
         createAttachment: {},
-        getHTMLRendering: () => loadTestAsset('learning-objects/dummy/rendering.html').toString(),
+        getHTMLRendering: () => loadTestAsset('learning-objects/dummy/rendering.txt').toString(),
     };
 }

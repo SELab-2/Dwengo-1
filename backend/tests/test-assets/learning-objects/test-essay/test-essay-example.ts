@@ -18,7 +18,7 @@ const example: LearningObjectExample = {
         return learningObject;
     },
     createAttachment: {},
-    getHTMLRendering: () => loadTestAsset('learning-objects/test-essay/rendering.html').toString(),
+    getHTMLRendering: () => loadTestAsset('learning-objects/test-essay/rendering.txt').toString(),
 };
 
 export default example;

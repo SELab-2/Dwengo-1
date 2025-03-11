@@ -77,7 +77,7 @@ export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearni
     expect(filtered.key).toEqual(original.hruid);
     expect(filtered.targetAges).toEqual(original.targetAges);
     expect(filtered.title).toEqual(original.title);
-    expect(Boolean(filtered.teacherExclusive)).toEqual(original.teacherExclusive); // !!: Workaround: MikroORM with SQLite returns 0 and 1 instead of booleans.
+    expect(Boolean(filtered.teacherExclusive)).toEqual(Boolean(original.teacherExclusive));
     expect(filtered.skosConcepts).toEqual(original.skosConcepts);
     expect(filtered.estimatedTime).toEqual(original.estimatedTime);
     expect(filtered.educationalGoals).toEqual(original.educationalGoals);

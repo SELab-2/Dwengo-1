@@ -67,6 +67,6 @@ const example: LearningObjectExample = {
             return att;
         },
     },
-    getHTMLRendering: () => loadTestAsset(`${ASSETS_PREFIX}/rendering.html`).toString(),
+    getHTMLRendering: () => loadTestAsset(`${ASSETS_PREFIX}/rendering.txt`).toString(),
 };
 export default example;
