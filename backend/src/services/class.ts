@@ -79,8 +79,6 @@ export async function getClassTeacherInvitations(
     const invitations =
         await teacherInvitationRepository.findAllInvitationsForClass(cls);
 
-    console.log(invitations);
-
     if (!invitations) {
         return [];
     }
