@@ -3,6 +3,7 @@ import dwengoApiLearningPathProvider from './dwengo-api-learning-path-provider';
 import databaseLearningPathProvider from './database-learning-path-provider';
 import { EnvVars, getEnvVar } from '../../util/envvars';
 import { Language } from '../../entities/content/language';
+import {PersonalizationTarget} from "./learning-path-personalizing-service";
 
 const userContentPrefix = getEnvVar(EnvVars.UserContentPrefix);
 const allProviders = [dwengoApiLearningPathProvider, databaseLearningPathProvider];
@@ -13,16 +14,22 @@ const allProviders = [dwengoApiLearningPathProvider, databaseLearningPathProvide
 const learningPathService = {
     /**
      * Fetch the learning paths with the given hruids from the data source.
+     * @param hruids For each of the hruids, the learning path will be fetched.
+     * @param language This is the language each of the learning paths will use.
+     * @param source
+     * @param personalizedFor If this is set, a learning path personalized for the given group or student will be returned.
      */
-    async fetchLearningPaths(hruids: string[], language: Language, source: string): Promise<LearningPathResponse> {
+    async fetchLearningPaths(hruids: string[], language: Language, source: string, personalizedFor?: PersonalizationTarget): Promise<LearningPathResponse> {
         const userContentHruids = hruids.filter((hruid) => hruid.startsWith(userContentPrefix));
         const nonUserContentHruids = hruids.filter((hruid) => !hruid.startsWith(userContentPrefix));
 
-        const userContentLearningPaths = await databaseLearningPathProvider.fetchLearningPaths(userContentHruids, language, source);
-        const nonUserContentLearningPaths = await dwengoApiLearningPathProvider.fetchLearningPaths(nonUserContentHruids, language, source);
+        const userContentLearningPaths = await databaseLearningPathProvider.fetchLearningPaths(userContentHruids, language, source, personalizedFor);
+        const nonUserContentLearningPaths = await dwengoApiLearningPathProvider.fetchLearningPaths(nonUserContentHruids, language, source, personalizedFor);
+
+        let result = (userContentLearningPaths.data || []).concat(nonUserContentLearningPaths.data || []);
 
         return {
-            data: (userContentLearningPaths.data || []).concat(nonUserContentLearningPaths.data || []),
+            data: result,
             source: source,
             success: userContentLearningPaths.success || nonUserContentLearningPaths.success,
         };

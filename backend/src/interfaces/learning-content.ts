@@ -26,6 +26,7 @@ export interface LearningObjectNode {
     transitions: Transition[];
     created_at: string;
     updatedAt: string;
+    done?: boolean; // true if a submission exists for this node by the user for whom the learning path is customized.
 }
 
 export interface LearningPath {

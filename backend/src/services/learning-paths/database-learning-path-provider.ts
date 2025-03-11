@@ -6,6 +6,11 @@ import { Language } from '../../entities/content/language';
 import learningObjectService from '../learning-objects/learning-object-service';
 import { LearningPathNode } from '../../entities/content/learning-path-node.entity';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity';
+import {
+    getLastSubmissionForCustomizationTarget,
+    isTransitionPossible,
+    PersonalizationTarget
+} from "./learning-path-personalization-util";
 
 /**
  * Fetches the corresponding learning object for each of the nodes and creates a map that maps each node to its
@@ -37,7 +42,7 @@ async function getLearningObjectsForNodes(nodes: LearningPathNode[]): Promise<Ma
 /**
  * Convert the given learning path entity to an object which conforms to the learning path content.
  */
-async function convertLearningPath(learningPath: LearningPathEntity, order: number): Promise<LearningPath> {
+async function convertLearningPath(learningPath: LearningPathEntity, order: number, personalizedFor?: PersonalizationTarget): Promise<LearningPath> {
     const nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject> = await getLearningObjectsForNodes(learningPath.nodes);
 
     const targetAges = nodesToLearningObjects
@@ -52,6 +57,8 @@ async function convertLearningPath(learningPath: LearningPathEntity, order: numb
 
     const image = learningPath.image ? learningPath.image.toString('base64') : undefined;
 
+    const convertedNodes = await convertNodes(nodesToLearningObjects, personalizedFor);
+
     return {
         _id: `${learningPath.hruid}/${learningPath.language}`, // For backwards compatibility with the original Dwengo API.
         __order: order,
@@ -60,9 +67,9 @@ async function convertLearningPath(learningPath: LearningPathEntity, order: numb
         description: learningPath.description,
         image: image,
         title: learningPath.title,
-        nodes: convertNodes(nodesToLearningObjects),
+        nodes: convertedNodes,
         num_nodes: learningPath.nodes.length,
-        num_nodes_left: learningPath.nodes.length, // TODO: Adjust when submissions are added.
+        num_nodes_left: convertedNodes.filter(it => !it.done).length,
         keywords: keywords.join(' '),
         target_ages: targetAges,
         max_age: Math.max(...targetAges),
@@ -74,12 +81,14 @@ async function convertLearningPath(learningPath: LearningPathEntity, order: numb
  * Helper function converting pairs of learning path nodes (as represented in the database) and the corresponding
  * learning objects into a list of learning path nodes as they should be represented in the API.
  * @param nodesToLearningObjects
+ * @param personalizedFor
  */
-function convertNodes(nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>): LearningObjectNode[] {
-    return nodesToLearningObjects
+async function convertNodes(nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>, personalizedFor?: PersonalizationTarget): Promise<LearningObjectNode[]> {
+    const nodesPromise = nodesToLearningObjects
         .entries()
-        .map((entry) => {
+        .map(async(entry) => {
             const [node, learningObject] = entry;
+            const lastSubmission = personalizedFor ? await getLastSubmissionForCustomizationTarget(node, personalizedFor) : null;
             return {
                 _id: learningObject.uuid,
                 language: learningObject.language,
@@ -88,10 +97,13 @@ function convertNodes(nodesToLearningObjects: Map<LearningPathNode, FilteredLear
                 updatedAt: node.updatedAt.toISOString(),
                 learningobject_hruid: node.learningObjectHruid,
                 version: learningObject.version,
-                transitions: node.transitions.map((trans, i) => convertTransition(trans, i, nodesToLearningObjects)),
+                transitions: node.transitions
+                    .filter(trans => !personalizedFor || isTransitionPossible(trans, lastSubmission)) // If we want a personalized learning path, remove all transitions that aren't possible.
+                    .map((trans, i) => convertTransition(trans, i, nodesToLearningObjects)), // then convert all the transition
             };
         })
         .toArray();
+    return await Promise.all(nodesPromise);
 }
 
 /**
@@ -131,12 +143,16 @@ const databaseLearningPathProvider: LearningPathProvider = {
     /**
      * Fetch the learning paths with the given hruids from the database.
      */
-    async fetchLearningPaths(hruids: string[], language: Language, source: string): Promise<LearningPathResponse> {
+    async fetchLearningPaths(hruids: string[], language: Language, source: string, personalizedFor?: PersonalizationTarget): Promise<LearningPathResponse> {
         const learningPathRepo = getLearningPathRepository();
 
-        const learningPaths = await Promise.all(hruids.map((hruid) => learningPathRepo.findByHruidAndLanguage(hruid, language)));
+        const learningPaths = (
+            await Promise.all(
+                hruids.map((hruid) => learningPathRepo.findByHruidAndLanguage(hruid, language))
+            )
+        ).filter((learningPath) => learningPath !== null);
         const filteredLearningPaths = await Promise.all(
-            learningPaths.filter((learningPath) => learningPath !== null).map((learningPath, index) => convertLearningPath(learningPath, index))
+            learningPaths.map((learningPath, index) => convertLearningPath(learningPath, index, personalizedFor))
         );
 
         return {
@@ -149,11 +165,11 @@ const databaseLearningPathProvider: LearningPathProvider = {
     /**
      * Search learning paths in the database using the given search string.
      */
-    async searchLearningPaths(query: string, language: Language): Promise<LearningPath[]> {
+    async searchLearningPaths(query: string, language: Language, personalizedFor?: PersonalizationTarget): Promise<LearningPath[]> {
         const learningPathRepo = getLearningPathRepository();
 
         const searchResults = await learningPathRepo.findByQueryStringAndLanguage(query, language);
-        return await Promise.all(searchResults.map((result, index) => convertLearningPath(result, index)));
+        return await Promise.all(searchResults.map((result, index) => convertLearningPath(result, index, personalizedFor)));
     },
 };
 
