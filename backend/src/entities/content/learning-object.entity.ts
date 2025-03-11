@@ -3,6 +3,24 @@ import { Language } from './language.js';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
 
+@Embeddable()
+export class EducationalGoal {
+    @Property({ type: 'string' })
+    source!: string;
+
+    @Property({ type: 'string' })
+    id!: string;
+}
+
+@Embeddable()
+export class ReturnValue {
+    @Property({ type: 'string' })
+    callbackUrl!: string;
+
+    @Property({ type: 'json' })
+    callbackSchema!: string;
+}
+
 @Entity()
 export class LearningObject {
     @PrimaryKey({ type: 'string' })
@@ -80,24 +98,6 @@ export class LearningObject {
 
     @Property({ type: 'blob' })
     content!: Buffer;
-}
-
-@Embeddable()
-export class EducationalGoal {
-    @Property({ type: 'string' })
-    source!: string;
-
-    @Property({ type: 'string' })
-    id!: string;
-}
-
-@Embeddable()
-export class ReturnValue {
-    @Property({ type: 'string' })
-    callbackUrl!: string;
-
-    @Property({ type: 'json' })
-    callbackSchema!: string;
 }
 
 export enum ContentType {
