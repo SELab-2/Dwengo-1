@@ -6,7 +6,7 @@ type EnvVar = { key: string; required?: boolean; defaultValue?: any };
 export const EnvVars: { [key: string]: EnvVar } = {
     Port: { key: PREFIX + 'PORT', defaultValue: 3000 },
     DbHost: { key: DB_PREFIX + 'HOST', required: true },
-    DbPort: { key: DB_PREFIX + 'PORT', defaultValue: 5431 },
+    DbPort: { key: DB_PREFIX + 'PORT', defaultValue: 5432 },
     DbName: { key: DB_PREFIX + 'NAME', defaultValue: 'dwengo' },
     DbUsername: { key: DB_PREFIX + 'USERNAME', required: true },
     DbPassword: { key: DB_PREFIX + 'PASSWORD', required: true },
