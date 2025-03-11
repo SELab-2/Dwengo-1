@@ -3,7 +3,7 @@ import dwengoApiLearningPathProvider from './dwengo-api-learning-path-provider';
 import databaseLearningPathProvider from './database-learning-path-provider';
 import { EnvVars, getEnvVar } from '../../util/envvars';
 import { Language } from '../../entities/content/language';
-import {PersonalizationTarget} from "./learning-path-personalization-util";
+import { PersonalizationTarget } from './learning-path-personalization-util';
 
 const userContentPrefix = getEnvVar(EnvVars.UserContentPrefix);
 const allProviders = [dwengoApiLearningPathProvider, databaseLearningPathProvider];
