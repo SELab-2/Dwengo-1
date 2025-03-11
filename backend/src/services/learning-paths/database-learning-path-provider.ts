@@ -99,7 +99,7 @@ async function convertNodes(nodesToLearningObjects: Map<LearningPathNode, Filter
                 version: learningObject.version,
                 transitions: node.transitions
                     .filter(trans => !personalizedFor || isTransitionPossible(trans, lastSubmission)) // If we want a personalized learning path, remove all transitions that aren't possible.
-                    .map((trans, i) => convertTransition(trans, i, nodesToLearningObjects)), // then convert all the transition
+                    .map((trans, i) => convertTransition(trans, i, nodesToLearningObjects)), // Then convert all the transition
             };
         })
         .toArray();

@@ -20,9 +20,9 @@ export async function getLastSubmissionForCustomizationTarget(node: LearningPath
     };
     if (pathFor.type === 'group') {
         return await submissionRepo.findMostRecentSubmissionForGroup(learningObjectId, pathFor.group);
-    } else {
+    } 
         return await submissionRepo.findMostRecentSubmissionForStudent(learningObjectId, pathFor.student);
-    }
+    
 }
 
 

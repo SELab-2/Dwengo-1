@@ -26,7 +26,7 @@ const learningPathService = {
         const userContentLearningPaths = await databaseLearningPathProvider.fetchLearningPaths(userContentHruids, language, source, personalizedFor);
         const nonUserContentLearningPaths = await dwengoApiLearningPathProvider.fetchLearningPaths(nonUserContentHruids, language, source, personalizedFor);
 
-        let result = (userContentLearningPaths.data || []).concat(nonUserContentLearningPaths.data || []);
+        const result = (userContentLearningPaths.data || []).concat(nonUserContentLearningPaths.data || []);
 
         return {
             data: result,
