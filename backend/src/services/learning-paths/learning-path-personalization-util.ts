@@ -26,9 +26,9 @@ export async function personalizedForStudent(username: string): Promise<Personal
             type: "student",
             student: student
         }
-    } else {
+    } 
         return undefined;
-    }
+    
 }
 
 /**
@@ -55,9 +55,9 @@ export async function personalizedForGroup(classId: string, assignmentNumber: nu
             type: "group",
             group: group
         }
-    } else {
+    } 
         return undefined;
-    }
+    
 }
 
 /**
