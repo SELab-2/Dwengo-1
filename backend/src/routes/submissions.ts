@@ -1,5 +1,8 @@
 import express from 'express';
+import { getSubmissionHandler } from '../controllers/submissions';
 const router = express.Router();
+
+
 
 // Root endpoint used to search objects
 router.get('/', (req, res) => {
@@ -9,15 +12,6 @@ router.get('/', (req, res) => {
 });
 
 // Information about an submission with id 'id'
-router.get('/:id', (req, res) => {
-    res.json({
-        id: req.params.id,
-        student: '0',
-        group: '0',
-        time: new Date(2025, 1, 1),
-        content: 'Wortel 2 is rationeel',
-        learningObject: '0',
-    });
-});
+router.get('/:id', getSubmissionHandler);
 
 export default router;
