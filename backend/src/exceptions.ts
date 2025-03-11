@@ -24,6 +24,7 @@ export class UnauthorizedException extends Error {
  */
 export class ForbiddenException extends Error {
     status = 403;
+
     constructor(message: string = 'Forbidden') {
         super(message);
     }

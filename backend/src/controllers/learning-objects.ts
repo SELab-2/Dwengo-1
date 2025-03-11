@@ -15,7 +15,7 @@ function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIde
     return {
         hruid: req.params.hruid as string,
         language: (req.query.language || getEnvVar(EnvVars.FallbackLanguage)) as Language,
-        version: req.query.version as string
+        version: parseInt(req.query.version as string)
     };
 }
 
