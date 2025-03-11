@@ -88,6 +88,6 @@ export function isTransitionPossible(transition: LearningPathTransition, submitt
     if (submitted === null) {
         return false; // If the transition is not unconditional and there was no submission, the transition is not possible.
     }
-    const match = JSONPath({ path: transition.condition, json: {submission: submitted} })
+    const match = JSONPath({ path: transition.condition, json: { submission: submitted } });
     return match.length === 1;
 }

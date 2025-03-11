@@ -3,7 +3,7 @@ import { LearningObject } from '../../../../src/entities/content/learning-object
 import { Language } from '../../../../src/entities/content/language';
 import { loadTestAsset } from '../../../test-utils/load-test-asset';
 import { DwengoContentType } from '../../../../src/services/learning-objects/processing/content-type';
-import {EnvVars, getEnvVar} from "../../../../src/util/envvars";
+import { EnvVars, getEnvVar } from '../../../../src/util/envvars';
 
 /**
  * Create a dummy learning object to be used in tests where multiple learning objects are needed (for example for use
@@ -22,8 +22,8 @@ export function dummyLearningObject(hruid: string, language: Language, title: st
             learningObject.content = Buffer.from('Dummy content');
             learningObject.returnValue = {
                 callbackUrl: `/learningObject/${hruid}/submissions`,
-                callbackSchema: "[]"
-            }
+                callbackSchema: '[]',
+            };
             return learningObject;
         },
         createAttachment: {},
