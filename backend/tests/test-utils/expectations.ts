@@ -78,7 +78,7 @@ export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearni
     expect(filtered.key).toEqual(original.hruid);
     expect(filtered.targetAges).toEqual(original.targetAges);
     expect(filtered.title).toEqual(original.title);
-    expect(!!filtered.teacherExclusive).toEqual(original.teacherExclusive) // !!: Workaround: MikroORM with SQLite returns 0 and 1 instead of booleans.
+    expect(!!filtered.teacherExclusive).toEqual(!!original.teacherExclusive) // !!: Workaround: MikroORM with SQLite returns 0 and 1 instead of booleans.
     expect(filtered.skosConcepts).toEqual(original.skosConcepts);
     expect(filtered.estimatedTime).toEqual(original.estimatedTime);
     expect(filtered.educationalGoals).toEqual(original.educationalGoals);
@@ -87,7 +87,7 @@ export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearni
     expect(filtered.returnValue?.callback_url).toEqual(original.returnValue.callbackUrl);
     expect(filtered.returnValue?.callback_schema).toEqual(JSON.parse(original.returnValue.callbackSchema));
     expect(filtered.contentType).toEqual(original.contentType);
-    expect(filtered.contentLocation).toEqual(original.contentLocation || null);
+    expect(filtered.contentLocation || null).toEqual(original.contentLocation || null);
     expect(filtered.htmlUrl).toContain(`/${original.hruid}/html`);
     expect(filtered.htmlUrl).toContain(`language=${original.language}`);
     expect(filtered.htmlUrl).toContain(`version=${original.version}`);

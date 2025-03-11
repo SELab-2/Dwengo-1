@@ -10,6 +10,7 @@ import {LearningObject} from "../../entities/content/learning-object.entity";
 import {getUrlStringForLearningObject} from "../../util/links";
 import processingService from "./processing/processing-service";
 import {NotFoundError} from "@mikro-orm/core";
+import learningObjectService from "./learning-object-service";
 
 
 function convertLearningObject(learningObject: LearningObject | null): FilteredLearningObject | null {
@@ -90,7 +91,7 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
         if (!learningPath) {
             throw new NotFoundError("The learning path with the given ID could not be found.");
         }
-        return learningPath.nodes.map(it => it.learningObjectHruid); // TODO: Determine this based on the submissions of the user.
+        return learningPath.nodes.map(it => it.learningObjectHruid);
     },
 
     /**
@@ -105,7 +106,7 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
         }
         const learningObjects = await Promise.all(
             learningPath.nodes.map(it => {
-                const learningObject = this.getLearningObjectById({
+                const learningObject = learningObjectService.getLearningObjectById({
                     hruid: it.learningObjectHruid,
                     language: it.language,
                     version: it.version
@@ -116,7 +117,7 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
                 return learningObject;
             })
         );
-        return learningObjects.filter(it => it !== null); // TODO: Determine this based on the submissions of the user.
+        return learningObjects.filter(it => it !== null);
     }
 }
 
