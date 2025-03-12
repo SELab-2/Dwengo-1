@@ -1,9 +1,12 @@
 import {describe, it, expect, vi} from 'vitest';
 import {
-    LearningObjectMetadata,
+    LearningObjectMetadata, LearningPath,
 } from "../../src/interfaces/learningPath";
 import {fetchWithLogging} from "../../src/util/apiHelper";
-import {getLearningObjectById, getLearningObjectsFromPath} from "../../src/services/learningObjects";
+import {
+    getLearningObjectById,
+    getLearningObjectsFromPath
+} from "../../src/services/learningObjects";
 import {fetchLearningPaths} from "../../src/services/learningPaths";
 
 // Mock API functions
@@ -35,9 +38,7 @@ describe('getLearningObjectById', () => {
         description: 'A test object',
         target_ages: [10, 12],
         content_type: 'markdown',
-        content_location: '',
-        skos_concepts: [],
-        return_value: undefined,
+        content_location: ''
     };
 
     it('✅ Should return a filtered learning object when API provides data', async () => {
@@ -62,9 +63,7 @@ describe('getLearningObjectById', () => {
             description: 'A test object',
             targetAges: [10, 12],
             contentType: 'markdown',
-            contentLocation: '',
-            skosConcepts: [],
-            returnValue: undefined,
+            contentLocation: ''
         });
     });
 
@@ -80,19 +79,44 @@ describe('getLearningObjectsFromPath', () => {
     const hruid = 'test-path';
     const language = 'en';
 
-    it('⚠️ Should return an empty array if API returns an empty path response', async () => {
-        vi.mocked(fetchLearningPaths).mockResolvedValueOnce({success: false, source: 'Test Source', data: []});
+    it('✅ Should not give error or warning', async () => {
+        const mockPathResponse: LearningPath[] = [{
+            _id: 'path-1',
+            hruid,
+            language,
+            title: 'Test Path',
+            description: '',
+            num_nodes: 1,
+            num_nodes_left: 0,
+            nodes: [],
+            keywords: '',
+            target_ages: [],
+            min_age: 10,
+            max_age: 12,
+            __order: 1,
+        }];
+
+        vi.mocked(fetchLearningPaths).mockResolvedValueOnce({
+            success: true,
+            source: 'Test Source',
+            data: mockPathResponse
+        });
 
         const result = await getLearningObjectsFromPath(hruid, language);
-
         expect(result).toEqual([]);
     });
 
-    it('❌ Should return an empty array and log an error if fetchLearningPaths fails', async () => {
+    it('⚠️ Should give a warning', async () => {
+        vi.mocked(fetchLearningPaths).mockResolvedValueOnce({success: false, source: 'Test Source', data: []});
+
+        const result = await getLearningObjectsFromPath(hruid, language);
+        expect(result).toEqual([]);
+    });
+
+    it('❌ Should give an error', async () => {
         vi.mocked(fetchLearningPaths).mockRejectedValueOnce(new Error('API Error'));
 
         const result = await getLearningObjectsFromPath(hruid, language);
-
         expect(result).toEqual([]);
     });
 });
