@@ -1,3 +1,5 @@
+import { Language } from '../entities/content/language';
+
 export interface Transition {
     default: boolean;
     _id: string;
@@ -9,15 +11,22 @@ export interface Transition {
     };
 }
 
+export interface LearningObjectIdentifier {
+    hruid: string;
+    language: Language;
+    version?: number;
+}
+
 export interface LearningObjectNode {
     _id: string;
     learningobject_hruid: string;
     version: number;
-    language: string;
+    language: Language;
     start_node?: boolean;
     transitions: Transition[];
     created_at: string;
     updatedAt: string;
+    done?: boolean; // True if a submission exists for this node by the user for whom the learning path is customized.
 }
 
 export interface LearningPath {
@@ -37,6 +46,11 @@ export interface LearningPath {
     __order: number;
 }
 
+export interface LearningPathIdentifier {
+    hruid: string;
+    language: Language;
+}
+
 export interface EducationalGoal {
     source: string;
     id: string;
@@ -52,7 +66,7 @@ export interface LearningObjectMetadata {
     uuid: string;
     hruid: string;
     version: number;
-    language: string;
+    language: Language;
     title: string;
     description: string;
     difficulty: number;
@@ -75,9 +89,9 @@ export interface FilteredLearningObject {
     version: number;
     title: string;
     htmlUrl: string;
-    language: string;
+    language: Language;
     difficulty: number;
-    estimatedTime: number;
+    estimatedTime?: number;
     available: boolean;
     teacherExclusive: boolean;
     educationalGoals: EducationalGoal[];

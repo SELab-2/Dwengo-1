@@ -2,8 +2,29 @@ import { Embeddable, Embedded, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, 
 import { Language } from './language.js';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
+import { DwengoContentType } from '../../services/learning-objects/processing/content-type.js';
+import { v4 } from 'uuid';
+import { LearningObjectRepository } from '../../data/content/learning-object-repository.js';
 
-@Entity()
+@Embeddable()
+export class EducationalGoal {
+    @Property({ type: 'string' })
+    source!: string;
+
+    @Property({ type: 'string' })
+    id!: string;
+}
+
+@Embeddable()
+export class ReturnValue {
+    @Property({ type: 'string' })
+    callbackUrl!: string;
+
+    @Property({ type: 'json' })
+    callbackSchema!: string;
+}
+
+@Entity({ repository: () => LearningObjectRepository })
 export class LearningObject {
     @PrimaryKey({ type: 'string' })
     hruid!: string;
@@ -14,8 +35,11 @@ export class LearningObject {
     })
     language!: Language;
 
-    @PrimaryKey({ type: 'string' })
-    version: string = '1';
+    @PrimaryKey({ type: 'number' })
+    version: number = 1;
+
+    @Property({ type: 'uuid', unique: true })
+    uuid = v4();
 
     @ManyToMany({
         entity: () => Teacher,
@@ -29,19 +53,19 @@ export class LearningObject {
     description!: string;
 
     @Property({ type: 'string' })
-    contentType!: string;
+    contentType!: DwengoContentType;
 
     @Property({ type: 'array' })
     keywords: string[] = [];
 
     @Property({ type: 'array', nullable: true })
-    targetAges?: number[];
+    targetAges?: number[] = [];
 
     @Property({ type: 'bool' })
     teacherExclusive: boolean = false;
 
     @Property({ type: 'array' })
-    skosConcepts!: string[];
+    skosConcepts: string[] = [];
 
     @Embedded({
         entity: () => EducationalGoal,
@@ -58,8 +82,8 @@ export class LearningObject {
     @Property({ type: 'smallint', nullable: true })
     difficulty?: number;
 
-    @Property({ type: 'integer' })
-    estimatedTime!: number;
+    @Property({ type: 'integer', nullable: true })
+    estimatedTime?: number;
 
     @Embedded({
         entity: () => ReturnValue,
@@ -80,31 +104,4 @@ export class LearningObject {
 
     @Property({ type: 'blob' })
     content!: Buffer;
-}
-
-@Embeddable()
-export class EducationalGoal {
-    @Property({ type: 'string' })
-    source!: string;
-
-    @Property({ type: 'string' })
-    id!: string;
-}
-
-@Embeddable()
-export class ReturnValue {
-    @Property({ type: 'string' })
-    callbackUrl!: string;
-
-    @Property({ type: 'json' })
-    callbackSchema!: string;
-}
-
-export enum ContentType {
-    Markdown = 'text/markdown',
-    Image = 'image/image',
-    Mpeg = 'audio/mpeg',
-    Pdf = 'application/pdf',
-    Extern = 'extern',
-    Blockly = 'Blockly',
 }

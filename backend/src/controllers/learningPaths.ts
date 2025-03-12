@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
-import { fetchLearningPaths, searchLearningPaths } from '../services/learningPaths.js';
 import { getLogger } from '../logging/initalize.js';
+import learningPathService from '../services/learning-paths/learning-path-service.js';
+import { Language } from '../entities/content/language.js';
 /**
  * Fetch learning paths based on query parameters.
  */
@@ -11,7 +12,7 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
         const hruids = req.query.hruid;
         const themeKey = req.query.theme as string;
         const searchQuery = req.query.search as string;
-        const language = (req.query.language as string) || FALLBACK_LANG;
+        const language = (req.query.language as Language) || FALLBACK_LANG;
 
         let hruidList;
 
@@ -28,14 +29,14 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
                 return;
             }
         } else if (searchQuery) {
-            const searchResults = await searchLearningPaths(searchQuery, language);
+            const searchResults = await learningPathService.searchLearningPaths(searchQuery, language);
             res.json(searchResults);
             return;
         } else {
             hruidList = themes.flatMap((theme) => theme.hruids);
         }
 
-        const learningPaths = await fetchLearningPaths(hruidList, language, `HRUIDs: ${hruidList.join(', ')}`);
+        const learningPaths = await learningPathService.fetchLearningPaths(hruidList, language, `HRUIDs: ${hruidList.join(', ')}`);
         res.json(learningPaths.data);
     } catch (error) {
         getLogger().error('❌ Unexpected error fetching learning paths:', error);

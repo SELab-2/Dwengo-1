@@ -1,8 +1,9 @@
 import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { Language } from '../content/language.js';
 import { Student } from '../users/student.entity.js';
+import { QuestionRepository } from '../../data/questions/question-repository.js';
 
-@Entity()
+@Entity({ repository: () => QuestionRepository })
 export class Question {
     @PrimaryKey({ type: 'string' })
     learningObjectHruid!: string;
@@ -13,8 +14,8 @@ export class Question {
     })
     learningObjectLanguage!: Language;
 
-    @PrimaryKey({ type: 'string' })
-    learningObjectVersion: string = '1';
+    @PrimaryKey({ type: 'number' })
+    learningObjectVersion: number = 1;
 
     @PrimaryKey({ type: 'integer' })
     sequenceNumber!: number;

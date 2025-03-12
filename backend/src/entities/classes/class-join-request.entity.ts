@@ -1,8 +1,9 @@
 import { Entity, Enum, ManyToOne } from '@mikro-orm/core';
 import { Student } from '../users/student.entity.js';
 import { Class } from './class.entity.js';
+import { ClassJoinRequestRepository } from '../../data/classes/class-join-request-repository.js';
 
-@Entity()
+@Entity({ repository: () => ClassJoinRequestRepository })
 export class ClassJoinRequest {
     @ManyToOne({
         entity: () => Student,
