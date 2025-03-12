@@ -3,21 +3,19 @@ import { fetchLearningPaths, searchLearningPaths } from '../../src/services/lear
 import { fetchWithLogging } from '../../src/util/apiHelper';
 import { LearningPathResponse } from '../../src/interfaces/learningPath';
 
-// Function to mock the fetchWithLogging module using vi
+// Mock the fetchWithLogging module using vi
 vi.mock('../../src/util/apiHelper', () => ({
     fetchWithLogging: vi.fn(),
 }));
 
 describe('fetchLearningPaths', () => {
+    // Mock data and response
     const mockHruids = ['pn_werking', 'art1'];
     const language = 'en';
     const source = 'Test Source';
     const mockResponse = [{ title: 'Test Path', hruids: mockHruids }];
 
     it('✅ Should return a successful response when HRUIDs are provided', async () => {
-        // Mock response van fetchWithLogging
-        const mockResponse = [{ title: 'Test Path', hruids: mockHruids }];
-
         // Mock the function to return mockResponse
         vi.mocked(fetchWithLogging).mockResolvedValue(mockResponse);
 
@@ -29,9 +27,9 @@ describe('fetchLearningPaths', () => {
     });
 
     it('⚠️ Should return an error when no HRUIDs are provided', async () => {
-        const result: LearningPathResponse = await fetchLearningPaths([], language, source);
-
         vi.mocked(fetchWithLogging).mockResolvedValue(mockResponse);
+
+        const result: LearningPathResponse = await fetchLearningPaths([], language, source);
 
         expect(result.success).toBe(false);
         expect(result.data).toBeNull();
