@@ -7,6 +7,7 @@ import {
     getStudentClassesHandler,
     getStudentGroupsHandler,
     getStudentHandler,
+    getStudentSubmissionsHandler,
 } from '../controllers/students.js';
 import { getStudentGroups } from '../services/students.js';
 const router = express.Router();
@@ -25,11 +26,7 @@ router.get('/:username', getStudentHandler);
 router.get('/:id/classes', getStudentClassesHandler);
 
 // The list of submissions a student has made
-router.get('/:id/submissions', (req, res) => {
-    res.json({
-        submissions: ['0'],
-    });
-});
+router.get('/:id/submissions', getStudentSubmissionsHandler);
 
 // The list of assignments a student has
 router.get('/:id/assignments', getStudentAssignmentsHandler);

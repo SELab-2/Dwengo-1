@@ -3,6 +3,7 @@ import {
     getStudentAssignments,
     getStudentClasses,
     getStudentGroups,
+    getStudentSubmissions,
     StudentService,
 } from '../services/students.js';
 import { ClassDTO } from '../interfaces/class.js';
@@ -99,5 +100,18 @@ export async function getStudentGroupsHandler(
     
     res.json({
         groups: groups,
+    });
+}
+
+export async function getStudentSubmissionsHandler(
+    req: Request,
+    res: Response,
+): Promise<void> {
+    const username = req.params.id;
+
+    const submissions = await getStudentSubmissions(username);
+
+    res.json({
+        submissions: submissions,
     });
 }

@@ -55,6 +55,14 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
         );
     }
 
+    public findAllSubmissionsForStudent(
+        student: Student,
+    ): Promise<Submission[]> {
+        return this.find(
+            { submitter: student },
+        );
+    }
+
     public deleteSubmissionByLearningObjectAndSubmissionNumber(
         loId: LearningObjectIdentifier,
         submissionNumber: number
