@@ -38,7 +38,9 @@ export default [
             'no-unreachable-loop': 'warn',
             'no-use-before-define': 'error',
             'no-useless-assignment': 'error',
-            'no-unused-vars': 'error',
+
+            'no-unused-vars': 'off',
+            '@typescript-eslint/no-unused-vars': 'error',
 
             'arrow-body-style': ['warn', 'as-needed'],
             'block-scoped-var': 'warn',
