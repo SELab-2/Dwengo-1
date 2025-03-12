@@ -1,4 +1,4 @@
-import { Entity, Enum, ManyToOne, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, Enum, ManyToOne, OneToMany, PrimaryKey, Property, Rel } from '@mikro-orm/core';
 import { Language } from './language.js';
 import { LearningPath } from './learning-path.entity.js';
 import { LearningPathTransition } from './learning-path-transition.entity.js';
@@ -6,7 +6,7 @@ import { LearningPathTransition } from './learning-path-transition.entity.js';
 @Entity()
 export class LearningPathNode {
     @ManyToOne({ entity: () => LearningPath, primary: true })
-    learningPath!: LearningPath;
+    learningPath!: Rel<LearningPath>;
 
     @PrimaryKey({ type: 'integer', autoincrement: true })
     nodeNumber!: number;

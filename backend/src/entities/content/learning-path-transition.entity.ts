@@ -1,10 +1,10 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, ManyToOne, PrimaryKey, Property, Rel } from '@mikro-orm/core';
 import { LearningPathNode } from './learning-path-node.entity.js';
 
 @Entity()
 export class LearningPathTransition {
     @ManyToOne({ entity: () => LearningPathNode, primary: true })
-    node!: LearningPathNode;
+    node!: Rel<LearningPathNode>;
 
     @PrimaryKey({ type: 'numeric' })
     transitionNumber!: number;
@@ -13,5 +13,5 @@ export class LearningPathTransition {
     condition!: string;
 
     @ManyToOne({ entity: () => LearningPathNode })
-    next!: LearningPathNode;
+    next!: Rel<LearningPathNode>;
 }
