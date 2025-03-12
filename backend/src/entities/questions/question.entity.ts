@@ -14,8 +14,8 @@ export class Question {
     })
     learningObjectLanguage!: Language;
 
-    @PrimaryKey({ type: 'string' })
-    learningObjectVersion: string = '1';
+    @PrimaryKey({ type: 'number' })
+    learningObjectVersion: number = 1;
 
     @PrimaryKey({ type: 'integer' })
     sequenceNumber!: number;

@@ -91,7 +91,7 @@ export interface FilteredLearningObject {
     htmlUrl: string;
     language: Language;
     difficulty: number;
-    estimatedTime: number;
+    estimatedTime?: number;
     available: boolean;
     teacherExclusive: boolean;
     educationalGoals: EducationalGoal[];
