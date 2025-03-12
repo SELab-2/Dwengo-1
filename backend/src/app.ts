@@ -1,5 +1,6 @@
 import express, { Express, Response } from 'express';
 import { initORM } from './orm.js';
+import "dotenv/config";
 
 import themeRoutes from './routes/themes.js';
 import learningPathRoutes from './routes/learning-paths.js';

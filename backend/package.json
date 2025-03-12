@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "build": "NODE_ENV=production tsc --project tsconfig.json",
-        "dev": "NODE_ENV=development tsx watch --env-file=.env.development.local src/app.ts",
+        "dev": "cross-env NODE_ENV=development tsx watch src/app.ts",
         "start": "NODE_ENV=production node --env-file=.env dist/app.js",
         "format": "prettier --write src/",
         "format-check": "prettier --check src/",
@@ -22,6 +22,8 @@
         "@types/js-yaml": "^4.0.9",
         "axios": "^1.8.2",
         "cors": "^2.8.5",
+        "cross": "^1.0.0",
+        "cross-env": "^7.0.3",
         "dotenv": "^16.4.7",
         "express": "^5.0.1",
         "express-jwt": "^8.5.1",
