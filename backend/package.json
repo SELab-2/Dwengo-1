@@ -5,9 +5,9 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "NODE_ENV=production tsc --project tsconfig.json",
+        "build": "cross-env NODE_ENV=production tsc --project tsconfig.json",
         "dev": "cross-env NODE_ENV=development tsx watch --env-file=.env.development.local src/app.ts",
-        "start": "NODE_ENV=production node --env-file=.env dist/app.js",
+        "start": "cross-env NODE_ENV=production node --env-file=.env dist/app.js",
         "format": "prettier --write src/",
         "format-check": "prettier --check src/",
         "lint": "eslint . --fix",
