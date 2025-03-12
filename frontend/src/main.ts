@@ -1,14 +1,16 @@
-import { createApp } from "vue";
+import {createApp} from "vue";
 
 // Vuetify
 import "vuetify/styles";
-import { createVuetify } from "vuetify";
+import {createVuetify} from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
+import i18n from "./i18n/i18n.ts";
 
 // Components
 import App from "./App.vue";
 import router from "./router";
+
 
 const app = createApp(App);
 
@@ -24,5 +26,5 @@ const vuetify = createVuetify({
     directives,
 });
 app.use(vuetify);
-
+app.use(i18n);
 app.mount("#app");
