@@ -22,12 +22,13 @@ WORKDIR /app/frontend
 
 COPY frontend ./
 
-RUN npm run build
+RUN npx vite build
 
 FROM nginx:stable AS production-stage
 
 COPY config/nginx/nginx.conf /etc/nginx/nginx.conf
 
+COPY --from=build-stage /app/assets /usr/share/nginx/html/assets
 COPY --from=build-stage /app/frontend/dist /usr/share/nginx/html
 
 EXPOSE 80
