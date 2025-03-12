@@ -10,12 +10,12 @@ export default [
     },
 
     {
-        files: [ 'tests/**/*.ts'],
+        files: ['tests/**/*.ts'],
         languageOptions: {
-            globals: globals.node
+            globals: globals.node,
         },
         rules: {
-            'no-console': 'off'
-        }
-    }
+            'no-console': 'off',
+        },
+    },
 ];
