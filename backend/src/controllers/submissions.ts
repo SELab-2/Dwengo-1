@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getSubmission } from "../services/submissions";
-import { Language } from "../entities/content/language";
+import { Language, languageMap } from "../entities/content/language";
 
 interface SubmissionParams {
     lohruid: string,
@@ -12,9 +12,17 @@ export async function getSubmissionHandler(
     res: Response,
 ): Promise<void> {
     const lohruid = req.params.lohruid;
-    const submissionNumber = req.params.submissionNumber;
+    const submissionNumber = +req.params.submissionNumber;
 
-    const submission = getSubmission(lohruid, Language.Dutch, '1', submissionNumber);
+    if (isNaN(submissionNumber)) {
+        res.status(404).json({ error: 'Submission number is not a number' });
+        return;
+    }
+
+    let lang = languageMap[req.query.language as string] || Language.Dutch;
+    let version = req.query.version as string || '1';
+
+    const submission = getSubmission(lohruid, lang, version, submissionNumber);
 
     if (!submission) {
         res.status(404).json({ error: 'Submission not found' });

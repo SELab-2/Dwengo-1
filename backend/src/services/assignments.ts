@@ -1,12 +1,15 @@
 import {
     getAssignmentRepository,
     getClassRepository,
+    getGroupRepository,
+    getSubmissionRepository,
 } from '../data/repositories.js';
 import {
     AssignmentDTO,
     mapToAssignmentDTO,
     mapToAssignmentDTOId,
 } from '../interfaces/assignment.js';
+import { mapToSubmissionDTO, SubmissionDTO } from '../interfaces/submission.js';
 
 export async function getAllAssignments(
     classid: string,
@@ -49,4 +52,32 @@ export async function getAssignment(
     }
 
     return mapToAssignmentDTO(assignment);
+}
+
+export async function getAssignmentsSubmissions(
+    classid: string,
+    assignmentNumber: number,
+): Promise<SubmissionDTO[]> {
+    const classRepository = getClassRepository();
+    const cls = await classRepository.findById(classid);
+
+    if (!cls) {
+        return [];
+    }
+
+    const assignmentRepository = getAssignmentRepository();
+    const assignment = await assignmentRepository.findByClassAndId(cls, assignmentNumber);
+
+    if (!assignment) {
+        return [];
+    }
+
+    const groupRepository = getGroupRepository();
+    const groups = await groupRepository.findAllGroupsForAssignment(assignment);
+
+    const submissionRepository = getSubmissionRepository();
+    const submissions = 
+        (await Promise.all(groups.map(group => submissionRepository.findAllSubmissionsForGroup(group)))).flat();
+
+    return submissions.map(mapToSubmissionDTO);
 }
