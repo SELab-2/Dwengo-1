@@ -67,7 +67,7 @@ Zie [CONTRIBUTING.md](./CONTRIBUTING.md) voor meer informatie over hoe je kan bi
 Deze rocksterren hebben bijgedragen aan Dwengo-1:
 
 | Naam                                                                                                                                                    | Functie                    |
-|---------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------|
+| ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
 | [<img src="https://github.com/WhisperinCheetah.png" width="100px"/><br/><sub><b>Adriaan Jacquet</b></sub>](https://github.com/WhisperinCheetah)         | Backend Lead               |
 | [<img src="https://github.com/Gabriellvl.png" width="100px"/><br/><sub><b>Francisco Gabriel Van Langenhove</b></sub>](https://github.com/Gabriellvl)    | Team Lead                  |
 | [<img src="https://github.com/geraldschmittinger.png" width="100px"/><br/><sub><b>Gerald Schmittinger</b></sub>](https://github.com/geraldschmittinger) | Database Administrator     |
