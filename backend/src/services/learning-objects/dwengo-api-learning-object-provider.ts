@@ -65,14 +65,15 @@ async function fetchLearningObjects(learningPathId: LearningPathIdentifier, full
             return nodes.map((node) => node.learningobject_hruid);
         }
 
-        return await Promise.all(
+        const objects = await Promise.all(
             nodes.map(async (node) =>
                 dwengoApiLearningObjectProvider.getLearningObjectById({
                     hruid: node.learningobject_hruid,
                     language: learningPathId.language,
                 })
             )
-        ).then((objects) => objects.filter((obj): obj is FilteredLearningObject => obj !== null));
+        );
+        return objects.filter((obj): obj is FilteredLearningObject => obj !== null);
     } catch (error) {
         logger.error('❌ Error fetching learning objects:', error);
         return [];

@@ -10,7 +10,6 @@ import { EnvVars, getEnvVar } from '../../../src/util/envvars';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
 import learningPathExample from '../../test-assets/learning-paths/pn-werking-example';
 
-const TEST_LEARNING_OBJECT_TITLE = 'Test title';
 const EXPECTED_DWENGO_LEARNING_OBJECT_TITLE = 'Werken met notebooks';
 const DWENGO_TEST_LEARNING_OBJECT_ID: LearningObjectIdentifier = {
     hruid: 'pn_werkingnotebooks',
@@ -78,11 +77,12 @@ describe('LearningObjectService', () => {
                 const result = await learningObjectService.getLearningObjectHTML(DWENGO_TEST_LEARNING_OBJECT_ID);
                 expect(result).not.toBeNull();
 
-                const htmlFromDwengoApi = await fetch(
+                const responseFromDwengoApi = await fetch(
                     getEnvVar(EnvVars.LearningContentRepoApiBaseUrl) +
                         `/learningObject/getRaw?hruid=${DWENGO_TEST_LEARNING_OBJECT_ID.hruid}&language=${DWENGO_TEST_LEARNING_OBJECT_ID.language}&version=${DWENGO_TEST_LEARNING_OBJECT_ID.version}`
-                ).then((it) => it.text());
-                expect(result).toEqual(htmlFromDwengoApi);
+                );
+                const responseHtml = await responseFromDwengoApi.text();
+                expect(result).toEqual(responseHtml);
             }
         );
         it('returns null when queried with a non-existing identifier', async () => {
