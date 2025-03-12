@@ -37,10 +37,10 @@ describe('LearningPathService', () => {
                 'the source'
             );
             expect(result.success).toBeTruthy();
-            expect(result.data?.filter((it) => it.hruid == TEST_DWENGO_LEARNING_PATH_HRUID).length).not.toBe(0);
-            expect(result.data?.filter((it) => it.hruid == example.learningPath.hruid).length).not.toBe(0);
-            expect(result.data?.filter((it) => it.hruid == TEST_DWENGO_LEARNING_PATH_HRUID)[0].title).toEqual(TEST_DWENGO_LEARNING_PATH_TITLE);
-            expect(result.data?.filter((it) => it.hruid == example.learningPath.hruid)[0].title).toEqual(example.learningPath.title);
+            expect(result.data?.filter((it) => it.hruid === TEST_DWENGO_LEARNING_PATH_HRUID).length).not.toBe(0);
+            expect(result.data?.filter((it) => it.hruid === example.learningPath.hruid).length).not.toBe(0);
+            expect(result.data?.filter((it) => it.hruid === TEST_DWENGO_LEARNING_PATH_HRUID)[0].title).toEqual(TEST_DWENGO_LEARNING_PATH_TITLE);
+            expect(result.data?.filter((it) => it.hruid === example.learningPath.hruid)[0].title).toEqual(example.learningPath.title);
         });
         it('should include both the learning objects from the Dwengo API and learning objects from the database in its response', async () => {
             const result = await learningPathService.fetchLearningPaths([example.learningPath.hruid], example.learningPath.language, 'the source');
