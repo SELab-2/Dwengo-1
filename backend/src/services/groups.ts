@@ -2,12 +2,14 @@ import {
     getAssignmentRepository,
     getClassRepository,
     getGroupRepository,
+    getSubmissionRepository,
 } from '../data/repositories.js';
 import {
     GroupDTO,
     mapToGroupDTO,
     mapToGroupDTOId,
 } from '../interfaces/group.js';
+import { mapToSubmissionDTO, SubmissionDTO } from '../interfaces/submission.js';
 
 export async function getGroup(
     classId: string,
@@ -81,4 +83,42 @@ export async function getAllGroups(
     }
 
     return groups.map(mapToGroupDTOId);
+}
+
+export async function getGroupSubmissions(
+    classId: string,
+    assignmentNumber: number,
+    groupNumber: number,
+): Promise<SubmissionDTO[]> {
+    const classRepository = getClassRepository();
+    const cls = await classRepository.findById(classId);
+
+    if (!cls) {
+        return [];
+    }
+
+    const assignmentRepository = getAssignmentRepository();
+    const assignment = await assignmentRepository.findByClassAndId(
+        cls,
+        assignmentNumber
+    );
+
+    if (!assignment) {
+        return [];
+    }
+
+    const groupRepository = getGroupRepository();
+    const group = await groupRepository.findByAssignmentAndGroupNumber(
+        assignment,
+        groupNumber
+    );
+
+    if (!group) {
+        return [];
+    }
+
+    const submissionRepository = getSubmissionRepository();
+    const submissions = await submissionRepository.findAllSubmissionsForGroup(group);
+
+    return submissions.map(mapToSubmissionDTO);
 }

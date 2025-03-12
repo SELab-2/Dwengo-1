@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllGroupsHandler, getGroupHandler } from '../controllers/groups.js';
+import { getAllGroupsHandler, getGroupHandler, getGroupSubmissionsHandler } from '../controllers/groups.js';
 
 const router = express.Router({ mergeParams: true });
 
@@ -8,6 +8,8 @@ router.get('/', getAllGroupsHandler);
 
 // Information about a group (members, ... [TODO DOC])
 router.get('/:groupid', getGroupHandler);
+
+router.get('/:groupid', getGroupSubmissionsHandler);
 
 // The list of questions a group has made
 router.get('/:id/question', (req, res) => {
