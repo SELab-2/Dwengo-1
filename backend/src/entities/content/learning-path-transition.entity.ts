@@ -1,5 +1,5 @@
 import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
-import { LearningPathNode } from './learning-path-node.entity';
+import { LearningPathNode } from './learning-path-node.entity.js';
 
 @Entity()
 export class LearningPathTransition {

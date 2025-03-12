@@ -8,7 +8,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import { DwengoContentType } from '../content-type.js';
 import { isValidHttpUrl } from '../../../../util/links.js';
 import { ProcessingError } from '../processing-error.js';
-import { StringProcessor } from '../string-processor';
+import { StringProcessor } from '../string-processor.js';
 
 class PdfProcessor extends StringProcessor {
     constructor() {

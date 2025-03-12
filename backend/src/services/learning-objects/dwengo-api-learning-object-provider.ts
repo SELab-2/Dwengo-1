@@ -9,8 +9,8 @@ import {
     LearningPathResponse,
 } from '../../interfaces/learning-content.js';
 import dwengoApiLearningPathProvider from '../learning-paths/dwengo-api-learning-path-provider.js';
-import { LearningObjectProvider } from './learning-object-provider';
-import {getLogger, Logger} from "../../logging/initalize";
+import { LearningObjectProvider } from './learning-object-provider.js';
+import { getLogger, Logger } from '../../logging/initalize.js';
 
 const logger: Logger = getLogger();
 

@@ -1,10 +1,14 @@
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
-import learningPathService from '../services/learning-paths/learning-path-service';
-import { BadRequestException, NotFoundException } from '../exceptions';
-import { Language } from '../entities/content/language';
-import { PersonalizationTarget, personalizedForGroup, personalizedForStudent } from '../services/learning-paths/learning-path-personalization-util';
+import learningPathService from '../services/learning-paths/learning-path-service.js';
+import { BadRequestException, NotFoundException } from '../exceptions.js';
+import { Language } from '../entities/content/language.js';
+import {
+    PersonalizationTarget,
+    personalizedForGroup,
+    personalizedForStudent,
+} from '../services/learning-paths/learning-path-personalization-util.js';
 
 /**
  * Fetch learning paths based on query parameters.

@@ -2,7 +2,7 @@ import { Collection, Entity, ManyToMany, PrimaryKey, Property } from '@mikro-orm
 import { v4 } from 'uuid';
 import { Teacher } from '../users/teacher.entity.js';
 import { Student } from '../users/student.entity.js';
-import { ClassRepository } from '../../data/classes/class-repository';
+import { ClassRepository } from '../../data/classes/class-repository.js';
 
 @Entity({ repository: () => ClassRepository })
 export class Class {

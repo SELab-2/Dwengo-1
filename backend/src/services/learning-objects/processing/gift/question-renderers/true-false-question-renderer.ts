@@ -1,6 +1,6 @@
-import { GIFTQuestionRenderer } from './gift-question-renderer';
+import { GIFTQuestionRenderer } from './gift-question-renderer.js';
 import { TrueFalse } from 'gift-pegjs';
-import { ProcessingError } from '../../processing-error';
+import { ProcessingError } from '../../processing-error.js';
 
 export class TrueFalseQuestionRenderer extends GIFTQuestionRenderer<TrueFalse> {
     render(question: TrueFalse, questionNumber: number): string {

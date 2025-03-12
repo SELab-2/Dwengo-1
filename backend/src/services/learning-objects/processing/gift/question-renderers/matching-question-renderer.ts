@@ -1,6 +1,6 @@
-import { GIFTQuestionRenderer } from './gift-question-renderer';
+import { GIFTQuestionRenderer } from './gift-question-renderer.js';
 import { Matching } from 'gift-pegjs';
-import { ProcessingError } from '../../processing-error';
+import { ProcessingError } from '../../processing-error.js';
 
 export class MatchingQuestionRenderer extends GIFTQuestionRenderer<Matching> {
     render(question: Matching, questionNumber: number): string {

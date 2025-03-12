@@ -1,26 +1,26 @@
-import { beforeAll, describe, expect, it } from 'vitest';
-import { LearningObject } from '../../../src/entities/content/learning-object.entity';
-import { setupTestApp } from '../../setup-tests';
-import { LearningPath } from '../../../src/entities/content/learning-path.entity';
+import {beforeAll, describe, expect, it} from 'vitest';
+import {LearningObject} from '../../../src/entities/content/learning-object.entity.js';
+import {setupTestApp} from '../../setup-tests.js';
+import {LearningPath} from '../../../src/entities/content/learning-path.entity.js';
 import {
     getLearningObjectRepository,
     getLearningPathRepository,
     getStudentRepository,
     getSubmissionRepository,
-} from '../../../src/data/repositories';
-import learningObjectExample from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example';
-import learningPathExample from '../../test-assets/learning-paths/pn-werking-example';
-import databaseLearningPathProvider from '../../../src/services/learning-paths/database-learning-path-provider';
-import { expectToBeCorrectLearningPath } from '../../test-utils/expectations';
-import { LearningObjectRepository } from '../../../src/data/content/learning-object-repository';
-import learningObjectService from '../../../src/services/learning-objects/learning-object-service';
-import { Language } from '../../../src/entities/content/language';
+} from '../../../src/data/repositories.js';
+import learningObjectExample from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example.js';
+import learningPathExample from '../../test-assets/learning-paths/pn-werking-example.js';
+import databaseLearningPathProvider from '../../../src/services/learning-paths/database-learning-path-provider.js';
+import {expectToBeCorrectLearningPath} from '../../test-utils/expectations.js';
+import {LearningObjectRepository} from '../../../src/data/content/learning-object-repository.js';
+import learningObjectService from '../../../src/services/learning-objects/learning-object-service.js';
+import {Language} from '../../../src/entities/content/language.js';
 import {
     ConditionTestLearningPathAndLearningObjects,
     createConditionTestLearningPathAndLearningObjects,
-} from '../../test-assets/learning-paths/test-conditions-example';
-import { Student } from '../../../src/entities/users/student.entity';
-import { LearningObjectNode, LearningPathResponse } from '../../../src/interfaces/learning-content';
+} from '../../test-assets/learning-paths/test-conditions-example.js';
+import {Student} from '../../../src/entities/users/student.entity.js';
+import {LearningObjectNode, LearningPathResponse} from '../../../src/interfaces/learning-content.js';
 
 async function initExampleData(): Promise<{ learningObject: LearningObject; learningPath: LearningPath }> {
     const learningObjectRepo = getLearningObjectRepository();

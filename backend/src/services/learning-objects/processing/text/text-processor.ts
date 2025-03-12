@@ -4,7 +4,7 @@
 
 import DOMPurify from 'isomorphic-dompurify';
 import { DwengoContentType } from '../content-type.js';
-import { StringProcessor } from '../string-processor';
+import { StringProcessor } from '../string-processor.js';
 
 class TextProcessor extends StringProcessor {
     constructor() {

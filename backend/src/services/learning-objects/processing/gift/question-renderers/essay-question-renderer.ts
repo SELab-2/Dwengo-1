@@ -1,4 +1,4 @@
-import { GIFTQuestionRenderer } from './gift-question-renderer';
+import { GIFTQuestionRenderer } from './gift-question-renderer.js';
 import { Essay } from 'gift-pegjs';
 
 export class EssayQuestionRenderer extends GIFTQuestionRenderer<Essay> {

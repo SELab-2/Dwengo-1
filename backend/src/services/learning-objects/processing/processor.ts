@@ -1,6 +1,6 @@
-import { LearningObject } from '../../../entities/content/learning-object.entity';
-import { ProcessingError } from './processing-error';
-import { DwengoContentType } from './content-type';
+import { LearningObject } from '../../../entities/content/learning-object.entity.js';
+import { ProcessingError } from './processing-error.js';
+import { DwengoContentType } from './content-type.js';
 
 /**
  * Abstract base class for all processors.

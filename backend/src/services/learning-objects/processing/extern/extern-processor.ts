@@ -5,10 +5,10 @@
  */
 
 import DOMPurify from 'isomorphic-dompurify';
-import { ProcessingError } from '../processing-error';
-import { isValidHttpUrl } from '../../../../util/links';
-import { DwengoContentType } from '../content-type';
-import { StringProcessor } from '../string-processor';
+import { ProcessingError } from '../processing-error.js';
+import { isValidHttpUrl } from '../../../../util/links.js';
+import { DwengoContentType } from '../content-type.js';
+import { StringProcessor } from '../string-processor.js';
 
 class ExternProcessor extends StringProcessor {
     constructor() {

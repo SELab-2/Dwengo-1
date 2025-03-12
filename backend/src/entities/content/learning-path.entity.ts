@@ -1,8 +1,8 @@
 import { Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Language } from './language.js';
 import { Teacher } from '../users/teacher.entity.js';
-import { LearningPathRepository } from '../../data/content/learning-path-repository';
-import { LearningPathNode } from './learning-path-node.entity';
+import { LearningPathRepository } from '../../data/content/learning-path-repository.js';
+import { LearningPathNode } from './learning-path-node.entity.js';
 
 @Entity({ repository: () => LearningPathRepository })
 export class LearningPath {

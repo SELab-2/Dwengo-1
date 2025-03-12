@@ -6,7 +6,7 @@ import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
 import { AuthenticatedRequest } from './authenticated-request.js';
 import { AuthenticationInfo } from './authentication-info.js';
-import { ForbiddenException, UnauthorizedException } from '../../exceptions';
+import { ForbiddenException, UnauthorizedException } from '../../exceptions.js';
 
 const JWKS_CACHE = true;
 const JWKS_RATE_LIMIT = true;

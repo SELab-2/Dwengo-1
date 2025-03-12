@@ -2,9 +2,9 @@ import { Embeddable, Embedded, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, 
 import { Language } from './language.js';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
-import { DwengoContentType } from '../../services/learning-objects/processing/content-type';
+import { DwengoContentType } from '../../services/learning-objects/processing/content-type.js';
 import { v4 } from 'uuid';
-import { LearningObjectRepository } from '../../data/content/learning-object-repository';
+import { LearningObjectRepository } from '../../data/content/learning-object-repository.js';
 
 @Entity({ repository: () => LearningObjectRepository })
 export class LearningObject {

@@ -1,5 +1,5 @@
-import Processor from './processor';
-import { LearningObject } from '../../../entities/content/learning-object.entity';
+import Processor from './processor.js';
+import { LearningObject } from '../../../entities/content/learning-object.entity.js';
 
 export abstract class StringProcessor extends Processor<string> {
     /**

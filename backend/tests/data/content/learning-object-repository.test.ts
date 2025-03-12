@@ -1,10 +1,10 @@
 import { beforeAll, describe, it, expect } from 'vitest';
-import { LearningObjectRepository } from '../../../src/data/content/learning-object-repository';
-import { setupTestApp } from '../../setup-tests';
-import { getLearningObjectRepository } from '../../../src/data/repositories';
+import { LearningObjectRepository } from '../../../src/data/content/learning-object-repository.js';
+import { setupTestApp } from '../../setup-tests.js';
+import { getLearningObjectRepository } from '../../../src/data/repositories.js';
 import example from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example.js';
-import { LearningObject } from '../../../src/entities/content/learning-object.entity';
-import { expectToBeCorrectEntity } from '../../test-utils/expectations';
+import { LearningObject } from '../../../src/entities/content/learning-object.entity.js';
+import { expectToBeCorrectEntity } from '../../test-utils/expectations.js';
 
 describe('LearningObjectRepository', () => {
     let learningObjectRepository: LearningObjectRepository;

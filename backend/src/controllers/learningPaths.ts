@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
-import { fetchLearningPaths, searchLearningPaths } from '../services/learningPaths.js';
 import { getLogger } from '../logging/initalize.js';
+import learningPathService from '../services/learning-paths/learning-path-service.js';
+import { Language } from '../entities/content/language.js';
 /**
  * Fetch learning paths based on query parameters.
  */

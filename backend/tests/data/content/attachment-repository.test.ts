@@ -1,12 +1,12 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { setupTestApp } from '../../setup-tests';
-import { getAttachmentRepository, getLearningObjectRepository } from '../../../src/data/repositories';
-import { AttachmentRepository } from '../../../src/data/content/attachment-repository';
-import { LearningObjectRepository } from '../../../src/data/content/learning-object-repository';
-import example from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example';
-import { LearningObject } from '../../../src/entities/content/learning-object.entity';
-import { Attachment } from '../../../src/entities/content/attachment.entity';
-import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
+import { setupTestApp } from '../../setup-tests.js';
+import { getAttachmentRepository, getLearningObjectRepository } from '../../../src/data/repositories.js';
+import { AttachmentRepository } from '../../../src/data/content/attachment-repository.js';
+import { LearningObjectRepository } from '../../../src/data/content/learning-object-repository.js';
+import example from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example.js';
+import { LearningObject } from '../../../src/entities/content/learning-object.entity.js';
+import { Attachment } from '../../../src/entities/content/attachment.entity.js';
+import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier.js';
 
 const NEWER_TEST_SUFFIX = 'nEweR';
 

@@ -10,12 +10,12 @@ import AudioProcessor from './audio/audio-processor.js';
 import PdfProcessor from './pdf/pdf-processor.js';
 import ExternProcessor from './extern/extern-processor.js';
 import GiftProcessor from './gift/gift-processor.js';
-import { LearningObject } from '../../../entities/content/learning-object.entity';
-import Processor from './processor';
-import { DwengoContentType } from './content-type';
-import { LearningObjectIdentifier } from '../../../interfaces/learning-content';
-import { Language } from '../../../entities/content/language';
-import { replaceAsync } from '../../../util/async';
+import { LearningObject } from '../../../entities/content/learning-object.entity.js';
+import Processor from './processor.js';
+import { DwengoContentType } from './content-type.js';
+import { LearningObjectIdentifier } from '../../../interfaces/learning-content.js';
+import { Language } from '../../../entities/content/language.js';
+import { replaceAsync } from '../../../util/async.js';
 
 const EMBEDDED_LEARNING_OBJECT_PLACEHOLDER = /<learning-object hruid="([^"]+)" language="([^"]+)" version="([^"]+)"\/>/g;
 const LEARNING_OBJECT_DOES_NOT_EXIST = "<div class='non-existing-learning-object' />";

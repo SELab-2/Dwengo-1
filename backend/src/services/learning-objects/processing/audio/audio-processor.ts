@@ -6,8 +6,8 @@
 
 import DOMPurify from 'isomorphic-dompurify';
 import { type } from 'node:os';
-import { DwengoContentType } from '../content-type';
-import { StringProcessor } from '../string-processor';
+import { DwengoContentType } from '../content-type.js';
+import { StringProcessor } from '../string-processor.js';
 
 class AudioProcessor extends StringProcessor {
     constructor() {

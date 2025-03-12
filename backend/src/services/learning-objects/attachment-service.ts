@@ -1,6 +1,6 @@
-import { getAttachmentRepository } from '../../data/repositories';
-import { Attachment } from '../../entities/content/attachment.entity';
-import { LearningObjectIdentifier } from '../../interfaces/learning-content';
+import { getAttachmentRepository } from '../../data/repositories.js';
+import { Attachment } from '../../entities/content/attachment.entity.js';
+import { LearningObjectIdentifier } from '../../interfaces/learning-content.js';
 
 const attachmentService = {
     getAttachment(learningObjectId: LearningObjectIdentifier, attachmentName: string): Promise<Attachment | null> {

@@ -1,12 +1,12 @@
-import { LearningPathProvider } from './learning-path-provider';
-import { FilteredLearningObject, LearningObjectNode, LearningPath, LearningPathResponse, Transition } from '../../interfaces/learning-content';
-import { LearningPath as LearningPathEntity } from '../../entities/content/learning-path.entity';
-import { getLearningPathRepository } from '../../data/repositories';
-import { Language } from '../../entities/content/language';
-import learningObjectService from '../learning-objects/learning-object-service';
-import { LearningPathNode } from '../../entities/content/learning-path-node.entity';
-import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity';
-import { getLastSubmissionForCustomizationTarget, isTransitionPossible, PersonalizationTarget } from './learning-path-personalization-util';
+import { LearningPathProvider } from './learning-path-provider.js';
+import { FilteredLearningObject, LearningObjectNode, LearningPath, LearningPathResponse, Transition } from '../../interfaces/learning-content.js';
+import { LearningPath as LearningPathEntity } from '../../entities/content/learning-path.entity.js';
+import { getLearningPathRepository } from '../../data/repositories.js';
+import { Language } from '../../entities/content/language.js';
+import learningObjectService from '../learning-objects/learning-object-service.js';
+import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
+import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
+import { getLastSubmissionForCustomizationTarget, isTransitionPossible, PersonalizationTarget } from './learning-path-personalization-util.js';
 
 /**
  * Fetches the corresponding learning object for each of the nodes and creates a map that maps each node to its

@@ -4,10 +4,10 @@
 
 import { marked } from 'marked';
 import InlineImageProcessor from '../image/inline-image-processor.js';
-import { DwengoContentType } from '../content-type';
-import dwengoMarkedRenderer from './dwengo-marked-renderer';
-import { StringProcessor } from '../string-processor';
-import { ProcessingError } from '../processing-error';
+import { DwengoContentType } from '../content-type.js';
+import dwengoMarkedRenderer from './dwengo-marked-renderer.js';
+import { StringProcessor } from '../string-processor.js';
+import { ProcessingError } from '../processing-error.js';
 
 class MarkdownProcessor extends StringProcessor {
     constructor() {

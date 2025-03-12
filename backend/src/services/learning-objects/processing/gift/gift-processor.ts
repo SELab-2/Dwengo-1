@@ -4,17 +4,17 @@
 
 import DOMPurify from 'isomorphic-dompurify';
 import { GIFTQuestion, parse } from 'gift-pegjs';
-import { DwengoContentType } from '../content-type';
-import { GIFTQuestionRenderer } from './question-renderers/gift-question-renderer';
-import { MultipleChoiceQuestionRenderer } from './question-renderers/multiple-choice-question-renderer';
-import { CategoryQuestionRenderer } from './question-renderers/category-question-renderer';
-import { DescriptionQuestionRenderer } from './question-renderers/description-question-renderer';
-import { EssayQuestionRenderer } from './question-renderers/essay-question-renderer';
-import { MatchingQuestionRenderer } from './question-renderers/matching-question-renderer';
-import { NumericalQuestionRenderer } from './question-renderers/numerical-question-renderer';
-import { ShortQuestionRenderer } from './question-renderers/short-question-renderer';
-import { TrueFalseQuestionRenderer } from './question-renderers/true-false-question-renderer';
-import { StringProcessor } from '../string-processor';
+import { DwengoContentType } from '../content-type.js';
+import { GIFTQuestionRenderer } from './question-renderers/gift-question-renderer.js';
+import { MultipleChoiceQuestionRenderer } from './question-renderers/multiple-choice-question-renderer.js';
+import { CategoryQuestionRenderer } from './question-renderers/category-question-renderer.js';
+import { DescriptionQuestionRenderer } from './question-renderers/description-question-renderer.js';
+import { EssayQuestionRenderer } from './question-renderers/essay-question-renderer.js';
+import { MatchingQuestionRenderer } from './question-renderers/matching-question-renderer.js';
+import { NumericalQuestionRenderer } from './question-renderers/numerical-question-renderer.js';
+import { ShortQuestionRenderer } from './question-renderers/short-question-renderer.js';
+import { TrueFalseQuestionRenderer } from './question-renderers/true-false-question-renderer.js';
+import { StringProcessor } from '../string-processor.js';
 
 class GiftProcessor extends StringProcessor {
     private renderers: RendererMap = {

@@ -1,4 +1,4 @@
-import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../../interfaces/learning-content';
+import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../../interfaces/learning-content.js';
 
 export interface LearningObjectProvider {
     /**

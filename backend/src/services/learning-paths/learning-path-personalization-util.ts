@@ -1,10 +1,10 @@
-import { LearningPathNode } from '../../entities/content/learning-path-node.entity';
-import { Student } from '../../entities/users/student.entity';
-import { Group } from '../../entities/assignments/group.entity';
-import { Submission } from '../../entities/assignments/submission.entity';
-import { getClassRepository, getGroupRepository, getStudentRepository, getSubmissionRepository } from '../../data/repositories';
-import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier';
-import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity';
+import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
+import { Student } from '../../entities/users/student.entity.js';
+import { Group } from '../../entities/assignments/group.entity.js';
+import { Submission } from '../../entities/assignments/submission.entity.js';
+import { getClassRepository, getGroupRepository, getStudentRepository, getSubmissionRepository } from '../../data/repositories.js';
+import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
+import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
 import { JSONPath } from 'jsonpath-plus';
 
 export type PersonalizationTarget = { type: 'student'; student: Student } | { type: 'group'; group: Group };

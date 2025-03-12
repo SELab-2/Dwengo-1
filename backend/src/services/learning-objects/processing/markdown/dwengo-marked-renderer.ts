@@ -6,10 +6,10 @@ import AudioProcessor from '../audio/audio-processor.js';
 import ExternProcessor from '../extern/extern-processor.js';
 import InlineImageProcessor from '../image/inline-image-processor.js';
 import * as marked from 'marked';
-import { getUrlStringForLearningObjectHTML, isValidHttpUrl } from '../../../../util/links';
-import { ProcessingError } from '../processing-error';
-import { LearningObjectIdentifier } from '../../../../interfaces/learning-content';
-import { Language } from '../../../../entities/content/language';
+import { getUrlStringForLearningObjectHTML, isValidHttpUrl } from '../../../../util/links.js';
+import { ProcessingError } from '../processing-error.js';
+import { LearningObjectIdentifier } from '../../../../interfaces/learning-content.js';
+import { Language } from '../../../../entities/content/language.js';
 
 import Image = marked.Tokens.Image;
 import Heading = marked.Tokens.Heading;

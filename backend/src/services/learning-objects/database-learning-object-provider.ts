@@ -1,13 +1,13 @@
-import { LearningObjectProvider } from './learning-object-provider';
-import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../../interfaces/learning-content';
-import { getLearningObjectRepository, getLearningPathRepository } from '../../data/repositories';
-import { Language } from '../../entities/content/language';
-import { LearningObject } from '../../entities/content/learning-object.entity';
-import { getUrlStringForLearningObject } from '../../util/links';
-import processingService from './processing/processing-service';
+import { LearningObjectProvider } from './learning-object-provider.js';
+import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../../interfaces/learning-content.js';
+import { getLearningObjectRepository, getLearningPathRepository } from '../../data/repositories.js';
+import { Language } from '../../entities/content/language.js';
+import { LearningObject } from '../../entities/content/learning-object.entity.js';
+import { getUrlStringForLearningObject } from '../../util/links.js';
+import processingService from './processing/processing-service.js';
 import { NotFoundError } from '@mikro-orm/core';
-import learningObjectService from './learning-object-service';
-import {getLogger, Logger} from "../../logging/initalize";
+import learningObjectService from './learning-object-service.js';
+import { getLogger, Logger } from '../../logging/initalize.js';
 
 const logger: Logger = getLogger();
 

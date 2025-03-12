@@ -1,4 +1,4 @@
-import { GIFTQuestionRenderer } from './gift-question-renderer';
+import { GIFTQuestionRenderer } from './gift-question-renderer.js';
 import { MultipleChoice } from 'gift-pegjs';
 
 export class MultipleChoiceQuestionRenderer extends GIFTQuestionRenderer<MultipleChoice> {

@@ -1,11 +1,11 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { setupTestApp } from '../../setup-tests';
-import { getLearningPathRepository } from '../../../src/data/repositories';
-import { LearningPathRepository } from '../../../src/data/content/learning-path-repository';
-import example from '../../test-assets/learning-paths/pn-werking-example';
-import { LearningPath } from '../../../src/entities/content/learning-path.entity';
-import { expectToBeCorrectEntity } from '../../test-utils/expectations';
-import { Language } from '../../../src/entities/content/language';
+import { setupTestApp } from '../../setup-tests.js';
+import { getLearningPathRepository } from '../../../src/data/repositories.js';
+import { LearningPathRepository } from '../../../src/data/content/learning-path-repository.js';
+import example from '../../test-assets/learning-paths/pn-werking-example.js';
+import { LearningPath } from '../../../src/entities/content/learning-path.entity.js';
+import { expectToBeCorrectEntity } from '../../test-utils/expectations.js';
+import { Language } from '../../../src/entities/content/language.js';
 
 function expectToHaveFoundPrecisely(expected: LearningPath, result: LearningPath[]): void {
     expect(result).toHaveProperty('length');

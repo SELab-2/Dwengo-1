@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { FALLBACK_LANG } from '../config.js';
-import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../interfaces/learning-content';
-import learningObjectService from '../services/learning-objects/learning-object-service';
-import { EnvVars, getEnvVar } from '../util/envvars';
-import { Language } from '../entities/content/language';
-import { BadRequestException } from '../exceptions';
-import attachmentService from '../services/learning-objects/attachment-service';
+import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../interfaces/learning-content.js';
+import learningObjectService from '../services/learning-objects/learning-object-service.js';
+import { EnvVars, getEnvVar } from '../util/envvars.js';
+import { Language } from '../entities/content/language.js';
+import { BadRequestException } from '../exceptions.js';
+import attachmentService from '../services/learning-objects/attachment-service.js';
 import { NotFoundError } from '@mikro-orm/core';
 
 function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIdentifier {

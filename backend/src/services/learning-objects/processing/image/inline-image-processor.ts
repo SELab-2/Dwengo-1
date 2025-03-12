@@ -5,8 +5,8 @@
 import DOMPurify from 'isomorphic-dompurify';
 import { DwengoContentType } from '../content-type.js';
 import { ProcessingError } from '../processing-error.js';
-import { isValidHttpUrl } from '../../../../util/links';
-import { StringProcessor } from '../string-processor';
+import { isValidHttpUrl } from '../../../../util/links.js';
+import { StringProcessor } from '../string-processor.js';
 
 class InlineImageProcessor extends StringProcessor {
     constructor(contentType: DwengoContentType = DwengoContentType.IMAGE_INLINE) {
