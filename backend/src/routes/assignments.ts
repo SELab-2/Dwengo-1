@@ -2,6 +2,7 @@ import express from 'express';
 import {
     getAllAssignmentsHandler,
     getAssignmentHandler,
+    getAssignmentsSubmissionsHandler,
 } from '../controllers/assignments.js';
 import groupRouter from './groups.js';
 
@@ -13,11 +14,7 @@ router.get('/', getAllAssignmentsHandler);
 // Information about an assignment with id 'id'
 router.get('/:id', getAssignmentHandler);
 
-router.get('/:id/submissions', (req, res) => {
-    res.json({
-        submissions: ['0'],
-    });
-});
+router.get('/:id/submissions', getAssignmentsSubmissionsHandler);
 
 router.get('/:id/questions', (req, res) => {
     res.json({

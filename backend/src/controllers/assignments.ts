@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getAllAssignments, getAssignment } from '../services/assignments.js';
+import { getAllAssignments, getAssignment, getAssignmentsSubmissions } from '../services/assignments.js';
 
 // Typescript is annoy with with parameter forwarding from class.ts
 interface AssignmentParams {
@@ -41,4 +41,23 @@ export async function getAssignmentHandler(
     }
 
     res.json(assignment);
+}
+
+export async function getAssignmentsSubmissionsHandler(
+    req: Request<AssignmentParams>,
+    res: Response,
+): Promise<void> {
+    const classid = req.params.classid;
+    const assignmentNumber = +req.params.id;
+
+    if (isNaN(assignmentNumber)) {
+        res.status(400).json({ error: 'Assignment id must be a number' });
+        return;
+    }
+
+    const submissions = await getAssignmentsSubmissions(classid, assignmentNumber);
+
+    res.json({
+        submissions: submissions,
+    });
 }
