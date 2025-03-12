@@ -7,6 +7,9 @@ import { getUrlStringForLearningObject } from '../../util/links';
 import processingService from './processing/processing-service';
 import { NotFoundError } from '@mikro-orm/core';
 import learningObjectService from './learning-object-service';
+import {getLogger, Logger} from "../../logging/initalize";
+
+const logger: Logger = getLogger();
 
 function convertLearningObject(learningObject: LearningObject | null): FilteredLearningObject | null {
     if (!learningObject) {
@@ -100,7 +103,7 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
                     version: it.version,
                 });
                 if (learningObject === null) {
-                    console.log(`WARN: Learning object corresponding with node ${it} not found!`);
+                    logger.warn(`WARN: Learning object corresponding with node ${it} not found!`);
                 }
                 return learningObject;
             })

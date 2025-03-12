@@ -10,6 +10,9 @@ import {
 } from '../../interfaces/learning-content.js';
 import dwengoApiLearningPathProvider from '../learning-paths/dwengo-api-learning-path-provider.js';
 import { LearningObjectProvider } from './learning-object-provider';
+import {getLogger, Logger} from "../../logging/initalize";
+
+const logger: Logger = getLogger();
 
 /**
  * Helper function to convert the learning object metadata retrieved from the API to a FilteredLearningObject which
@@ -52,7 +55,7 @@ async function fetchLearningObjects(learningPathId: LearningPathIdentifier, full
         );
 
         if (!learningPathResponse.success || !learningPathResponse.data?.length) {
-            console.error(`⚠️ WARNING: Learning path "${learningPathId.hruid}" exists but contains no learning objects.`);
+            logger.warn(`⚠️ WARNING: Learning path "${learningPathId.hruid}" exists but contains no learning objects.`);
             return [];
         }
 
@@ -71,7 +74,7 @@ async function fetchLearningObjects(learningPathId: LearningPathIdentifier, full
             )
         ).then((objects) => objects.filter((obj): obj is FilteredLearningObject => obj !== null));
     } catch (error) {
-        console.error('❌ Error fetching learning objects:', error);
+        logger.error('❌ Error fetching learning objects:', error);
         return [];
     }
 }
@@ -91,7 +94,7 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
         );
 
         if (!metadata || typeof metadata !== 'object') {
-            console.error(`⚠️ WARNING: Learning object "${id.hruid}" not found.`);
+            logger.warn(`⚠️ WARNING: Learning object "${id.hruid}" not found.`);
             return null;
         }
 
@@ -123,7 +126,7 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
         });
 
         if (!html) {
-            console.error(`⚠️ WARNING: Learning object "${id.hruid}" not found.`);
+            logger.warn(`⚠️ WARNING: Learning object "${id.hruid}" not found.`);
             return null;
         }
 

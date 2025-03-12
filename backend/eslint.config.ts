@@ -8,4 +8,14 @@ export default [
             globals: globals.node,
         },
     },
+
+    {
+        files: [ 'tests/**/*.ts'],
+        languageOptions: {
+            globals: globals.node
+        },
+        rules: {
+            'no-console': 'off'
+        }
+    }
 ];

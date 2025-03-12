@@ -2,6 +2,9 @@ import { fetchWithLogging } from '../../util/apiHelper.js';
 import { DWENGO_API_BASE } from '../../config.js';
 import { LearningPath, LearningPathResponse } from '../../interfaces/learning-content.js';
 import { LearningPathProvider } from './learning-path-provider';
+import {getLogger, Logger} from "../../logging/initalize";
+
+const logger: Logger = getLogger();
 
 const dwengoApiLearningPathProvider: LearningPathProvider = {
     async fetchLearningPaths(hruids: string[], language: string, source: string): Promise<LearningPathResponse> {
@@ -20,7 +23,7 @@ const dwengoApiLearningPathProvider: LearningPathProvider = {
         const learningPaths = await fetchWithLogging<LearningPath[]>(apiUrl, `Learning paths for ${source}`, { params });
 
         if (!learningPaths || learningPaths.length === 0) {
-            console.error(`⚠️ WARNING: No learning paths found for ${source}.`);
+            logger.warn(`⚠️ WARNING: No learning paths found for ${source}.`);
             return {
                 success: false,
                 source,
