@@ -7,9 +7,9 @@ services:
         networks:
             - dwengo-1
         labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.web.rule=PathPrefix(`/`)"
-            - "traefik.http.services.web.loadbalancer.server.port=80"
+            - 'traefik.enable=true'
+            - 'traefik.http.routers.web.rule=PathPrefix(`/`)'
+            - 'traefik.http.services.web.loadbalancer.server.port=80'
 
     api:
         build:
@@ -25,12 +25,12 @@ services:
             - db
             - logging
         labels:
-            - "traefik.enable=true"
-            - "traefik.http.middlewares.api-prefix.stripprefix.prefixes=/api"
-            - "traefik.http.routers.api.rule=Host(`sel2-1.ugent.be`)"
-            - "traefik.http.routers.api.rule=PathPrefix(`/api`)"
-            - "traefik.http.routers.api.middlewares=api-prefix"
-            - "traefik.http.services.api.loadbalancer.server.port=3000"
+            - 'traefik.enable=true'
+            - 'traefik.http.middlewares.api-prefix.stripprefix.prefixes=/api'
+            - 'traefik.http.routers.api.rule=Host(`sel2-1.ugent.be`)'
+            - 'traefik.http.routers.api.rule=PathPrefix(`/api`)'
+            - 'traefik.http.routers.api.middlewares=api-prefix'
+            - 'traefik.http.services.api.loadbalancer.server.port=3000'
 
     db:
         image: postgres:latest
@@ -85,11 +85,11 @@ services:
         networks:
             - dwengo-1
         labels:
-            - "traefik.enable=true"
-            - "traefik.http.middlewares.logging-prefix.stripprefix.prefixes=/logging"
-            - "traefik.http.routers.web.rule=PathPrefix(`/logging`)"
-            - "traefik.http.routers.web.middlewares=logging-prefix"
-            - "traefik.http.services.web.loadbalancer.server.port=3102"
+            - 'traefik.enable=true'
+            - 'traefik.http.middlewares.logging-prefix.stripprefix.prefixes=/logging'
+            - 'traefik.http.routers.web.rule=PathPrefix(`/logging`)'
+            - 'traefik.http.routers.web.middlewares=logging-prefix'
+            - 'traefik.http.services.web.loadbalancer.server.port=3102'
 
     dashboards:
         image: grafana/grafana:latest
