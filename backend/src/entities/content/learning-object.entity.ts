@@ -6,6 +6,24 @@ import { DwengoContentType } from '../../services/learning-objects/processing/co
 import { v4 } from 'uuid';
 import { LearningObjectRepository } from '../../data/content/learning-object-repository.js';
 
+@Embeddable()
+export class EducationalGoal {
+    @Property({ type: 'string' })
+    source!: string;
+
+    @Property({ type: 'string' })
+    id!: string;
+}
+
+@Embeddable()
+export class ReturnValue {
+    @Property({ type: 'string' })
+    callbackUrl!: string;
+
+    @Property({ type: 'json' })
+    callbackSchema!: string;
+}
+
 @Entity({ repository: () => LearningObjectRepository })
 export class LearningObject {
     @PrimaryKey({ type: 'string' })
@@ -86,22 +104,4 @@ export class LearningObject {
 
     @Property({ type: 'blob' })
     content!: Buffer;
-}
-
-@Embeddable()
-export class EducationalGoal {
-    @Property({ type: 'string' })
-    source!: string;
-
-    @Property({ type: 'string' })
-    id!: string;
-}
-
-@Embeddable()
-export class ReturnValue {
-    @Property({ type: 'string' })
-    callbackUrl!: string;
-
-    @Property({ type: 'json' })
-    callbackSchema!: string;
 }
