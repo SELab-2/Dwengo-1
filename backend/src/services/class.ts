@@ -3,6 +3,9 @@ import { Class } from '../entities/classes/class.entity.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToTeacherInvitationDTO, mapToTeacherInvitationDTOIds, TeacherInvitationDTO } from '../interfaces/teacher-invitation.js';
+import {getLogger} from "../logging/initalize";
+
+const logger = getLogger();
 
 export async function getAllClasses(full: boolean): Promise<ClassDTO[] | string[]> {
     const classRepository = getClassRepository();
@@ -41,6 +44,7 @@ export async function createClass(classData: ClassDTO): Promise<Class | null> {
 
         return newClass;
     } catch (e) {
+        logger.error(e);
         return null;
     }
 }

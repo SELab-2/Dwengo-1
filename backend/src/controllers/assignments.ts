@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { createAssignment, getAllAssignments, getAssignment, getAssignmentsSubmissions } from '../services/assignments.js';
-import { AssignmentDTO, mapToAssignment, mapToAssignmentDTO } from '../interfaces/assignment.js';
-import { getAssignmentRepository, getClassRepository } from '../data/repositories.js';
+import { AssignmentDTO } from '../interfaces/assignment.js';
 
 // Typescript is annoy with with parameter forwarding from class.ts
 interface AssignmentParams {
@@ -31,7 +30,7 @@ export async function createAssignmentHandler(req: Request<AssignmentParams>, re
         return;
     }
 
-    const assignment = createAssignment(classid, assignmentData);
+    const assignment = await createAssignment(classid, assignmentData);
 
     if (!assignment) {
         res.status(500).json({ error: 'Could not create assignment ' });
