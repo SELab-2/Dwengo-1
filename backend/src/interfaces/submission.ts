@@ -1,17 +1,19 @@
 import { Submission } from "../entities/assignments/submission.entity.js";
 import { Language } from "../entities/content/language.js";
 import { GroupDTO, mapToGroupDTO } from "./group.js";
-import { mapToStudentDTO, StudentDTO } from "./student.js";
+import {mapToStudent, mapToStudentDTO, StudentDTO} from "./student.js";
+import {mapToUser} from "./user";
+import {Student} from "../entities/users/student.entity";
 
 export interface SubmissionDTO {
     learningObjectHruid: string,
     learningObjectLanguage: Language,
     learningObjectVersion: string,
 
-    submissionNumber: number,
-    submitter: StudentDTO | string,
-    time: Date,
-    group?: GroupDTO | string,
+    submissionNumber?: number,
+    submitter: StudentDTO,
+    time?: Date,
+    group?: GroupDTO,
     content: string,
 }
 
@@ -27,4 +29,19 @@ export function mapToSubmissionDTO(submission: Submission): SubmissionDTO {
         group: submission.onBehalfOf ? mapToGroupDTO(submission.onBehalfOf) : undefined,
         content: submission.content,
     }
+}
+
+export function mapToSubmission(submissionDTO: SubmissionDTO): Submission {
+    const submission = new Submission();
+    submission.learningObjectHruid = submissionDTO.learningObjectHruid;
+    submission.learningObjectLanguage = submissionDTO.learningObjectLanguage;
+    submission.learningObjectVersion = submissionDTO.learningObjectVersion;
+    // submission.submissionNumber = submissionDTO.submissionNumber;
+    submission.submitter = mapToStudent(submissionDTO.submitter) ;
+    // submission.submissionTime = submissionDTO.time;
+    // submission.onBehalfOf =  submissionDTO.group!;
+    // TODO fix group
+    submission.content = submissionDTO.content;
+
+    return submission;
 }

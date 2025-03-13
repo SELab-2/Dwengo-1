@@ -1,5 +1,5 @@
 import express from 'express';
-import { getSubmissionHandler } from '../controllers/submissions.js';
+import {createSubmissionHandler, deleteSubmissionHandler, getSubmissionHandler} from '../controllers/submissions.js';
 const router = express.Router({ mergeParams: true });
 
 
@@ -11,7 +11,11 @@ router.get('/', (req, res) => {
     });
 });
 
+router.post('/:id', createSubmissionHandler);
+
 // Information about an submission with id 'id'
 router.get('/:id', getSubmissionHandler);
+
+router.delete('/:id', deleteSubmissionHandler);
 
 export default router;
