@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { getSubmission } from "../services/submissions";
-import { Language, languageMap } from "../entities/content/language";
+import { getSubmission } from "../services/submissions.js";
+import { Language, languageMap } from "../entities/content/language.js";
 
 interface SubmissionParams {
     lohruid: string,

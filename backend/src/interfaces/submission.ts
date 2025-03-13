@@ -1,7 +1,7 @@
-import { Submission } from "../entities/assignments/submission.entity";
-import { Language } from "../entities/content/language";
-import { GroupDTO, mapToGroupDTO } from "./group";
-import { mapToStudentDTO, StudentDTO } from "./student";
+import { Submission } from "../entities/assignments/submission.entity.js";
+import { Language } from "../entities/content/language.js";
+import { GroupDTO, mapToGroupDTO } from "./group.js";
+import { mapToStudentDTO, StudentDTO } from "./student.js";
 
 export interface SubmissionDTO {
     learningObjectHruid: string,

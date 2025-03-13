@@ -1,5 +1,5 @@
 import express from 'express';
-import { getSubmissionHandler } from '../controllers/submissions';
+import { getSubmissionHandler } from '../controllers/submissions.js';
 const router = express.Router({ mergeParams: true });
 
 
