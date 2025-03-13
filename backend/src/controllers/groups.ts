@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import { getAllGroups, getGroup, getGroupSubmissions } from '../services/groups.js';
+import { createGroup, getAllGroups, getGroup, getGroupSubmissions } from '../services/groups.js';
+import { GroupDTO } from '../interfaces/group.js';
 
 // Typescript is annoywith with parameter forwarding from class.ts
 interface GroupParams {
@@ -52,6 +53,29 @@ export async function getAllGroupsHandler(
     res.json({
         groups: groups,
     });
+}
+
+export async function createGroupHandler(
+    req: Request,
+    res: Response,
+): Promise<void> {
+    const classid = req.params.classid;
+    const assignmentId = +req.params.assignmentid;
+
+    if (isNaN(assignmentId)) {
+        res.status(400).json({ error: 'Assignment id must be a number' });
+        return;
+    }
+
+    const groupData = req.body as GroupDTO;
+    const group = createGroup(groupData, classid, assignmentId);
+
+    if (!group) {
+        res.status(500).json({ error: "Something went wrong while creating group" });
+        return
+    }
+
+    res.status(201).json({ group: group });
 }
 
 export async function getGroupSubmissionsHandler(

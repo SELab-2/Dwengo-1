@@ -11,7 +11,7 @@ export interface GroupDTO {
 export function mapToGroupDTO(group: Group): GroupDTO {
     return {
         assignment: mapToAssignmentDTO(group.assignment), // ERROR: , group.assignment.within),
-        groupNumber: group.groupNumber,
+        groupNumber: group.groupNumber!,
         members: group.members.map(mapToStudentDTO),
     };
 }
@@ -19,7 +19,7 @@ export function mapToGroupDTO(group: Group): GroupDTO {
 export function mapToGroupDTOId(group: Group): GroupDTO {
     return {
         assignment: group.assignment.id!,
-        groupNumber: group.groupNumber,
+        groupNumber: group.groupNumber!,
         members: group.members.map((member) => {
             return member.username;
         }),

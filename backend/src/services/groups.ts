@@ -1,9 +1,12 @@
+import { GroupRepository } from '../data/assignments/group-repository.js';
 import {
     getAssignmentRepository,
     getClassRepository,
     getGroupRepository,
+    getStudentRepository,
     getSubmissionRepository,
 } from '../data/repositories.js';
+import { Group } from '../entities/assignments/group.entity.js';
 import {
     GroupDTO,
     mapToGroupDTO,
@@ -49,6 +52,48 @@ export async function getGroup(
     }
 
     return mapToGroupDTOId(group);
+}
+
+export async function createGroup(
+    groupData: GroupDTO,
+    classid: string,
+    assignmentNumber: number,
+): Promise<Group | null> {
+    const studentRepository = getStudentRepository();
+
+    const memberUsernames = groupData.members as string[] || []; // TODO check if groupdata.members is a list
+    const members = (await Promise.all([...memberUsernames].map(id => studentRepository.findByUsername(id))))
+        .filter(student => student != null);
+
+    console.log(members);
+
+    const classRepository = getClassRepository();
+    const cls = await classRepository.findById(classid);
+
+    if (!cls) {
+        return null;
+    }
+
+    const assignmentRepository = getAssignmentRepository();
+    const assignment = await assignmentRepository.findByClassAndId(cls, assignmentNumber);
+
+    if (!assignment) {
+        return null;
+    }
+
+    const groupRepository = getGroupRepository();
+    try {
+        const newGroup = groupRepository.create({
+            assignment: assignment,
+            members: members,
+        });
+        await groupRepository.save(newGroup);
+
+        return newGroup;
+    } catch(e) {
+        console.log(e);
+        return null;
+    }
 }
 
 export async function getAllGroups(

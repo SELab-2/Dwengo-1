@@ -19,4 +19,12 @@ export class Student extends User {
         return Group;
     })
     groups!: Collection<Group>;
+
+    constructor(
+        public username: string,
+        public firstName: string,
+        public lastName: string
+    ) {
+        super();
+    }
 }
