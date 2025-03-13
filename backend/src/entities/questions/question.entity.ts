@@ -23,8 +23,8 @@ export class Question {
     @PrimaryKey({ type: 'string' })
     learningObjectVersion: string = '1';
 
-    @PrimaryKey({ type: 'integer' })
-    sequenceNumber!: number;
+    @PrimaryKey({ type: 'integer', autoincrement: true })
+    sequenceNumber?: number;
 
     @ManyToOne({
         entity: () => {

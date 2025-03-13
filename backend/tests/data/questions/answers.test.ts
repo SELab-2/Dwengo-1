@@ -9,7 +9,6 @@ import {
 import { QuestionRepository } from '../../../src/data/questions/question-repository';
 import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
 import { Language } from '../../../src/entities/content/language';
-import { Question } from '../../../src/entities/questions/question.entity';
 import { TeacherRepository } from '../../../src/data/users/teacher-repository';
 
 describe('AnswerRepository', () => {
@@ -40,27 +39,27 @@ describe('AnswerRepository', () => {
         expect(answers[1].content).toBeOneOf(['answer', 'answer2']);
     });
 
-    // it('should create an answer to a question', async () => {
-    //     const teacher = await teacherRepository.findByUsername('FooFighters');
-    //     const id = new LearningObjectIdentifier('id05', Language.English, '1');
-    //     const questions =
-    //         await questionRepository.findAllQuestionsAboutLearningObject(id);
+    it('should create an answer to a question', async () => {
+        const teacher = await teacherRepository.findByUsername('FooFighters');
+        const id = new LearningObjectIdentifier('id05', Language.English, '1');
+        const questions =
+            await questionRepository.findAllQuestionsAboutLearningObject(id);
 
-    //     const question = questions[0];
+        const question = questions[0];
 
-    //     await answerRepository.createAnswer({
-    //         toQuestion: question,
-    //         author: teacher!,
-    //         content: 'created answer',
-    //     });
+        await answerRepository.createAnswer({
+            toQuestion: question,
+            author: teacher!,
+            content: 'created answer',
+        });
 
-    //     const answers =
-    //         await answerRepository.findAllAnswersToQuestion(question);
+        const answers =
+            await answerRepository.findAllAnswersToQuestion(question);
 
-    //     expect(answers).toBeTruthy();
-    //     expect(answers).toHaveLength(1);
-    //     expect(answers[0].content).toBe('created answer');
-    // });
+        expect(answers).toBeTruthy();
+        expect(answers).toHaveLength(1);
+        expect(answers[0].content).toBe('created answer');
+    });
 
     it('should not find a removed answer', async () => {
         const id = new LearningObjectIdentifier('id04', Language.English, '1');

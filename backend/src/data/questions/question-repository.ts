@@ -9,7 +9,14 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         author: Student;
         content: string;
     }): Promise<Question> {
-        const questionEntity = new Question();
+        const questionEntity = this.create({
+            learningObjectHruid: question.loId.hruid,
+            learningObjectLanguage: question.loId.language,
+            learningObjectVersion: question.loId.version,
+            author: question.author,
+            content: question.content,
+            timestamp: new Date()
+        });
         questionEntity.learningObjectHruid = question.loId.hruid;
         questionEntity.learningObjectLanguage = question.loId.language;
         questionEntity.learningObjectVersion = question.loId.version;

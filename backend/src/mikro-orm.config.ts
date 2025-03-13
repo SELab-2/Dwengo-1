@@ -24,6 +24,7 @@ import { LearningPath } from './entities/content/learning-path.entity.js';
 
 import { Answer } from './entities/questions/answer.entity.js';
 import { Question } from './entities/questions/question.entity.js';
+import {SqliteAutoincrementSubscriber} from "./sqlite-autoincrement-workaround";
 
 const entities = [
     User,
@@ -47,6 +48,7 @@ function config(testingMode: boolean = false): Options {
         return {
             driver: SqliteDriver,
             dbName: getEnvVar(EnvVars.DbName),
+            subscribers: [new SqliteAutoincrementSubscriber()],
             entities: entities,
             // EntitiesTs: entitiesTs,
 
