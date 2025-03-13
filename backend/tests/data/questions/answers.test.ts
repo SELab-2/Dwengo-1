@@ -20,7 +20,7 @@ describe('AnswerRepository', () => {
     });
 
     it('should find all answers to a question', async () => {
-        const id = new LearningObjectIdentifier('id05', Language.English, '1');
+        const id = new LearningObjectIdentifier('id05', Language.English, 1);
         const questions = await questionRepository.findAllQuestionsAboutLearningObject(id);
 
         const question = questions.filter((it) => it.sequenceNumber == 2)[0];
@@ -35,7 +35,7 @@ describe('AnswerRepository', () => {
 
     it('should create an answer to a question', async () => {
         const teacher = await teacherRepository.findByUsername('FooFighters');
-        const id = new LearningObjectIdentifier('id05', Language.English, '1');
+        const id = new LearningObjectIdentifier('id05', Language.English, 1);
         const questions = await questionRepository.findAllQuestionsAboutLearningObject(id);
 
         const question = questions[0];
@@ -54,7 +54,7 @@ describe('AnswerRepository', () => {
     });
 
     it('should not find a removed answer', async () => {
-        const id = new LearningObjectIdentifier('id04', Language.English, '1');
+        const id = new LearningObjectIdentifier('id04', Language.English, 1);
         const questions = await questionRepository.findAllQuestionsAboutLearningObject(id);
 
         await answerRepository.removeAnswerByQuestionAndSequenceNumber(questions[0], 1);

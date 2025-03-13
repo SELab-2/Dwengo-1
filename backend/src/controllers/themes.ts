@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
-import { loadTranslations } from '../util/translationHelper.js';
+import { loadTranslations } from '../util/translation-helper.js';
 
 interface Translations {
     curricula_page: {
