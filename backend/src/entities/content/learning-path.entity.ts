@@ -1,21 +1,18 @@
-import { Embeddable, Embedded, Entity, Enum, ManyToMany, OneToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Language } from './language.js';
 import { Teacher } from '../users/teacher.entity.js';
+import { LearningPathRepository } from '../../data/content/learning-path-repository.js';
+import { LearningPathNode } from './learning-path-node.entity.js';
 
-@Entity()
+@Entity({ repository: () => LearningPathRepository })
 export class LearningPath {
     @PrimaryKey({ type: 'string' })
     hruid!: string;
 
-    @Enum({
-        items: () => Language,
-        primary: true,
-    })
+    @Enum({ items: () => Language, primary: true })
     language!: Language;
 
-    @ManyToMany({
-        entity: () => Teacher,
-    })
+    @ManyToMany({ entity: () => Teacher })
     admins!: Teacher[];
 
     @Property({ type: 'string' })
@@ -24,49 +21,9 @@ export class LearningPath {
     @Property({ type: 'text' })
     description!: string;
 
-    @Property({ type: 'blob' })
-    image!: string;
+    @Property({ type: 'blob', nullable: true })
+    image: Buffer | null = null;
 
-    @Embedded({
-        entity: () => LearningPathNode,
-        array: true,
-    })
+    @OneToMany({ entity: () => LearningPathNode, mappedBy: 'learningPath' })
     nodes: LearningPathNode[] = [];
-}
-
-@Embeddable()
-export class LearningPathNode {
-    @Property({ type: 'string' })
-    learningObjectHruid!: string;
-
-    @Enum({
-        items: () => Language,
-    })
-    language!: Language;
-
-    @Property({ type: 'string' })
-    version!: string;
-
-    @Property({ type: 'longtext' })
-    instruction!: string;
-
-    @Property({ type: 'bool' })
-    startNode!: boolean;
-
-    @Embedded({
-        entity: () => LearningPathTransition,
-        array: true,
-    })
-    transitions!: LearningPathTransition[];
-}
-
-@Embeddable()
-export class LearningPathTransition {
-    @Property({ type: 'string' })
-    condition!: string;
-
-    @OneToOne({
-        entity: () => LearningPathNode,
-    })
-    next!: LearningPathNode;
 }

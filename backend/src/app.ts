@@ -2,8 +2,8 @@ import express, { Express, Response } from 'express';
 import { initORM } from './orm.js';
 
 import themeRoutes from './routes/themes.js';
-import learningPathRoutes from './routes/learningPaths.js';
-import learningObjectRoutes from './routes/learningObjects.js';
+import learningPathRoutes from './routes/learning-paths.js';
+import learningObjectRoutes from './routes/learning-objects.js';
 
 import studentRouter from './routes/student.js';
 import groupRouter from './routes/group.js';

@@ -2,8 +2,9 @@ import { Student } from '../users/student.entity.js';
 import { Group } from './group.entity.js';
 import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { Language } from '../content/language.js';
+import { SubmissionRepository } from '../../data/assignments/submission-repository.js';
 
-@Entity()
+@Entity({ repository: () => SubmissionRepository })
 export class Submission {
     @PrimaryKey({ type: 'string' })
     learningObjectHruid!: string;
@@ -14,8 +15,8 @@ export class Submission {
     })
     learningObjectLanguage!: Language;
 
-    @PrimaryKey({ type: 'string' })
-    learningObjectVersion: string = '1';
+    @PrimaryKey({ type: 'numeric' })
+    learningObjectVersion: number = 1;
 
     @PrimaryKey({ type: 'integer' })
     submissionNumber!: number;

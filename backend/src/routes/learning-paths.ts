@@ -1,5 +1,5 @@
 import express from 'express';
-import { getLearningPaths } from '../controllers/learningPaths.js';
+import { getLearningPaths } from '../controllers/learning-paths.js';
 
 const router = express.Router();
 
