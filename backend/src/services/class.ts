@@ -3,7 +3,7 @@ import { Class } from '../entities/classes/class.entity.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToTeacherInvitationDTO, mapToTeacherInvitationDTOIds, TeacherInvitationDTO } from '../interfaces/teacher-invitation.js';
-import { getLogger } from '../logging/initalize';
+import { getLogger } from '../logging/initalize.js';
 
 const logger = getLogger();
 
