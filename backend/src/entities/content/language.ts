@@ -184,3 +184,10 @@ export enum Language {
     Zhuang = 'za',
     Zulu = 'zu',
 }
+
+export const languageMap: Record<string, Language> = {
+    nl: Language.Dutch,
+    fr: Language.French,
+    en: Language.English,
+    de: Language.German,
+};

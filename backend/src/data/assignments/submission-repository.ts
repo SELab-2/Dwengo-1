@@ -38,6 +38,14 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
         );
     }
 
+    public findAllSubmissionsForGroup(group: Group): Promise<Submission[]> {
+        return this.find({ onBehalfOf: group });
+    }
+
+    public findAllSubmissionsForStudent(student: Student): Promise<Submission[]> {
+        return this.find({ submitter: student });
+    }
+
     public deleteSubmissionByLearningObjectAndSubmissionNumber(loId: LearningObjectIdentifier, submissionNumber: number): Promise<void> {
         return this.deleteWhere({
             learningObjectHruid: loId.hruid,
