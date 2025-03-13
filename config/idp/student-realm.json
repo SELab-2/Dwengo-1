@@ -620,7 +620,15 @@
             "enabled": true,
             "alwaysDisplayInConsole": false,
             "clientAuthenticatorType": "client-jwt",
-            "redirectUris": ["urn:ietf:wg:oauth:2.0:oob", "http://localhost:5173/*", "http://localhost:5173", "http://localhost/*", "http://localhost", "https://sel2-1.ugent.be/*", "https://sel2-1.ugent.be"],
+            "redirectUris": [
+                "urn:ietf:wg:oauth:2.0:oob",
+                "http://localhost:5173/*",
+                "http://localhost:5173",
+                "http://localhost/*",
+                "http://localhost",
+                "https://sel2-1.ugent.be/*",
+                "https://sel2-1.ugent.be"
+            ],
             "webOrigins": ["+"],
             "notBefore": 0,
             "bearerOnly": false,

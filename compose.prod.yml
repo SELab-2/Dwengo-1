@@ -50,7 +50,7 @@ services:
             - 'traefik.http.routers.idp.rule=PathPrefix(`/idp`)'
             - 'traefik.http.services.idp.loadbalancer.server.port=7080'
         env_file:
-            -   ./config/idp/.env
+            - ./config/idp/.env
         environment:
             KC_HOSTNAME: 'sel2-1.ugent.be'
             PROXY_ADDRESS_FORWARDING: 'true'
@@ -65,25 +65,25 @@ services:
             - '443:443/tcp'
         command:
             # Add Docker provider
-            - "--providers.docker=true"
-            - "--providers.docker.exposedbydefault=false"
+            - '--providers.docker=true'
+            - '--providers.docker.exposedbydefault=false'
 
             # Add web entrypoint
-            - "--entrypoints.web.address=:80/tcp"
-            - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-            - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+            - '--entrypoints.web.address=:80/tcp'
+            - '--entrypoints.web.http.redirections.entryPoint.to=websecure'
+            - '--entrypoints.web.http.redirections.entryPoint.scheme=https'
 
             # Add websecure entrypoint
-            - "--entrypoints.websecure.address=:443/tcp"
-            - "--entrypoints.websecure.http.tls=true"
-            - "--entrypoints.websecure.http.tls.certResolver=letsencrypt"
-            - "--entrypoints.websecure.http.tls.domains[0].main=sel2-1.ugent.be"
+            - '--entrypoints.websecure.address=:443/tcp'
+            - '--entrypoints.websecure.http.tls=true'
+            - '--entrypoints.websecure.http.tls.certResolver=letsencrypt'
+            - '--entrypoints.websecure.http.tls.domains[0].main=sel2-1.ugent.be'
 
             # Certificates
-            - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
-            - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-            - "--certificatesresolvers.letsencrypt.acme.email=timo.demeyst@ugent.be"
-            - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+            - '--certificatesresolvers.letsencrypt.acme.httpchallenge=true'
+            - '--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web'
+            - '--certificatesresolvers.letsencrypt.acme.email=timo.demeyst@ugent.be'
+            - '--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json'
         restart: unless-stopped
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
