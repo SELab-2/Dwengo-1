@@ -30,29 +30,29 @@ app.use(responseTime(responseTimeLogger));
 app.use(authenticateUser);
 
 // TODO Replace with Express routes
-app.get('/', (_, res: Response) => {
-    logger.debug('GET /');
+app.get('/api/', (_, res: Response) => {
+    logger.debug('GET /api/');
     res.json({
         message: 'Hello Dwengo!🚀',
     });
 });
 
-app.use('/student', studentRouter);
-app.use('/group', groupRouter);
-app.use('/assignment', assignmentRouter);
-app.use('/submission', submissionRouter);
-app.use('/class', classRouter);
-app.use('/question', questionRouter);
-app.use('/auth', authRouter);
-app.use('/theme', themeRoutes);
-app.use('/learningPath', learningPathRoutes);
-app.use('/learningObject', learningObjectRoutes);
+app.use('/api/student', studentRouter);
+app.use('/api/group', groupRouter);
+app.use('/api/assignment', assignmentRouter);
+app.use('/api/submission', submissionRouter);
+app.use('/api/class', classRouter);
+app.use('/api/question', questionRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/theme', themeRoutes);
+app.use('/api/learningPath', learningPathRoutes);
+app.use('/api/learningObject', learningObjectRoutes);
 
 async function startServer() {
     await initORM();
 
     app.listen(port, () => {
-        logger.info(`Server is running at http://localhost:${port}`);
+        logger.info(`Server is running at http://localhost:${port}/api`);
     });
 }
 
