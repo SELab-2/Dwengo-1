@@ -1,4 +1,7 @@
+import { FALLBACK_LANG } from '../config.js';
 import { Assignment } from '../entities/assignments/assignment.entity.js';
+import { Class } from '../entities/classes/class.entity.js';
+import { languageMap } from '../entities/content/language.js';
 import { GroupDTO, mapToGroupDTO } from './group.js';
 
 export interface AssignmentDTO {
@@ -13,7 +16,7 @@ export interface AssignmentDTO {
 
 export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTO {
     return {
-        id: assignment.id,
+        id: assignment.id!,
         class: assignment.within.classId,
         title: assignment.title,
         description: assignment.description,
@@ -25,7 +28,7 @@ export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTO {
 
 export function mapToAssignmentDTO(assignment: Assignment): AssignmentDTO {
     return {
-        id: assignment.id,
+        id: assignment.id!,
         class: assignment.within.classId,
         title: assignment.title,
         description: assignment.description,
@@ -33,4 +36,17 @@ export function mapToAssignmentDTO(assignment: Assignment): AssignmentDTO {
         language: assignment.learningPathLanguage,
         // Groups: assignment.groups.map(mapToGroupDTO),
     };
+}
+
+export function mapToAssignment(assignmentData: AssignmentDTO, cls: Class): Assignment {
+    const assignment = new Assignment();
+    assignment.title = assignmentData.title;
+    assignment.description = assignmentData.description;
+    assignment.learningPathHruid = assignmentData.learningPath;
+    assignment.learningPathLanguage = languageMap[assignmentData.language] || FALLBACK_LANG;
+    assignment.within = cls;
+
+    console.log(assignment);
+
+    return assignment;
 }

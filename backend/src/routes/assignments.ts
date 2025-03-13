@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+    createAssignmentHandler,
     getAllAssignmentsHandler,
     getAssignmentHandler,
     getAssignmentsSubmissionsHandler,
@@ -10,6 +11,8 @@ const router = express.Router({ mergeParams: true });
 
 // Root endpoint used to search objects
 router.get('/', getAllAssignmentsHandler);
+
+router.post('/', createAssignmentHandler);
 
 // Information about an assignment with id 'id'
 router.get('/:id', getAssignmentHandler);

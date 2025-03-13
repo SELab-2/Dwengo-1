@@ -4,8 +4,10 @@ import {
     getGroupRepository,
     getSubmissionRepository,
 } from '../data/repositories.js';
+import { Assignment } from '../entities/assignments/assignment.entity.js';
 import {
     AssignmentDTO,
+    mapToAssignment,
     mapToAssignmentDTO,
     mapToAssignmentDTOId,
 } from '../interfaces/assignment.js';
@@ -31,6 +33,31 @@ export async function getAllAssignments(
     }
 
     return assignments.map(mapToAssignmentDTOId);
+}
+
+export async function createAssignment(
+    classid: string,
+    assignmentData: AssignmentDTO,
+): Promise<Assignment | null> {
+    const classRepository = getClassRepository();
+    const cls = await classRepository.findById(classid);
+
+    if  (!cls) {
+        return null;
+    }
+
+    const assignment = mapToAssignment(assignmentData, cls);
+    const assignmentRepository = getAssignmentRepository();
+
+    try {
+        const newAssignment = assignmentRepository.create(assignment);
+        await assignmentRepository.save(newAssignment);
+
+        return newAssignment;
+    } catch(e) {
+        return null;
+    }
+
 }
 
 export async function getAssignment(
