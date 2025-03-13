@@ -21,9 +21,9 @@ app.use(authenticateUser);
 // Add response time logging
 app.use(responseTime(responseTimeLogger));
 
-// Swagger
-app.get('/api', apiRouter);
+app.use('/api', apiRouter);
 
+// Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerMiddleware);
 
 async function startServer() {

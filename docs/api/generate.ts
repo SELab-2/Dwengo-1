@@ -16,7 +16,7 @@ const doc = {
             description: 'Development server',
         },
         {
-            url: 'https://sel2-1.ugent.be/api',
+            url: 'https://sel2-1.ugent.be/',
             description: 'Production server',
         },
     ],
@@ -26,7 +26,7 @@ const doc = {
                 type: 'oauth2',
                 flows: {
                     implicit: {
-                        authorizationUrl: 'http://localhost:7080/realms/student/protocol/openid-connect/auth',
+                        authorizationUrl: 'https://sel2-1.ugent.be/idp/realms/student/protocol/openid-connect/auth',
                         scopes: {
                             openid: 'openid',
                             profile: 'profile',
@@ -39,7 +39,7 @@ const doc = {
                 type: 'oauth2',
                 flows: {
                     implicit: {
-                        authorizationUrl: 'http://localhost:7080/realms/teacher/protocol/openid-connect/auth',
+                        authorizationUrl: 'https://sel2-1.ugent.be/idp/realms/teacher/protocol/openid-connect/auth',
                         scopes: {
                             openid: 'openid',
                             profile: 'profile',
