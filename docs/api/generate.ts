@@ -26,8 +26,7 @@ const doc = {
                 type: 'oauth2',
                 flows: {
                     implicit: {
-                        authorizationUrl:
-                            'http://localhost:7080/realms/student/protocol/openid-connect/auth',
+                        authorizationUrl: 'http://localhost:7080/realms/student/protocol/openid-connect/auth',
                         scopes: {
                             openid: 'openid',
                             profile: 'profile',
@@ -40,8 +39,7 @@ const doc = {
                 type: 'oauth2',
                 flows: {
                     implicit: {
-                        authorizationUrl:
-                            'http://localhost:7080/realms/teacher/protocol/openid-connect/auth',
+                        authorizationUrl: 'http://localhost:7080/realms/teacher/protocol/openid-connect/auth',
                         scopes: {
                             openid: 'openid',
                             profile: 'profile',

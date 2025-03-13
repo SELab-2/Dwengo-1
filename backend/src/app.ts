@@ -7,6 +7,8 @@ import { responseTimeLogger } from './logging/responseTimeLogger.js';
 import responseTime from 'response-time';
 import { EnvVars, getNumericEnvVar } from './util/envvars.js';
 import apiRouter from './routes/router.js';
+import swaggerMiddleware from './swagger';
+import swaggerUi from 'swagger-ui-express';
 
 const logger: Logger = getLogger();
 
@@ -19,7 +21,10 @@ app.use(authenticateUser);
 // Add response time logging
 app.use(responseTime(responseTimeLogger));
 
+// Swagger
 app.get('/api', apiRouter);
+
+app.use('/api-docs', swaggerUi.serve, swaggerMiddleware);
 
 async function startServer() {
     await initORM();
