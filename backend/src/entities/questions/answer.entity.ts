@@ -17,8 +17,8 @@ export class Answer {
     })
     toQuestion!: Question;
 
-    @PrimaryKey({ type: 'integer' })
-    sequenceNumber!: number;
+    @PrimaryKey({ type: 'integer', autoincrement: true })
+    sequenceNumber?: number;
 
     @Property({ type: 'datetime' })
     timestamp: Date = new Date();

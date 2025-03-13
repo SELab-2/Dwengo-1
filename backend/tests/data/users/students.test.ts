@@ -1,8 +1,8 @@
-import { setupTestApp } from '../setup-tests.js';
-import { Student } from '../../src/entities/users/student.entity.js';
+import { setupTestApp } from '../../setup-tests.js';
+import { Student } from '../../../src/entities/users/student.entity.js';
 import { describe, it, expect, beforeAll } from 'vitest';
-import { StudentRepository } from '../../src/data/users/student-repository.js';
-import { getStudentRepository } from '../../src/data/repositories.js';
+import { StudentRepository } from '../../../src/data/users/student-repository.js';
+import { getStudentRepository } from '../../../src/data/repositories.js';
 
 const username = 'teststudent';
 const firstName = 'John';
@@ -13,6 +13,20 @@ describe('StudentRepository', () => {
     beforeAll(async () => {
         await setupTestApp();
         studentRepository = getStudentRepository();
+    });
+
+    it('should not return a student because username does not exist', async () => {
+        const student = await studentRepository.findByUsername('test');
+
+        expect(student).toBeNull();
+    });
+
+    it('should return student from the datbase', async () => {
+        const student = await studentRepository.findByUsername('Noordkaap');
+
+        expect(student).toBeTruthy();
+        expect(student?.firstName).toBe('Stijn');
+        expect(student?.lastName).toBe('Meuris');
     });
 
     it('should return the queried student after he was added', async () => {

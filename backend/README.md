@@ -21,6 +21,14 @@ npm run build
 npm run start
 ```
 
+### Tests
+
+Voer volgend commando uit om de unit tests uit te voeren:
+
+```
+npm run test:unit
+```
+
 ## Keycloak configuratie
 
 Tijdens development is het voldoende om gebruik te maken van de keycloak configuratie die automatisch ingeladen wordt.

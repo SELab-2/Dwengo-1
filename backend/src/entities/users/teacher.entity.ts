@@ -7,4 +7,12 @@ import { TeacherRepository } from '../../data/users/teacher-repository.js';
 export class Teacher extends User {
     @ManyToMany(() => Class)
     classes!: Collection<Class>;
+
+    constructor(
+        public username: string,
+        public firstName: string,
+        public lastName: string
+    ) {
+        super();
+    }
 }

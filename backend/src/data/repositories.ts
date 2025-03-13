@@ -61,7 +61,7 @@ export const getTeacherRepository = repositoryGetter<Teacher, TeacherRepository>
 /* Classes */
 export const getClassRepository = repositoryGetter<Class, ClassRepository>(Class);
 export const getClassJoinRequestRepository = repositoryGetter<ClassJoinRequest, ClassJoinRequestRepository>(ClassJoinRequest);
-export const getTeacherInvitationRepository = repositoryGetter<TeacherInvitation, TeacherInvitationRepository>(TeacherInvitationRepository);
+export const getTeacherInvitationRepository = repositoryGetter<TeacherInvitation, TeacherInvitationRepository>(TeacherInvitation);
 
 /* Assignments */
 export const getAssignmentRepository = repositoryGetter<Assignment, AssignmentRepository>(Assignment);

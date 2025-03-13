@@ -17,8 +17,8 @@ export class Question {
     @PrimaryKey({ type: 'number' })
     learningObjectVersion: number = 1;
 
-    @PrimaryKey({ type: 'integer' })
-    sequenceNumber!: number;
+    @PrimaryKey({ type: 'integer', autoincrement: true })
+    sequenceNumber?: number;
 
     @ManyToOne({
         entity: () => Student,
