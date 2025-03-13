@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
-import { getAllAssignments, getAssignment, getAssignmentsSubmissions } from '../services/assignments.js';
+import { createAssignment, getAllAssignments, getAssignment, getAssignmentsSubmissions } from '../services/assignments.js';
+import { AssignmentDTO, mapToAssignment, mapToAssignmentDTO } from '../interfaces/assignment.js';
+import { getAssignmentRepository, getClassRepository } from '../data/repositories.js';
 
 // Typescript is annoy with with parameter forwarding from class.ts
 interface AssignmentParams {
@@ -19,6 +21,34 @@ export async function getAllAssignmentsHandler(
     res.json({
         assignments: assignments,
     });
+}
+
+export async function createAssignmentHandler(
+    req: Request<AssignmentParams>,
+    res: Response,
+): Promise<void> {
+    const classid = req.params.classid;
+    const assignmentData = req.body as AssignmentDTO;
+
+    if (!assignmentData.description 
+        || !assignmentData.language 
+        || !assignmentData.learningPath 
+        || !assignmentData.title
+    ) {
+        res.status(400).json({
+            error: 'Missing one or more required fields: title, description, learningPath, title',
+        });
+        return;
+    }
+
+    const assignment = createAssignment(classid, assignmentData);
+
+    if (!assignment) {
+        res.status(500).json({ error: "Could not create assignment "});
+        return;
+    }
+
+    res.status(201).json({ assignment: assignment });
 }
 
 export async function getAssignmentHandler(
