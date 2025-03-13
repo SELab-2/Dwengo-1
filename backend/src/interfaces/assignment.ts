@@ -17,7 +17,7 @@ export interface AssignmentDTO {
 export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTO {
     return {
         id: assignment.id!,
-        class: assignment.within.classId,
+        class: assignment.within.classId!,
         title: assignment.title,
         description: assignment.description,
         learningPath: assignment.learningPathHruid,
@@ -29,7 +29,7 @@ export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTO {
 export function mapToAssignmentDTO(assignment: Assignment): AssignmentDTO {
     return {
         id: assignment.id!,
-        class: assignment.within.classId,
+        class: assignment.within.classId!,
         title: assignment.title,
         description: assignment.description,
         learningPath: assignment.learningPathHruid,

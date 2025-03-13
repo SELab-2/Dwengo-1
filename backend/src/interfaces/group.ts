@@ -18,7 +18,7 @@ export function mapToGroupDTO(group: Group): GroupDTO {
 
 export function mapToGroupDTOId(group: Group): GroupDTO {
     return {
-        assignment: group.assignment.id,
+        assignment: group.assignment.id!,
         groupNumber: group.groupNumber,
         members: group.members.map((member) => {
             return member.username;

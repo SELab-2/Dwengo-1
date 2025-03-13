@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+    createClassHandler,
     getAllClassesHandler,
     getClassHandler,
     getClassStudentsHandler,
@@ -11,6 +12,8 @@ const router = express.Router();
 
 // Root endpoint used to search objects
 router.get('/', getAllClassesHandler);
+
+router.post('/', createClassHandler);
 
 // Information about an class with id 'id'
 router.get('/:id', getClassHandler);

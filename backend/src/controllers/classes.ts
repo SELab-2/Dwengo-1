@@ -1,11 +1,14 @@
 import { Request, Response } from 'express';
 import {
+    createClass,
     getAllClasses,
     getClass,
     getClassStudents,
     getClassStudentsIds,
     getClassTeacherInvitations,
 } from '../services/class.js';
+import { ClassDTO, mapToClass } from '../interfaces/class.js';
+import { getClassRepository, getStudentRepository, getTeacherRepository } from '../data/repositories.js';
 
 export async function getAllClassesHandler(
     req: Request,
@@ -17,6 +20,29 @@ export async function getAllClassesHandler(
     res.json({
         classes: classes,
     });
+}
+
+export async function createClassHandler(
+    req: Request,
+    res: Response,
+): Promise<void> {
+    const classData = req.body as ClassDTO;
+
+    if (!classData.displayName) {
+        res.status(400).json({
+            error: 'Missing one or more required fields: displayName',
+        });
+        return;
+    }
+
+    const cls = await createClass(classData);
+
+    if (!cls) {
+        res.status(500).json({ error: "Something went wrong while creating class" });
+        return
+    }
+
+    res.status(201).json({ class: cls });
 }
 
 export async function getClassHandler(
