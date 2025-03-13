@@ -1,10 +1,11 @@
 import express from 'express';
 import {
-    createQuestionHandler, deleteQuestionHandler,
+    createQuestionHandler,
+    deleteQuestionHandler,
     getAllQuestionsHandler,
     getQuestionAnswersHandler,
-    getQuestionHandler
-} from "../controllers/questions.js";
+    getQuestionHandler,
+} from '../controllers/questions.js';
 const router = express.Router({ mergeParams: true });
 
 // Query language

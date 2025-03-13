@@ -1,5 +1,5 @@
 import { EnvVars, getEnvVar } from './util/envvars.js';
-import {Language} from "./entities/content/language.js";
+import { Language } from './entities/content/language.js';
 
 // API
 export const DWENGO_API_BASE = getEnvVar(EnvVars.LearningContentRepoApiBaseUrl);

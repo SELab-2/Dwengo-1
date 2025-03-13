@@ -9,10 +9,7 @@ interface GroupParams {
     groupid?: string;
 }
 
-export async function getGroupHandler(
-    req: Request<GroupParams>,
-    res: Response
-): Promise<void> {
+export async function getGroupHandler(req: Request<GroupParams>, res: Response): Promise<void> {
     const classId = req.params.classid;
     const full = req.query.full === 'true';
     const assignmentId = +req.params.assignmentid;
@@ -34,10 +31,7 @@ export async function getGroupHandler(
     res.json(group);
 }
 
-export async function getAllGroupsHandler(
-    req: Request,
-    res: Response
-): Promise<void> {
+export async function getAllGroupsHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.classid;
     const full = req.query.full === 'true';
 
@@ -55,10 +49,7 @@ export async function getAllGroupsHandler(
     });
 }
 
-export async function createGroupHandler(
-    req: Request,
-    res: Response,
-): Promise<void> {
+export async function createGroupHandler(req: Request, res: Response): Promise<void> {
     const classid = req.params.classid;
     const assignmentId = +req.params.assignmentid;
 
@@ -71,17 +62,14 @@ export async function createGroupHandler(
     const group = createGroup(groupData, classid, assignmentId);
 
     if (!group) {
-        res.status(500).json({ error: "Something went wrong while creating group" });
-        return
+        res.status(500).json({ error: 'Something went wrong while creating group' });
+        return;
     }
 
     res.status(201).json({ group: group });
 }
 
-export async function getGroupSubmissionsHandler(
-    req: Request,
-    res: Response,
-): Promise<void> {
+export async function getGroupSubmissionsHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.classid;
     // Const full = req.query.full === 'true';
 

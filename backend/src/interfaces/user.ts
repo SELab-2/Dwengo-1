@@ -22,10 +22,7 @@ export function mapToUserDTO(user: User): UserDTO {
     };
 }
 
-export function mapToUser<T extends User>(
-    userData: UserDTO,
-    userInstance: T
-): T {
+export function mapToUser<T extends User>(userData: UserDTO, userInstance: T): T {
     userInstance.username = userData.username;
     userInstance.firstName = userData.firstName;
     userInstance.lastName = userData.lastName;

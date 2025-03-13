@@ -40,9 +40,7 @@ export function transactional<T>(f: () => Promise<T>) {
     entityManager?.transactional(f);
 }
 
-function repositoryGetter<T extends AnyEntity, R extends EntityRepository<T>>(
-    entity: EntityName<T>
-): () => R {
+function repositoryGetter<T extends AnyEntity, R extends EntityRepository<T>>(entity: EntityName<T>): () => R {
     let cachedRepo: R | undefined;
     return (): R => {
         if (!cachedRepo) {

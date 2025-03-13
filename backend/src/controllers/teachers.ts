@@ -1,5 +1,16 @@
 import { Request, Response } from 'express';
-import { createTeacher, deleteTeacher, getAllTeachers, getClassesByTeacher, getClassIdsByTeacher, getQuestionIdsByTeacher, getQuestionsByTeacher, getStudentIdsByTeacher, getStudentsByTeacher, getTeacher } from '../services/teachers.js';
+import {
+    createTeacher,
+    deleteTeacher,
+    getAllTeachers,
+    getClassesByTeacher,
+    getClassIdsByTeacher,
+    getQuestionIdsByTeacher,
+    getQuestionsByTeacher,
+    getStudentIdsByTeacher,
+    getStudentsByTeacher,
+    getTeacher,
+} from '../services/teachers.js';
 import { ClassDTO } from '../interfaces/class.js';
 import { StudentDTO } from '../interfaces/student.js';
 import { QuestionDTO, QuestionId } from '../interfaces/question.js';
@@ -7,17 +18,12 @@ import { Teacher } from '../entities/users/teacher.entity.js';
 import { TeacherDTO } from '../interfaces/teacher.js';
 import { getTeacherRepository } from '../data/repositories.js';
 
-export async function getAllTeachersHandler(
-    req: Request,
-    res: Response,
-): Promise<void> {
+export async function getAllTeachersHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
 
     const teacherRepository = getTeacherRepository();
 
-    const teachers: TeacherDTO[] | string[] = full
-        ? await getAllTeachers()
-        : await getAllTeachers();
+    const teachers: TeacherDTO[] | string[] = full ? await getAllTeachers() : await getAllTeachers();
 
     if (!teachers) {
         res.status(404).json({ error: `Teacher not found.` });
@@ -27,11 +33,7 @@ export async function getAllTeachersHandler(
     res.status(201).json(teachers);
 }
 
-
-export async function getTeacherHandler(
-    req: Request,
-    res: Response,
-): Promise<void> {
+export async function getTeacherHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
 
     if (!username) {
@@ -51,10 +53,7 @@ export async function getTeacherHandler(
     res.status(201).json(user);
 }
 
-export async function createTeacherHandler(
-    req: Request,
-    res: Response,
-) {
+export async function createTeacherHandler(req: Request, res: Response) {
     const userData = req.body as TeacherDTO;
 
     if (!userData.username || !userData.firstName || !userData.lastName) {
@@ -68,10 +67,7 @@ export async function createTeacherHandler(
     res.status(201).json(newUser);
 }
 
-export async function deleteTeacherHandler(
-    req: Request,
-    res: Response,
-) {
+export async function deleteTeacherHandler(req: Request, res: Response) {
     const username = req.params.username;
 
     if (!username) {
@@ -90,11 +86,7 @@ export async function deleteTeacherHandler(
     res.status(200).json(deletedUser);
 }
 
-
-export async function getTeacherClassHandler(
-    req: Request,
-    res: Response
-): Promise<void> {
+export async function getTeacherClassHandler(req: Request, res: Response): Promise<void> {
     try {
         const username = req.params.username as string;
         const full = req.query.full === 'true';
@@ -104,9 +96,7 @@ export async function getTeacherClassHandler(
             return;
         }
 
-        const classes: ClassDTO[] | string[] = full
-            ? await getClassesByTeacher(username)
-            : await getClassIdsByTeacher(username);
+        const classes: ClassDTO[] | string[] = full ? await getClassesByTeacher(username) : await getClassIdsByTeacher(username);
 
         res.status(201).json(classes);
     } catch (error) {
@@ -115,10 +105,7 @@ export async function getTeacherClassHandler(
     }
 }
 
-export async function getTeacherStudentHandler(
-    req: Request,
-    res: Response
-): Promise<void> {
+export async function getTeacherStudentHandler(req: Request, res: Response): Promise<void> {
     try {
         const username = req.params.username as string;
         const full = req.query.full === 'true';
@@ -128,9 +115,7 @@ export async function getTeacherStudentHandler(
             return;
         }
 
-        const students: StudentDTO[] | string[] = full
-            ? await getStudentsByTeacher(username)
-            : await getStudentIdsByTeacher(username);
+        const students: StudentDTO[] | string[] = full ? await getStudentsByTeacher(username) : await getStudentIdsByTeacher(username);
 
         res.status(201).json(students);
     } catch (error) {
@@ -139,10 +124,7 @@ export async function getTeacherStudentHandler(
     }
 }
 
-export async function getTeacherQuestionHandler(
-    req: Request,
-    res: Response
-): Promise<void> {
+export async function getTeacherQuestionHandler(req: Request, res: Response): Promise<void> {
     try {
         const username = req.params.username as string;
         const full = req.query.full === 'true';
@@ -152,9 +134,7 @@ export async function getTeacherQuestionHandler(
             return;
         }
 
-        const questions: QuestionDTO[] | QuestionId[] = full
-            ? await getQuestionsByTeacher(username)
-            : await getQuestionIdsByTeacher(username);
+        const questions: QuestionDTO[] | QuestionId[] = full ? await getQuestionsByTeacher(username) : await getQuestionIdsByTeacher(username);
 
         res.status(201).json(questions);
     } catch (error) {

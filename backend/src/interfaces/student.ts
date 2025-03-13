@@ -23,11 +23,7 @@ export function mapToStudentDTO(student: Student): StudentDTO {
 }
 
 export function mapToStudent(studentData: StudentDTO): Student {
-    const student = new Student(
-        studentData.username,
-        studentData.firstName,
-        studentData.lastName,
-    );
+    const student = new Student(studentData.username, studentData.firstName, studentData.lastName);
 
     return student;
 }

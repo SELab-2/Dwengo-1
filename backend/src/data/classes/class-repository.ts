@@ -5,10 +5,7 @@ import { Teacher } from '../../entities/users/teacher.entity';
 
 export class ClassRepository extends DwengoEntityRepository<Class> {
     public findById(id: string): Promise<Class | null> {
-        return this.findOne(
-            { classId: id },
-            { populate: ['students', 'teachers'] }
-        );
+        return this.findOne({ classId: id }, { populate: ['students', 'teachers'] });
     }
     public deleteById(id: string): Promise<void> {
         return this.deleteWhere({ classId: id });
@@ -21,9 +18,6 @@ export class ClassRepository extends DwengoEntityRepository<Class> {
     }
 
     public findByTeacher(teacher: Teacher): Promise<Class[]> {
-        return this.find(
-            { teachers: teacher },
-            { populate: ['students', 'teachers'] }
-        );
+        return this.find({ teachers: teacher }, { populate: ['students', 'teachers'] });
     }
 }

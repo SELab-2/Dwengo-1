@@ -1,20 +1,20 @@
-import { Submission } from "../entities/assignments/submission.entity.js";
-import { Language } from "../entities/content/language.js";
-import { GroupDTO, mapToGroupDTO } from "./group.js";
-import {mapToStudent, mapToStudentDTO, StudentDTO} from "./student.js";
-import {mapToUser} from "./user";
-import {Student} from "../entities/users/student.entity";
+import { Submission } from '../entities/assignments/submission.entity.js';
+import { Language } from '../entities/content/language.js';
+import { GroupDTO, mapToGroupDTO } from './group.js';
+import { mapToStudent, mapToStudentDTO, StudentDTO } from './student.js';
+import { mapToUser } from './user';
+import { Student } from '../entities/users/student.entity';
 
 export interface SubmissionDTO {
-    learningObjectHruid: string,
-    learningObjectLanguage: Language,
-    learningObjectVersion: number,
+    learningObjectHruid: string;
+    learningObjectLanguage: Language;
+    learningObjectVersion: number;
 
-    submissionNumber?: number,
-    submitter: StudentDTO,
-    time?: Date,
-    group?: GroupDTO,
-    content: string,
+    submissionNumber?: number;
+    submitter: StudentDTO;
+    time?: Date;
+    group?: GroupDTO;
+    content: string;
 }
 
 export function mapToSubmissionDTO(submission: Submission): SubmissionDTO {
@@ -28,7 +28,7 @@ export function mapToSubmissionDTO(submission: Submission): SubmissionDTO {
         time: submission.submissionTime,
         group: submission.onBehalfOf ? mapToGroupDTO(submission.onBehalfOf) : undefined,
         content: submission.content,
-    }
+    };
 }
 
 export function mapToSubmission(submissionDTO: SubmissionDTO): Submission {
@@ -37,7 +37,7 @@ export function mapToSubmission(submissionDTO: SubmissionDTO): Submission {
     submission.learningObjectLanguage = submissionDTO.learningObjectLanguage;
     submission.learningObjectVersion = submissionDTO.learningObjectVersion;
     // Submission.submissionNumber = submissionDTO.submissionNumber;
-    submission.submitter = mapToStudent(submissionDTO.submitter) ;
+    submission.submitter = mapToStudent(submissionDTO.submitter);
     // Submission.submissionTime = submissionDTO.time;
     // Submission.onBehalfOf =  submissionDTO.group!;
     // TODO fix group

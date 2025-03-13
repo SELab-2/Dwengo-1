@@ -9,12 +9,7 @@ import { Teacher } from '../entities/users/teacher.entity.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { getClassStudents } from './class.js';
 import { StudentDTO } from '../interfaces/student.js';
-import {
-    mapToQuestionDTO,
-    mapToQuestionId,
-    QuestionDTO,
-    QuestionId,
-} from '../interfaces/question.js';
+import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question.js';
 import { UserService } from './users.js';
 import { mapToUser } from '../interfaces/user.js';
 import { mapToTeacher, mapToTeacherDTO, TeacherDTO } from '../interfaces/teacher.js';
@@ -42,9 +37,9 @@ export async function createTeacher(userData: TeacherDTO): Promise<TeacherDTO | 
     try {
         const newTeacher = teacherRepository.create(mapToTeacher(userData));
         await teacherRepository.save(newTeacher);
-    
+
         return mapToTeacherDTO(newTeacher);
-    } catch(e) {
+    } catch (e) {
         console.log(e);
         return null;
     }
@@ -61,9 +56,9 @@ export async function deleteTeacher(username: string): Promise<TeacherDTO | null
 
     try {
         await teacherRepository.deleteByUsername(username);
-    
+
         return mapToTeacherDTO(user);
-    } catch(e) {
+    } catch (e) {
         console.log(e);
         return null;
     }
@@ -93,11 +88,7 @@ export async function getClassIdsByTeacher(username: string): Promise<string[]> 
 export async function fetchStudentsByTeacher(username: string) {
     const classes = await getClassIdsByTeacher(username);
 
-    return (
-        await Promise.all(
-            classes.map(async (id) => getClassStudents(id))
-        )
-    ).flat();
+    return (await Promise.all(classes.map(async (id) => getClassStudents(id)))).flat();
 }
 
 export async function getStudentsByTeacher(username: string): Promise<StudentDTO[]> {
@@ -122,10 +113,7 @@ export async function fetchTeacherQuestions(username: string): Promise<QuestionD
 
     // Fetch all questions related to these learning objects
     const questionRepository = getQuestionRepository();
-    const questions =
-        await questionRepository.findAllByLearningObjects(
-            learningObjects
-        );
+    const questions = await questionRepository.findAllByLearningObjects(learningObjects);
 
     return questions.map(mapToQuestionDTO);
 }

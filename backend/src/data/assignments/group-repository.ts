@@ -4,10 +4,7 @@ import { Assignment } from '../../entities/assignments/assignment.entity.js';
 import { Student } from '../../entities/users/student.entity.js';
 
 export class GroupRepository extends DwengoEntityRepository<Group> {
-    public findByAssignmentAndGroupNumber(
-        assignment: Assignment,
-        groupNumber: number
-    ): Promise<Group | null> {
+    public findByAssignmentAndGroupNumber(assignment: Assignment, groupNumber: number): Promise<Group | null> {
         return this.findOne(
             {
                 assignment: assignment,
@@ -16,26 +13,16 @@ export class GroupRepository extends DwengoEntityRepository<Group> {
             { populate: ['members'] }
         );
     }
-    public findAllGroupsForAssignment(
-        assignment: Assignment
-    ): Promise<Group[]> {
+    public findAllGroupsForAssignment(assignment: Assignment): Promise<Group[]> {
         return this.findAll({
             where: { assignment: assignment },
             populate: ['members'],
         });
     }
-    public findAllGroupsWithStudent(
-        student: Student
-    ): Promise<Group[]> {
-        return this.find(
-            { members: student },
-            { populate: ['members'] }
-        )
+    public findAllGroupsWithStudent(student: Student): Promise<Group[]> {
+        return this.find({ members: student }, { populate: ['members'] });
     }
-    public deleteByAssignmentAndGroupNumber(
-        assignment: Assignment,
-        groupNumber: number
-    ) {
+    public deleteByAssignmentAndGroupNumber(assignment: Assignment, groupNumber: number) {
         return this.deleteWhere({
             assignment: assignment,
             groupNumber: groupNumber,

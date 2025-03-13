@@ -8,9 +8,7 @@ export interface TeacherInvitationDTO {
     class: string | ClassDTO;
 }
 
-export function mapToTeacherInvitationDTO(
-    invitation: TeacherInvitation
-): TeacherInvitationDTO {
+export function mapToTeacherInvitationDTO(invitation: TeacherInvitation): TeacherInvitationDTO {
     return {
         sender: mapToUserDTO(invitation.sender),
         receiver: mapToUserDTO(invitation.receiver),
@@ -18,9 +16,7 @@ export function mapToTeacherInvitationDTO(
     };
 }
 
-export function mapToTeacherInvitationDTOIds(
-    invitation: TeacherInvitation
-): TeacherInvitationDTO {
+export function mapToTeacherInvitationDTOIds(invitation: TeacherInvitation): TeacherInvitationDTO {
     return {
         sender: invitation.sender.username,
         receiver: invitation.receiver.username,

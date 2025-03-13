@@ -1,6 +1,6 @@
-import {mapToUserDTO, UserDTO} from "./user.js";
-import {mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId} from "./question.js";
-import {Answer} from "../entities/questions/answer.entity.js";
+import { mapToUserDTO, UserDTO } from './user.js';
+import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from './question.js';
+import { Answer } from '../entities/questions/answer.entity.js';
 
 export interface AnswerDTO {
     author: UserDTO;
@@ -33,6 +33,6 @@ export function mapToAnswerId(answer: AnswerDTO): AnswerId {
     return {
         author: answer.author.username,
         toQuestion: mapToQuestionId(answer.toQuestion),
-        sequenceNumber: answer.sequenceNumber
-    }
+        sequenceNumber: answer.sequenceNumber,
+    };
 }

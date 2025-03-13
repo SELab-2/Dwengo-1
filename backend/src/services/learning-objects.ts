@@ -1,16 +1,8 @@
 import { DWENGO_API_BASE } from '../config.js';
 import { fetchWithLogging } from '../util/api-helper.js';
-import {
-    FilteredLearningObject,
-    LearningObjectMetadata,
-    LearningObjectNode,
-    LearningPathResponse,
-} from '../interfaces/learning-content.js';
+import { FilteredLearningObject, LearningObjectMetadata, LearningObjectNode, LearningPathResponse } from '../interfaces/learning-content.js';
 
-function filterData(
-    data: LearningObjectMetadata,
-    htmlUrl: string
-): FilteredLearningObject {
+function filterData(data: LearningObjectMetadata, htmlUrl: string): FilteredLearningObject {
     return {
         key: data.hruid, // Hruid learningObject (not path)
         _id: data._id,
@@ -37,10 +29,7 @@ function filterData(
 /**
  * Fetches a single learning object by its HRUID
  */
-export async function getLearningObjectById(
-    hruid: string,
-    language: string
-): Promise<FilteredLearningObject | null> {
+export async function getLearningObjectById(hruid: string, language: string): Promise<FilteredLearningObject | null> {
     const metadataUrl = `${DWENGO_API_BASE}/learningObject/getMetadata?hruid=${hruid}&language=${language}`;
     const metadata = await fetchWithLogging<LearningObjectMetadata>(
         metadataUrl,
@@ -59,26 +48,12 @@ export async function getLearningObjectById(
 /**
  * Generic function to fetch learning objects (full data or just HRUIDs)
  */
-async function fetchLearningObjects(
-    hruid: string,
-    full: boolean,
-    language: string
-): Promise<FilteredLearningObject[] | string[]> {
+async function fetchLearningObjects(hruid: string, full: boolean, language: string): Promise<FilteredLearningObject[] | string[]> {
     try {
-        const learningPathResponse: LearningPathResponse =
-            await fetchLearningPaths(
-                [hruid],
-                language,
-                `Learning path for HRUID "${hruid}"`
-            );
+        const learningPathResponse: LearningPathResponse = await fetchLearningPaths([hruid], language, `Learning path for HRUID "${hruid}"`);
 
-        if (
-            !learningPathResponse.success ||
-            !learningPathResponse.data?.length
-        ) {
-            console.error(
-                `⚠️ WARNING: Learning path "${hruid}" exists but contains no learning objects.`
-            );
+        if (!learningPathResponse.success || !learningPathResponse.data?.length) {
+            console.error(`⚠️ WARNING: Learning path "${hruid}" exists but contains no learning objects.`);
             return [];
         }
 
@@ -88,12 +63,9 @@ async function fetchLearningObjects(
             return nodes.map((node) => node.learningobject_hruid);
         }
 
-        return await Promise.all(
-            nodes.map(async (node) => getLearningObjectById(
-                    node.learningobject_hruid,
-                    language
-                ))
-        ).then((objects) => objects.filter((obj): obj is FilteredLearningObject => obj !== null));
+        return await Promise.all(nodes.map(async (node) => getLearningObjectById(node.learningobject_hruid, language))).then((objects) =>
+            objects.filter((obj): obj is FilteredLearningObject => obj !== null)
+        );
     } catch (error) {
         console.error('❌ Error fetching learning objects:', error);
         return [];
@@ -103,27 +75,16 @@ async function fetchLearningObjects(
 /**
  * Fetch full learning object data (metadata)
  */
-export async function getLearningObjectsFromPath(
-    hruid: string,
-    language: string
-): Promise<FilteredLearningObject[]> {
-    return (await fetchLearningObjects(
-        hruid,
-        true,
-        language
-    )) as FilteredLearningObject[];
+export async function getLearningObjectsFromPath(hruid: string, language: string): Promise<FilteredLearningObject[]> {
+    return (await fetchLearningObjects(hruid, true, language)) as FilteredLearningObject[];
 }
 
 /**
  * Fetch only learning object HRUIDs
  */
-export async function getLearningObjectIdsFromPath(
-    hruid: string,
-    language: string
-): Promise<string[]> {
+export async function getLearningObjectIdsFromPath(hruid: string, language: string): Promise<string[]> {
     return (await fetchLearningObjects(hruid, false, language)) as string[];
 }
 function fetchLearningPaths(arg0: string[], language: string, arg2: string): LearningPathResponse | PromiseLike<LearningPathResponse> {
     throw new Error('Function not implemented.');
 }
-

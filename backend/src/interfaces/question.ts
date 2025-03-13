@@ -1,6 +1,6 @@
 import { Question } from '../entities/questions/question.entity.js';
-import {UserDTO} from "./user.js";
-import {LearningObjectIdentifier} from "../entities/content/learning-object-identifier.js";
+import { UserDTO } from './user.js';
+import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { mapToStudentDTO, StudentDTO } from './student.js';
 import { TeacherDTO } from './teacher.js';
 
@@ -19,8 +19,8 @@ export function mapToQuestionDTO(question: Question): QuestionDTO {
     const learningObjectIdentifier = {
         hruid: question.learningObjectHruid,
         language: question.learningObjectLanguage,
-        version: question.learningObjectVersion
-    }
+        version: question.learningObjectVersion,
+    };
 
     return {
         learningObjectIdentifier,
@@ -42,4 +42,3 @@ export function mapToQuestionId(question: QuestionDTO): QuestionId {
         sequenceNumber: question.sequenceNumber!,
     };
 }
-

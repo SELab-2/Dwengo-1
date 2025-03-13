@@ -3,17 +3,11 @@ import { UserService } from '../services/users.js';
 import { UserDTO } from '../interfaces/user.js';
 import { User } from '../entities/users/user.entity.js';
 
-export async function getAllUsersHandler<T extends User>(
-    req: Request,
-    res: Response,
-    service: UserService<T>
-): Promise<void> {
+export async function getAllUsersHandler<T extends User>(req: Request, res: Response, service: UserService<T>): Promise<void> {
     try {
         const full = req.query.full === 'true';
 
-        const users: UserDTO[] | string[] = full
-            ? await service.getAllUsers()
-            : await service.getAllUserIds();
+        const users: UserDTO[] | string[] = full ? await service.getAllUsers() : await service.getAllUserIds();
 
         if (!users) {
             res.status(404).json({ error: `Users not found.` });
@@ -27,11 +21,7 @@ export async function getAllUsersHandler<T extends User>(
     }
 }
 
-export async function getUserHandler<T extends User>(
-    req: Request,
-    res: Response,
-    service: UserService<T>
-): Promise<void> {
+export async function getUserHandler<T extends User>(req: Request, res: Response, service: UserService<T>): Promise<void> {
     try {
         const username = req.params.username as string;
 
@@ -56,12 +46,7 @@ export async function getUserHandler<T extends User>(
     }
 }
 
-export async function createUserHandler<T extends User>(
-    req: Request,
-    res: Response,
-    service: UserService<T>,
-    UserClass: new () => T
-) {
+export async function createUserHandler<T extends User>(req: Request, res: Response, service: UserService<T>, UserClass: new () => T) {
     try {
         console.log('req', req);
         const userData = req.body as UserDTO;
@@ -81,11 +66,7 @@ export async function createUserHandler<T extends User>(
     }
 }
 
-export async function deleteUserHandler<T extends User>(
-    req: Request,
-    res: Response,
-    service: UserService<T>
-) {
+export async function deleteUserHandler<T extends User>(req: Request, res: Response, service: UserService<T>) {
     try {
         const username = req.params.username;
 

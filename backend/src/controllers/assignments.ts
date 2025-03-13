@@ -9,10 +9,7 @@ interface AssignmentParams {
     id: string;
 }
 
-export async function getAllAssignmentsHandler(
-    req: Request<AssignmentParams>,
-    res: Response
-): Promise<void> {
+export async function getAllAssignmentsHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
     const classid = req.params.classid;
     const full = req.query.full === 'true';
 
@@ -23,18 +20,11 @@ export async function getAllAssignmentsHandler(
     });
 }
 
-export async function createAssignmentHandler(
-    req: Request<AssignmentParams>,
-    res: Response,
-): Promise<void> {
+export async function createAssignmentHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
     const classid = req.params.classid;
     const assignmentData = req.body as AssignmentDTO;
 
-    if (!assignmentData.description 
-        || !assignmentData.language 
-        || !assignmentData.learningPath 
-        || !assignmentData.title
-    ) {
+    if (!assignmentData.description || !assignmentData.language || !assignmentData.learningPath || !assignmentData.title) {
         res.status(400).json({
             error: 'Missing one or more required fields: title, description, learningPath, title',
         });
@@ -44,17 +34,14 @@ export async function createAssignmentHandler(
     const assignment = createAssignment(classid, assignmentData);
 
     if (!assignment) {
-        res.status(500).json({ error: "Could not create assignment "});
+        res.status(500).json({ error: 'Could not create assignment ' });
         return;
     }
 
     res.status(201).json({ assignment: assignment });
 }
 
-export async function getAssignmentHandler(
-    req: Request<AssignmentParams>,
-    res: Response
-): Promise<void> {
+export async function getAssignmentHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
     const id = +req.params.id;
     const classid = req.params.classid;
 
@@ -73,10 +60,7 @@ export async function getAssignmentHandler(
     res.json(assignment);
 }
 
-export async function getAssignmentsSubmissionsHandler(
-    req: Request<AssignmentParams>,
-    res: Response,
-): Promise<void> {
+export async function getAssignmentsSubmissionsHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
     const classid = req.params.classid;
     const assignmentNumber = +req.params.id;
 

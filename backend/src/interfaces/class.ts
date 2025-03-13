@@ -27,15 +27,11 @@ export function mapToClassDTO(cls: Class): ClassDTO {
     };
 }
 
-export function mapToClass(
-    classData: ClassDTO, 
-    students: Collection<Student>, 
-    teachers: Collection<Teacher>
-): Class {
+export function mapToClass(classData: ClassDTO, students: Collection<Student>, teachers: Collection<Teacher>): Class {
     const cls = new Class();
     cls.displayName = classData.displayName;
     cls.students = students;
     cls.teachers = teachers;
-    
+
     return cls;
 }

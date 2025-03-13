@@ -10,9 +10,7 @@ import {
 } from '../services/students.js';
 import { ClassDTO } from '../interfaces/class.js';
 import { getAllAssignments } from '../services/assignments.js';
-import {
-    getUserHandler,
-} from './users.js';
+import { getUserHandler } from './users.js';
 import { Student } from '../entities/users/student.entity.js';
 import { StudentDTO } from '../interfaces/student.js';
 import { getStudentRepository } from '../data/repositories.js';
@@ -20,17 +18,12 @@ import { UserDTO } from '../interfaces/user.js';
 
 // TODO: accept arguments (full, ...)
 // TODO: endpoints
-export async function getAllStudentsHandler(
-    req: Request,
-    res: Response,
-): Promise<void> {
+export async function getAllStudentsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
 
     const studentRepository = getStudentRepository();
 
-    const students: StudentDTO[] | string[] = full
-        ? await getAllStudents()
-        : await getAllStudents();
+    const students: StudentDTO[] | string[] = full ? await getAllStudents() : await getAllStudents();
 
     if (!students) {
         res.status(404).json({ error: `Student not found.` });
@@ -40,11 +33,7 @@ export async function getAllStudentsHandler(
     res.status(201).json(students);
 }
 
-
-export async function getStudentHandler(
-    req: Request,
-    res: Response,
-): Promise<void> {
+export async function getStudentHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
 
     if (!username) {
@@ -64,10 +53,7 @@ export async function getStudentHandler(
     res.status(201).json(user);
 }
 
-export async function createStudentHandler(
-    req: Request,
-    res: Response,
-) {
+export async function createStudentHandler(req: Request, res: Response) {
     const userData = req.body as StudentDTO;
 
     if (!userData.username || !userData.firstName || !userData.lastName) {
@@ -81,10 +67,7 @@ export async function createStudentHandler(
     res.status(201).json(newUser);
 }
 
-export async function deleteStudentHandler(
-    req: Request,
-    res: Response,
-) {
+export async function deleteStudentHandler(req: Request, res: Response) {
     const username = req.params.username;
 
     if (!username) {
@@ -103,10 +86,7 @@ export async function deleteStudentHandler(
     res.status(200).json(deletedUser);
 }
 
-export async function getStudentClassesHandler(
-    req: Request,
-    res: Response
-): Promise<void> {
+export async function getStudentClassesHandler(req: Request, res: Response): Promise<void> {
     try {
         const full = req.query.full === 'true';
         const username = req.params.id;
@@ -132,10 +112,7 @@ export async function getStudentClassesHandler(
 // Might not be fully correct depending on if
 // A class has an assignment, that all students
 // Have this assignment.
-export async function getStudentAssignmentsHandler(
-    req: Request,
-    res: Response
-): Promise<void> {
+export async function getStudentAssignmentsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
     const username = req.params.id;
 
@@ -146,24 +123,18 @@ export async function getStudentAssignmentsHandler(
     });
 }
 
-export async function getStudentGroupsHandler(
-    req: Request,
-    res: Response,
-): Promise<void> {
+export async function getStudentGroupsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
     const username = req.params.id;
 
     const groups = await getStudentGroups(username, full);
-    
+
     res.json({
         groups: groups,
     });
 }
 
-export async function getStudentSubmissionsHandler(
-    req: Request,
-    res: Response,
-): Promise<void> {
+export async function getStudentSubmissionsHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.id;
 
     const submissions = await getStudentSubmissions(username);
@@ -175,4 +146,3 @@ export async function getStudentSubmissionsHandler(
 function getAllStudents(): StudentDTO[] | string[] | PromiseLike<StudentDTO[] | string[]> {
     throw new Error('Function not implemented.');
 }
-

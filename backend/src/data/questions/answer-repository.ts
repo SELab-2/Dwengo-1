@@ -19,10 +19,7 @@ export class AnswerRepository extends DwengoEntityRepository<Answer> {
             orderBy: { sequenceNumber: 'ASC' },
         });
     }
-    public removeAnswerByQuestionAndSequenceNumber(
-        question: Question,
-        sequenceNumber: number
-    ): Promise<void> {
+    public removeAnswerByQuestionAndSequenceNumber(question: Question, sequenceNumber: number): Promise<void> {
         return this.deleteWhere({
             toQuestion: question,
             sequenceNumber: sequenceNumber,

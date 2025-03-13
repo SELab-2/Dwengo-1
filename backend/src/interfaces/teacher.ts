@@ -23,11 +23,7 @@ export function mapToTeacherDTO(teacher: Teacher): TeacherDTO {
 }
 
 export function mapToTeacher(TeacherData: TeacherDTO): Teacher {
-    const teacher = new Teacher(
-        TeacherData.username,
-        TeacherData.firstName,
-        TeacherData.lastName,
-    );
+    const teacher = new Teacher(TeacherData.username, TeacherData.firstName, TeacherData.lastName);
 
     return teacher;
 }

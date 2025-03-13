@@ -1,9 +1,4 @@
-import {
-    getClassRepository,
-    getGroupRepository,
-    getStudentRepository,
-    getSubmissionRepository,
-} from '../data/repositories.js';
+import { getClassRepository, getGroupRepository, getStudentRepository, getSubmissionRepository } from '../data/repositories.js';
 import { Class } from '../entities/classes/class.entity.js';
 import { Student } from '../entities/users/student.entity.js';
 import { AssignmentDTO } from '../interfaces/assignment.js';
@@ -13,7 +8,6 @@ import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student
 import { mapToSubmissionDTO, SubmissionDTO } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
 import { UserService } from './users.js';
-
 
 export async function getAllStudents(): Promise<StudentDTO[]> {
     const studentRepository = getStudentRepository();
@@ -38,9 +32,9 @@ export async function createStudent(userData: StudentDTO): Promise<StudentDTO | 
     try {
         const newStudent = studentRepository.create(mapToStudent(userData));
         await studentRepository.save(newStudent);
-    
+
         return mapToStudentDTO(newStudent);
-    } catch(e) {
+    } catch (e) {
         console.log(e);
         return null;
     }
@@ -57,9 +51,9 @@ export async function deleteStudent(username: string): Promise<StudentDTO | null
 
     try {
         await studentRepository.deleteByUsername(username);
-    
+
         return mapToStudentDTO(user);
-    } catch(e) {
+    } catch (e) {
         console.log(e);
         return null;
     }
@@ -94,11 +88,7 @@ export async function getStudentAssignments(username: string, full: boolean): Pr
     const classRepository = getClassRepository();
     const classes = await classRepository.findByStudent(student);
 
-    const assignments = (
-        await Promise.all(
-            classes.map(async (cls) => await getAllAssignments(cls.classId!, full))
-        )
-    ).flat();
+    const assignments = (await Promise.all(classes.map(async (cls) => await getAllAssignments(cls.classId!, full)))).flat();
 
     return assignments;
 }
@@ -121,9 +111,7 @@ export async function getStudentGroups(username: string, full: boolean): Promise
     return groups.map(mapToGroupDTOId);
 }
 
-export async function getStudentSubmissions(
-    username: string
-): Promise<SubmissionDTO[]> {
+export async function getStudentSubmissions(username: string): Promise<SubmissionDTO[]> {
     const studentRepository = getStudentRepository();
     const student = await studentRepository.findByUsername(username);
 
