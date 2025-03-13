@@ -1,4 +1,5 @@
 import {
+    Collection,
     Entity,
     Enum,
     ManyToOne,
@@ -50,5 +51,5 @@ export class Assignment {
         },
         mappedBy: 'assignment',
     })
-    groups!: Group[];
+    groups!: Collection<Group>;
 }

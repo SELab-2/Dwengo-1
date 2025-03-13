@@ -83,14 +83,11 @@ export async function createGroup(
 
     const groupRepository = getGroupRepository();
     try {
-        console.log('EEEEE');
         const newGroup = groupRepository.create({
             assignment: assignment,
             members: members,
         });
-        console.log('OOOOOO');
         await groupRepository.save(newGroup);
-        console.log('AAAAAA');
 
         return newGroup;
     } catch(e) {
