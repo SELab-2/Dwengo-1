@@ -35,7 +35,7 @@ COPY package-lock.json backend/package.json ./
 RUN npm install --silent --only=production
 
 COPY --from=build-stage /app/backend/dist ./dist/
-COPY --from=build-stage /app/docs/swagger ./dist/swagger
+COPY --from=build-stage /app/docs/api ./docs/swagger
 
 EXPOSE 3000
 

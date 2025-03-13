@@ -7,7 +7,7 @@ import { responseTimeLogger } from './logging/responseTimeLogger.js';
 import responseTime from 'response-time';
 import { EnvVars, getNumericEnvVar } from './util/envvars.js';
 import apiRouter from './routes/router.js';
-import swaggerMiddleware from './swagger';
+import swaggerMiddleware from './swagger.js';
 import swaggerUi from 'swagger-ui-express';
 
 const logger: Logger = getLogger();
