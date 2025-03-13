@@ -1,34 +1,24 @@
 import express from 'express';
-const router = express.Router();
+import {
+    createQuestionHandler, deleteQuestionHandler,
+    getAllQuestionsHandler,
+    getQuestionAnswersHandler,
+    getQuestionHandler
+} from "../controllers/questions.js";
+const router = express.Router({ mergeParams: true });
+
+// query language
 
 // Root endpoint used to search objects
-router.get('/', (req, res) => {
-    res.json({
-        questions: ['0', '1'],
-    });
-});
+router.get('/', getAllQuestionsHandler);
 
-// Information about an question with id 'id'
-router.get('/:id', (req, res) => {
-    res.json({
-        id: req.params.id,
-        student: '0',
-        group: '0',
-        time: new Date(2025, 1, 1),
-        content:
-            'Zijn alle gehele getallen groter dan 2 gelijk aan de som van 2 priemgetallen????',
-        learningObject: '0',
-        links: {
-            self: `${req.baseUrl}/${req.params.id}`,
-            answers: `${req.baseUrl}/${req.params.id}/answers`,
-        },
-    });
-});
+router.post('/', createQuestionHandler);
 
-router.get('/:id/answers', (req, res) => {
-    res.json({
-        answers: ['0'],
-    });
-});
+router.delete('/:seq', deleteQuestionHandler);
+
+// Information about a question with id
+router.get('/:seq', getQuestionHandler);
+
+router.get('/answers/:seq', getQuestionAnswersHandler);
 
 export default router;

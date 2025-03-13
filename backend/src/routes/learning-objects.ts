@@ -5,6 +5,8 @@ import {
 } from '../controllers/learning-objects.js';
 
 import submissionRoutes from './submissions.js';
+import questionRoutes from './questions.js';
+
 
 const router = express.Router();
 
@@ -27,5 +29,7 @@ router.get('/', getAllLearningObjects);
 router.get('/:hruid', getLearningObject);
 
 router.use('/:hruid/submissions', submissionRoutes);
+
+router.use('/:hruid/:version/questions', questionRoutes)
 
 export default router;
