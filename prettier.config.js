@@ -2,7 +2,7 @@
  * @type {import("prettier").Options}
  */
 export default {
-    printWidth: 80,
+    printWidth: 150,
     semi: true,
     singleQuote: true,
     trailingComma: 'es5',

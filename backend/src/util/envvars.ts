@@ -15,33 +15,18 @@ export const EnvVars: { [key: string]: EnvVar } = {
     DbUsername: { key: DB_PREFIX + 'USERNAME', required: true },
     DbPassword: { key: DB_PREFIX + 'PASSWORD', required: true },
     DbUpdate: { key: DB_PREFIX + 'UPDATE', defaultValue: false },
+    LearningContentRepoApiBaseUrl: { key: PREFIX + 'LEARNING_CONTENT_REPO_API_BASE_URL', defaultValue: 'https://dwengo.org/backend/api' },
+    FallbackLanguage: { key: PREFIX + 'FALLBACK_LANGUAGE', defaultValue: 'nl' },
+    UserContentPrefix: { key: DB_PREFIX + 'USER_CONTENT_PREFIX', defaultValue: 'u_' },
     IdpStudentUrl: { key: STUDENT_IDP_PREFIX + 'URL', required: true },
-    IdpStudentClientId: {
-        key: STUDENT_IDP_PREFIX + 'CLIENT_ID',
-        required: true,
-    },
-    IdpStudentJwksEndpoint: {
-        key: STUDENT_IDP_PREFIX + 'JWKS_ENDPOINT',
-        required: true,
-    },
+    IdpStudentClientId: { key: STUDENT_IDP_PREFIX + 'CLIENT_ID', required: true },
+    IdpStudentJwksEndpoint: { key: STUDENT_IDP_PREFIX + 'JWKS_ENDPOINT', required: true },
     IdpTeacherUrl: { key: TEACHER_IDP_PREFIX + 'URL', required: true },
-    IdpTeacherClientId: {
-        key: TEACHER_IDP_PREFIX + 'CLIENT_ID',
-        required: true,
-    },
-    IdpTeacherJwksEndpoint: {
-        key: TEACHER_IDP_PREFIX + 'JWKS_ENDPOINT',
-        required: true,
-    },
+    IdpTeacherClientId: { key: TEACHER_IDP_PREFIX + 'CLIENT_ID', required: true },
+    IdpTeacherJwksEndpoint: { key: TEACHER_IDP_PREFIX + 'JWKS_ENDPOINT', required: true },
     IdpAudience: { key: IDP_PREFIX + 'AUDIENCE', defaultValue: 'account' },
-    CorsAllowedOrigins: {
-        key: CORS_PREFIX + 'ALLOWED_ORIGINS',
-        defaultValue: '',
-    },
-    CorsAllowedHeaders: {
-        key: CORS_PREFIX + 'ALLOWED_HEADERS',
-        defaultValue: 'Authorization,Content-Type',
-    },
+    CorsAllowedOrigins: { key: CORS_PREFIX + 'ALLOWED_ORIGINS', defaultValue: '' },
+    CorsAllowedHeaders: { key: CORS_PREFIX + 'ALLOWED_HEADERS', defaultValue: 'Authorization,Content-Type' },
 } as const;
 
 /**
@@ -67,9 +52,7 @@ export function getNumericEnvVar(envVar: EnvVar): number {
     const valueString = getEnvVar(envVar);
     const value = parseInt(valueString);
     if (isNaN(value)) {
-        throw new Error(
-            `Invalid value for environment variable ${envVar.key}: ${valueString}. Expected a number.`
-        );
+        throw new Error(`Invalid value for environment variable ${envVar.key}: ${valueString}. Expected a number.`);
     } else {
         return value;
     }

@@ -23,16 +23,12 @@ const router = createRouter({
         {
             path: "/",
             name: "home",
-            component: () => {
-                return import("../views/HomePage.vue");
-            },
+            component: () => import("../views/HomePage.vue"),
         },
         {
             path: "/login",
             name: "LoginPage",
-            component: () => {
-                return import("../views/LoginPage.vue");
-            },
+            component: () => import("../views/LoginPage.vue"),
         },
         {
             path: "/callback",

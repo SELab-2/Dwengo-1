@@ -6,7 +6,7 @@ import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
 import { AuthenticatedRequest } from './authenticated-request.js';
 import { AuthenticationInfo } from './authentication-info.js';
-import { ForbiddenException, UnauthorizedException } from '../../exceptions';
+import { ForbiddenException, UnauthorizedException } from '../../exceptions.js';
 
 const JWKS_CACHE = true;
 const JWKS_RATE_LIMIT = true;
@@ -52,16 +52,12 @@ const verifyJwtToken = expressjwt({
 
         const issuer = (token.payload as JwtPayload).iss;
 
-        const idpConfig = Object.values(idpConfigs).find((config) => {
-            return config.issuer === issuer;
-        });
+        const idpConfig = Object.values(idpConfigs).find((config) => config.issuer === issuer);
         if (!idpConfig) {
             throw new Error('Issuer not accepted.');
         }
 
-        const signingKey = await idpConfig.jwksClient.getSigningKey(
-            token.header.kid
-        );
+        const signingKey = await idpConfig.jwksClient.getSigningKey(token.header.kid);
         if (!signingKey) {
             throw new Error('Signing key not found.');
         }
@@ -76,9 +72,7 @@ const verifyJwtToken = expressjwt({
 /**
  * Get an object with information about the authenticated user from a given authenticated request.
  */
-function getAuthenticationInfo(
-    req: AuthenticatedRequest
-): AuthenticationInfo | undefined {
+function getAuthenticationInfo(req: AuthenticatedRequest): AuthenticationInfo | undefined {
     if (!req.jwtPayload) {
         return;
     }
@@ -106,11 +100,7 @@ function getAuthenticationInfo(
  * Add the AuthenticationInfo object with the information about the current authentication to the request in order
  * to avoid that the routers have to deal with the JWT token.
  */
-const addAuthenticationInfo = (
-    req: AuthenticatedRequest,
-    res: express.Response,
-    next: express.NextFunction
-) => {
+const addAuthenticationInfo = (req: AuthenticatedRequest, res: express.Response, next: express.NextFunction) => {
     req.auth = getAuthenticationInfo(req);
     next();
 };
@@ -123,14 +113,9 @@ export const authenticateUser = [verifyJwtToken, addAuthenticationInfo];
  * @param accessCondition Predicate over the current AuthenticationInfo. Access is only granted when this evaluates
  *                        to true.
  */
-export const authorize = (
-    accessCondition: (auth: AuthenticationInfo) => boolean
-) => {
-    return (
-        req: AuthenticatedRequest,
-        res: express.Response,
-        next: express.NextFunction
-    ): void => {
+export const authorize =
+    (accessCondition: (auth: AuthenticationInfo) => boolean) =>
+    (req: AuthenticatedRequest, res: express.Response, next: express.NextFunction): void => {
         if (!req.auth) {
             throw new UnauthorizedException();
         } else if (!accessCondition(req.auth)) {
@@ -139,25 +124,18 @@ export const authorize = (
             next();
         }
     };
-};
 
 /**
  * Middleware which rejects all unauthenticated users, but accepts all authenticated users.
  */
-export const authenticatedOnly = authorize((_) => {
-    return true;
-});
+export const authenticatedOnly = authorize((_) => true);
 
 /**
  * Middleware which rejects requests from unauthenticated users or users that aren't students.
  */
-export const studentsOnly = authorize((auth) => {
-    return auth.accountType === 'student';
-});
+export const studentsOnly = authorize((auth) => auth.accountType === 'student');
 
 /**
  * Middleware which rejects requests from unauthenticated users or users that aren't teachers.
  */
-export const teachersOnly = authorize((auth) => {
-    return auth.accountType === 'teacher';
-});
+export const teachersOnly = authorize((auth) => auth.accountType === 'teacher');

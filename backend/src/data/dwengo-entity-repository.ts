@@ -1,8 +1,6 @@
 import { EntityRepository, FilterQuery } from '@mikro-orm/core';
 
-export abstract class DwengoEntityRepository<
-    T extends object,
-> extends EntityRepository<T> {
+export abstract class DwengoEntityRepository<T extends object> extends EntityRepository<T> {
     public async save(entity: T) {
         const em = this.getEntityManager();
         em.persist(entity);

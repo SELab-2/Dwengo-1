@@ -24,6 +24,7 @@ import { LearningPath } from './entities/content/learning-path.entity.js';
 
 import { Answer } from './entities/questions/answer.entity.js';
 import { Question } from './entities/questions/question.entity.js';
+import { SqliteAutoincrementSubscriber } from './sqlite-autoincrement-workaround.js';
 
 const entities = [
     User,
@@ -47,14 +48,13 @@ function config(testingMode: boolean = false): Options {
         return {
             driver: SqliteDriver,
             dbName: getEnvVar(EnvVars.DbName),
+            subscribers: [new SqliteAutoincrementSubscriber()],
             entities: entities,
             // EntitiesTs: entitiesTs,
 
             // Workaround: vitest: `TypeError: Unknown file extension ".ts"` (ERR_UNKNOWN_FILE_EXTENSION)
             // (see https://mikro-orm.io/docs/guide/project-setup#testing-the-endpoint)
-            dynamicImportProvider: (id) => {
-                return import(id);
-            },
+            dynamicImportProvider: (id) => import(id),
         };
     }
 
@@ -70,9 +70,7 @@ function config(testingMode: boolean = false): Options {
 
         // Logging
         debug: LOG_LEVEL === 'debug',
-        loggerFactory: (options: LoggerOptions) => {
-            return new MikroOrmLogger(options);
-        },
+        loggerFactory: (options: LoggerOptions) => new MikroOrmLogger(options),
     };
 }
 

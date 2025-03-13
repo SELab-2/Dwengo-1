@@ -4,15 +4,13 @@ import { Question } from '../../entities/questions/question.entity.js';
 import { Teacher } from '../../entities/users/teacher.entity.js';
 
 export class AnswerRepository extends DwengoEntityRepository<Answer> {
-    public createAnswer(answer: {
-        toQuestion: Question;
-        author: Teacher;
-        content: string;
-    }): Promise<Answer> {
-        const answerEntity = new Answer();
-        answerEntity.toQuestion = answer.toQuestion;
-        answerEntity.author = answer.author;
-        answerEntity.content = answer.content;
+    public createAnswer(answer: { toQuestion: Question; author: Teacher; content: string }): Promise<Answer> {
+        const answerEntity = this.create({
+            toQuestion: answer.toQuestion,
+            author: answer.author,
+            content: answer.content,
+            timestamp: new Date(),
+        });
         return this.insert(answerEntity);
     }
     public findAllAnswersToQuestion(question: Question): Promise<Answer[]> {
@@ -21,10 +19,7 @@ export class AnswerRepository extends DwengoEntityRepository<Answer> {
             orderBy: { sequenceNumber: 'ASC' },
         });
     }
-    public removeAnswerByQuestionAndSequenceNumber(
-        question: Question,
-        sequenceNumber: number
-    ): Promise<void> {
+    public removeAnswerByQuestionAndSequenceNumber(question: Question, sequenceNumber: number): Promise<void> {
         return this.deleteWhere({
             toQuestion: question,
             sequenceNumber: sequenceNumber,
