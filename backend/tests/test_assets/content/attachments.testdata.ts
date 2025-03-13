@@ -8,7 +8,7 @@ export function makeTestAttachments(
 ): Array<Attachment> {
     const attachment01 = em.create(Attachment, {
         learningObject: learningObjects[1],
-        sequenceNumber: 1,
+        name: 'attachment01',
         mimeType: '',
         content: Buffer.from(''),
     });

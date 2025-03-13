@@ -1,10 +1,10 @@
 import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
 import {
     LearningPath,
-    LearningPathNode,
-    LearningPathTransition,
 } from '../../../src/entities/content/learning-path.entity';
 import { Language } from '../../../src/entities/content/language';
+import { LearningPathTransition } from '../../../src/entities/content/learning-path-transition.entity';
+import { LearningPathNode } from '../../../src/entities/content/learning-path-node.entity';
 
 export function makeTestLearningPaths(
     em: EntityManager<IDatabaseDriver<Connection>>
@@ -41,35 +41,35 @@ export function makeTestLearningPaths(
     learningPathNode01.learningObjectHruid = 'id01';
     learningPathNode01.startNode = true;
     learningPathNode01.transitions = [transitions01];
-    learningPathNode01.version = '1';
+    learningPathNode01.version = 1;
 
     learningPathNode02.instruction = '';
     learningPathNode02.language = Language.English;
     learningPathNode02.learningObjectHruid = 'id02';
     learningPathNode02.startNode = false;
     learningPathNode02.transitions = [transitions02];
-    learningPathNode02.version = '1';
+    learningPathNode02.version = 1;
 
     learningPathNode03.instruction = '';
     learningPathNode03.language = Language.English;
     learningPathNode03.learningObjectHruid = 'id03';
     learningPathNode03.startNode = true;
     learningPathNode03.transitions = [transitions03];
-    learningPathNode03.version = '1';
+    learningPathNode03.version = 1;
 
     learningPathNode04.instruction = '';
     learningPathNode04.language = Language.English;
     learningPathNode04.learningObjectHruid = 'id04';
     learningPathNode04.startNode = false;
     learningPathNode04.transitions = [transitions04];
-    learningPathNode04.version = '1';
+    learningPathNode04.version = 1;
 
     learningPathNode05.instruction = '';
     learningPathNode05.language = Language.English;
     learningPathNode05.learningObjectHruid = 'id05';
     learningPathNode05.startNode = false;
     learningPathNode05.transitions = [transitions05];
-    learningPathNode05.version = '1';
+    learningPathNode05.version = 1;
 
     const nodes01: Array<LearningPathNode> = [
         // learningPathNode01,

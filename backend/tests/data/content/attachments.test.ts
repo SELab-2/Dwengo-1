@@ -1,13 +1,13 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { setupTestApp } from '../../setup-tests';
+import { setupTestApp } from '../../setup-tests.js';
 import {
     getAttachmentRepository,
     getLearningObjectRepository,
-} from '../../../src/data/repositories';
-import { AttachmentRepository } from '../../../src/data/content/attachment-repository';
-import { LearningObjectRepository } from '../../../src/data/content/learning-object-repository';
-import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
-import { Language } from '../../../src/entities/content/language';
+} from '../../../src/data/repositories.js';
+import { AttachmentRepository } from '../../../src/data/content/attachment-repository.js';
+import { LearningObjectRepository } from '../../../src/data/content/learning-object-repository.js';
+import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier.js';
+import { Language } from '../../../src/entities/content/language.js';
 
 describe('AttachmentRepository', () => {
     let attachmentRepository: AttachmentRepository;
@@ -25,9 +25,10 @@ describe('AttachmentRepository', () => {
             await learningObjectRepository.findByIdentifier(id);
 
         const attachment =
-            await attachmentRepository.findByLearningObjectAndNumber(
+            await attachmentRepository.findByMostRecentVersionOfLearningObjectAndName(
                 learningObject!,
-                1
+                Language.English,
+                'attachment01'
             );
 
         expect(attachment).toBeTruthy();

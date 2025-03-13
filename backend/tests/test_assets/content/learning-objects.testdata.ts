@@ -1,10 +1,7 @@
 import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
-import {
-    ContentType,
-    LearningObject,
-    ReturnValue,
-} from '../../../src/entities/content/learning-object.entity';
+import { LearningObject, ReturnValue } from '../../../src/entities/content/learning-object.entity';
 import { Language } from '../../../src/entities/content/language';
+import { DwengoContentType } from '../../../src/services/learning-objects/processing/content-type';
 
 export function makeTestLearningObjects(
     em: EntityManager<IDatabaseDriver<Connection>>
@@ -16,11 +13,11 @@ export function makeTestLearningObjects(
     const learningObject01 = em.create(LearningObject, {
         hruid: 'id01',
         language: Language.English,
-        version: '1',
+        version: 1,
         admins: [],
         title: 'Undertow',
         description: 'debute',
-        contentType: ContentType.Markdown,
+        contentType: DwengoContentType.TEXT_MARKDOWN,
         keywords: [],
         teacherExclusive: false,
         skosConcepts: [],
@@ -34,17 +31,17 @@ export function makeTestLearningObjects(
         attachments: [],
         content: Buffer.from(
             "there's a shadow just behind me, shrouding every step i take, making every promise empty pointing every finger at me"
-        ),
+        )
     });
 
     const learningObject02 = em.create(LearningObject, {
         hruid: 'id02',
         language: Language.English,
-        version: '1',
+        version: 1,
         admins: [],
         title: 'Aenema',
         description: 'second album',
-        contentType: ContentType.Markdown,
+        contentType: DwengoContentType.TEXT_MARKDOWN,
         keywords: [],
         teacherExclusive: false,
         skosConcepts: [],
@@ -64,11 +61,11 @@ export function makeTestLearningObjects(
     const learningObject03 = em.create(LearningObject, {
         hruid: 'id03',
         language: Language.English,
-        version: '1',
+        version: 1,
         admins: [],
         title: 'love over gold',
         description: 'third album',
-        contentType: ContentType.Markdown,
+        contentType: DwengoContentType.TEXT_MARKDOWN,
         keywords: [],
         teacherExclusive: false,
         skosConcepts: [],
@@ -91,11 +88,11 @@ export function makeTestLearningObjects(
     const learningObject04 = em.create(LearningObject, {
         hruid: 'id04',
         language: Language.English,
-        version: '1',
+        version: 1,
         admins: [],
         title: 'making movies',
         description: 'fifth album',
-        contentType: ContentType.Markdown,
+        contentType: DwengoContentType.TEXT_MARKDOWN,
         keywords: [],
         teacherExclusive: false,
         skosConcepts: [],
@@ -118,11 +115,11 @@ export function makeTestLearningObjects(
     const learningObject05 = em.create(LearningObject, {
         hruid: 'id05',
         language: Language.English,
-        version: '1',
+        version: 1,
         admins: [],
         title: 'on every street',
         description: 'sixth album',
-        contentType: ContentType.Markdown,
+        contentType: DwengoContentType.TEXT_MARKDOWN,
         keywords: [],
         teacherExclusive: false,
         skosConcepts: [],
