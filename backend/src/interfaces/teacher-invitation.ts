@@ -24,6 +24,6 @@ export function mapToTeacherInvitationDTOIds(
     return {
         sender: invitation.sender.username,
         receiver: invitation.receiver.username,
-        class: invitation.class.classId,
+        class: invitation.class.classId!,
     };
 }

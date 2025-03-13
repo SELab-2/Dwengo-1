@@ -17,8 +17,8 @@ export class Group {
     })
     assignment!: Assignment;
 
-    @PrimaryKey({ type: 'integer' })
-    groupNumber!: number;
+    @PrimaryKey({ type: 'integer', autoincrement: true })
+    groupNumber?: number;
 
     @ManyToMany({
         entity: () => {
