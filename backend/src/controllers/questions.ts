@@ -104,7 +104,10 @@ export async function createQuestionHandler(req: Request, res: Response): Promis
 }
 
 export async function deleteQuestionHandler(req: Request, res: Response): Promise<void> {
-    const questionId = getQuestionId(res, req)
+    const questionId = getQuestionId(req, res);
+
+    if (!questionId)
+        return
 
     const question = await deleteQuestion(questionId);
 

@@ -1,10 +1,12 @@
 import {getAnswerRepository, getQuestionRepository} from "../data/repositories.js";
-import {mapToQuestion, mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId} from "../interfaces/question.js";
+import {mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId} from "../interfaces/question.js";
 import {Question} from "../entities/questions/question.entity.js";
 import {Answer} from "../entities/questions/answer.entity.js";
 import {mapToAnswerDTO, mapToAnswerId} from "../interfaces/answer.js";
 import {QuestionRepository} from "../data/questions/question-repository.js";
 import {LearningObjectIdentifier} from "../entities/content/learning-object-identifier.js";
+import {mapToUser} from "../interfaces/user.js";
+import {Student} from "../entities/users/student.entity.js";
 
 export async function getAllQuestions(
     id: LearningObjectIdentifier, full: boolean
@@ -69,16 +71,20 @@ export async function getAnswersByQuestion(questionId: QuestionId, full: boolean
 
 export async function createQuestion(questionDTO: QuestionDTO) {
     const questionRepository = getQuestionRepository();
-    const question = mapToQuestion(questionDTO);
+
+    const author = mapToUser<Student>(questionDTO.author, new Student())
 
     try {
-        const newQuestion = questionRepository.create(question)
-        await questionRepository.save(newQuestion);
+        await questionRepository.createQuestion({
+            loId: questionDTO.learningObjectIdentifier,
+            author,
+            content: questionDTO.content }
+        );
     } catch (e) {
         return null
     }
 
-    return newQuestion;
+    return questionDTO;
 }
 
 export async function deleteQuestion(questionId: QuestionId) {
