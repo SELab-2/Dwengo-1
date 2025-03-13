@@ -6,32 +6,22 @@ import { TeacherInvitationRepository } from '../../data/classes/teacher-invitati
 /**
  * Invitation of a teacher into a class (in order to teach it).
  */
-@Entity({
-    repository: () => {
-        return TeacherInvitationRepository;
-    },
-})
+@Entity({ repository: () => TeacherInvitationRepository })
 export class TeacherInvitation {
     @ManyToOne({
-        entity: () => {
-            return Teacher;
-        },
+        entity: () => Teacher,
         primary: true,
     })
     sender!: Teacher;
 
     @ManyToOne({
-        entity: () => {
-            return Teacher;
-        },
+        entity: () => Teacher,
         primary: true,
     })
     receiver!: Teacher;
 
     @ManyToOne({
-        entity: () => {
-            return Class;
-        },
+        entity: () => Class,
         primary: true,
     })
     class!: Class;

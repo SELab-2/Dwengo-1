@@ -23,13 +23,7 @@ export const themes: Theme[] = [
     },
     {
         title: 'art',
-        hruids: [
-            'pn_werking',
-            'un_artificiele_intelligentie',
-            'art1',
-            'art2',
-            'art3',
-        ],
+        hruids: ['pn_werking', 'un_artificiele_intelligentie', 'art1', 'art2', 'art3'],
     },
     {
         title: 'socialrobot',
@@ -37,12 +31,7 @@ export const themes: Theme[] = [
     },
     {
         title: 'agriculture',
-        hruids: [
-            'pn_werking',
-            'un_artificiele_intelligentie',
-            'agri_landbouw',
-            'agri_lopendeband',
-        ],
+        hruids: ['pn_werking', 'un_artificiele_intelligentie', 'agri_landbouw', 'agri_lopendeband'],
     },
     {
         title: 'wegostem',
@@ -83,16 +72,7 @@ export const themes: Theme[] = [
     },
     {
         title: 'python_programming',
-        hruids: [
-            'pn_werking',
-            'pn_datatypes',
-            'pn_operatoren',
-            'pn_structuren',
-            'pn_functies',
-            'art2',
-            'stem_insectbooks',
-            'un_algoenprog',
-        ],
+        hruids: ['pn_werking', 'pn_datatypes', 'pn_operatoren', 'pn_structuren', 'pn_functies', 'art2', 'stem_insectbooks', 'un_algoenprog'],
     },
     {
         title: 'stem',
@@ -110,15 +90,7 @@ export const themes: Theme[] = [
     },
     {
         title: 'care',
-        hruids: [
-            'pn_werking',
-            'un_artificiele_intelligentie',
-            'aiz1_zorg',
-            'aiz2_grafen',
-            'aiz3_unplugged',
-            'aiz4_eindtermen',
-            'aiz5_triage',
-        ],
+        hruids: ['pn_werking', 'un_artificiele_intelligentie', 'aiz1_zorg', 'aiz2_grafen', 'aiz3_unplugged', 'aiz4_eindtermen', 'aiz5_triage'],
     },
     {
         title: 'chatbot',

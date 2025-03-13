@@ -8,7 +8,6 @@ import {
 import { v4 } from 'uuid';
 import { Teacher } from '../users/teacher.entity.js';
 import { Student } from '../users/student.entity.js';
-import { ClassRepository } from '../../data/classes/class-repository.js';
 
 @Entity({
     repository: () => {
@@ -22,13 +21,9 @@ export class Class {
     @Property({ type: 'string' })
     displayName!: string;
 
-    @ManyToMany(() => {
-        return Teacher;
-    })
+    @ManyToMany(() => Teacher)
     teachers!: Collection<Teacher>;
 
-    @ManyToMany(() => {
-        return Student;
-    })
+    @ManyToMany(() => Student)
     students!: Collection<Student>;
 }

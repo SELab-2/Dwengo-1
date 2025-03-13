@@ -2,8 +2,10 @@
     import { ref } from "vue";
     import { useRoute } from "vue-router";
     import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
+    import { useI18n } from "vue-i18n";
 
     const route = useRoute();
+    const { t, locale } = useI18n();
 
     // Instantiate variables to use in html to render right
     // Links and content dependent on the role (student or teacher)
@@ -27,6 +29,8 @@
 
     // Logic to change the language of the website to the selected language
     const changeLanguage = (langCode: string) => {
+        locale.value = langCode;
+        localStorage.setItem("user-lang", langCode);
         console.log(langCode);
     };
 </script>
@@ -46,7 +50,7 @@
                                 :src="dwengoLogo"
                             />
                             <p class="caption">
-                                {{ role }}
+                                {{ t(`${role}`) }}
                             </p>
                         </router-link>
                     </li>
@@ -55,22 +59,22 @@
                             :to="`/${role}/${userId}/assignment`"
                             class="menu_item"
                         >
-                            assignments
+                            {{ t("assignments") }}
                         </router-link>
                     </li>
                     <li>
                         <router-link
                             :to="`/${role}/${userId}/class`"
                             class="menu_item"
-                            >classes</router-link
+                            >{{ t("classes") }}</router-link
                         >
                     </li>
                     <li>
                         <router-link
                             :to="`/${role}/${userId}/discussion`"
                             class="menu_item"
-                            >discussions</router-link
-                        >
+                            >{{ t("discussions") }}
+                        </router-link>
                     </li>
                     <li>
                         <v-menu open-on-hover>
@@ -104,7 +108,7 @@
                 <li>
                     <router-link :to="`/login`">
                         <v-tooltip
-                            text="log out"
+                            :text="t('logout')"
                             location="bottom"
                         >
                             <template v-slot:activator="{ props }">

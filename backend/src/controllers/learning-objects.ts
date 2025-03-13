@@ -1,60 +1,69 @@
 import { Request, Response } from 'express';
-import {
-    getLearningObjectById,
-    getLearningObjectIdsFromPath,
-    getLearningObjectsFromPath,
-} from '../services/learning-objects.js';
 import { FALLBACK_LANG } from '../config.js';
-import { FilteredLearningObject } from '../interfaces/learning-path.js';
+import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../interfaces/learning-content.js';
+import learningObjectService from '../services/learning-objects/learning-object-service.js';
+import { EnvVars, getEnvVar } from '../util/envvars.js';
+import { Language } from '../entities/content/language.js';
+import { BadRequestException } from '../exceptions.js';
+import attachmentService from '../services/learning-objects/attachment-service.js';
+import { NotFoundError } from '@mikro-orm/core';
 
-export async function getAllLearningObjects(
-    req: Request,
-    res: Response
-): Promise<void> {
-    try {
-        const hruid = req.query.hruid as string;
-        const full = req.query.full === 'true';
-        const language = (req.query.language as string) || FALLBACK_LANG;
-
-        if (!hruid) {
-            res.status(400).json({ error: 'HRUID query is required.' });
-            return;
-        }
-
-        let learningObjects: FilteredLearningObject[] | string[];
-        if (full) {
-            learningObjects = await getLearningObjectsFromPath(hruid, language);
-        } else {
-            learningObjects = await getLearningObjectIdsFromPath(
-                hruid,
-                language
-            );
-        }
-
-        res.json(learningObjects);
-    } catch (error) {
-        console.error('Error fetching learning objects:', error);
-        res.status(500).json({ error: 'Internal server error' });
+function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIdentifier {
+    if (!req.params.hruid) {
+        throw new BadRequestException('HRUID is required.');
     }
+    return {
+        hruid: req.params.hruid as string,
+        language: (req.query.language || getEnvVar(EnvVars.FallbackLanguage)) as Language,
+        version: parseInt(req.query.version as string),
+    };
 }
 
-export async function getLearningObject(
-    req: Request,
-    res: Response
-): Promise<void> {
-    try {
-        const { hruid } = req.params;
-        const language = (req.query.language as string) || FALLBACK_LANG;
-
-        if (!hruid) {
-            res.status(400).json({ error: 'HRUID parameter is required.' });
-            return;
-        }
-
-        const learningObject = await getLearningObjectById(hruid, language);
-        res.json(learningObject);
-    } catch (error) {
-        console.error('Error fetching learning object:', error);
-        res.status(500).json({ error: 'Internal server error' });
+function getLearningPathIdentifierFromRequest(req: Request): LearningPathIdentifier {
+    if (!req.query.hruid) {
+        throw new BadRequestException('HRUID is required.');
     }
+    return {
+        hruid: req.params.hruid as string,
+        language: (req.query.language as Language) || FALLBACK_LANG,
+    };
+}
+
+export async function getAllLearningObjects(req: Request, res: Response): Promise<void> {
+    const learningPathId = getLearningPathIdentifierFromRequest(req);
+    const full = req.query.full;
+
+    let learningObjects: FilteredLearningObject[] | string[];
+    if (full) {
+        learningObjects = await learningObjectService.getLearningObjectsFromPath(learningPathId);
+    } else {
+        learningObjects = await learningObjectService.getLearningObjectIdsFromPath(learningPathId);
+    }
+
+    res.json(learningObjects);
+}
+
+export async function getLearningObject(req: Request, res: Response): Promise<void> {
+    const learningObjectId = getLearningObjectIdentifierFromRequest(req);
+
+    const learningObject = await learningObjectService.getLearningObjectById(learningObjectId);
+    res.json(learningObject);
+}
+
+export async function getLearningObjectHTML(req: Request, res: Response): Promise<void> {
+    const learningObjectId = getLearningObjectIdentifierFromRequest(req);
+
+    const learningObject = await learningObjectService.getLearningObjectHTML(learningObjectId);
+    res.send(learningObject);
+}
+
+export async function getAttachment(req: Request, res: Response): Promise<void> {
+    const learningObjectId = getLearningObjectIdentifierFromRequest(req);
+    const name = req.params.attachmentName;
+    const attachment = await attachmentService.getAttachment(learningObjectId, name);
+
+    if (!attachment) {
+        throw new NotFoundError(`Attachment ${name} not found`);
+    }
+    res.setHeader('Content-Type', attachment.mimeType).send(attachment.content);
 }

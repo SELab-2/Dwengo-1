@@ -10,24 +10,18 @@ import { ClassJoinRequestRepository } from '../../data/classes/class-join-reques
 })
 export class ClassJoinRequest {
     @ManyToOne({
-        entity: () => {
-            return Student;
-        },
+        entity: () => Student,
         primary: true,
     })
     requester!: Student;
 
     @ManyToOne({
-        entity: () => {
-            return Class;
-        },
+        entity: () => Class,
         primary: true,
     })
     class!: Class;
 
-    @Enum(() => {
-        return ClassJoinRequestStatus;
-    })
+    @Enum(() => ClassJoinRequestStatus)
     status!: ClassJoinRequestStatus;
 }
 

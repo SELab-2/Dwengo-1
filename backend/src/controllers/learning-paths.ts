@@ -1,62 +1,64 @@
 import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
+import learningPathService from '../services/learning-paths/learning-path-service.js';
+import { BadRequestException, NotFoundException } from '../exceptions.js';
+import { Language } from '../entities/content/language.js';
 import {
-    fetchLearningPaths,
-    searchLearningPaths,
-} from '../services/learning-paths.js';
+    PersonalizationTarget,
+    personalizedForGroup,
+    personalizedForStudent,
+} from '../services/learning-paths/learning-path-personalization-util.js';
+
 /**
  * Fetch learning paths based on query parameters.
  */
-export async function getLearningPaths(
-    req: Request,
-    res: Response
-): Promise<void> {
-    try {
-        const hruids = req.query.hruid;
-        const themeKey = req.query.theme as string;
-        const searchQuery = req.query.search as string;
-        const language = (req.query.language as string) || FALLBACK_LANG;
+export async function getLearningPaths(req: Request, res: Response): Promise<void> {
+    const hruids = req.query.hruid;
+    const themeKey = req.query.theme as string;
+    const searchQuery = req.query.search as string;
+    const language = (req.query.language as string) || FALLBACK_LANG;
 
-        let hruidList;
+    const forStudent = req.query.forStudent as string;
+    const forGroupNo = req.query.forGroup as string;
+    const assignmentNo = req.query.assignmentNo as string;
+    const classId = req.query.classId as string;
 
-        if (hruids) {
-            hruidList = Array.isArray(hruids)
-                ? hruids.map(String)
-                : [String(hruids)];
-        } else if (themeKey) {
-            const theme = themes.find((t) => {
-                return t.title === themeKey;
-            });
-            if (theme) {
-                hruidList = theme.hruids;
-            } else {
-                res.status(404).json({
-                    error: `Theme "${themeKey}" not found.`,
-                });
-                return;
-            }
-        } else if (searchQuery) {
-            const searchResults = await searchLearningPaths(
-                searchQuery,
-                language
-            );
-            res.json(searchResults);
-            return;
-        } else {
-            hruidList = themes.flatMap((theme) => {
-                return theme.hruids;
-            });
+    let personalizationTarget: PersonalizationTarget | undefined;
+
+    if (forStudent) {
+        personalizationTarget = await personalizedForStudent(forStudent);
+    } else if (forGroupNo) {
+        if (!assignmentNo || !classId) {
+            throw new BadRequestException('If forGroupNo is specified, assignmentNo and classId must also be specified.');
         }
-
-        const learningPaths = await fetchLearningPaths(
-            hruidList,
-            language,
-            `HRUIDs: ${hruidList.join(', ')}`
-        );
-        res.json(learningPaths.data);
-    } catch (error) {
-        console.error('❌ Unexpected error fetching learning paths:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        personalizationTarget = await personalizedForGroup(classId, parseInt(assignmentNo), parseInt(forGroupNo));
     }
+
+    let hruidList;
+
+    if (hruids) {
+        hruidList = Array.isArray(hruids) ? hruids.map(String) : [String(hruids)];
+    } else if (themeKey) {
+        const theme = themes.find((t) => t.title === themeKey);
+        if (theme) {
+            hruidList = theme.hruids;
+        } else {
+            throw new NotFoundException(`Theme "${themeKey}" not found.`);
+        }
+    } else if (searchQuery) {
+        const searchResults = await learningPathService.searchLearningPaths(searchQuery, language as Language, personalizationTarget);
+        res.json(searchResults);
+        return;
+    } else {
+        hruidList = themes.flatMap((theme) => theme.hruids);
+    }
+
+    const learningPaths = await learningPathService.fetchLearningPaths(
+        hruidList,
+        language as Language,
+        `HRUIDs: ${hruidList.join(', ')}`,
+        personalizationTarget
+    );
+    res.json(learningPaths.data);
 }

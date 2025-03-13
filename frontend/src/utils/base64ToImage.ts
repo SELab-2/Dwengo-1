@@ -14,7 +14,5 @@
  * <img :src="convertBase64ToImageSrc(base64String)" alt="Learning Path Image" />
  */
 export function convertBase64ToImageSrc(base64String: string): string {
-    return base64String.startsWith("data:image")
-        ? base64String
-        : `data:image/png;base64,${base64String}`;
+    return base64String.startsWith("data:image") ? base64String : `data:image/png;base64,${base64String}`;
 }

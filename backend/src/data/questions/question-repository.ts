@@ -2,15 +2,17 @@ import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { Question } from '../../entities/questions/question.entity.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { Student } from '../../entities/users/student.entity.js';
-import { LearningObject } from '../../entities/content/learning-object.entity';
 
 export class QuestionRepository extends DwengoEntityRepository<Question> {
-    public createQuestion(question: {
-        loId: LearningObjectIdentifier;
-        author: Student;
-        content: string;
-    }): Promise<Question> {
-        const questionEntity = new Question();
+    public createQuestion(question: { loId: LearningObjectIdentifier; author: Student; content: string }): Promise<Question> {
+        const questionEntity = this.create({
+            learningObjectHruid: question.loId.hruid,
+            learningObjectLanguage: question.loId.language,
+            learningObjectVersion: question.loId.version,
+            author: question.author,
+            content: question.content,
+            timestamp: new Date(),
+        });
         questionEntity.learningObjectHruid = question.loId.hruid;
         questionEntity.learningObjectLanguage = question.loId.language;
         questionEntity.learningObjectVersion = question.loId.version;

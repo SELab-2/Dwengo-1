@@ -16,7 +16,8 @@ export default [
     prettierConfig,
     includeIgnoreFile(gitignorePath),
     {
-        ignores: ['**/dist/**', '**/.node_modules/**', '**/coverage/**'],
+        ignores: ['**/dist/**', '**/.node_modules/**', '**/coverage/**', '**/.github/**'],
+        files: ['**/*.ts', '**/*.cts', '**.*.mts', '**/*.ts'],
     },
     {
         languageOptions: {
@@ -38,7 +39,10 @@ export default [
             'no-use-before-define': 'error',
             'no-useless-assignment': 'error',
 
-            'arrow-body-style': ['warn', 'always'],
+            'no-unused-vars': 'off',
+            '@typescript-eslint/no-unused-vars': 'error',
+
+            'arrow-body-style': ['warn', 'as-needed'],
             'block-scoped-var': 'warn',
             camelcase: 'warn',
             'capitalized-comments': 'warn',

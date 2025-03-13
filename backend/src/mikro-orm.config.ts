@@ -1,7 +1,9 @@
-import { Options } from '@mikro-orm/core';
+import { LoggerOptions, Options } from '@mikro-orm/core';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { EnvVars, getEnvVar, getNumericEnvVar } from './util/envvars.js';
 import { SqliteDriver } from '@mikro-orm/sqlite';
+import { MikroOrmLogger } from './logging/mikroOrmLogger.js';
+import { LOG_LEVEL } from './config.js';
 
 // Import alle entity-bestanden handmatig
 import { User } from './entities/users/user.entity.js';
@@ -22,6 +24,7 @@ import { LearningPath } from './entities/content/learning-path.entity.js';
 
 import { Answer } from './entities/questions/answer.entity.js';
 import { Question } from './entities/questions/question.entity.js';
+import { SqliteAutoincrementSubscriber } from './sqlite-autoincrement-workaround.js';
 
 const entities = [
     User,
@@ -45,16 +48,16 @@ function config(testingMode: boolean = false): Options {
         return {
             driver: SqliteDriver,
             dbName: getEnvVar(EnvVars.DbName),
+            subscribers: [new SqliteAutoincrementSubscriber()],
             entities: entities,
             // EntitiesTs: entitiesTs,
 
             // Workaround: vitest: `TypeError: Unknown file extension ".ts"` (ERR_UNKNOWN_FILE_EXTENSION)
             // (see https://mikro-orm.io/docs/guide/project-setup#testing-the-endpoint)
-            dynamicImportProvider: (id) => {
-                return import(id);
-            },
+            dynamicImportProvider: (id) => import(id),
         };
     }
+
     return {
         driver: PostgreSqlDriver,
         host: getEnvVar(EnvVars.DbHost),
@@ -63,8 +66,11 @@ function config(testingMode: boolean = false): Options {
         user: getEnvVar(EnvVars.DbUsername),
         password: getEnvVar(EnvVars.DbPassword),
         entities: entities,
-        //EntitiesTs: entitiesTs,
-        debug: true,
+        // EntitiesTs: entitiesTs,
+
+        // Logging
+        debug: LOG_LEVEL === 'debug',
+        loggerFactory: (options: LoggerOptions) => new MikroOrmLogger(options),
     };
 }
 

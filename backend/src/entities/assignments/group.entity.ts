@@ -1,7 +1,6 @@
 import { Collection, Entity, ManyToMany, ManyToOne, PrimaryKey } from '@mikro-orm/core';
 import { Assignment } from './assignment.entity.js';
 import { Student } from '../users/student.entity.js';
-import { GroupRepository } from '../../data/assignments/group-repository.js';
 
 @Entity({
     repository: () => {
@@ -10,9 +9,7 @@ import { GroupRepository } from '../../data/assignments/group-repository.js';
 })
 export class Group {
     @ManyToOne({
-        entity: () => {
-            return Assignment;
-        },
+        entity: () => Assignment,
         primary: true,
     })
     assignment!: Assignment;
@@ -20,8 +17,8 @@ export class Group {
     @PrimaryKey({ type: 'integer', autoincrement: true })
     groupNumber?: number;
 
-    @ManyToMany(() => {
-        return Student;
+    @ManyToMany({
+        entity: () => Student,
     })
-    members!: Collection<Student>;
+    members!: Student[];
 }
