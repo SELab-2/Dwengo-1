@@ -9,29 +9,26 @@ Figma</a></span>
 Projectopgave</a></span>
 </p>
 
-<ul align="center" style="list-style-type: none">
-<li>Projectleider: Fransisco Gabriel Van Langenhove (<a href="https://github.com/Gabriellvl">@Gabriellvl</a>)</li>
-<li>Technische lead: Tibo De Peuter (<a href="https://github.com/tdpeuter">@tdpeuter</a>)</li>
-<li>Systeembeheerder: Timo De Meyst (<a href="https://github.com/kloep1">@kloep1</a>)</li>
-<li>Customer relations officer: Adriaan Jacquet (<a href="https://github.com/WhisperinCheetah">@WhisperinCheetah</a>)</li>
-</ul>
-
 Dit is de monorepo voor [Dwengo-1](https://sel2-1.ugent.be), een interactief leerplatform waar leerkrachten opdrachten
 en lessen kunnen samenstellen hun leerlingen en hun vooruitgang kunnen opvolgen.
 
 ## Installatie
 
-Om de applicatie in te stellen voor een productieomgeving, volg de [installatiehandleiding](https://github.com/SELab-2/Dwengo-1/wiki/Administrator:-Productie-omgeving).
+Om de applicatie in te stellen voor een productieomgeving, volg
+de [installatiehandleiding](https://github.com/SELab-2/Dwengo-1/wiki/Administrator:-Productie-omgeving).
 
 Alternatief kan je één van de volgende methodes gebruiken om de applicatie lokaal te draaien.
 
 ### Quick start
 
-1. Installeer Docker en Docker Compose op je systeem (zie [Docker](https://docs.docker.com/get-docker/) en [Docker Compose](https://docs.docker.com/compose/)).
+1. Installeer Docker en Docker Compose op je systeem (zie [Docker](https://docs.docker.com/get-docker/)
+   en [Docker Compose](https://docs.docker.com/compose/)).
 2. Clone deze repository.
-3. In de backend, kopieer `.env.example` (of `.env.development.example`) naar `.env` en pas de variabelen aan waar nodig.
+3. In de backend, kopieer `.env.example` (of `.env.development.example`) naar `.env` en pas de variabelen aan waar
+   nodig.
 4. Voer `docker compose up` uit in de root van de repository.
-5. Optioneel: Configureer de applicatie aan de hand van de [configuratiehandleiding](https://github.com/SELab-2/Dwengo-1/wiki/Administrator:-Productie-omgeving#dwengo-1-configuratie).
+5. Optioneel: Configureer de applicatie aan de hand van
+   de [configuratiehandleiding](https://github.com/SELab-2/Dwengo-1/wiki/Administrator:-Productie-omgeving#dwengo-1-configuratie).
 
 ```bash
 docker compose version
@@ -47,7 +44,8 @@ docker compose up
 
 ### Handmatige installatie
 
-Zie de submappen voor de installatie-instructies van de [frontend](./frontend/README.md) en [backend](./backend/README.md).
+Zie de submappen voor de installatie-instructies van de [frontend](./frontend/README.md)
+en [backend](./backend/README.md).
 
 ## Architectuur
 
@@ -59,8 +57,23 @@ De tech-stack bestaat uit:
 - **Backend**: TypeScript + Node.js + Express.js + TypeORM + PostgreSQL
 - **Identity provider**: Keycloak
 
-Voor meer informatie over de keuze van deze tech-stack, zie [designkeuzes](https://github.com/SELab-2/Dwengo-1/wiki/Developer:-Design-keuzes).
+Voor meer informatie over de keuze van deze tech-stack,
+zie [designkeuzes](https://github.com/SELab-2/Dwengo-1/wiki/Developer:-Design-keuzes).
 
 ## Bijdragen aan Dwengo-1
 
 Zie [CONTRIBUTING.md](./CONTRIBUTING.md) voor meer informatie over hoe je kan bijdragen aan Dwengo-1.
+
+Deze rocksterren hebben bijgedragen aan Dwengo-1:
+
+| Naam                                                                                                                                                    | Functie                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| [<img src="https://github.com/WhisperinCheetah.png" width="100px"/><br/><sub><b>Adriaan Jacquet</b></sub>](https://github.com/WhisperinCheetah)         | Backend Lead               |
+| [<img src="https://github.com/Gabriellvl.png" width="100px"/><br/><sub><b>Francisco Gabriel Van Langenhove</b></sub>](https://github.com/Gabriellvl)    | Team Lead                  |
+| [<img src="https://github.com/geraldschmittinger.png" width="100px"/><br/><sub><b>Gerald Schmittinger</b></sub>](https://github.com/geraldschmittinger) | Database Administrator     |
+| [<img src="https://github.com/joyelle436.png" width="100px"/><br/><sub><b>Joyelle Ndagijimana</b></sub>](https://github.com/joyelle436)                 | Frontend Lead              |
+| [<img src="https://github.com/laurejablonski.png" width="100px"/><br><sub><b>Laure Jablonski</b></sub>](https://github.com/laurejablonski)              | Documentatie- en Test Lead |
+| [<img src="https://github.com/tdpeuter.png" width="100px"/><br/><sub><b>Tibo De Peuter</b></sub>](https://github.com/tdpeuter)                          | Technische Lead            |
+| [<img src="https://github.com/kloep1.png" width="100px"/><br/><sub><b>Timo De Meyst</b></sub>](https://github.com/kloep1)                               | System Administrator       |
+
+En in de toekomst misschien jij ook?
