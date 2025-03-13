@@ -3,15 +3,9 @@ import { User } from './user.entity.js';
 import { Class } from '../classes/class.entity.js';
 import { TeacherRepository } from '../../data/users/teacher-repository.js';
 
-@Entity({
-    repository: () => {
-        return TeacherRepository;
-    },
-})
+@Entity({ repository: () => TeacherRepository })
 export class Teacher extends User {
-    @ManyToMany(() => {
-        return Class;
-    })
+    @ManyToMany(() => Class)
     classes!: Collection<Class>;
 
     constructor(

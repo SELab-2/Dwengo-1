@@ -9,35 +9,34 @@ const logger: Logger = getLogger();
  *
  * @param url The API endpoint to fetch from.
  * @param description A short description of what is being fetched (for logging).
- * @param params
+ * @param options Contains further options such as params (the query params) and responseType (whether the response
+ *                should be parsed as JSON ("json") or whether it should be returned as plain text ("text")
  * @returns The response data if successful, or null if an error occurs.
  */
 export async function fetchWithLogging<T>(
     url: string,
     description: string,
-    params?: Record<string, any>
+    options?: {
+        params?: Record<string, any>;
+        query?: Record<string, any>;
+        responseType?: 'json' | 'text';
+    }
 ): Promise<T | null> {
     try {
-        const config: AxiosRequestConfig = params ? { params } : {};
-
+        const config: AxiosRequestConfig = options || {};
         const response = await axios.get<T>(url, config);
         return response.data;
     } catch (error: any) {
         if (error.response) {
             if (error.response.status === 404) {
-                logger.debug(
-                    `❌ ERROR: ${description} not found (404) at "${url}".`
-                );
+                logger.debug(`❌ ERROR: ${description} not found (404) at "${url}".`);
             } else {
                 logger.debug(
                     `❌ ERROR: Failed to fetch ${description}. Status: ${error.response.status} - ${error.response.statusText} (URL: "${url}")`
                 );
             }
         } else {
-            logger.debug(
-                `❌ ERROR: Network or unexpected error when fetching ${description}:`,
-                error.message
-            );
+            logger.debug(`❌ ERROR: Network or unexpected error when fetching ${description}:`, error.message);
         }
         return null;
     }

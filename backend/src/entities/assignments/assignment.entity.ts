@@ -1,28 +1,12 @@
-import {
-    Entity,
-    Enum,
-    ManyToOne,
-    OneToMany,
-    PrimaryKey,
-    Property,
-} from '@mikro-orm/core';
+import { Entity, Enum, ManyToOne, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Class } from '../classes/class.entity.js';
 import { Group } from './group.entity.js';
 import { Language } from '../content/language.js';
 import { AssignmentRepository } from '../../data/assignments/assignment-repository.js';
 
-@Entity({
-    repository: () => {
-        return AssignmentRepository;
-    },
-})
+@Entity({ repository: () => AssignmentRepository })
 export class Assignment {
-    @ManyToOne({
-        entity: () => {
-            return Class;
-        },
-        primary: true,
-    })
+    @ManyToOne({ entity: () => Class, primary: true })
     within!: Class;
 
     @PrimaryKey({ type: 'number' })
@@ -37,18 +21,9 @@ export class Assignment {
     @Property({ type: 'string' })
     learningPathHruid!: string;
 
-    @Enum({
-        items: () => {
-            return Language;
-        },
-    })
+    @Enum({ items: () => Language })
     learningPathLanguage!: Language;
 
-    @OneToMany({
-        entity: () => {
-            return Group;
-        },
-        mappedBy: 'assignment',
-    })
+    @OneToMany({ entity: () => Group, mappedBy: 'assignment' })
     groups!: Group[];
 }

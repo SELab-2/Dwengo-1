@@ -1,110 +1,10 @@
-import {
-    Embeddable,
-    Embedded,
-    Entity,
-    Enum,
-    ManyToMany,
-    OneToMany,
-    PrimaryKey,
-    Property,
-} from '@mikro-orm/core';
+import { Embeddable, Embedded, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Language } from './language.js';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
+import { DwengoContentType } from '../../services/learning-objects/processing/content-type.js';
+import { v4 } from 'uuid';
 import { LearningObjectRepository } from '../../data/content/learning-object-repository.js';
-
-@Entity({
-    repository: () => {
-        return LearningObjectRepository;
-    },
-})
-export class LearningObject {
-    @PrimaryKey({ type: 'string' })
-    hruid!: string;
-
-    @Enum({
-        items: () => {
-            return Language;
-        },
-        primary: true,
-    })
-    language!: Language;
-
-    @PrimaryKey({ type: 'string' })
-    version: string = '1';
-
-    @ManyToMany({
-        entity: () => {
-            return Teacher;
-        },
-    })
-    admins!: Teacher[];
-
-    @Property({ type: 'string' })
-    title!: string;
-
-    @Property({ type: 'text' })
-    description!: string;
-
-    @Property({ type: 'string' })
-    contentType!: string;
-
-    @Property({ type: 'array' })
-    keywords: string[] = [];
-
-    @Property({ type: 'array', nullable: true })
-    targetAges?: number[];
-
-    @Property({ type: 'bool' })
-    teacherExclusive: boolean = false;
-
-    @Property({ type: 'array' })
-    skosConcepts!: string[];
-
-    @Embedded({
-        entity: () => {
-            return EducationalGoal;
-        },
-        array: true,
-    })
-    educationalGoals: EducationalGoal[] = [];
-
-    @Property({ type: 'string' })
-    copyright: string = '';
-
-    @Property({ type: 'string' })
-    license: string = '';
-
-    @Property({ type: 'smallint', nullable: true })
-    difficulty?: number;
-
-    @Property({ type: 'integer' })
-    estimatedTime!: number;
-
-    @Embedded({
-        entity: () => {
-            return ReturnValue;
-        },
-    })
-    returnValue!: ReturnValue;
-
-    @Property({ type: 'bool' })
-    available: boolean = true;
-
-    @Property({ type: 'string', nullable: true })
-    contentLocation?: string;
-
-    @OneToMany({
-        entity: () => {
-            return Attachment;
-        },
-        mappedBy: 'learningObject',
-    })
-    attachments: Attachment[] = [];
-
-    @Property({ type: 'blob' })
-    content!: Buffer;
-}
 
 @Embeddable()
 export class EducationalGoal {
@@ -124,11 +24,84 @@ export class ReturnValue {
     callbackSchema!: string;
 }
 
-export enum ContentType {
-    Markdown = 'text/markdown',
-    Image = 'image/image',
-    Mpeg = 'audio/mpeg',
-    Pdf = 'application/pdf',
-    Extern = 'extern',
-    Blockly = 'Blockly',
+@Entity({ repository: () => LearningObjectRepository })
+export class LearningObject {
+    @PrimaryKey({ type: 'string' })
+    hruid!: string;
+
+    @Enum({
+        items: () => Language,
+        primary: true,
+    })
+    language!: Language;
+
+    @PrimaryKey({ type: 'number' })
+    version: number = 1;
+
+    @Property({ type: 'uuid', unique: true })
+    uuid = v4();
+
+    @ManyToMany({
+        entity: () => Teacher,
+    })
+    admins!: Teacher[];
+
+    @Property({ type: 'string' })
+    title!: string;
+
+    @Property({ type: 'text' })
+    description!: string;
+
+    @Property({ type: 'string' })
+    contentType!: DwengoContentType;
+
+    @Property({ type: 'array' })
+    keywords: string[] = [];
+
+    @Property({ type: 'array', nullable: true })
+    targetAges?: number[] = [];
+
+    @Property({ type: 'bool' })
+    teacherExclusive: boolean = false;
+
+    @Property({ type: 'array' })
+    skosConcepts: string[] = [];
+
+    @Embedded({
+        entity: () => EducationalGoal,
+        array: true,
+    })
+    educationalGoals: EducationalGoal[] = [];
+
+    @Property({ type: 'string' })
+    copyright: string = '';
+
+    @Property({ type: 'string' })
+    license: string = '';
+
+    @Property({ type: 'smallint', nullable: true })
+    difficulty?: number;
+
+    @Property({ type: 'integer', nullable: true })
+    estimatedTime?: number;
+
+    @Embedded({
+        entity: () => ReturnValue,
+    })
+    returnValue!: ReturnValue;
+
+    @Property({ type: 'bool' })
+    available: boolean = true;
+
+    @Property({ type: 'string', nullable: true })
+    contentLocation?: string;
+
+    @OneToMany({
+        entity: () => Attachment,
+        mappedBy: 'learningObject',
+    })
+    attachments: Attachment[] = [];
+
+    @Property({ type: 'blob' })
+    content!: Buffer;
 }

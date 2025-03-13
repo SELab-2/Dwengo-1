@@ -3,16 +3,10 @@ import { Assignment } from './assignment.entity.js';
 import { Student } from '../users/student.entity.js';
 import { GroupRepository } from '../../data/assignments/group-repository.js';
 
-@Entity({
-    repository: () => {
-        return GroupRepository;
-    },
-})
+@Entity({ repository: () => GroupRepository })
 export class Group {
     @ManyToOne({
-        entity: () => {
-            return Assignment;
-        },
+        entity: () => Assignment,
         primary: true,
     })
     assignment!: Assignment;
@@ -21,9 +15,7 @@ export class Group {
     groupNumber!: number;
 
     @ManyToMany({
-        entity: () => {
-            return Student;
-        },
+        entity: () => Student,
     })
     members!: Student[];
 }

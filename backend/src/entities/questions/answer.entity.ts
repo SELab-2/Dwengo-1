@@ -3,24 +3,16 @@ import { Question } from './question.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
 import { AnswerRepository } from '../../data/questions/answer-repository.js';
 
-@Entity({
-    repository: () => {
-        return AnswerRepository;
-    },
-})
+@Entity({ repository: () => AnswerRepository })
 export class Answer {
     @ManyToOne({
-        entity: () => {
-            return Teacher;
-        },
+        entity: () => Teacher,
         primary: true,
     })
     author!: Teacher;
 
     @ManyToOne({
-        entity: () => {
-            return Question;
-        },
+        entity: () => Question,
         primary: true,
     })
     toQuestion!: Question;

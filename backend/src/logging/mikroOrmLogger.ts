@@ -12,42 +12,28 @@ export class MikroOrmLogger extends DefaultLogger {
 
         switch (namespace) {
             case 'query':
-                this.logger.debug(
-                    this.createMessage(namespace, message, context)
-                );
+                this.logger.debug(this.createMessage(namespace, message, context));
                 break;
             case 'query-params':
                 // TODO Which log level should this be?
-                this.logger.info(
-                    this.createMessage(namespace, message, context)
-                );
+                this.logger.info(this.createMessage(namespace, message, context));
                 break;
             case 'schema':
-                this.logger.info(
-                    this.createMessage(namespace, message, context)
-                );
+                this.logger.info(this.createMessage(namespace, message, context));
                 break;
             case 'discovery':
-                this.logger.debug(
-                    this.createMessage(namespace, message, context)
-                );
+                this.logger.debug(this.createMessage(namespace, message, context));
                 break;
             case 'info':
-                this.logger.info(
-                    this.createMessage(namespace, message, context)
-                );
+                this.logger.info(this.createMessage(namespace, message, context));
                 break;
             case 'deprecated':
-                this.logger.warn(
-                    this.createMessage(namespace, message, context)
-                );
+                this.logger.warn(this.createMessage(namespace, message, context));
                 break;
             default:
                 switch (context?.level) {
                     case 'info':
-                        this.logger.info(
-                            this.createMessage(namespace, message, context)
-                        );
+                        this.logger.info(this.createMessage(namespace, message, context));
                         break;
                     case 'warning':
                         this.logger.warn(message);
@@ -62,11 +48,7 @@ export class MikroOrmLogger extends DefaultLogger {
         }
     }
 
-    private createMessage(
-        namespace: LoggerNamespace,
-        messageArg: string,
-        context?: LogContext
-    ) {
+    private createMessage(namespace: LoggerNamespace, messageArg: string, context?: LogContext) {
         const labels: LokiLabels = {
             service: 'ORM',
         };

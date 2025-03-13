@@ -1,4 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+    import auth from "@/services/auth/auth-service.ts";
+    auth.loadUser();
+</script>
 
 <template>
     <router-view />

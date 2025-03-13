@@ -4,33 +4,25 @@ import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { Language } from '../content/language.js';
 import { SubmissionRepository } from '../../data/assignments/submission-repository.js';
 
-@Entity({
-    repository: () => {
-        return SubmissionRepository;
-    },
-})
+@Entity({ repository: () => SubmissionRepository })
 export class Submission {
     @PrimaryKey({ type: 'string' })
     learningObjectHruid!: string;
 
     @Enum({
-        items: () => {
-            return Language;
-        },
+        items: () => Language,
         primary: true,
     })
     learningObjectLanguage!: Language;
 
-    @PrimaryKey({ type: 'string' })
-    learningObjectVersion: string = '1';
+    @PrimaryKey({ type: 'numeric' })
+    learningObjectVersion: number = 1;
 
     @PrimaryKey({ type: 'integer' })
     submissionNumber!: number;
 
     @ManyToOne({
-        entity: () => {
-            return Student;
-        },
+        entity: () => Student,
     })
     submitter!: Student;
 
@@ -38,9 +30,7 @@ export class Submission {
     submissionTime!: Date;
 
     @ManyToOne({
-        entity: () => {
-            return Group;
-        },
+        entity: () => Group,
         nullable: true,
     })
     onBehalfOf?: Group;

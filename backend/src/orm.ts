@@ -28,9 +28,7 @@ export async function initORM(testingMode: boolean = false) {
 }
 export function forkEntityManager(): EntityManager {
     if (!orm) {
-        throw Error(
-            'Accessing the Entity Manager before the ORM is fully initialized.'
-        );
+        throw Error('Accessing the Entity Manager before the ORM is fully initialized.');
     }
     return orm.em.fork();
 }

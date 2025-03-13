@@ -1,20 +1,10 @@
-import {
-    Collection,
-    Entity,
-    ManyToMany,
-    PrimaryKey,
-    Property,
-} from '@mikro-orm/core';
+import { Collection, Entity, ManyToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { v4 } from 'uuid';
 import { Teacher } from '../users/teacher.entity.js';
 import { Student } from '../users/student.entity.js';
 import { ClassRepository } from '../../data/classes/class-repository.js';
 
-@Entity({
-    repository: () => {
-        return ClassRepository;
-    },
-})
+@Entity({ repository: () => ClassRepository })
 export class Class {
     @PrimaryKey()
     classId = v4();
@@ -22,13 +12,9 @@ export class Class {
     @Property({ type: 'string' })
     displayName!: string;
 
-    @ManyToMany(() => {
-        return Teacher;
-    })
+    @ManyToMany(() => Teacher)
     teachers!: Collection<Teacher>;
 
-    @ManyToMany(() => {
-        return Student;
-    })
+    @ManyToMany(() => Student)
     students!: Collection<Student>;
 }
