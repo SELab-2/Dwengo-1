@@ -17,7 +17,7 @@ import { ClassRepository } from '../../data/classes/class-repository.js';
 })
 export class Class {
     @PrimaryKey()
-    classId = v4();
+    classId? = v4();
 
     @Property({ type: 'string' })
     displayName!: string;

@@ -34,7 +34,7 @@ export async function getStudentClasses(username: string, full: boolean): Promis
         return classes.map(mapToClassDTO);
     }
 
-    return classes.map((cls) => cls.classId);
+    return classes.map((cls) => cls.classId!);
 }
 
 export async function getStudentAssignments(username: string, full: boolean): Promise<AssignmentDTO[]> {
@@ -51,7 +51,7 @@ export async function getStudentAssignments(username: string, full: boolean): Pr
     const assignments = (
         await Promise.all(
             classes.map(async (cls) => {
-                return await getAllAssignments(cls.classId, full);
+                return await getAllAssignments(cls.classId!, full);
             })
         )
     ).flat();
