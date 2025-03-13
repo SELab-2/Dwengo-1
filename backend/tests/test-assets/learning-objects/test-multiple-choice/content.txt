@@ -1,0 +1,5 @@
+::MC basic::
+Are you following along well with the class?  {
+	~No, it's very difficult to follow along.
+    =Yes, no problem!
+}
