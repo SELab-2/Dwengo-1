@@ -72,8 +72,8 @@ export function makeTestLearningPaths(
     learningPathNode05.version = 1;
 
     const nodes01: Array<LearningPathNode> = [
-        // learningPathNode01,
-        // learningPathNode02,
+        // LearningPathNode01,
+        // LearningPathNode02,
     ];
     const learningPath01 = em.create(LearningPath, {
         hruid: 'id01',
@@ -86,9 +86,9 @@ export function makeTestLearningPaths(
     });
 
     const nodes02: Array<LearningPathNode> = [
-        // learningPathNode03,
-        // learningPathNode04,
-        // learningPathNode05,
+        // LearningPathNode03,
+        // LearningPathNode04,
+        // LearningPathNode05,
     ];
     const learningPath02 = em.create(LearningPath, {
         hruid: 'id02',

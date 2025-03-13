@@ -22,7 +22,7 @@ export function makeTestTeachers(
         lastName: 'Lewis',
     });
 
-    // should not be used, gets deleted in a unit test
+    // Should not be used, gets deleted in a unit test
     const teacher04 = em.create(Teacher, {
         username: 'ZesdeMetaal',
         firstName: 'Wannes',

@@ -40,7 +40,7 @@ export function makeTestStudents(
         lastName: 'Morisson',
     });
 
-    // do not use for any tests, gets deleted in a unit test
+    // Do not use for any tests, gets deleted in a unit test
     const student07 = em.create(Student, {
         username: 'Nirvana',
         firstName: 'Kurt',

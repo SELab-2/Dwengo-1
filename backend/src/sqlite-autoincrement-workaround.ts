@@ -25,7 +25,7 @@ export class SqliteAutoincrementSubscriber implements EventSubscriber {
             return; // If there is not a composite primary key, autoincrement works fine with SQLite anyway.
         }
 
-        for (let prop of Object.values(args.meta.properties)) {
+        for (const prop of Object.values(args.meta.properties)) {
             const property = prop as EntityProperty<T>;
             if (property.primary && property.autoincrement && !(args.entity as Record<string, any>)[property.name]) {
                 // Obtain and increment sequence number of this entity.

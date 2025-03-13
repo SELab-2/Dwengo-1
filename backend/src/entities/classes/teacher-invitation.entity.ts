@@ -8,9 +8,7 @@ import { TeacherInvitationRepository } from '../../data/classes/teacher-invitati
  */
 @Entity({ repository: () => TeacherInvitationRepository })
 @Entity({
-    repository: () => {
-        return TeacherInvitationRepository;
-    },
+    repository: () => TeacherInvitationRepository,
 })
 export class TeacherInvitation {
     @ManyToOne({
