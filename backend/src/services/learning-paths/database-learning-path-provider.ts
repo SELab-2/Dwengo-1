@@ -41,11 +41,9 @@ async function getLearningObjectsForNodes(nodes: LearningPathNode[]): Promise<Ma
 async function convertLearningPath(learningPath: LearningPathEntity, order: number, personalizedFor?: PersonalizationTarget): Promise<LearningPath> {
     const nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject> = await getLearningObjectsForNodes(learningPath.nodes);
 
-    const targetAges = Array.from(nodesToLearningObjects.values())
-        .flatMap((it) => it.targetAges || []);
+    const targetAges = Array.from(nodesToLearningObjects.values()).flatMap((it) => it.targetAges || []);
 
-    const keywords = Array.from(nodesToLearningObjects.values())
-        .flatMap((it) => it.keywords || []);
+    const keywords = Array.from(nodesToLearningObjects.values()).flatMap((it) => it.keywords || []);
 
     const image = learningPath.image ? learningPath.image.toString('base64') : undefined;
 
@@ -79,25 +77,24 @@ async function convertNodes(
     nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>,
     personalizedFor?: PersonalizationTarget
 ): Promise<LearningObjectNode[]> {
-    const nodesPromise = Array.from(nodesToLearningObjects.entries())
-        .map(async (entry) => {
-            const [node, learningObject] = entry;
-            const lastSubmission = personalizedFor ? await getLastSubmissionForCustomizationTarget(node, personalizedFor) : null;
-            return {
-                _id: learningObject.uuid,
-                language: learningObject.language,
-                start_node: node.startNode,
-                created_at: node.createdAt.toISOString(),
-                updatedAt: node.updatedAt.toISOString(),
-                learningobject_hruid: node.learningObjectHruid,
-                version: learningObject.version,
-                transitions: node.transitions
-                    .filter(
-                        (trans) => !personalizedFor || isTransitionPossible(trans, optionalJsonStringToObject(lastSubmission?.content)) // If we want a personalized learning path, remove all transitions that aren't possible.
-                    )
-                    .map((trans, i) => convertTransition(trans, i, nodesToLearningObjects)), // Then convert all the transition
-            };
-        });
+    const nodesPromise = Array.from(nodesToLearningObjects.entries()).map(async (entry) => {
+        const [node, learningObject] = entry;
+        const lastSubmission = personalizedFor ? await getLastSubmissionForCustomizationTarget(node, personalizedFor) : null;
+        return {
+            _id: learningObject.uuid,
+            language: learningObject.language,
+            start_node: node.startNode,
+            created_at: node.createdAt.toISOString(),
+            updatedAt: node.updatedAt.toISOString(),
+            learningobject_hruid: node.learningObjectHruid,
+            version: learningObject.version,
+            transitions: node.transitions
+                .filter(
+                    (trans) => !personalizedFor || isTransitionPossible(trans, optionalJsonStringToObject(lastSubmission?.content)) // If we want a personalized learning path, remove all transitions that aren't possible.
+                )
+                .map((trans, i) => convertTransition(trans, i, nodesToLearningObjects)), // Then convert all the transition
+        };
+    });
     return await Promise.all(nodesPromise);
 }
 
