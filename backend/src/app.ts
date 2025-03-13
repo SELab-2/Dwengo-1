@@ -1,19 +1,6 @@
 import express, { Express } from 'express';
 import { initORM } from './orm.js';
 
-import themeRoutes from './routes/themes.js';
-import learningPathRoutes from './routes/learning-paths.js';
-import learningObjectRoutes from './routes/learning-objects.js';
-
-import studentRouter from './routes/students.js';
-import teacherRouter from './routes/teachers.js';
-import groupRouter from './routes/groups.js';
-import assignmentRouter from './routes/assignments.js';
-import submissionRouter from './routes/submissions.js';
-import classRouter from './routes/classes.js';
-import questionRouter from './routes/questions.js';
-import authRouter from './routes/auth.js';
-
 import { authenticateUser } from './middleware/auth/auth.js';
 import cors from './middleware/cors.js';
 import { getLogger, Logger } from './logging/initalize.js';
