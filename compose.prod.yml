@@ -54,6 +54,8 @@ services:
         environment:
             KC_HOSTNAME: 'sel2-1.ugent.be'
             PROXY_ADDRESS_FORWARDING: 'true'
+            KC_PROXY_HEADERS: 'xforwarded'
+            KC_HTTP_ENABLED: 'true'
             KC_HTTP_RELATIVE_PATH: '/idp'
 
     reverse-proxy:
