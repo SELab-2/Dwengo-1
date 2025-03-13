@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { createClass, getAllClasses, getClass, getClassStudents, getClassStudentsIds, getClassTeacherInvitations } from '../services/class.js';
-import { ClassDTO, mapToClass } from '../interfaces/class.js';
-import { getClassRepository, getStudentRepository, getTeacherRepository } from '../data/repositories.js';
+import { ClassDTO } from '../interfaces/class.js';
 
 export async function getAllClassesHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
@@ -38,7 +37,7 @@ export async function getClassHandler(req: Request, res: Response): Promise<void
         const cls = await getClass(classId);
 
         if (!cls) {
-            res.status(404).json({ error: 'Student not found' });
+            res.status(404).json({ error: 'Class not found' });
             return;
         }
         cls.endpoints = {

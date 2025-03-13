@@ -59,7 +59,7 @@ export async function createGroupHandler(req: Request, res: Response): Promise<v
     }
 
     const groupData = req.body as GroupDTO;
-    const group = createGroup(groupData, classid, assignmentId);
+    const group = await createGroup(groupData, classid, assignmentId);
 
     if (!group) {
         res.status(500).json({ error: 'Something went wrong while creating group' });
