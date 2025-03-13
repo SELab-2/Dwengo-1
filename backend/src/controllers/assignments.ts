@@ -26,7 +26,7 @@ export async function createAssignmentHandler(req: Request<AssignmentParams>, re
 
     if (!assignmentData.description || !assignmentData.language || !assignmentData.learningPath || !assignmentData.title) {
         res.status(400).json({
-            error: 'Missing one or more required fields: title, description, learningPath, title',
+            error: 'Missing one or more required fields: title, description, learningPath, language',
         });
         return;
     }

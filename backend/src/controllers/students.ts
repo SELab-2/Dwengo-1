@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import {
     createStudent,
     deleteStudent,
+    getAllStudents,
     getStudent,
     getStudentAssignments,
     getStudentClasses,
@@ -142,7 +143,4 @@ export async function getStudentSubmissionsHandler(req: Request, res: Response):
     res.json({
         submissions: submissions,
     });
-}
-function getAllStudents(): StudentDTO[] | string[] | PromiseLike<StudentDTO[] | string[]> {
-    throw new Error('Function not implemented.');
 }

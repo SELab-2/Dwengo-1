@@ -17,6 +17,8 @@ router.get('/', getAllStudentsHandler);
 
 router.post('/', createStudentHandler);
 
+router.delete('/', deleteStudentHandler);
+
 router.delete('/:username', deleteStudentHandler);
 
 // Information about a student's profile
