@@ -14,6 +14,12 @@ RUN npm install --silent
 # Root tsconfig.json
 COPY tsconfig.json ./
 
+WORKDIR /app/docs
+
+COPY docs ./
+
+RUN npm run swagger
+
 WORKDIR /app/backend
 
 COPY backend ./
@@ -29,6 +35,7 @@ COPY package-lock.json backend/package.json ./
 RUN npm install --silent --only=production
 
 COPY --from=build-stage /app/backend/dist ./dist/
+COPY --from=build-stage /app/docs/api ./docs/swagger
 
 EXPOSE 3000
 
