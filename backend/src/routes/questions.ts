@@ -7,7 +7,7 @@ import {
 } from "../controllers/questions.js";
 const router = express.Router({ mergeParams: true });
 
-// query language
+// Query language
 
 // Root endpoint used to search objects
 router.get('/', getAllQuestionsHandler);

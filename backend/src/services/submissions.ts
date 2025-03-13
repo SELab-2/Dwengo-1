@@ -46,7 +46,7 @@ export async function deleteSubmission(
     const submission = getSubmission(learningObjectHruid, language, version, submissionNumber);
 
     if (!submission)
-        return null
+        {return null}
 
     const loId = new LearningObjectIdentifier(learningObjectHruid, language, version);
     await submissionRepository.deleteSubmissionByLearningObjectAndSubmissionNumber(loId, submissionNumber);

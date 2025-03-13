@@ -4,9 +4,7 @@ import { Class } from './class.entity.js';
 import { ClassJoinRequestRepository } from '../../data/classes/class-join-request-repository.js';
 
 @Entity({
-    repository: () => {
-        return ClassJoinRequestRepository;
-    },
+    repository: () => ClassJoinRequestRepository,
 })
 export class ClassJoinRequest {
     @ManyToOne({

@@ -85,23 +85,15 @@ async function fetchLearningObjects(
         const nodes: LearningObjectNode[] = learningPathResponse.data[0].nodes;
 
         if (!full) {
-            return nodes.map((node) => {
-                return node.learningobject_hruid;
-            });
+            return nodes.map((node) => node.learningobject_hruid);
         }
 
         return await Promise.all(
-            nodes.map(async (node) => {
-                return getLearningObjectById(
+            nodes.map(async (node) => getLearningObjectById(
                     node.learningobject_hruid,
                     language
-                );
-            })
-        ).then((objects) => {
-            return objects.filter((obj): obj is FilteredLearningObject => {
-                return obj !== null;
-            });
-        });
+                ))
+        ).then((objects) => objects.filter((obj): obj is FilteredLearningObject => obj !== null));
     } catch (error) {
         console.error('❌ Error fetching learning objects:', error);
         return [];

@@ -50,13 +50,11 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
     public async findAllByLearningObjects(
         learningObjects: LearningObject[]
     ): Promise<Question[]> {
-        const objectIdentifiers = learningObjects.map((lo) => {
-            return {
+        const objectIdentifiers = learningObjects.map((lo) => ({
                 learningObjectHruid: lo.hruid,
                 learningObjectLanguage: lo.language,
                 learningObjectVersion: lo.version,
-            };
-        });
+            }));
 
         return this.findAll({
             where: { $or: objectIdentifiers },

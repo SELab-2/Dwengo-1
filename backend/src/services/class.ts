@@ -29,9 +29,7 @@ export async function getAllClasses(
     if (full) {
         return classes.map(mapToClassDTO);
     }
-    return classes.map((cls) => {
-        return cls.classId!;
-    });
+    return classes.map((cls) => cls.classId!);
 }
 
 export async function createClass(classData: ClassDTO): Promise<Class | null> {
@@ -45,7 +43,7 @@ export async function createClass(classData: ClassDTO): Promise<Class | null> {
     const students = (await Promise.all(studentUsernames.map(id => studentRepository.findByUsername(id))))
         .filter(student => student != null);
 
-    //const cls = mapToClass(classData, teachers, students);
+    //Const cls = mapToClass(classData, teachers, students);
 
     const classRepository = getClassRepository();
 
@@ -91,9 +89,7 @@ export async function getClassStudents(classId: string): Promise<StudentDTO[]> {
 
 export async function getClassStudentsIds(classId: string): Promise<string[]> {
     const students: StudentDTO[] = await fetchClassStudents(classId);
-    return students.map((student) => {
-        return student.username;
-    });
+    return students.map((student) => student.username);
 }
 
 export async function getClassTeacherInvitations(

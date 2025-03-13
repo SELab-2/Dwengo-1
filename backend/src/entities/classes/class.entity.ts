@@ -11,9 +11,7 @@ import { Student } from '../users/student.entity.js';
 import { ClassRepository } from '../../data/classes/class-repository.js';
 
 @Entity({
-    repository: () => {
-        return ClassRepository;
-    },
+    repository: () => ClassRepository,
 })
 export class Class {
     @PrimaryKey()

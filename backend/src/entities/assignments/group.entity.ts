@@ -4,9 +4,7 @@ import { Student } from '../users/student.entity.js';
 import { GroupRepository } from '../../data/assignments/group-repository.js';
 
 @Entity({
-    repository: () => {
-        return GroupRepository;
-    },
+    repository: () => GroupRepository,
 })
 export class Group {
     @ManyToOne({

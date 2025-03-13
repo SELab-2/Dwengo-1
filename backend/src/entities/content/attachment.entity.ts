@@ -3,15 +3,11 @@ import { LearningObject } from './learning-object.entity.js';
 import { AttachmentRepository } from '../../data/content/attachment-repository.js';
 
 @Entity({
-    repository: () => {
-        return AttachmentRepository;
-    },
+    repository: () => AttachmentRepository,
 })
 export class Attachment {
     @ManyToOne({
-        entity: () => {
-            return LearningObject;
-        },
+        entity: () => LearningObject,
         primary: true,
     })
     learningObject!: LearningObject;

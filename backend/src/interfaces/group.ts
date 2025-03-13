@@ -20,8 +20,6 @@ export function mapToGroupDTOId(group: Group): GroupDTO {
     return {
         assignment: group.assignment.id!,
         groupNumber: group.groupNumber!,
-        members: group.members.map((member) => {
-            return member.username;
-        }),
+        members: group.members.map((member) => member.username),
     };
 }

@@ -1,9 +1,9 @@
 import { Student } from '../../entities/users/student.entity.js';
 import { User } from '../../entities/users/user.entity.js';
 import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
-// import { UserRepository } from './user-repository.js';
+// Import { UserRepository } from './user-repository.js';
 
-// export class StudentRepository extends UserRepository<Student> {}
+// Export class StudentRepository extends UserRepository<Student> {}
 
 export class StudentRepository extends DwengoEntityRepository<Student> {
     public findByUsername(username: string): Promise<Student | null> {

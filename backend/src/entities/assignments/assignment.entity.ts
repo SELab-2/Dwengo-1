@@ -13,15 +13,11 @@ import { Language } from '../content/language.js';
 import { AssignmentRepository } from '../../data/assignments/assignment-repository.js';
 
 @Entity({
-    repository: () => {
-        return AssignmentRepository;
-    },
+    repository: () => AssignmentRepository,
 })
 export class Assignment {
     @ManyToOne({
-        entity: () => {
-            return Class;
-        },
+        entity: () => Class,
         primary: true,
     })
     within!: Class;
@@ -39,16 +35,12 @@ export class Assignment {
     learningPathHruid!: string;
 
     @Enum({
-        items: () => {
-            return Language;
-        },
+        items: () => Language,
     })
     learningPathLanguage!: Language;
 
     @OneToMany({
-        entity: () => {
-            return Group;
-        },
+        entity: () => Group,
         mappedBy: 'assignment',
     })
     groups!: Group[];

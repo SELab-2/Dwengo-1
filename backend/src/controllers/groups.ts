@@ -83,7 +83,7 @@ export async function getGroupSubmissionsHandler(
     res: Response,
 ): Promise<void> {
     const classId = req.params.classid;
-    // const full = req.query.full === 'true';
+    // Const full = req.query.full === 'true';
 
     const assignmentId = +req.params.assignmentid;
 

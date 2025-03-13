@@ -16,9 +16,7 @@ export class UserService<T extends User> {
 
     async getAllUserIds(): Promise<string[]> {
         const users = await this.getAllUsers();
-        return users.map((user) => {
-            return user.username;
-        });
+        return users.map((user) => user.username);
     }
 
     async getUserByUsername(username: string): Promise<UserDTO | null> {

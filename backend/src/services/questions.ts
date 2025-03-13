@@ -45,7 +45,7 @@ export async function getQuestion(questionId: QuestionId): Promise<QuestionDTO |
     const question = await fetchQuestion(questionId);
 
     if (!question)
-        return null
+        {return null}
 
     return mapToQuestionDTO(question);
 }
@@ -55,17 +55,17 @@ export async function getAnswersByQuestion(questionId: QuestionId, full: boolean
     const question = await fetchQuestion(questionId);
 
     if (!question)
-        return [];
+        {return [];}
 
     const answers: Answer[] = await answerRepository.findAllAnswersToQuestion(question);
 
     if (!answers)
-        return []
+        {return []}
 
     const answersDTO = answers.map(mapToAnswerDTO);
 
     if (full)
-        return answersDTO
+        {return answersDTO}
 
     return answersDTO.map(mapToAnswerId);
 }
@@ -94,7 +94,7 @@ export async function deleteQuestion(questionId: QuestionId) {
     const question = await fetchQuestion(questionId);
 
     if (!question)
-        return null
+        {return null}
 
     try {
         await questionRepository.removeQuestionByLearningObjectAndSequenceNumber(

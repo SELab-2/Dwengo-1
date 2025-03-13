@@ -36,10 +36,10 @@ export function mapToSubmission(submissionDTO: SubmissionDTO): Submission {
     submission.learningObjectHruid = submissionDTO.learningObjectHruid;
     submission.learningObjectLanguage = submissionDTO.learningObjectLanguage;
     submission.learningObjectVersion = submissionDTO.learningObjectVersion;
-    // submission.submissionNumber = submissionDTO.submissionNumber;
+    // Submission.submissionNumber = submissionDTO.submissionNumber;
     submission.submitter = mapToStudent(submissionDTO.submitter) ;
-    // submission.submissionTime = submissionDTO.time;
-    // submission.onBehalfOf =  submissionDTO.group!;
+    // Submission.submissionTime = submissionDTO.time;
+    // Submission.onBehalfOf =  submissionDTO.group!;
     // TODO fix group
     submission.content = submissionDTO.content;
 

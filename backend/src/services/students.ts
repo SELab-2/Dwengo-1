@@ -23,9 +23,7 @@ export async function getAllStudents(): Promise<StudentDTO[]> {
 
 export async function getAllStudentIds(): Promise<string[]> {
     const users = await getAllStudents();
-    return users.map((user) => {
-        return user.username;
-    });
+    return users.map((user) => user.username);
 }
 
 export async function getStudent(username: string): Promise<StudentDTO | null> {
@@ -98,9 +96,7 @@ export async function getStudentAssignments(username: string, full: boolean): Pr
 
     const assignments = (
         await Promise.all(
-            classes.map(async (cls) => {
-                return await getAllAssignments(cls.classId!, full);
-            })
+            classes.map(async (cls) => await getAllAssignments(cls.classId!, full))
         )
     ).flat();
 

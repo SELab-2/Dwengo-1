@@ -27,9 +27,7 @@ export async function getAllTeachers(): Promise<TeacherDTO[]> {
 
 export async function getAllTeacherIds(): Promise<string[]> {
     const users = await getAllTeachers();
-    return users.map((user) => {
-        return user.username;
-    });
+    return users.map((user) => user.username);
 }
 
 export async function getTeacher(username: string): Promise<TeacherDTO | null> {
@@ -89,9 +87,7 @@ export async function getClassesByTeacher(username: string): Promise<ClassDTO[]>
 
 export async function getClassIdsByTeacher(username: string): Promise<string[]> {
     const classes = await fetchClassesByTeacher(username);
-    return classes.map((cls) => {
-        return cls.id;
-    });
+    return classes.map((cls) => cls.id);
 }
 
 export async function fetchStudentsByTeacher(username: string) {
@@ -99,9 +95,7 @@ export async function fetchStudentsByTeacher(username: string) {
 
     return (
         await Promise.all(
-            classes.map(async (id) => {
-                return getClassStudents(id);
-            })
+            classes.map(async (id) => getClassStudents(id))
         )
     ).flat();
 }
@@ -112,9 +106,7 @@ export async function getStudentsByTeacher(username: string): Promise<StudentDTO
 
 export async function getStudentIdsByTeacher(username: string): Promise<string[]> {
     const students = await fetchStudentsByTeacher(username);
-    return students.map((student) => {
-        return student.username;
-    });
+    return students.map((student) => student.username);
 }
 
 export async function fetchTeacherQuestions(username: string): Promise<QuestionDTO[]> {

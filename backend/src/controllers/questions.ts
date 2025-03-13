@@ -32,7 +32,7 @@ function getQuestionId(req: Request, res: Response): QuestionId | null {
     const learningObjectIdentifier = getObjectId(req,res);
 
     if (!learningObjectIdentifier)
-        return null
+        {return null}
 
     return {
         learningObjectIdentifier,
@@ -48,28 +48,28 @@ export async function getAllQuestionsHandler(
     const full = req.query.full === 'true';
 
     if (!objectId)
-        return
+        {return}
 
     const questions = await getAllQuestions(objectId, full);
 
     if (!questions)
-        res.status(404).json({ error: `Questions not found.` });
+        {res.status(404).json({ error: `Questions not found.` });}
     else
-        res.json(questions);
+        {res.json(questions);}
 }
 
 export async function getQuestionHandler(req: Request, res: Response): Promise<void> {
     const questionId = getQuestionId(req, res);
 
     if (!questionId)
-        return
+        {return}
 
     const question = await getQuestion(questionId);
 
     if (!question)
-        res.status(404).json({ error: `Question not found.` });
+        {res.status(404).json({ error: `Question not found.` });}
     else
-        res.json(question)
+        {res.json(question)}
 }
 
 export async function getQuestionAnswersHandler(req: Request, res: Response): Promise<void> {
@@ -77,14 +77,14 @@ export async function getQuestionAnswersHandler(req: Request, res: Response): Pr
     const full = req.query.full === 'true';
 
     if (!questionId)
-        return
+        {return}
 
     const answers = getAnswersByQuestion(questionId, full);
 
     if (!answers)
-        res.status(404).json({ error: `Questions not found.` });
+        {res.status(404).json({ error: `Questions not found.` });}
     else
-        res.json(answers)
+        {res.json(answers)}
 }
 
 export async function createQuestionHandler(req: Request, res: Response): Promise<void> {
@@ -98,23 +98,23 @@ export async function createQuestionHandler(req: Request, res: Response): Promis
     const question = await createQuestion(questionDTO);
 
     if (!question)
-        res.status(400).json({error: 'Could not add question'});
+        {res.status(400).json({error: 'Could not add question'});}
     else
-        res.json(question)
+        {res.json(question)}
 }
 
 export async function deleteQuestionHandler(req: Request, res: Response): Promise<void> {
     const questionId = getQuestionId(req, res);
 
     if (!questionId)
-        return
+        {return}
 
     const question = await deleteQuestion(questionId);
 
     if (!question)
-        res.status(400).json({error: 'Could not find nor delete question'});
+        {res.status(400).json({error: 'Could not find nor delete question'});}
     else
-        res.json(question)
+        {res.json(question)}
 }
 
 

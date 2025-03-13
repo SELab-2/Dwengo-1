@@ -20,8 +20,8 @@ export async function getSubmissionHandler(
         return;
     }
 
-    let lang = languageMap[req.query.language as string] || Language.Dutch;
-    let version = (req.query.version || 1) as number;
+    const lang = languageMap[req.query.language as string] || Language.Dutch;
+    const version = (req.query.version || 1) as number;
 
     const submission = await getSubmission(lohruid, lang, version, submissionNumber);
 
@@ -39,22 +39,22 @@ export async function createSubmissionHandler(req: Request, res: Response){
     const submission = await createSubmission(submissionDTO);
 
     if (!submission)
-        res.status(404).json({ error: 'Submission not added' });
+        {res.status(404).json({ error: 'Submission not added' });}
     else
-        res.json(submission)
+        {res.json(submission)}
 }
 
 export async function deleteSubmissionHandler(req: Request, res: Response){
     const hruid = req.params.hruid;
     const submissionNumber = +req.params.id;
 
-    let lang = languageMap[req.query.language as string] || Language.Dutch;
-    let version = (req.query.version || 1) as number;
+    const lang = languageMap[req.query.language as string] || Language.Dutch;
+    const version = (req.query.version || 1) as number;
 
     const submission = await deleteSubmission(hruid, lang, version, submissionNumber);
 
     if (!submission)
-        res.status(404).json({ error: 'Submission not found' });
+        {res.status(404).json({ error: 'Submission not found' });}
     else
-        res.json(submission)
+        {res.json(submission)}
 }
