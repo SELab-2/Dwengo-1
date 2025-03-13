@@ -11,6 +11,8 @@ on:
     pull_request:
         branches:
             - dev
+        types: [ready_for_review]
+
 
 # Down scope as necessary via https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
 permissions:
