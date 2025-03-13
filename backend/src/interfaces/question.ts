@@ -1,11 +1,13 @@
 import { Question } from '../entities/questions/question.entity.js';
 import {UserDTO} from "./user.js";
 import {LearningObjectIdentifier} from "../entities/content/learning-object-identifier.js";
+import { mapToStudentDTO, StudentDTO } from './student.js';
+import { TeacherDTO } from './teacher.js';
 
 export interface QuestionDTO {
     learningObjectIdentifier: LearningObjectIdentifier;
     sequenceNumber?: number;
-    author: UserDTO;
+    author: StudentDTO;
     timestamp?: string;
     content: string;
 }
@@ -23,7 +25,7 @@ export function mapToQuestionDTO(question: Question): QuestionDTO {
     return {
         learningObjectIdentifier,
         sequenceNumber: question.sequenceNumber!,
-        author: question.author,
+        author: mapToStudentDTO(question.author),
         timestamp: question.timestamp.toISOString(),
         content: question.content,
     };

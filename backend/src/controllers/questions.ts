@@ -12,7 +12,7 @@ import {LearningObjectIdentifier} from "../entities/content/learning-object-iden
 import {Language} from "../entities/content/language.js";
 
 function getObjectId(req: Request, res: Response): LearningObjectIdentifier | null {
-    const { hruid, version} = req.params
+    const { hruid, version } = req.params
     const lang = req.query.lang
 
     if (!hruid || !version ) {
@@ -23,7 +23,7 @@ function getObjectId(req: Request, res: Response): LearningObjectIdentifier | nu
     return {
         hruid,
         language: lang as Language || FALLBACK_LANG,
-        version
+        version: +version
     }
 }
 

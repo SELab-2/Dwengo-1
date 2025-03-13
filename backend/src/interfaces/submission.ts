@@ -8,7 +8,7 @@ import {Student} from "../entities/users/student.entity";
 export interface SubmissionDTO {
     learningObjectHruid: string,
     learningObjectLanguage: Language,
-    learningObjectVersion: string,
+    learningObjectVersion: number,
 
     submissionNumber?: number,
     submitter: StudentDTO,

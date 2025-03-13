@@ -1,49 +1,106 @@
 import { Request, Response } from 'express';
 import {
+    createStudent,
+    deleteStudent,
+    getStudent,
     getStudentAssignments,
     getStudentClasses,
     getStudentGroups,
     getStudentSubmissions,
-    StudentService,
 } from '../services/students.js';
 import { ClassDTO } from '../interfaces/class.js';
 import { getAllAssignments } from '../services/assignments.js';
 import {
-    createUserHandler,
-    deleteUserHandler,
-    getAllUsersHandler,
     getUserHandler,
 } from './users.js';
 import { Student } from '../entities/users/student.entity.js';
+import { StudentDTO } from '../interfaces/student.js';
+import { getStudentRepository } from '../data/repositories.js';
+import { UserDTO } from '../interfaces/user.js';
 
 // TODO: accept arguments (full, ...)
 // TODO: endpoints
 export async function getAllStudentsHandler(
     req: Request,
-    res: Response
+    res: Response,
 ): Promise<void> {
-    await getAllUsersHandler<Student>(req, res, new StudentService());
+    const full = req.query.full === 'true';
+
+    const studentRepository = getStudentRepository();
+
+    const students: StudentDTO[] | string[] = full
+        ? await getAllStudents()
+        : await getAllStudents();
+
+    if (!students) {
+        res.status(404).json({ error: `Student not found.` });
+        return;
+    }
+
+    res.status(201).json(students);
 }
+
 
 export async function getStudentHandler(
     req: Request,
-    res: Response
+    res: Response,
 ): Promise<void> {
-    await getUserHandler<Student>(req, res, new StudentService());
+    const username = req.params.username;
+
+    if (!username) {
+        res.status(400).json({ error: 'Missing required field: username' });
+        return;
+    }
+
+    const user = await getStudent(username);
+
+    if (!user) {
+        res.status(404).json({
+            error: `User with username '${username}' not found.`,
+        });
+        return;
+    }
+
+    res.status(201).json(user);
 }
 
 export async function createStudentHandler(
     req: Request,
-    res: Response
-): Promise<void> {
-    await createUserHandler<Student>(req, res, new StudentService(), Student);
+    res: Response,
+) {
+    const userData = req.body as StudentDTO;
+
+    if (!userData.username || !userData.firstName || !userData.lastName) {
+        res.status(400).json({
+            error: 'Missing required fields: username, firstName, lastName',
+        });
+        return;
+    }
+
+    const newUser = await createStudent(userData);
+    res.status(201).json(newUser);
 }
 
 export async function deleteStudentHandler(
     req: Request,
-    res: Response
-): Promise<void> {
-    await deleteUserHandler<Student>(req, res, new StudentService());
+    res: Response,
+) {
+    const username = req.params.username;
+
+    if (!username) {
+        res.status(400).json({ error: 'Missing required field: username' });
+        return;
+    }
+
+    const deletedUser = await deleteStudent(username);
+    if (!deletedUser) {
+        res.status(404).json({
+            error: `User with username '${username}' not found.`,
+        });
+        return;
+    }
+
+    res.status(200).json(deletedUser);
 }
 
 export async function getStudentClassesHandler(
@@ -115,3 +172,7 @@ export async function getStudentSubmissionsHandler(
         submissions: submissions,
     });
 }
+function getAllStudents(): StudentDTO[] | string[] | PromiseLike<StudentDTO[] | string[]> {
+    throw new Error('Function not implemented.');
+}
+

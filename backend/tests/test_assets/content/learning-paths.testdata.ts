@@ -77,7 +77,7 @@ export function makeTestLearningPaths(em: EntityManager<IDatabaseDriver<Connecti
         admins: [],
         title: 'repertoire Tool',
         description: 'all about Tool',
-        image: '',
+        image: null,
         nodes: nodes01,
     });
 
@@ -92,7 +92,7 @@ export function makeTestLearningPaths(em: EntityManager<IDatabaseDriver<Connecti
         admins: [],
         title: 'repertoire Dire Straits',
         description: 'all about Dire Straits',
-        image: '',
+        image: null,
         nodes: nodes02,
     });
 

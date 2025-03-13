@@ -32,7 +32,7 @@ describe('SubmissionRepository', () => {
     });
 
     it('should find the requested submission', async () => {
-        const id = new LearningObjectIdentifier('id03', Language.English, '1');
+        const id = new LearningObjectIdentifier('id03', Language.English, 1);
         const submission = await submissionRepository.findSubmissionByLearningObjectAndSubmissionNumber(id, 1);
 
         expect(submission).toBeTruthy();
@@ -40,7 +40,7 @@ describe('SubmissionRepository', () => {
     });
 
     it('should find the most recent submission for a student', async () => {
-        const id = new LearningObjectIdentifier('id02', Language.English, '1');
+        const id = new LearningObjectIdentifier('id02', Language.English, 1);
         const student = await studentRepository.findByUsername('Noordkaap');
         const submission = await submissionRepository.findMostRecentSubmissionForStudent(id, student!);
 
@@ -49,7 +49,7 @@ describe('SubmissionRepository', () => {
     });
 
     it('should find the most recent submission for a group', async () => {
-        const id = new LearningObjectIdentifier('id03', Language.English, '1');
+        const id = new LearningObjectIdentifier('id03', Language.English, 1);
         const class_ = await classRepository.findById('id01');
         const assignment = await assignmentRepository.findByClassAndId(class_!, 1);
         const group = await groupRepository.findByAssignmentAndGroupNumber(assignment!, 1);
@@ -60,7 +60,7 @@ describe('SubmissionRepository', () => {
     });
 
     it('should not find a deleted submission', async () => {
-        const id = new LearningObjectIdentifier('id01', Language.English, '1');
+        const id = new LearningObjectIdentifier('id01', Language.English, 1);
         await submissionRepository.deleteSubmissionByLearningObjectAndSubmissionNumber(id, 1);
 
         const submission = await submissionRepository.findSubmissionByLearningObjectAndSubmissionNumber(id, 1);

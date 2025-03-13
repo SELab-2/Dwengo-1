@@ -7,6 +7,7 @@ import {QuestionRepository} from "../data/questions/question-repository.js";
 import {LearningObjectIdentifier} from "../entities/content/learning-object-identifier.js";
 import {mapToUser} from "../interfaces/user.js";
 import {Student} from "../entities/users/student.entity.js";
+import { mapToStudent } from "../interfaces/student.js";
 
 export async function getAllQuestions(
     id: LearningObjectIdentifier, full: boolean
@@ -72,7 +73,7 @@ export async function getAnswersByQuestion(questionId: QuestionId, full: boolean
 export async function createQuestion(questionDTO: QuestionDTO) {
     const questionRepository = getQuestionRepository();
 
-    const author = mapToUser<Student>(questionDTO.author, new Student())
+    const author = mapToStudent(questionDTO.author);
 
     try {
         await questionRepository.createQuestion({

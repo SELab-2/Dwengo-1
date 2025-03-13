@@ -5,8 +5,7 @@ import {
     LearningObjectMetadata,
     LearningObjectNode,
     LearningPathResponse,
-} from '../interfaces/learning-path.js';
-import { fetchLearningPaths } from './learning-paths.js';
+} from '../interfaces/learning-content.js';
 
 function filterData(
     data: LearningObjectMetadata,
@@ -132,3 +131,7 @@ export async function getLearningObjectIdsFromPath(
 ): Promise<string[]> {
     return (await fetchLearningObjects(hruid, false, language)) as string[];
 }
+function fetchLearningPaths(arg0: string[], language: string, arg2: string): LearningPathResponse | PromiseLike<LearningPathResponse> {
+    throw new Error('Function not implemented.');
+}
+

@@ -6,7 +6,7 @@ import {mapToSubmission, mapToSubmissionDTO, SubmissionDTO} from "../interfaces/
 export async function getSubmission(
     learningObjectHruid: string,
     language: Language,
-    version: string,
+    version: number,
     submissionNumber: number,
 ): Promise<SubmissionDTO | null> {
     const loId = new LearningObjectIdentifier(learningObjectHruid, language, version);
@@ -38,7 +38,7 @@ export async function createSubmission(submissionDTO: SubmissionDTO) {
 export async function deleteSubmission(
     learningObjectHruid: string,
     language: Language,
-    version: string,
+    version: number,
     submissionNumber: number
 ) {
     const submissionRepository = getSubmissionRepository();

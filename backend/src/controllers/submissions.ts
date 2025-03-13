@@ -21,7 +21,7 @@ export async function getSubmissionHandler(
     }
 
     let lang = languageMap[req.query.language as string] || Language.Dutch;
-    let version = req.query.version as string || '1';
+    let version = (req.query.version || 1) as number;
 
     const submission = await getSubmission(lohruid, lang, version, submissionNumber);
 
@@ -49,7 +49,7 @@ export async function deleteSubmissionHandler(req: Request, res: Response){
     const submissionNumber = +req.params.id;
 
     let lang = languageMap[req.query.language as string] || Language.Dutch;
-    let version = req.query.version as string || '1';
+    let version = (req.query.version || 1) as number;
 
     const submission = await deleteSubmission(hruid, lang, version, submissionNumber);
 

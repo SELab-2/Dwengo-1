@@ -17,7 +17,7 @@ export function mapToAnswerDTO(answer: Answer): AnswerDTO {
     return {
         author: mapToUserDTO(answer.author),
         toQuestion: mapToQuestionDTO(answer.toQuestion),
-        sequenceNumber: answer.sequenceNumber,
+        sequenceNumber: answer.sequenceNumber!,
         timestamp: answer.timestamp.toISOString(),
         content: answer.content,
     };

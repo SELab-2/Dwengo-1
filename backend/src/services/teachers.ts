@@ -17,93 +17,133 @@ import {
 } from '../interfaces/question.js';
 import { UserService } from './users.js';
 import { mapToUser } from '../interfaces/user.js';
+import { mapToTeacher, mapToTeacherDTO, TeacherDTO } from '../interfaces/teacher.js';
 
-export class TeacherUserService extends UserService<Teacher> {
-    constructor() {
-        super(getTeacherRepository());
+export async function getAllTeachers(): Promise<TeacherDTO[]> {
+    const teacherRepository = getTeacherRepository();
+    const users = await teacherRepository.findAll();
+    return users.map(mapToTeacherDTO);
+}
+
+export async function getAllTeacherIds(): Promise<string[]> {
+    const users = await getAllTeachers();
+    return users.map((user) => {
+        return user.username;
+    });
+}
+
+export async function getTeacher(username: string): Promise<TeacherDTO | null> {
+    const teacherRepository = getTeacherRepository();
+    const user = await teacherRepository.findByUsername(username);
+    return user ? mapToTeacherDTO(user) : null;
+}
+
+export async function createTeacher(userData: TeacherDTO): Promise<TeacherDTO | null> {
+    const teacherRepository = getTeacherRepository();
+
+    try {
+        const newTeacher = teacherRepository.create(mapToTeacher(userData));
+        await teacherRepository.save(newTeacher);
+    
+        return mapToTeacherDTO(newTeacher);
+    } catch(e) {
+        console.log(e);
+        return null;
     }
 }
 
-export class TeacherService {
-    protected teacherService = new TeacherUserService();
-    protected teacherRepository = getTeacherRepository();
-    protected classRepository = getClassRepository();
-    protected learningObjectRepository = getLearningObjectRepository();
-    protected questionRepository = getQuestionRepository();
+export async function deleteTeacher(username: string): Promise<TeacherDTO | null> {
+    const teacherRepository = getTeacherRepository();
 
-    async fetchClassesByTeacher(username: string): Promise<ClassDTO[]> {
-        const teacher = await this.teacherRepository.findByUsername(username);
-        if (!teacher) {
-            return [];
-        }
+    const user = await teacherRepository.findByUsername(username);
 
-        const classes = await this.classRepository.findByTeacher(teacher);
-        return classes.map(mapToClassDTO);
+    if (!user) {
+        return null;
     }
 
-    async getClassesByTeacher(username: string): Promise<ClassDTO[]> {
-        return await this.fetchClassesByTeacher(username);
+    try {
+        await teacherRepository.deleteByUsername(username);
+    
+        return mapToTeacherDTO(user);
+    } catch(e) {
+        console.log(e);
+        return null;
+    }
+}
+
+export async function fetchClassesByTeacher(username: string): Promise<ClassDTO[]> {
+    const teacherRepository = getTeacherRepository();
+    const teacher = await teacherRepository.findByUsername(username);
+    if (!teacher) {
+        return [];
     }
 
-    async getClassIdsByTeacher(username: string): Promise<string[]> {
-        const classes = await this.fetchClassesByTeacher(username);
-        return classes.map((cls) => {
-            return cls.id;
-        });
+    const classRepository = getClassRepository();
+    const classes = await classRepository.findByTeacher(teacher);
+    return classes.map(mapToClassDTO);
+}
+
+export async function getClassesByTeacher(username: string): Promise<ClassDTO[]> {
+    return await fetchClassesByTeacher(username);
+}
+
+export async function getClassIdsByTeacher(username: string): Promise<string[]> {
+    const classes = await fetchClassesByTeacher(username);
+    return classes.map((cls) => {
+        return cls.id;
+    });
+}
+
+export async function fetchStudentsByTeacher(username: string) {
+    const classes = await getClassIdsByTeacher(username);
+
+    return (
+        await Promise.all(
+            classes.map(async (id) => {
+                return getClassStudents(id);
+            })
+        )
+    ).flat();
+}
+
+export async function getStudentsByTeacher(username: string): Promise<StudentDTO[]> {
+    return await fetchStudentsByTeacher(username);
+}
+
+export async function getStudentIdsByTeacher(username: string): Promise<string[]> {
+    const students = await fetchStudentsByTeacher(username);
+    return students.map((student) => {
+        return student.username;
+    });
+}
+
+export async function fetchTeacherQuestions(username: string): Promise<QuestionDTO[]> {
+    const teacherRepository = getTeacherRepository();
+    const teacher = await teacherRepository.findByUsername(username);
+    if (!teacher) {
+        throw new Error(`Teacher with username '${username}' not found.`);
     }
 
-    async fetchStudentsByTeacher(username: string) {
-        const classes = await this.getClassIdsByTeacher(username);
+    // Find all learning objects that this teacher manages
+    const learningObjectRepository = getLearningObjectRepository();
+    const learningObjects = await learningObjectRepository.findAllByTeacher(teacher);
 
-        return (
-            await Promise.all(
-                classes.map(async (id) => {
-                    return getClassStudents(id);
-                })
-            )
-        ).flat();
-    }
+    // Fetch all questions related to these learning objects
+    const questionRepository = getQuestionRepository();
+    const questions =
+        await questionRepository.findAllByLearningObjects(
+            learningObjects
+        );
 
-    async getStudentsByTeacher(username: string): Promise<StudentDTO[]> {
-        return await this.fetchStudentsByTeacher(username);
-    }
+    return questions.map(mapToQuestionDTO);
+}
 
-    async getStudentIdsByTeacher(username: string): Promise<string[]> {
-        const students = await this.fetchStudentsByTeacher(username);
-        return students.map((student) => {
-            return student.username;
-        });
-    }
+export async function getQuestionsByTeacher(username: string): Promise<QuestionDTO[]> {
+    return await fetchTeacherQuestions(username);
+}
 
-    async fetchTeacherQuestions(username: string): Promise<QuestionDTO[]> {
-        const teacherDTO =
-            await this.teacherService.getUserByUsername(username);
-        if (!teacherDTO) {
-            throw new Error(`Teacher with username '${username}' not found.`);
-        }
+export async function getQuestionIdsByTeacher(username: string): Promise<QuestionId[]> {
+    const questions = await fetchTeacherQuestions(username);
 
-        const teacher = mapToUser<Teacher>(teacherDTO, new Teacher());
-
-        // Find all learning objects that this teacher manages
-        const learningObjects =
-            await this.learningObjectRepository.findAllByTeacher(teacher);
-
-        // Fetch all questions related to these learning objects
-        const questions =
-            await this.questionRepository.findAllByLearningObjects(
-                learningObjects
-            );
-
-        return questions.map(mapToQuestionDTO);
-    }
-
-    async getQuestionsByTeacher(username: string): Promise<QuestionDTO[]> {
-        return await this.fetchTeacherQuestions(username);
-    }
-
-    async getQuestionIdsByTeacher(username: string): Promise<QuestionId[]> {
-        const questions = await this.fetchTeacherQuestions(username);
-
-        return questions.map(mapToQuestionId);
-    }
+    return questions.map(mapToQuestionId);
 }

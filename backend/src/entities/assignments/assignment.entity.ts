@@ -51,5 +51,5 @@ export class Assignment {
         },
         mappedBy: 'assignment',
     })
-    groups!: Collection<Group>;
+    groups!: Group[];
 }

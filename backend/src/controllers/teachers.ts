@@ -1,48 +1,95 @@
 import { Request, Response } from 'express';
-import { TeacherUserService, TeacherService } from '../services/teachers.js';
+import { createTeacher, deleteTeacher, getAllTeachers, getClassesByTeacher, getClassIdsByTeacher, getQuestionIdsByTeacher, getQuestionsByTeacher, getStudentIdsByTeacher, getStudentsByTeacher, getTeacher } from '../services/teachers.js';
 import { ClassDTO } from '../interfaces/class.js';
 import { StudentDTO } from '../interfaces/student.js';
 import { QuestionDTO, QuestionId } from '../interfaces/question.js';
-import {
-    createUserHandler,
-    deleteUserHandler,
-    getAllUsersHandler,
-    getUserHandler,
-} from './users.js';
 import { Teacher } from '../entities/users/teacher.entity.js';
+import { TeacherDTO } from '../interfaces/teacher.js';
+import { getTeacherRepository } from '../data/repositories.js';
 
 export async function getAllTeachersHandler(
     req: Request,
-    res: Response
+    res: Response,
 ): Promise<void> {
-    await getAllUsersHandler<Teacher>(req, res, new TeacherUserService());
+    const full = req.query.full === 'true';
+
+    const teacherRepository = getTeacherRepository();
+
+    const teachers: TeacherDTO[] | string[] = full
+        ? await getAllTeachers()
+        : await getAllTeachers();
+
+    if (!teachers) {
+        res.status(404).json({ error: `Teacher not found.` });
+        return;
+    }
+
+    res.status(201).json(teachers);
 }
+
 
 export async function getTeacherHandler(
     req: Request,
-    res: Response
+    res: Response,
 ): Promise<void> {
-    await getUserHandler<Teacher>(req, res, new TeacherUserService());
+    const username = req.params.username;
+
+    if (!username) {
+        res.status(400).json({ error: 'Missing required field: username' });
+        return;
+    }
+
+    const user = await getTeacher(username);
+
+    if (!user) {
+        res.status(404).json({
+            error: `User with username '${username}' not found.`,
+        });
+        return;
+    }
+
+    res.status(201).json(user);
 }
 
 export async function createTeacherHandler(
     req: Request,
-    res: Response
-): Promise<void> {
-    await createUserHandler<Teacher>(
-        req,
-        res,
-        new TeacherUserService(),
-        Teacher
-    );
+    res: Response,
+) {
+    const userData = req.body as TeacherDTO;
+
+    if (!userData.username || !userData.firstName || !userData.lastName) {
+        res.status(400).json({
+            error: 'Missing required fields: username, firstName, lastName',
+        });
+        return;
+    }
+
+    const newUser = await createTeacher(userData);
+    res.status(201).json(newUser);
 }
 
 export async function deleteTeacherHandler(
     req: Request,
-    res: Response
-): Promise<void> {
-    await deleteUserHandler<Teacher>(req, res, new TeacherUserService());
+    res: Response,
+) {
+    const username = req.params.username;
+
+    if (!username) {
+        res.status(400).json({ error: 'Missing required field: username' });
+        return;
+    }
+
+    const deletedUser = await deleteTeacher(username);
+    if (!deletedUser) {
+        res.status(404).json({
+            error: `User with username '${username}' not found.`,
+        });
+        return;
+    }
+
+    res.status(200).json(deletedUser);
 }
+
 
 export async function getTeacherClassHandler(
     req: Request,
@@ -57,11 +104,9 @@ export async function getTeacherClassHandler(
             return;
         }
 
-        const teacherService = new TeacherService();
-
         const classes: ClassDTO[] | string[] = full
-            ? await teacherService.getClassesByTeacher(username)
-            : await teacherService.getClassIdsByTeacher(username);
+            ? await getClassesByTeacher(username)
+            : await getClassIdsByTeacher(username);
 
         res.status(201).json(classes);
     } catch (error) {
@@ -83,11 +128,9 @@ export async function getTeacherStudentHandler(
             return;
         }
 
-        const teacherService = new TeacherService();
-
         const students: StudentDTO[] | string[] = full
-            ? await teacherService.getStudentsByTeacher(username)
-            : await teacherService.getStudentIdsByTeacher(username);
+            ? await getStudentsByTeacher(username)
+            : await getStudentIdsByTeacher(username);
 
         res.status(201).json(students);
     } catch (error) {
@@ -109,11 +152,9 @@ export async function getTeacherQuestionHandler(
             return;
         }
 
-        const teacherService = new TeacherService();
-
         const questions: QuestionDTO[] | QuestionId[] = full
-            ? await teacherService.getQuestionsByTeacher(username)
-            : await teacherService.getQuestionIdsByTeacher(username);
+            ? await getQuestionsByTeacher(username)
+            : await getQuestionIdsByTeacher(username);
 
         res.status(201).json(questions);
     } catch (error) {

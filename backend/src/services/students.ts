@@ -9,13 +9,61 @@ import { Student } from '../entities/users/student.entity.js';
 import { AssignmentDTO } from '../interfaces/assignment.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
+import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToSubmissionDTO, SubmissionDTO } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
 import { UserService } from './users.js';
 
-export class StudentService extends UserService<Student> {
-    constructor() {
-        super(getStudentRepository());
+
+export async function getAllStudents(): Promise<StudentDTO[]> {
+    const studentRepository = getStudentRepository();
+    const users = await studentRepository.findAll();
+    return users.map(mapToStudentDTO);
+}
+
+export async function getAllStudentIds(): Promise<string[]> {
+    const users = await getAllStudents();
+    return users.map((user) => {
+        return user.username;
+    });
+}
+
+export async function getStudent(username: string): Promise<StudentDTO | null> {
+    const studentRepository = getStudentRepository();
+    const user = await studentRepository.findByUsername(username);
+    return user ? mapToStudentDTO(user) : null;
+}
+
+export async function createStudent(userData: StudentDTO): Promise<StudentDTO | null> {
+    const studentRepository = getStudentRepository();
+
+    try {
+        const newStudent = studentRepository.create(mapToStudent(userData));
+        await studentRepository.save(newStudent);
+    
+        return mapToStudentDTO(newStudent);
+    } catch(e) {
+        console.log(e);
+        return null;
+    }
+}
+
+export async function deleteStudent(username: string): Promise<StudentDTO | null> {
+    const studentRepository = getStudentRepository();
+
+    const user = await studentRepository.findByUsername(username);
+
+    if (!user) {
+        return null;
+    }
+
+    try {
+        await studentRepository.deleteByUsername(username);
+    
+        return mapToStudentDTO(user);
+    } catch(e) {
+        console.log(e);
+        return null;
     }
 }
 

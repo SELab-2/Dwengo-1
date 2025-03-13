@@ -189,5 +189,5 @@ export const languageMap: Record<string, Language> = {
     nl: Language.Dutch,
     fr: Language.French,
     en: Language.English,
-    de: Language.Germany,
+    de: Language.German,
 };

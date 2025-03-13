@@ -5,7 +5,7 @@ import themeRoutes from './routes/themes.js';
 import learningPathRoutes from './routes/learning-paths.js';
 import learningObjectRoutes from './routes/learning-objects.js';
 
-import studentRouter from './routes/student.js';
+import studentRouter from './routes/students.js';
 import groupRouter from './routes/groups.js';
 import assignmentRouter from './routes/assignments.js';
 import submissionRouter from './routes/submissions.js';
