@@ -2,10 +2,10 @@
     import { ref } from "vue";
     import { useRoute } from "vue-router";
     import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
-    import {useI18n} from "vue-i18n";
+    import { useI18n } from "vue-i18n";
 
     const route = useRoute();
-    const { t, locale } = useI18n()
+    const { t, locale } = useI18n();
 
     // Instantiate variables to use in html to render right
     // Links and content dependent on the role (student or teacher)
@@ -30,7 +30,7 @@
     // Logic to change the language of the website to the selected language
     const changeLanguage = (langCode: string) => {
         locale.value = langCode;
-        localStorage.setItem('user-lang', langCode);
+        localStorage.setItem("user-lang", langCode);
         console.log(langCode);
     };
 </script>
@@ -59,22 +59,22 @@
                             :to="`/${role}/${userId}/assignment`"
                             class="menu_item"
                         >
-                            {{ t('assignments') }}
+                            {{ t("assignments") }}
                         </router-link>
                     </li>
                     <li>
                         <router-link
                             :to="`/${role}/${userId}/class`"
                             class="menu_item"
-                            >{{ t('classes') }}</router-link
+                            >{{ t("classes") }}</router-link
                         >
                     </li>
                     <li>
                         <router-link
                             :to="`/${role}/${userId}/discussion`"
                             class="menu_item"
-                            >{{ t('discussions') }} </router-link
-                        >
+                            >{{ t("discussions") }}
+                        </router-link>
                     </li>
                     <li>
                         <v-menu open-on-hover>

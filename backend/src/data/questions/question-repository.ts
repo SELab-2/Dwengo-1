@@ -11,7 +11,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
             learningObjectVersion: question.loId.version,
             author: question.author,
             content: question.content,
-            timestamp: new Date()
+            timestamp: new Date(),
         });
         questionEntity.learningObjectHruid = question.loId.hruid;
         questionEntity.learningObjectLanguage = question.loId.language;

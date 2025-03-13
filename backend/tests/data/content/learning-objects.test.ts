@@ -17,8 +17,7 @@ describe('LearningObjectRepository', () => {
     const id02 = new LearningObjectIdentifier('test_id', Language.English, '1');
 
     it('should return the learning object that matches identifier 1', async () => {
-        const learningObject =
-            await learningObjectRepository.findByIdentifier(id01);
+        const learningObject = await learningObjectRepository.findByIdentifier(id01);
 
         expect(learningObject).toBeTruthy();
         expect(learningObject?.title).toBe('Undertow');
@@ -26,8 +25,7 @@ describe('LearningObjectRepository', () => {
     });
 
     it('should return nothing because the identifier does not exist in the database', async () => {
-        const learningObject =
-            await learningObjectRepository.findByIdentifier(id02);
+        const learningObject = await learningObjectRepository.findByIdentifier(id02);
 
         expect(learningObject).toBeNull();
     });

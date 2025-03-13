@@ -24,7 +24,7 @@ import { LearningPath } from './entities/content/learning-path.entity.js';
 
 import { Answer } from './entities/questions/answer.entity.js';
 import { Question } from './entities/questions/question.entity.js';
-import {SqliteAutoincrementSubscriber} from "./sqlite-autoincrement-workaround.js";
+import { SqliteAutoincrementSubscriber } from './sqlite-autoincrement-workaround.js';
 
 const entities = [
     User,

@@ -1,10 +1,6 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { setupTestApp } from '../../setup-tests';
-import {
-    getClassRepository,
-    getTeacherInvitationRepository,
-    getTeacherRepository,
-} from '../../../src/data/repositories';
+import { getClassRepository, getTeacherInvitationRepository, getTeacherRepository } from '../../../src/data/repositories';
 import { TeacherInvitationRepository } from '../../../src/data/classes/teacher-invitation-repository';
 import { TeacherRepository } from '../../../src/data/users/teacher-repository';
 import { ClassRepository } from '../../../src/data/classes/class-repository';
@@ -23,8 +19,7 @@ describe('ClassRepository', () => {
 
     it('should return all invitations from a teacher', async () => {
         const teacher = await teacherRepository.findByUsername('LimpBizkit');
-        const invitations =
-            await teacherInvitationRepository.findAllInvitationsBy(teacher!);
+        const invitations = await teacherInvitationRepository.findAllInvitationsBy(teacher!);
 
         expect(invitations).toBeTruthy();
         expect(invitations).toHaveLength(2);
@@ -32,8 +27,7 @@ describe('ClassRepository', () => {
 
     it('should return all invitations for a teacher', async () => {
         const teacher = await teacherRepository.findByUsername('FooFighters');
-        const invitations =
-            await teacherInvitationRepository.findAllInvitationsFor(teacher!);
+        const invitations = await teacherInvitationRepository.findAllInvitationsFor(teacher!);
 
         expect(invitations).toBeTruthy();
         expect(invitations).toHaveLength(2);
@@ -41,10 +35,7 @@ describe('ClassRepository', () => {
 
     it('should return all invitations for a class', async () => {
         const class_ = await classRepository.findById('id02');
-        const invitations =
-            await teacherInvitationRepository.findAllInvitationsForClass(
-                class_!
-            );
+        const invitations = await teacherInvitationRepository.findAllInvitationsForClass(class_!);
 
         expect(invitations).toBeTruthy();
         expect(invitations).toHaveLength(2);
@@ -56,8 +47,7 @@ describe('ClassRepository', () => {
         const receiver = await teacherRepository.findByUsername('LimpBizkit');
         await teacherInvitationRepository.deleteBy(class_!, sender!, receiver!);
 
-        const invitation =
-            await teacherInvitationRepository.findAllInvitationsBy(sender!);
+        const invitation = await teacherInvitationRepository.findAllInvitationsBy(sender!);
 
         expect(invitation).toHaveLength(0);
     });

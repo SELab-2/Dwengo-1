@@ -30,12 +30,9 @@ describe('TeacherRepository', () => {
     });
 
     it('should return the queried teacher after he was added', async () => {
-        await teacherRepository.insert(
-            new Teacher(username, firstName, lastName)
-        );
+        await teacherRepository.insert(new Teacher(username, firstName, lastName));
 
-        const retrievedTeacher =
-            await teacherRepository.findByUsername(username);
+        const retrievedTeacher = await teacherRepository.findByUsername(username);
         expect(retrievedTeacher).toBeTruthy();
         expect(retrievedTeacher?.firstName).toBe(firstName);
         expect(retrievedTeacher?.lastName).toBe(lastName);
@@ -44,8 +41,7 @@ describe('TeacherRepository', () => {
     it('should no longer return the queried teacher after he was removed again', async () => {
         await teacherRepository.deleteByUsername('ZesdeMetaal');
 
-        const retrievedTeacher =
-            await teacherRepository.findByUsername('ZesdeMetaal');
+        const retrievedTeacher = await teacherRepository.findByUsername('ZesdeMetaal');
         expect(retrievedTeacher).toBeNull();
     });
 });

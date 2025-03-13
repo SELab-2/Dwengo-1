@@ -3,10 +3,7 @@ import { Assignment } from '../../../src/entities/assignments/assignment.entity'
 import { Class } from '../../../src/entities/classes/class.entity';
 import { Language } from '../../../src/entities/content/language';
 
-export function makeTestAssignemnts(
-    em: EntityManager<IDatabaseDriver<Connection>>,
-    classes: Array<Class>
-): Array<Assignment> {
+export function makeTestAssignemnts(em: EntityManager<IDatabaseDriver<Connection>>, classes: Array<Class>): Array<Assignment> {
     const assignment01 = em.create(Assignment, {
         within: classes[0],
         id: 1,

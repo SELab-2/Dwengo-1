@@ -1,8 +1,5 @@
 import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
-import {
-    ClassJoinRequest,
-    ClassJoinRequestStatus,
-} from '../../../src/entities/classes/class-join-request.entity';
+import { ClassJoinRequest, ClassJoinRequestStatus } from '../../../src/entities/classes/class-join-request.entity';
 import { Student } from '../../../src/entities/users/student.entity';
 import { Class } from '../../../src/entities/classes/class.entity';
 
@@ -35,10 +32,5 @@ export function makeTestClassJoinRequests(
         status: ClassJoinRequestStatus.Open,
     });
 
-    return [
-        classJoinRequest01,
-        classJoinRequest02,
-        classJoinRequest03,
-        classJoinRequest04,
-    ];
+    return [classJoinRequest01, classJoinRequest02, classJoinRequest03, classJoinRequest04];
 }

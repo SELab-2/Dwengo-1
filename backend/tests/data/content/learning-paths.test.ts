@@ -13,21 +13,13 @@ describe('LearningPathRepository', () => {
     });
 
     it('should return nothing because no match for hruid and language', async () => {
-        const learningPath =
-            await learningPathRepository.findByHruidAndLanguage(
-                'test_id',
-                Language.Dutch
-            );
+        const learningPath = await learningPathRepository.findByHruidAndLanguage('test_id', Language.Dutch);
 
         expect(learningPath).toBeNull();
     });
 
     it('should return requested learning path', async () => {
-        const learningPath =
-            await learningPathRepository.findByHruidAndLanguage(
-                'id01',
-                Language.English
-            );
+        const learningPath = await learningPathRepository.findByHruidAndLanguage('id01', Language.English);
 
         expect(learningPath).toBeTruthy();
         expect(learningPath?.title).toBe('repertoire Tool');

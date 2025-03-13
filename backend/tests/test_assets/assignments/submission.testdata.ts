@@ -61,11 +61,5 @@ export function makeTestSubmissions(
         content: '',
     });
 
-    return [
-        submission01,
-        submission02,
-        submission03,
-        submission04,
-        submission05,
-    ];
+    return [submission01, submission02, submission03, submission04, submission05];
 }

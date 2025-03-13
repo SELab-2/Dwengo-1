@@ -3,11 +3,7 @@ import { Class } from '../../../src/entities/classes/class.entity';
 import { Student } from '../../../src/entities/users/student.entity';
 import { Teacher } from '../../../src/entities/users/teacher.entity';
 
-export function makeTestClasses(
-    em: EntityManager<IDatabaseDriver<Connection>>,
-    students: Array<Student>,
-    teachers: Array<Teacher>
-): Array<Class> {
+export function makeTestClasses(em: EntityManager<IDatabaseDriver<Connection>>, students: Array<Student>, teachers: Array<Teacher>): Array<Class> {
     const studentsClass01 = students.slice(0, 7);
     const teacherClass01: Array<Teacher> = teachers.slice(0, 1);
 
@@ -18,9 +14,7 @@ export function makeTestClasses(
         students: studentsClass01,
     });
 
-    const studentsClass02: Array<Student> = students
-        .slice(0, 2)
-        .concat(students.slice(3, 4));
+    const studentsClass02: Array<Student> = students.slice(0, 2).concat(students.slice(3, 4));
     const teacherClass02: Array<Teacher> = teachers.slice(1, 2);
 
     const class02 = em.create(Class, {

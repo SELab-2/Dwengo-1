@@ -1,9 +1,7 @@
 import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
 import { Student } from '../../../src/entities/users/student.entity';
 
-export function makeTestStudents(
-    em: EntityManager<IDatabaseDriver<Connection>>
-): Array<Student> {
+export function makeTestStudents(em: EntityManager<IDatabaseDriver<Connection>>): Array<Student> {
     const student01 = em.create(Student, {
         username: 'Noordkaap',
         firstName: 'Stijn',
@@ -47,13 +45,5 @@ export function makeTestStudents(
         lastName: 'Cobain',
     });
 
-    return [
-        student01,
-        student02,
-        student03,
-        student04,
-        student05,
-        student06,
-        student07,
-    ];
+    return [student01, student02, student03, student04, student05, student06, student07];
 }

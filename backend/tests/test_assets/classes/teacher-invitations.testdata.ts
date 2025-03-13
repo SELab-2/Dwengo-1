@@ -32,10 +32,5 @@ export function makeTestTeacherInvitations(
         class: classes[0],
     });
 
-    return [
-        teacherInvitation01,
-        teacherInvitation02,
-        teacherInvitation03,
-        teacherInvitation04,
-    ];
+    return [teacherInvitation01, teacherInvitation02, teacherInvitation03, teacherInvitation04];
 }

@@ -31,11 +31,7 @@ export async function setupTestApp() {
     assignments[0].groups = groups.slice(0, 3);
     assignments[1].groups = groups.slice(3, 4);
 
-    const teacherInvitations = makeTestTeacherInvitations(
-        em,
-        teachers,
-        classes
-    );
+    const teacherInvitations = makeTestTeacherInvitations(em, teachers, classes);
     const classJoinRequests = makeTestClassJoinRequests(em, students, classes);
     const attachments = makeTestAttachments(em, learningObjects);
 

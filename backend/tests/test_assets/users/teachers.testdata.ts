@@ -1,9 +1,7 @@
 import { Teacher } from '../../../src/entities/users/teacher.entity';
 import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
 
-export function makeTestTeachers(
-    em: EntityManager<IDatabaseDriver<Connection>>
-): Array<Teacher> {
+export function makeTestTeachers(em: EntityManager<IDatabaseDriver<Connection>>): Array<Teacher> {
     const teacher01 = em.create(Teacher, {
         username: 'FooFighters',
         firstName: 'Dave',

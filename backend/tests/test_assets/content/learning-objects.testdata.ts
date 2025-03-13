@@ -3,9 +3,7 @@ import { LearningObject, ReturnValue } from '../../../src/entities/content/learn
 import { Language } from '../../../src/entities/content/language';
 import { DwengoContentType } from '../../../src/services/learning-objects/processing/content-type';
 
-export function makeTestLearningObjects(
-    em: EntityManager<IDatabaseDriver<Connection>>
-): Array<LearningObject> {
+export function makeTestLearningObjects(em: EntityManager<IDatabaseDriver<Connection>>): Array<LearningObject> {
     const returnValue: ReturnValue = new ReturnValue();
     returnValue.callbackSchema = '';
     returnValue.callbackUrl = '';
@@ -29,9 +27,7 @@ export function makeTestLearningObjects(
         available: true,
         contentLocation: '',
         attachments: [],
-        content: Buffer.from(
-            "there's a shadow just behind me, shrouding every step i take, making every promise empty pointing every finger at me"
-        )
+        content: Buffer.from("there's a shadow just behind me, shrouding every step i take, making every promise empty pointing every finger at me"),
     });
 
     const learningObject02 = em.create(LearningObject, {
@@ -131,16 +127,8 @@ export function makeTestLearningObjects(
         available: true,
         contentLocation: '',
         attachments: [],
-        content: Buffer.from(
-            'calling Elvis, is anybody home, calling elvis, I am here all alone'
-        ),
+        content: Buffer.from('calling Elvis, is anybody home, calling elvis, I am here all alone'),
     });
 
-    return [
-        learningObject01,
-        learningObject02,
-        learningObject03,
-        learningObject04,
-        learningObject05,
-    ];
+    return [learningObject01, learningObject02, learningObject03, learningObject04, learningObject05];
 }

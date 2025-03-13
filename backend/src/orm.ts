@@ -1,4 +1,4 @@
-import {EntityManager, MikroORM} from '@mikro-orm/core';
+import { EntityManager, MikroORM } from '@mikro-orm/core';
 import config from './mikro-orm.config.js';
 import { EnvVars, getEnvVar } from './util/envvars.js';
 import { getLogger, Logger } from './logging/initalize.js';

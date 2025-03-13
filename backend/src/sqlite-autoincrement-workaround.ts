@@ -1,4 +1,4 @@
-import {EntityProperty, EventArgs, EventSubscriber} from "@mikro-orm/core";
+import { EntityProperty, EventArgs, EventSubscriber } from '@mikro-orm/core';
 
 /**
  * The tests are ran on an in-memory SQLite database. However, SQLite does not allow fields which are part of composite
@@ -29,7 +29,7 @@ export class SqliteAutoincrementSubscriber implements EventSubscriber {
             const property = prop as EntityProperty<T>;
             if (property.primary && property.autoincrement && !(args.entity as Record<string, any>)[property.name]) {
                 // Obtain and increment sequence number of this entity.
-                const propertyKey = args.meta.class.name + "." + property.name;
+                const propertyKey = args.meta.class.name + '.' + property.name;
                 const nextSeqNumber = this.sequenceNumbersForEntityType.get(propertyKey) || 0;
                 this.sequenceNumbersForEntityType.set(propertyKey, nextSeqNumber + 1);
 
