@@ -60,7 +60,7 @@ describe('DatabaseLearningObjectProvider', () => {
     describe('getLearningObjectHTML', () => {
         it('should return the correct rendering of the learning object', async () => {
             const result = await databaseLearningObjectProvider.getLearningObjectHTML(exampleLearningObject);
-            expect(result).toEqual(example.getHTMLRendering());
+            expect(result).toEqual(example.getHTMLRendering().replace(/\r\n/g, '\n'));
         });
         it('should return null for a non-existing learning object', async () => {
             const result = await databaseLearningObjectProvider.getLearningObjectHTML({

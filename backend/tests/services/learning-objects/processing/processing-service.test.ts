@@ -8,18 +8,18 @@ describe('ProcessingService', () => {
     it('renders a markdown learning object correctly', async () => {
         const markdownLearningObject = mdExample.createLearningObject();
         const result = await processingService.render(markdownLearningObject);
-        expect(result).toEqual(mdExample.getHTMLRendering());
+        expect(result).toEqual(mdExample.getHTMLRendering().replace(/\r\n/g, '\n'));
     });
 
     it('renders a multiple choice question correctly', async () => {
         const multipleChoiceLearningObject = multipleChoiceExample.createLearningObject();
         const result = await processingService.render(multipleChoiceLearningObject);
-        expect(result).toEqual(multipleChoiceExample.getHTMLRendering());
+        expect(result).toEqual(multipleChoiceExample.getHTMLRendering().replace(/\r\n/g, '\n'));
     });
 
     it('renders an essay question correctly', async () => {
         const essayLearningObject = essayExample.createLearningObject();
         const result = await processingService.render(essayLearningObject);
-        expect(result).toEqual(essayExample.getHTMLRendering());
+        expect(result).toEqual(essayExample.getHTMLRendering().replace(/\r\n/g, '\n'));
     });
 });
