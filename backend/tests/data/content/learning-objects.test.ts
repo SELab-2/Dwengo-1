@@ -13,8 +13,8 @@ describe('LearningObjectRepository', () => {
         learningObjectRepository = getLearningObjectRepository();
     });
 
-    const id01 = new LearningObjectIdentifier('id01', Language.English, '1');
-    const id02 = new LearningObjectIdentifier('test_id', Language.English, '1');
+    const id01 = new LearningObjectIdentifier('id01', Language.English, 1);
+    const id02 = new LearningObjectIdentifier('test_id', Language.English, 1);
 
     it('should return the learning object that matches identifier 1', async () => {
         const learningObject = await learningObjectRepository.findByIdentifier(id01);

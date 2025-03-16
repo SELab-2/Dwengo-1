@@ -12,12 +12,13 @@ import apiClient from "@/services/api-client.ts";
 import router from "@/router";
 import type { AxiosError } from "axios";
 
-const authConfig = await loadAuthConfig();
-
-const userManagers: UserManagersForRoles = {
-    student: new UserManager(authConfig.student),
-    teacher: new UserManager(authConfig.teacher),
-};
+async function getUserManagers(): Promise<UserManagersForRoles> {
+    const authConfig = await loadAuthConfig();
+    return {
+        student: new UserManager(authConfig.student),
+        teacher: new UserManager(authConfig.teacher),
+    };
+}
 
 /**
  * Load the information about who is currently logged in from the IDP.
@@ -27,7 +28,7 @@ async function loadUser(): Promise<User | null> {
     if (!activeRole) {
         return null;
     }
-    const user = await userManagers[activeRole].getUser();
+    const user = await (await getUserManagers())[activeRole].getUser();
     authState.user = user;
     authState.accessToken = user?.access_token || null;
     authState.activeRole = activeRole || null;
@@ -59,7 +60,7 @@ async function initiateLogin() {
 async function loginAs(role: Role): Promise<void> {
     // Storing it in local storage so that it won't be lost when redirecting outside of the app.
     authStorage.setActiveRole(role);
-    await userManagers[role].signinRedirect();
+    await (await getUserManagers())[role].signinRedirect();
 }
 
 /**
@@ -70,7 +71,7 @@ async function handleLoginCallback(): Promise<void> {
     if (!activeRole) {
         throw new Error("Login callback received, but the user is not logging in!");
     }
-    authState.user = (await userManagers[activeRole].signinCallback()) || null;
+    authState.user = (await (await getUserManagers())[activeRole].signinCallback()) || null;
 }
 
 /**
@@ -84,7 +85,7 @@ async function renewToken() {
         return;
     }
     try {
-        return await userManagers[activeRole].signinSilent();
+        return await (await getUserManagers())[activeRole].signinSilent();
     } catch (error) {
         console.log("Can't renew the token:");
         console.log(error);
@@ -98,7 +99,7 @@ async function renewToken() {
 async function logout(): Promise<void> {
     const activeRole = authStorage.getActiveRole();
     if (activeRole) {
-        await userManagers[activeRole].signoutRedirect();
+        await (await getUserManagers())[activeRole].signoutRedirect();
         authStorage.deleteActiveRole();
     }
 }

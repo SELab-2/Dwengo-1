@@ -18,7 +18,7 @@ export class Submission {
     @PrimaryKey({ type: 'numeric' })
     learningObjectVersion: number = 1;
 
-    @PrimaryKey({ type: 'integer' })
+    @PrimaryKey({ type: 'integer', autoincrement: true })
     submissionNumber!: number;
 
     @ManyToOne({

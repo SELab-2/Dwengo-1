@@ -4,10 +4,12 @@ import { Teacher } from '../users/teacher.entity.js';
 import { Student } from '../users/student.entity.js';
 import { ClassRepository } from '../../data/classes/class-repository.js';
 
-@Entity({ repository: () => ClassRepository })
+@Entity({
+    repository: () => ClassRepository,
+})
 export class Class {
     @PrimaryKey()
-    classId = v4();
+    classId? = v4();
 
     @Property({ type: 'string' })
     displayName!: string;

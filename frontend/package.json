@@ -1,6 +1,6 @@
 {
     "name": "dwengo-1-frontend",
-    "version": "0.0.1",
+    "version": "0.1.1",
     "description": "Frontend for Dwengo-1",
     "private": true,
     "type": "module",
@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "vue": "^3.5.13",
+        "vue-i18n": "^11.1.2",
         "vue-router": "^4.5.0",
         "vuetify": "^3.7.12",
         "oidc-client-ts": "^3.1.0",

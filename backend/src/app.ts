@@ -1,58 +1,36 @@
-import express, { Express, Response } from 'express';
+import express, { Express } from 'express';
 import { initORM } from './orm.js';
-
-import themeRoutes from './routes/themes.js';
-import learningPathRoutes from './routes/learning-paths.js';
-import learningObjectRoutes from './routes/learning-objects.js';
-
-import studentRouter from './routes/student.js';
-import groupRouter from './routes/group.js';
-import assignmentRouter from './routes/assignment.js';
-import submissionRouter from './routes/submission.js';
-import classRouter from './routes/class.js';
-import questionRouter from './routes/question.js';
-import authRouter from './routes/auth.js';
 import { authenticateUser } from './middleware/auth/auth.js';
 import cors from './middleware/cors.js';
 import { getLogger, Logger } from './logging/initalize.js';
 import { responseTimeLogger } from './logging/responseTimeLogger.js';
 import responseTime from 'response-time';
 import { EnvVars, getNumericEnvVar } from './util/envvars.js';
+import apiRouter from './routes/router.js';
+import swaggerMiddleware from './swagger.js';
+import swaggerUi from 'swagger-ui-express';
 
 const logger: Logger = getLogger();
 
 const app: Express = express();
 const port: string | number = getNumericEnvVar(EnvVars.Port);
 
-app.use(cors);
 app.use(express.json());
-app.use(responseTime(responseTimeLogger));
+app.use(cors);
 app.use(authenticateUser);
+// Add response time logging
+app.use(responseTime(responseTimeLogger));
 
-// TODO Replace with Express routes
-app.get('/', (_, res: Response) => {
-    logger.debug('GET /');
-    res.json({
-        message: 'Hello Dwengo!🚀',
-    });
-});
+app.use('/api', apiRouter);
 
-app.use('/student', studentRouter);
-app.use('/group', groupRouter);
-app.use('/assignment', assignmentRouter);
-app.use('/submission', submissionRouter);
-app.use('/class', classRouter);
-app.use('/question', questionRouter);
-app.use('/auth', authRouter);
-app.use('/theme', themeRoutes);
-app.use('/learningPath', learningPathRoutes);
-app.use('/learningObject', learningObjectRoutes);
+// Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerMiddleware);
 
 async function startServer() {
     await initORM();
 
     app.listen(port, () => {
-        logger.info(`Server is running at http://localhost:${port}`);
+        logger.info(`Server is running at http://localhost:${port}/api`);
     });
 }
 

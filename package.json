@@ -1,6 +1,6 @@
 {
     "name": "dwengo-1-monorepo",
-    "version": "0.0.1",
+    "version": "0.1.1",
     "description": "Monorepo for Dwengo-1",
     "private": true,
     "type": "module",
@@ -8,13 +8,13 @@
         "build": "npm run build --ws",
         "format": "npm run format --ws",
         "format-check": "npm run format-check --ws",
-        "generate-docs": "python3 -m venv .venv && source .venv/bin/activate && pip install -r docs/requirements.txt && python docs/architecture/schema.py",
         "lint": "npm run lint --ws",
         "test:unit": "npm run test:unit --ws"
     },
     "workspaces": [
         "backend",
-        "frontend"
+        "frontend",
+        "docs"
     ],
     "repository": {
         "type": "git",
