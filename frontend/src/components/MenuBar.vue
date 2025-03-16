@@ -18,9 +18,7 @@
     const name = "Kurt Cobain";
     const initials = name
         .split(" ")
-        .map((n) => {
-            return n[0];
-        })
+        .map((n) => n[0])
         .join("");
 
     const languages = ref([
