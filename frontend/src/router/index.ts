@@ -1,13 +1,6 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {createRouter, createWebHistory} from "vue-router";
 import MenuBar from "@/components/MenuBar.vue";
-import StudentHomepage from "@/views/StudentHomepage.vue";
-import StudentAssignments from "@/views/assignments/StudentAssignments.vue";
-import StudentClasses from "@/views/classes/StudentClasses.vue";
-import StudentDiscussions from "@/views/discussions/StudentDiscussions.vue";
-import TeacherHomepage from "@/views/TeacherHomepage.vue";
-import TeacherAssignments from "@/views/assignments/TeacherAssignments.vue";
-import TeacherClasses from "@/views/classes/TeacherClasses.vue";
-import TeacherDiscussions from "@/views/discussions/TeacherDiscussions.vue";
+import StudentHomepage from "@/views/homepage/StudentHomepage.vue";
 import SingleAssignment from "@/views/assignments/SingleAssignment.vue";
 import SingleClass from "@/views/classes/SingleClass.vue";
 import SingleDiscussion from "@/views/discussions/SingleDiscussion.vue";
@@ -16,6 +9,9 @@ import CreateClass from "@/views/classes/CreateClass.vue";
 import CreateAssignment from "@/views/assignments/CreateAssignment.vue";
 import CreateDiscussion from "@/views/discussions/CreateDiscussion.vue";
 import CallbackPage from "@/views/CallbackPage.vue";
+import UserDiscussions from "@/views/discussions/UserDiscussions.vue";
+import UserClasses from "@/views/classes/UserClasses.vue";
+import UserAssignments from "@/views/classes/UserAssignments.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,93 +30,76 @@ const router = createRouter({
             path: "/callback",
             component: CallbackPage,
         },
+
         {
-            path: "/student/:id",
+            path: "/user",
             component: MenuBar,
+            meta: {requiresAuth: true},
             children: [
                 {
                     path: "home",
-                    name: "StudentHomePage",
+                    name: "UserHomePage",
                     component: StudentHomepage,
                 },
                 {
                     path: "assignment",
-                    name: "StudentAssignments",
-                    component: StudentAssignments,
+                    name: "UserAssignments",
+                    component: UserAssignments,
                 },
                 {
                     path: "class",
-                    name: "StudentClasses",
-                    component: StudentClasses,
+                    name: "UserClasses",
+                    component: UserClasses,
                 },
                 {
                     path: "discussion",
-                    name: "StudentDiscussions",
-                    component: StudentDiscussions,
+                    name: "UserDiscussions",
+                    component: UserDiscussions,
                 },
             ],
         },
 
         {
-            path: "/teacher/:id",
-            component: MenuBar,
-            children: [
-                {
-                    path: "home",
-                    name: "TeacherHomepage",
-                    component: TeacherHomepage,
-                },
-                {
-                    path: "assignment",
-                    name: "TeacherAssignments",
-                    component: TeacherAssignments,
-                },
-                {
-                    path: "class",
-                    name: "TeacherClasses",
-                    component: TeacherClasses,
-                },
-                {
-                    path: "discussion",
-                    name: "TeacherDiscussions",
-                    component: TeacherDiscussions,
-                },
-            ],
-        },
-        {
             path: "/assignment/create",
             name: "CreateAssigment",
             component: CreateAssignment,
+            meta: {requiresAuth: true},
         },
         {
             path: "/assignment/:id",
             name: "SingleAssigment",
             component: SingleAssignment,
+            meta: {requiresAuth: true},
         },
         {
             path: "/class/create",
             name: "CreateClass",
             component: CreateClass,
+            meta: {requiresAuth: true},
         },
         {
             path: "/class/:id",
             name: "SingleClass",
             component: SingleClass,
+            meta: {requiresAuth: true},
         },
         {
             path: "/discussion/create",
             name: "CreateDiscussion",
             component: CreateDiscussion,
+            meta: {requiresAuth: true},
         },
         {
             path: "/discussion/:id",
             name: "SingleDiscussion",
             component: SingleDiscussion,
+            meta: {requiresAuth: true},
         },
         {
             path: "/:catchAll(.*)",
             name: "NotFound",
             component: NotFound,
+            meta: {requiresAuth: true},
         },
     ],
 });

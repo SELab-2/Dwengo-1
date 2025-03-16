@@ -9,6 +9,7 @@
 
     // Instantiate variables to use in html to render right
     // Links and content dependent on the role (student or teacher)
+    //TODO: use localStorage to know which one in logged in, teacher or student
     const isTeacher = route.path.includes("teacher");
 
     const userId = route.params.id as string;
