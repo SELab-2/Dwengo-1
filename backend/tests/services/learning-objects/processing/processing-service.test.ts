@@ -8,6 +8,7 @@ describe('ProcessingService', () => {
     it('renders a markdown learning object correctly', async () => {
         const markdownLearningObject = mdExample.createLearningObject();
         const result = await processingService.render(markdownLearningObject);
+        // Set newlines so your tests are platform-independent.
         expect(result).toEqual(mdExample.getHTMLRendering().replace(/\r\n/g, '\n'));
     });
 
