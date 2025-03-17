@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import MenuBar from "@/components/MenuBar.vue";
 import StudentHomepage from "@/views/homepage/StudentHomepage.vue";
 import SingleAssignment from "@/views/assignments/SingleAssignment.vue";
@@ -21,24 +21,24 @@ const router = createRouter({
             path: "/",
             name: "home",
             component: () => import("../views/HomePage.vue"),
-            meta: {requiresAuth: false}
+            meta: { requiresAuth: false },
         },
         {
             path: "/login",
             name: "LoginPage",
             component: () => import("../views/LoginPage.vue"),
-            meta: {requiresAuth: false},
+            meta: { requiresAuth: false },
         },
         {
             path: "/callback",
             component: CallbackPage,
-            meta: {requiresAuth: false}
+            meta: { requiresAuth: false },
         },
 
         {
             path: "/user",
             component: MenuBar,
-            meta: {requiresAuth: true},
+            meta: { requiresAuth: true },
             children: [
                 {
                     path: "home",
@@ -67,49 +67,48 @@ const router = createRouter({
             path: "/assignment/create",
             name: "CreateAssigment",
             component: CreateAssignment,
-            meta: {requiresAuth: true},
+            meta: { requiresAuth: true },
         },
         {
             path: "/assignment/:id",
             name: "SingleAssigment",
             component: SingleAssignment,
-            meta: {requiresAuth: true},
+            meta: { requiresAuth: true },
         },
         {
             path: "/class/create",
             name: "CreateClass",
             component: CreateClass,
-            meta: {requiresAuth: true},
+            meta: { requiresAuth: true },
         },
         {
             path: "/class/:id",
             name: "SingleClass",
             component: SingleClass,
-            meta: {requiresAuth: true},
+            meta: { requiresAuth: true },
         },
         {
             path: "/discussion/create",
             name: "CreateDiscussion",
             component: CreateDiscussion,
-            meta: {requiresAuth: true},
+            meta: { requiresAuth: true },
         },
         {
             path: "/discussion/:id",
             name: "SingleDiscussion",
             component: SingleDiscussion,
-            meta: {requiresAuth: true},
+            meta: { requiresAuth: true },
         },
         {
             path: "/:catchAll(.*)",
             name: "NotFound",
             component: NotFound,
-            meta: {requiresAuth: false}
+            meta: { requiresAuth: false },
         },
     ],
 });
 
 router.beforeEach(async (to, from, next) => {
-
     // Verify if user is logged in for paths that require access
     if (to.meta.requiresAuth) {
         if (!authState.isLoggedIn) {
