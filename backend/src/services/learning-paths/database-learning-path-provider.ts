@@ -44,13 +44,9 @@ async function convertLearningPath(learningPath: LearningPathEntity, order: numb
     const nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject> = await getLearningObjectsForNodes(learningPath.nodes);
 
     // The target ages of a learning path are the union of the target ages of all learning objects.
-    const targetAges = [...new Set(
-        Array.from(nodesToLearningObjects.values()).flatMap((it) => it.targetAges || [])
-    )];
+    const targetAges = [...new Set(Array.from(nodesToLearningObjects.values()).flatMap((it) => it.targetAges || []))];
     // The keywords of the learning path consist of the union of the keywords of all learning objects.
-    const keywords = [...new Set(
-        Array.from(nodesToLearningObjects.values()).flatMap((it) => it.keywords || []))
-    ];
+    const keywords = [...new Set(Array.from(nodesToLearningObjects.values()).flatMap((it) => it.keywords || []))];
 
     const image = learningPath.image ? learningPath.image.toString('base64') : undefined;
 
@@ -94,11 +90,10 @@ async function convertNode(
     const transitions = node.transitions
         .filter(
             (trans) =>
-                !personalizedFor // If we do not want a personalized learning path, keep all transitions
-                || isTransitionPossible(trans, optionalJsonStringToObject(lastSubmission?.content)) // Otherwise remove all transitions that aren't possible.
-        ).map(
-            (trans, i) => convertTransition(trans, i, nodesToLearningObjects)
+                !personalizedFor || // If we do not want a personalized learning path, keep all transitions
+                isTransitionPossible(trans, optionalJsonStringToObject(lastSubmission?.content)) // Otherwise remove all transitions that aren't possible.
         )
+        .map((trans, i) => convertTransition(trans, i, nodesToLearningObjects));
     return {
         _id: learningObject.uuid,
         language: learningObject.language,
@@ -107,7 +102,7 @@ async function convertNode(
         updatedAt: node.updatedAt.toISOString(),
         learningobject_hruid: node.learningObjectHruid,
         version: learningObject.version,
-        transitions
+        transitions,
     };
 }
 
@@ -122,8 +117,9 @@ async function convertNodes(
     nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>,
     personalizedFor?: PersonalizationTarget
 ): Promise<LearningObjectNode[]> {
-    const nodesPromise = Array.from(nodesToLearningObjects.entries())
-        .map(entry => convertNode(entry[0], entry[1], personalizedFor, nodesToLearningObjects));
+    const nodesPromise = Array.from(nodesToLearningObjects.entries()).map((entry) =>
+        convertNode(entry[0], entry[1], personalizedFor, nodesToLearningObjects)
+    );
     return await Promise.all(nodesPromise);
 }
 
