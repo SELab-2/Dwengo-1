@@ -109,7 +109,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-    // Verify if user is logged in for paths that require access
+    // Verify if user is logged in for paths that require authentication
     if (to.meta.requiresAuth) {
         if (!authState.isLoggedIn) {
             next("/login");

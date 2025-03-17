@@ -12,6 +12,8 @@
     const path = "/user";
 
     const role = localStorage.getItem("activeRole");
+
+    //TODO: use authState form services map to get user token
     const name = "Kurt Cobain";
     const initials = name
         .split(" ")
