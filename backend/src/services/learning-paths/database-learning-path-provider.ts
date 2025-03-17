@@ -40,7 +40,7 @@ async function getLearningObjectsForNodes(nodes: LearningPathNode[]): Promise<Ma
  */
 async function convertLearningPath(learningPath: LearningPathEntity, order: number, personalizedFor?: PersonalizationTarget): Promise<LearningPath> {
     // Fetch the corresponding learning object for each node since some parts of the expected response contains parts
-    // with information which is not available in the LearningPathNodes themselves.
+    // With information which is not available in the LearningPathNodes themselves.
     const nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject> = await getLearningObjectsForNodes(learningPath.nodes);
 
     // The target ages of a learning path are the union of the target ages of all learning objects.
