@@ -68,6 +68,7 @@ describe('LearningObjectService', () => {
         it('returns the expected HTML when queried with the identifier of a learning object saved in the database', async () => {
             const result = await learningObjectService.getLearningObjectHTML(exampleLearningObject);
             expect(result).not.toBeNull();
+            // Set newlines so your tests are platform-independent.
             expect(result).toEqual(learningObjectExample.getHTMLRendering().replace(/\r\n/g, '\n'));
         });
         it(
