@@ -15,7 +15,7 @@ import { makeTestAnswers } from './test_assets/questions/answers.testdata.js';
 import { makeTestSubmissions } from './test_assets/assignments/submission.testdata.js';
 
 export async function setupTestApp() {
-    dotenv.config({ path: '.env.test.example' });
+    dotenv.config({ path: '.env.test' });
     await initORM(true);
 
     const em = forkEntityManager();
