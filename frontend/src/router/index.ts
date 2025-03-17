@@ -12,6 +12,7 @@ import CallbackPage from "@/views/CallbackPage.vue";
 import UserDiscussions from "@/views/discussions/UserDiscussions.vue";
 import UserClasses from "@/views/classes/UserClasses.vue";
 import UserAssignments from "@/views/classes/UserAssignments.vue";
+import authState from "@/services/auth/auth-service.ts";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,15 +21,18 @@ const router = createRouter({
             path: "/",
             name: "home",
             component: () => import("../views/HomePage.vue"),
+            meta: {requiresAuth: false}
         },
         {
             path: "/login",
             name: "LoginPage",
             component: () => import("../views/LoginPage.vue"),
+            meta: {requiresAuth: false},
         },
         {
             path: "/callback",
             component: CallbackPage,
+            meta: {requiresAuth: false}
         },
 
         {
@@ -99,9 +103,23 @@ const router = createRouter({
             path: "/:catchAll(.*)",
             name: "NotFound",
             component: NotFound,
-            meta: {requiresAuth: true},
+            meta: {requiresAuth: false}
         },
     ],
+});
+
+router.beforeEach(async (to, from, next) => {
+
+    // Verify if user is logged in for paths that require access
+    if (to.meta.requiresAuth) {
+        if (!authState.isLoggedIn) {
+            next("/login");
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
 });
 
 export default router;
