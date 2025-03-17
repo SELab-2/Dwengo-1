@@ -1,3 +1,9 @@
 {
-    "welcome": "Bienvenue"
+    "welcome": "Bienvenue",
+    "homeTitle": "Nos atouts",
+    "homeIntroduction": "Nous développons des ateliers innovants et des ressources éducatives, et nous les fournissons aux étudiants du monde entier en collaboration avec les enseignants et les bénévoles.Nos séances de train-Trainer leur permettent d'amener nos ateliers pratiques aux étudiants. Nous ajoutons toujours de nouveaux projets et méthodologies à tous nos projets.Nous recherchons toujours un thème socialement pertinent pour ces projets.De plus, nous nous assurons toujours que notre matériel didactique est basé sur la recherche scientifique et nous gardons également un œil sur l'inclusivité.",
+    "innovative": "Innovatif",
+    "researchBased": "Fondé sur la recherche",
+    "inclusive": "Inclusif",
+    "sociallyRelevant": "Socialement pertinent"
 }
