@@ -39,14 +39,22 @@ async function getLearningObjectsForNodes(nodes: LearningPathNode[]): Promise<Ma
  * Convert the given learning path entity to an object which conforms to the learning path content.
  */
 async function convertLearningPath(learningPath: LearningPathEntity, order: number, personalizedFor?: PersonalizationTarget): Promise<LearningPath> {
+    // Fetch the corresponding learning object for each node since some parts of the expected response contains parts
+    // with information which is not available in the LearningPathNodes themselves.
     const nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject> = await getLearningObjectsForNodes(learningPath.nodes);
 
-    const targetAges = Array.from(nodesToLearningObjects.values()).flatMap((it) => it.targetAges || []);
-
-    const keywords = Array.from(nodesToLearningObjects.values()).flatMap((it) => it.keywords || []);
+    // The target ages of a learning path are the union of the target ages of all learning objects.
+    const targetAges = [...new Set(
+        Array.from(nodesToLearningObjects.values()).flatMap((it) => it.targetAges || [])
+    )];
+    // The keywords of the learning path consist of the union of the keywords of all learning objects.
+    const keywords = [...new Set(
+        Array.from(nodesToLearningObjects.values()).flatMap((it) => it.keywords || []))
+    ];
 
     const image = learningPath.image ? learningPath.image.toString('base64') : undefined;
 
+    // Convert the learning object notes as retrieved from the database into the expected response format-
     const convertedNodes = await convertNodes(nodesToLearningObjects, personalizedFor);
 
     return {
@@ -68,33 +76,54 @@ async function convertLearningPath(learningPath: LearningPathEntity, order: numb
 }
 
 /**
+ * Helper function converting a single learning path node (as represented in the database) and the corresponding
+ * learning object into a learning path node as it should be represented in the API.
+ *
+ * @param node Learning path node as represented in the database.
+ * @param learningObject Learning object the learning path node refers to.
+ * @param personalizedFor Personalization target if a personalized learning path is desired.
+ * @param nodesToLearningObjects Mapping from learning path nodes to the corresponding learning objects.
+ */
+async function convertNode(
+    node: LearningPathNode,
+    learningObject: FilteredLearningObject,
+    personalizedFor: PersonalizationTarget | undefined,
+    nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>
+): Promise<LearningObjectNode> {
+    const lastSubmission = personalizedFor ? await getLastSubmissionForCustomizationTarget(node, personalizedFor) : null;
+    const transitions = node.transitions
+        .filter(
+            (trans) =>
+                !personalizedFor // If we do not want a personalized learning path, keep all transitions
+                || isTransitionPossible(trans, optionalJsonStringToObject(lastSubmission?.content)) // Otherwise remove all transitions that aren't possible.
+        ).map(
+            (trans, i) => convertTransition(trans, i, nodesToLearningObjects)
+        )
+    return {
+        _id: learningObject.uuid,
+        language: learningObject.language,
+        start_node: node.startNode,
+        created_at: node.createdAt.toISOString(),
+        updatedAt: node.updatedAt.toISOString(),
+        learningobject_hruid: node.learningObjectHruid,
+        version: learningObject.version,
+        transitions
+    };
+}
+
+/**
  * Helper function converting pairs of learning path nodes (as represented in the database) and the corresponding
  * learning objects into a list of learning path nodes as they should be represented in the API.
- * @param nodesToLearningObjects
- * @param personalizedFor
+ *
+ * @param nodesToLearningObjects Mapping from learning path nodes to the corresponding learning objects.
+ * @param personalizedFor Personalization target if a personalized learning path is desired.
  */
 async function convertNodes(
     nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>,
     personalizedFor?: PersonalizationTarget
 ): Promise<LearningObjectNode[]> {
-    const nodesPromise = Array.from(nodesToLearningObjects.entries()).map(async (entry) => {
-        const [node, learningObject] = entry;
-        const lastSubmission = personalizedFor ? await getLastSubmissionForCustomizationTarget(node, personalizedFor) : null;
-        return {
-            _id: learningObject.uuid,
-            language: learningObject.language,
-            start_node: node.startNode,
-            created_at: node.createdAt.toISOString(),
-            updatedAt: node.updatedAt.toISOString(),
-            learningobject_hruid: node.learningObjectHruid,
-            version: learningObject.version,
-            transitions: node.transitions
-                .filter(
-                    (trans) => !personalizedFor || isTransitionPossible(trans, optionalJsonStringToObject(lastSubmission?.content)) // If we want a personalized learning path, remove all transitions that aren't possible.
-                )
-                .map((trans, i) => convertTransition(trans, i, nodesToLearningObjects)), // Then convert all the transition
-        };
-    });
+    const nodesPromise = Array.from(nodesToLearningObjects.entries())
+        .map(entry => convertNode(entry[0], entry[1], personalizedFor, nodesToLearningObjects));
     return await Promise.all(nodesPromise);
 }
 
@@ -112,9 +141,10 @@ function optionalJsonStringToObject(jsonString?: string): object | null {
  * Helper function which converts a transition in the database representation to a transition in the representation
  * the Dwengo API uses.
  *
- * @param transition
- * @param index
- * @param nodesToLearningObjects
+ * @param transition The transition to convert
+ * @param index The sequence number of the transition to convert
+ * @param nodesToLearningObjects Map which maps each learning path node of the current learning path to the learning
+ *                               object it refers to.
  */
 function convertTransition(
     transition: LearningPathTransition,
