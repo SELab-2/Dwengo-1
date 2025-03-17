@@ -26,8 +26,9 @@
                 <img :src="dwengoLogo" />
                 <h> {{ t("homeTitle") }}</h>
                 <p class="info">
-                    {{ t("homeIntroduction") }}
+                    {{ t("homeIntroduction1") }}
                 </p>
+                <p class="info">{{ t("homeIntroduction2") }}</p>
                 <v-btn
                     size="large"
                     density="comfortable"

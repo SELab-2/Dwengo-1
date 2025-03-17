@@ -1,11 +1,18 @@
 {
     "welcome": "Willkommen",
+    "student": "schüler",
+    "teacher": "lehrer",
+    "assignments": "aufgaben",
+    "classes": "klasses",
+    "discussions": "diskussionen",
+    "login": "einloggen",
+    "logout": "ausloggen",
     "homeTitle": "Unsere Stärken",
-    "homeIntroduction": "We develop innovative workshops and educational resources, and we provide them to students around the globe in collaboration with teachers and volunteers. Our train-the-trainer sessions enable them to bring our hands-on workshops to the students.\nWir fügen kontinuierlich neue Projekte und Methoden zu all unseren Projekten hinzu. Für diese Projekte suchen wir immer nach einem gesellschaftlich relevanten Thema. Darüber hinaus stellen wir sicher, dass unser didaktisches Material auf wissenschaftlicher Forschung basiert, und wir achten immer auf Inklusivität.",
+    "homeIntroduction1": "Wir entwickeln innovative Workshops und Bildungsressourcen, die wir in Zusammenarbeit mit Lehrern und Freiwilligen Schülern auf der ganzen Welt zur Verfügung stellen. Unsere Train-the-Trainer-Sitzungen ermöglichen es ihnen, unsere praktischen Workshops an die Schüler weiterzugeben.",
+    "homeIntroduction2": "Wir fügen allen unseren Projekten ständig neue Projekte und Methoden hinzu. Für diese Projekte suchen wir immer nach einem gesellschaftlich relevanten Thema. Darüber hinaus stellen wir sicher, dass unser didaktisches Material auf wissenschaftlicher Forschung basiert, und achten stets auf die Inklusion.",
     "innovative": "Innovativ",
     "researchBased": "Forschungsbasiert",
     "inclusive": "Inclusiv",
     "sociallyRelevant": "Gesellschaftlich relevant",
-    "login": "login",
     "translate": "übersetzen"
 }
