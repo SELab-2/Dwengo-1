@@ -1,5 +1,5 @@
 import { DWENGO_API_BASE } from '../../config.js';
-import { fetchWithLogging } from '../../util/apiHelper.js';
+import { fetchWithLogging } from '../../util/api-helper.js';
 import {
     FilteredLearningObject,
     LearningObjectIdentifier,
