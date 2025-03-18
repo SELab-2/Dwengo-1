@@ -4,16 +4,10 @@ on:
   push:
     branches:
         - main
-  pull_request:
-    branches:
-        - main
-    types:
-        - closed
 
 jobs:
   docker:
     name: Deploy with docker
-    if: github.event.pull_request.merged == true
     runs-on: [self-hosted, Linux, X64]
     steps:
       -
