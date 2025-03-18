@@ -1,27 +1,28 @@
 <script setup lang="ts">
     import { ref } from "vue";
-    import { useRoute } from "vue-router";
-    import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
     import { useI18n } from "vue-i18n";
 
-    const route = useRoute();
+    import auth from "@/services/auth/auth-service.ts";
+
+    // Import assets
+    import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
+
     const { t, locale } = useI18n();
 
     // Instantiate variables to use in html to render right
     // Links and content dependent on the role (student or teacher)
-    const isTeacher = route.path.includes("teacher");
+    const path = "/user";
 
-    const userId = route.params.id as string;
+    const role = auth.authState.activeRole;
 
-    const role = isTeacher ? "teacher" : "student";
+    //TODO: use authState form services map to get user token
     const name = "Kurt Cobain";
     const initials = name
         .split(" ")
-        .map((n) => {
-            return n[0];
-        })
+        .map((n) => n[0])
         .join("");
 
+    // Available languages
     const languages = ref([
         { name: "English", code: "en" },
         { name: "Nederlands", code: "nl" },
@@ -42,7 +43,7 @@
                 <ul>
                     <li>
                         <router-link
-                            :to="`/${role}/${userId}`"
+                            :to="`${path}`"
                             class="dwengo_home"
                         >
                             <img
@@ -56,7 +57,7 @@
                     </li>
                     <li>
                         <router-link
-                            :to="`/${role}/${userId}/assignment`"
+                            :to="`/user/assignment`"
                             class="menu_item"
                         >
                             {{ t("assignments") }}
@@ -64,14 +65,14 @@
                     </li>
                     <li>
                         <router-link
-                            :to="`/${role}/${userId}/class`"
+                            :to="`${path}/class`"
                             class="menu_item"
                             >{{ t("classes") }}</router-link
                         >
                     </li>
                     <li>
                         <router-link
-                            :to="`/${role}/${userId}/discussion`"
+                            :to="`${path}/discussion`"
                             class="menu_item"
                             >{{ t("discussions") }}
                         </router-link>

@@ -21,6 +21,15 @@ async function getUserManagers(): Promise<UserManagersForRoles> {
 }
 
 /**
+ * Information about the current authentication state.
+ */
+const authState = reactive<AuthState>({
+    user: null,
+    accessToken: null,
+    activeRole: authStorage.getActiveRole() || null,
+});
+
+/**
  * Load the information about who is currently logged in from the IDP.
  */
 async function loadUser(): Promise<User | null> {
@@ -34,15 +43,6 @@ async function loadUser(): Promise<User | null> {
     authState.activeRole = activeRole || null;
     return user;
 }
-
-/**
- * Information about the current authentication state.
- */
-const authState = reactive<AuthState>({
-    user: null,
-    accessToken: null,
-    activeRole: authStorage.getActiveRole() || null,
-});
 
 const isLoggedIn = computed(() => authState.user !== null);
 
