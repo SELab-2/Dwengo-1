@@ -44,7 +44,6 @@ async function loadUser(): Promise<User | null> {
     return user;
 }
 
-
 const isLoggedIn = computed(() => authState.user !== null);
 
 /**
