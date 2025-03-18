@@ -4,7 +4,6 @@
 
     import auth from "@/services/auth/auth-service.ts";
 
-
     // Import assets
     import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
 
