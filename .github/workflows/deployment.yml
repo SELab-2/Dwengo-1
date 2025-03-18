@@ -1,0 +1,25 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+        - main
+  pull_request:
+    branches:
+        - main
+    types:
+        - closed
+
+jobs:
+  docker:
+    name: Deploy with docker
+    if: github.event.pull_request.merged == true
+    runs-on: [self-hosted, Linux, X64]
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Start docker
+        run: docker compose -f compose.yml -f compose.override.yml up --build -d
+        
