@@ -109,9 +109,9 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-    // Verify if user is logged in for paths that require authentication
+    // Verify if user is logged in before accessing certain routes
     if (to.meta.requiresAuth) {
-        if (!authState.isLoggedIn) {
+        if (!authState.isLoggedIn.value) {
             next("/login");
         } else {
             next();
