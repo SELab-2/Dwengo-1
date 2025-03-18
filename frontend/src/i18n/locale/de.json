@@ -1,3 +1,32 @@
 {
-    "welcome": "Willkommen"
+    "welcome": "Willkommen",
+    "student": "schüler",
+    "teacher": "lehrer",
+    "assignments": "aufgaben",
+    "classes": "klasses",
+    "discussions": "diskussionen",
+    "login": "einloggen",
+    "logout": "ausloggen",
+    "themes": "Themen",
+    "choose-theme": "Wähle ein thema",
+    "choose-age": "Alter auswählen",
+    "themes-options": {
+        "all-themes": "Alle themen",
+        "culture": "culture",
+        "electricity-and-mechanics": "Electricity and mechanics",
+        "nature-and-climate": "Nature and climate",
+        "agriculture": "agriculture",
+        "society": "society",
+        "math": "math",
+        "technology": "technology",
+        "algorithms": "algorithms"
+    },
+    "age-options": {
+        "all-ages": "Alle altersgruppen",
+        "primary-school": "Grundschule",
+        "lower-secondary": "12-14 jahre alt",
+        "upper-secondary": "14-16 jahre alt",
+        "high-school": "16-18 jahre alt",
+        "older": "18 und älter"
+    }
 }

@@ -5,5 +5,28 @@
     "assignments": "opdrachten",
     "classes": "klassen",
     "discussions": "discussies",
-    "logout": "log uit"
+    "login": "log in",
+    "logout": "log uit",
+    "themes": "Lesthema's",
+    "choose-theme": "Kies een thema",
+    "choose-age": "Kies een leeftijd",
+    "theme-options": {
+        "all-themes": "Alle thema's",
+        "culture": "Taal en kunst",
+        "electricity-and-mechanics": "Elektriciteit en mechanica",
+        "nature-and-climate": "Natuur en klimaat",
+        "agriculture": "Land-en tuinbouw",
+        "society": "Maatschappij en welzijn",
+        "math": "Wiskunde",
+        "technology": "Technologie",
+        "algorithms": "Algoritmes"
+    },
+    "age-options": {
+        "all-ages": "Alle leeftijden",
+        "primary": "Lagere school",
+        "lower-secondary": "1e graad secundair",
+        "upper-secondary": "2e graad secundair",
+        "high-school": "3e graad secundair",
+        "older": "Hoger onderwijs"
+    }
 }

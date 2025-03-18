@@ -5,5 +5,28 @@
     "assignments": "assignments",
     "classes": "classes",
     "discussions": "discussions",
-    "logout": "log out"
+    "login": "log in",
+    "logout": "log out",
+    "themes": "Themes",
+    "choose-theme": "Select a theme",
+    "choose-age": "Select age",
+    "theme-options": {
+        "all-themes": "All themes",
+        "culture": "culture",
+        "electricity-and-mechanics": "Electricity and mechanics",
+        "nature-and-climate": "Nature and climate",
+        "agriculture": "Agriculture",
+        "society": "Society",
+        "math": "Math",
+        "technology": "Technology",
+        "algorithms": "Algorithms"
+    },
+    "age-options": {
+        "all-ages": "All ages",
+        "primary-school": "Primary school",
+        "lower-secondary": "12-14 years old",
+        "upper-secondary": "14-16 years old",
+        "high-school": "16-18 years old",
+        "older": "18 and older"
+    }
 }

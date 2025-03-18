@@ -26,6 +26,8 @@
     const languages = ref([
         { name: "English", code: "en" },
         { name: "Nederlands", code: "nl" },
+        { name: "Français", code: "fr" },
+        { name: "Deutsch", code: "de" }
     ]);
 
     // Logic to change the language of the website to the selected language
@@ -133,6 +135,7 @@
                 </li>
             </div>
         </nav>
+        <router-view />
     </main>
 </template>
 
