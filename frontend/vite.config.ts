@@ -13,6 +13,6 @@ export default defineConfig({
         },
     },
     build: {
-        target: 'esnext' //Browsers can handle the latest ES features
-      },
+        target: "esnext", //Browsers can handle the latest ES features
+    },
 });
