@@ -9,7 +9,7 @@
         "format": "npm run format --ws",
         "format-check": "npm run format-check --ws",
         "lint": "npm run lint --ws",
-        "test:unit": "npm run test:unit --ws"
+        "test:unit": "npm run test:unit -w backend -w frontend"
     },
     "workspaces": [
         "backend",
