@@ -2,6 +2,9 @@
     import { ref } from "vue";
     import { useI18n } from "vue-i18n";
 
+    import auth from "@/services/auth/auth-service.ts";
+
+
     // Import assets
     import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
 
@@ -11,7 +14,7 @@
     // Links and content dependent on the role (student or teacher)
     const path = "/user";
 
-    const role = localStorage.getItem("activeRole");
+    const role = auth.authState.activeRole;
 
     //TODO: use authState form services map to get user token
     const name = "Kurt Cobain";
