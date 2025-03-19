@@ -23,7 +23,10 @@
     <main>
         <div class="layout">
             <div class="container_left">
-                <img :src="dwengoLogo" style="align-self: center;"/>
+                <img
+                    :src="dwengoLogo"
+                    style="align-self: center"
+                />
                 <h> {{ t("homeTitle") }}</h>
                 <p class="info">
                     {{ t("homeIntroduction1") }}
@@ -32,7 +35,7 @@
                 <v-btn
                     size="large"
                     density="comfortable"
-                    style="font-weight: bolder; color: white; align-self: center;"
+                    style="font-weight: bolder; color: white; align-self: center"
                     color="#88BD28"
                     to="/login"
                 >
@@ -172,21 +175,20 @@
     }
 
     @media (max-width: 1024px) {
-    .container_left {
-        width: 100%; /* Full width on tablets */
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start; /* Align content to the left */
-        justify-content: center;
-        padding: 20px;
-        position: relative; /* Ensure child elements are positioned relative to this */
-    }
+        .container_left {
+            width: 100%; /* Full width on tablets */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Align content to the left */
+            justify-content: center;
+            padding: 20px;
+            position: relative; /* Ensure child elements are positioned relative to this */
+        }
 
-    .container_right {
-        position: absolute;
-        top: 10px; /* Adjust top position to align properly */
-        right: 70px; /* Keep it in the right corner */
+        .container_right {
+            position: absolute;
+            top: 10px; /* Adjust top position to align properly */
+            right: 70px; /* Keep it in the right corner */
+        }
     }
-}
-
 </style>
