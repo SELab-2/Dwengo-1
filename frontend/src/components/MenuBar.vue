@@ -15,9 +15,8 @@
 
     const role = auth.authState.activeRole;
 
-    //TODO: use authState form services map to get user token
-    const name = "Kurt Cobain";
-    const initials = name
+    const name : string = auth.authState.user!.profile.name!;
+    const initials : string = name
         .split(" ")
         .map((n) => n[0])
         .join("");
@@ -34,6 +33,11 @@
         localStorage.setItem("user-lang", langCode);
         console.log(langCode);
     };
+
+    // when the user wants to logout, the authentication must be set to False
+    function performLogout() {
+        auth.logout();
+    }
 </script>
 
 <template>
@@ -107,7 +111,7 @@
             </div>
             <div class="right">
                 <li>
-                    <router-link :to="`/login`">
+                    <v-btn @click="performLogout" to="/login" style="background-color: transparent; box-shadow: none !important;">
                         <v-tooltip
                             :text="t('logout')"
                             location="bottom"
@@ -121,7 +125,7 @@
                                 ></v-icon>
                             </template>
                         </v-tooltip>
-                    </router-link>
+                    </v-btn>
                 </li>
                 <li>
                     <v-avatar
