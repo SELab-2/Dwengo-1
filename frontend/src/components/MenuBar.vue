@@ -41,72 +41,111 @@
 <template>
     <main>
         <v-app class="menu_collapsed">
-            <v-app-bar app style="background-color: #f6faf2;">
+            <v-app-bar
+                app
+                style="background-color: #f6faf2"
+            >
                 <template v-slot:prepend>
                     <v-app-bar-nav-icon @click="drawer = !drawer" />
                 </template>
 
                 <v-app-bar-title>
-                    <router-link to="/user" class="dwengo_home">
-                        <img class="dwengo_logo" :src="dwengoLogo" style="width: 100px;" />
-                        <p class="caption" style="font-size: smaller;">{{ t(`${role}`) }}</p>
+                    <router-link
+                        to="/user"
+                        class="dwengo_home"
+                    >
+                        <div>
+                            <img
+                                class="dwengo_logo"
+                                :src="dwengoLogo"
+                                style="width: 100px"
+                            />
+                            <p
+                                class="caption"
+                                style="font-size: smaller"
+                            >
+                                {{ t(`${role}`) }}
+                            </p>
+                        </div>
                     </router-link>
                 </v-app-bar-title>
 
                 <v-spacer></v-spacer>
 
                 <v-menu open-on-hover>
-                            <template v-slot:activator="{ props }">
-                                <v-btn
-                                    v-bind="props"
-                                    icon
-                                    variant="text"
-                                >
-                                    <v-icon
-                                        icon="mdi-translate"
-                                        size="small"
-                                        color="#0e6942"
-                                    ></v-icon>
-                                </v-btn>
-                            </template>
-                            <v-list>
-                                <v-list-item
-                                    v-for="(language, index) in languages"
-                                    :key="index"
-                                    @click="changeLanguage(language.code)"
-                                >
-                                    <v-list-item-title>{{ language.name }}</v-list-item-title>
-                                </v-list-item>
-                            </v-list>
-                        </v-menu>
+                    <template v-slot:activator="{ props }">
+                        <v-btn
+                            v-bind="props"
+                            icon
+                            variant="text"
+                        >
+                            <v-icon
+                                icon="mdi-translate"
+                                size="small"
+                                color="#0e6942"
+                            ></v-icon>
+                        </v-btn>
+                    </template>
+                    <v-list>
+                        <v-list-item
+                            v-for="(language, index) in languages"
+                            :key="index"
+                            @click="changeLanguage(language.code)"
+                        >
+                            <v-list-item-title>{{ language.name }}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
 
-                <v-btn @click="performLogout" text>
-                    <v-tooltip :text="t('logout')" location="bottom">
+                <v-btn
+                    @click="performLogout"
+                    text
+                >
+                    <v-tooltip
+                        :text="t('logout')"
+                        location="bottom"
+                    >
                         <template v-slot:activator="{ props }">
-                            <v-icon v-bind="props" icon="mdi-logout" size="x-large" color="#0e6942" />
+                            <v-icon
+                                v-bind="props"
+                                icon="mdi-logout"
+                                size="x-large"
+                                color="#0e6942"
+                            />
                         </template>
                     </v-tooltip>
                 </v-btn>
             </v-app-bar>
 
-            <v-navigation-drawer v-model="drawer" app>
+            <v-navigation-drawer
+                v-model="drawer"
+                app
+            >
                 <v-list>
-
-                    <v-list-item to="/user/assignment" link>
+                    <v-list-item
+                        to="/user/assignment"
+                        link
+                    >
                         <v-list-item-content>
-                            <v-list-item-title>{{ t("assignments") }}</v-list-item-title>
+                            <v-list-item-title class="menu_item">{{ t("assignments") }}</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
 
-                    <v-list-item to="/user/class" link>
+                    <v-list-item
+                        to="/user/class"
+                        link
+                    >
                         <v-list-item-content>
-                            <v-list-item-title>{{ t("classes") }}</v-list-item-title>
+                            <v-list-item-title class="menu_item">{{ t("classes") }}</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
 
-                    <v-list-item to="/user/discussion" link>
+                    <v-list-item
+                        to="/user/discussion"
+                        link
+                    >
                         <v-list-item-content>
-                            <v-list-item-title>{{ t("discussions") }}</v-list-item-title>
+                            <v-list-item-title class="menu_item">{{ t("discussions") }}</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                 </v-list>
