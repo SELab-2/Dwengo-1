@@ -13,6 +13,7 @@ import UserClasses from "@/views/classes/UserClasses.vue";
 import UserAssignments from "@/views/classes/UserAssignments.vue";
 import authState from "@/services/auth/auth-service.ts";
 import UserHomePage from "@/views/homepage/UserHomePage.vue";
+import SingleTheme from "@/views/SingleTheme.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -64,6 +65,12 @@ const router = createRouter({
         },
 
         {
+            path: "/theme/:id",
+            name: "Theme",
+            component: SingleTheme,
+            meta: { requiresAuth: true },
+        },
+        {
             path: "/assignment/create",
             name: "CreateAssigment",
             component: CreateAssignment,
@@ -112,7 +119,7 @@ router.beforeEach(async (to, from, next) => {
     // Verify if user is logged in before accessing certain routes
     if (to.meta.requiresAuth) {
         if (!authState.isLoggedIn.value) {
-            //next("/login");
+            //Next("/login");
             next();
         } else {
             next();

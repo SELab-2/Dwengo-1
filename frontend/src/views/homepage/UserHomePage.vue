@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import {ref, watch} from "vue";
+    import {ref, watch} from "vue";
     import { useI18n } from "vue-i18n";
+    import {AGEITEMS, THEMESITEMS} from "@/utils/constants.ts";
+    import BrowseThemes from "@/components/BrowseThemes.vue";
 
     const { t, locale } = useI18n();
 
-    const themesItems = ref(["all-themes", "culture", "electricity-and-mechanics", "nature-and-climate", "agriculture", "society", "math", "technology", "algorithms"]);
-
-    const ageItems = ref(["all-ages",  "primary-school", "lower-secondary", "upper-secondary", "high-school", "older"]);
 
     const selectedTheme = ref(t('choose-theme'));
     const selectedAge = ref(t('choose-age'));
@@ -22,24 +21,22 @@ import {ref, watch} from "vue";
 
 <template>
     <div class="main-container">
-        <div class="header">
-            <h1>{{ t("themes") }}</h1>
-        </div>
-        <div class="dropdowns">
+        <h1 class="title">{{ t("themes") }}</h1>
+        <v-container class="dropdowns">
             <v-select class="v-select"
                 :label="t('choose-theme')"
-                      :items="themesItems.map(theme => t(`theme-options.${theme}`))"
+                      :items="THEMESITEMS.map(theme => t(`theme-options.${theme}`))"
                       v-model="selectedTheme"
                       variant="outlined"
             ></v-select>
             <v-select class="v-select"
                 :label="t('choose-age')"
-                      :items="ageItems.map(age => t(`age-options.${age}`))"
+                      :items="AGEITEMS.map(age => t(`age-options.${age}`))"
                       v-model="selectedAge"
                     variant="outlined"
             ></v-select>
-        </div>
-        <div class="content"></div>
+        </v-container>
+        <BrowseThemes/>
     </div>
 </template>
 
@@ -51,19 +48,22 @@ import {ref, watch} from "vue";
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
-        padding: 2rem;
     }
 
-    .header {
-        width: 60%;
+    .title {
         max-width: 50rem;
-        margin-bottom: 1rem;
+        margin-left: 1rem;
+        margin-top: 1rem;
+        text-align: center;
+        display: flex;
+        justify-content: center;
     }
+
 
     .dropdowns {
         display: flex;
         justify-content: space-between;
-        gap: 3rem;
+        gap: 5rem;
         width: 80%;
     }
 
@@ -79,5 +79,12 @@ import {ref, watch} from "vue";
         }
     }
 
+    @media (max-width: 700px) {
+        .dropdowns {
+            flex-direction: column;
+            gap: 1rem;
+            width: 80%;
+        }
+    }
 
 </style>
