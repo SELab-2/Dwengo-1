@@ -11,7 +11,7 @@
     "choose-theme": "Choisis un thème",
     "choose-age": "Choisis un âge",
     "theme-options": {
-        "all-themes": "Tous les thèmes",
+        "all": "Tous les thèmes",
         "culture": "Culture",
         "electricity-and-mechanics": "Electricité et méchanique",
         "nature-and-climate": "Nature et climat",
@@ -22,11 +22,12 @@
         "algorithms": "Algorithmes"
     },
     "age-options": {
-        "all-ages": "Tous les âges",
+        "all": "Tous les âges",
         "primary-school": "Ecole primaire",
         "lower-secondary": "12-14 ans",
         "upper-secondary": "14-16 ans",
         "high-school": "16-18 ans",
         "older": "18 et plus"
-    }
+    },
+    "read-more": "En savoir plus"
 }

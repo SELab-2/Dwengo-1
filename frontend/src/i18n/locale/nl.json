@@ -11,7 +11,7 @@
     "choose-theme": "Kies een thema",
     "choose-age": "Kies een leeftijd",
     "theme-options": {
-        "all-themes": "Alle thema's",
+        "all": "Alle thema's",
         "culture": "Taal en kunst",
         "electricity-and-mechanics": "Elektriciteit en mechanica",
         "nature-and-climate": "Natuur en klimaat",
@@ -22,11 +22,12 @@
         "algorithms": "Algoritmes"
     },
     "age-options": {
-        "all-ages": "Alle leeftijden",
+        "all": "Alle leeftijden",
         "primary": "Lagere school",
         "lower-secondary": "1e graad secundair",
         "upper-secondary": "2e graad secundair",
         "high-school": "3e graad secundair",
         "older": "Hoger onderwijs"
-    }
+    },
+    "read-more": "Lees meer"
 }

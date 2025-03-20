@@ -11,7 +11,7 @@
     "choose-theme": "Select a theme",
     "choose-age": "Select age",
     "theme-options": {
-        "all-themes": "All themes",
+        "all": "All themes",
         "culture": "culture",
         "electricity-and-mechanics": "Electricity and mechanics",
         "nature-and-climate": "Nature and climate",
@@ -22,16 +22,12 @@
         "algorithms": "Algorithms"
     },
     "age-options": {
-        "all-ages": "All ages",
+        "all": "All ages",
         "primary-school": "Primary school",
         "lower-secondary": "12-14 years old",
         "upper-secondary": "14-16 years old",
         "high-school": "16-18 years old",
         "older": "18 and older"
     },
-    "read-more": "read-more",
-    "basics-ai": {
-        "title": "Basic principles of AI",
-        "description": "Under this teaching theme, we combine several activities that cover the basics of artificial intelligence (AI). Students learn what AI is, how it works and how it can be applied in different domains."
-    }
+    "read-more": "Read more"
 }

@@ -1,29 +1,50 @@
 <script setup lang="ts">
-import ThemeCard from "@/components/ThemeCard.vue";
-import { ref, onMounted, watch } from "vue";
-import { useI18n } from "vue-i18n";
+    import ThemeCard from "@/components/ThemeCard.vue";
+    import { ref, onMounted, watch } from "vue";
+    import { useI18n } from "vue-i18n";
+    import {THEMESITEMS} from "@/utils/constants.ts";
 
-const { locale } = useI18n();
-const cards = ref<Array<{ key: string; title: string; description: string; image: string }>>([]);
+    // Receive the selectedTheme from the parent component
+    const props = defineProps<{ selectedTheme: string }>();
 
-// Fetch themes based on the current language
-const fetchThemes = async () => {
-    try {
-        const language = localStorage.getItem("user-lang") || locale.value;
-        const response = await fetch(`http://localhost:3000/api/theme?language=${language}`);
-        cards.value = await response.json();
-        console.log(cards.value);
-    } catch (error) {
-        console.error("Error fetching themes:", error);
+    const {locale} = useI18n();
+
+    const allCards = ref<Array<{ key: string; title: string; description: string; image: string }>>([]);
+    const cards = ref<Array<{ key: string; title: string; description: string; image: string }>>([]);
+
+    // Fetch all themes based on the current language
+    async function fetchThemes() {
+        try {
+            // Get the current selected language
+            const language = locale.value;
+            const response = await fetch(`http://localhost:3000/api/theme?language=${language}`);
+
+            // Update the cards value with the fetched themes
+            allCards.value = await response.json();
+            cards.value = allCards.value;
+            //console.log(allCards.value);
+        } catch (error) {
+            console.error("Error fetching themes:", error);
+        }
     }
-};
 
-onMounted(fetchThemes);
+    // Fetch on mount
+    onMounted(fetchThemes);
 
-// Refetch themes when language changes
-watch(locale, () => {
-    fetchThemes();
-});
+    // Re-fetch themes when language changes
+    watch(locale, () => {
+        fetchThemes();
+    });
+
+    // Watch for selectedTheme change and filter themes
+    watch(() => props.selectedTheme, (newTheme) => {
+        if (newTheme && newTheme !== "all") {
+            cards.value = allCards.value.filter(theme => THEMESITEMS[newTheme].includes(theme.key));
+        } else {
+            cards.value = allCards.value;
+        }
+    });
+
 
 </script>
 

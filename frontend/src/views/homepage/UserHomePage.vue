@@ -1,22 +1,19 @@
 <script setup lang="ts">
-    import {ref, watch} from "vue";
+    import { ref, watch } from "vue";
     import { useI18n } from "vue-i18n";
-    import {AGEITEMS, THEMESITEMS} from "@/utils/constants.ts";
+    import { THEMESITEMS, AGEITEMS } from "@/utils/constants.ts";
     import BrowseThemes from "@/components/BrowseThemes.vue";
 
     const { t, locale } = useI18n();
 
+    const selectedThemeKey = ref<string | null>(null);
+    const selectedAgeKey = ref<string | null>(null);
 
-    const selectedTheme = ref(t('choose-theme'));
-    const selectedAge = ref(t('choose-age'));
-
-    // Watch for language change and update the labels accordingly
+    // Reset selection when language changes
     watch(locale, () => {
-        // Make sure that when the language is changed the
-        selectedTheme.value = t('choose-theme');
-        selectedAge.value = t('choose-age');
+        selectedThemeKey.value = null;
+        selectedAgeKey.value = null;
     });
-
 </script>
 
 <template>
@@ -24,19 +21,27 @@
         <h1 class="title">{{ t("themes") }}</h1>
         <v-container class="dropdowns">
             <v-select class="v-select"
-                :label="t('choose-theme')"
-                      :items="THEMESITEMS.map(theme => t(`theme-options.${theme}`))"
-                      v-model="selectedTheme"
+                      :label="t('choose-theme')"
+                      :items="Object.keys(THEMESITEMS).map(theme => ({ title: t(`theme-options.${theme}`), value: theme }))"
+                      v-model="selectedThemeKey"
+                      item-title="title"
+                      item-value="value"
                       variant="outlined"
-            ></v-select>
-            <v-select class="v-select"
+            />
+
+
+            <v-select
+                class="v-select"
                 :label="t('choose-age')"
-                      :items="AGEITEMS.map(age => t(`age-options.${age}`))"
-                      v-model="selectedAge"
-                    variant="outlined"
+                :items="AGEITEMS.map(age => ({ key: age, label: t(`age-options.${age}`), value: age }))"
+                v-model="selectedAgeKey"
+                item-title="label"
+                item-value="key"
+                variant="outlined"
             ></v-select>
         </v-container>
-        <BrowseThemes/>
+
+        <BrowseThemes :selectedTheme="selectedThemeKey ?? ''" />
     </div>
 </template>
 
