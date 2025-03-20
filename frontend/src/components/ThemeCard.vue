@@ -22,9 +22,9 @@
                 contain
                 class="title-image"
             ></v-img>
-            <span class="title">{{ t(title) }}</span>
+            <span class="title">{{ title }}</span>
         </v-card-title>
-        <v-card-text class="description flex-grow-1">{{ t(description) }}</v-card-text>
+        <v-card-text class="description flex-grow-1">{{ description }}</v-card-text>
         <v-card-actions>
             <v-btn :to="`theme/${path}`" variant="text">
                 {{ t("read-more") }}

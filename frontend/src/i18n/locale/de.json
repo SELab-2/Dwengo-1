@@ -28,5 +28,8 @@
         "upper-secondary": "14-16 jahre alt",
         "high-school": "16-18 jahre alt",
         "older": "18 und älter"
+    },
+    "basics-ai": {
+        "title": "Grundlegende Prinzipien der AI"
     }
 }

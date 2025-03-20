@@ -29,5 +29,9 @@
         "high-school": "16-18 years old",
         "older": "18 and older"
     },
-    "read-more": "read-more"
+    "read-more": "read-more",
+    "basics-ai": {
+        "title": "Basic principles of AI",
+        "description": "Under this teaching theme, we combine several activities that cover the basics of artificial intelligence (AI). Students learn what AI is, how it works and how it can be applied in different domains."
+    }
 }
