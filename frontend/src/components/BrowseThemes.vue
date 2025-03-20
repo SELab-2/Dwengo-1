@@ -2,10 +2,19 @@
     import ThemeCard from "@/components/ThemeCard.vue";
     import { ref, onMounted, watch } from "vue";
     import { useI18n } from "vue-i18n";
-    import {THEMESITEMS} from "@/utils/constants.ts";
+    import {AGE_TO_THEMES, THEMESITEMS} from "@/utils/constants.ts";
 
     // Receive the selectedTheme from the parent component
-    const props = defineProps<{ selectedTheme: string }>();
+    const props = defineProps({
+        selectedTheme: {
+            type: String,
+            required: true
+        },
+        selectedAge: {
+            type: String,
+            required: true
+        }
+    });
 
     const {locale} = useI18n();
 
@@ -38,8 +47,17 @@
 
     // Watch for selectedTheme change and filter themes
     watch(() => props.selectedTheme, (newTheme) => {
-        if (newTheme && newTheme !== "all") {
-            cards.value = allCards.value.filter(theme => THEMESITEMS[newTheme].includes(theme.key));
+        if (newTheme) {
+            cards.value = allCards.value.filter(theme => THEMESITEMS[newTheme].includes(theme.key) && AGE_TO_THEMES[props.selectedAge]?.includes(theme.key));
+        } else {
+            cards.value = allCards.value;
+        }
+    });
+
+    // Watch for selectedAge change and filter themes
+    watch(() => props.selectedAge, (newAge) => {
+        if (newAge) {
+            cards.value = allCards.value.filter(theme => THEMESITEMS[props.selectedTheme].includes(theme.key) && AGE_TO_THEMES[newAge]?.includes(theme.key));
         } else {
             cards.value = allCards.value;
         }
