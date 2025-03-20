@@ -12,16 +12,50 @@
 </script>
 
 <template>
-    <v-card :title="t(`${title}`)" :text="t(`${description}`)" variant="outlined">
-        <v-img v-if="image" :src="image" height="200px" cover></v-img>
+    <v-card variant="outlined" class="theme-card d-flex flex-column">
+        <v-card-title class="title-container">
+            <v-img
+                v-if="image"
+                :src="image"
+                height="40px"
+                width="40px"
+                contain
+                class="title-image"
+            ></v-img>
+            <span class="title">{{ t(title) }}</span>
+        </v-card-title>
+        <v-card-text class="description flex-grow-1">{{ t(description) }}</v-card-text>
         <v-card-actions>
             <v-btn :to="`theme/${path}`" variant="text">
                 {{ t("read-more") }}
             </v-btn>
-
         </v-card-actions>
     </v-card>
 </template>
 
 <style scoped>
+.theme-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem;
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    justify-content: flex-start;
+}
+
+.title-image {
+    flex-shrink: 0;
+    border-radius: 5px;
+    margin-left: 0;
+}
+
+.title {
+    flex-grow: 1;
+}
 </style>
