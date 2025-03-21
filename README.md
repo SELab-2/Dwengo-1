@@ -26,8 +26,7 @@ Om de applicatie lokaal te draaien als kant-en-klare Docker-containers:
 1. Installeer Docker en Docker Compose op je systeem (zie [Docker](https://docs.docker.com/get-docker/)
    en [Docker Compose](https://docs.docker.com/compose/)).
 2. Clone deze repository.
-3. In de backend, kopieer `.env.example` (of `.env.development.example`) naar `.env` en pas de variabelen aan waar
-   nodig.
+3. In de backend, kopieer `.env.example` naar `.env` en pas de variabelen aan waar nodig.
 4. Voer `docker compose -f compose.staging.yml up --build` uit in de root van de repository.
 5. Optioneel: Configureer de applicatie aan de hand van
    de [configuratiehandleiding](https://github.com/SELab-2/Dwengo-1/wiki/Administrator:-Productie-omgeving#dwengo-1-configuratie).

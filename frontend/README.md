@@ -27,6 +27,7 @@ cd ../ # Go to the root of the repository
 docker compose up -d
 # Start the backend
 cd backend
+cp .env.development.example .env.development.local
 npm run dev # or npm run build && npm run start
 ```
 

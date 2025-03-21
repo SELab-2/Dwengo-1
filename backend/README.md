@@ -16,6 +16,9 @@ Je kan het `.env.example` bestand als template gebruiken.
 ### Ontwikkeling
 
 ```shell
+# Omgevingsvariabelen
+cp .env.development.example .env.development.local
+
 npm run dev
 ```
 
