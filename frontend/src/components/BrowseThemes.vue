@@ -4,7 +4,7 @@
     import { useI18n } from "vue-i18n";
     import {AGE_TO_THEMES, THEMESITEMS} from "@/utils/constants.ts";
 
-    // Receive the selectedTheme from the parent component
+    // Receive the selectedTheme and selectedAge from the parent component
     const props = defineProps({
         selectedTheme: {
             type: String,
@@ -31,7 +31,6 @@
             // Update the cards value with the fetched themes
             allCards.value = await response.json();
             cards.value = allCards.value;
-            //console.log(allCards.value);
         } catch (error) {
             console.error("Error fetching themes:", error);
         }

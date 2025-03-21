@@ -1,18 +1,23 @@
 <script setup lang="ts">
-    import { useI18n } from "vue-i18n";
+import { useI18n } from "vue-i18n";
 
-    const { t } = useI18n();
+const { t } = useI18n();
 
-    defineProps<{
-        path: string;
-        title: string;
-        description: string;
-        image: string;
-    }>();
+defineProps<{
+    path: string;
+    title: string;
+    description: string;
+    image: string;
+}>();
 </script>
 
 <template>
-    <v-card variant="outlined" class="theme-card d-flex flex-column">
+    <v-card
+        variant="outlined"
+        class="theme-card d-flex flex-column"
+        :to="`theme/${path}`"
+        link
+    >
         <v-card-title class="title-container">
             <v-img
                 v-if="image"
@@ -39,6 +44,11 @@
     flex-direction: column;
     height: 100%;
     padding: 1rem;
+    cursor: pointer;
+}
+
+.theme-card:hover {
+    background-color: rgba(0, 0, 0, 0.03);
 }
 
 .title-container {
@@ -57,5 +67,8 @@
 
 .title {
     flex-grow: 1;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 </style>

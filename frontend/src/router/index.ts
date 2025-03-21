@@ -119,7 +119,7 @@ router.beforeEach(async (to, from, next) => {
     // Verify if user is logged in before accessing certain routes
     if (to.meta.requiresAuth) {
         if (!authState.isLoggedIn.value) {
-            //next("/login");
+            //Next("/login");
             next();
         } else {
             next();

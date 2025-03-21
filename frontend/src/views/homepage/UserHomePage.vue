@@ -72,7 +72,6 @@ import {ref, watch} from "vue";
         </v-container>
 
         <BrowseThemes :selectedTheme="selectedThemeKey ?? ''" :selectedAge="selectedAgeKey ?? ''"/>
-        />
     </div>
 </template>
 
