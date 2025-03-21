@@ -1,76 +1,52 @@
 <script setup lang="ts">
-    import ThemeCard from "@/components/ThemeCard.vue";
-    import { ref, onMounted, watch } from "vue";
-    import { useI18n } from "vue-i18n";
-    import {AGE_TO_THEMES, THEMESITEMS} from "@/utils/constants.ts";
-    import {getAllThemes} from "@/controllers/themes.ts";
-    import {getThemeController} from "@/controllers/controllers.ts";
+import ThemeCard from "@/components/ThemeCard.vue";
+import { ref, watchEffect, computed } from "vue";
+import { useI18n } from "vue-i18n";
+import { AGE_TO_THEMES, THEMESITEMS } from "@/utils/constants.ts";
+import { useThemeQuery } from "@/queries/themes.ts";
 
-    // Receive the selectedTheme and selectedAge from the parent component
-    const props = defineProps({
-        selectedTheme: {
-            type: String,
-            required: true
-        },
-        selectedAge: {
-            type: String,
-            required: true
-        }
-    });
+const props = defineProps({
+    selectedTheme: { type: String, required: true },
+    selectedAge: { type: String, required: true }
+});
 
-    const themeController = getThemeController();
+const { locale } = useI18n();
+const language = computed(() => locale.value);
 
-    const {locale} = useI18n();
+const { data: allThemes, isLoading, error } = useThemeQuery(language);
 
-    const allCards = ref<Array<{ key: string; title: string; description: string; image: string }>>([]);
-    const cards = ref<Array<{ key: string; title: string; description: string; image: string }>>([]);
+const allCards = ref([]);
+const cards = ref([]);
 
-    // Fetch all themes based on the current language
-    async function fetchThemes() {
-        try {
-            // Get the current selected language
-            const language = locale.value;
+watchEffect(() => {
+    const themes = allThemes.value ?? [];
+    allCards.value = themes;
 
-            // Update the cards value with the fetched themes
-            allCards.value = await themeController.getAll(language);
-            cards.value = allCards.value;
-        } catch (error) {
-            console.error("Error fetching themes:", error);
-        }
+    if (props.selectedTheme) {
+        cards.value = themes.filter((theme) =>
+            THEMESITEMS[props.selectedTheme]?.includes(theme.key) &&
+            AGE_TO_THEMES[props.selectedAge]?.includes(theme.key)
+        );
+    } else {
+        cards.value = themes;
     }
-
-    // Fetch on mount
-    onMounted(fetchThemes);
-
-    // Re-fetch themes when language changes
-    watch(locale, () => {
-        fetchThemes();
-    });
-
-    // Watch for selectedTheme change and filter themes
-    watch(() => props.selectedTheme, (newTheme) => {
-        if (newTheme) {
-            cards.value = allCards.value.filter(theme => THEMESITEMS[newTheme].includes(theme.key) && AGE_TO_THEMES[props.selectedAge]?.includes(theme.key));
-        } else {
-            cards.value = allCards.value;
-        }
-    });
-
-    // Watch for selectedAge change and filter themes
-    watch(() => props.selectedAge, (newAge) => {
-        if (newAge) {
-            cards.value = allCards.value.filter(theme => THEMESITEMS[props.selectedTheme].includes(theme.key) && AGE_TO_THEMES[newAge]?.includes(theme.key));
-        } else {
-            cards.value = allCards.value;
-        }
-    });
-
-
+});
 </script>
+
 
 <template>
     <v-container>
-        <v-row>
+        <div v-if="isLoading" class="text-center py-10">
+            <v-progress-circular indeterminate color="primary" />
+            <p>Loading...</p>
+        </div>
+
+        <div v-else-if="error" class="text-center py-10 text-error">
+            <v-icon large>mdi-alert-circle</v-icon>
+            <p>Error loading: {{ error.message }}</p>
+        </div>
+
+        <v-row v-else>
             <v-col
                 v-for="card in cards"
                 :key="card.key"

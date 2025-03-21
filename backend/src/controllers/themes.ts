@@ -23,6 +23,12 @@ export function getThemes(req: Request, res: Response) {
 
 export function getThemeByTitle(req: Request, res: Response) {
     const themeKey = req.params.theme;
+
+    if (!theme) {
+        res.status(400).json({ error: 'Missing required field: theme' });
+        return;
+    }
+
     const theme = themes.find((t) => t.title === themeKey);
 
     if (theme) {
