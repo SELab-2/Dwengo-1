@@ -1,5 +1,6 @@
 import { Response, Router } from 'express';
 import studentRouter from './students.js';
+import teacherRouter from './teachers.js';
 import groupRouter from './groups.js';
 import assignmentRouter from './assignments.js';
 import submissionRouter from './submissions.js';
@@ -22,6 +23,7 @@ router.get('/', (_, res: Response) => {
 });
 
 router.use('/student', studentRouter /* #swagger.tags = ['Student'] */);
+router.use('/teacher', teacherRouter /* #swagger.tags = ['Teacher'] */);
 router.use('/group', groupRouter /* #swagger.tags = ['Group'] */);
 router.use('/assignment', assignmentRouter /* #swagger.tags = ['Assignment'] */);
 router.use('/submission', submissionRouter /* #swagger.tags = ['Submission'] */);
