@@ -19,7 +19,15 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 ## Project Setup
 
 ```sh
+# Install dependencies
 npm install
+
+# Start necessary services for development
+cd ../ # Go to the root of the repository
+docker compose up -d
+# Start the backend
+cd backend
+npm run dev # or npm run build && npm run start
 ```
 
 ### Compile and Hot-Reload for Development
