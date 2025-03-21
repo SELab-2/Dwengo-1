@@ -1,7 +1,7 @@
 import { createLogger, format, Logger as WinstonLogger, transports } from 'winston';
 import LokiTransport from 'winston-loki';
 import { LokiLabels } from 'loki-logger-ts';
-import { EnvVars, getEnvVar } from '../util/envvars';
+import { EnvVars, getEnvVar } from '../util/envvars.js';
 
 export class Logger extends WinstonLogger {
     constructor() {
