@@ -6,7 +6,8 @@ import {
     getStudentAssignmentsHandler,
     getStudentClassesHandler,
     getStudentGroupsHandler,
-    getStudentHandler, getStudentQuestionsHandler,
+    getStudentHandler,
+    getStudentQuestionsHandler,
     getStudentSubmissionsHandler,
 } from '../controllers/students.js';
 import { getStudentGroups } from '../services/students.js';

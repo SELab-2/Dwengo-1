@@ -1,17 +1,18 @@
 import { Request, Response } from 'express';
 import {
     createStudent,
-    deleteStudent, getAllStudentIds,
+    deleteStudent,
+    getAllStudentIds,
     getAllStudents,
     getStudent,
     getStudentAssignments,
     getStudentClasses,
-    getStudentGroups, getStudentQuestions,
+    getStudentGroups,
+    getStudentQuestions,
     getStudentSubmissions,
 } from '../services/students.js';
-import {MISSING_FIELDS_ERROR, MISSING_USERNAME_ERROR, NAME_NOT_FOUND_ERROR} from './users.js';
+import { MISSING_FIELDS_ERROR, MISSING_USERNAME_ERROR, NAME_NOT_FOUND_ERROR } from './users.js';
 import { StudentDTO } from '../interfaces/student.js';
-
 
 export async function getAllStudentsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
@@ -23,7 +24,7 @@ export async function getAllStudentsHandler(req: Request, res: Response): Promis
         return;
     }
 
-    res.json({students});
+    res.json({ students });
 }
 
 export async function getStudentHandler(req: Request, res: Response): Promise<void> {
@@ -152,5 +153,5 @@ export async function getStudentQuestionsHandler(req: Request, res: Response): P
 
     res.json({
         questions,
-    })
+    });
 }

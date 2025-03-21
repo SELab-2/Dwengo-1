@@ -3,7 +3,7 @@ import {
     getGroupRepository,
     getQuestionRepository,
     getStudentRepository,
-    getSubmissionRepository
+    getSubmissionRepository,
 } from '../data/repositories.js';
 import { AssignmentDTO } from '../interfaces/assignment.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
@@ -11,7 +11,7 @@ import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js
 import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToSubmissionDTO, SubmissionDTO } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
-import {mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId} from "../interfaces/question";
+import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question';
 
 export async function getAllStudents(): Promise<StudentDTO[]> {
     const studentRepository = getStudentRepository();
@@ -138,8 +138,9 @@ export async function getStudentQuestions(username: string, full: boolean): Prom
     const questionRepository = getQuestionRepository();
     const questions = await questionRepository.findAllByAuthor(student);
 
-    if (full)
-        {return questions.map(mapToQuestionDTO)}
+    if (full) {
+        return questions.map(mapToQuestionDTO);
+    }
 
     return questions.map(mapToQuestionId);
 }

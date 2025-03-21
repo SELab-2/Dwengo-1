@@ -61,5 +61,4 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
             orderBy: { timestamp: 'DESC' }, // New to old
         });
     }
-
 }

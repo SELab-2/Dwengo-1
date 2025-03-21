@@ -1,5 +1,5 @@
-import {StudentController} from "@/controllers/student-controller.ts";
-import {TeacherController} from "@/controllers/teacher-controller.ts";
+import { StudentController } from "@/controllers/student-controller.ts";
+import { TeacherController } from "@/controllers/teacher-controller.ts";
 
 export function controllerGetter<T>(Factory: new () => T): () => T {
     let instance: T | undefined;

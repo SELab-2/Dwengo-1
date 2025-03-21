@@ -1,4 +1,4 @@
-import {BaseController} from "@/controllers/base-controller.ts";
+import { BaseController } from "@/controllers/base-controller.ts";
 
 export class TeacherController extends BaseController {
     constructor() {
