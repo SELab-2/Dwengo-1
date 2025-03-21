@@ -12,7 +12,6 @@ import learningObjectExample from '../../test-assets/learning-objects/pn-werking
 import learningPathExample from '../../test-assets/learning-paths/pn-werking-example.js';
 import databaseLearningPathProvider from '../../../src/services/learning-paths/database-learning-path-provider.js';
 import { expectToBeCorrectLearningPath } from '../../test-utils/expectations.js';
-import { LearningObjectRepository } from '../../../src/data/content/learning-object-repository.js';
 import learningObjectService from '../../../src/services/learning-objects/learning-object-service.js';
 import { Language } from '../../../src/entities/content/language.js';
 import {
@@ -59,7 +58,6 @@ async function initPersonalizationTestData(): Promise<{
         learningObjectHruid: learningContent.branchingObject.hruid,
         learningObjectLanguage: learningContent.branchingObject.language,
         learningObjectVersion: learningContent.branchingObject.version,
-        submissionNumber: 0,
         submitter: studentA,
         submissionTime: new Date(),
         content: '[0]',
@@ -76,7 +74,6 @@ async function initPersonalizationTestData(): Promise<{
         learningObjectHruid: learningContent.branchingObject.hruid,
         learningObjectLanguage: learningContent.branchingObject.language,
         learningObjectVersion: learningContent.branchingObject.version,
-        submissionNumber: 1,
         submitter: studentB,
         submissionTime: new Date(),
         content: '[1]',
@@ -106,7 +103,6 @@ function expectBranchingObjectNode(
 }
 
 describe('DatabaseLearningPathProvider', () => {
-    let learningObjectRepo: LearningObjectRepository;
     let example: { learningObject: LearningObject; learningPath: LearningPath };
     let persTestData: { learningContent: ConditionTestLearningPathAndLearningObjects; studentA: Student; studentB: Student };
 
@@ -114,7 +110,6 @@ describe('DatabaseLearningPathProvider', () => {
         await setupTestApp();
         example = await initExampleData();
         persTestData = await initPersonalizationTestData();
-        learningObjectRepo = getLearningObjectRepository();
     });
 
     describe('fetchLearningPaths', () => {
