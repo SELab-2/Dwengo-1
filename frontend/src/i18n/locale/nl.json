@@ -23,7 +23,7 @@
     },
     "age-options": {
         "all": "Alle leeftijden",
-        "primary": "Lagere school",
+        "primary-school": "Lagere school",
         "lower-secondary": "1e graad secundair",
         "upper-secondary": "2e graad secundair",
         "high-school": "3e graad secundair",
