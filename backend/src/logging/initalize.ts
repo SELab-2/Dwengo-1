@@ -29,6 +29,12 @@ function initializeLogger(): Logger {
         format: format.combine(format.cli(), format.colorize()),
     });
 
+    if (getEnvVar(EnvVars.RunMode) === 'dev') {
+        return createLogger({
+            transports: [consoleTransport],
+        });
+    }
+
     const lokiHost = getEnvVar(EnvVars.LokiHost);
 
     const lokiTransport: LokiTransport = new LokiTransport({
