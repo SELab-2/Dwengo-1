@@ -90,4 +90,3 @@ volumes:
     dwengo_grafana_data:
     dwengo_loki_data:
     dwengo_postgres_data:
-
