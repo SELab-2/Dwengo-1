@@ -12,7 +12,7 @@ export class BaseController {
         if (queryParams) {
             const query = new URLSearchParams();
             Object.entries(queryParams).forEach(([key, value]) => {
-                if (value !== undefined && value !== null) query.append(key, value.toString());
+                if (value !== undefined && value !== null) {query.append(key, value.toString());}
             });
             url += `?${query.toString()}`;
         }

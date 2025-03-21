@@ -15,7 +15,7 @@ export async function getAllTeachers(full: boolean): Promise<TeacherDTO[]> {
     const users = await teacherRepository.findAll();
 
     if (full)
-        return users.map(mapToTeacherDTO);
+        {return users.map(mapToTeacherDTO);}
     return users.map((user) => user.username);
 }
 
@@ -74,7 +74,7 @@ export async function getClassesByTeacher(username: string, full: boolean): Prom
     const classes = await fetchClassesByTeacher(username);
 
     if (full)
-        return classes;
+        {return classes;}
     return classes.map((cls) => cls.id);
 }
 
@@ -83,7 +83,7 @@ export async function getStudentsByTeacher(username: string, full: boolean) {
 
     const students =  (await Promise.all(classes.map(async (id) => getClassStudents(id)))).flat();
     if (full)
-        return students
+        {return students}
     return students.map((student) => student.username);
 }
 
@@ -103,7 +103,7 @@ export async function getTeacherQuestions(username: string, full: boolean): Prom
     const questions = await questionRepository.findAllByLearningObjects(learningObjects);
 
     if (full)
-        return questions.map(mapToQuestionDTO);
+        {return questions.map(mapToQuestionDTO);}
 
     return questions.map(mapToQuestionId);
 }

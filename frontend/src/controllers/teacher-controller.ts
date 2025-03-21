@@ -33,5 +33,5 @@ export class TeacherController extends BaseController {
         return this.get<{ questions: any[] }>(`/${username}/questions`, { full });
     }
 
-    // getInvitations(id: string) {return this.get<{ invitations: string[] }>(`/${id}/invitations`);}
+    // GetInvitations(id: string) {return this.get<{ invitations: string[] }>(`/${id}/invitations`);}
 }
