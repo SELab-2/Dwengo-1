@@ -3,7 +3,8 @@
     import { ref, onMounted, watch } from "vue";
     import { useI18n } from "vue-i18n";
     import {AGE_TO_THEMES, THEMESITEMS} from "@/utils/constants.ts";
-    import {getAllThemes} from "@/controller/themes.ts";
+    import {getAllThemes} from "@/controllers/themes.ts";
+    import {getThemeController} from "@/controllers/controllers.ts";
 
     // Receive the selectedTheme and selectedAge from the parent component
     const props = defineProps({
@@ -17,6 +18,8 @@
         }
     });
 
+    const themeController = getThemeController();
+
     const {locale} = useI18n();
 
     const allCards = ref<Array<{ key: string; title: string; description: string; image: string }>>([]);
@@ -29,7 +32,7 @@
             const language = locale.value;
 
             // Update the cards value with the fetched themes
-            allCards.value = await getAllThemes(language);
+            allCards.value = await themeController.getAll(language);
             cards.value = allCards.value;
         } catch (error) {
             console.error("Error fetching themes:", error);
