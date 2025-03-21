@@ -5,23 +5,17 @@ import {
     getStudentRepository,
     getTeacherRepository,
 } from '../data/repositories.js';
-import { Teacher } from '../entities/users/teacher.entity.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { getClassStudents } from './class.js';
-import { StudentDTO } from '../interfaces/student.js';
-import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question.js';
-import { UserService } from './users.js';
-import { mapToUser } from '../interfaces/user.js';
+import { mapToQuestionDTO, mapToQuestionId, QuestionDTO } from '../interfaces/question.js';
 import { mapToTeacher, mapToTeacherDTO, TeacherDTO } from '../interfaces/teacher.js';
 
-export async function getAllTeachers(): Promise<TeacherDTO[]> {
+export async function getAllTeachers(full: boolean): Promise<TeacherDTO[]> {
     const teacherRepository = getTeacherRepository();
     const users = await teacherRepository.findAll();
-    return users.map(mapToTeacherDTO);
-}
 
-export async function getAllTeacherIds(): Promise<string[]> {
-    const users = await getAllTeachers();
+    if (full)
+        return users.map(mapToTeacherDTO);
     return users.map((user) => user.username);
 }
 
@@ -64,7 +58,7 @@ export async function deleteTeacher(username: string): Promise<TeacherDTO | null
     }
 }
 
-export async function fetchClassesByTeacher(username: string): Promise<ClassDTO[]> {
+async function fetchClassesByTeacher(username: string): Promise<ClassDTO[]> {
     const teacherRepository = getTeacherRepository();
     const teacher = await teacherRepository.findByUsername(username);
     if (!teacher) {
@@ -76,31 +70,24 @@ export async function fetchClassesByTeacher(username: string): Promise<ClassDTO[
     return classes.map(mapToClassDTO);
 }
 
-export async function getClassesByTeacher(username: string): Promise<ClassDTO[]> {
-    return await fetchClassesByTeacher(username);
-}
-
-export async function getClassIdsByTeacher(username: string): Promise<string[]> {
+export async function getClassesByTeacher(username: string, full: boolean): Promise<ClassDTO[] | string[]> {
     const classes = await fetchClassesByTeacher(username);
+
+    if (full)
+        return classes;
     return classes.map((cls) => cls.id);
 }
 
-export async function fetchStudentsByTeacher(username: string) {
-    const classes = await getClassIdsByTeacher(username);
+export async function getStudentsByTeacher(username: string, full: boolean) {
+    const classes = await getClassesByTeacher(username, false);
 
-    return (await Promise.all(classes.map(async (id) => getClassStudents(id)))).flat();
-}
-
-export async function getStudentsByTeacher(username: string): Promise<StudentDTO[]> {
-    return await fetchStudentsByTeacher(username);
-}
-
-export async function getStudentIdsByTeacher(username: string): Promise<string[]> {
-    const students = await fetchStudentsByTeacher(username);
+    const students =  (await Promise.all(classes.map(async (id) => getClassStudents(id)))).flat();
+    if (full)
+        return students
     return students.map((student) => student.username);
 }
 
-export async function fetchTeacherQuestions(username: string): Promise<QuestionDTO[]> {
+export async function getTeacherQuestions(username: string, full: boolean): Promise<QuestionDTO[]> {
     const teacherRepository = getTeacherRepository();
     const teacher = await teacherRepository.findByUsername(username);
     if (!teacher) {
@@ -115,15 +102,9 @@ export async function fetchTeacherQuestions(username: string): Promise<QuestionD
     const questionRepository = getQuestionRepository();
     const questions = await questionRepository.findAllByLearningObjects(learningObjects);
 
-    return questions.map(mapToQuestionDTO);
-}
-
-export async function getQuestionsByTeacher(username: string): Promise<QuestionDTO[]> {
-    return await fetchTeacherQuestions(username);
-}
-
-export async function getQuestionIdsByTeacher(username: string): Promise<QuestionId[]> {
-    const questions = await fetchTeacherQuestions(username);
+    if (full)
+        return questions.map(mapToQuestionDTO);
 
     return questions.map(mapToQuestionId);
 }
+

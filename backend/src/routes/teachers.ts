@@ -15,8 +15,6 @@ router.get('/', getAllTeachersHandler);
 
 router.post('/', createTeacherHandler);
 
-router.delete('/', deleteTeacherHandler);
-
 router.get('/:username', getTeacherHandler);
 
 router.delete('/:username', deleteTeacherHandler);

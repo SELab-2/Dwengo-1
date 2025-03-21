@@ -1,13 +1,17 @@
-import { getClassRepository, getGroupRepository, getStudentRepository, getSubmissionRepository } from '../data/repositories.js';
-import { Class } from '../entities/classes/class.entity.js';
-import { Student } from '../entities/users/student.entity.js';
+import {
+    getClassRepository,
+    getGroupRepository,
+    getQuestionRepository,
+    getStudentRepository,
+    getSubmissionRepository
+} from '../data/repositories.js';
 import { AssignmentDTO } from '../interfaces/assignment.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToSubmissionDTO, SubmissionDTO } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
-import { UserService } from './users.js';
+import {mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId} from "../interfaces/question";
 
 export async function getAllStudents(): Promise<StudentDTO[]> {
     const studentRepository = getStudentRepository();
@@ -88,9 +92,7 @@ export async function getStudentAssignments(username: string, full: boolean): Pr
     const classRepository = getClassRepository();
     const classes = await classRepository.findByStudent(student);
 
-    const assignments = (await Promise.all(classes.map(async (cls) => await getAllAssignments(cls.classId!, full)))).flat();
-
-    return assignments;
+    return (await Promise.all(classes.map(async (cls) => await getAllAssignments(cls.classId!, full)))).flat();
 }
 
 export async function getStudentGroups(username: string, full: boolean): Promise<GroupDTO[]> {
@@ -123,4 +125,21 @@ export async function getStudentSubmissions(username: string): Promise<Submissio
     const submissions = await submissionRepository.findAllSubmissionsForStudent(student);
 
     return submissions.map(mapToSubmissionDTO);
+}
+
+export async function getStudentQuestions(username: string, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
+    const studentRepository = getStudentRepository();
+    const student = await studentRepository.findByUsername(username);
+
+    if (!student) {
+        return [];
+    }
+
+    const questionRepository = getQuestionRepository();
+    const questions = await questionRepository.findAllByAuthor(student);
+
+    if (full)
+        return questions.map(mapToQuestionDTO)
+
+    return questions.map(mapToQuestionId);
 }

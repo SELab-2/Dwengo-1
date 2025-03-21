@@ -1,53 +1,43 @@
 import { Request, Response } from 'express';
 import {
     createStudent,
-    deleteStudent,
+    deleteStudent, getAllStudentIds,
     getAllStudents,
     getStudent,
     getStudentAssignments,
     getStudentClasses,
-    getStudentGroups,
+    getStudentGroups, getStudentQuestions,
     getStudentSubmissions,
 } from '../services/students.js';
-import { ClassDTO } from '../interfaces/class.js';
-import { getAllAssignments } from '../services/assignments.js';
-import { getUserHandler } from './users.js';
-import { Student } from '../entities/users/student.entity.js';
+import {MISSING_FIELDS_ERROR, MISSING_USERNAME_ERROR, NAME_NOT_FOUND_ERROR} from './users.js';
 import { StudentDTO } from '../interfaces/student.js';
-import { getStudentRepository } from '../data/repositories.js';
-import { UserDTO } from '../interfaces/user.js';
 
-// TODO: accept arguments (full, ...)
-// TODO: endpoints
+
 export async function getAllStudentsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
 
-    const studentRepository = getStudentRepository();
-
-    const students: StudentDTO[] | string[] = full ? await getAllStudents() : await getAllStudents();
+    const students: StudentDTO[] | string[] = full ? await getAllStudents() : await getAllStudentIds();
 
     if (!students) {
-        res.status(404).json({ error: `Student not found.` });
+        res.status(404).json({ error: `Students not found.` });
         return;
     }
 
-    res.status(201).json(students);
+    res.json({students});
 }
 
 export async function getStudentHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
 
     if (!username) {
-        res.status(400).json({ error: 'Missing required field: username' });
+        res.status(400).json(MISSING_USERNAME_ERROR);
         return;
     }
 
     const user = await getStudent(username);
 
     if (!user) {
-        res.status(404).json({
-            error: `User with username '${username}' not found.`,
-        });
+        res.status(404).json(NAME_NOT_FOUND_ERROR(username));
         return;
     }
 
@@ -58,9 +48,7 @@ export async function createStudentHandler(req: Request, res: Response) {
     const userData = req.body as StudentDTO;
 
     if (!userData.username || !userData.firstName || !userData.lastName) {
-        res.status(400).json({
-            error: 'Missing required fields: username, firstName, lastName',
-        });
+        res.status(400).json(MISSING_FIELDS_ERROR);
         return;
     }
 
@@ -72,15 +60,13 @@ export async function deleteStudentHandler(req: Request, res: Response) {
     const username = req.params.username;
 
     if (!username) {
-        res.status(400).json({ error: 'Missing required field: username' });
+        res.status(400).json(MISSING_USERNAME_ERROR);
         return;
     }
 
     const deletedUser = await deleteStudent(username);
     if (!deletedUser) {
-        res.status(404).json({
-            error: `User with username '${username}' not found.`,
-        });
+        res.status(404).json(NAME_NOT_FOUND_ERROR(username));
         return;
     }
 
@@ -88,25 +74,19 @@ export async function deleteStudentHandler(req: Request, res: Response) {
 }
 
 export async function getStudentClassesHandler(req: Request, res: Response): Promise<void> {
-    try {
-        const full = req.query.full === 'true';
-        const username = req.params.id;
+    const full = req.query.full === 'true';
+    const username = req.params.username;
 
-        const classes = await getStudentClasses(username, full);
-
-        res.json({
-            classes: classes,
-            endpoints: {
-                self: `${req.baseUrl}/${req.params.id}`,
-                classes: `${req.baseUrl}/${req.params.id}/invitations`,
-                questions: `${req.baseUrl}/${req.params.id}/assignments`,
-                students: `${req.baseUrl}/${req.params.id}/students`,
-            },
-        });
-    } catch (error) {
-        console.error('Error fetching learning objects:', error);
-        res.status(500).json({ error: 'Internal server error' });
+    if (!username) {
+        res.status(400).json(MISSING_USERNAME_ERROR);
+        return;
     }
+
+    const classes = await getStudentClasses(username, full);
+
+    res.json({
+        classes,
+    });
 }
 
 // TODO
@@ -115,32 +95,62 @@ export async function getStudentClassesHandler(req: Request, res: Response): Pro
 // Have this assignment.
 export async function getStudentAssignmentsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
-    const username = req.params.id;
+    const username = req.params.username;
+
+    if (!username) {
+        res.status(400).json(MISSING_USERNAME_ERROR);
+        return;
+    }
 
     const assignments = getStudentAssignments(username, full);
 
     res.json({
-        assignments: assignments,
+        assignments,
     });
 }
 
 export async function getStudentGroupsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
-    const username = req.params.id;
+    const username = req.params.username;
+
+    if (!username) {
+        res.status(400).json(MISSING_USERNAME_ERROR);
+        return;
+    }
 
     const groups = await getStudentGroups(username, full);
 
     res.json({
-        groups: groups,
+        groups,
     });
 }
 
 export async function getStudentSubmissionsHandler(req: Request, res: Response): Promise<void> {
-    const username = req.params.id;
+    const username = req.params.username;
+
+    if (!username) {
+        res.status(400).json(MISSING_USERNAME_ERROR);
+        return;
+    }
 
     const submissions = await getStudentSubmissions(username);
 
     res.json({
-        submissions: submissions,
+        submissions,
     });
+}
+
+export async function getStudentQuestionsHandler(req: Request, res: Response): Promise<void> {
+    const username = req.params.username;
+
+    if (!username) {
+        res.status(400).json(MISSING_USERNAME_ERROR);
+        return;
+    }
+
+    const questions = await getStudentQuestions(username, full);
+
+    res.json({
+        questions,
+    })
 }
