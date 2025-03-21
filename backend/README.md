@@ -33,6 +33,9 @@ npm run test:unit
 ### Productie
 
 ```shell
+# Omgevingsvariabelen
+cp .env.development.example .env
+
 npm run build
 npm run start
 ```
