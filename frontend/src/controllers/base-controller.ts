@@ -1,10 +1,10 @@
-import { API_BASE } from "../../config.ts";
+import {apiConfig} from "@/config.ts";
 
 export class BaseController {
     protected baseUrl: string;
 
     constructor(basePath: string) {
-        this.baseUrl = `${API_BASE}/${basePath}`;
+        this.baseUrl = `${apiConfig.baseUrl}/${basePath}`;
     }
 
     protected async get<T>(path: string, queryParams?: Record<string, any>): Promise<T> {
