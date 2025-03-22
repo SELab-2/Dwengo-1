@@ -48,7 +48,7 @@ export async function getAllQuestionsHandler(req: Request, res: Response): Promi
     if (!questions) {
         res.status(404).json({ error: `Questions not found.` });
     } else {
-        res.json(questions);
+        res.json({ questions: questions });
     }
 }
 
@@ -81,7 +81,7 @@ export async function getQuestionAnswersHandler(req: Request, res: Response): Pr
     if (!answers) {
         res.status(404).json({ error: `Questions not found.` });
     } else {
-        res.json(answers);
+        res.json({ answers: answers });
     }
 }
 

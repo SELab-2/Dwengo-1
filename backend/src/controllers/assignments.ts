@@ -37,7 +37,7 @@ export async function createAssignmentHandler(req: Request<AssignmentParams>, re
         return;
     }
 
-    res.status(201).json({ assignment: assignment });
+    res.status(201).json(assignment);
 }
 
 export async function getAssignmentHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {

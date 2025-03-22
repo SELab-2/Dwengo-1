@@ -66,7 +66,7 @@ export async function createGroupHandler(req: Request, res: Response): Promise<v
         return;
     }
 
-    res.status(201).json({ group: group });
+    res.status(201).json(group);
 }
 
 export async function getGroupSubmissionsHandler(req: Request, res: Response): Promise<void> {

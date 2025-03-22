@@ -28,7 +28,7 @@ export async function createClassHandler(req: Request, res: Response): Promise<v
         return;
     }
 
-    res.status(201).json({ class: cls });
+    res.status(201).json(cls);
 }
 
 export async function getClassHandler(req: Request, res: Response): Promise<void> {

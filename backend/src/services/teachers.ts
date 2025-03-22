@@ -76,27 +76,29 @@ export async function fetchClassesByTeacher(username: string): Promise<ClassDTO[
     return classes.map(mapToClassDTO);
 }
 
-export async function getClassesByTeacher(username: string): Promise<ClassDTO[]> {
-    return await fetchClassesByTeacher(username);
-}
-
-export async function getClassIdsByTeacher(username: string): Promise<string[]> {
+export async function getClassesByTeacher(username: string, full: boolean): Promise<ClassDTO[] | string[]> {
     const classes = await fetchClassesByTeacher(username);
+
+    if (full) {
+        return classes;
+    }
+
     return classes.map((cls) => cls.id);
 }
 
 export async function fetchStudentsByTeacher(username: string) {
-    const classes = await getClassIdsByTeacher(username);
+    const classes = await getClassesByTeacher(username, false) as string[];
 
     return (await Promise.all(classes.map(async (id) => getClassStudents(id)))).flat();
 }
 
-export async function getStudentsByTeacher(username: string): Promise<StudentDTO[]> {
-    return await fetchStudentsByTeacher(username);
-}
-
-export async function getStudentIdsByTeacher(username: string): Promise<string[]> {
+export async function getStudentsByTeacher(username: string, full: boolean): Promise<StudentDTO[] | string[]> {
     const students = await fetchStudentsByTeacher(username);
+
+    if (full) {
+        return students;
+    }
+
     return students.map((student) => student.username);
 }
 
@@ -118,12 +120,12 @@ export async function fetchTeacherQuestions(username: string): Promise<QuestionD
     return questions.map(mapToQuestionDTO);
 }
 
-export async function getQuestionsByTeacher(username: string): Promise<QuestionDTO[]> {
-    return await fetchTeacherQuestions(username);
-}
-
-export async function getQuestionIdsByTeacher(username: string): Promise<QuestionId[]> {
+export async function getQuestionsByTeacher(username: string, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
     const questions = await fetchTeacherQuestions(username);
+
+    if (full) {
+        return questions;
+    }
 
     return questions.map(mapToQuestionId);
 }
