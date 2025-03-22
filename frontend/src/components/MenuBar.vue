@@ -21,13 +21,14 @@
     const languages = ref([
         { name: "English", code: "en" },
         { name: "Nederlands", code: "nl" },
+        { name: "Français", code: "fr" },
+        { name: "Deutsch", code: "de" },
     ]);
 
     // Logic to change the language of the website to the selected language
     const changeLanguage = (langCode: string) => {
         locale.value = langCode;
         localStorage.setItem("user-lang", langCode);
-        console.log(langCode);
     };
 
     const drawer = ref(false);

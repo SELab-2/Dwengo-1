@@ -2,8 +2,17 @@
     "welcome": "Welkom",
     "student": "leerling",
     "teacher": "leerkracht",
-    "assignments": "opdrachten",
-    "classes": "klassen",
-    "discussions": "discussies",
-    "logout": "log uit"
+    "assignments": "Opdrachten",
+    "classes": "Klassen",
+    "discussions": "Discussies",
+    "logout": "log uit",
+    "homeTitle": "Onze sterke punten",
+    "homeIntroduction1": "We ontwikkelen innovatieve workshops en leermiddelen en bieden deze aan studenten over de hele wereld in samenwerking met leerkrachten en vrijwilligers. Onze train-de-trainer sessies stellen hen in staat om onze hands-on workshops naar de leerlingen te brengen.",
+    "homeIntroduction2": "We voegen voortdurend nieuwe projecten en methodologieën toe aan al onze projecten. Voor deze projecten zoeken we altijd een maatschappelijk relevant thema. Daarnaast zorgen we ervoor dat ons didactisch materiaal gebaseerd is op wetenschappelijk onderzoek en houden we inclusiviteit altijd in het oog.",
+    "innovative": "Innovatief",
+    "researchBased": "Onderzoeksgedreven",
+    "inclusive": "Inclusief",
+    "sociallyRelevant": "Maatschappelijk relevant",
+    "login": "inloggen",
+    "translate": "vertalen"
 }
