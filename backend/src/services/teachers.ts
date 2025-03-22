@@ -7,10 +7,9 @@ import {
 } from '../data/repositories.js';
 import { Teacher } from '../entities/users/teacher.entity.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
-import { getClassStudents } from './class.js';
+import { getClassStudents } from './classes.js';
 import { StudentDTO } from '../interfaces/student.js';
 import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question.js';
-import { UserService } from './users.js';
 import { mapToUser } from '../interfaces/user.js';
 import { mapToTeacher, mapToTeacherDTO, TeacherDTO } from '../interfaces/teacher.js';
 

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createClass, getAllClasses, getClass, getClassStudents, getClassStudentsIds, getClassTeacherInvitations } from '../services/class.js';
+import { createClass, getAllClasses, getClass, getClassStudents, getClassStudentsIds, getClassTeacherInvitations } from '../services/classes.js';
 import { ClassDTO } from '../interfaces/class.js';
 
 export async function getAllClassesHandler(req: Request, res: Response): Promise<void> {
