@@ -14,16 +14,14 @@ import { getTeacherRepository } from '../data/repositories.js';
 export async function getAllTeachersHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
 
-    const teacherRepository = getTeacherRepository();
-
-    const teachers: TeacherDTO[] | string[] = full ? await getAllTeachers() : await getAllTeachers();
+    const teachers = await getAllTeachers(full);
 
     if (!teachers) {
         res.status(404).json({ error: `Teacher not found.` });
         return;
     }
 
-    res.status(201).json({ teachers: teachers });
+    res.json({ teachers: teachers });
 }
 
 export async function getTeacherHandler(req: Request, res: Response): Promise<void> {
@@ -38,12 +36,12 @@ export async function getTeacherHandler(req: Request, res: Response): Promise<vo
 
     if (!user) {
         res.status(404).json({
-            error: `User '${username}' not found.`,
+            error: `Teacher '${username}' not found.`,
         });
         return;
     }
 
-    res.status(201).json(user);
+    res.json(user);
 }
 
 export async function createTeacherHandler(req: Request, res: Response) {
@@ -96,7 +94,7 @@ export async function getTeacherClassHandler(req: Request, res: Response): Promi
 
     const classes = await getClassesByTeacher(username, full);
 
-    res.status(201).json({ classes: classes });
+    res.json({ classes: classes });
 }
 
 export async function getTeacherStudentHandler(req: Request, res: Response): Promise<void> {

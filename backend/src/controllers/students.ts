@@ -17,9 +17,7 @@ import { getStudentRepository } from '../data/repositories.js';
 export async function getAllStudentsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
 
-    const studentRepository = getStudentRepository();
-
-    const students: StudentDTO[] | string[] = full ? await getAllStudents() : await getAllStudents();
+    const students = await getAllStudents(full);
 
     if (!students) {
         res.status(404).json({ error: `Student not found.` });
@@ -121,8 +119,9 @@ export async function getStudentGroupsHandler(req: Request, res: Response): Prom
 
 export async function getStudentSubmissionsHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.id;
+    const full = req.query.full === 'true';
 
-    const submissions = await getStudentSubmissions(username);
+    const submissions = await getStudentSubmissions(username, full);
 
     res.json({
         submissions: submissions,

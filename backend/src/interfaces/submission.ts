@@ -17,6 +17,14 @@ export interface SubmissionDTO {
     content: string;
 }
 
+export interface SubmissionDTOId {
+    learningObjectHruid: string;
+    learningObjectLanguage: Language;
+    learningObjectVersion: number;
+
+    submissionNumber?: number;
+}
+
 export function mapToSubmissionDTO(submission: Submission): SubmissionDTO {
     return {
         learningObjectHruid: submission.learningObjectHruid,
@@ -29,6 +37,16 @@ export function mapToSubmissionDTO(submission: Submission): SubmissionDTO {
         group: submission.onBehalfOf ? mapToGroupDTO(submission.onBehalfOf) : undefined,
         content: submission.content,
     };
+}
+
+export function mapToSubmissionDTOId(submission: Submission): SubmissionDTOId {
+    return {
+        learningObjectHruid: submission.learningObjectHruid,
+        learningObjectLanguage: submission.learningObjectLanguage,
+        learningObjectVersion: submission.learningObjectVersion,
+
+        submissionNumber: submission.submissionNumber,
+    }
 }
 
 export function mapToSubmission(submissionDTO: SubmissionDTO): Submission {

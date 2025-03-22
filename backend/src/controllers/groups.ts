@@ -71,7 +71,7 @@ export async function createGroupHandler(req: Request, res: Response): Promise<v
 
 export async function getGroupSubmissionsHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.classid;
-    // Const full = req.query.full === 'true';
+    const full = req.query.full === 'true';
 
     const assignmentId = +req.params.assignmentid;
 
@@ -87,7 +87,7 @@ export async function getGroupSubmissionsHandler(req: Request, res: Response): P
         return;
     }
 
-    const submissions = await getGroupSubmissions(classId, assignmentId, groupId);
+    const submissions = await getGroupSubmissions(classId, assignmentId, groupId, full);
 
     res.json({
         submissions: submissions,

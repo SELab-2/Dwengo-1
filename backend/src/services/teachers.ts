@@ -12,16 +12,17 @@ import { StudentDTO } from '../interfaces/student.js';
 import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question.js';
 import { mapToUser } from '../interfaces/user.js';
 import { mapToTeacher, mapToTeacherDTO, TeacherDTO } from '../interfaces/teacher.js';
+import { teachersOnly } from '../middleware/auth/auth.js';
 
-export async function getAllTeachers(): Promise<TeacherDTO[]> {
+export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | string[]> {
     const teacherRepository = getTeacherRepository();
-    const users = await teacherRepository.findAll();
-    return users.map(mapToTeacherDTO);
-}
+    const teachers = await teacherRepository.findAll();
 
-export async function getAllTeacherIds(): Promise<string[]> {
-    const users = await getAllTeachers();
-    return users.map((user) => user.username);
+    if (full) {
+        return teachers.map(mapToTeacherDTO);
+    }
+
+    return teachers.map(teacher => teacher.username);
 }
 
 export async function getTeacher(username: string): Promise<TeacherDTO | null> {
