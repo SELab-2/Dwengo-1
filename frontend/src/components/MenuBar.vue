@@ -276,7 +276,11 @@
                                         :text="t('cancel')"
                                         @click="isActive.value = false"
                                     ></v-btn>
-                                    <v-btn :text="t('logout')"  @click="performLogout" to="/login"></v-btn>
+                                    <v-btn
+                                        :text="t('logout')"
+                                        @click="performLogout"
+                                        to="/login"
+                                    ></v-btn>
                                 </v-card-actions>
                             </v-card>
                         </template>
