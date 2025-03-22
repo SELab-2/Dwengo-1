@@ -8,6 +8,7 @@ import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student
 import { mapToSubmissionDTO, SubmissionDTO } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
 import { UserService } from './users.js';
+import { getLogger } from '../logging/initalize.js';
 
 export async function getAllStudents(): Promise<StudentDTO[]> {
     const studentRepository = getStudentRepository();
@@ -35,7 +36,7 @@ export async function createStudent(userData: StudentDTO): Promise<StudentDTO | 
 
         return mapToStudentDTO(newStudent);
     } catch (e) {
-        console.log(e);
+        getLogger().error(e);
         return null;
     }
 }
@@ -54,7 +55,7 @@ export async function deleteStudent(username: string): Promise<StudentDTO | null
 
         return mapToStudentDTO(user);
     } catch (e) {
-        console.log(e);
+        getLogger().error(e);
         return null;
     }
 }

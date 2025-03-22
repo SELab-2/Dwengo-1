@@ -16,6 +16,7 @@ import { Student } from '../entities/users/student.entity.js';
 import { StudentDTO } from '../interfaces/student.js';
 import { getStudentRepository } from '../data/repositories.js';
 import { UserDTO } from '../interfaces/user.js';
+import { getLogger } from '../logging/initalize.js';
 
 // TODO: accept arguments (full, ...)
 // TODO: endpoints
@@ -104,7 +105,7 @@ export async function getStudentClassesHandler(req: Request, res: Response): Pro
             },
         });
     } catch (error) {
-        console.error('Error fetching learning objects:', error);
+        getLogger().error('Error fetching learning objects:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 }

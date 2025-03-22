@@ -17,6 +17,7 @@ import { QuestionDTO, QuestionId } from '../interfaces/question.js';
 import { Teacher } from '../entities/users/teacher.entity.js';
 import { TeacherDTO } from '../interfaces/teacher.js';
 import { getTeacherRepository } from '../data/repositories.js';
+import { getLogger } from '../logging/initalize.js';
 
 export async function getAllTeachersHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
@@ -100,7 +101,7 @@ export async function getTeacherClassHandler(req: Request, res: Response): Promi
 
         res.status(201).json(classes);
     } catch (error) {
-        console.error('Error fetching classes by teacher:', error);
+        getLogger().error('Error fetching classes by teacher:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 }
@@ -119,7 +120,7 @@ export async function getTeacherStudentHandler(req: Request, res: Response): Pro
 
         res.status(201).json(students);
     } catch (error) {
-        console.error('Error fetching students by teacher:', error);
+        getLogger().error('Error fetching students by teacher:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 }
@@ -138,7 +139,7 @@ export async function getTeacherQuestionHandler(req: Request, res: Response): Pr
 
         res.status(201).json(questions);
     } catch (error) {
-        console.error('Error fetching questions by teacher:', error);
+        getLogger().error('Error fetching questions by teacher:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 }

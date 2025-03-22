@@ -13,6 +13,7 @@ import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../i
 import { UserService } from './users.js';
 import { mapToUser } from '../interfaces/user.js';
 import { mapToTeacher, mapToTeacherDTO, TeacherDTO } from '../interfaces/teacher.js';
+import { getLogger } from '../logging/initalize.js';
 
 export async function getAllTeachers(): Promise<TeacherDTO[]> {
     const teacherRepository = getTeacherRepository();
@@ -40,7 +41,7 @@ export async function createTeacher(userData: TeacherDTO): Promise<TeacherDTO | 
 
         return mapToTeacherDTO(newTeacher);
     } catch (e) {
-        console.log(e);
+        getLogger().error(e);
         return null;
     }
 }
@@ -59,7 +60,7 @@ export async function deleteTeacher(username: string): Promise<TeacherDTO | null
 
         return mapToTeacherDTO(user);
     } catch (e) {
-        console.log(e);
+        getLogger().error(e);
         return null;
     }
 }

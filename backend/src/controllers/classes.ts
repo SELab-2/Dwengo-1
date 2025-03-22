@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { createClass, getAllClasses, getClass, getClassStudents, getClassStudentsIds, getClassTeacherInvitations } from '../services/class.js';
 import { ClassDTO } from '../interfaces/class.js';
+import { getLogger } from '../logging/initalize.js';
 
 export async function getAllClassesHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
@@ -49,7 +50,7 @@ export async function getClassHandler(req: Request, res: Response): Promise<void
 
         res.json(cls);
     } catch (error) {
-        console.error('Error fetching learning objects:', error);
+        getLogger().error('Error fetching learning objects:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 }
