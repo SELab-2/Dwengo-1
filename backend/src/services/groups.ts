@@ -104,9 +104,9 @@ export async function getAllGroups(classId: string, assignmentNumber: number, fu
 }
 
 export async function getGroupSubmissions(
-    classId: string, 
-    assignmentNumber: number, 
-    groupNumber: number, 
+    classId: string,
+    assignmentNumber: number,
+    groupNumber: number,
     full: boolean
 ): Promise<SubmissionDTO[] | SubmissionDTOId[]> {
     const classRepository = getClassRepository();

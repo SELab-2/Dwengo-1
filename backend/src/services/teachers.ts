@@ -22,7 +22,7 @@ export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | stri
         return teachers.map(mapToTeacherDTO);
     }
 
-    return teachers.map(teacher => teacher.username);
+    return teachers.map((teacher) => teacher.username);
 }
 
 export async function getTeacher(username: string): Promise<TeacherDTO | null> {
@@ -87,7 +87,7 @@ export async function getClassesByTeacher(username: string, full: boolean): Prom
 }
 
 export async function fetchStudentsByTeacher(username: string) {
-    const classes = await getClassesByTeacher(username, false) as string[];
+    const classes = (await getClassesByTeacher(username, false)) as string[];
 
     return (await Promise.all(classes.map(async (id) => getClassStudents(id)))).flat();
 }

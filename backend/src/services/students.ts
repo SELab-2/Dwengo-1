@@ -16,7 +16,7 @@ export async function getAllStudents(full: boolean): Promise<StudentDTO[] | stri
         return students.map(mapToStudentDTO);
     }
 
-    return students.map(student => student.username);
+    return students.map((student) => student.username);
 }
 
 export async function getStudent(username: string): Promise<StudentDTO | null> {

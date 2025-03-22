@@ -60,7 +60,11 @@ export async function getAssignment(classid: string, id: number): Promise<Assign
     return mapToAssignmentDTO(assignment);
 }
 
-export async function getAssignmentsSubmissions(classid: string, assignmentNumber: number, full: boolean): Promise<SubmissionDTO[] | SubmissionDTOId[]> {
+export async function getAssignmentsSubmissions(
+    classid: string,
+    assignmentNumber: number,
+    full: boolean
+): Promise<SubmissionDTO[] | SubmissionDTOId[]> {
     const classRepository = getClassRepository();
     const cls = await classRepository.findById(classid);
 

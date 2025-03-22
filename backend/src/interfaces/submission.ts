@@ -46,7 +46,7 @@ export function mapToSubmissionDTOId(submission: Submission): SubmissionDTOId {
         learningObjectVersion: submission.learningObjectVersion,
 
         submissionNumber: submission.submissionNumber,
-    }
+    };
 }
 
 export function mapToSubmission(submissionDTO: SubmissionDTO): Submission {

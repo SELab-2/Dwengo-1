@@ -39,7 +39,7 @@ export async function createSubmissionHandler(req: Request, res: Response) {
         res.status(400).json({ error: 'Failed to create submission' });
         return;
     }
-    
+
     res.json(submission);
 }
 

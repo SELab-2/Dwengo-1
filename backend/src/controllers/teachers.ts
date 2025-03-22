@@ -57,7 +57,7 @@ export async function createTeacherHandler(req: Request, res: Response) {
     const newUser = await createTeacher(userData);
 
     if (!newUser) {
-        res.status(400).json({ error: "Failed to create teacher" });
+        res.status(400).json({ error: 'Failed to create teacher' });
         return;
     }
 

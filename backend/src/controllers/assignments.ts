@@ -64,7 +64,6 @@ export async function getAssignmentsSubmissionsHandler(req: Request<AssignmentPa
     const assignmentNumber = +req.params.id;
     const full = req.query.full === 'true';
 
-
     if (isNaN(assignmentNumber)) {
         res.status(400).json({ error: 'Assignment id must be a number' });
         return;
