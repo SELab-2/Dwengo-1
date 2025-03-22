@@ -30,7 +30,7 @@ export async function getSubmissionHandler(req: Request<SubmissionParams>, res: 
     res.json(submission);
 }
 
-export async function createSubmissionHandler(req: Request, res: Response) {
+export async function createSubmissionHandler(req: Request, res: Response): Promise<void> {
     const submissionDTO = req.body as SubmissionDTO;
 
     const submission = await createSubmission(submissionDTO);
@@ -42,7 +42,7 @@ export async function createSubmissionHandler(req: Request, res: Response) {
     }
 }
 
-export async function deleteSubmissionHandler(req: Request, res: Response) {
+export async function deleteSubmissionHandler(req: Request, res: Response): Promise<void> {
     const hruid = req.params.hruid;
     const submissionNumber = +req.params.id;
 

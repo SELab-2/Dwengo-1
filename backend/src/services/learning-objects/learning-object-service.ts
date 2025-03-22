@@ -18,28 +18,28 @@ const learningObjectService = {
     /**
      * Fetches a single learning object by its HRUID
      */
-    getLearningObjectById(id: LearningObjectIdentifier): Promise<FilteredLearningObject | null> {
+    async getLearningObjectById(id: LearningObjectIdentifier): Promise<FilteredLearningObject | null> {
         return getProvider(id).getLearningObjectById(id);
     },
 
     /**
      * Fetch full learning object data (metadata)
      */
-    getLearningObjectsFromPath(id: LearningPathIdentifier): Promise<FilteredLearningObject[]> {
+    async getLearningObjectsFromPath(id: LearningPathIdentifier): Promise<FilteredLearningObject[]> {
         return getProvider(id).getLearningObjectsFromPath(id);
     },
 
     /**
      * Fetch only learning object HRUIDs
      */
-    getLearningObjectIdsFromPath(id: LearningPathIdentifier): Promise<string[]> {
+    async getLearningObjectIdsFromPath(id: LearningPathIdentifier): Promise<string[]> {
         return getProvider(id).getLearningObjectIdsFromPath(id);
     },
 
     /**
      * Obtain a HTML-rendering of the learning object with the given identifier (as a string).
      */
-    getLearningObjectHTML(id: LearningObjectIdentifier): Promise<string | null> {
+    async getLearningObjectHTML(id: LearningObjectIdentifier): Promise<string | null> {
         return getProvider(id).getLearningObjectHTML(id);
     },
 };

@@ -8,7 +8,7 @@ interface Translations {
     };
 }
 
-export function getThemes(req: Request, res: Response) {
+export function getThemes(req: Request, res: Response): void {
     const language = (req.query.language as string)?.toLowerCase() || 'nl';
     const translations = loadTranslations<Translations>(language);
     const themeList = themes.map((theme) => ({
@@ -21,7 +21,7 @@ export function getThemes(req: Request, res: Response) {
     res.json(themeList);
 }
 
-export function getThemeByTitle(req: Request, res: Response) {
+export function getThemeByTitle(req: Request, res: Response): void {
     const themeKey = req.params.theme;
     const theme = themes.find((t) => t.title === themeKey);
 

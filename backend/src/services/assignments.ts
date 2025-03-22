@@ -79,7 +79,7 @@ export async function getAssignmentsSubmissions(classid: string, assignmentNumbe
     const groups = await groupRepository.findAllGroupsForAssignment(assignment);
 
     const submissionRepository = getSubmissionRepository();
-    const submissions = (await Promise.all(groups.map((group) => submissionRepository.findAllSubmissionsForGroup(group)))).flat();
+    const submissions = (await Promise.all(groups.map(async (group) => submissionRepository.findAllSubmissionsForGroup(group)))).flat();
 
     return submissions.map(mapToSubmissionDTO);
 }

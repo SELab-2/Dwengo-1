@@ -49,7 +49,9 @@ const learningPathService = {
      * Search learning paths in the data source using the given search string.
      */
     async searchLearningPaths(query: string, language: Language, personalizedFor?: PersonalizationTarget): Promise<LearningPath[]> {
-        const providerResponses = await Promise.all(allProviders.map((provider) => provider.searchLearningPaths(query, language, personalizedFor)));
+        const providerResponses = await Promise.all(
+            allProviders.map(async (provider) => provider.searchLearningPaths(query, language, personalizedFor))
+        );
         return providerResponses.flat();
     },
 };

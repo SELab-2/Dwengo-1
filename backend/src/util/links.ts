@@ -9,7 +9,7 @@ export function isValidHttpUrl(url: string): boolean {
     }
 }
 
-export function getUrlStringForLearningObject(learningObjectId: LearningObjectIdentifier) {
+export function getUrlStringForLearningObject(learningObjectId: LearningObjectIdentifier): string {
     let url = `/learningObject/${learningObjectId.hruid}/html?language=${learningObjectId.language}`;
     if (learningObjectId.version) {
         url += `&version=${learningObjectId.version}`;

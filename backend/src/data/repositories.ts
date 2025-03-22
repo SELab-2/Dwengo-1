@@ -34,7 +34,7 @@ let entityManager: EntityManager | undefined;
 /**
  * Execute all the database operations within the function f in a single transaction.
  */
-export function transactional<T>(f: () => Promise<T>) {
+export function transactional<T>(f: () => Promise<T>): void {
     entityManager?.transactional(f);
 }
 

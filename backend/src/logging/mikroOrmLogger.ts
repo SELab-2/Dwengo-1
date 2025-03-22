@@ -5,7 +5,7 @@ import { LokiLabels } from 'loki-logger-ts';
 export class MikroOrmLogger extends DefaultLogger {
     private logger: Logger = getLogger();
 
-    log(namespace: LoggerNamespace, message: string, context?: LogContext) {
+    log(namespace: LoggerNamespace, message: string, context?: LogContext): void {
         if (!this.isEnabled(namespace, context)) {
             return;
         }
@@ -48,7 +48,7 @@ export class MikroOrmLogger extends DefaultLogger {
         }
     }
 
-    private createMessage(namespace: LoggerNamespace, messageArg: string, context?: LogContext) {
+    private createMessage(namespace: LoggerNamespace, messageArg: string, context?: LogContext): unknown {
         const labels: LokiLabels = {
             service: 'ORM',
         };

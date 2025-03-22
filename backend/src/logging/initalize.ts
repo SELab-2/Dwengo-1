@@ -28,7 +28,7 @@ function initializeLogger(): Logger {
         level: LOG_LEVEL,
         json: true,
         format: format.combine(format.timestamp(), format.json()),
-        onConnectionError: (err) => {
+        onConnectionError: (err): void => {
             // eslint-disable-next-line no-console
             console.error(`Connection error: ${err}`);
         },

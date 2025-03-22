@@ -1,9 +1,9 @@
 import { envVars, getEnvVar } from '../../util/envVars.js';
 import { expressjwt } from 'express-jwt';
+import * as jwt from 'jsonwebtoken';
 import { JwtPayload } from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
 import * as express from 'express';
-import * as jwt from 'jsonwebtoken';
 import { AuthenticatedRequest } from './authenticated-request.js';
 import { AuthenticationInfo } from './authentication-info.js';
 import { ForbiddenException, UnauthorizedException } from '../../exceptions.js';
@@ -74,7 +74,7 @@ const verifyJwtToken = expressjwt({
  */
 function getAuthenticationInfo(req: AuthenticatedRequest): AuthenticationInfo | undefined {
     if (!req.jwtPayload) {
-        return;
+        return undefined;
     }
     const issuer = req.jwtPayload.iss;
     let accountType: 'student' | 'teacher';
@@ -84,8 +84,9 @@ function getAuthenticationInfo(req: AuthenticatedRequest): AuthenticationInfo | 
     } else if (issuer === idpConfigs.teacher.issuer) {
         accountType = 'teacher';
     } else {
-        return;
+        return undefined;
     }
+
     return {
         accountType: accountType,
         username: req.jwtPayload[JWT_PROPERTY_NAMES.username]!,
@@ -100,10 +101,10 @@ function getAuthenticationInfo(req: AuthenticatedRequest): AuthenticationInfo | 
  * Add the AuthenticationInfo object with the information about the current authentication to the request in order
  * to avoid that the routers have to deal with the JWT token.
  */
-const addAuthenticationInfo = (req: AuthenticatedRequest, _res: express.Response, next: express.NextFunction) => {
+function addAuthenticationInfo(req: AuthenticatedRequest, _res: express.Response, next: express.NextFunction): void {
     req.auth = getAuthenticationInfo(req);
     next();
-};
+}
 
 export const authenticateUser = [verifyJwtToken, addAuthenticationInfo];
 
@@ -113,9 +114,8 @@ export const authenticateUser = [verifyJwtToken, addAuthenticationInfo];
  * @param accessCondition Predicate over the current AuthenticationInfo. Access is only granted when this evaluates
  *                        to true.
  */
-export const authorize =
-    (accessCondition: (auth: AuthenticationInfo) => boolean) =>
-    (req: AuthenticatedRequest, _res: express.Response, next: express.NextFunction): void => {
+export function authorize(accessCondition: (auth: AuthenticationInfo) => boolean) {
+    return (req: AuthenticatedRequest, _res: express.Response, next: express.NextFunction): void => {
         if (!req.auth) {
             throw new UnauthorizedException();
         } else if (!accessCondition(req.auth)) {
@@ -124,6 +124,7 @@ export const authorize =
             next();
         }
     };
+}
 
 /**
  * Middleware which rejects all unauthenticated users, but accepts all authenticated users.

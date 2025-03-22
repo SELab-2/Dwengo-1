@@ -47,7 +47,7 @@ export async function getStudentHandler(req: Request, res: Response): Promise<vo
     res.status(201).json(user);
 }
 
-export async function createStudentHandler(req: Request, res: Response) {
+export async function createStudentHandler(req: Request, res: Response): Promise<void> {
     const userData = req.body as StudentDTO;
 
     if (!userData.username || !userData.firstName || !userData.lastName) {
@@ -61,7 +61,7 @@ export async function createStudentHandler(req: Request, res: Response) {
     res.status(201).json(newUser);
 }
 
-export async function deleteStudentHandler(req: Request, res: Response) {
+export async function deleteStudentHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
 
     if (!username) {

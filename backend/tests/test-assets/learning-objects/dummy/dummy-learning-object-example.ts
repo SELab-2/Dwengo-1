@@ -11,7 +11,7 @@ import { envVars, getEnvVar } from '../../../../src/util/envVars';
  */
 export function dummyLearningObject(hruid: string, language: Language, title: string): LearningObjectExample {
     return {
-        createLearningObject: () => {
+        createLearningObject: (): LearningObject => {
             const learningObject = new LearningObject();
             learningObject.hruid = getEnvVar(envVars.UserContentPrefix) + hruid;
             learningObject.language = language;

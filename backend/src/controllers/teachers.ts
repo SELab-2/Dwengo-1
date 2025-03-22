@@ -50,7 +50,7 @@ export async function getTeacherHandler(req: Request, res: Response): Promise<vo
     res.status(201).json(user);
 }
 
-export async function createTeacherHandler(req: Request, res: Response) {
+export async function createTeacherHandler(req: Request, res: Response): Promise<void> {
     const userData = req.body as TeacherDTO;
 
     if (!userData.username || !userData.firstName || !userData.lastName) {
@@ -64,7 +64,7 @@ export async function createTeacherHandler(req: Request, res: Response) {
     res.status(201).json(newUser);
 }
 
-export async function deleteTeacherHandler(req: Request, res: Response) {
+export async function deleteTeacherHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
 
     if (!username) {

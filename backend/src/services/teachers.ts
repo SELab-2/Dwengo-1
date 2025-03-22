@@ -77,7 +77,7 @@ export async function getClassIdsByTeacher(username: string): Promise<string[]> 
     return classes.map((cls) => cls.id);
 }
 
-export async function fetchStudentsByTeacher(username: string) {
+export async function fetchStudentsByTeacher(username: string): Promise<StudentDTO[]> {
     const classes = await getClassIdsByTeacher(username);
 
     return (await Promise.all(classes.map(async (id) => getClassStudents(id)))).flat();

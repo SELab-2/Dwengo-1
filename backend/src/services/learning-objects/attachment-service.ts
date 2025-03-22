@@ -3,7 +3,7 @@ import { Attachment } from '../../entities/content/attachment.entity.js';
 import { LearningObjectIdentifier } from '../../interfaces/learning-content.js';
 
 const attachmentService = {
-    getAttachment(learningObjectId: LearningObjectIdentifier, attachmentName: string): Promise<Attachment | null> {
+    async getAttachment(learningObjectId: LearningObjectIdentifier, attachmentName: string): Promise<Attachment | null> {
         const attachmentRepo = getAttachmentRepository();
 
         if (learningObjectId.version) {

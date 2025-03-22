@@ -18,7 +18,7 @@ async function getLearningObjectsForNodes(nodes: LearningPathNode[]): Promise<Ma
     // Its corresponding learning object.
     const nullableNodesToLearningObjects = new Map<LearningPathNode, FilteredLearningObject | null>(
         await Promise.all(
-            nodes.map((node) =>
+            nodes.map(async (node) =>
                 learningObjectService
                     .getLearningObjectById({
                         hruid: node.learningObjectHruid,
@@ -117,7 +117,7 @@ async function convertNodes(
     nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>,
     personalizedFor?: PersonalizationTarget
 ): Promise<LearningObjectNode[]> {
-    const nodesPromise = Array.from(nodesToLearningObjects.entries()).map((entry) =>
+    const nodesPromise = Array.from(nodesToLearningObjects.entries()).map(async (entry) =>
         convertNode(entry[0], entry[1], personalizedFor, nodesToLearningObjects)
     );
     return await Promise.all(nodesPromise);
@@ -179,11 +179,11 @@ const databaseLearningPathProvider: LearningPathProvider = {
     ): Promise<LearningPathResponse> {
         const learningPathRepo = getLearningPathRepository();
 
-        const learningPaths = (await Promise.all(hruids.map((hruid) => learningPathRepo.findByHruidAndLanguage(hruid, language)))).filter(
+        const learningPaths = (await Promise.all(hruids.map(async (hruid) => learningPathRepo.findByHruidAndLanguage(hruid, language)))).filter(
             (learningPath) => learningPath !== null
         );
         const filteredLearningPaths = await Promise.all(
-            learningPaths.map((learningPath, index) => convertLearningPath(learningPath, index, personalizedFor))
+            learningPaths.map(async (learningPath, index) => convertLearningPath(learningPath, index, personalizedFor))
         );
 
         return {
@@ -200,7 +200,7 @@ const databaseLearningPathProvider: LearningPathProvider = {
         const learningPathRepo = getLearningPathRepository();
 
         const searchResults = await learningPathRepo.findByQueryStringAndLanguage(query, language);
-        return await Promise.all(searchResults.map((result, index) => convertLearningPath(result, index, personalizedFor)));
+        return await Promise.all(searchResults.map(async (result, index) => convertLearningPath(result, index, personalizedFor)));
     },
 };
 

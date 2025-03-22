@@ -26,7 +26,7 @@ app.use('/api', apiRouter);
 // Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerMiddleware);
 
-async function startServer() {
+async function startServer(): Promise<void> {
     await initORM();
 
     app.listen(port, () => {

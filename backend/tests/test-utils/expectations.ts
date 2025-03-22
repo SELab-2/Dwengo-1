@@ -69,7 +69,7 @@ export function expectToBeCorrectEntity<T extends object>(actual: { entity: T; n
  * @param filtered the representation as FilteredLearningObject
  * @param original the original entity added to the database
  */
-export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearningObject, original: LearningObject) {
+export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearningObject, original: LearningObject): void {
     expect(filtered.uuid).toEqual(original.uuid);
     expect(filtered.version).toEqual(original.version);
     expect(filtered.language).toEqual(original.language);
@@ -105,7 +105,7 @@ export function expectToBeCorrectLearningPath(
     learningPath: LearningPath,
     expectedEntity: LearningPathEntity,
     learningObjectsOnPath: FilteredLearningObject[]
-) {
+): void {
     expect(learningPath.hruid).toEqual(expectedEntity.hruid);
     expect(learningPath.language).toEqual(expectedEntity.language);
     expect(learningPath.description).toEqual(expectedEntity.description);

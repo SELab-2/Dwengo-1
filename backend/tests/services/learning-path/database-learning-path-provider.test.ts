@@ -124,7 +124,7 @@ describe('DatabaseLearningPathProvider', () => {
 
             const learningObjectsOnPath = (
                 await Promise.all(
-                    example.learningPath.nodes.map((node) =>
+                    example.learningPath.nodes.map(async (node) =>
                         learningObjectService.getLearningObjectById({
                             hruid: node.learningObjectHruid,
                             version: node.version,

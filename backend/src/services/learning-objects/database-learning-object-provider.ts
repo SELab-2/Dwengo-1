@@ -41,7 +41,7 @@ function convertLearningObject(learningObject: LearningObject | null): FilteredL
     };
 }
 
-function findLearningObjectEntityById(id: LearningObjectIdentifier): Promise<LearningObject | null> {
+async function findLearningObjectEntityById(id: LearningObjectIdentifier): Promise<LearningObject | null> {
     const learningObjectRepo = getLearningObjectRepository();
 
     return learningObjectRepo.findLatestByHruidAndLanguage(id.hruid, id.language as Language);
@@ -69,7 +69,7 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
         if (!learningObject) {
             return null;
         }
-        return await processingService.render(learningObject, (id) => findLearningObjectEntityById(id));
+        return await processingService.render(learningObject, async (id) => findLearningObjectEntityById(id));
     },
 
     /**
@@ -96,7 +96,7 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
             throw new NotFoundError('The learning path with the given ID could not be found.');
         }
         const learningObjects = await Promise.all(
-            learningPath.nodes.map((it) => {
+            learningPath.nodes.map(async (it) => {
                 const learningObject = learningObjectService.getLearningObjectById({
                     hruid: it.learningObjectHruid,
                     language: it.language,

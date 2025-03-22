@@ -14,7 +14,7 @@ class MarkdownProcessor extends StringProcessor {
         super(DwengoContentType.TEXT_MARKDOWN);
     }
 
-    override renderFn(mdText: string) {
+    override renderFn(mdText: string): string {
         try {
             marked.use({ renderer: dwengoMarkedRenderer });
             const html = marked(mdText, { async: false });
@@ -24,7 +24,7 @@ class MarkdownProcessor extends StringProcessor {
         }
     }
 
-    replaceLinks(html: string) {
+    replaceLinks(html: string): string {
         const proc = new InlineImageProcessor();
         html = html.replace(
             /<img.*?src="(.*?)".*?(alt="(.*?)")?.*?(title="(.*?)")?.*?>/g,

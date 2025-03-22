@@ -47,7 +47,7 @@ export async function getUserHandler<T extends User>(req: Request, res: Response
     }
 }
 
-export async function createUserHandler<T extends User>(req: Request, res: Response, service: UserService<T>, userClass: new () => T) {
+export async function createUserHandler<T extends User>(req: Request, res: Response, service: UserService<T>, userClass: new () => T): Promise<void> {
     try {
         getLogger().debug({ req: req });
         const userData = req.body as UserDTO;
@@ -67,7 +67,7 @@ export async function createUserHandler<T extends User>(req: Request, res: Respo
     }
 }
 
-export async function deleteUserHandler<T extends User>(req: Request, res: Response, service: UserService<T>) {
+export async function deleteUserHandler<T extends User>(req: Request, res: Response, service: UserService<T>): Promise<void> {
     try {
         const username = req.params.username;
 

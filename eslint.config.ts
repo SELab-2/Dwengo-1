@@ -23,11 +23,20 @@ export default [
         languageOptions: {
             ecmaVersion: 'latest',
             sourceType: 'module',
+            parserOptions: {
+                projectService: true,
+                tsconfigRootDir: import.meta.dirname,
+            },
         },
         linterOptions: {
             reportUnusedInlineConfigs: 'error',
         },
         rules: {
+            'consistent-return': 'off',
+            '@typescript-eslint/consistent-return': 'off',
+
+            '@typescript-eslint/explicit-function-return-type': 'warn',
+
             '@typescript-eslint/naming-convention': [
                 'warn',
                 { // Enforce that all variables, functions and properties are camelCase
@@ -49,6 +58,14 @@ export default [
                 }
             ],
 
+            // 'no-empty-function': 'off',
+            '@typescript-eslint/no-empty-function': 'error',
+
+            'no-loop-func': 'off',
+            '@typescript-eslint/no-loop-func': 'error',
+
+            '@typescript-eslint/no-unsafe-function-type': 'error',
+
             'no-unused-expressions': 'off',
             '@typescript-eslint/no-unused-expressions': 'warn',
             'no-unused-vars': 'off',
@@ -65,6 +82,10 @@ export default [
             ],
             'no-use-before-define': 'off',
             '@typescript-eslint/no-use-before-define': 'off',
+
+            '@typescript-eslint/prefer-function-type': 'error',
+
+            '@typescript-eslint/promise-function-async': 'warn',
 
             'no-await-in-loop': 'warn',
             'no-constructor-return': 'error',
@@ -110,7 +131,6 @@ export default [
             'no-iterator': 'error',
             'no-label-var': 'warn',
             'no-labels': 'warn',
-            'no-loop-func': 'error',
             'no-multi-assign': 'error',
             'no-nested-ternary': 'error',
             'no-object-constructor': 'error',

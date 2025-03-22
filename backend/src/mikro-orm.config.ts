@@ -54,7 +54,7 @@ function config(testingMode: boolean = false): Options {
 
             // Workaround: vitest: `TypeError: Unknown file extension ".ts"` (ERR_UNKNOWN_FILE_EXTENSION)
             // (see https://mikro-orm.io/docs/guide/project-setup#testing-the-endpoint)
-            dynamicImportProvider: (id) => import(id),
+            dynamicImportProvider: async (id) => import(id),
         };
     }
 
