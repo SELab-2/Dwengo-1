@@ -19,7 +19,7 @@ export class Submission {
     learningObjectVersion: number = 1;
 
     @PrimaryKey({ type: 'integer', autoincrement: true })
-    submissionNumber!: number;
+    submissionNumber?: number;
 
     @ManyToOne({
         entity: () => Student,
