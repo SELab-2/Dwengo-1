@@ -13,7 +13,7 @@ export type ConditionTestLearningPathAndLearningObjects = {
     learningPath: LearningPath;
 };
 
-export function createConditionTestLearningPathAndLearningObjects() {
+export function createConditionTestLearningPathAndLearningObjects(): ConditionTestLearningPathAndLearningObjects {
     const learningPath = new LearningPath();
     learningPath.hruid = `${getEnvVar(envVars.UserContentPrefix)}test_conditions`;
     learningPath.language = Language.English;
