@@ -31,12 +31,15 @@
         localStorage.setItem("user-lang", langCode);
     };
 
+    // contains functionality to let the collapsed menu appear and disappear
+    // when the screen size varies
     const drawer = ref(false);
 
-    // when the user wants to logout, the authentication must be set to False
-    function performLogout() {
+    // when the user wants to logout, a popup is shown to verify this
+    // if verified, the user should be logged out
+    const performLogout = () => {
         auth.logout();
-    }
+    };
 </script>
 
 <template>
@@ -222,7 +225,7 @@
             </div>
             <div class="right">
                 <li>
-                    <v-btn
+                    <!-- <v-btn
                         @click="performLogout"
                         to="/login"
                         style="background-color: transparent; box-shadow: none !important"
@@ -240,7 +243,44 @@
                                 ></v-icon>
                             </template>
                         </v-tooltip>
-                    </v-btn>
+                    </v-btn> -->
+                    <v-dialog max-width="500">
+                        <template v-slot:activator="{ props: activatorProps }">
+                            <v-btn
+                                v-bind="activatorProps"
+                                style="background-color: transparent; box-shadow: none !important"
+                            >
+                                <v-tooltip
+                                    :text="t('logout')"
+                                    location="bottom"
+                                >
+                                    <template v-slot:activator="{ props }">
+                                        <v-icon
+                                            v-bind="props"
+                                            icon="mdi-logout"
+                                            size="x-large"
+                                            color="#0e6942"
+                                        >
+                                        </v-icon>
+                                    </template>
+                                </v-tooltip>
+                            </v-btn>
+                        </template>
+
+                        <template v-slot:default="{ isActive }">
+                            <v-card :title="t('logoutVerification')">
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+
+                                    <v-btn
+                                        :text="t('cancel')"
+                                        @click="isActive.value = false"
+                                    ></v-btn>
+                                    <v-btn :text="t('logout')"  @click="performLogout" to="/login"></v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </template>
+                    </v-dialog>
                 </li>
                 <li>
                     <v-avatar
