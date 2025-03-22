@@ -41,7 +41,7 @@ export async function createAssignmentHandler(req: Request<AssignmentParams>, re
 }
 
 export async function getAssignmentHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
-    const id = +req.params.id;
+    const id = Number(req.params.id);
     const classid = req.params.classid;
 
     if (isNaN(id)) {
@@ -61,7 +61,7 @@ export async function getAssignmentHandler(req: Request<AssignmentParams>, res: 
 
 export async function getAssignmentsSubmissionsHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
     const classid = req.params.classid;
-    const assignmentNumber = +req.params.id;
+    const assignmentNumber = Number(req.params.id);
 
     if (isNaN(assignmentNumber)) {
         res.status(400).json({ error: 'Assignment id must be a number' });

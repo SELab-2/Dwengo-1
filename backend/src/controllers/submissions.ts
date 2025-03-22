@@ -10,7 +10,7 @@ interface SubmissionParams {
 
 export async function getSubmissionHandler(req: Request<SubmissionParams>, res: Response): Promise<void> {
     const lohruid = req.params.hruid;
-    const submissionNumber = +req.params.id;
+    const submissionNumber = Number(req.params.id);
 
     if (isNaN(submissionNumber)) {
         res.status(400).json({ error: 'Submission number is not a number' });
@@ -44,7 +44,7 @@ export async function createSubmissionHandler(req: Request, res: Response): Prom
 
 export async function deleteSubmissionHandler(req: Request, res: Response): Promise<void> {
     const hruid = req.params.hruid;
-    const submissionNumber = +req.params.id;
+    const submissionNumber = Number(req.params.id);
 
     const lang = languageMap[req.query.language as string] || Language.Dutch;
     const version = (req.query.version || 1) as number;

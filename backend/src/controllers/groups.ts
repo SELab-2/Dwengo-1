@@ -12,14 +12,14 @@ interface GroupParams {
 export async function getGroupHandler(req: Request<GroupParams>, res: Response): Promise<void> {
     const classId = req.params.classid;
     const full = req.query.full === 'true';
-    const assignmentId = +req.params.assignmentid;
+    const assignmentId = Number(req.params.assignmentid);
 
     if (isNaN(assignmentId)) {
         res.status(400).json({ error: 'Assignment id must be a number' });
         return;
     }
 
-    const groupId = +req.params.groupid!; // Can't be undefined
+    const groupId = Number(req.params.groupid!); // Can't be undefined
 
     if (isNaN(groupId)) {
         res.status(400).json({ error: 'Group id must be a number' });
@@ -35,7 +35,7 @@ export async function getAllGroupsHandler(req: Request, res: Response): Promise<
     const classId = req.params.classid;
     const full = req.query.full === 'true';
 
-    const assignmentId = +req.params.assignmentid;
+    const assignmentId = Number(req.params.assignmentid);
 
     if (isNaN(assignmentId)) {
         res.status(400).json({ error: 'Assignment id must be a number' });
@@ -51,7 +51,7 @@ export async function getAllGroupsHandler(req: Request, res: Response): Promise<
 
 export async function createGroupHandler(req: Request, res: Response): Promise<void> {
     const classid = req.params.classid;
-    const assignmentId = +req.params.assignmentid;
+    const assignmentId = Number(req.params.assignmentid);
 
     if (isNaN(assignmentId)) {
         res.status(400).json({ error: 'Assignment id must be a number' });
@@ -73,14 +73,14 @@ export async function getGroupSubmissionsHandler(req: Request, res: Response): P
     const classId = req.params.classid;
     // Const full = req.query.full === 'true';
 
-    const assignmentId = +req.params.assignmentid;
+    const assignmentId = Number(req.params.assignmentid);
 
     if (isNaN(assignmentId)) {
         res.status(400).json({ error: 'Assignment id must be a number' });
         return;
     }
 
-    const groupId = +req.params.groupid!; // Can't be undefined
+    const groupId = Number(req.params.groupid!); // Can't be undefined
 
     if (isNaN(groupId)) {
         res.status(400).json({ error: 'Group id must be a number' });
