@@ -13,6 +13,7 @@ import UserDiscussions from "@/views/discussions/UserDiscussions.vue";
 import UserClasses from "@/views/classes/UserClasses.vue";
 import UserAssignments from "@/views/classes/UserAssignments.vue";
 import authState from "@/services/auth/auth-service.ts";
+import LearningPathPage from "@/views/learning-paths/LearningPathPage.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -98,6 +99,12 @@ const router = createRouter({
             name: "SingleDiscussion",
             component: SingleDiscussion,
             meta: { requiresAuth: true },
+        },
+        {
+            path: "/learningPath/:hruid/:language",
+            name: "LearningPath",
+            component: LearningPathPage,
+            meta: { requiresAuth: false }
         },
         {
             path: "/:catchAll(.*)",
