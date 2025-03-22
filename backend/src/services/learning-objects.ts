@@ -86,6 +86,6 @@ export async function getLearningObjectsFromPath(hruid: string, language: string
 export async function getLearningObjectIdsFromPath(hruid: string, language: string): Promise<string[]> {
     return (await fetchLearningObjects(hruid, false, language)) as string[];
 }
-function fetchLearningPaths(arg0: string[], language: string, arg2: string): LearningPathResponse | PromiseLike<LearningPathResponse> {
+function fetchLearningPaths(_arg0: string[], _language: string, _arg2: string): LearningPathResponse | PromiseLike<LearningPathResponse> {
     throw new Error('Function not implemented.');
 }

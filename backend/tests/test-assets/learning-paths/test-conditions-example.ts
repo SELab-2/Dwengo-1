@@ -79,6 +79,6 @@ export function createConditionTestLearningPathAndLearningObjects() {
     };
 }
 
-const example: LearningPathExample = {
+const _example: LearningPathExample = {
     createLearningPath: () => createConditionTestLearningPathAndLearningObjects().learningPath,
 };

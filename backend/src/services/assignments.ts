@@ -37,7 +37,7 @@ export async function createAssignment(classid: string, assignmentData: Assignme
         await assignmentRepository.save(newAssignment);
 
         return newAssignment;
-    } catch (e) {
+    } catch (_) {
         return null;
     }
 }

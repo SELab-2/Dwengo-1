@@ -5,8 +5,6 @@ import { Answer } from '../entities/questions/answer.entity.js';
 import { mapToAnswerDTO, mapToAnswerId } from '../interfaces/answer.js';
 import { QuestionRepository } from '../data/questions/question-repository.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
-import { mapToUser } from '../interfaces/user.js';
-import { Student } from '../entities/users/student.entity.js';
 import { mapToStudent } from '../interfaces/student.js';
 
 export async function getAllQuestions(id: LearningObjectIdentifier, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
@@ -81,7 +79,7 @@ export async function createQuestion(questionDTO: QuestionDTO) {
             author,
             content: questionDTO.content,
         });
-    } catch (e) {
+    } catch (_) {
         return null;
     }
 
@@ -99,7 +97,7 @@ export async function deleteQuestion(questionId: QuestionId) {
 
     try {
         await questionRepository.removeQuestionByLearningObjectAndSequenceNumber(questionId.learningObjectIdentifier, questionId.sequenceNumber);
-    } catch (e) {
+    } catch (_) {
         return null;
     }
 

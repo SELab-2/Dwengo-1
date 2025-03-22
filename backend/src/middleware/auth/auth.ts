@@ -100,7 +100,7 @@ function getAuthenticationInfo(req: AuthenticatedRequest): AuthenticationInfo | 
  * Add the AuthenticationInfo object with the information about the current authentication to the request in order
  * to avoid that the routers have to deal with the JWT token.
  */
-const addAuthenticationInfo = (req: AuthenticatedRequest, res: express.Response, next: express.NextFunction) => {
+const addAuthenticationInfo = (req: AuthenticatedRequest, _res: express.Response, next: express.NextFunction) => {
     req.auth = getAuthenticationInfo(req);
     next();
 };
@@ -115,7 +115,7 @@ export const authenticateUser = [verifyJwtToken, addAuthenticationInfo];
  */
 export const authorize =
     (accessCondition: (auth: AuthenticationInfo) => boolean) =>
-    (req: AuthenticatedRequest, res: express.Response, next: express.NextFunction): void => {
+    (req: AuthenticatedRequest, _res: express.Response, next: express.NextFunction): void => {
         if (!req.auth) {
             throw new UnauthorizedException();
         } else if (!accessCondition(req.auth)) {

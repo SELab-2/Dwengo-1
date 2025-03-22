@@ -9,21 +9,13 @@ import {
     getStudentGroups,
     getStudentSubmissions,
 } from '../services/students.js';
-import { ClassDTO } from '../interfaces/class.js';
-import { getAllAssignments } from '../services/assignments.js';
-import { getUserHandler } from './users.js';
-import { Student } from '../entities/users/student.entity.js';
 import { StudentDTO } from '../interfaces/student.js';
-import { getStudentRepository } from '../data/repositories.js';
-import { UserDTO } from '../interfaces/user.js';
 import { getLogger } from '../logging/initalize.js';
 
 // TODO: accept arguments (full, ...)
 // TODO: endpoints
 export async function getAllStudentsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
-
-    const studentRepository = getStudentRepository();
 
     const students: StudentDTO[] | string[] = full ? await getAllStudents() : await getAllStudents();
 

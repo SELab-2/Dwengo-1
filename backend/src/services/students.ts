@@ -1,13 +1,10 @@
 import { getClassRepository, getGroupRepository, getStudentRepository, getSubmissionRepository } from '../data/repositories.js';
-import { Class } from '../entities/classes/class.entity.js';
-import { Student } from '../entities/users/student.entity.js';
 import { AssignmentDTO } from '../interfaces/assignment.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToSubmissionDTO, SubmissionDTO } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
-import { UserService } from './users.js';
 import { getLogger } from '../logging/initalize.js';
 
 export async function getAllStudents(): Promise<StudentDTO[]> {

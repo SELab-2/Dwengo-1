@@ -9,7 +9,7 @@ import {
     getStudentHandler,
     getStudentSubmissionsHandler,
 } from '../controllers/students.js';
-import { getStudentGroups } from '../services/students.js';
+
 const router = express.Router();
 
 // Root endpoint used to search objects
@@ -37,7 +37,7 @@ router.get('/:id/assignments', getStudentAssignmentsHandler);
 router.get('/:id/groups', getStudentGroupsHandler);
 
 // A list of questions a user has created
-router.get('/:id/questions', (req, res) => {
+router.get('/:id/questions', (_req, res) => {
     res.json({
         questions: ['0'],
     });

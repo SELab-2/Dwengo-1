@@ -1,4 +1,3 @@
-import { GroupRepository } from '../data/assignments/group-repository.js';
 import {
     getAssignmentRepository,
     getClassRepository,

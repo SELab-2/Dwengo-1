@@ -15,22 +15,20 @@ class MarkdownProcessor extends StringProcessor {
     }
 
     override renderFn(mdText: string) {
-        let html = '';
         try {
             marked.use({ renderer: dwengoMarkedRenderer });
-            html = marked(mdText, { async: false });
-            html = this.replaceLinks(html); // Replace html image links path
+            const html = marked(mdText, { async: false });
+            return this.replaceLinks(html); // Replace html image links path
         } catch (e: any) {
             throw new ProcessingError(e.message);
         }
-        return html;
     }
 
     replaceLinks(html: string) {
         const proc = new InlineImageProcessor();
         html = html.replace(
             /<img.*?src="(.*?)".*?(alt="(.*?)")?.*?(title="(.*?)")?.*?>/g,
-            (match: string, src: string, alt: string, altText: string, title: string, titleText: string) => proc.render(src)
+            (_match: string, src: string, _alt: string, _altText: string, _title: string, _titleText: string) => proc.render(src)
         );
         return html;
     }

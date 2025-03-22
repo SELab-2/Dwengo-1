@@ -4,7 +4,7 @@ export function isValidHttpUrl(url: string): boolean {
     try {
         const parsedUrl = new URL(url, 'http://test.be');
         return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
-    } catch (e) {
+    } catch (_) {
         return false;
     }
 }

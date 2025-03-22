@@ -14,15 +14,11 @@ import {
 import { ClassDTO } from '../interfaces/class.js';
 import { StudentDTO } from '../interfaces/student.js';
 import { QuestionDTO, QuestionId } from '../interfaces/question.js';
-import { Teacher } from '../entities/users/teacher.entity.js';
 import { TeacherDTO } from '../interfaces/teacher.js';
-import { getTeacherRepository } from '../data/repositories.js';
 import { getLogger } from '../logging/initalize.js';
 
 export async function getAllTeachersHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
-
-    const teacherRepository = getTeacherRepository();
 
     const teachers: TeacherDTO[] | string[] = full ? await getAllTeachers() : await getAllTeachers();
 
