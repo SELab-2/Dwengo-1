@@ -22,11 +22,7 @@ router.get('/', (_, res: Response) => {
 });
 
 router.use('/student', studentRouter /* #swagger.tags = ['Student'] */);
-router.use('/group', groupRouter /* #swagger.tags = ['Group'] */);
-router.use('/assignment', assignmentRouter /* #swagger.tags = ['Assignment'] */);
-router.use('/submission', submissionRouter /* #swagger.tags = ['Submission'] */);
 router.use('/class', classRouter /* #swagger.tags = ['Class'] */);
-router.use('/question', questionRouter /* #swagger.tags = ['Question'] */);
 router.use('/auth', authRouter /* #swagger.tags = ['Auth'] */);
 router.use('/theme', themeRoutes /* #swagger.tags = ['Theme'] */);
 router.use('/learningPath', learningPathRoutes /* #swagger.tags = ['Learning Path'] */);
