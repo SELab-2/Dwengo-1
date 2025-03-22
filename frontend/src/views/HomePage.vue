@@ -138,7 +138,7 @@
         flex-direction: column;
         padding: 20px;
         align-items: flex-start;
-        justify-content: flex-start;
+        justify-content: center;
     }
 
     .container_right {
@@ -171,24 +171,26 @@
 
     .info {
         text-align: center;
+        padding-left: 10px;
+        padding-right: 10px;
         padding-bottom: 30px;
     }
 
     @media (max-width: 1024px) {
         .container_left {
-            width: 100%; /* Full width on tablets */
+            width: 100%;
             display: flex;
             flex-direction: column;
-            align-items: flex-start; /* Align content to the left */
+            align-items: flex-start;
             justify-content: center;
             padding: 20px;
-            position: relative; /* Ensure child elements are positioned relative to this */
+            position: relative;
         }
 
         .container_right {
             position: absolute;
-            top: 10px; /* Adjust top position to align properly */
-            right: 70px; /* Keep it in the right corner */
+            top: 10px;
+            right: 80px;
         }
     }
 </style>
