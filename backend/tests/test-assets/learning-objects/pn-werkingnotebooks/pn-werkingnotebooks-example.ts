@@ -4,14 +4,14 @@ import { DwengoContentType } from '../../../../src/services/learning-objects/pro
 import { loadTestAsset } from '../../../test-utils/load-test-asset';
 import { EducationalGoal, LearningObject, ReturnValue } from '../../../../src/entities/content/learning-object.entity';
 import { Attachment } from '../../../../src/entities/content/attachment.entity';
-import { EnvVars, getEnvVar } from '../../../../src/util/envvars';
+import { envVars, getEnvVar } from '../../../../src/util/envVars';
 
 const ASSETS_PREFIX = 'learning-objects/pn-werkingnotebooks/';
 
 const example: LearningObjectExample = {
     createLearningObject: () => {
         const learningObject = new LearningObject();
-        learningObject.hruid = `${getEnvVar(EnvVars.UserContentPrefix)}pn_werkingnotebooks`;
+        learningObject.hruid = `${getEnvVar(envVars.UserContentPrefix)}pn_werkingnotebooks`;
         learningObject.version = 3;
         learningObject.language = Language.Dutch;
         learningObject.title = 'Werken met notebooks';

@@ -1,6 +1,6 @@
 import { LoggerOptions, Options } from '@mikro-orm/core';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { EnvVars, getEnvVar, getNumericEnvVar } from './util/envvars.js';
+import { envVars, getEnvVar, getNumericEnvVar } from './util/envVars.js';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { MikroOrmLogger } from './logging/mikroOrmLogger.js';
 import { LOG_LEVEL } from './config.js';
@@ -47,7 +47,7 @@ function config(testingMode: boolean = false): Options {
     if (testingMode) {
         return {
             driver: SqliteDriver,
-            dbName: getEnvVar(EnvVars.DbName),
+            dbName: getEnvVar(envVars.DbName),
             subscribers: [new SqliteAutoincrementSubscriber()],
             entities: entities,
             // EntitiesTs: entitiesTs,
@@ -60,11 +60,11 @@ function config(testingMode: boolean = false): Options {
 
     return {
         driver: PostgreSqlDriver,
-        host: getEnvVar(EnvVars.DbHost),
-        port: getNumericEnvVar(EnvVars.DbPort),
-        dbName: getEnvVar(EnvVars.DbName),
-        user: getEnvVar(EnvVars.DbUsername),
-        password: getEnvVar(EnvVars.DbPassword),
+        host: getEnvVar(envVars.DbHost),
+        port: getNumericEnvVar(envVars.DbPort),
+        dbName: getEnvVar(envVars.DbName),
+        user: getEnvVar(envVars.DbUsername),
+        password: getEnvVar(envVars.DbPassword),
         entities: entities,
         // EntitiesTs: entitiesTs,
 

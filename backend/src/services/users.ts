@@ -24,8 +24,8 @@ export class UserService<T extends User> {
         return user ? mapToUserDTO(user) : null;
     }
 
-    async createUser(userData: UserDTO, UserClass: new () => T): Promise<T> {
-        const newUser = mapToUser(userData, new UserClass());
+    async createUser(userData: UserDTO, userClass: new () => T): Promise<T> {
+        const newUser = mapToUser(userData, new userClass());
         await this.repository.save(newUser);
         return newUser;
     }

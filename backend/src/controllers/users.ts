@@ -47,7 +47,7 @@ export async function getUserHandler<T extends User>(req: Request, res: Response
     }
 }
 
-export async function createUserHandler<T extends User>(req: Request, res: Response, service: UserService<T>, UserClass: new () => T) {
+export async function createUserHandler<T extends User>(req: Request, res: Response, service: UserService<T>, userClass: new () => T) {
     try {
         getLogger().debug({ req: req });
         const userData = req.body as UserDTO;
@@ -59,7 +59,7 @@ export async function createUserHandler<T extends User>(req: Request, res: Respo
             return;
         }
 
-        const newUser = await service.createUser(userData, UserClass);
+        const newUser = await service.createUser(userData, userClass);
         res.status(201).json(newUser);
     } catch (error) {
         getLogger().error('❌ Error creating user:', error);

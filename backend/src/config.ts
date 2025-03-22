@@ -1,8 +1,8 @@
-import { EnvVars, getEnvVar } from './util/envvars.js';
+import { envVars, getEnvVar } from './util/envVars.js';
 
 // API
-export const DWENGO_API_BASE = getEnvVar(EnvVars.LearningContentRepoApiBaseUrl);
-export const FALLBACK_LANG = getEnvVar(EnvVars.FallbackLanguage);
+export const DWENGO_API_BASE = getEnvVar(envVars.LearningContentRepoApiBaseUrl);
+export const FALLBACK_LANG = getEnvVar(envVars.FallbackLanguage);
 
 // Logging
 export const LOG_LEVEL: string = 'development' === process.env.NODE_ENV ? 'debug' : 'info';

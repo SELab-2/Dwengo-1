@@ -28,6 +28,27 @@ export default [
             reportUnusedInlineConfigs: 'error',
         },
         rules: {
+            '@typescript-eslint/naming-convention': [
+                'warn',
+                { // Enforce that all variables, functions and properties are camelCase
+                    selector: 'variableLike',
+                    format: ['camelCase'],
+                    leadingUnderscore: 'allow'
+                },
+                {
+                    selector: 'variable',
+                    modifiers: ['const'],
+                    format: ['camelCase', 'UPPER_CASE'],
+                    trailingUnderscore: 'allow'
+                },
+                { // Enforce that private members are prefixed with an underscore
+                    selector: 'memberLike',
+                    modifiers: ['private'],
+                    format: ['camelCase'],
+                    leadingUnderscore: 'allow',
+                }
+            ],
+
             'no-unused-expressions': 'off',
             '@typescript-eslint/no-unused-expressions': 'warn',
             'no-unused-vars': 'off',
@@ -57,7 +78,6 @@ export default [
 
             'arrow-body-style': ['warn', 'as-needed'],
             'block-scoped-var': 'warn',
-            camelcase: 'warn',
             'capitalized-comments': 'warn',
             'consistent-return': 'warn',
             'consistent-this': 'error',

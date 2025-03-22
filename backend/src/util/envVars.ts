@@ -7,7 +7,7 @@ const CORS_PREFIX = PREFIX + 'CORS_';
 
 type EnvVar = { key: string; required?: boolean; defaultValue?: any };
 
-export const EnvVars: { [key: string]: EnvVar } = {
+export const envVars: { [key: string]: EnvVar } = {
     Port: { key: PREFIX + 'PORT', defaultValue: 3000 },
     DbHost: { key: DB_PREFIX + 'HOST', required: true },
     DbPort: { key: DB_PREFIX + 'PORT', defaultValue: 5432 },

@@ -1,11 +1,11 @@
 import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../../interfaces/learning-content.js';
 import dwengoApiLearningObjectProvider from './dwengo-api-learning-object-provider.js';
 import { LearningObjectProvider } from './learning-object-provider.js';
-import { EnvVars, getEnvVar } from '../../util/envvars.js';
+import { envVars, getEnvVar } from '../../util/envVars.js';
 import databaseLearningObjectProvider from './database-learning-object-provider.js';
 
 function getProvider(id: LearningObjectIdentifier): LearningObjectProvider {
-    if (id.hruid.startsWith(getEnvVar(EnvVars.UserContentPrefix))) {
+    if (id.hruid.startsWith(getEnvVar(envVars.UserContentPrefix))) {
         return databaseLearningObjectProvider;
     }
     return dwengoApiLearningObjectProvider;

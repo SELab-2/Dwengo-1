@@ -9,7 +9,7 @@ export class Logger extends WinstonLogger {
     }
 }
 
-const Labels: LokiLabels = {
+const lokiLabels: LokiLabels = {
     source: 'Dwengo-Backend',
     service: 'API',
     host: 'localhost',
@@ -24,7 +24,7 @@ function initializeLogger(): Logger {
 
     const lokiTransport: LokiTransport = new LokiTransport({
         host: LOKI_HOST,
-        labels: Labels,
+        labels: lokiLabels,
         level: LOG_LEVEL,
         json: true,
         format: format.combine(format.timestamp(), format.json()),

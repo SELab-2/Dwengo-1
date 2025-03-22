@@ -22,8 +22,8 @@ export function mapToTeacherDTO(teacher: Teacher): TeacherDTO {
     };
 }
 
-export function mapToTeacher(TeacherData: TeacherDTO): Teacher {
-    const teacher = new Teacher(TeacherData.username, TeacherData.firstName, TeacherData.lastName);
+export function mapToTeacher(teacherDTO: TeacherDTO): Teacher {
+    const teacher = new Teacher(teacherDTO.username, teacherDTO.firstName, teacherDTO.lastName);
 
     return teacher;
 }

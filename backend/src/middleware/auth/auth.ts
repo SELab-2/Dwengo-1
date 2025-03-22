@@ -1,4 +1,4 @@
-import { EnvVars, getEnvVar } from '../../util/envvars.js';
+import { envVars, getEnvVar } from '../../util/envVars.js';
 import { expressjwt } from 'express-jwt';
 import { JwtPayload } from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
@@ -32,12 +32,12 @@ function createJwksClient(uri: string): jwksClient.JwksClient {
 
 const idpConfigs = {
     student: {
-        issuer: getEnvVar(EnvVars.IdpStudentUrl),
-        jwksClient: createJwksClient(getEnvVar(EnvVars.IdpStudentJwksEndpoint)),
+        issuer: getEnvVar(envVars.IdpStudentUrl),
+        jwksClient: createJwksClient(getEnvVar(envVars.IdpStudentJwksEndpoint)),
     },
     teacher: {
-        issuer: getEnvVar(EnvVars.IdpTeacherUrl),
-        jwksClient: createJwksClient(getEnvVar(EnvVars.IdpTeacherJwksEndpoint)),
+        issuer: getEnvVar(envVars.IdpTeacherUrl),
+        jwksClient: createJwksClient(getEnvVar(envVars.IdpTeacherJwksEndpoint)),
     },
 };
 
@@ -63,7 +63,7 @@ const verifyJwtToken = expressjwt({
         }
         return signingKey.getPublicKey();
     },
-    audience: getEnvVar(EnvVars.IdpAudience),
+    audience: getEnvVar(envVars.IdpAudience),
     algorithms: [JWT_ALGORITHM],
     credentialsRequired: false,
     requestProperty: REQUEST_PROPERTY_FOR_JWT_PAYLOAD,

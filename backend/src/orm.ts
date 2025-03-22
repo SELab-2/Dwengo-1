@@ -1,6 +1,6 @@
 import { EntityManager, MikroORM } from '@mikro-orm/core';
 import config from './mikro-orm.config.js';
-import { EnvVars, getEnvVar } from './util/envvars.js';
+import { envVars, getEnvVar } from './util/envVars.js';
 import { getLogger, Logger } from './logging/initalize.js';
 
 let orm: MikroORM | undefined;
@@ -12,7 +12,7 @@ export async function initORM(testingMode: boolean = false) {
 
     orm = await MikroORM.init(config(testingMode));
     // Update the database scheme if necessary and enabled.
-    if (getEnvVar(EnvVars.DbUpdate)) {
+    if (getEnvVar(envVars.DbUpdate)) {
         await orm.schema.updateSchema();
     } else {
         const diff = await orm.schema.getUpdateSchemaSQL();
