@@ -27,7 +27,7 @@ export async function createSubmission(submissionDTO: SubmissionDTO): Promise<Su
     const submission = mapToSubmission(submissionDTO);
 
     try {
-        const newSubmission = await submissionRepository.create(submission);
+        const newSubmission = submissionRepository.create(submission);
         await submissionRepository.save(newSubmission);
     } catch (_) {
         return null;

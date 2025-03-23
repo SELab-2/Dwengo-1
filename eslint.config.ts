@@ -33,6 +33,7 @@ export default [
         },
         rules: {
             '@typescript-eslint/array-type': 'warn',
+            '@typescript-eslint/await-thenable': 'error',
 
             'consistent-return': 'off',
             '@typescript-eslint/consistent-return': 'off',
