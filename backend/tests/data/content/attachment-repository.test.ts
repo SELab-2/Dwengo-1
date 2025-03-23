@@ -12,7 +12,7 @@ const NEWER_TEST_SUFFIX = 'nEweR';
 
 async function createTestLearningObjects(learningObjectRepo: LearningObjectRepository): Promise<{
     older: LearningObject;
-    newer: LearningObject
+    newer: LearningObject;
 }> {
     const olderExample = example.createLearningObject();
     await learningObjectRepo.save(olderExample);

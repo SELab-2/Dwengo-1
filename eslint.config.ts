@@ -38,15 +38,12 @@ export default [
             '@typescript-eslint/adjacent-overload-signatures': 'warn',
             '@typescript-eslint/array-type': 'warn',
             '@typescript-eslint/await-thenable': 'error',
-            '@typescript-eslint/ban-ts-comment': [
-                'error',
-                { minimumDescriptionLength: 10 },
-            ],
+            '@typescript-eslint/ban-ts-comment': ['error', { minimumDescriptionLength: 10 }],
             '@typescript-eslint/ban-tslint-comment': 'error',
-            'camelcase': 'off',
+            camelcase: 'off',
             '@typescript-eslint/class-literal-property-style': 'warn',
             'class-methods-use-this': 'off',
-            '@typescript-eslint/class-methods-use-this': [ 'error', { ignoreOverrideMethods: true } ],
+            '@typescript-eslint/class-methods-use-this': ['error', { ignoreOverrideMethods: true }],
             '@typescript-eslint/consistent-generic-constructors': 'warn',
             '@typescript-eslint/consistent-indexed-object-style': 'error',
             'consistent-return': 'off',
@@ -65,28 +62,30 @@ export default [
             'init-declarations': 'off',
             '@typescript-eslint/init-declarations': 'off',
             'max-params': 'off',
-            '@typescript-eslint/max-params': ['error', { 'max': 6 }],
+            '@typescript-eslint/max-params': ['error', { max: 6 }],
             '@typescript-eslint/member-ordering': 'warn',
             '@typescript-eslint/method-signature-style': 'off', // Don't care about TypeScript strict mode.
             '@typescript-eslint/naming-convention': [
                 'warn',
-                { // Enforce that all variables, functions and properties are camelCase
+                {
+                    // Enforce that all variables, functions and properties are camelCase
                     selector: 'variableLike',
                     format: ['camelCase'],
-                    leadingUnderscore: 'allow'
+                    leadingUnderscore: 'allow',
                 },
                 {
                     selector: 'variable',
                     modifiers: ['const'],
                     format: ['camelCase', 'UPPER_CASE'],
-                    trailingUnderscore: 'allow'
+                    trailingUnderscore: 'allow',
                 },
-                { // Enforce that private members are prefixed with an underscore
+                {
+                    // Enforce that private members are prefixed with an underscore
                     selector: 'memberLike',
                     modifiers: ['private'],
                     format: ['camelCase'],
                     leadingUnderscore: 'allow',
-                }
+                },
             ],
             'no-array-constructor': 'off',
             '@typescript-eslint/no-array-constructor': 'error',
@@ -143,13 +142,13 @@ export default [
             '@typescript-eslint/no-unused-vars': [
                 'warn',
                 {
-                    'args': 'all',
-                    'argsIgnorePattern': '^_',
-                    'caughtErrors': 'all',
-                    'caughtErrorsIgnorePattern': '^_',
-                    'varsIgnorePattern': '^_',
-                    'ignoreRestSiblings': true,
-                }
+                    args: 'all',
+                    argsIgnorePattern: '^_',
+                    caughtErrors: 'all',
+                    caughtErrorsIgnorePattern: '^_',
+                    varsIgnorePattern: '^_',
+                    ignoreRestSiblings: true,
+                },
             ],
             'no-use-before-define': 'off',
             '@typescript-eslint/no-use-before-define': 'off',
