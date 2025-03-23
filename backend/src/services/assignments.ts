@@ -21,7 +21,7 @@ export async function getAllAssignments(classid: string, full: boolean): Promise
     return assignments.map(mapToAssignmentDTOId);
 }
 
-export async function createAssignment(classid: string, assignmentData: AssignmentDTO): Promise<Assignment | null> {
+export async function createAssignment(classid: string, assignmentData: AssignmentDTO): Promise<AssignmentDTO | null> {
     const classRepository = getClassRepository();
     const cls = await classRepository.findById(classid);
 
@@ -36,7 +36,7 @@ export async function createAssignment(classid: string, assignmentData: Assignme
         const newAssignment = assignmentRepository.create(assignment);
         await assignmentRepository.save(newAssignment);
 
-        return newAssignment;
+        return mapToAssignmentDTO(newAssignment);
     } catch (e) {
         return null;
     }

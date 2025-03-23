@@ -94,6 +94,11 @@ export async function getTeacherClassHandler(req: Request, res: Response): Promi
 
     const classes = await getClassesByTeacher(username, full);
 
+    if (!classes) {
+        res.status(404).json({ error: 'Teacher not found' });
+        return;
+    }
+
     res.json({ classes: classes });
 }
 
@@ -108,6 +113,11 @@ export async function getTeacherStudentHandler(req: Request, res: Response): Pro
 
     const students = await getStudentsByTeacher(username, full);
 
+    if (!students) {
+        res.status(404).json({ error: 'Teacher not found' });
+        return;
+    }
+
     res.json({ students: students });
 }
 
@@ -121,6 +131,11 @@ export async function getTeacherQuestionHandler(req: Request, res: Response): Pr
     }
 
     const questions = await getQuestionsByTeacher(username, full);
+
+    if (!questions) {
+        res.status(404).json({ error: 'Teacher not found' });
+        return;
+    }
 
     res.json({ questions: questions });
 }

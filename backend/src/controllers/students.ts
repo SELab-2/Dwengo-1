@@ -58,6 +58,14 @@ export async function createStudentHandler(req: Request, res: Response) {
     }
 
     const newUser = await createStudent(userData);
+
+    if (!newUser) {
+        res.status(500).json({
+            error: 'Something went wrong while creating student'
+        });
+        return;
+    }
+
     res.status(201).json(newUser);
 }
 

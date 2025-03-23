@@ -103,5 +103,5 @@ export async function deleteQuestion(questionId: QuestionId) {
         return null;
     }
 
-    return question;
+    return mapToQuestionDTO(question);
 }

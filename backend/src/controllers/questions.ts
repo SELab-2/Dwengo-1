@@ -76,10 +76,10 @@ export async function getQuestionAnswersHandler(req: Request, res: Response): Pr
         return;
     }
 
-    const answers = getAnswersByQuestion(questionId, full);
+    const answers = await getAnswersByQuestion(questionId, full);
 
     if (!answers) {
-        res.status(404).json({ error: `Questions not found.` });
+        res.status(404).json({ error: `Questions not found` });
     } else {
         res.json({ answers: answers });
     }
@@ -96,7 +96,7 @@ export async function createQuestionHandler(req: Request, res: Response): Promis
     const question = await createQuestion(questionDTO);
 
     if (!question) {
-        res.status(400).json({ error: 'Could not add question' });
+        res.status(400).json({ error: 'Could not create question' });
     } else {
         res.json(question);
     }

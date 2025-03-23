@@ -28,6 +28,11 @@ export async function getGroupHandler(req: Request<GroupParams>, res: Response):
 
     const group = await getGroup(classId, assignmentId, groupId, full);
 
+    if (!group) {
+        res.status(404).json({ error: 'Group not found' });
+        return;
+    }
+
     res.json(group);
 }
 
