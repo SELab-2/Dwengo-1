@@ -15,6 +15,29 @@
     "researchBased": "Research-based",
     "inclusive": "Inclusive",
     "sociallyRelevant": "Socially relevant",
-    "login": "login",
-    "translate": "translate"
+    "login": "log in",
+    "translate": "translate",
+    "themes": "Themes",
+    "choose-theme": "Select a theme",
+    "choose-age": "Select age",
+    "theme-options": {
+        "all": "All themes",
+        "culture": "Culture",
+        "electricity-and-mechanics": "Electricity and mechanics",
+        "nature-and-climate": "Nature and climate",
+        "agriculture": "Agriculture",
+        "society": "Society",
+        "math": "Math",
+        "technology": "Technology",
+        "algorithms": "Algorithms"
+    },
+    "age-options": {
+        "all": "All ages",
+        "primary-school": "Primary school",
+        "lower-secondary": "12-14 years old",
+        "upper-secondary": "14-16 years old",
+        "high-school": "16-18 years old",
+        "older": "18 and older"
+    },
+    "read-more": "Read more"
 }

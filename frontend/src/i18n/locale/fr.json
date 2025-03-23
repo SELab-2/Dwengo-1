@@ -16,5 +16,28 @@
     "researchBased": "Fondé sur la recherche",
     "inclusive": "Inclusif",
     "sociallyRelevant": "Socialement pertinent",
-    "translate": "traduire"
+    "translate": "traduire",
+    "themes": "Thèmes",
+    "choose-theme": "Choisis un thème",
+    "choose-age": "Choisis un âge",
+    "theme-options": {
+        "all": "Tous les thèmes",
+        "culture": "Culture",
+        "electricity-and-mechanics": "Electricité et méchanique",
+        "nature-and-climate": "Nature et climat",
+        "agriculture": "Agriculture",
+        "society": "Société",
+        "math": "Math",
+        "technology": "Technologie",
+        "algorithms": "Algorithmes"
+    },
+    "age-options": {
+        "all": "Tous les âges",
+        "primary-school": "Ecole primaire",
+        "lower-secondary": "12-14 ans",
+        "upper-secondary": "14-16 ans",
+        "high-school": "16-18 ans",
+        "older": "18 et plus"
+    },
+    "read-more": "En savoir plus"
 }
