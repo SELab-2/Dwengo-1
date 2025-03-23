@@ -1,6 +1,6 @@
 import apiClient from "@/services/api-client.ts";
 import type { FrontendAuthConfig } from "@/services/auth/auth.d.ts";
-import type {UserManagerSettings} from "oidc-client-ts";
+import type { UserManagerSettings } from "oidc-client-ts";
 
 /**
  * Fetch the authentication configuration from the backend.

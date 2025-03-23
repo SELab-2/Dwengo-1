@@ -19,4 +19,7 @@ export interface FrontendIdpConfig {
 }
 
 export type Role = "student" | "teacher";
-export interface UserManagersForRoles { student: UserManager; teacher: UserManager }
+export interface UserManagersForRoles {
+    student: UserManager;
+    teacher: UserManager;
+}

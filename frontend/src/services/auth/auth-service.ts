@@ -80,15 +80,14 @@ async function handleLoginCallback(): Promise<void> {
 async function renewToken(): Promise<User | null> {
     const activeRole = authStorage.getActiveRole();
     if (!activeRole) {
-        console.log("Can't renew the token: Not logged in!");
+        // FIXME console.log("Can't renew the token: Not logged in!");
         await initiateLogin();
         return null;
     }
     try {
         return await (await getUserManagers())[activeRole].signinSilent();
-    } catch (error) {
-        console.log("Can't renew the token:");
-        console.log(error);
+    } catch (_error) {
+        // FIXME console.log("Can't renew the token: " + error);
         await initiateLogin();
     }
     return null;
@@ -123,7 +122,7 @@ apiClient.interceptors.response.use(
     async (error: AxiosError<{ message?: string }>) => {
         if (error.response?.status === 401) {
             if (error.response.data.message === "token_expired") {
-                console.log("Access token expired, trying to refresh...");
+                // FIXME console.log("Access token expired, trying to refresh...");
                 await renewToken();
                 return apiClient(error.config!); // Retry the request
             } // Apparently, the user got a 401 because he was not logged in yet at all. Redirect him to login.

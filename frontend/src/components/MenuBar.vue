@@ -32,7 +32,6 @@
     function changeLanguage(langCode: string): void {
         locale.value = langCode;
         localStorage.setItem("user-lang", langCode);
-        console.log(langCode);
     }
 </script>
 
