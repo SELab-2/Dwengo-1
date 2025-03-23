@@ -5,7 +5,7 @@ import { HttpException } from './httpException.js';
  */
 
 export class BadRequestException extends HttpException {
-    constructor(message: string = 'Bad Request') {
+    constructor(message = 'Bad Request') {
         super(400, message);
     }
 }

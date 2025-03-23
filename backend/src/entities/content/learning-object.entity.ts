@@ -20,7 +20,7 @@ export class LearningObject {
     language!: Language;
 
     @PrimaryKey({ type: 'number' })
-    version: number = 1;
+    version = 1;
 
     @Property({ type: 'uuid', unique: true })
     uuid = v4();
@@ -46,7 +46,7 @@ export class LearningObject {
     targetAges?: number[] = [];
 
     @Property({ type: 'bool' })
-    teacherExclusive: boolean = false;
+    teacherExclusive = false;
 
     @Property({ type: 'array' })
     skosConcepts: string[] = [];
@@ -58,10 +58,10 @@ export class LearningObject {
     educationalGoals: EducationalGoal[] = [];
 
     @Property({ type: 'string' })
-    copyright: string = '';
+    copyright = '';
 
     @Property({ type: 'string' })
-    license: string = '';
+    license = '';
 
     @Property({ type: 'smallint', nullable: true })
     difficulty?: number;
@@ -75,7 +75,7 @@ export class LearningObject {
     returnValue!: ReturnValue;
 
     @Property({ type: 'bool' })
-    available: boolean = true;
+    available = true;
 
     @Property({ type: 'string', nullable: true })
     contentLocation?: string;

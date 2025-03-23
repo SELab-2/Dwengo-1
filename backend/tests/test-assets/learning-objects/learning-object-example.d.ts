@@ -3,6 +3,6 @@ import { Attachment } from '../../../src/entities/content/attachment.entity';
 
 interface LearningObjectExample {
     createLearningObject: () => LearningObject;
-    createAttachment: { [key: string]: (owner: LearningObject) => Attachment };
+    createAttachment: Record<string, (owner: LearningObject) => Attachment>;
     getHTMLRendering: () => string;
 }

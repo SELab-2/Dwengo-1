@@ -4,7 +4,7 @@ import { envVars, getEnvVar } from './util/envVars.js';
 import { getLogger, Logger } from './logging/initalize.js';
 
 let orm: MikroORM | undefined;
-export async function initORM(testingMode: boolean = false): Promise<void> {
+export async function initORM(testingMode = false): Promise<void> {
     const logger: Logger = getLogger();
 
     logger.info('Initializing ORM');

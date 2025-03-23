@@ -82,6 +82,10 @@ export default [
             // 'no-empty-function': 'off',
             '@typescript-eslint/no-empty-function': 'error',
 
+            '@typescript-eslint/no-for-in-array': 'error',
+
+            '@typescript-eslint/no-inferrable-types': 'warn',
+
             'no-loop-func': 'off',
             '@typescript-eslint/no-loop-func': 'error',
 

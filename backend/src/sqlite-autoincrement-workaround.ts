@@ -14,7 +14,7 @@ import { EntityProperty, EventArgs, EventSubscriber } from '@mikro-orm/core';
  *   the sequence number will not be filled in.
  */
 export class SqliteAutoincrementSubscriber implements EventSubscriber {
-    private sequenceNumbersForEntityType: Map<string, number> = new Map();
+    private sequenceNumbersForEntityType = new Map<string, number>();
 
     /**
      * When an entity with an autoincremented property which is part of the composite private key is created,

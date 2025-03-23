@@ -43,7 +43,7 @@ const entities = [
     Question,
 ];
 
-function config(testingMode: boolean = false): Options {
+function config(testingMode = false): Options {
     if (testingMode) {
         return {
             driver: SqliteDriver,

@@ -11,7 +11,7 @@ interface EnvVar {
     defaultValue?: number | string | boolean;
 }
 
-export const envVars: { [key: string]: EnvVar } = {
+export const envVars: Record<string, EnvVar> = {
     Port: { key: PREFIX + 'PORT', defaultValue: 3000 },
     DbHost: { key: DB_PREFIX + 'HOST', required: true },
     DbPort: { key: DB_PREFIX + 'PORT', defaultValue: 5432 },
