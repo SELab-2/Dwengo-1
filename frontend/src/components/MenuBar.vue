@@ -225,25 +225,6 @@
             </div>
             <div class="right">
                 <li>
-                    <!-- <v-btn
-                        @click="performLogout"
-                        to="/login"
-                        style="background-color: transparent; box-shadow: none !important"
-                    >
-                        <v-tooltip
-                            :text="t('logout')"
-                            location="bottom"
-                        >
-                            <template v-slot:activator="{ props }">
-                                <v-icon
-                                    v-bind="props"
-                                    icon="mdi-logout"
-                                    size="x-large"
-                                    color="#0e6942"
-                                ></v-icon>
-                            </template>
-                        </v-tooltip>
-                    </v-btn> -->
                     <v-dialog max-width="500">
                         <template v-slot:activator="{ props: activatorProps }">
                             <v-btn
