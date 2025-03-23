@@ -35,6 +35,9 @@ export default [
             '@typescript-eslint/array-type': 'warn',
             '@typescript-eslint/await-thenable': 'error',
 
+            'class-methods-use-this': 'off',
+            '@typescript-eslint/class-methods-use-this': [ 'error', { ignoreOverrideMethods: true } ],
+
             'consistent-return': 'off',
             '@typescript-eslint/consistent-return': 'off',
             '@typescript-eslint/consistent-type-assertions': 'error',

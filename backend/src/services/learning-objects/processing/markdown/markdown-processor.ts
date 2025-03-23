@@ -15,11 +15,20 @@ class MarkdownProcessor extends StringProcessor {
         super(DwengoContentType.TEXT_MARKDOWN);
     }
 
+    static replaceLinks(html: string): string {
+        const proc = new InlineImageProcessor();
+        html = html.replace(
+            /<img.*?src="(.*?)".*?(alt="(.*?)")?.*?(title="(.*?)")?.*?>/g,
+            (_match: string, src: string, _alt: string, _altText: string, _title: string, _titleText: string) => proc.render(src)
+        );
+        return html;
+    }
+
     override renderFn(mdText: string): string {
         try {
             marked.use({ renderer: dwengoMarkedRenderer });
             const html = marked(mdText, { async: false });
-            return this.replaceLinks(html); // Replace html image links path
+            return MarkdownProcessor.replaceLinks(html); // Replace html image links path
         } catch (e: unknown) {
             if (e instanceof YAMLException) {
                 throw new ProcessingError(e.message);
@@ -27,15 +36,6 @@ class MarkdownProcessor extends StringProcessor {
 
             throw new ProcessingError('Unknown error while processing markdown: ' + e);
         }
-    }
-
-    replaceLinks(html: string): string {
-        const proc = new InlineImageProcessor();
-        html = html.replace(
-            /<img.*?src="(.*?)".*?(alt="(.*?)")?.*?(title="(.*?)")?.*?>/g,
-            (_match: string, src: string, _alt: string, _altText: string, _title: string, _titleText: string) => proc.render(src)
-        );
-        return html;
     }
 }
 

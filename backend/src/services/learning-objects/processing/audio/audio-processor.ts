@@ -14,7 +14,7 @@ class AudioProcessor extends StringProcessor {
         super(DwengoContentType.AUDIO_MPEG);
     }
 
-    protected renderFn(audioUrl: string): string {
+    override renderFn(audioUrl: string): string {
         return DOMPurify.sanitize(`<audio controls>
             <source src="${audioUrl}" type=${type}>
             Your browser does not support the audio element.
