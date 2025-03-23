@@ -20,8 +20,8 @@ function createRequestObject(classid: string, assignmentid: string, groupNumber:
     return {
         params: { 
             classid: classid,
-            assignmentid: assignmentid, // should not exist
-            groupid: groupNumber, // should not exist
+            assignmentid: assignmentid,
+            groupid: groupNumber,
         },
         query: {},
     };
