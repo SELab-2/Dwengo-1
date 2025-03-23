@@ -11,6 +11,8 @@ on:
     pull_request:
         branches:
             - dev
+        types: ["synchronize", "ready_for_review", "opened", "reopened"]
+
 
 # Down scope as necessary via https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
 permissions:
@@ -20,6 +22,7 @@ permissions:
 jobs:
     run-linters:
         name: Run linters
+        if: '! github.event.pull_request.draft'
         runs-on: [self-hosted, Linux, X64]
 
         steps:
