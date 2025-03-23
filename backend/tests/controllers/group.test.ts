@@ -2,19 +2,6 @@ import { setupTestApp } from '../setup-tests.js';
 import { describe, it, expect, beforeAll, beforeEach, vi, Mock } from 'vitest';
 import { Request, Response } from 'express';
 import { createGroupHandler, getAllGroupsHandler, getGroupHandler, getGroupSubmissionsHandler } from '../../src/controllers/groups.js';
-import { G } from 'vitest/dist/chunks/reporters.66aFHiyX.js';
-
-async function test404<T>(
-    req: Partial<Request<T>> , 
-    res: Partial<Response>, 
-    handler: (req: Request<T>, res: Response) => Promise<void>, 
-    expectedMessage: string
-) {
-    await handler(req as Request<T>, res as Response);
-
-    expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ error: expectedMessage });
-}
 
 function createRequestObject(classid: string, assignmentid: string, groupNumber: string) {
     return {

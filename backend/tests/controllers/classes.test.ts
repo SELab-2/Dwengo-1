@@ -4,11 +4,6 @@ import { createClassHandler, getAllClassesHandler, getClassHandler, getClassStud
 import { Request, Response } from 'express';
 import { getAllClasses } from '../../src/services/class.js';
 
-async function fetchClass(id: string) {
-    const data = await fetch(`localhost:3000/class/${id}`);
-    return data;
-}
-
 describe('Class controllers', () => {
     let req: Partial<Request>;
     let res: Partial<Response>;
