@@ -2,16 +2,16 @@
     import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
     import auth from "@/services/auth/auth-service.ts";
 
-    function loginAsStudent(): void {
-        auth.loginAs("student");
+    async function loginAsStudent(): Promise<void> {
+        await auth.loginAs("student");
     }
 
-    function loginAsTeacher(): void {
-        auth.loginAs("teacher");
+    async function loginAsTeacher(): Promise<void> {
+        await auth.loginAs("teacher");
     }
 
-    function performLogout(): void {
-        auth.logout();
+    async function performLogout(): Promise<void> {
+        await auth.logout();
     }
 </script>
 

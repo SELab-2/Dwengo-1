@@ -10,9 +10,12 @@ import { LearningObjectIdentifier } from '../../../src/entities/content/learning
 
 const NEWER_TEST_SUFFIX = 'nEweR';
 
-function createTestLearningObjects(learningObjectRepo: LearningObjectRepository): { older: LearningObject; newer: LearningObject } {
+async function createTestLearningObjects(learningObjectRepo: LearningObjectRepository): Promise<{
+    older: LearningObject;
+    newer: LearningObject
+}> {
     const olderExample = example.createLearningObject();
-    learningObjectRepo.save(olderExample);
+    await learningObjectRepo.save(olderExample);
 
     const newerExample = example.createLearningObject();
     newerExample.title = 'Newer example';
@@ -32,23 +35,21 @@ describe('AttachmentRepository', () => {
     beforeAll(async () => {
         await setupTestApp();
         attachmentRepo = getAttachmentRepository();
-        exampleLearningObjects = createTestLearningObjects(getLearningObjectRepository());
+        exampleLearningObjects = await createTestLearningObjects(getLearningObjectRepository());
     });
 
-    it('can add attachments to learning objects without throwing an error', () => {
+    it('can add attachments to learning objects without throwing an error', async () => {
         attachmentsOlderLearningObject = Object.values(example.createAttachment).map((fn) => fn(exampleLearningObjects.older));
 
-        for (const attachment of attachmentsOlderLearningObject) {
-            attachmentRepo.save(attachment);
-        }
+        await Promise.all(attachmentsOlderLearningObject.map(async (attachment) => attachmentRepo.save(attachment)));
     });
 
     let attachmentOnlyNewer: Attachment;
-    it('allows us to add attachments with the same name to a different learning object without throwing an error', () => {
+    it('allows us to add attachments with the same name to a different learning object without throwing an error', async () => {
         attachmentOnlyNewer = Object.values(example.createAttachment)[0](exampleLearningObjects.newer);
         attachmentOnlyNewer.content.write(NEWER_TEST_SUFFIX);
 
-        attachmentRepo.save(attachmentOnlyNewer);
+        await attachmentRepo.save(attachmentOnlyNewer);
     });
 
     let olderLearningObjectId: LearningObjectIdentifier;

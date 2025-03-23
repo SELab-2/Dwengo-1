@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import auth from "@/services/auth/auth-service.ts";
-    auth.loadUser();
+    await auth.loadUser();
 </script>
 
 <template>

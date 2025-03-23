@@ -34,8 +34,8 @@ let entityManager: EntityManager | undefined;
 /**
  * Execute all the database operations within the function f in a single transaction.
  */
-export function transactional<T>(f: () => Promise<T>): void {
-    entityManager?.transactional(f);
+export async function transactional<T>(f: () => Promise<T>): Promise<void> {
+    await entityManager?.transactional(f);
 }
 
 function repositoryGetter<T extends AnyEntity, R extends EntityRepository<T>>(entity: EntityName<T>): () => R {
