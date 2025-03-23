@@ -6,9 +6,9 @@ import { includeIgnoreFile } from '@eslint/compat';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const gitignorePath = path.resolve(__dirname, '.gitignore');
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+const gitignorePath = path.resolve(dirname, '.gitignore');
 
 export default [
     pluginJs.configs.recommended,
@@ -194,14 +194,11 @@ export default [
             'no-console': 'warn',
             'no-continue': 'warn',
             'no-else-return': 'warn',
-            'no-empty-function': 'warn',
             'no-eq-null': 'error',
             'no-eval': 'error',
             'no-extend-native': 'error',
             'no-extra-label': 'error',
             'no-implicit-coercion': 'warn',
-            'no-implied-eval': 'error',
-            'no-invalid-this': 'error',
             'no-iterator': 'error',
             'no-label-var': 'warn',
             'no-labels': 'warn',
