@@ -1,13 +1,9 @@
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { ClassJoinRequest, ClassJoinRequestStatus } from '../../../src/entities/classes/class-join-request.entity';
 import { Student } from '../../../src/entities/users/student.entity';
 import { Class } from '../../../src/entities/classes/class.entity';
 
-export function makeTestClassJoinRequests(
-    em: EntityManager<IDatabaseDriver<Connection>>,
-    students: Array<Student>,
-    classes: Array<Class>
-): Array<ClassJoinRequest> {
+export function makeTestClassJoinRequests(em: EntityManager, students: Array<Student>, classes: Array<Class>): Array<ClassJoinRequest> {
     const classJoinRequest01 = em.create(ClassJoinRequest, {
         requester: students[4],
         class: classes[1],

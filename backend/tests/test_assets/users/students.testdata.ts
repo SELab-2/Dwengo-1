@@ -1,7 +1,7 @@
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { Student } from '../../../src/entities/users/student.entity';
 
-export function makeTestStudents(em: EntityManager<IDatabaseDriver<Connection>>): Array<Student> {
+export function makeTestStudents(em: EntityManager): Array<Student> {
     const student01 = em.create(Student, {
         username: 'Noordkaap',
         firstName: 'Stijn',

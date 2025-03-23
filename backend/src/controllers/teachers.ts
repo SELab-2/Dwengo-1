@@ -85,7 +85,7 @@ export async function deleteTeacherHandler(req: Request, res: Response): Promise
 
 export async function getTeacherClassHandler(req: Request, res: Response): Promise<void> {
     try {
-        const username = req.params.username as string;
+        const username = req.params.username;
         const full = req.query.full === 'true';
 
         if (!username) {
@@ -104,7 +104,7 @@ export async function getTeacherClassHandler(req: Request, res: Response): Promi
 
 export async function getTeacherStudentHandler(req: Request, res: Response): Promise<void> {
     try {
-        const username = req.params.username as string;
+        const username = req.params.username;
         const full = req.query.full === 'true';
 
         if (!username) {
@@ -123,7 +123,7 @@ export async function getTeacherStudentHandler(req: Request, res: Response): Pro
 
 export async function getTeacherQuestionHandler(req: Request, res: Response): Promise<void> {
     try {
-        const username = req.params.username as string;
+        const username = req.params.username;
         const full = req.query.full === 'true';
 
         if (!username) {

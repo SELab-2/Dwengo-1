@@ -13,7 +13,7 @@ function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIde
         throw new BadRequestException('HRUID is required.');
     }
     return {
-        hruid: req.params.hruid as string,
+        hruid: req.params.hruid,
         language: (req.query.language || getEnvVar(envVars.FallbackLanguage)) as Language,
         version: parseInt(req.query.version as string),
     };
@@ -24,7 +24,7 @@ function getLearningPathIdentifierFromRequest(req: Request): LearningPathIdentif
         throw new BadRequestException('HRUID is required.');
     }
     return {
-        hruid: req.params.hruid as string,
+        hruid: req.params.hruid,
         language: (req.query.language as Language) || FALLBACK_LANG,
     };
 }

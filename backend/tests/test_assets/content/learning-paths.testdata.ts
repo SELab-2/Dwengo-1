@@ -1,10 +1,10 @@
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
 import { Language } from '../../../src/entities/content/language';
 import { LearningPathTransition } from '../../../src/entities/content/learning-path-transition.entity';
 import { LearningPathNode } from '../../../src/entities/content/learning-path-node.entity';
 
-export function makeTestLearningPaths(em: EntityManager<IDatabaseDriver<Connection>>): Array<LearningPath> {
+export function makeTestLearningPaths(em: EntityManager): Array<LearningPath> {
     const learningPathNode01: LearningPathNode = new LearningPathNode();
     const learningPathNode02: LearningPathNode = new LearningPathNode();
     const learningPathNode03: LearningPathNode = new LearningPathNode();

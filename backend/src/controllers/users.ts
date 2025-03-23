@@ -24,7 +24,7 @@ export async function getAllUsersHandler<T extends User>(req: Request, res: Resp
 
 export async function getUserHandler<T extends User>(req: Request, res: Response, service: UserService<T>): Promise<void> {
     try {
-        const username = req.params.username as string;
+        const username = req.params.username;
 
         if (!username) {
             res.status(400).json({ error: 'Missing required field: username' });

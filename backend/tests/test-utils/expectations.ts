@@ -25,7 +25,7 @@ export function expectToBeCorrectEntity<T extends object>(actual: { entity: T; n
             expected.entity[property] !== undefined && // If we don't expect a certain value for a property, we assume it can be filled in by the database however it wants.
             typeof expected.entity[property] !== 'function' // Functions obviously are not persisted via the database
         ) {
-            if (!actual.entity.hasOwnProperty(property)) {
+            if (!Object.prototype.hasOwnProperty.call(actual.entity, property)) {
                 throw new AssertionError({
                     message: `${expected.name} has defined property ${property}, but ${actual.name} is missing it.`,
                 });

@@ -1,7 +1,6 @@
 import { LearningObjectProvider } from './learning-object-provider.js';
 import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../../interfaces/learning-content.js';
 import { getLearningObjectRepository, getLearningPathRepository } from '../../data/repositories.js';
-import { Language } from '../../entities/content/language.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
 import { getUrlStringForLearningObject } from '../../util/links.js';
 import processingService from './processing/processing-service.js';
@@ -44,7 +43,7 @@ function convertLearningObject(learningObject: LearningObject | null): FilteredL
 async function findLearningObjectEntityById(id: LearningObjectIdentifier): Promise<LearningObject | null> {
     const learningObjectRepo = getLearningObjectRepository();
 
-    return learningObjectRepo.findLatestByHruidAndLanguage(id.hruid, id.language as Language);
+    return learningObjectRepo.findLatestByHruidAndLanguage(id.hruid, id.language);
 }
 
 /**
@@ -65,7 +64,7 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
     async getLearningObjectHTML(id: LearningObjectIdentifier): Promise<string | null> {
         const learningObjectRepo = getLearningObjectRepository();
 
-        const learningObject = await learningObjectRepo.findLatestByHruidAndLanguage(id.hruid, id.language as Language);
+        const learningObject = await learningObjectRepo.findLatestByHruidAndLanguage(id.hruid, id.language);
         if (!learningObject) {
             return null;
         }

@@ -6,12 +6,12 @@ import { createLearningPathNode, createLearningPathTransition } from './learning
 import { LearningObject } from '../../../src/entities/content/learning-object.entity';
 import { envVars, getEnvVar } from '../../../src/util/envVars';
 
-export type ConditionTestLearningPathAndLearningObjects = {
+export interface ConditionTestLearningPathAndLearningObjects {
     branchingObject: LearningObject;
     extraExerciseObject: LearningObject;
     finalObject: LearningObject;
     learningPath: LearningPath;
-};
+}
 
 export function createConditionTestLearningPathAndLearningObjects(): ConditionTestLearningPathAndLearningObjects {
     const learningPath = new LearningPath();

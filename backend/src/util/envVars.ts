@@ -5,7 +5,7 @@ const STUDENT_IDP_PREFIX = IDP_PREFIX + 'STUDENT_';
 const TEACHER_IDP_PREFIX = IDP_PREFIX + 'TEACHER_';
 const CORS_PREFIX = PREFIX + 'CORS_';
 
-type EnvVar = { key: string; required?: boolean; defaultValue?: any };
+interface EnvVar { key: string; required?: boolean; defaultValue?: number | string | boolean }
 
 export const envVars: { [key: string]: EnvVar } = {
     Port: { key: PREFIX + 'PORT', defaultValue: 3000 },
@@ -44,7 +44,7 @@ export function getEnvVar(envVar: EnvVar): string {
     } else if (envVar.required) {
         throw new Error(`Missing environment variable: ${envVar.key}`);
     } else {
-        return envVar.defaultValue || '';
+        return String(envVar.defaultValue) || '';
     }
 }
 

@@ -34,6 +34,10 @@ export default [
         rules: {
             'consistent-return': 'off',
             '@typescript-eslint/consistent-return': 'off',
+            '@typescript-eslint/consistent-type-assertions': 'error',
+            '@typescript-eslint/consistent-type-definitions': 'error',
+            '@typescript-eslint/consistent-type-exports': 'off',
+            '@typescript-eslint/consistent-type-imports': 'off',
 
             '@typescript-eslint/explicit-function-return-type': 'warn',
 
@@ -58,12 +62,24 @@ export default [
                 }
             ],
 
+            'no-dupe-class-members': 'off',
+            '@typescript-eslint/no-dupe-class-members': 'off',
+            '@typescript-eslint/no-duplicate-enum-values': 'error',
+            'no-duplicate-imports': 'off',
+            '@typescript-eslint/no-duplicate-type-constituents': 'off',
+
             // 'no-empty-function': 'off',
             '@typescript-eslint/no-empty-function': 'error',
 
             'no-loop-func': 'off',
             '@typescript-eslint/no-loop-func': 'error',
 
+            '@typescript-eslint/no-type-alias': 'off',
+
+            '@typescript-eslint/no-unnecessary-type-arguments': 'error',
+            '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+            '@typescript-eslint/no-unnecessary-type-constraint': 'error',
+            '@typescript-eslint/no-unnecessary-type-parameters': 'off',
             '@typescript-eslint/no-unsafe-function-type': 'error',
 
             'no-unused-expressions': 'off',
@@ -89,7 +105,6 @@ export default [
 
             'no-await-in-loop': 'warn',
             'no-constructor-return': 'error',
-            'no-duplicate-imports': 'error',
             'no-inner-declarations': 'error',
             'no-self-compare': 'error',
             'no-template-curly-in-string': 'error',
@@ -100,7 +115,6 @@ export default [
             'arrow-body-style': ['warn', 'as-needed'],
             'block-scoped-var': 'warn',
             'capitalized-comments': 'warn',
-            'consistent-return': 'warn',
             'consistent-this': 'error',
             curly: 'error',
             'default-case': 'error',

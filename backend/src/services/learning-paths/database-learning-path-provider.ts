@@ -25,7 +25,7 @@ async function getLearningObjectsForNodes(nodes: LearningPathNode[]): Promise<Ma
                         version: node.version,
                         language: node.language,
                     })
-                    .then((learningObject) => <[LearningPathNode, FilteredLearningObject | null]>[node, learningObject])
+                    .then((learningObject) => ([node, learningObject] as [LearningPathNode, FilteredLearningObject | null]))
             )
         )
     );

@@ -1,13 +1,9 @@
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { Group } from '../../../src/entities/assignments/group.entity';
 import { Assignment } from '../../../src/entities/assignments/assignment.entity';
 import { Student } from '../../../src/entities/users/student.entity';
 
-export function makeTestGroups(
-    em: EntityManager<IDatabaseDriver<Connection>>,
-    students: Array<Student>,
-    assignments: Array<Assignment>
-): Array<Group> {
+export function makeTestGroups(em: EntityManager, students: Array<Student>, assignments: Array<Assignment>): Array<Group> {
     const group01 = em.create(Group, {
         assignment: assignments[0],
         groupNumber: 1,

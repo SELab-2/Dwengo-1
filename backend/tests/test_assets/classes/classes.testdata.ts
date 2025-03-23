@@ -1,9 +1,9 @@
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { Class } from '../../../src/entities/classes/class.entity';
 import { Student } from '../../../src/entities/users/student.entity';
 import { Teacher } from '../../../src/entities/users/teacher.entity';
 
-export function makeTestClasses(em: EntityManager<IDatabaseDriver<Connection>>, students: Array<Student>, teachers: Array<Teacher>): Array<Class> {
+export function makeTestClasses(em: EntityManager, students: Array<Student>, teachers: Array<Teacher>): Array<Class> {
     const studentsClass01 = students.slice(0, 7);
     const teacherClass01: Array<Teacher> = teachers.slice(0, 1);
 
