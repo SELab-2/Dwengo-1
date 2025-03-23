@@ -109,6 +109,8 @@ export default [
 
             '@typescript-eslint/parameter-properties': 'off',
 
+            '@typescript-eslint/prefer-find': 'warn',
+
             '@typescript-eslint/prefer-function-type': 'error',
 
             '@typescript-eslint/prefer-readonly-parameter-types': 'off',
