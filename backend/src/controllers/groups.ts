@@ -2,14 +2,7 @@ import { Request, Response } from 'express';
 import { createGroup, getAllGroups, getGroup, getGroupSubmissions } from '../services/groups.js';
 import { GroupDTO } from '../interfaces/group.js';
 
-// Typescript is annoywith with parameter forwarding from class.ts
-interface GroupParams {
-    classid: string;
-    assignmentid: string;
-    groupid?: string;
-}
-
-export async function getGroupHandler(req: Request<GroupParams>, res: Response): Promise<void> {
+export async function getGroupHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.classid;
     const full = req.query.full === 'true';
     const assignmentId = +req.params.assignmentid;

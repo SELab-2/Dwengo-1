@@ -1,17 +1,13 @@
 import { setupTestApp } from '../setup-tests.js';
 import { describe, it, expect, beforeAll, beforeEach, vi, Mock } from 'vitest';
-import { createClassHandler, getClassHandler, getClassStudentsHandler, getTeacherInvitationsHandler } from '../../src/controllers/classes.js';
+import { createClassHandler, getAllClassesHandler, getClassHandler, getClassStudentsHandler, getTeacherInvitationsHandler } from '../../src/controllers/classes.js';
 import { Request, Response } from 'express';
-import { getClassTeacherInvitations } from '../../src/services/class.js';
+import { getAllClasses } from '../../src/services/class.js';
 
 async function fetchClass(id: string) {
     const data = await fetch(`localhost:3000/class/${id}`);
     return data;
 }
-
-vi.mock('./getClass', () => ({
-    getClass: vi.fn(),
-}));
 
 describe('Class controllers', () => {
     let req: Partial<Request>;
@@ -146,4 +142,18 @@ describe('Class controllers', () => {
         expect(statusMock).toHaveBeenCalledWith(404);
         expect(jsonMock).toHaveBeenCalledWith({ error: 'Class not found' });
     });
+
+    it('should return a list of classes', async () => {
+        req = {
+            query: {},
+        };
+
+        await getAllClassesHandler(req as Request, res as Response);
+
+        expect(jsonMock).toHaveBeenCalled();
+
+        const result = jsonMock.mock.lastCall![0];
+
+        expect("classes" in result).toBeTruthy();
+    })
 })
