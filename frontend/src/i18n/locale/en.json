@@ -5,5 +5,6 @@
     "assignments": "assignments",
     "classes": "classes",
     "discussions": "discussions",
-    "logout": "log out"
+    "logout": "log out",
+    "error_title": "Error"
 }

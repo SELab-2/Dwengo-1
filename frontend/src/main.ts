@@ -10,6 +10,7 @@ import i18n from "./i18n/i18n.ts";
 // Components
 import App from "./App.vue";
 import router from "./router";
+import {aliases, mdi} from "vuetify/iconsets/mdi";
 
 const app = createApp(App);
 
@@ -23,6 +24,13 @@ document.head.appendChild(link);
 const vuetify = createVuetify({
     components,
     directives,
+    icons: {
+        defaultSet: "mdi",
+        aliases,
+        sets: {
+            mdi
+        }
+    }
 });
 app.use(vuetify);
 app.use(i18n);

@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import auth from "@/services/auth/auth-service.ts";
-    import apiClient from "@/services/api-client.ts";
+    import apiClient from "@/services/api-client/api-client.ts";
     import { ref } from "vue";
 
     const testResponse = ref(null);

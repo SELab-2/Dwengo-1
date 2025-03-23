@@ -1,4 +1,4 @@
-import apiClient from "@/services/api-client.ts";
+import apiClient from "@/services/api-client/api-client.ts";
 import type { FrontendAuthConfig } from "@/services/auth/auth.d.ts";
 
 /**
