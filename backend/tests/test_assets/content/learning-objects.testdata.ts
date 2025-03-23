@@ -1,7 +1,8 @@
 import { EntityManager } from '@mikro-orm/core';
-import { LearningObject, ReturnValue } from '../../../src/entities/content/learning-object.entity';
+import { LearningObject } from '../../../src/entities/content/learning-object.entity';
 import { Language } from '../../../src/entities/content/language';
 import { DwengoContentType } from '../../../src/services/learning-objects/processing/content-type';
+import { ReturnValue } from '../../../src/entities/content/return-value.entity';
 
 export function makeTestLearningObjects(em: EntityManager): Array<LearningObject> {
     const returnValue: ReturnValue = new ReturnValue();

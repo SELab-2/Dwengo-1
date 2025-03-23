@@ -6,7 +6,8 @@ import jwksClient from 'jwks-rsa';
 import * as express from 'express';
 import { AuthenticatedRequest } from './authenticated-request.js';
 import { AuthenticationInfo } from './authentication-info.js';
-import { ForbiddenException, UnauthorizedException } from '../../exceptions.js';
+import { UnauthorizedException } from '../../exceptions/unauthorizedException.js';
+import { ForbiddenException } from '../../exceptions/forbiddenException.js';
 
 const JWKS_CACHE = true;
 const JWKS_RATE_LIMIT = true;

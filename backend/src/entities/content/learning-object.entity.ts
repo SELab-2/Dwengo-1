@@ -1,28 +1,12 @@
-import { Embeddable, Embedded, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
+import { Embedded, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Language } from './language.js';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
 import { DwengoContentType } from '../../services/learning-objects/processing/content-type.js';
 import { v4 } from 'uuid';
 import { LearningObjectRepository } from '../../data/content/learning-object-repository.js';
-
-@Embeddable()
-export class EducationalGoal {
-    @Property({ type: 'string' })
-    source!: string;
-
-    @Property({ type: 'string' })
-    id!: string;
-}
-
-@Embeddable()
-export class ReturnValue {
-    @Property({ type: 'string' })
-    callbackUrl!: string;
-
-    @Property({ type: 'json' })
-    callbackSchema!: string;
-}
+import { EducationalGoal } from './educational-goal.entity.js';
+import { ReturnValue } from './return-value.entity.js';
 
 @Entity({ repository: () => LearningObjectRepository })
 export class LearningObject {

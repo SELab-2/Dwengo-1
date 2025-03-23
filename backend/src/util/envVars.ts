@@ -5,7 +5,11 @@ const STUDENT_IDP_PREFIX = IDP_PREFIX + 'STUDENT_';
 const TEACHER_IDP_PREFIX = IDP_PREFIX + 'TEACHER_';
 const CORS_PREFIX = PREFIX + 'CORS_';
 
-interface EnvVar { key: string; required?: boolean; defaultValue?: number | string | boolean }
+interface EnvVar {
+    key: string;
+    required?: boolean;
+    defaultValue?: number | string | boolean;
+}
 
 export const envVars: { [key: string]: EnvVar } = {
     Port: { key: PREFIX + 'PORT', defaultValue: 3000 },
