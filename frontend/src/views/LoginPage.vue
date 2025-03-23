@@ -2,15 +2,15 @@
     import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
     import auth from "@/services/auth/auth-service.ts";
 
-    function loginAsStudent() {
+    function loginAsStudent(): void {
         auth.loginAs("student");
     }
 
-    function loginAsTeacher() {
+    function loginAsTeacher(): void {
         auth.loginAs("teacher");
     }
 
-    function performLogout() {
+    function performLogout(): void {
         auth.logout();
     }
 </script>

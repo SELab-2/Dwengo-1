@@ -1,10 +1,11 @@
 import apiClient from "@/services/api-client.ts";
 import type { FrontendAuthConfig } from "@/services/auth/auth.d.ts";
+import type {UserManagerSettings} from "oidc-client-ts";
 
 /**
  * Fetch the authentication configuration from the backend.
  */
-export async function loadAuthConfig() {
+export async function loadAuthConfig(): Promise<Record<string, UserManagerSettings>> {
     const authConfig = (await apiClient.get<FrontendAuthConfig>("auth/config")).data;
     return {
         student: {

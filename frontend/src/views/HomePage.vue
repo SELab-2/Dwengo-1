@@ -5,7 +5,7 @@
 
     const testResponse = ref(null);
 
-    async function testAuthenticated() {
+    async function testAuthenticated(): Promise<void> {
         testResponse.value = await apiClient.get("/auth/testAuthenticatedOnly");
     }
 </script>
