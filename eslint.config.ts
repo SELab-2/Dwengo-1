@@ -38,9 +38,15 @@ export default [
             '@typescript-eslint/consistent-type-definitions': 'error',
             '@typescript-eslint/consistent-type-exports': 'off',
             '@typescript-eslint/consistent-type-imports': 'off',
+            'default-param-last': 'off',
+            '@typescript-eslint/default-param-last': 'error',
 
             '@typescript-eslint/explicit-function-return-type': 'warn',
 
+            'max-params': 'off',
+            '@typescript-eslint/max-params': ['error', { 'max': 6 }],
+            '@typescript-eslint/member-ordering': 'warn',
+            '@typescript-eslint/method-signature-style': 'off', // Don't care about TypeScript strict mode.
             '@typescript-eslint/naming-convention': [
                 'warn',
                 { // Enforce that all variables, functions and properties are camelCase
@@ -76,6 +82,8 @@ export default [
 
             '@typescript-eslint/no-type-alias': 'off',
 
+            '@typescript-eslint/no-unnecessary-parameter-property-assignment': 'error',
+
             '@typescript-eslint/no-unnecessary-type-arguments': 'error',
             '@typescript-eslint/no-unnecessary-type-assertion': 'error',
             '@typescript-eslint/no-unnecessary-type-constraint': 'error',
@@ -99,7 +107,12 @@ export default [
             'no-use-before-define': 'off',
             '@typescript-eslint/no-use-before-define': 'off',
 
+            '@typescript-eslint/parameter-properties': 'off',
+
             '@typescript-eslint/prefer-function-type': 'error',
+
+            '@typescript-eslint/prefer-readonly-parameter-types': 'off',
+            '@typescript-eslint/prefer-reduce-type-parameter': 'error',
 
             '@typescript-eslint/promise-function-async': 'warn',
 
@@ -119,7 +132,6 @@ export default [
             curly: 'error',
             'default-case': 'error',
             'default-case-last': 'error',
-            'default-param-last': 'error',
             'dot-notation': 'warn',
             eqeqeq: 'error',
             'func-names': 'warn',
