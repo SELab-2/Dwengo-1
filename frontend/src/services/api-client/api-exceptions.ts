@@ -8,3 +8,15 @@ export class HttpErrorStatusException extends Error {
         this.statusCode = response.status;
     }
 }
+
+export class NotFoundException extends Error {
+    constructor(message: string) {
+        super(message);
+    }
+}
+
+export class InvalidResponseException extends Error {
+    constructor(message: string) {
+        super(message);
+    }
+}

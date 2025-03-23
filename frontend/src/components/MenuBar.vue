@@ -37,7 +37,7 @@
 </script>
 
 <template>
-    <main>
+    <v-app-bar>
         <nav class="menu">
             <div class="left">
                 <ul>
@@ -133,7 +133,7 @@
                 </li>
             </div>
         </nav>
-    </main>
+    </v-app-bar>
 </template>
 
 <style scoped>
@@ -187,5 +187,9 @@
 
     nav a.router-link-active {
         font-weight: bold;
+    }
+
+    nav {
+        width: 100%;
     }
 </style>

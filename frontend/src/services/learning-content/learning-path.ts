@@ -1,5 +1,5 @@
 import type {Language} from "@/services/learning-content/language.ts";
-import type {RemoteResource} from "@/services/api-client/remote-resource.ts";
+import {RemoteResource} from "@/services/api-client/remote-resource.ts";
 import type {LearningObject} from "@/services/learning-content/learning-object.ts";
 import {getLearningObjectMetadata} from "@/services/learning-content/learning-object-service.ts";
 
@@ -96,6 +96,21 @@ export class LearningPath {
         public readonly startNode: LearningPathNode,
         public readonly image?: string // Image might be missing, so it's optional
     ) {
+    }
+
+    public get nodesAsList(): LearningPathNode[] {
+        let list: LearningPathNode[] = [];
+        let currentNode = this.startNode;
+        while (currentNode) {
+            list.push(currentNode);
+            currentNode = currentNode.transitions.filter(it => it.default)[0]?.next
+                            || currentNode.transitions[0]?.next;
+        }
+        return list;
+    }
+
+    public get learningObjectsAsList(): RemoteResource<LearningObject[]> {
+        return RemoteResource.join(this.nodesAsList.map(node => node.learningObject));
     }
 
     static fromDTO(dto: LearningPathDTO): LearningPath {

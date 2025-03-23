@@ -14,6 +14,7 @@ import UserClasses from "@/views/classes/UserClasses.vue";
 import UserAssignments from "@/views/classes/UserAssignments.vue";
 import authState from "@/services/auth/auth-service.ts";
 import LearningPathPage from "@/views/learning-paths/LearningPathPage.vue";
+import path from "path";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -104,7 +105,15 @@ const router = createRouter({
             path: "/learningPath/:hruid/:language",
             name: "LearningPath",
             component: LearningPathPage,
-            meta: { requiresAuth: false }
+            props: true,
+            meta: { requiresAuth: false },
+            children: [
+                {
+                    path: ":learningObjectHruid",
+                    component: LearningPathPage,
+                    props: true,
+                }
+            ]
         },
         {
             path: "/:catchAll(.*)",

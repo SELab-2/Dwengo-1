@@ -4,9 +4,8 @@ import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifie
 import learningObjectService from '../services/learning-objects/learning-object-service.js';
 import { EnvVars, getEnvVar } from '../util/envvars.js';
 import { Language } from '../entities/content/language.js';
-import { BadRequestException } from '../exceptions.js';
+import {BadRequestException, NotFoundException} from '../exceptions.js';
 import attachmentService from '../services/learning-objects/attachment-service.js';
-import { NotFoundError } from '@mikro-orm/core';
 
 function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIdentifier {
     if (!req.params.hruid) {
@@ -47,6 +46,11 @@ export async function getLearningObject(req: Request, res: Response): Promise<vo
     const learningObjectId = getLearningObjectIdentifierFromRequest(req);
 
     const learningObject = await learningObjectService.getLearningObjectById(learningObjectId);
+
+    if (!learningObject) {
+        throw new NotFoundException("Learning object not found");
+    }
+
     res.json(learningObject);
 }
 
@@ -63,7 +67,7 @@ export async function getAttachment(req: Request, res: Response): Promise<void> 
     const attachment = await attachmentService.getAttachment(learningObjectId, name);
 
     if (!attachment) {
-        throw new NotFoundError(`Attachment ${name} not found`);
+        throw new NotFoundException(`Attachment ${name} not found`);
     }
     res.setHeader('Content-Type', attachment.mimeType).send(attachment.content);
 }
