@@ -19,6 +19,7 @@
             <p>
                 Your access token for the backend is: <code>{{ auth.authState.user?.access_token }}</code>
             </p>
+            <v-btn to="/user">home</v-btn>
         </div>
 
         <v-btn @click="testAuthenticated">Send test request</v-btn>

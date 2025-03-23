@@ -28,10 +28,11 @@ curricula_page:
         contact: ''
         teaser: https://www.youtube.com/embed/2B6gZ9HdQ1Y
     basics_ai:
-        title: Basisprincipes van AI
-        sub_title: Basisprincipes van AI
-        description: 'Onder dit lesthema bundelen we verschillende activiteiten waarin de basisprincipes van artificiële intelligentie (AI) aan bod komen. Leerlingen leren wat AI is, hoe het werkt en hoe het kan worden toegepast in verschillende domeinen.'
+        title: Basics of AI
+        sub_title: Basics of AI
+        description: 'This theme brings together various activities covering the basic principles of Artificial Intelligence (AI). Students learn what AI is, how it works, and how it can be applied in different domains.'
         contact: ''
+
     kiks:
         title: AI and Climate
         sub_title: KIKS

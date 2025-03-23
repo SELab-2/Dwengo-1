@@ -70,6 +70,7 @@
                 You are currently logged in as {{ auth.authState.user!.profile.name }} ({{ auth.authState.activeRole }})
             </p>
             <v-btn @click="performLogout">Logout</v-btn>
+            <v-btn to="/user">home</v-btn>
         </div>
     </main>
 </template>
