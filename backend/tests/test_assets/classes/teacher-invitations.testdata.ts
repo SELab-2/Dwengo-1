@@ -3,7 +3,7 @@ import { TeacherInvitation } from '../../../src/entities/classes/teacher-invitat
 import { Teacher } from '../../../src/entities/users/teacher.entity';
 import { Class } from '../../../src/entities/classes/class.entity';
 
-export function makeTestTeacherInvitations(em: EntityManager, teachers: Array<Teacher>, classes: Array<Class>): Array<TeacherInvitation> {
+export function makeTestTeacherInvitations(em: EntityManager, teachers: Teacher[], classes: Class[]): TeacherInvitation[] {
     const teacherInvitation01 = em.create(TeacherInvitation, {
         sender: teachers[1],
         receiver: teachers[0],

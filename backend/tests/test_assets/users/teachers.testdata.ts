@@ -1,7 +1,7 @@
 import { Teacher } from '../../../src/entities/users/teacher.entity';
 import { EntityManager } from '@mikro-orm/core';
 
-export function makeTestTeachers(em: EntityManager): Array<Teacher> {
+export function makeTestTeachers(em: EntityManager): Teacher[] {
     const teacher01 = em.create(Teacher, {
         username: 'FooFighters',
         firstName: 'Dave',

@@ -32,6 +32,8 @@ export default [
             reportUnusedInlineConfigs: 'error',
         },
         rules: {
+            '@typescript-eslint/array-type': 'warn',
+
             'consistent-return': 'off',
             '@typescript-eslint/consistent-return': 'off',
             '@typescript-eslint/consistent-type-assertions': 'error',
@@ -67,6 +69,9 @@ export default [
                     leadingUnderscore: 'allow',
                 }
             ],
+            'no-array-constructor': 'off',
+            '@typescript-eslint/no-array-constructor': 'error',
+            '@typescript-eslint/no-array-delete': 'error',
 
             'no-dupe-class-members': 'off',
             '@typescript-eslint/no-dupe-class-members': 'off',
@@ -118,6 +123,8 @@ export default [
 
             '@typescript-eslint/promise-function-async': 'warn',
 
+            '@typescript-eslint/require-array-sort-compare': 'warn',
+
             'no-await-in-loop': 'warn',
             'no-constructor-return': 'error',
             'no-inner-declarations': 'error',
@@ -143,7 +150,6 @@ export default [
             'logical-assignment-operators': 'warn',
             'max-classes-per-file': 'warn',
             'no-alert': 'error',
-            'no-array-constructor': 'warn',
             'no-bitwise': 'warn',
             'no-console': 'warn',
             'no-continue': 'warn',

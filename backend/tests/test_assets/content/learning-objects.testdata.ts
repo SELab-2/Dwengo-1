@@ -4,7 +4,7 @@ import { Language } from '../../../src/entities/content/language';
 import { DwengoContentType } from '../../../src/services/learning-objects/processing/content-type';
 import { ReturnValue } from '../../../src/entities/content/return-value.entity';
 
-export function makeTestLearningObjects(em: EntityManager): Array<LearningObject> {
+export function makeTestLearningObjects(em: EntityManager): LearningObject[] {
     const returnValue: ReturnValue = new ReturnValue();
     returnValue.callbackSchema = '';
     returnValue.callbackUrl = '';

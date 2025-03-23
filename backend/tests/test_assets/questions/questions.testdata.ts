@@ -3,7 +3,7 @@ import { Question } from '../../../src/entities/questions/question.entity';
 import { Language } from '../../../src/entities/content/language';
 import { Student } from '../../../src/entities/users/student.entity';
 
-export function makeTestQuestions(em: EntityManager, students: Array<Student>): Array<Question> {
+export function makeTestQuestions(em: EntityManager, students: Student[]): Question[] {
     const question01 = em.create(Question, {
         learningObjectLanguage: Language.English,
         learningObjectVersion: 1,
