@@ -4,11 +4,10 @@ import { GroupDTO, mapToGroupDTO } from './group.js';
 import { mapToStudent, mapToStudentDTO, StudentDTO } from './student.js';
 import { mapToUser } from './user';
 import { Student } from '../entities/users/student.entity';
+import { LearningObjectIdentifier } from './learning-content.js';
 
 export interface SubmissionDTO {
-    learningObjectHruid: string;
-    learningObjectLanguage: Language;
-    learningObjectVersion: number;
+    learningObjectIdentifier: LearningObjectIdentifier;
 
     submissionNumber?: number;
     submitter: StudentDTO;
@@ -27,9 +26,11 @@ export interface SubmissionDTOId {
 
 export function mapToSubmissionDTO(submission: Submission): SubmissionDTO {
     return {
-        learningObjectHruid: submission.learningObjectHruid,
-        learningObjectLanguage: submission.learningObjectLanguage,
-        learningObjectVersion: submission.learningObjectVersion,
+        learningObjectIdentifier: {
+            hruid: submission.learningObjectHruid,
+            language: submission.learningObjectLanguage,
+            version: submission.learningObjectVersion,
+        },
 
         submissionNumber: submission.submissionNumber,
         submitter: mapToStudentDTO(submission.submitter),
@@ -51,9 +52,9 @@ export function mapToSubmissionDTOId(submission: Submission): SubmissionDTOId {
 
 export function mapToSubmission(submissionDTO: SubmissionDTO): Submission {
     const submission = new Submission();
-    submission.learningObjectHruid = submissionDTO.learningObjectHruid;
-    submission.learningObjectLanguage = submissionDTO.learningObjectLanguage;
-    submission.learningObjectVersion = submissionDTO.learningObjectVersion;
+    submission.learningObjectHruid = submissionDTO.learningObjectIdentifier.hruid;
+    submission.learningObjectLanguage = submissionDTO.learningObjectIdentifier.language;
+    submission.learningObjectVersion = submissionDTO.learningObjectIdentifier.version!;
     // Submission.submissionNumber = submissionDTO.submissionNumber;
     submission.submitter = mapToStudent(submissionDTO.submitter);
     // Submission.submissionTime = submissionDTO.time;
