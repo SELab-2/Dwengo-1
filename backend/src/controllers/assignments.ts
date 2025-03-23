@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { createAssignment, getAllAssignments, getAssignment, getAssignmentsSubmissions } from '../services/assignments.js';
 import { AssignmentDTO } from '../interfaces/assignment.js';
 
-// Typescript is annoy with with parameter forwarding from class.ts
+// Typescript is annoying with parameter forwarding from class.ts
 interface AssignmentParams {
     classid: string;
     id: string;

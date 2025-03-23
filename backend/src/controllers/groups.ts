@@ -80,7 +80,7 @@ export async function getGroupSubmissionsHandler(req: Request, res: Response): P
         return;
     }
 
-    const groupId = Number(req.params.groupid!); // Can't be undefined
+    const groupId = Number(req.params.groupid); // Can't be undefined
 
     if (isNaN(groupId)) {
         res.status(400).json({ error: 'Group id must be a number' });

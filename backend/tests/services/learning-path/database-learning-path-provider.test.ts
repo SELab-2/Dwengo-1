@@ -46,8 +46,6 @@ async function initPersonalizationTestData(): Promise<{
     await learningObjectRepo.save(learningContent.extraExerciseObject);
     await learningPathRepo.save(learningContent.learningPath);
 
-    console.log(await getSubmissionRepository().findAll({}));
-
     const studentA = studentRepo.create({
         username: 'student_a',
         firstName: 'Aron',

@@ -32,12 +32,23 @@ export default [
             reportUnusedInlineConfigs: 'error',
         },
         rules: {
+            // All @typescript-eslint configuration options are listed.
+            // If the rules are commented, they are configured by the inherited configurations.
+
+            '@typescript-eslint/adjacent-overload-signatures': 'warn',
             '@typescript-eslint/array-type': 'warn',
             '@typescript-eslint/await-thenable': 'error',
-
+            '@typescript-eslint/ban-ts-comment': [
+                'error',
+                { minimumDescriptionLength: 10 },
+            ],
+            '@typescript-eslint/ban-tslint-comment': 'error',
+            'camelcase': 'off',
+            '@typescript-eslint/class-literal-property-style': 'warn',
             'class-methods-use-this': 'off',
             '@typescript-eslint/class-methods-use-this': [ 'error', { ignoreOverrideMethods: true } ],
-
+            '@typescript-eslint/consistent-generic-constructors': 'warn',
+            '@typescript-eslint/consistent-indexed-object-style': 'error',
             'consistent-return': 'off',
             '@typescript-eslint/consistent-return': 'off',
             '@typescript-eslint/consistent-type-assertions': 'error',
@@ -46,9 +57,13 @@ export default [
             '@typescript-eslint/consistent-type-imports': 'off',
             'default-param-last': 'off',
             '@typescript-eslint/default-param-last': 'error',
-
+            'dot-notation': 'off',
+            '@typescript-eslint/dot-notation': 'warn',
             '@typescript-eslint/explicit-function-return-type': 'warn',
-
+            '@typescript-eslint/explicit-member-accessibility': 'off',
+            '@typescript-eslint/explicit-module-boundary-types': 'warn',
+            'init-declarations': 'off',
+            '@typescript-eslint/init-declarations': 'off',
             'max-params': 'off',
             '@typescript-eslint/max-params': ['error', { 'max': 6 }],
             '@typescript-eslint/member-ordering': 'warn',
@@ -76,22 +91,41 @@ export default [
             'no-array-constructor': 'off',
             '@typescript-eslint/no-array-constructor': 'error',
             '@typescript-eslint/no-array-delete': 'error',
-
+            '@typescript-eslint/no-base-to-string': 'off',
+            '@typescript-eslint/no-confusing-non-null-assertion': 'error',
+            '@typescript-eslint/no-confusing-void-expression': 'error',
+            '@typescript-eslint/no-deprecated': 'error',
             'no-dupe-class-members': 'off',
             '@typescript-eslint/no-dupe-class-members': 'off',
             '@typescript-eslint/no-duplicate-enum-values': 'error',
             'no-duplicate-imports': 'off',
             '@typescript-eslint/no-duplicate-type-constituents': 'off',
-
-            // 'no-empty-function': 'off',
+            '@typescript-eslint/no-dynamic-delete': 'error',
+            'no-empty-function': 'off',
             '@typescript-eslint/no-empty-function': 'error',
-
+            '@typescript-eslint/no-empty-interface': 'off',
+            '@typescript-eslint/no-empty-object-type': 'error',
+            '@typescript-eslint/no-explicit-any': 'warn', // Once in production, this should be an error.
+            '@typescript-eslint/no-extra-non-null-assertion': 'error',
+            '@typescript-eslint/no-extraneous-class': 'error',
+            '@typescript-eslint/no-floating-promises': 'error',
             '@typescript-eslint/no-for-in-array': 'error',
-
+            'no-implied-eval': 'off',
+            '@typescript-eslint/no-implied-eval': 'error',
+            '@typescript-eslint/no-import-type-side-effects': 'error',
             '@typescript-eslint/no-inferrable-types': 'warn',
-
+            'no-invalid-this': 'off',
+            '@typescript-eslint/no-invalid-this': 'off',
+            '@typescript-eslint/no-invalid-void-type': 'error',
             'no-loop-func': 'off',
             '@typescript-eslint/no-loop-func': 'error',
+            'no-loss-of-precision': 'off',
+            '@typescript-eslint/no-loss-of-precision': 'off',
+            'no-magic-numbers': 'off',
+            '@typescript-eslint/no-magic-numbers': 'off',
+
+            'no-redeclare': 'off',
+            '@typescript-eslint/no-redeclare': 'off',
 
             '@typescript-eslint/no-type-alias': 'off',
 
@@ -149,7 +183,6 @@ export default [
             curly: 'error',
             'default-case': 'error',
             'default-case-last': 'error',
-            'dot-notation': 'warn',
             eqeqeq: 'error',
             'func-names': 'warn',
             'func-style': ['warn', 'declaration'],
