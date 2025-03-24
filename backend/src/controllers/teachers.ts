@@ -1,17 +1,10 @@
 import { Request, Response } from 'express';
-import {
-    createTeacher,
-    deleteTeacher,
-    getAllTeachers,
-    getClassesByTeacher,
-    getStudentsByTeacher,
-    getTeacher,
-} from '../services/teachers.js';
+import { createTeacher, deleteTeacher, getAllTeachers, getClassesByTeacher, getStudentsByTeacher, getTeacher } from '../services/teachers.js';
 import { ClassDTO } from '../interfaces/class.js';
 import { StudentDTO } from '../interfaces/student.js';
 import { QuestionDTO, QuestionId } from '../interfaces/question.js';
 import { TeacherDTO } from '../interfaces/teacher.js';
-import {MISSING_FIELDS_ERROR, MISSING_USERNAME_ERROR, NAME_NOT_FOUND_ERROR} from "./users";
+import { MISSING_FIELDS_ERROR, MISSING_USERNAME_ERROR, NAME_NOT_FOUND_ERROR } from './users';
 
 export async function getAllTeachersHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
@@ -23,7 +16,7 @@ export async function getAllTeachersHandler(req: Request, res: Response): Promis
         return;
     }
 
-    res.json({teachers});
+    res.json({ teachers });
 }
 
 export async function getTeacherHandler(req: Request, res: Response): Promise<void> {
@@ -98,7 +91,7 @@ export async function getTeacherStudentHandler(req: Request, res: Response): Pro
 
     const students: StudentDTO[] | string[] = await getStudentsByTeacher(username, full);
 
-    res.json({students});
+    res.json({ students });
 }
 
 export async function getTeacherQuestionHandler(req: Request, res: Response): Promise<void> {
@@ -112,5 +105,5 @@ export async function getTeacherQuestionHandler(req: Request, res: Response): Pr
 
     const questions: QuestionDTO[] | QuestionId[] = await getQuestionsByTeacher(username, full);
 
-    res.json({questions});
+    res.json({ questions });
 }

@@ -1,4 +1,4 @@
-import {BaseController} from "@/controllers/base-controller.ts";
+import { BaseController } from "@/controllers/base-controller.ts";
 
 export class StudentController extends BaseController {
     constructor() {
@@ -40,5 +40,4 @@ export class StudentController extends BaseController {
     getQuestions(username: string, full = true) {
         return this.get<{ questions: any[] }>(`/${username}/questions`, { full });
     }
-
 }

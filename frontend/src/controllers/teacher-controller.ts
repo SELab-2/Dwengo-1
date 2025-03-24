@@ -1,4 +1,4 @@
-import {BaseController} from "@/controllers/base-controller.ts";
+import { BaseController } from "@/controllers/base-controller.ts";
 
 export class TeacherController extends BaseController {
     constructor() {
@@ -33,5 +33,5 @@ export class TeacherController extends BaseController {
         return this.get<{ questions: any[] }>(`/${username}/questions`, { full });
     }
 
-    // getInvitations(id: string) {return this.get<{ invitations: string[] }>(`/${id}/invitations`);}
+    // GetInvitations(id: string) {return this.get<{ invitations: string[] }>(`/${id}/invitations`);}
 }

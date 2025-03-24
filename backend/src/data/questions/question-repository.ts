@@ -58,8 +58,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
     public findAllByAuthor(author: Student): Promise<Question[]> {
         return this.findAll({
             where: { author },
-            orderBy: { timestamp: 'DESC' }, // new to old
+            orderBy: { timestamp: 'DESC' }, // New to old
         });
     }
-
 }
