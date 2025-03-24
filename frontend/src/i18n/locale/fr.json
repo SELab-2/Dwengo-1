@@ -1,4 +1,6 @@
 {
     "welcome": "Bienvenue",
-    "error_title": "Erreur"
+    "error_title": "Erreur",
+    "previous": "Précédente",
+    "next": "Suivante"
 }

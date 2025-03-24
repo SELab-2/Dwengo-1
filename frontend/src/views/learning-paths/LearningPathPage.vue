@@ -2,20 +2,36 @@
     import {Language} from "@/services/learning-content/language.ts";
     import {getLearningPath} from "@/services/learning-content/learning-path-service.ts";
     import UsingRemoteResource from "@/components/UsingRemoteResource.vue";
-    import {type LearningPath} from "@/services/learning-content/learning-path.ts";
-    import {computed, watch, watchEffect} from "vue";
+    import {type LearningPath, LearningPathNode} from "@/services/learning-content/learning-path.ts";
+    import {computed, type ComputedRef, watch} from "vue";
     import type {LearningObject} from "@/services/learning-content/learning-object.ts";
-    import {useRouter} from "vue-router";
+    import {useRoute, useRouter} from "vue-router";
     import {loadResource, remoteResource, type SuccessState} from "@/services/api-client/remote-resource.ts";
     import LearningObjectView from "@/views/learning-paths/LearningObjectView.vue";
+    import {useI18n} from "vue-i18n";
 
     const router = useRouter();
+    const route = useRoute();
+    const { t } = useI18n();
+
     const props = defineProps<{hruid: string, language: Language, learningObjectHruid?: string}>()
 
+    interface QueryParams {
+        forStudent?: string,
+        forGroup?: string
+    }
+
     const learningPathResource = remoteResource<LearningPath>();
-    watchEffect(() => {
-        loadResource(learningPathResource, getLearningPath(props.hruid, props.language));
-    });
+    watch([() => props.hruid, () => props.language, () => route.query.forStudent, () => route.query.forGroup], () => {
+        loadResource(
+            learningPathResource,
+            getLearningPath(
+                props.hruid,
+                props.language,
+                route.query as QueryParams
+            )
+        )
+    }, {immediate: true});
 
     const learningObjectListResource = remoteResource<LearningObject[]>();
     watch(learningPathResource, () => {
@@ -24,12 +40,36 @@
         }
     }, {immediate: true});
 
-    const currentNode = computed(() => {
-        let currentHruid = props.learningObjectHruid;
+    const nodesList: ComputedRef<LearningPathNode[] | null> = computed(() => {
         if (learningPathResource.state.type === "success") {
-            return learningPathResource.state.data.nodesAsList.filter(it => it.learningobjectHruid === currentHruid)[0]
+            return learningPathResource.state.data.nodesAsList;
         } else {
-            return undefined;
+            return null;
+        }
+    })
+
+    const currentNode = computed(() => {
+        const currentHruid = props.learningObjectHruid;
+        if (nodesList.value) {
+            return nodesList.value.filter(it => it.learningobjectHruid === currentHruid)[0]
+        }
+    });
+
+    const nextNode = computed(() => {
+        if (!currentNode.value || !nodesList.value)
+            return;
+        const currentIndex = nodesList.value?.indexOf(currentNode.value);
+        if (currentIndex < nodesList.value?.length) {
+            return nodesList.value?.[currentIndex + 1];
+        }
+    });
+
+    const previousNode = computed(() => {
+        if (!currentNode.value || !nodesList.value)
+            return;
+        const currentIndex = nodesList.value?.indexOf(currentNode.value);
+        if (currentIndex < nodesList.value?.length) {
+            return nodesList.value?.[currentIndex - 1];
         }
     });
 
@@ -40,6 +80,17 @@
                     + "/" + (newValue as SuccessState<LearningPath>).data.startNode.learningobjectHruid);
             }
         });
+    }
+
+    function isLearningObjectCompleted(learningObject: LearningObject): boolean {
+        if (learningPathResource.state.type === "success") {
+            return learningPathResource.state.data.nodesAsList.filter(it =>
+                it.learningobjectHruid === learningObject.key
+                && it.version === learningObject.version
+                && it.language == learningObject.language
+            )[0].done;
+        }
+        return false;
     }
 </script>
 
@@ -62,9 +113,10 @@
                 >
                     <v-list-item
                         link
-                        :to="node.key"
+                        :to="{path: node.key, query: route.query}"
                         :title="node.title"
                         :active="node.key === props.learningObjectHruid"
+                        :prepend-icon="isLearningObjectCompleted(node) ? 'mdi-checkbox-marked-circle-outline' : 'mdi-checkbox-blank-circle-outline'"
                         v-for="node in learningObjects.data"
                     >
                         <template v-slot:append>
@@ -80,9 +132,31 @@
             :version="currentNode.version"
             v-if="currentNode"
         ></learning-object-view>
+        <div class="navigation-buttons-container">
+            <v-btn
+                prepend-icon="mdi-chevron-left"
+                variant="text"
+                :disabled="!previousNode"
+                :to="previousNode ? {path: previousNode.learningobjectHruid, query: route.query} : undefined"
+            >
+                {{ t("previous") }}
+            </v-btn>
+            <v-btn
+                append-icon="mdi-chevron-right"
+                variant="text"
+                :disabled="!nextNode"
+                :to="nextNode ? {path: nextNode.learningobjectHruid, query: route.query} : undefined"
+            >
+                {{ t("next") }}
+            </v-btn>
+        </div>
     </using-remote-resource>
 </template>
 
 <style scoped>
-
+    .navigation-buttons-container {
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+    }
 </style>

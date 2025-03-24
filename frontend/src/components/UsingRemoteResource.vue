@@ -35,6 +35,7 @@
 
 <style scoped>
   .loading-div {
+      padding: 20px;
       text-align: center;
   }
 </style>

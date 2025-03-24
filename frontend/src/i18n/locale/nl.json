@@ -6,5 +6,7 @@
     "classes": "klassen",
     "discussions": "discussies",
     "logout": "log uit",
-    "error_title": "Fout"
+    "error_title": "Fout",
+    "previous": "Vorige",
+    "next": "Volgende"
 }

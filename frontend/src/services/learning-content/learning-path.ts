@@ -49,7 +49,8 @@ export class LearningPathNode {
         public readonly language: Language,
         public readonly transitions: {next: LearningPathNode, default: boolean}[],
         public readonly createdAt: Date,
-        public readonly updatedAt: Date
+        public readonly updatedAt: Date,
+        public readonly done: boolean = false
     ) {
     }
 
@@ -80,6 +81,7 @@ export class LearningPathNode {
             }),
             new Date(dto.created_at),
             new Date(dto.updatedAt),
+            dto.done
         )
     }
 }
