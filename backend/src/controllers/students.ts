@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import {
     createStudent,
-    deleteStudent, getAllStudentIds,
+    deleteStudent,
     getAllStudents,
     getStudent,
     getStudentAssignments,
@@ -16,7 +16,7 @@ import { StudentDTO } from '../interfaces/student.js';
 export async function getAllStudentsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
 
-    const students: StudentDTO[] | string[] = full ? await getAllStudents() : await getAllStudentIds();
+    const students: StudentDTO[] | string[] = await getAllStudents(full);
 
     if (!students) {
         res.status(404).json({ error: `Students not found.` });

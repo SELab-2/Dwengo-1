@@ -13,14 +13,13 @@ import { mapToSubmissionDTO, SubmissionDTO } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
 import {mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId} from "../interfaces/question";
 
-export async function getAllStudents(): Promise<StudentDTO[]> {
+export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();
     const users = await studentRepository.findAll();
-    return users.map(mapToStudentDTO);
-}
 
-export async function getAllStudentIds(): Promise<string[]> {
-    const users = await getAllStudents();
+    if (full)
+        return users.map(mapToStudentDTO);
+
     return users.map((user) => user.username);
 }
 
