@@ -1,5 +1,4 @@
 import type {Language} from "@/services/learning-content/language.ts";
-import {RemoteResource} from "@/services/api-client/remote-resource.ts";
 import type {LearningObject} from "@/services/learning-content/learning-object.ts";
 import {getLearningObjectMetadata} from "@/services/learning-content/learning-object-service.ts";
 
@@ -43,7 +42,6 @@ interface LearningPathTransitionDTO {
 }
 
 export class LearningPathNode {
-    public learningObject: RemoteResource<LearningObject>
 
     constructor(
         public readonly learningobjectHruid: string,
@@ -53,7 +51,10 @@ export class LearningPathNode {
         public readonly createdAt: Date,
         public readonly updatedAt: Date
     ) {
-        this.learningObject = getLearningObjectMetadata(learningobjectHruid, language, version);
+    }
+
+    get learningObject(): Promise<LearningObject> {
+        return getLearningObjectMetadata(this.learningobjectHruid, this.language, this.version);
     }
 
     static fromDTOAndOtherNodes(dto: LearningPathNodeDTO, otherNodes: LearningPathNodeDTO[]): LearningPathNode {
@@ -109,8 +110,8 @@ export class LearningPath {
         return list;
     }
 
-    public get learningObjectsAsList(): RemoteResource<LearningObject[]> {
-        return RemoteResource.join(this.nodesAsList.map(node => node.learningObject));
+    public get learningObjectsAsList(): Promise<LearningObject[]> {
+        return Promise.all(this.nodesAsList.map(node => node.learningObject));
     }
 
     static fromDTO(dto: LearningPathDTO): LearningPath {

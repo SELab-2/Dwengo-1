@@ -1,32 +1,22 @@
 <script setup lang="ts" generic="T">
-import {type ErrorState, RemoteResource, type RemoteResourceState} from "@/services/api-client/remote-resource.ts";
-import {computed, onMounted, reactive, ref, type UnwrapNestedRefs, watch} from "vue";
+    import {RemoteResource} from "@/services/api-client/remote-resource.ts";
+    import {computed} from "vue";
     import {useI18n} from "vue-i18n";
 
     const props = defineProps<{
-        resource: RemoteResource<T> | (UnwrapNestedRefs<RemoteResource<T>> & {})
+        resource: RemoteResource<T>
     }>()
-
-    const resource = reactive(props.resource as RemoteResource<T>);
 
     const { t } = useI18n();
 
-    const isLoading = computed(() => resource.state.type === 'loading');
-    const isError = computed(() => resource.state.type === 'error');
+    const isLoading = computed(() => props.resource.state.type === 'loading');
+    const isError = computed(() => props.resource.state.type === 'error');
+    const data = computed(() => props.resource.state.type === 'success' ? props.resource.state.data : null);
 
-    // `data` will be correctly inferred as `T`
-    const data = computed(() => resource.data);
-
-    const error = computed(() => resource.state.type === "error" ? resource.state as ErrorState : null);
+    const error = computed(() => props.resource.state.type === "error" ? props.resource.state : null);
     const errorMessage = computed(() =>
-        error.value?.message ? error.value.message : JSON.stringify(error.value?.error)
+        error.value?.error.message ? error.value.error.message : JSON.stringify(error.value?.error)
     );
-
-    watch(data, (newValue, _) => {
-        if (!newValue && resource.state.type !== "loading") {
-            (resource as RemoteResource<T>).startRequestInBackground();
-        }
-    }, {immediate: true});
 </script>
 
 <template>
@@ -46,6 +36,5 @@ import {computed, onMounted, reactive, ref, type UnwrapNestedRefs, watch} from "
 <style scoped>
   .loading-div {
       text-align: center;
-      margin: 10px;
   }
 </style>
