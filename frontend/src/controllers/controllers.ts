@@ -1,6 +1,8 @@
 import { StudentController } from "@/controllers/student-controller.ts";
 import { TeacherController } from "@/controllers/teacher-controller.ts";
 
+import {ThemeController} from "@/controllers/themes.ts";
+
 export function controllerGetter<T>(Factory: new () => T): () => T {
     let instance: T | undefined;
 
@@ -14,3 +16,4 @@ export function controllerGetter<T>(Factory: new () => T): () => T {
 
 export const getStudentController = controllerGetter(StudentController);
 export const getTeacherController = controllerGetter(TeacherController);
+export const getThemeController = controllerGetter(ThemeController);
