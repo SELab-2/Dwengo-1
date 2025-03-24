@@ -141,6 +141,7 @@ export async function getStudentSubmissionsHandler(req: Request, res: Response):
 }
 
 export async function getStudentQuestionsHandler(req: Request, res: Response): Promise<void> {
+    const full = req.query.full === 'true';
     const username = req.params.username;
 
     if (!username) {

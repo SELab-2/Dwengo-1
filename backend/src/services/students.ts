@@ -138,8 +138,10 @@ export async function getStudentQuestions(username: string, full: boolean): Prom
     const questionRepository = getQuestionRepository();
     const questions = await questionRepository.findAllByAuthor(student);
 
-    if (full)
-        return questions.map(mapToQuestionDTO)
+    const questionsDTO = questions.map(mapToQuestionDTO);
 
-    return questions.map(mapToQuestionId);
+    if (full)
+        return questionsDTO;
+
+    return questionsDTO.map(mapToQuestionId);
 }
