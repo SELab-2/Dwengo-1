@@ -3,7 +3,7 @@
     import {getLearningPath} from "@/services/learning-content/learning-path-service.ts";
     import UsingRemoteResource from "@/components/UsingRemoteResource.vue";
     import {type LearningPath, LearningPathNode} from "@/services/learning-content/learning-path.ts";
-    import {computed, type ComputedRef, watch} from "vue";
+    import {computed, type ComputedRef, ref, watch} from "vue";
     import type {LearningObject} from "@/services/learning-content/learning-object.ts";
     import {useRoute, useRouter} from "vue-router";
     import {loadResource, remoteResource, type SuccessState} from "@/services/api-client/remote-resource.ts";
@@ -73,14 +73,16 @@
         }
     });
 
-    if (!props.learningObjectHruid) {
-        watch(() => learningPathResource.state, (newValue) => {
-            if (newValue.type === "success") {
-                router.push(router.currentRoute.value.path
-                    + "/" + (newValue as SuccessState<LearningPath>).data.startNode.learningobjectHruid);
-            }
-        });
-    }
+    watch(() => learningPathResource.state, (newValue) => {
+        if (!props.learningObjectHruid && newValue.type === "success") {
+            router.push({
+                path: router.currentRoute.value.path + "/" + (newValue as SuccessState<LearningPath>).data.startNode.learningobjectHruid,
+                query: route.query,
+            });
+        }
+    });
+
+    const navigationDrawerShown = ref(true);
 
     function isLearningObjectCompleted(learningObject: LearningObject): boolean {
         if (learningPathResource.state.type === "success") {
@@ -99,7 +101,7 @@
         :resource="learningPathResource"
         v-slot="learningPath: {data: LearningPath}"
     >
-        <v-navigation-drawer>
+        <v-navigation-drawer v-model="navigationDrawerShown">
             <v-list-item
                 :title="learningPath.data.title"
                 :subtitle="learningPath.data.description"
@@ -126,6 +128,11 @@
                 </using-remote-resource>
             </div>
         </v-navigation-drawer>
+        <v-btn
+            :icon="navigationDrawerShown ? 'mdi-menu-open' : 'mdi-menu'"
+            class="navigation-drawer-toggle-button"
+            variant="plain"
+            @click="navigationDrawerShown = !navigationDrawerShown"></v-btn>
         <learning-object-view
             :hruid="currentNode.learningobjectHruid"
             :language="currentNode.language"
@@ -154,6 +161,10 @@
 </template>
 
 <style scoped>
+    .navigation-drawer-toggle-button {
+        margin-bottom: -30px;
+        margin-left: 5px;
+    }
     .navigation-buttons-container {
         padding: 20px;
         display: flex;
