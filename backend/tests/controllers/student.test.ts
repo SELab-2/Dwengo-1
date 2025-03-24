@@ -97,7 +97,11 @@ describe('Student controllers', () => {
 
         await getStudentClassesHandler(req as Request, res as Response);
 
+
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ classes: expect.anything() }));
+
+        const result = jsonMock.mock.lastCall?.[0];
+        expect(result.classes).to.have.length.greaterThan(0);
     });
 
     it('Student groups', async () => {
@@ -106,6 +110,9 @@ describe('Student controllers', () => {
         await getStudentGroupsHandler(req as Request, res as Response);
 
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ groups: expect.anything() }));
+
+        const result = jsonMock.mock.lastCall?.[0];
+        expect(result.groups).to.have.length.greaterThan(0);
     });
 
     it('Student submissions', async () => {
@@ -114,6 +121,9 @@ describe('Student controllers', () => {
         await getStudentSubmissionsHandler(req as Request, res as Response);
 
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ submissions: expect.anything() }));
+
+        const result = jsonMock.mock.lastCall?.[0];
+        expect(result.submissions).to.have.length.greaterThan(0);
     });
 
     it('Student questions', async () => {
@@ -122,6 +132,9 @@ describe('Student controllers', () => {
         await getStudentQuestionsHandler(req as Request, res as Response);
 
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ questions: expect.anything() }));
+
+        const result = jsonMock.mock.lastCall?.[0];
+        expect(result.questions).to.have.length.greaterThan(0);
     });
 
     it('Delete student', async () => {
