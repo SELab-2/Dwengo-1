@@ -1,5 +1,5 @@
-import { StudentController } from "@/controllers/student-controller.ts";
-import { TeacherController } from "@/controllers/teacher-controller.ts";
+import { StudentController } from "@/controllers/students.ts";
+import { TeacherController } from "@/controllers/teachers.ts";
 
 import {ThemeController} from "@/controllers/themes.ts";
 
