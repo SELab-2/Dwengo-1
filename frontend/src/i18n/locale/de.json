@@ -48,5 +48,8 @@
     "enterSearchTerm": "Lernpfade suchen",
     "enterSearchTermDescription": "Bitte geben Sie einen Suchbegriff ein.",
     "noLearningPathsFound": "Nichts gefunden!",
-    "noLearningPathsFoundDescription": "Es gibt keine Lernpfade, die zu Ihrem Suchbegriff passen."
+    "noLearningPathsFoundDescription": "Es gibt keine Lernpfade, die zu Ihrem Suchbegriff passen.",
+    "legendNotCompletedYet": "Noch nicht fertig",
+    "legendCompleted": "Fertig",
+    "legendTeacherExclusive": "Information für Lehrkräfte"
 }

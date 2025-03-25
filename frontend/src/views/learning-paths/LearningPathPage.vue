@@ -85,6 +85,7 @@
 
     const navigationDrawerShown = ref(true);
 
+
     function isLearningObjectCompleted(learningObject: LearningObject): boolean {
         if (learningPathResource.state.type === "success") {
             return learningPathResource.state.data.nodesAsList.filter(it =>
@@ -95,13 +96,28 @@
         }
         return false;
     }
-    function getStatusIconForLearningObject(learningObject: LearningObject): {icon: string, color?: "success" | "info" | "warning" | "error"} {
+
+    type NavItemState = "teacherExclusive" | "completed" | "notCompleted";
+
+    const ICONS: {[key: NavItemState]: string} = {
+        teacherExclusive: "mdi-information",
+        completed: "mdi-checkbox-marked-circle-outline",
+        notCompleted: "mdi-checkbox-blank-circle-outline"
+    }
+
+    const COLORS: {[key: NavItemState]: string | undefined}  = {
+        teacherExclusive: "info",
+        completed: "success",
+        notCompleted: undefined
+    }
+
+    function getNavItemState(learningObject: LearningObject): NavItemState {
         if (learningObject.teacherExclusive) {
-            return {icon: "mdi-information", color: "info"};
+            return "teacherExclusive";
         } else if (isLearningObjectCompleted(learningObject)) {
-            return {icon: "mdi-checkbox-marked-circle-outline", color: "success"};
+            return "completed";
         } else {
-            return {icon: "mdi-checkbox-blank-circle-outline"};
+            return "notCompleted";
         }
     }
 </script>
@@ -116,6 +132,13 @@
                 :title="learningPath.data.title"
                 :subtitle="learningPath.data.description"
             ></v-list-item>
+            <v-list-item>
+                <template v-slot:subtitle>
+                    <p><v-icon :color="COLORS.notCompleted" :icon="ICONS.notCompleted"></v-icon> {{ t("legendNotCompletedYet") }}</p>
+                    <p><v-icon :color="COLORS.completed" :icon="ICONS.completed"></v-icon> {{ t("legendCompleted") }}</p>
+                    <p><v-icon :color="COLORS.teacherExclusive" :icon="ICONS.teacherExclusive"></v-icon> {{ t("legendTeacherExclusive") }}</p>
+                </template>
+            </v-list-item>
             <v-divider></v-divider>
 
             <div v-if="props.learningObjectHruid">
@@ -132,8 +155,8 @@
                     >
                         <template v-slot:prepend>
                             <v-icon
-                                :color="getStatusIconForLearningObject(node).color"
-                                :icon="getStatusIconForLearningObject(node).icon"></v-icon>
+                                :color="COLORS[getNavItemState(node)]"
+                                :icon="ICONS[getNavItemState(node)]"></v-icon>
                         </template>
                         <template v-slot:append>
                             {{ node.estimatedTime }}'

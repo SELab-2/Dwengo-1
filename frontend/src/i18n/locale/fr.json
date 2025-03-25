@@ -8,7 +8,10 @@
     "enterSearchTerm": "Rechercher des parcours d'apprentissage",
     "enterSearchTermDescription": "Saisissez un terme de recherche pour commencer.",
     "noLearningPathsFound": "Rien trouvé !",
-    "noLearningPathsFoundDescription": "Aucun parcours d'apprentissage ne correspond à votre recherche."
+    "noLearningPathsFoundDescription": "Aucun parcours d'apprentissage ne correspond à votre recherche.",
+    "legendNotCompletedYet": "Pas encore achevé",
+    "legendCompleted": "Achevé",
+    "legendTeacherExclusive": "Informations pour les enseignants",
     "student": "élève",
     "teacher": "enseignant",
     "assignments": "Travails",

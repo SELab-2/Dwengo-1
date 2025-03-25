@@ -25,7 +25,7 @@
 
 <template>
     <div class="search-field-container">
-        <learning-path-search-field></learning-path-search-field>
+        <learning-path-search-field class="search-field"></learning-path-search-field>
     </div>
 
     <using-remote-resource :resource="searchResultsResource" v-slot="{ data }: {data: LearningPath[]}">
@@ -33,7 +33,7 @@
             <v-card
                 class="learning-path-card"
                 link
-                :to="`${learningPath.hruid}/${learningPath.language}`"
+                :to="`${learningPath.hruid}/${learningPath.language}/${learningPath.startNode.learningobjectHruid}`"
                 v-for="learningPath in data"
             >
                 <v-img
