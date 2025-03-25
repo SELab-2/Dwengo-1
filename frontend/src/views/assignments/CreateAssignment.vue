@@ -7,6 +7,15 @@
 
     const step = ref(1);
 
+    const loading = ref(false)
+
+    function onClick () {
+        loading.value = true
+    }
+    const searchQuery = ref("");
+
+
+
     // Use a list with all themes so learning-paths can be filtered by theme
     const themeItems = ref(Object.keys(THEMESITEMS).slice(1));
     const value = shallowRef([]);
@@ -21,17 +30,31 @@
                 <template v-slot:item.1>
                     <v-card title="Select a learning path" flat>
                         <v-container class="step-container">
-                            <v-select
-                                v-model="value"
-                                :items="themeItems.map(theme => ({ title: t(`theme-options.${theme}`), value: theme }))"
-                                label="Filter by themes"
-                                chips
-                                multiple
-                                deletable-chips
-                                clearable
-                            ></v-select>
+                            <v-card-text>
+                                <v-select
+                                    v-model="value"
+                                    :items="themeItems.map(theme => ({ title: t(`theme-options.${theme}`), value: theme }))"
+                                    variant="solo"
+                                    label="Filter by themes"
+                                    chips
+                                    multiple
+                                    deletable-chips
+                                    clearable
+                                ></v-select>
+                            </v-card-text>
 
-
+                            <v-card-text>
+                                <v-text-field
+                                    :loading="loading"
+                                    append-inner-icon="mdi-magnify"
+                                    density="compact"
+                                    label="Search"
+                                    variant="solo"
+                                    hide-details
+                                    single-line
+                                    @click:append-inner="onClick"
+                                ></v-text-field>
+                            </v-card-text>
                         </v-container>
                     </v-card>
                 </template>
@@ -88,7 +111,7 @@
 .step-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    flex-direction: column;
     min-height: 200px;
 }
 
