@@ -296,7 +296,6 @@
                 </li>
             </div>
         </nav>
-        <router-view />
     </main>
 </template>
 
@@ -351,17 +350,5 @@
 
     nav a.router-link-active {
         font-weight: bold;
-    }
-
-    @media (max-width: 700px) {
-        .menu {
-            display: none;
-        }
-    }
-
-    @media (min-width: 701px) {
-        .menu_collapsed {
-            display: none;
-        }
     }
 </style>

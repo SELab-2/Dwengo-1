@@ -110,23 +110,30 @@ const router = createRouter({
             meta: { requiresAuth: true },
         },
         {
-           path: "/learningPath/search",
-           name: "LearningPathSearchPage",
-           component: LearningPathSearchPage,
-           meta: { requiresAuth: false }
-        },
-        {
-            path: "/learningPath/:hruid/:language",
-            name: "LearningPath",
-            component: LearningPathPage,
-            props: true,
-            meta: { requiresAuth: false },
+            path: "/learningPath",
+            component: MenuBar,
             children: [
                 {
-                    path: ":learningObjectHruid",
+                    path: "/search",
+                    name: "LearningPathSearchPage",
+                    component: LearningPathSearchPage,
+                    meta: { requiresAuth: true }
+                },
+                {
+                    path: "/:hruid/:language",
+                    name: "LearningPath",
                     component: LearningPathPage,
                     props: true,
-                }
+                    meta: { requiresAuth: true },
+                    children: [
+                        {
+                            path: ":learningObjectHruid",
+                            component: LearningPathPage,
+                            props: true,
+                            meta: { requiresAuth: true }
+                        }
+                    ]
+                },
             ]
         },
         {
