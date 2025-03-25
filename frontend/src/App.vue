@@ -12,7 +12,7 @@
     }
 
     const showMenuBar = computed(() =>
-        (route.meta as RouteMeta).requiresAuth in [false, undefined]
+        (route.meta as RouteMeta).requiresAuth
         && auth.authState.user
     )
 </script>
