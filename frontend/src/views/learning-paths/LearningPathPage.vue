@@ -9,6 +9,7 @@
     import {loadResource, remoteResource, type SuccessState} from "@/services/api-client/remote-resource.ts";
     import LearningObjectView from "@/views/learning-paths/LearningObjectView.vue";
     import {useI18n} from "vue-i18n";
+    import LearningPathSearchField from "@/components/LearningPathSearchField.vue";
 
     const router = useRouter();
     const route = useRoute();
@@ -128,11 +129,17 @@
                 </using-remote-resource>
             </div>
         </v-navigation-drawer>
-        <v-btn
-            :icon="navigationDrawerShown ? 'mdi-menu-open' : 'mdi-menu'"
-            class="navigation-drawer-toggle-button"
-            variant="plain"
-            @click="navigationDrawerShown = !navigationDrawerShown"></v-btn>
+        <div class="control-bar-above-content">
+            <v-btn
+                :icon="navigationDrawerShown ? 'mdi-menu-open' : 'mdi-menu'"
+                class="navigation-drawer-toggle-button"
+                variant="plain"
+                @click="navigationDrawerShown = !navigationDrawerShown"></v-btn>
+            <div class="search-field-container">
+                <learning-path-search-field></learning-path-search-field>
+            </div>
+        </div>
+
         <learning-object-view
             :hruid="currentNode.learningobjectHruid"
             :language="currentNode.language"
@@ -161,9 +168,15 @@
 </template>
 
 <style scoped>
-    .navigation-drawer-toggle-button {
-        margin-bottom: -30px;
+    .search-field-container {
+        min-width: 250px;
+    }
+    .control-bar-above-content {
         margin-left: 5px;
+        margin-right: 5px;
+        margin-bottom: -30px;
+        display: flex;
+        justify-content: space-between;
     }
     .navigation-buttons-container {
         padding: 20px;

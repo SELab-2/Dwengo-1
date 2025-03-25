@@ -8,5 +8,11 @@
     "logout": "log uit",
     "error_title": "Fout",
     "previous": "Vorige",
-    "next": "Volgende"
+    "next": "Volgende",
+    "search": "Zoeken...",
+    "yearsAge": "jaar",
+    "enterSearchTerm": "Zoek naar leerpaden",
+    "enterSearchTermDescription": "Gelieve een zoekterm in te voeren.",
+    "noLearningPathsFound": "Niets gevonden!",
+    "noLearningPathsFoundDescription": "Er zijn geen leerpaden die overeenkomen met je zoekterm."
 }

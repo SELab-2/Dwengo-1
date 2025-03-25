@@ -117,9 +117,10 @@ export class LearningPath {
     }
 
     static fromDTO(dto: LearningPathDTO): LearningPath {
-        let startNodeDto = dto.nodes.filter(it => it.start_node);
+        let startNodeDto = dto.nodes.filter(it => it.start_node === true);
         if (startNodeDto.length !== 1) {
-            throw new Error(`Invalid learning path! Expected precisely one start node, but there were ${startNodeDto.length}.`);
+            throw new Error(`Invalid learning path: ${dto.hruid}/${dto.language}!
+                                Expected precisely one start node, but there were ${startNodeDto.length}.`);
         }
         return new LearningPath(
             dto.language,
@@ -130,7 +131,8 @@ export class LearningPath {
             dto.num_nodes_left,
             dto.keywords.split(' '),
             {min: dto.min_age, max: dto.max_age},
-            LearningPathNode.fromDTOAndOtherNodes(startNodeDto[0], dto.nodes)
+            LearningPathNode.fromDTOAndOtherNodes(startNodeDto[0], dto.nodes),
+            dto.image
         )
     }
 }

@@ -2,5 +2,12 @@
     "welcome": "Bienvenue",
     "error_title": "Erreur",
     "previous": "Précédente",
-    "next": "Suivante"
+    "next": "Suivante",
+    "search": "Réchercher...",
+    "yearsAge": "ans",
+    "enterSearchTerm": "Rechercher des parcours d'apprentissage",
+    "enterSearchTermDescription": "Saisissez un terme de recherche pour commencer.",
+    "noLearningPathsFound": "Rien trouvé !",
+    "noLearningPathsFoundDescription": "Aucun parcours d'apprentissage ne correspond à votre recherche."
+
 }

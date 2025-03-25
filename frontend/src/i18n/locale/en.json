@@ -8,5 +8,11 @@
     "logout": "log out",
     "error_title": "Error",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "search": "Search...",
+    "yearsAge": "years",
+    "enterSearchTerm": "Search learning paths",
+    "enterSearchTermDescription": "Please enter a search term.",
+    "noLearningPathsFound": "Nothing found!",
+    "noLearningPathsFoundDescription": "There are no learning paths matching your search term."
 }
