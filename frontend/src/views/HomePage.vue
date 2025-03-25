@@ -13,10 +13,10 @@
     ]);
 
     // Logic to change the language of the website to the selected language
-    const changeLanguage = (langCode: string) => {
+    function changeLanguage(langCode: string): void {
         locale.value = langCode;
         localStorage.setItem("user-lang", langCode);
-    };
+    }
 </script>
 
 <template>
