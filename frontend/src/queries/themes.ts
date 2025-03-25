@@ -1,4 +1,4 @@
-import { useQuery, UseQueryReturnType } from "@tanstack/vue-query";
+import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
 import { getThemeController } from "@/controllers/controllers";
 import { type MaybeRefOrGetter, toValue } from "vue";
 
