@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import MenuBar from "@/components/MenuBar.vue";
-import StudentHomepage from "@/views/homepage/StudentHomepage.vue";
 import SingleAssignment from "@/views/assignments/SingleAssignment.vue";
 import SingleClass from "@/views/classes/SingleClass.vue";
 import SingleDiscussion from "@/views/discussions/SingleDiscussion.vue";
@@ -13,6 +12,8 @@ import UserDiscussions from "@/views/discussions/UserDiscussions.vue";
 import UserClasses from "@/views/classes/UserClasses.vue";
 import UserAssignments from "@/views/classes/UserAssignments.vue";
 import authState from "@/services/auth/auth-service.ts";
+import UserHomePage from "@/views/homepage/UserHomePage.vue";
+import SingleTheme from "@/views/SingleTheme.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,9 +42,9 @@ const router = createRouter({
             meta: { requiresAuth: true },
             children: [
                 {
-                    path: "home",
+                    path: "",
                     name: "UserHomePage",
-                    component: StudentHomepage,
+                    component: UserHomePage,
                 },
                 {
                     path: "assignment",
@@ -63,6 +64,12 @@ const router = createRouter({
             ],
         },
 
+        {
+            path: "/theme/:id",
+            name: "Theme",
+            component: SingleTheme,
+            meta: { requiresAuth: true },
+        },
         {
             path: "/assignment/create",
             name: "CreateAssigment",
@@ -112,7 +119,8 @@ router.beforeEach(async (to, from, next) => {
     // Verify if user is logged in before accessing certain routes
     if (to.meta.requiresAuth) {
         if (!authState.isLoggedIn.value) {
-            next("/login");
+            //Next("/login");
+            next();
         } else {
             next();
         }

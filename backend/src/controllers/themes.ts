@@ -8,7 +8,7 @@ interface Translations {
     };
 }
 
-export function getThemes(req: Request, res: Response) {
+export function getThemesHandler(req: Request, res: Response) {
     const language = (req.query.language as string)?.toLowerCase() || 'nl';
     const translations = loadTranslations<Translations>(language);
     const themeList = themes.map((theme) => ({
@@ -21,8 +21,14 @@ export function getThemes(req: Request, res: Response) {
     res.json(themeList);
 }
 
-export function getThemeByTitle(req: Request, res: Response) {
+export function getHruidsByThemeHandler(req: Request, res: Response) {
     const themeKey = req.params.theme;
+
+    if (!themeKey) {
+        res.status(400).json({ error: 'Missing required field: theme' });
+        return;
+    }
+
     const theme = themes.find((t) => t.title === themeKey);
 
     if (theme) {

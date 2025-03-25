@@ -16,12 +16,14 @@
         "test:e2e": "playwright test"
     },
     "dependencies": {
+        "@tanstack/react-query": "^5.69.0",
+        "@tanstack/vue-query": "^5.69.0",
+        "axios": "^1.8.2",
+        "oidc-client-ts": "^3.1.0",
         "vue": "^3.5.13",
         "vue-i18n": "^11.1.2",
         "vue-router": "^4.5.0",
-        "vuetify": "^3.7.12",
-        "oidc-client-ts": "^3.1.0",
-        "axios": "^1.8.2"
+        "vuetify": "^3.7.12"
     },
     "devDependencies": {
         "@playwright/test": "^1.50.1",
