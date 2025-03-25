@@ -30,6 +30,7 @@ COPY package-lock.json backend/package.json ./
 RUN npm install --silent --only=production
 
 COPY ./docs /docs
+COPY ./backend/i18n /app/i18n
 COPY --from=build-stage /app/backend/dist ./dist/
 
 EXPOSE 3000
