@@ -52,6 +52,7 @@
             <div>
                 <img
                     class="dwengo_logo"
+                    alt="Dwengo logo"
                     :src="dwengoLogo"
                 />
                 <p
@@ -158,6 +159,34 @@
         >{{ initials }}</v-avatar
         >
     </v-app-bar>
+    <v-navigation-drawer
+        v-model="drawer"
+        temporary
+        app
+    >
+        <v-list>
+            <v-list-item
+                to="/user/assignment"
+                link
+            >
+                <v-list-item-title class="menu_item">{{ t("assignments") }}</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item
+                to="/user/class"
+                link
+            >
+                <v-list-item-title class="menu_item">{{ t("classes") }}</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item
+                to="/user/discussion"
+                link
+            >
+                <v-list-item-title class="menu_item">{{ t("discussions") }}</v-list-item-title>
+            </v-list-item>
+        </v-list>
+    </v-navigation-drawer>
 </template>
 
 <style scoped>
@@ -173,11 +202,6 @@
         margin-right: 10px;
         font-size: large;
         font-weight: bold;
-    }
-
-    .right {
-        align-items: center;
-        padding: 10px;
     }
 
     .right li {
@@ -216,10 +240,6 @@
         text-decoration: none;
         font-size: large;
         text-transform: none;
-    }
-
-    nav a.router-link-active {
-        font-weight: bold;
     }
 
     @media (max-width: 700px) {
