@@ -16,10 +16,6 @@ export const THEMESITEMS: Record<string, string[]> = {
     "algorithms": ["math_with_python", "python_programming", "stem", "algorithms", "basics_ai"],
 };
 
-export const AGEITEMS = [
-    "all", "primary-school", "lower-secondary", "upper-secondary", "high-school", "older"
-];
-
 export const AGE_TO_THEMES: Record<string, string[]> = {
     "all": THEMES_KEYS,
     "primary-school": ["wegostem", "computational_thinking", "physical_computing"],

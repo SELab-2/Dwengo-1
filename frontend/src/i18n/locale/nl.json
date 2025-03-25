@@ -39,5 +39,10 @@
         "high-school": "3e graad secundair",
         "older": "Hoger onderwijs"
     },
-    "read-more": "Lees meer"
+    "read-more": "Lees meer",
+    "new-assignment": "Nieuwe opdracht",
+    "next": "volgende",
+    "previous": "vorige",
+    "groups": "Groepen",
+    "learning-path": "Leerpad"
 }

@@ -40,5 +40,9 @@
         "older": "18 and older"
     },
     "read-more": "Read more",
-    "new-assignment": "New Assignment"
+    "new-assignment": "New Assignment",
+    "next": "next",
+    "previous": "previous",
+    "groups": "Groups",
+    "learning-path": "Learning path"
 }

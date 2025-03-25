@@ -40,5 +40,9 @@
         "older": "18 et plus"
     },
     "read-more": "En savoir plus",
-    "new-assignment": "Nouveau travail"
+    "new-assignment": "Nouveau travail",
+    "next": "suivant",
+    "previous": "précédent",
+    "groups": "Groupes",
+    "learning-path": "Parcours d'apprentissage"
 }
