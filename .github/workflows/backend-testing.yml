@@ -3,12 +3,24 @@
 
 name: Backend Testing
 
+# Workflow runs when:
+#   - a backend js/ts file on "dev" changes
+#   - a non-draft PR to "dev" with backend js/ts files is opened, is reopened, or changes
+#   - a draft PR to "dev" with backend js/ts files is marked as ready for review
 on:
   push:
     branches: [ "dev" ]
+    paths:
+      - 'backend/src/**.[jt]s'
+      - 'backend/tests/**.[jt]s'
+      - 'backend/vitest.config.ts'
   pull_request:
     branches: [ "dev" ]
     types: ["synchronize", "ready_for_review", "opened", "reopened"]
+    paths:
+      - 'backend/src/**.[jt]s'
+      - 'backend/tests/**.[jt]s'
+      - 'backend/vitest.config.ts'
 
 
 jobs:

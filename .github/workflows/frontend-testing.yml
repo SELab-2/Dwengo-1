@@ -3,12 +3,34 @@
 
 name: Frontend Testing
 
+# Workflow runs when:
+#   - a frontend js/ts/vue/css file on "dev" changes
+#   - a non-draft PR to "dev" with frontend js/ts/vue/css files is opened, is reopened, or changes
+#   - a draft PR to "dev" with frontend js/ts/vue/css files is marked as ready for review
 on:
     push:
       branches: [ "dev" ]
+      paths:
+        - 'frontend/src/**.[jt]s'
+        - 'frontend/src/**.vue'
+        - 'frontend/src/**.css'
+        - 'frontend/tests/**.[jt]s'
+        - 'frontend/tests/**.vue'
+        - 'frontend/tests/**.css'
+        - 'frontend/vitest.config.ts'
+        - 'frontend/playwright.config.ts'
     pull_request:
       branches: [ "dev" ]
       types: ["synchronize", "ready_for_review", "opened", "reopened"]
+      paths:
+        - 'frontend/src/**.[jt]s'
+        - 'frontend/src/**.vue'
+        - 'frontend/src/**.css'
+        - 'frontend/tests/**.[jt]s'
+        - 'frontend/tests/**.vue'
+        - 'frontend/tests/**.css'
+        - 'frontend/vitest.config.ts'
+        - 'frontend/playwright.config.ts'
 
 jobs:
   test:
