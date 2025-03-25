@@ -95,6 +95,15 @@
         }
         return false;
     }
+    function getStatusIconForLearningObject(learningObject: LearningObject): {icon: string, color?: "success" | "info" | "warning" | "error"} {
+        if (learningObject.teacherExclusive) {
+            return {icon: "mdi-information", color: "info"};
+        } else if (isLearningObjectCompleted(learningObject)) {
+            return {icon: "mdi-checkbox-marked-circle-outline", color: "success"};
+        } else {
+            return {icon: "mdi-checkbox-blank-circle-outline"};
+        }
+    }
 </script>
 
 <template>
@@ -119,9 +128,13 @@
                         :to="{path: node.key, query: route.query}"
                         :title="node.title"
                         :active="node.key === props.learningObjectHruid"
-                        :prepend-icon="isLearningObjectCompleted(node) ? 'mdi-checkbox-marked-circle-outline' : 'mdi-checkbox-blank-circle-outline'"
                         v-for="node in learningObjects.data"
                     >
+                        <template v-slot:prepend>
+                            <v-icon
+                                :color="getStatusIconForLearningObject(node).color"
+                                :icon="getStatusIconForLearningObject(node).icon"></v-icon>
+                        </template>
                         <template v-slot:append>
                             {{ node.estimatedTime }}'
                         </template>
