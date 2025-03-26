@@ -31,12 +31,12 @@
         localStorage.setItem("user-lang", langCode);
     };
 
-    // contains functionality to let the collapsed menu appear and disappear
-    // when the screen size varies
+    // Contains functionality to let the collapsed menu appear and disappear
+    // When the screen size varies
     const drawer = ref(false);
 
-    // when the user wants to logout, a popup is shown to verify this
-    // if verified, the user should be logged out
+    // When the user wants to logout, a popup is shown to verify this
+    // If verified, the user should be logged out
     const performLogout = () => {
         auth.logout();
     };
