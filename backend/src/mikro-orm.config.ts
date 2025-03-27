@@ -3,7 +3,6 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { envVars, getEnvVar, getNumericEnvVar } from './util/envVars.js';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { MikroOrmLogger } from './logging/mikroOrmLogger.js';
-import { LOG_LEVEL } from './config.js';
 
 // Import alle entity-bestanden handmatig
 import { User } from './entities/users/user.entity.js';
@@ -69,7 +68,7 @@ function config(testingMode = false): Options {
         // EntitiesTs: entitiesTs,
 
         // Logging
-        debug: LOG_LEVEL === 'debug',
+        debug: getEnvVar(envVars.LogLevel) === 'debug',
         loggerFactory: (options: LoggerOptions) => new MikroOrmLogger(options),
     };
 }

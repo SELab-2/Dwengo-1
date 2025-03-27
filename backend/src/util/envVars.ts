@@ -4,6 +4,7 @@ const IDP_PREFIX = PREFIX + 'AUTH_';
 const STUDENT_IDP_PREFIX = IDP_PREFIX + 'STUDENT_';
 const TEACHER_IDP_PREFIX = IDP_PREFIX + 'TEACHER_';
 const CORS_PREFIX = PREFIX + 'CORS_';
+const LOGGING_PREFIX = PREFIX + 'LOGGING_';
 
 interface EnvVar {
     key: string;
@@ -13,15 +14,18 @@ interface EnvVar {
 
 export const envVars: Record<string, EnvVar> = {
     Port: { key: PREFIX + 'PORT', defaultValue: 3000 },
+    LearningContentRepoApiBaseUrl: { key: PREFIX + 'LEARNING_CONTENT_REPO_API_BASE_URL', defaultValue: 'https://dwengo.org/backend/api' },
+    FallbackLanguage: { key: PREFIX + 'FALLBACK_LANGUAGE', defaultValue: 'nl' },
+    RunMode: { key: PREFIX + 'RUN_MODE', defaultValue: 'dev' },
+
     DbHost: { key: DB_PREFIX + 'HOST', required: true },
     DbPort: { key: DB_PREFIX + 'PORT', defaultValue: 5432 },
     DbName: { key: DB_PREFIX + 'NAME', defaultValue: 'dwengo' },
     DbUsername: { key: DB_PREFIX + 'USERNAME', required: true },
     DbPassword: { key: DB_PREFIX + 'PASSWORD', required: true },
     DbUpdate: { key: DB_PREFIX + 'UPDATE', defaultValue: false },
-    LearningContentRepoApiBaseUrl: { key: PREFIX + 'LEARNING_CONTENT_REPO_API_BASE_URL', defaultValue: 'https://dwengo.org/backend/api' },
-    FallbackLanguage: { key: PREFIX + 'FALLBACK_LANGUAGE', defaultValue: 'nl' },
     UserContentPrefix: { key: DB_PREFIX + 'USER_CONTENT_PREFIX', defaultValue: 'u_' },
+
     IdpStudentUrl: { key: STUDENT_IDP_PREFIX + 'URL', required: true },
     IdpStudentClientId: { key: STUDENT_IDP_PREFIX + 'CLIENT_ID', required: true },
     IdpStudentJwksEndpoint: { key: STUDENT_IDP_PREFIX + 'JWKS_ENDPOINT', required: true },
@@ -29,8 +33,12 @@ export const envVars: Record<string, EnvVar> = {
     IdpTeacherClientId: { key: TEACHER_IDP_PREFIX + 'CLIENT_ID', required: true },
     IdpTeacherJwksEndpoint: { key: TEACHER_IDP_PREFIX + 'JWKS_ENDPOINT', required: true },
     IdpAudience: { key: IDP_PREFIX + 'AUDIENCE', defaultValue: 'account' },
+
     CorsAllowedOrigins: { key: CORS_PREFIX + 'ALLOWED_ORIGINS', defaultValue: '' },
     CorsAllowedHeaders: { key: CORS_PREFIX + 'ALLOWED_HEADERS', defaultValue: 'Authorization,Content-Type' },
+
+    LogLevel: { key: LOGGING_PREFIX + 'LEVEL', defaultValue: 'info' },
+    LokiHost: { key: LOGGING_PREFIX + 'LOKI_HOST', defaultValue: 'http://localhost:3102' },
 } as const;
 
 /**

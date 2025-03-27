@@ -1,7 +1,7 @@
 import { createLogger, format, Logger as WinstonLogger, transports } from 'winston';
 import LokiTransport from 'winston-loki';
 import { LokiLabels } from 'loki-logger-ts';
-import { LOG_LEVEL, LOKI_HOST } from '../config.js';
+import { envVars, getEnvVar } from '../util/envVars.js';
 
 export class Logger extends WinstonLogger {
     constructor() {
@@ -22,10 +22,25 @@ function initializeLogger(): Logger {
         return logger;
     }
 
+    const logLevel = getEnvVar(envVars.LogLevel);
+
+    const consoleTransport = new transports.Console({
+        level: getEnvVar(envVars.LogLevel),
+        format: format.combine(format.cli(), format.colorize()),
+    });
+
+    if (getEnvVar(envVars.RunMode) === 'dev') {
+        return createLogger({
+            transports: [consoleTransport],
+        });
+    }
+
+    const lokiHost = getEnvVar(envVars.LokiHost);
+
     const lokiTransport: LokiTransport = new LokiTransport({
-        host: LOKI_HOST,
+        host: lokiHost,
         labels: lokiLabels,
-        level: LOG_LEVEL,
+        level: logLevel,
         json: true,
         format: format.combine(format.timestamp(), format.json()),
         onConnectionError: (err): void => {
@@ -34,16 +49,11 @@ function initializeLogger(): Logger {
         },
     });
 
-    const consoleTransport = new transports.Console({
-        level: LOG_LEVEL,
-        format: format.combine(format.cli(), format.colorize()),
-    });
-
     logger = createLogger({
         transports: [lokiTransport, consoleTransport],
     });
 
-    logger.debug(`Logger initialized with level ${LOG_LEVEL}, Loki host ${LOKI_HOST}`);
+    logger.debug(`Logger initialized with level ${logLevel} to Loki host ${lokiHost}`);
     return logger;
 }
 
