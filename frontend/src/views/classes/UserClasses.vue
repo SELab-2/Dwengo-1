@@ -52,11 +52,11 @@
         </div>
         <div class="join">
             <h1>{{ t("joinClass") }}</h1>
-            <p>{{ t("Enter the code the teacher has given you to join the class.") }}</p>
+            <p>{{ t("JoinClassExplanation") }}</p>
 
             <v-text-field
                 label="CODE"
-                placeholder="Enter the code"
+                placeholder=""
                 variant="outlined"
                 max-width="300px"
             ></v-text-field>

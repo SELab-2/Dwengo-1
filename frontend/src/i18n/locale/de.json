@@ -17,6 +17,8 @@
     "inclusive": "Inclusiv",
     "sociallyRelevant": "Gesellschaftlich relevant",
     "translate": "übersetzen",
+    "joinClass": "Klasse beitreten",
+    "JoinClassExplanation": "Geben Sie den Code ein, den Ihnen die Lehrkraft mitgeteilt hat, um der Klasse beizutreten.",
     "themes": "Themen",
     "choose-theme": "Wähle ein thema",
     "choose-age": "Alter auswählen",
