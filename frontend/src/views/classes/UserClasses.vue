@@ -50,6 +50,17 @@
                 </tbody>
             </v-table>
         </div>
+        <div class="join">
+            <h1>{{ t("joinClass") }}</h1>
+            <p>{{ t("Enter the code the teacher has given you to join the class.") }}</p>
+
+            <v-text-field
+                label="CODE"
+                placeholder="Enter the code"
+                variant="outlined"
+                max-width="300px"
+            ></v-text-field>
+        </div>
     </main>
 </template>
 
@@ -62,11 +73,11 @@
     }
 
     table thead th:first-child {
-        border-top-left-radius: 10px; /* Top-left rounded corner */
+        border-top-left-radius: 10px;
     }
 
     .table thead th:last-child {
-        border-top-right-radius: 10px; /* Top-right rounded corner */
+        border-top-right-radius: 10px;
     }
 
     .table tbody tr:nth-child(odd) {
@@ -97,5 +108,18 @@
         padding-left: 30px;
         padding-top: 2%;
         font-size: 50px;
+    }
+
+    h1 {
+        color: #0e6942;
+        font-size: 30px;
+    }
+
+    .join {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-left: 30px;
+        margin-top: 50px;
     }
 </style>
