@@ -46,14 +46,17 @@ services:
         extends:
             file: ./compose.yml
             service: idp
-        # TODO Replace with proper production command
-        command: ['start-dev', '--http-port', '7080', '--https-port', '7443', '--import-realm']
+        command: 'start'
         networks:
             - dwengo-1
+        depends_on:
+            - db
         labels:
             - 'traefik.enable=true'
             - 'traefik.http.routers.idp.rule=PathPrefix(`/idp`)'
             - 'traefik.http.services.idp.loadbalancer.server.port=7080'
+        volumes:
+          - /etc/keycloak:/opt/keycloak/conf/  # Keycloak certificates (momennteel self-signed)
         env_file:
             - ./config/idp/.env
         environment:
@@ -62,6 +65,8 @@ services:
             KC_PROXY_HEADERS: 'xforwarded'
             KC_HTTP_ENABLED: 'true'
             KC_HTTP_RELATIVE_PATH: '/idp'
+            KC_HTTPS_CERTIFICATE_FILE: /opt/keycloak/keycloak.crt
+            KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keycloak/keycloak.pem
 
     reverse-proxy:
         image: traefik:v3.3
