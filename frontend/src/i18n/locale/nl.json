@@ -44,5 +44,8 @@
     "next": "volgende",
     "previous": "vorige",
     "groups": "Groepen",
-    "learning-path": "Leerpad"
+    "learning-path": "Leerpad",
+    "choose-lp": "Kies een leerpad",
+    "filter-themes": "Filter op thema's",
+    "search-lp": "Zoek en selecteer een leerpad"
 }

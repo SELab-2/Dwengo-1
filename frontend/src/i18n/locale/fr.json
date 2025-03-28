@@ -44,5 +44,8 @@
     "next": "suivant",
     "previous": "précédent",
     "groups": "Groupes",
-    "learning-path": "Parcours d'apprentissage"
+    "learning-path": "Parcours d'apprentissage",
+    "choose-lp": "Choisis un parcours d'apprentissage",
+    "filter-themes": "Filtrer par thèmes",
+    "search-lp": "Cherche et sélectionne un parcours d'apprentissage"
 }
