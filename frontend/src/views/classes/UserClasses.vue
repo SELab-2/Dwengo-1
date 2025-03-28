@@ -1,13 +1,65 @@
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
-    const { t, locale } = useI18n();
+    import { ref, watch } from "vue";
+    const { t } = useI18n();
 
     const role: String = authState.authState.activeRole!;
 
-    const classIds = ["class01", "class02", "class03"];
-    const classmembers = [22, 11, 9];
-    const zipped = classIds.map((item, index) => [item, classmembers[index]]);
+    type Teacher = {
+        username: string;
+        firstName: string;
+        lastName: string;
+        classes: Array<Class>;
+    };
+
+    type Student = {
+        username: string;
+        firstName: string;
+        lastName: string;
+        classes: Array<Class>;
+    };
+
+    type Class = {
+        id: string;
+        displayName: string;
+        teachers: Array<Teacher>;
+        students: Array<Student>;
+    };
+
+    const classIds: Array<string> = ["class01", "class02", "class03"];
+    let student01: Student = { username: "id01", firstName: "Mark", lastName: "Knopfler", classes: [] };
+    let student02: Student = { username: "id01", firstName: "John", lastName: "Hiat", classes: [] };
+    let student03: Student = { username: "id01", firstName: "Aaron", lastName: "Lewis", classes: [] };
+
+    const class01: Class = { id: "class01", displayName: "class 01", teachers: [], students: [student01, student02] };
+    const class02: Class = { id: "class02", displayName: "class 02", teachers: [], students: [student01, student03] };
+    const class03: Class = { id: "class03", displayName: "class 03", teachers: [], students: [student02, student03] };
+
+    student01.classes = [class01, class02];
+    student02.classes = [class01, class03];
+    student03.classes = [class02, class03];
+
+    const classes: Array<Class> = [class01, class02, class03];
+
+    const code = ref("");
+    console.log(code);
+    watch(code, (newValue) => {
+        console.log("Code changed:", newValue);
+    });
+
+    // handle dialog for showing members of a class
+    const dialog = ref(false);
+    const students = ref<Array<string>>([]);
+    const selectedClass = ref<Class | null>(null);
+    
+    const openDialog = (c: Class) => {
+        selectedClass.value = c;
+        if (selectedClass !== undefined) {
+            students.value = selectedClass.value.students.map((student) => `${student.firstName} ${student.lastName}`);
+            dialog.value = true;
+        }
+    };
 </script>
 <template>
     <main>
@@ -22,11 +74,11 @@
                 </thead>
                 <tbody>
                     <tr
-                        v-for="[id, members] in zipped"
-                        :key="id"
+                        v-for="c in classes"
+                        :key="c.id"
                     >
-                        <td>{{ id }}</td>
-                        <td>{{ members }}</td>
+                        <td>{{ c.displayName }}</td>
+                        <td class="link" @click="openDialog(c)">{{ c.students.length }}</td>
                     </tr>
                 </tbody>
             </v-table>
@@ -41,22 +93,47 @@
                 </thead>
                 <tbody>
                     <tr
-                        v-for="[id, members] in zipped"
-                        :key="id"
+                        v-for="c in classes"
+                        :key="c.id"
                     >
-                        <td>{{ id }}</td>
-                        <td>{{ members }}</td>
+                        <td>{{ c.displayName }}</td>
+                        <td>{{ c.students.length }}</td>
                     </tr>
                 </tbody>
             </v-table>
         </div>
+        <v-dialog
+            v-model="dialog"
+            width="400"
+        >
+            <v-card>
+                <v-card-title> {{ selectedClass?.displayName }} </v-card-title>
+                <v-card-text>
+                    <ul>
+                        <li
+                            v-for="student in students"
+                            :key="student"
+                        >
+                            {{ student }}
+                        </li>
+                    </ul>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn
+                        color="primary"
+                        @click="dialog = false"
+                        >Close</v-btn
+                    >
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <div class="join">
             <h1>{{ t("joinClass") }}</h1>
             <p>{{ t("JoinClassExplanation") }}</p>
 
             <v-text-field
                 label="CODE"
-                placeholder=""
+                v-model="code"
                 variant="outlined"
                 max-width="300px"
             ></v-text-field>
@@ -121,5 +198,10 @@
         gap: 20px;
         margin-left: 30px;
         margin-top: 50px;
+    }
+
+    .link {
+        color: #0b75bb;
+        text-decoration: underline;
     }
 </style>
