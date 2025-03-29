@@ -40,3 +40,17 @@ export class NotFoundException extends Error {
         super(error);
     }
 }
+
+export class ConflictException extends Error {
+    public status = 409;
+    constructor(message: string = 'Conflict') {
+        super(message);
+    }
+}
+
+export class InternalServerError extends Error {
+    public status = 500;
+    constructor(message: string = 'Internal Server Error') {
+        super(message);
+    }
+}

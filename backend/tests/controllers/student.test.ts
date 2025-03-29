@@ -9,9 +9,14 @@ import {
     getStudentClassesHandler,
     getStudentGroupsHandler,
     getStudentSubmissionsHandler,
-    getStudentQuestionsHandler
+    getStudentQuestionsHandler,
+    createStudentRequestHandler,
+    getStudentRequestHandler,
+    updateClassJoinRequestHandler,
+    deleteClassJoinRequestHandler
 } from '../../src/controllers/students.js';
 import {TEST_STUDENTS} from "../test_assets/users/students.testdata";
+import {BadRequestException, NotFoundException} from "../../src/exceptions";
 
 describe('Student controllers', () => {
     let req: Partial<Request>;
@@ -33,22 +38,20 @@ describe('Student controllers', () => {
         };
     });
 
-    it('Student not found 404', async () => {
+    it('Student not found', async () => {
         req = { params: { username: 'doesnotexist' } };
 
-        await getStudentHandler(req as Request, res as Response);
-
-        expect(statusMock).toHaveBeenCalledWith(404);
-        expect(jsonMock).toHaveBeenCalled();
+        await expect(() => deleteStudentHandler(req as Request, res as Response))
+            .rejects
+            .toThrow(NotFoundException);
     });
 
-    it('No username 400', async () => {
+    it('No username', async () => {
         req = { params: {} };
 
-        await getStudentHandler(req as Request, res as Response);
-
-        expect(statusMock).toHaveBeenCalledWith(400);
-        expect(jsonMock).toHaveBeenCalled();
+        await expect(() => getStudentHandler(req as Request, res as Response))
+            .rejects
+            .toThrowError(BadRequestException);
     });
 
     it('Create student', async () => {
@@ -66,13 +69,14 @@ describe('Student controllers', () => {
         expect(jsonMock).toHaveBeenCalled();
     });
 
+    // TODO create duplicate student id
+
     it('Create student no body 400', async () => {
         req = { body: {} };
 
-        await createStudentHandler(req as Request, res as Response);
-
-        expect(statusMock).toHaveBeenCalledWith(400);
-        expect(jsonMock).toHaveBeenCalled();
+        await expect(() => createStudentHandler(req as Request, res as Response))
+            .rejects
+            .toThrowError(BadRequestException);
     });
 
     it('Student list', async () => {
@@ -146,12 +150,73 @@ describe('Student controllers', () => {
         expect(jsonMock).toHaveBeenCalled();
     });
 
-    it('Deleting non-existent student 404', async () => {
+    it('Deleting non-existent student', async () => {
         req = { params: { username: 'doesnotexist' } };
 
-        await deleteStudentHandler(req as Request, res as Response);
+        await expect(() => deleteStudentHandler(req as Request, res as Response))
+            .rejects
+            .toThrow(NotFoundException);
+    });
 
-        expect(statusMock).toHaveBeenCalledWith(404);
+    it('Get join requests by student', async () => {
+        req = {
+            params: { username: 'PinkFloyd' },
+        };
+
+        await getStudentRequestHandler(req as Request, res as Response);
+
+        expect(statusMock).toHaveBeenCalledWith(201);
+        expect(jsonMock).toHaveBeenCalledWith(
+            expect.objectContaining({
+                requests: expect.anything(),
+            })
+        );
+
+        const result = jsonMock.mock.lastCall?.[0];
+        // console.log('[JOIN REQUESTS]', result.requests);
+        expect(result.requests.length).toBeGreaterThan(0);
+    });
+
+    it('Create join request', async () => {
+        req = {
+            params: { username: 'DireStraits', classId: '' },
+        };
+
+        await createStudentRequestHandler(req as Request, res as Response);
+
+        expect(statusMock).toHaveBeenCalledWith(201);
         expect(jsonMock).toHaveBeenCalled();
     });
+
+    /*
+
+    it('Update join request status (accept)', async () => {
+        req = {
+            params: { classId },
+            query: { username },
+        };
+
+        await updateClassJoinRequestHandler(req as Request, res as Response);
+
+        expect(statusMock).toHaveBeenCalledWith(200);
+        expect(jsonMock).toHaveBeenCalled();
+        const result = jsonMock.mock.lastCall?.[0];
+        console.log('[UPDATED REQUEST]', result);
+    });
+
+    it('Delete join request', async () => {
+        req = {
+            params: { classId },
+            query: { username },
+        };
+
+        await deleteClassJoinRequestHandler(req as Request, res as Response);
+
+        expect(statusMock).toHaveBeenCalledWith(204);
+        expect(sendMock).toHaveBeenCalled();
+    });
+
+     */
+
+
 });

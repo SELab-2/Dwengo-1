@@ -2,15 +2,14 @@ import {
     getClassRepository,
     getLearningObjectRepository,
     getQuestionRepository,
-    getStudentRepository,
     getTeacherRepository,
 } from '../data/repositories.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { getClassStudents } from './class.js';
-import { mapToQuestionDTO, mapToQuestionId, QuestionDTO } from '../interfaces/question.js';
+import {mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId} from '../interfaces/question.js';
 import { mapToTeacher, mapToTeacherDTO, TeacherDTO } from '../interfaces/teacher.js';
 
-export async function getAllTeachers(full: boolean): Promise<TeacherDTO[]> {
+export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | string[]> {
     const teacherRepository = getTeacherRepository();
     const users = await teacherRepository.findAll();
 
@@ -81,16 +80,17 @@ export async function getClassesByTeacher(username: string, full: boolean): Prom
 }
 
 export async function getStudentsByTeacher(username: string, full: boolean) {
-    const classes = await getClassesByTeacher(username, false);
+    const classes = await fetchClassesByTeacher(username);
+    const classIds = classes.map((cls) => cls.id);
 
-    const students = (await Promise.all(classes.map(async (id) => getClassStudents(id)))).flat();
+    const students = (await Promise.all(classIds.map(async (id) => getClassStudents(id)))).flat();
     if (full) {
         return students;
     }
     return students.map((student) => student.username);
 }
 
-export async function getTeacherQuestions(username: string, full: boolean): Promise<QuestionDTO[]> {
+export async function getTeacherQuestions(username: string, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
     const teacherRepository = getTeacherRepository();
     const teacher = await teacherRepository.findByUsername(username);
     if (!teacher) {
@@ -104,10 +104,11 @@ export async function getTeacherQuestions(username: string, full: boolean): Prom
     // Fetch all questions related to these learning objects
     const questionRepository = getQuestionRepository();
     const questions = await questionRepository.findAllByLearningObjects(learningObjects);
+    const questionsDTO = questions.map(mapToQuestionDTO);
 
     if (full) {
-        return questions.map(mapToQuestionDTO);
+        return questionsDTO;
     }
 
-    return questions.map(mapToQuestionId);
+    return questionsDTO.map(mapToQuestionId);
 }

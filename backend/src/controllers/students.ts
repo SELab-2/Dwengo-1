@@ -1,17 +1,19 @@
 import { Request, Response } from 'express';
 import {
-    createStudent,
+    createClassJoinRequest,
+    createStudent, deleteClassJoinRequest,
     deleteStudent,
-    getAllStudents,
+    getAllStudents, getJoinRequestsByStudent,
     getStudent,
     getStudentAssignments,
     getStudentClasses,
     getStudentGroups,
     getStudentQuestions,
-    getStudentSubmissions,
+    getStudentSubmissions, updateClassJoinRequestStatus,
 } from '../services/students.js';
-import { MISSING_FIELDS_ERROR, MISSING_USERNAME_ERROR, NAME_NOT_FOUND_ERROR } from './users.js';
 import { StudentDTO } from '../interfaces/student.js';
+import {BadRequestException} from "../exceptions";
+import {requireFields} from "./error-helper";
 
 
 export async function getAllStudentsHandler(req: Request, res: Response): Promise<void> {
@@ -19,69 +21,42 @@ export async function getAllStudentsHandler(req: Request, res: Response): Promis
 
     const students: StudentDTO[] | string[] = await getAllStudents(full);
 
-    if (!students) {
-        res.status(404).json({ error: `Students not found.` });
-        return;
-    }
-
     res.json({ students });
 }
 
 export async function getStudentHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
+    requireFields({ username });
 
-    if (!username) {
-        res.status(400).json(MISSING_USERNAME_ERROR);
-        return;
-    }
+    const student = await getStudent(username);
 
-    const user = await getStudent(username);
-
-    if (!user) {
-        res.status(404).json(NAME_NOT_FOUND_ERROR(username));
-        return;
-    }
-
-    res.status(201).json(user);
+    res.status(201).json({ student });
 }
 
 export async function createStudentHandler(req: Request, res: Response) {
+    const username = req.body.username;
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    requireFields({ username, firstName, lastName });
+
     const userData = req.body as StudentDTO;
 
-    if (!userData.username || !userData.firstName || !userData.lastName) {
-        res.status(400).json(MISSING_FIELDS_ERROR);
-        return;
-    }
-
-    const newUser = await createStudent(userData);
-    res.status(201).json(newUser);
+    const student = await createStudent(userData);
+    res.status(201).json({ student });
 }
 
 export async function deleteStudentHandler(req: Request, res: Response) {
     const username = req.params.username;
+    requireFields({ username });
 
-    if (!username) {
-        res.status(400).json(MISSING_USERNAME_ERROR);
-        return;
-    }
-
-    const deletedUser = await deleteStudent(username);
-    if (!deletedUser) {
-        res.status(404).json(NAME_NOT_FOUND_ERROR(username));
-        return;
-    }
-
-    res.status(200).json(deletedUser);
+    const student = await deleteStudent(username);
+    res.status(200).json({ student });
 }
 
 export async function getStudentClassesHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
     const username = req.params.username;
-
-    if (!username) {
-        res.status(400).json(MISSING_USERNAME_ERROR);
-        return;
-    }
+    requireFields({ username });
 
     const classes = await getStudentClasses(username, full);
 
@@ -97,11 +72,7 @@ export async function getStudentClassesHandler(req: Request, res: Response): Pro
 export async function getStudentAssignmentsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
     const username = req.params.username;
-
-    if (!username) {
-        res.status(400).json(MISSING_USERNAME_ERROR);
-        return;
-    }
+    requireFields({ username });
 
     const assignments = getStudentAssignments(username, full);
 
@@ -113,11 +84,7 @@ export async function getStudentAssignmentsHandler(req: Request, res: Response):
 export async function getStudentGroupsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
     const username = req.params.username;
-
-    if (!username) {
-        res.status(400).json(MISSING_USERNAME_ERROR);
-        return;
-    }
+    requireFields({ username });
 
     const groups = await getStudentGroups(username, full);
 
@@ -128,11 +95,7 @@ export async function getStudentGroupsHandler(req: Request, res: Response): Prom
 
 export async function getStudentSubmissionsHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
-
-    if (!username) {
-        res.status(400).json(MISSING_USERNAME_ERROR);
-        return;
-    }
+    requireFields({ username });
 
     const submissions = await getStudentSubmissions(username);
 
@@ -144,11 +107,7 @@ export async function getStudentSubmissionsHandler(req: Request, res: Response):
 export async function getStudentQuestionsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
     const username = req.params.username;
-
-    if (!username) {
-        res.status(400).json(MISSING_USERNAME_ERROR);
-        return;
-    }
+    requireFields({ username });
 
     const questions = await getStudentQuestions(username, full);
 
@@ -156,3 +115,41 @@ export async function getStudentQuestionsHandler(req: Request, res: Response): P
         questions,
     });
 }
+
+export async function createStudentRequestHandler(req: Request, res: Response): Promise<void> {
+    const username = req.params.username;
+    const classId = req.params.classId;
+    requireFields({ username, classId });
+
+    await createClassJoinRequest(username, classId);
+    res.status(201).send();
+}
+
+export async function getStudentRequestHandler(req: Request, res: Response): Promise<void> {
+    const username = req.params.username;
+    requireFields({ username });
+
+    const requests = await getJoinRequestsByStudent(username);
+    res.status(201).json({ requests })
+}
+
+export async function updateClassJoinRequestHandler(req: Request, res: Response) {
+    const username = req.query.username as string;
+    const classId = req.params.classId;
+    const accepted = req.query.accepted !== 'false'; // default = true
+    requireFields({ username, classId });
+
+    const result = await updateClassJoinRequestStatus(username, classId, accepted);
+    res.status(200).json(result);
+}
+
+export async function deleteClassJoinRequestHandler(req: Request, res: Response) {
+    const username = req.query.username as string;
+    const classId = req.params.classId;
+    requireFields({ username, classId });
+
+    await deleteClassJoinRequest(username, classId);
+    res.status(204).send();
+}
+
+

@@ -1,4 +1,5 @@
 import {
+    getClassJoinRequestRepository,
     getClassRepository,
     getGroupRepository,
     getQuestionRepository,
@@ -12,6 +13,10 @@ import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student
 import { mapToSubmissionDTO, SubmissionDTO } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
 import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question';
+import {ClassJoinRequestStatus} from "../entities/classes/class-join-request.entity";
+import {ConflictException, NotFoundException} from "../exceptions";
+import {Student} from "../entities/users/student.entity";
+import {mapToStudentRequestDTO} from "../interfaces/student-request";
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();
@@ -23,24 +28,34 @@ export async function getAllStudents(full: boolean): Promise<StudentDTO[] | stri
     return users.map((user) => user.username);
 }
 
-export async function getStudent(username: string): Promise<StudentDTO | null> {
+export async function fetchStudent(username: string): Promise<Student> {
     const studentRepository = getStudentRepository();
     const user = await studentRepository.findByUsername(username);
-    return user ? mapToStudentDTO(user) : null;
+
+    if (!user) {
+        throw new NotFoundException("Student with username not found");
+    }
+
+    return user;
+}
+
+export async function getStudent(username: string): Promise<StudentDTO> {
+    const user = await fetchStudent(username);
+    return mapToStudentDTO(user);
 }
 
 export async function createStudent(userData: StudentDTO): Promise<StudentDTO | null> {
     const studentRepository = getStudentRepository();
 
-    try {
-        const newStudent = studentRepository.create(mapToStudent(userData));
-        await studentRepository.save(newStudent);
+    const user = await studentRepository.findByUsername(userData.username);
 
-        return mapToStudentDTO(newStudent);
-    } catch (e) {
-        console.log(e);
-        return null;
+    if (user) {
+        throw new ConflictException("Username already exists");
     }
+
+    const newStudent = studentRepository.create(mapToStudent(userData));
+    await studentRepository.save(newStudent);
+    return mapToStudentDTO(newStudent);
 }
 
 export async function deleteStudent(username: string): Promise<StudentDTO | null> {
@@ -49,26 +64,15 @@ export async function deleteStudent(username: string): Promise<StudentDTO | null
     const user = await studentRepository.findByUsername(username);
 
     if (!user) {
-        return null;
+        throw new NotFoundException("Student with username not found");
     }
 
-    try {
-        await studentRepository.deleteByUsername(username);
-
-        return mapToStudentDTO(user);
-    } catch (e) {
-        console.log(e);
-        return null;
-    }
+    await studentRepository.deleteByUsername(username);
+    return mapToStudentDTO(user);
 }
 
 export async function getStudentClasses(username: string, full: boolean): Promise<ClassDTO[] | string[]> {
-    const studentRepository = getStudentRepository();
-    const student = await studentRepository.findByUsername(username);
-
-    if (!student) {
-        return [];
-    }
+    const student = await fetchStudent(username);
 
     const classRepository = getClassRepository();
     const classes = await classRepository.findByStudent(student);
@@ -81,12 +85,7 @@ export async function getStudentClasses(username: string, full: boolean): Promis
 }
 
 export async function getStudentAssignments(username: string, full: boolean): Promise<AssignmentDTO[]> {
-    const studentRepository = getStudentRepository();
-    const student = await studentRepository.findByUsername(username);
-
-    if (!student) {
-        return [];
-    }
+    const student = await fetchStudent(username);
 
     const classRepository = getClassRepository();
     const classes = await classRepository.findByStudent(student);
@@ -95,12 +94,7 @@ export async function getStudentAssignments(username: string, full: boolean): Pr
 }
 
 export async function getStudentGroups(username: string, full: boolean): Promise<GroupDTO[]> {
-    const studentRepository = getStudentRepository();
-    const student = await studentRepository.findByUsername(username);
-
-    if (!student) {
-        return [];
-    }
+    const student = await fetchStudent(username);
 
     const groupRepository = getGroupRepository();
     const groups = await groupRepository.findAllGroupsWithStudent(student);
@@ -113,12 +107,7 @@ export async function getStudentGroups(username: string, full: boolean): Promise
 }
 
 export async function getStudentSubmissions(username: string): Promise<SubmissionDTO[]> {
-    const studentRepository = getStudentRepository();
-    const student = await studentRepository.findByUsername(username);
-
-    if (!student) {
-        return [];
-    }
+    const student = await fetchStudent(username);
 
     const submissionRepository = getSubmissionRepository();
     const submissions = await submissionRepository.findAllSubmissionsForStudent(student);
@@ -127,12 +116,7 @@ export async function getStudentSubmissions(username: string): Promise<Submissio
 }
 
 export async function getStudentQuestions(username: string, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
-    const studentRepository = getStudentRepository();
-    const student = await studentRepository.findByUsername(username);
-
-    if (!student) {
-        return [];
-    }
+    const student = await fetchStudent(username);
 
     const questionRepository = getQuestionRepository();
     const questions = await questionRepository.findAllByAuthor(student);
@@ -144,3 +128,79 @@ export async function getStudentQuestions(username: string, full: boolean): Prom
 
     return questionsDTO.map(mapToQuestionId);
 }
+
+export async function createClassJoinRequest(studentUsername: string, classId: string) {
+    const classRepo = getClassRepository();
+    const requestRepo = getClassJoinRequestRepository();
+
+    const student = await fetchStudent(studentUsername);
+    const cls = await classRepo.findById(classId);
+
+    if (!cls){
+        throw new NotFoundException("Class with id not found");
+    }
+
+    const request = requestRepo.create({
+        requester: student,
+        class: cls,
+        status: ClassJoinRequestStatus.Open,
+    });
+
+    await requestRepo.save(request);
+    return request;
+}
+
+export async function getJoinRequestsByStudent(studentUsername: string) {
+    const requestRepo = getClassJoinRequestRepository();
+
+    const student = await fetchStudent(studentUsername);
+
+    const requests = await requestRepo.findAllRequestsBy(student);
+    return requests.map(mapToStudentRequestDTO);
+}
+
+export async function updateClassJoinRequestStatus( studentUsername: string, classId: string, accepted: boolean = true) {
+    const requestRepo = getClassJoinRequestRepository();
+    const classRepo = getClassRepository();
+
+    const student = await fetchStudent(studentUsername);
+    const cls = await classRepo.findById(classId);
+
+    if (!cls) {
+        throw new NotFoundException('Class not found');
+    }
+
+    const request = await requestRepo.findOne({ requester: student, class: cls });
+
+    if (!request) {
+        throw new NotFoundException('Join request not found');
+    }
+
+    request.status = accepted ? ClassJoinRequestStatus.Accepted : ClassJoinRequestStatus.Declined;
+
+    await requestRepo.save(request);
+    return request;
+}
+
+export async function deleteClassJoinRequest(studentUsername: string, classId: string) {
+    const requestRepo = getClassJoinRequestRepository();
+    const classRepo = getClassRepository();
+
+    const student = await fetchStudent(studentUsername);
+    const cls = await classRepo.findById(classId);
+
+    if (!cls) {
+        throw new NotFoundException('Class not found');
+    }
+
+    const request = await requestRepo.findOne({ requester: student, class: cls });
+
+    if (!request) {
+        throw new NotFoundException('Join request not found');
+    }
+
+    await requestRepo.deleteBy(student, cls);
+    return true;
+}
+
+

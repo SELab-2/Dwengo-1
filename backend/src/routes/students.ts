@@ -10,7 +10,8 @@ import {
     getStudentQuestionsHandler,
     getStudentSubmissionsHandler,
 } from '../controllers/students.js';
-import { getStudentGroups } from '../services/students.js';
+import joinRequestRouter from './student-join-requests.js'
+
 const router = express.Router();
 
 // Root endpoint used to search objects
@@ -37,5 +38,7 @@ router.get('/:username/groups', getStudentGroupsHandler);
 
 // A list of questions a user has created
 router.get('/:username/questions', getStudentQuestionsHandler);
+
+router.use('/:username/join-requests', joinRequestRouter)
 
 export default router;
