@@ -8,6 +8,8 @@
 
     const {t, locale} = useI18n();
 
+    const form = ref();
+
     const language = ref(locale.value);
 
     const searchQuery = ref('');
@@ -80,8 +82,11 @@
 
     onMounted(fetchAllLearningPaths);
 
-    const submitFormHandler = () => {
-        console.log(deadline.value);
+    const submitFormHandler = async () => {
+        const { valid } = await form.value.validate();
+        console.log(valid);
+        console.log(deadline);
+        if (!valid) return;
         submitForm(assignmentTitle.value, selectedLearningPath.value, selectedClasses.value, groups.value, deadline.value);
     };
 </script>
@@ -91,7 +96,7 @@
     <div class="main-container">
         <h1 class="title">{{ t("new-assignment") }}</h1>
         <v-card class="form-card">
-            <v-form class="form-container" validate-on="submit lazy" @submit.prevent="submitFormHandler">
+            <v-form ref="form" class="form-container" validate-on="submit lazy" @submit.prevent="submitFormHandler">
                 <v-container class="step-container">
                     <v-card-text>
                         <v-text-field :v-model="assignmentTitle" :label="t('title')" :rules="assignmentTitleRules"

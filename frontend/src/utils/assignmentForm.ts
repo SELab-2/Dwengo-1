@@ -81,12 +81,14 @@ export const classesRules = [
  */
 export const deadlineRules = [
     (value: string) => {
-        if (!value) return 'You must set a deadline.';
+        if (!value) return "You must set a deadline.";
 
-        const selectedDate = new Date(value);
+        const selectedDateTime = new Date(value);
         const now = new Date();
 
-        if (selectedDate <= now) return 'The deadline must be in the future.';
+        if (isNaN(selectedDateTime.getTime())) return "Invalid date or time.";
+
+        if (selectedDateTime <= now) return "The deadline must be in the future.";
 
         return true;
     },

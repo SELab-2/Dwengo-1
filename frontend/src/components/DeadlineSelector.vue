@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, defineEmits } from "vue";
+import {deadlineRules} from "@/utils/assignmentForm.ts";
 
 const date = ref("");
-const time = ref("");
+const time = ref("23:59");
 const emit = defineEmits(["update:deadline"]);
 
 const formattedDeadline = computed(() => {
@@ -26,6 +27,8 @@ const updateDeadline = () => {
                 type="date"
                 variant="outlined"
                 density="compact"
+                :rules="deadlineRules"
+                required
                 @update:modelValue="updateDeadline"
             ></v-text-field>
         </v-card-text>
