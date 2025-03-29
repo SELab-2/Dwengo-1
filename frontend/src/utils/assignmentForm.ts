@@ -6,6 +6,7 @@
  * @param selectedClasses - The selected classes, an array of class objects.
  * @param groups - An array of groups, each containing student IDs.
  * @param deadline - The deadline of the assignment in ISO format.
+ * @param description - The description of the aasignment
  * Sends a POST request to the backend with the form data.
  */
 export const submitForm = async (
@@ -13,14 +14,16 @@ export const submitForm = async (
     selectedLearningPath: any,
     selectedClasses: any[],
     groups: string[][],
-    deadline: string
+    deadline: string,
+    description: string
 ) => {
     const formData = {
         title: assignmentTitle,
         hruid: selectedLearningPath?.hruid,
         classes: selectedClasses.map(cl => cl.value),
         groups: groups,
-        deadline: deadline
+        deadline: deadline,
+        description: description
     };
 
     try {
@@ -90,6 +93,13 @@ export const deadlineRules = [
 
         if (selectedDateTime <= now) return "The deadline must be in the future.";
 
+        return true;
+    },
+];
+
+export const descriptionRules = [
+    (value: string) => {
+        if (!value || value.trim() === "") return "Description cannot be empty.";
         return true;
     },
 ];

@@ -3,7 +3,13 @@
     import {computed, onMounted, ref, watch} from "vue";
     import GroupSelector from "@/components/GroupSelector.vue";
     import {classes} from "@/utils/tempData.ts";
-    import {assignmentTitleRules, classesRules, learningPathRules, submitForm} from "@/utils/assignmentForm.ts";
+    import {
+        assignmentTitleRules,
+        classesRules,
+        descriptionRules,
+        learningPathRules,
+        submitForm
+    } from "@/utils/assignmentForm.ts";
     import DeadlineSelector from "@/components/DeadlineSelector.vue";
 
     const {t, locale} = useI18n();
@@ -16,27 +22,28 @@
 
     const assignmentTitle = ref('');
     const deadline = ref(null);
+    const description = ref('');
     const allLearningPaths = ref([]);
     const filteredLearningPaths = ref([]);
     const selectedLearningPath = ref(null);
     const allClasses = ref([...classes.map(cl => ({title: cl.displayName, value: cl.id}))]);
-    const selectedClasses = ref([]);
+    const selectedClass = ref(null);
     const groups = ref<string[][]>([]);
 
-    const availableClasses = computed(() => {
+    const availableClass = computed(() => {
         //TODO: replace by real data
-        return classes.filter(cl => selectedClasses.value.some(c => c.value === cl.id));
+        return classes.find(cl => selectedClass.value?.value === cl.id) || null;
     });
 
     const allStudents = computed(() => {
         //TODO: replace by real data
-        return classes
-            .filter(cl => selectedClasses.value.some(c => c.value === cl.id))
-            .flatMap(cl => cl.students.map(st => ({
-                title: `${st.firstName} ${st.lastName}`,
-                value: st.username,
-                classes: cl
-            })));
+        if (!selectedClass.value) return [];
+        const cl = classes.find(c => c.id === selectedClass.value.value);
+        return cl ? cl.students.map(st => ({
+            title: `${st.firstName} ${st.lastName}`,
+            value: st.username,
+            classes: cl
+        })) : [];
     });
 
 
@@ -74,6 +81,10 @@
         {immediate: true}
     );
 
+    watch(selectedClass, () => {
+        groups.value = [];
+    });
+
     const searchResults = computed(() => {
         return filteredLearningPaths.value.filter((lp: { hruid: string; title: string }) =>
             lp.title.toLowerCase().includes(searchQuery.value.toLowerCase())
@@ -84,10 +95,9 @@
 
     const submitFormHandler = async () => {
         const { valid } = await form.value.validate();
-        console.log(valid);
-        console.log(deadline);
+        // Don't submit thr form if all rules don't apply
         if (!valid) return;
-        submitForm(assignmentTitle.value, selectedLearningPath.value, selectedClasses.value, groups.value, deadline.value);
+        submitForm(assignmentTitle.value, selectedLearningPath.value, selectedClass.value, groups.value, deadline.value, description.value);
     };
 </script>
 
@@ -123,21 +133,20 @@
 
                     <v-card-text>
                         <v-combobox
-                            v-model="selectedClasses"
+                            v-model="selectedClass"
                             :items="allClasses"
-                            :label="t('choose-classes')"
+                            :label="t('pick-class')"
                             :rules="classesRules"
                             variant="outlined"
                             clearable
-                            multiple
                             hide-details
                             density="compact"
-                            chips
                             append-inner-icon="mdi-magnify"
                             item-title="title"
                             item-value="value"
                             required
                         ></v-combobox>
+
                     </v-card-text>
 
                     <DeadlineSelector v-model:deadline="deadline" />
@@ -146,7 +155,7 @@
 
                     <GroupSelector
                         :students="allStudents"
-                        :availableClasses="availableClasses"
+                        :availableClass="availableClass"
                         :groups="groups"
                         @groupCreated="addGroupToList"
                     />
@@ -156,8 +165,21 @@
                         <strong>Created Groups: {{ groups.length }}</strong>
                     </v-card-text>
 
+                    <v-card-text>
+                        <v-textarea
+                            v-model="description"
+                            :label="t('description')"
+                            variant="outlined"
+                            density="compact"
+                            auto-grow
+                            rows="3"
+                            :rules="descriptionRules"
+                        ></v-textarea>
+                    </v-card-text>
+
+
+                    <v-btn class="mt-2" color="secondary" type="submit" block>Submit</v-btn>
                 </v-container>
-                <v-btn class="mt-2" color="secondary" type="submit" block>Submit</v-btn>
             </v-form>
         </v-card>
     </div>
@@ -169,7 +191,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
     text-align: center;
 }
 
@@ -212,7 +233,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 700px) {
+@media (max-width: 650px) {
     .form-card {
         width: 95%;
     }
