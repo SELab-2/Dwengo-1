@@ -4,6 +4,7 @@ import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToTeacherInvitationDTO, mapToTeacherInvitationDTOIds, TeacherInvitationDTO } from '../interfaces/teacher-invitation.js';
 import { getLogger } from '../logging/initalize.js';
+import { getStudent } from './students.js';
 
 const logger = getLogger();
 
@@ -60,32 +61,30 @@ export async function getClass(classId: string): Promise<ClassDTO | null> {
     return mapToClassDTO(cls);
 }
 
-async function fetchClassStudents(classId: string): Promise<StudentDTO[]> {
+export async function getClassStudents(classId: string, full: boolean): Promise<StudentDTO[] | string[] | null> {
     const classRepository = getClassRepository();
     const cls = await classRepository.findById(classId);
 
     if (!cls) {
-        return [];
+        return null;
     }
 
-    return cls.students.map(mapToStudentDTO);
+    const studentRepository = getStudentRepository();
+    const students = await studentRepository.findByClass(cls);
+
+	if (full) {
+		return cls.students.map(mapToStudentDTO);
+	}
+	
+    return students.map((student) => student.username);	
 }
 
-export async function getClassStudents(classId: string): Promise<StudentDTO[]> {
-    return await fetchClassStudents(classId);
-}
-
-export async function getClassStudentsIds(classId: string): Promise<string[]> {
-    const students: StudentDTO[] = await fetchClassStudents(classId);
-    return students.map((student) => student.username);
-}
-
-export async function getClassTeacherInvitations(classId: string, full: boolean): Promise<TeacherInvitationDTO[]> {
+export async function getClassTeacherInvitations(classId: string, full: boolean): Promise<TeacherInvitationDTO[] | null> {
     const classRepository = getClassRepository();
     const cls = await classRepository.findById(classId);
 
     if (!cls) {
-        return [];
+        return null;
     }
 
     const teacherInvitationRepository = getTeacherInvitationRepository();

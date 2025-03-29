@@ -3,6 +3,7 @@ import { describe, it, expect, beforeAll, beforeEach, vi, Mock } from 'vitest';
 import { createClassHandler, getAllClassesHandler, getClassHandler, getClassStudentsHandler, getTeacherInvitationsHandler } from '../../src/controllers/classes.js';
 import { Request, Response } from 'express';
 import { getAllClasses } from '../../src/services/class.js';
+import { checkReturnList, checkReturn404 } from './qol.js';
 
 describe('Class controllers', () => {
     let req: Partial<Request>;
@@ -84,15 +85,7 @@ describe('Class controllers', () => {
 
         await getClassStudentsHandler(req as Request, res as Response);
 
-        expect(jsonMock).toHaveBeenCalledWith({ students: [
-            'DireStraits',
-            'Nirvana',
-            'Noordkaap',
-            'PinkFloyd',
-            'SmashingPumpkins',
-            'TheDoors',
-            'Tool'
-        ]});
+		checkReturnList(jsonMock, 'students');
     });
 
     it('should return 404 not found when calling getClassStudentsHandler on a non-existent class', async () => {
@@ -102,8 +95,7 @@ describe('Class controllers', () => {
         };
 
         await getClassStudentsHandler(req as Request, res as Response);
-        
-        // will fail until code is fixed
+
         expect(statusMock).toHaveBeenCalledWith(404);
         expect(jsonMock).toHaveBeenCalledWith({ error: 'Class not found' });
     });
@@ -133,9 +125,8 @@ describe('Class controllers', () => {
 
         await getTeacherInvitationsHandler(req as Request, res as Response);
 
-        // will fail until code is fixed
-        expect(statusMock).toHaveBeenCalledWith(404);
         expect(jsonMock).toHaveBeenCalledWith({ error: 'Class not found' });
+        expect(statusMock).toHaveBeenCalledWith(404);
     });
 
     it('should return a list of classes', async () => {

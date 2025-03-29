@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createClass, getAllClasses, getClass, getClassStudents, getClassStudentsIds, getClassTeacherInvitations } from '../services/class.js';
+import { createClass, getAllClasses, getClass, getClassStudents, getClassTeacherInvitations } from '../services/class.js';
 import { ClassDTO } from '../interfaces/class.js';
 
 export async function getAllClassesHandler(req: Request, res: Response): Promise<void> {
@@ -58,7 +58,12 @@ export async function getClassStudentsHandler(req: Request, res: Response): Prom
     const classId = req.params.id;
     const full = req.query.full === 'true';
 
-    const students = full ? await getClassStudents(classId) : await getClassStudentsIds(classId);
+    const students = await getClassStudents(classId, full);
+
+	if (!students) {
+		res.status(404).json({ error: 'Class not found' });
+		return;
+	}
 
     res.json({
         students: students,
@@ -70,6 +75,11 @@ export async function getTeacherInvitationsHandler(req: Request, res: Response):
     const full = req.query.full === 'true'; // TODO: not implemented yet
 
     const invitations = await getClassTeacherInvitations(classId, full);
+
+    if (!invitations) {
+        res.status(404).json({ error: 'Class not found' });
+        return;
+    }
 
     res.json({
         invitations: invitations,
