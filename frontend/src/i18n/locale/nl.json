@@ -46,5 +46,10 @@
     "groups": "Groepen",
     "learning-path": "Leerpad",
     "choose-lp": "Kies een leerpad",
-    "choose-classes": "Kies klassen"
+    "choose-classes": "Kies klassen",
+    "create-groups": "Groepen maken",
+    "title": "Titel",
+    "pick-class": "Kies een klas",
+    "choose-students": "Studenten selecteren",
+    "create-group": "Groep aanmaken"
 }

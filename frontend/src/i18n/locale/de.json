@@ -46,5 +46,10 @@
     "groups": "Gruppen",
     "learning-path": "Lernpfad",
     "choose-lp": "Einen lernpfad auswählen",
-    "choose-classes": "Klassen wählen"
+    "choose-classes": "Klassen wählen",
+    "create-groups": "Gruppen erstellen",
+    "title": "Titel",
+    "pick-class": "Wählen Sie eine klasse",
+    "choose-students": "Studenten auswählen",
+    "create-group": "Gruppe erstellen"
 }

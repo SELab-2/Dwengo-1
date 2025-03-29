@@ -46,5 +46,10 @@
     "groups": "Groups",
     "learning-path": "Learning path",
     "choose-lp": "Select a learning path",
-    "choose-classes": "Select classes"
+    "choose-classes": "Select classes",
+    "create-groups": "Create groups",
+    "title": "Title",
+    "pick-class": "Pick a class",
+    "choose-students": "Select students",
+    "create-group": "Create group"
 }
