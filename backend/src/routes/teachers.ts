@@ -2,11 +2,11 @@ import express from 'express';
 import {
     createTeacherHandler,
     deleteTeacherHandler,
-    getAllTeachersHandler,
+    getAllTeachersHandler, getStudentJoinRequestHandler,
     getTeacherClassHandler,
     getTeacherHandler,
     getTeacherQuestionHandler,
-    getTeacherStudentHandler,
+    getTeacherStudentHandler, updateStudentJoinRequestHandler,
 } from '../controllers/teachers.js';
 const router = express.Router();
 
@@ -24,6 +24,10 @@ router.get('/:username/classes', getTeacherClassHandler);
 router.get('/:username/students', getTeacherStudentHandler);
 
 router.get('/:username/questions', getTeacherQuestionHandler);
+
+router.get('/:username/joinRequests/:classId', getStudentJoinRequestHandler);
+
+router.put('/:username/joinRequests/:classId/:studentUsername', updateStudentJoinRequestHandler);
 
 // Invitations to other classes a teacher received
 router.get('/:id/invitations', (req, res) => {

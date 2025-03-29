@@ -3,10 +3,10 @@ import {
     createTeacher,
     deleteTeacher,
     getAllTeachers,
-    getClassesByTeacher,
+    getClassesByTeacher, getJoinRequestsByClass,
     getStudentsByTeacher,
     getTeacher,
-    getTeacherQuestions
+    getTeacherQuestions, updateClassJoinRequestStatus
 } from '../services/teachers.js';
 import { ClassDTO } from '../interfaces/class.js';
 import { StudentDTO } from '../interfaces/student.js';
@@ -19,11 +19,6 @@ export async function getAllTeachersHandler(req: Request, res: Response): Promis
 
     const teachers: TeacherDTO[] | string[] = await getAllTeachers(full);
 
-    if (!teachers) {
-        res.status(404).json({ error: `Teachers not found.` });
-        return;
-    }
-
     res.json({ teachers });
 }
 
@@ -31,59 +26,45 @@ export async function getTeacherHandler(req: Request, res: Response): Promise<vo
     const username = req.params.username;
     requireFields({ username });
 
-    const user = await getTeacher(username);
+    const teacher = await getTeacher(username);
 
-
-
-    res.status(201).json(user);
+    res.json({ teacher });
 }
 
 export async function createTeacherHandler(req: Request, res: Response) {
+    const username = req.body.username;
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    requireFields({ username, firstName, lastName });
+
     const userData = req.body as TeacherDTO;
 
-    if (!userData.username || !userData.firstName || !userData.lastName) {
-        return;
-    }
-
-    const newUser = await createTeacher(userData);
-    res.status(201).json(newUser);
+    await createTeacher(userData);
+    res.status(201);
 }
 
 export async function deleteTeacherHandler(req: Request, res: Response) {
     const username = req.params.username;
+    requireFields({ username });
 
-    if (!username) {
-        return;
-    }
-
-    const deletedUser = await deleteTeacher(username);
-    if (!deletedUser) {
-        return;
-    }
-
-    res.status(200).json(deletedUser);
+    await deleteTeacher(username);
+    res.status(200);
 }
 
 export async function getTeacherClassHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username as string;
     const full = req.query.full === 'true';
-
-    if (!username) {
-        return;
-    }
+    requireFields({ username });
 
     const classes: ClassDTO[] | string[] = await getClassesByTeacher(username, full);
 
-    res.status(201).json(classes);
+    res.json(classes);
 }
 
 export async function getTeacherStudentHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username as string;
     const full = req.query.full === 'true';
-
-    if (!username) {
-        return;
-    }
+    requireFields({ username });
 
     const students: StudentDTO[] | string[] = await getStudentsByTeacher(username, full);
 
@@ -93,12 +74,28 @@ export async function getTeacherStudentHandler(req: Request, res: Response): Pro
 export async function getTeacherQuestionHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username as string;
     const full = req.query.full === 'true';
-
-    if (!username) {
-        return;
-    }
+    requireFields({ username });
 
     const questions: QuestionDTO[] | QuestionId[] = await getTeacherQuestions(username, full);
 
     res.json({ questions });
+}
+
+export async function getStudentJoinRequestHandler(req: Request, res: Response) {
+    const username = req.query.username as string;
+    const classId = req.params.classId;
+    requireFields({ username, classId });
+
+    const joinRequests = await getJoinRequestsByClass(classId);
+    res.json({ joinRequests });
+}
+
+export async function updateStudentJoinRequestHandler(req: Request, res: Response) {
+    const username = req.query.username as string;
+    const classId = req.params.classId;
+    const accepted = req.query.accepted !== 'false'; // default = true
+    requireFields({ username, classId });
+
+    await updateClassJoinRequestStatus(username, classId, accepted);
+    res.status(200);
 }

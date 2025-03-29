@@ -1,6 +1,6 @@
 import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { Class } from '../../entities/classes/class.entity.js';
-import { ClassJoinRequest } from '../../entities/classes/class-join-request.entity.js';
+import {ClassJoinRequest, ClassJoinRequestStatus} from '../../entities/classes/class-join-request.entity.js';
 import { Student } from '../../entities/users/student.entity.js';
 
 export class ClassJoinRequestRepository extends DwengoEntityRepository<ClassJoinRequest> {
@@ -8,7 +8,7 @@ export class ClassJoinRequestRepository extends DwengoEntityRepository<ClassJoin
         return this.findAll({ where: { requester: requester } });
     }
     public findAllOpenRequestsTo(clazz: Class): Promise<ClassJoinRequest[]> {
-        return this.findAll({ where: { class: clazz } });
+        return this.findAll({ where: { class: clazz, status: ClassJoinRequestStatus.Open, } }); // TODO check if works like this
     }
     public findByStudentAndClass(requester: Student, clazz: Class): Promise<ClassJoinRequest | null> {
         return this.findOne({ requester, class: clazz });

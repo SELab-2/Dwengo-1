@@ -9,12 +9,10 @@ import {
     getStudentClasses,
     getStudentGroups,
     getStudentQuestions,
-    getStudentSubmissions, updateClassJoinRequestStatus,
+    getStudentSubmissions,
 } from '../services/students.js';
 import { StudentDTO } from '../interfaces/student.js';
-import {BadRequestException} from "../exceptions";
 import {requireFields} from "./error-helper";
-
 
 export async function getAllStudentsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
@@ -41,16 +39,16 @@ export async function createStudentHandler(req: Request, res: Response) {
 
     const userData = req.body as StudentDTO;
 
-    const student = await createStudent(userData);
-    res.status(201).json({ student });
+    await createStudent(userData);
+    res.status(201);
 }
 
 export async function deleteStudentHandler(req: Request, res: Response) {
     const username = req.params.username;
     requireFields({ username });
 
-    const student = await deleteStudent(username);
-    res.status(200).json({ student });
+    await deleteStudent(username);
+    res.status(200);
 }
 
 export async function getStudentClassesHandler(req: Request, res: Response): Promise<void> {
@@ -131,16 +129,6 @@ export async function getStudentRequestHandler(req: Request, res: Response): Pro
 
     const requests = await getJoinRequestsByStudent(username);
     res.status(201).json({ requests })
-}
-
-export async function updateClassJoinRequestHandler(req: Request, res: Response) {
-    const username = req.query.username as string;
-    const classId = req.params.classId;
-    const accepted = req.query.accepted !== 'false'; // default = true
-    requireFields({ username, classId });
-
-    const result = await updateClassJoinRequestStatus(username, classId, accepted);
-    res.status(200).json(result);
 }
 
 export async function deleteClassJoinRequestHandler(req: Request, res: Response) {
