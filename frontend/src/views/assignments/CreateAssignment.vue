@@ -1,25 +1,21 @@
 <script setup lang="ts">
     import {useI18n} from "vue-i18n";
     import {computed, onMounted, ref, watch} from "vue";
+    import GroupSelector from "@/components/GroupSelector.vue";
 
     const {t, locale} = useI18n();
 
     const language = ref(locale.value);
 
-    // If this value is set to true, the search bar will display a "loading" animation
-    const loading = ref(false);
     const searchQuery = ref("");
 
-    // Store all learning paths
     const allLearningPaths = ref([]);
-
-    // Filtered learning paths that will be displayed in the search bar dropdown
     const filteredLearningPaths = ref([]);
-
-    // The hruid and title of the currently selected learning path(TODO: use for post req)
     const selectedLearningPath = ref(null);
-
+    const allClasses = ref(["f", "r"]);
     const selectedClasses = ref([]);
+    const allStudents = ref([]); // Fetched students from each selected class
+    const groups = ref<string[][]>([]);  // Each group is a list of student {names, id's}
 
     // Fetch all learning paths initially
     async function fetchAllLearningPaths() {
@@ -63,10 +59,20 @@
         );
     });
 
-    const classes = computed(() => ["f", "r"]);
-
     // Fetch all learning paths on mount
     onMounted(fetchAllLearningPaths);
+
+    // All students that aren't already in a group
+    const availableStudents = computed(() => {
+        const groupedStudents = new Set(groups.value.flat());
+        return allStudents.value.filter(student => !groupedStudents.has(student));
+    });
+
+    const addGroupToList = (students: string[]) => {
+        if (students.length) {
+            groups.value.push(students);
+        }
+    };
 
 </script>
 
@@ -85,7 +91,6 @@
                             clearable
                             hide-details
                             density="compact"
-                            :loading="loading"
                             append-inner-icon="mdi-magnify"
                             item-title="title"
                             item-value="value"
@@ -96,7 +101,7 @@
                     <v-card-text>
                         <v-combobox
                             v-model="selectedClasses"
-                            :items="classes"
+                            :items="allClasses"
                             :label="t('choose-classes')"
                             variant="solo"
                             clearable
@@ -108,6 +113,29 @@
                             item-value="value"
                         ></v-combobox>
                     </v-card-text>
+
+                    <v-container>
+                        <h3>{{ t('create-groups') }}</h3>
+
+                        <GroupSelector
+                            :students="availableStudents"
+                            @groupCreated="addGroupToList"
+                        />
+
+                        <!-- Counter for created groups -->
+                        <v-card-text v-if="groups.length">
+                            <strong>{{ t('created-groups') }}: {{ groups.length }}</strong>
+                        </v-card-text>
+
+                        <!-- Display created groups -->
+                        <v-card-text v-if="groups.length">
+                            <ul>
+                                <li v-for="(group, index) in groups" :key="index">
+                                    {{ group.join(', ') }}
+                                </li>
+                            </ul>
+                        </v-card-text>
+                    </v-container>
 
                 </v-container>
                 <v-btn class="mt-2" type="submit" block>Submit</v-btn>
