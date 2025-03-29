@@ -21,6 +21,10 @@ export async function getGroupHandler(req: Request, res: Response): Promise<void
 
     const group = await getGroup(classId, assignmentId, groupId, full);
 
+    if (!group) {
+        res.status(404).json({ error: 'Group not found' });
+    }
+
     res.json(group);
 }
 
