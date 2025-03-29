@@ -1,8 +1,10 @@
 import { setupTestApp } from '../setup-tests.js';
 import { describe, it, expect, beforeAll, beforeEach, vi, Mock } from 'vitest';
-import { getSubmissionHandler } from '../../src/controllers/submissions.js';
+import { getSubmissionHandler, getAllSubmissionsHandler } from '../../src/controllers/submissions.js';
 import { Request, Response } from 'express';
 import { checkReturn404, checkReturnList } from './qol.js';
+import { getSubmission } from '../../src/services/submissions.js';
+import { Language } from '../../src/entities/content/language.js';
 
 
 function createRequestObject(hruid: string, submissionNumber: string) {
@@ -12,7 +14,7 @@ function createRequestObject(hruid: string, submissionNumber: string) {
 			id: submissionNumber,
 		},
 		query: {
-			language: 'nl',
+			language: 'en',
 			version: '1',
 		},
 	}
@@ -60,13 +62,17 @@ describe('Submission controllers', () => {
 
 		await getSubmissionHandler(req as Request, res as Response);
 
-		console.log(jsonMock.mock.lastCall![0]);
-		// TODO
+		const expectedResult = await getSubmission('id01', Language.English, 1, 1);
+
+        expect(jsonMock.mock.lastCall![0]).toStrictEqual(expectedResult);
 	});
 
 	it('should return a list of submissions for a learning object', async () => {
-		req = createRequestObject('id01', 'irrelevant');
+		req = createRequestObject('id02', 'irrelevant');
 
+		await getAllSubmissionsHandler(req as Request, res as Response);
+
+		checkReturnList(jsonMock, 'submissions', 2);
 	});
 });
 

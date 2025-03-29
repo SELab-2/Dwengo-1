@@ -6,12 +6,15 @@ import { Student } from '../../entities/users/student.entity.js';
 
 export class SubmissionRepository extends DwengoEntityRepository<Submission> {
     public findSubmissionByLearningObjectAndSubmissionNumber(loId: LearningObjectIdentifier, submissionNumber: number): Promise<Submission | null> {
-        return this.findOne({
-            learningObjectHruid: loId.hruid,
-            learningObjectLanguage: loId.language,
-            learningObjectVersion: loId.version,
-            submissionNumber: submissionNumber,
-        });
+        return this.findOne(
+            {
+                learningObjectHruid: loId.hruid,
+                learningObjectLanguage: loId.language,
+                learningObjectVersion: loId.version,
+                submissionNumber: submissionNumber,
+            },
+            { populate: ['submitter', 'onBehalfOf'] },
+        );  
     }
 
     public findSubmissionsByLearningObject(loId: LearningObjectIdentifier): Promise<Submission[]> {
