@@ -1,5 +1,4 @@
 import { getAssignmentRepository, getClassRepository, getGroupRepository, getSubmissionRepository } from '../data/repositories.js';
-import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { AssignmentDTO, mapToAssignment, mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
 
@@ -38,6 +37,7 @@ export async function createAssignment(classid: string, assignmentData: Assignme
 
         return mapToAssignmentDTO(newAssignment);
     } catch (e) {
+        console.error(e);
         return null;
     }
 }

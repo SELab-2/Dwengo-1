@@ -2,8 +2,6 @@ import { Submission } from '../entities/assignments/submission.entity.js';
 import { Language } from '../entities/content/language.js';
 import { GroupDTO, mapToGroupDTO } from './group.js';
 import { mapToStudent, mapToStudentDTO, StudentDTO } from './student.js';
-import { mapToUser } from './user';
-import { Student } from '../entities/users/student.entity';
 import { LearningObjectIdentifier } from './learning-content.js';
 
 export interface SubmissionDTO {

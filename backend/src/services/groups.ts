@@ -1,4 +1,3 @@
-import { GroupRepository } from '../data/assignments/group-repository.js';
 import {
     getAssignmentRepository,
     getClassRepository,
@@ -43,7 +42,7 @@ export async function createGroup(groupData: GroupDTO, classid: string, assignme
     const studentRepository = getStudentRepository();
 
     const memberUsernames = (groupData.members as string[]) || []; // TODO check if groupdata.members is a list
-    const members = (await Promise.all([...memberUsernames].map((id) => studentRepository.findByUsername(id)))).filter((student) => student != null);
+    const members = (await Promise.all([...memberUsernames].map((id) => studentRepository.findByUsername(id)))).filter((student) => student !== null);
 
     console.log(members);
 

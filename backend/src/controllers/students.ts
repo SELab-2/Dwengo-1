@@ -10,7 +10,6 @@ import {
     getStudentSubmissions,
 } from '../services/students.js';
 import { StudentDTO } from '../interfaces/student.js';
-import { getStudentRepository } from '../data/repositories.js';
 
 // TODO: accept arguments (full, ...)
 // TODO: endpoints

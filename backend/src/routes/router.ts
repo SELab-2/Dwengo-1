@@ -1,11 +1,7 @@
 import { Response, Router } from 'express';
 import studentRouter from './students.js';
 import teacherRouter from './teachers.js';
-import groupRouter from './groups.js';
-import assignmentRouter from './assignments.js';
-import submissionRouter from './submissions.js';
 import classRouter from './classes.js';
-import questionRouter from './questions.js';
 import authRouter from './auth.js';
 import themeRoutes from './themes.js';
 import learningPathRoutes from './learning-paths.js';
