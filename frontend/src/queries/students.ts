@@ -13,6 +13,8 @@ const STUDENT_ASSIGNMENTS_QUERY_KEY = (username: string, full: boolean) => ['stu
 const STUDENT_GROUPS_QUERY_KEY = (username: string, full: boolean) => ['student-groups', username, full];
 const STUDENT_SUBMISSIONS_QUERY_KEY = (username: string) => ['student-submissions', username];
 const STUDENT_QUESTIONS_QUERY_KEY = (username: string, full: boolean) => ['student-questions', username, full];
+const STUDENT_JOIN_REQUESTS_QUERY_KEY = (username: string) => ["student-join-requests", username];
+
 
 export function useStudentsQuery(full: MaybeRefOrGetter<boolean> = true) {
     return useQuery({
@@ -99,6 +101,51 @@ export function useDeleteStudentMutation() {
         },
     });
 }
+
+export function useStudentJoinRequestsQuery(username: MaybeRefOrGetter<string | undefined>) {
+    return useQuery({
+        queryKey: computed(() => STUDENT_JOIN_REQUESTS_QUERY_KEY(toValue(username)!)),
+        queryFn: () => studentController.getJoinRequests(toValue(username)!),
+        enabled: () => !!toValue(username),
+    });
+}
+
+/**
+ * Mutation to create a join request for a class
+ */
+export function useCreateJoinRequestMutation() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ username, classId }: { username: string; classId: string }) =>
+            studentController.createJoinRequest(username, classId),
+        onSuccess: (_, { username }) => {
+            await queryClient.invalidateQueries({ queryKey: STUDENT_JOIN_REQUESTS_QUERY_KEY(username) });
+        },
+        onError: (err) => {
+            alert("Create join request failed:", err);
+        },
+    });
+}
+
+/**
+ * Mutation to delete a join request for a class
+ */
+export function useDeleteJoinRequestMutation() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ username, classId }: { username: string; classId: string }) =>
+            studentController.deleteJoinRequest(username, classId),
+        onSuccess: (_, { username }) => {
+            await queryClient.invalidateQueries({ queryKey: STUDENT_JOIN_REQUESTS_QUERY_KEY(username) });
+        },
+        onError: (err) => {
+            alert("Delete join request failed:", err);
+        },
+    });
+}
+
 
 
 
