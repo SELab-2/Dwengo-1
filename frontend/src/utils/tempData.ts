@@ -55,4 +55,19 @@ teacher01.classes = [class01];
 teacher02.classes = [class02];
 teacher03.classes = [class03];
 
+type Assignment = {
+    id: string;
+    title: string;
+    description: string;
+};
+
+export const assignments: Assignment[] = Array.from({ length: 4 }, (_, i) => ({
+    id: `assignment${i}`,
+    title: `Assignment ${i}`,
+    description:
+        "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. " +
+        "Aenean commodo ligula eget dolor. Aenean massa. " +
+        "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus."
+}));
+
 export const classes: Array<Class> = [class01, class02, class03];
