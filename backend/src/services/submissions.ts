@@ -21,6 +21,19 @@ export async function getSubmission(
     return mapToSubmissionDTO(submission);
 }
 
+export async function getAllSubmissions(
+    lohruid: string,
+    language: Language,
+    version: number,
+): Promise<SubmissionDTO[]> {
+    const loId = new LearningObjectIdentifier(lohruid, language, version);
+
+    const submissionRepository = getSubmissionRepository();
+    const submissions = await submissionRepository.findSubmissionsByLearningObject(loId);
+
+    return submissions.map(mapToSubmissionDTO);
+}
+
 export async function createSubmission(submissionDTO: SubmissionDTO) {
     const submissionRepository = getSubmissionRepository();
     const submission = mapToSubmission(submissionDTO);

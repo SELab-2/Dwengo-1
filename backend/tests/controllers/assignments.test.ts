@@ -2,6 +2,7 @@ import { setupTestApp } from '../setup-tests.js';
 import { describe, it, expect, beforeAll, beforeEach, vi, Mock } from 'vitest';
 import { Request, Response } from 'express';
 import { getAssignmentHandler, getAllAssignmentsHandler, getAssignmentsSubmissionsHandler } from '../../src/controllers/assignments.js';
+import { checkReturn404, checkReturnList } from './qol.js'
 
 function createRequestObject(classid: string, assignmentid: string) {
     return {
@@ -11,19 +12,6 @@ function createRequestObject(classid: string, assignmentid: string) {
         },
         query: {},
     };
-}
-
-function checkReturnList(jsonMock: Mock, listName: string) {
-	expect(jsonMock).toHaveBeenCalled();
-
-	const result = jsonMock.mock.lastCall![0];
-		
-	expect(listName in result).toBeTruthy();
-}
-
-function checkReturn404(jsonMock: Mock, statusMock: Mock) {
-		expect(statusMock).toHaveBeenCalledWith(404);
-		expect(jsonMock).toHaveBeenCalled();
 }
 
 describe('Assignment controllers', () => {

@@ -1,14 +1,9 @@
 import { Request, Response } from 'express';
-import { createSubmission, deleteSubmission, getSubmission } from '../services/submissions.js';
+import { createSubmission, deleteSubmission, getAllSubmissions, getSubmission } from '../services/submissions.js';
 import { Language, languageMap } from '../entities/content/language.js';
 import { SubmissionDTO } from '../interfaces/submission';
 
-interface SubmissionParams {
-    hruid: string;
-    id: number;
-}
-
-export async function getSubmissionHandler(req: Request<SubmissionParams>, res: Response): Promise<void> {
+export async function getSubmissionHandler(req: Request, res: Response): Promise<void> {
     const lohruid = req.params.hruid;
     const submissionNumber = +req.params.id;
 
@@ -16,6 +11,7 @@ export async function getSubmissionHandler(req: Request<SubmissionParams>, res: 
         res.status(400).json({ error: 'Submission number is not a number' });
         return;
     }
+
 
     const lang = languageMap[req.query.language as string] || Language.Dutch;
     const version = (req.query.version || 1) as number;
@@ -28,6 +24,17 @@ export async function getSubmissionHandler(req: Request<SubmissionParams>, res: 
     }
 
     res.json(submission);
+}
+
+export async function getAllSubmissionsHandler(req: Request, res: Response): Promise<void> {
+    const lohruid = req.params.hruid;
+
+    const lang = languageMap[req.query.language as string] || Language.Dutch;
+    const version = (req.query.version || 1) as number;
+
+    const submissions = await getAllSubmissions(lohruid, lang, version);
+
+    res.json({ submissions: submissions });
 }
 
 export async function createSubmissionHandler(req: Request, res: Response) {
