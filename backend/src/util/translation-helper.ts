@@ -8,12 +8,12 @@ const logger: Logger = getLogger();
 
 export function loadTranslations<T>(language: string): T {
     try {
-        const filePath = path.join(process.cwd(), '_i18n', `${language}.yml`);
+        const filePath = path.join(process.cwd(), 'i18n', `${language}.yml`);
         const yamlFile = fs.readFileSync(filePath, 'utf8');
         return yaml.load(yamlFile) as T;
     } catch (error) {
         logger.warn(`Cannot load translation for ${language}, fallen back to dutch`, error);
-        const fallbackPath = path.join(process.cwd(), '_i18n', `${FALLBACK_LANG}.yml`);
+        const fallbackPath = path.join(process.cwd(), 'i18n', `${FALLBACK_LANG}.yml`);
         return yaml.load(fs.readFileSync(fallbackPath, 'utf8')) as T;
     }
 }
