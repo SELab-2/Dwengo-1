@@ -52,7 +52,7 @@
     const codeRules = [
         (value: string | undefined) => {
             if (value !== undefined && validate(value) && version(value) === 4) return true;
-            return "Invalid format.";
+            return t("invalidFormat");
         },
     ];
     // Submitting a code will send a request if the code is valid
@@ -146,7 +146,7 @@
                             type="submit"
                             @click="submitCode"
                             block
-                            >Submit</v-btn
+                            >{{ t("submitCode") }}</v-btn
                         >
                     </v-form>
                 </v-sheet>
