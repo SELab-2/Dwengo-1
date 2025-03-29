@@ -54,7 +54,7 @@ const createGroup = () => {
             item-title="displayName"
             item-value="id"
             :label="t('pick-class')"
-            variant="solo"
+            variant="outlined"
             clearable
             hide-details
             density="compact"
@@ -67,7 +67,7 @@ const createGroup = () => {
             item-title="title"
             item-value="value"
             :label="t('choose-students')"
-            variant="solo"
+            variant="outlined"
             clearable
             multiple
             hide-details

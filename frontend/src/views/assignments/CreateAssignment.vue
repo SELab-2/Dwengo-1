@@ -3,7 +3,8 @@
     import {computed, onMounted, ref, watch} from "vue";
     import GroupSelector from "@/components/GroupSelector.vue";
     import {classes} from "@/utils/tempData.ts";
-    import {assignmentTitleRules, classesRules, learningPathRules, submitForm} from "@/utils/assignmentForm.ts";  // Assuming your tempData.ts has the required classes
+    import {assignmentTitleRules, classesRules, learningPathRules, submitForm} from "@/utils/assignmentForm.ts";
+    import DeadlineSelector from "@/components/DeadlineSelector.vue";
 
     const {t, locale} = useI18n();
 
@@ -12,6 +13,7 @@
     const searchQuery = ref('');
 
     const assignmentTitle = ref('');
+    const deadline = ref(null);
     const allLearningPaths = ref([]);
     const filteredLearningPaths = ref([]);
     const selectedLearningPath = ref(null);
@@ -79,7 +81,8 @@
     onMounted(fetchAllLearningPaths);
 
     const submitFormHandler = () => {
-        submitForm(assignmentTitle.value, selectedLearningPath.value, selectedClasses.value, groups.value);
+        console.log(deadline.value);
+        submitForm(assignmentTitle.value, selectedLearningPath.value, selectedClasses.value, groups.value, deadline.value);
     };
 </script>
 
@@ -92,7 +95,7 @@
                 <v-container class="step-container">
                     <v-card-text>
                         <v-text-field :v-model="assignmentTitle" :label="t('title')" :rules="assignmentTitleRules"
-                                      density="compact" variant="solo" clearable required></v-text-field>
+                                      density="compact" variant="outlined" clearable required></v-text-field>
                     </v-card-text>
 
                     <v-card-text>
@@ -101,7 +104,7 @@
                             :items="searchResults"
                             :label="t('choose-lp')"
                             :rules="learningPathRules"
-                            variant="solo"
+                            variant="outlined"
                             clearable
                             hide-details
                             density="compact"
@@ -119,7 +122,7 @@
                             :items="allClasses"
                             :label="t('choose-classes')"
                             :rules="classesRules"
-                            variant="solo"
+                            variant="outlined"
                             clearable
                             multiple
                             hide-details
@@ -131,6 +134,8 @@
                             required
                         ></v-combobox>
                     </v-card-text>
+
+                    <DeadlineSelector v-model:deadline="deadline" />
 
                     <h3>{{ t('create-groups') }}</h3>
 
@@ -147,7 +152,7 @@
                     </v-card-text>
 
                 </v-container>
-                <v-btn class="mt-2" type="submit" block>Submit</v-btn>
+                <v-btn class="mt-2" color="secondary" type="submit" block>Submit</v-btn>
             </v-form>
         </v-card>
     </div>
