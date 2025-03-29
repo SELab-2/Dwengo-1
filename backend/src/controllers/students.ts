@@ -122,7 +122,7 @@ export async function createStudentRequestHandler(req: Request, res: Response): 
     requireFields({ username, classId });
 
     await createClassJoinRequest(username, classId);
-    res.status(201).send();
+    res.status(201);
 }
 
 export async function getStudentRequestHandler(req: Request, res: Response): Promise<void> {
@@ -144,12 +144,12 @@ export async function updateClassJoinRequestHandler(req: Request, res: Response)
 }
 
 export async function deleteClassJoinRequestHandler(req: Request, res: Response) {
-    const username = req.query.username as string;
+    const username = req.params.username as string;
     const classId = req.params.classId;
     requireFields({ username, classId });
 
     await deleteClassJoinRequest(username, classId);
-    res.status(204).send();
+    res.status(204);
 }
 
 

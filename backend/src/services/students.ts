@@ -140,6 +140,12 @@ export async function createClassJoinRequest(studentUsername: string, classId: s
         throw new NotFoundException("Class with id not found");
     }
 
+    const req = await requestRepo.findByStudentAndClass(student, cls);
+
+    if (req){
+        throw new ConflictException("Request with student and class already exist");
+    }
+
     const request = requestRepo.create({
         requester: student,
         class: cls,
@@ -159,6 +165,7 @@ export async function getJoinRequestsByStudent(studentUsername: string) {
     return requests.map(mapToStudentRequestDTO);
 }
 
+// TODO naar teacher
 export async function updateClassJoinRequestStatus( studentUsername: string, classId: string, accepted: boolean = true) {
     const requestRepo = getClassJoinRequestRepository();
     const classRepo = getClassRepository();
@@ -193,7 +200,7 @@ export async function deleteClassJoinRequest(studentUsername: string, classId: s
         throw new NotFoundException('Class not found');
     }
 
-    const request = await requestRepo.findOne({ requester: student, class: cls });
+    const request = await requestRepo.findByStudentAndClass(student, cls);
 
     if (!request) {
         throw new NotFoundException('Join request not found');

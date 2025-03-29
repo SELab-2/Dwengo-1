@@ -39,6 +39,6 @@ router.get('/:username/groups', getStudentGroupsHandler);
 // A list of questions a user has created
 router.get('/:username/questions', getStudentQuestionsHandler);
 
-router.use('/:username/join-requests', joinRequestRouter)
+router.use('/:username/joinRequests', joinRequestRouter)
 
 export default router;

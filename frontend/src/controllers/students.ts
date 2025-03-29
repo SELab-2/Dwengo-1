@@ -2,7 +2,7 @@ import { BaseController } from "@/controllers/base-controller.ts";
 
 export class StudentController extends BaseController {
     constructor() {
-        super("students");
+        super("student");
     }
 
     getAll(full = true) {
@@ -10,15 +10,15 @@ export class StudentController extends BaseController {
     }
 
     getByUsername(username: string) {
-        return this.get<any>(`/${username}`);
+        return this.get<{ student: any }>(`/${username}`);
     }
 
     createStudent(data: any) {
-        return this.post<any>("/", data);
+        return this.post<{ student: any }>("/", data);
     }
 
     deleteStudent(username: string) {
-        return this.delete<any>(`/${username}`);
+        return this.delete<{ student: any }>(`/${username}`);
     }
 
     getClasses(username: string, full = true) {
@@ -39,5 +39,17 @@ export class StudentController extends BaseController {
 
     getQuestions(username: string, full = true) {
         return this.get<{ questions: any[] }>(`/${username}/questions`, { full });
+    }
+
+    getJoinRequests(username: string) {
+        return this.get<{ requests: any[] }>(`/${username}/joinRequests`);
+    }
+
+    createJoinRequest(username: string, classId: string) {
+        return this.post<any>(`/${username}/joinRequests/${classId}`);
+    }
+
+    deleteJoinRequest(username: string, classId: string) {
+        return this.delete<any>(`/${username}/joinRequests/${classId}`);
     }
 }

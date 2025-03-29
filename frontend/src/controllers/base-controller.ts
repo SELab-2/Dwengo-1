@@ -28,12 +28,17 @@ export class BaseController {
         return res.json();
     }
 
-    protected async post<T>(path: string, body: unknown): Promise<T> {
-        const res = await fetch(`${this.baseUrl}${path}`, {
+    protected async post<T>(path: string, body?: unknown): Promise<T> {
+        const options: RequestInit = {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-        });
+        };
+
+        if (body !== undefined) {
+            options.body = JSON.stringify(body);
+        }
+
+        const res = await fetch(`${this.baseUrl}${path}`, options);
 
         if (!res.ok) {
             const errorData = await res.json().catch(() => ({}));

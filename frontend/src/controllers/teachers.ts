@@ -2,7 +2,7 @@ import { BaseController } from "@/controllers/base-controller.ts";
 
 export class TeacherController extends BaseController {
     constructor() {
-        super("teachers");
+        super("teacher");
     }
 
     getAll(full = false) {

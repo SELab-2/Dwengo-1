@@ -10,6 +10,9 @@ export class ClassJoinRequestRepository extends DwengoEntityRepository<ClassJoin
     public findAllOpenRequestsTo(clazz: Class): Promise<ClassJoinRequest[]> {
         return this.findAll({ where: { class: clazz } });
     }
+    public findByStudentAndClass(requester: Student, clazz: Class): Promise<ClassJoinRequest | null> {
+        return this.findOne({ requester, class: clazz });
+    }
     public deleteBy(requester: Student, clazz: Class): Promise<void> {
         return this.deleteWhere({ requester: requester, class: clazz });
     }

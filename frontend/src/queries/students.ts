@@ -1,6 +1,6 @@
 import { computed, toValue } from "vue";
 import type { MaybeRefOrGetter } from "vue";
-import { useQuery } from "@tanstack/vue-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/vue-query";
 import { getStudentController } from "@/controllers/controllers.ts";
 
 const studentController = getStudentController();
@@ -75,7 +75,7 @@ export function useCreateStudentMutation() {
     return useMutation({
         mutationFn: (data: any) => studentController.createStudent(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['students'] });
+            await queryClient.invalidateQueries({ queryKey: ['students'] });
         },
         onError: (err) => {
             alert("Create student failed:", err);
@@ -92,10 +92,13 @@ export function useDeleteStudentMutation() {
     return useMutation({
         mutationFn: (username: string) => studentController.deleteStudent(username),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['students'] });
+            await queryClient.invalidateQueries({ queryKey: ['students'] });
         },
         onError: (err) => {
             alert("Delete student failed:", err);
         },
     });
 }
+
+
+
