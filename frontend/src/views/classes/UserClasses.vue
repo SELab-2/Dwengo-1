@@ -6,7 +6,7 @@
 
     const { t } = useI18n();
 
-    const role: String = authState.authState.activeRole!;
+    const role: string = authState.authState.activeRole!;
 
     // TODO : temp data until frontend controllers are ready
     type Teacher = {
@@ -30,10 +30,9 @@
         students: Array<Student>;
     };
 
-    const classIds: Array<string> = ["class01", "class02", "class03"];
-    let student01: Student = { username: "id01", firstName: "Mark", lastName: "Knopfler", classes: [] };
-    let student02: Student = { username: "id01", firstName: "John", lastName: "Hiat", classes: [] };
-    let student03: Student = { username: "id01", firstName: "Aaron", lastName: "Lewis", classes: [] };
+    const student01: Student = { username: "id01", firstName: "Mark", lastName: "Knopfler", classes: [] };
+    const student02: Student = { username: "id01", firstName: "John", lastName: "Hiat", classes: [] };
+    const student03: Student = { username: "id01", firstName: "Aaron", lastName: "Lewis", classes: [] };
 
     const class01: Class = { id: "class01", displayName: "class 01", teachers: [], students: [student01, student02] };
     const class02: Class = { id: "class02", displayName: "class 02", teachers: [], students: [student01, student03] };
@@ -45,37 +44,37 @@
 
     const classes: Array<Class> = [class01, class02, class03];
 
-    // handle the class join requests
+    // Handle the class join requests
     const code = ref<string>("");
 
-    // the code needs to be formatted as v4 to be valid
-    // these rules are used to display a message to the user if they use a code that has an invalid format
+    // The code needs to be formatted as v4 to be valid
+    // These rules are used to display a message to the user if they use a code that has an invalid format
     const codeRules = [
         (value: string | undefined) => {
             if (value !== undefined && validate(value) && version(value) === 4) return true;
             return "Invalid format.";
         },
     ];
-    // submitting a code will send a request if the code is valid
-    const submitCode = () => {
-        if (code.value !== undefined && validate(code.value) && version(code.value) == 4) {
+    // Submitting a code will send a request if the code is valid
+    function submitCode() {
+        if (code.value !== undefined && validate(code.value) && version(code.value) === 4) {
             // TODO: temp function until frontend controllers are ready
             console.log("Code submitted:", code.value);
         }
     }
 
-    // handle dialog for showing members of a class
+    // Handle dialog for showing members of a class
     const dialog = ref(false);
     const students = ref<Array<string>>([]);
     const selectedClass = ref<Class | null>(null);
 
-    const openDialog = (c: Class) => {
+    function openDialog(c: Class) {
         selectedClass.value = c;
-        if (selectedClass !== undefined) {
+        if (selectedClass.value !== undefined) {
             students.value = selectedClass.value.students.map((student) => `${student.firstName} ${student.lastName}`);
             dialog.value = true;
         }
-    };
+    }
 </script>
 <template>
     <main>
