@@ -78,7 +78,7 @@
 </script>
 <template>
     <main>
-        <h class="title">{{ t("classes") }}</h>
+        <h1 class="title">{{ t("classes") }}</h1>
 
         <v-table class="table">
             <thead>
@@ -129,9 +129,13 @@
         </v-dialog>
         <div v-if="role === 'student'">
             <div class="join">
-                <h1>{{ t("joinClass") }}</h1>
+                <h2>{{ t("joinClass") }}</h2>
                 <p>{{ t("JoinClassExplanation") }}</p>
-                <v-sheet width="400">
+
+                <v-sheet
+                    class="pa-4 sheet"
+                    max-width="400"
+                >
                     <v-form @submit.prevent>
                         <v-text-field
                             label="CODE"
@@ -187,21 +191,19 @@
 
     .table {
         width: 60%;
-        margin: 0 auto;
-        padding-top: 3%;
+        padding-top: 10px;
         border-collapse: collapse;
     }
 
-    .title {
+    h1 {
         color: #0e6942;
         text-transform: uppercase;
         font-weight: bolder;
-        padding-left: 30px;
         padding-top: 2%;
         font-size: 50px;
     }
 
-    h1 {
+    h2 {
         color: #0e6942;
         font-size: 30px;
     }
@@ -210,12 +212,40 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
-        margin-left: 30px;
         margin-top: 50px;
     }
 
     .link {
         color: #0b75bb;
         text-decoration: underline;
+    }
+
+    main {
+        margin-left: 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        h1 {
+            text-align: center;
+            padding-left: 0;
+        }
+
+        .join {
+            text-align: center;
+            align-items: center;
+            margin-left: 0;
+        }
+
+        .sheet {
+            width: 100%;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 5px;
+        }
     }
 </style>
