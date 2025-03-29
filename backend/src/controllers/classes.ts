@@ -28,30 +28,19 @@ export async function createClassHandler(req: Request, res: Response): Promise<v
         return;
     }
 
-    res.status(201).json({ class: cls });
+    res.status(201).json(cls);
 }
 
 export async function getClassHandler(req: Request, res: Response): Promise<void> {
-    try {
-        const classId = req.params.id;
-        const cls = await getClass(classId);
+    const classId = req.params.id;
+    const cls = await getClass(classId);
 
-        if (!cls) {
-            res.status(404).json({ error: 'Class not found' });
-            return;
-        }
-        cls.endpoints = {
-            self: `${req.baseUrl}/${req.params.id}`,
-            invitations: `${req.baseUrl}/${req.params.id}/invitations`,
-            assignments: `${req.baseUrl}/${req.params.id}/assignments`,
-            students: `${req.baseUrl}/${req.params.id}/students`,
-        };
-
-        res.json(cls);
-    } catch (error) {
-        console.error('Error fetching learning objects:', error);
-        res.status(500).json({ error: 'Internal server error' });
+    if (!cls) {
+        res.status(404).json({ error: 'Class not found' });
+        return;
     }
+
+    res.json(cls);
 }
 
 export async function getClassStudentsHandler(req: Request, res: Response): Promise<void> {
@@ -72,7 +61,7 @@ export async function getClassStudentsHandler(req: Request, res: Response): Prom
 
 export async function getTeacherInvitationsHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.id;
-    const full = req.query.full === 'true'; // TODO: not implemented yet
+    const full = req.query.full === 'true';
 
     const invitations = await getClassTeacherInvitations(classId, full);
 

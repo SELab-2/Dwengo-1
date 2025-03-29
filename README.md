@@ -21,14 +21,16 @@ Alternatief kan je één van de volgende methodes gebruiken om de applicatie lok
 
 ### Quick start
 
+Om de applicatie lokaal te draaien als kant-en-klare Docker-containers:
+
 1. Installeer Docker en Docker Compose op je systeem (zie [Docker](https://docs.docker.com/get-docker/)
    en [Docker Compose](https://docs.docker.com/compose/)).
 2. Clone deze repository.
-3. In de backend, kopieer `.env.example` (of `.env.development.example`) naar `.env` en pas de variabelen aan waar
-   nodig.
-4. Voer `docker compose up` uit in de root van de repository.
+3. In de backend, kopieer `.env.example` naar `.env` en pas de variabelen aan waar nodig.
+4. Voer `docker compose -f compose.staging.yml up --build` uit in de root van de repository.
 5. Optioneel: Configureer de applicatie aan de hand van
    de [configuratiehandleiding](https://github.com/SELab-2/Dwengo-1/wiki/Administrator:-Productie-omgeving#dwengo-1-configuratie).
+6. De applicatie is nu beschikbaar op [`http://localhost/`](http://localhost/) en [`http://localhost/api`](http://localhost/api).
 
 ```bash
 docker compose version
@@ -38,14 +40,13 @@ cp .env.example .env
 # Pas .env aan
 nano .env
 cd ..
-docker compose up
-# Configureer de applicatie
+docker compose -f compose.staging.yml up --build
 ```
 
-### Handmatige installatie
+### Handmatige installatie en ontwikkeling
 
 Zie de submappen voor de installatie-instructies van de [frontend](./frontend/README.md)
-en [backend](./backend/README.md).
+en [backend](./backend/README.md) en instructies voor het opzetten van een ontwikkelomgeving.
 
 ## Architectuur
 

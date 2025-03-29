@@ -9,7 +9,6 @@ import {
     getStudentHandler,
     getStudentSubmissionsHandler,
 } from '../controllers/students.js';
-import { getStudentGroups } from '../services/students.js';
 const router = express.Router();
 
 // Root endpoint used to search objects

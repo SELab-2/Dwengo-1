@@ -45,7 +45,7 @@ export async function createSubmission(submissionDTO: SubmissionDTO) {
         return null;
     }
 
-    return submission;
+    return mapToSubmissionDTO(submission);
 }
 
 export async function deleteSubmission(learningObjectHruid: string, language: Language, version: number, submissionNumber: number) {

@@ -2,8 +2,6 @@ import { AnyEntity, EntityManager, EntityName, EntityRepository } from '@mikro-o
 import { forkEntityManager } from '../orm.js';
 import { StudentRepository } from './users/student-repository.js';
 import { Student } from '../entities/users/student.entity.js';
-import { User } from '../entities/users/user.entity.js';
-import { UserRepository } from './users/user-repository.js';
 import { Teacher } from '../entities/users/teacher.entity.js';
 import { TeacherRepository } from './users/teacher-repository.js';
 import { Class } from '../entities/classes/class.entity.js';

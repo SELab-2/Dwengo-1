@@ -43,10 +43,11 @@ export async function createSubmissionHandler(req: Request, res: Response) {
     const submission = await createSubmission(submissionDTO);
 
     if (!submission) {
-        res.status(404).json({ error: 'Submission not added' });
-    } else {
-        res.json(submission);
+        res.status(400).json({ error: 'Failed to create submission' });
+        return;
     }
+
+    res.json(submission);
 }
 
 export async function deleteSubmissionHandler(req: Request, res: Response) {
@@ -60,7 +61,8 @@ export async function deleteSubmissionHandler(req: Request, res: Response) {
 
     if (!submission) {
         res.status(404).json({ error: 'Submission not found' });
-    } else {
-        res.json(submission);
+        return;
     }
+
+    res.json(submission);
 }
