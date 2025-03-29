@@ -2,6 +2,8 @@
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
     import { ref, watch } from "vue";
+    import { validate, version } from "uuid";
+
     const { t } = useI18n();
 
     const role: String = authState.authState.activeRole!;
@@ -42,17 +44,25 @@
 
     const classes: Array<Class> = [class01, class02, class03];
 
-    const code = ref("");
-    console.log(code);
+    const valid = ref(false);
+    const code = ref<string>("");
+    const codeRules = [
+        (value: string | undefined) => {
+            if (value !== undefined && validate(value) && version(value) === 4) return true;
+            return "Invalid format.";
+        },
+    ];
     watch(code, (newValue) => {
-        console.log("Code changed:", newValue);
+        if (code.value !== undefined && validate(code.value) && version(code.value) == 4) {
+            console.log("Code changed:", newValue);
+        }
     });
 
     // handle dialog for showing members of a class
     const dialog = ref(false);
     const students = ref<Array<string>>([]);
     const selectedClass = ref<Class | null>(null);
-    
+
     const openDialog = (c: Class) => {
         selectedClass.value = c;
         if (selectedClass !== undefined) {
@@ -64,44 +74,29 @@
 <template>
     <main>
         <h class="title">{{ t("classes") }}</h>
-        <div v-if="role === 'student'">
-            <v-table class="table">
-                <thead>
-                    <tr>
-                        <th class="header">{{ t("classes") }}</th>
-                        <th class="header">{{ t("members") }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        v-for="c in classes"
-                        :key="c.id"
+
+        <v-table class="table">
+            <thead>
+                <tr>
+                    <th class="header">{{ t("classes") }}</th>
+                    <th class="header">{{ t("members") }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    v-for="c in classes"
+                    :key="c.id"
+                >
+                    <td>{{ c.displayName }}</td>
+                    <td
+                        class="link"
+                        @click="openDialog(c)"
                     >
-                        <td>{{ c.displayName }}</td>
-                        <td class="link" @click="openDialog(c)">{{ c.students.length }}</td>
-                    </tr>
-                </tbody>
-            </v-table>
-        </div>
-        <div v-else>
-            <v-table class="table">
-                <thead>
-                    <tr>
-                        <th class="header">{{ t("classes") }}</th>
-                        <th class="header">{{ t("members") }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        v-for="c in classes"
-                        :key="c.id"
-                    >
-                        <td>{{ c.displayName }}</td>
-                        <td>{{ c.students.length }}</td>
-                    </tr>
-                </tbody>
-            </v-table>
-        </div>
+                        {{ c.students.length }}
+                    </td>
+                </tr>
+            </tbody>
+        </v-table>
         <v-dialog
             v-model="dialog"
             width="400"
@@ -127,16 +122,20 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <div class="join">
-            <h1>{{ t("joinClass") }}</h1>
-            <p>{{ t("JoinClassExplanation") }}</p>
-
-            <v-text-field
-                label="CODE"
-                v-model="code"
-                variant="outlined"
-                max-width="300px"
-            ></v-text-field>
+        <div v-if="role === 'student'">
+            <div class="join">
+                <h1>{{ t("joinClass") }}</h1>
+                <p>{{ t("JoinClassExplanation") }}</p>
+                <v-form v-model="valid">
+                    <v-text-field
+                        label="CODE"
+                        v-model="code"
+                        :rules="codeRules"
+                        variant="outlined"
+                        max-width="400px"
+                    ></v-text-field>
+                </v-form>
+            </div>
         </div>
     </main>
 </template>
