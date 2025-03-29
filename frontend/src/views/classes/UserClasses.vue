@@ -1,13 +1,14 @@
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
-    import { ref, watch } from "vue";
+    import { ref } from "vue";
     import { validate, version } from "uuid";
 
     const { t } = useI18n();
 
     const role: String = authState.authState.activeRole!;
 
+    // TODO : temp data until frontend controllers are ready
     type Teacher = {
         username: string;
         firstName: string;
@@ -44,19 +45,24 @@
 
     const classes: Array<Class> = [class01, class02, class03];
 
-    const valid = ref(false);
+    // handle the class join requests
     const code = ref<string>("");
+
+    // the code needs to be formatted as v4 to be valid
+    // these rules are used to display a message to the user if they use a code that has an invalid format
     const codeRules = [
         (value: string | undefined) => {
             if (value !== undefined && validate(value) && version(value) === 4) return true;
             return "Invalid format.";
         },
     ];
-    watch(code, (newValue) => {
+    // submitting a code will send a request if the code is valid
+    const submitCode = () => {
         if (code.value !== undefined && validate(code.value) && version(code.value) == 4) {
-            console.log("Code changed:", newValue);
+            // TODO: temp function until frontend controllers are ready
+            console.log("Code submitted:", code.value);
         }
-    });
+    }
 
     // handle dialog for showing members of a class
     const dialog = ref(false);
@@ -126,15 +132,25 @@
             <div class="join">
                 <h1>{{ t("joinClass") }}</h1>
                 <p>{{ t("JoinClassExplanation") }}</p>
-                <v-form v-model="valid">
-                    <v-text-field
-                        label="CODE"
-                        v-model="code"
-                        :rules="codeRules"
-                        variant="outlined"
-                        max-width="400px"
-                    ></v-text-field>
-                </v-form>
+                <v-sheet width="400">
+                    <v-form @submit.prevent>
+                        <v-text-field
+                            label="CODE"
+                            v-model="code"
+                            placeholder="XXXXXXXX-XXXX-4XXX-XXXX-XXXXXXXXXXXX"
+                            :rules="codeRules"
+                            variant="outlined"
+                        ></v-text-field>
+                        <v-btn
+                            class="mt-4"
+                            style="background-color: #f6faf2"
+                            type="submit"
+                            @click="submitCode"
+                            block
+                            >Submit</v-btn
+                        >
+                    </v-form>
+                </v-sheet>
             </div>
         </div>
     </main>
