@@ -24,11 +24,11 @@
         router.push('/assignment/create');
     };
 
-    const goToEditAssignment = (id: number) => {
-        router.push(`/assignment/edit/${id}`);
+    const goToEditAssignment = (id: string) => {
+        router.push(`/assignment/${id}/edit`);
     };
 
-    const goToAssignmentDetails = (id: number) => {
+    const goToAssignmentDetails = (id: string) => {
         router.push(`/assignment/${id}`);
     };
 </script>
@@ -45,9 +45,9 @@
             <v-row>
                 <v-col v-for="assignment in allAssignments" :key="assignment.id" cols="12">
                     <v-card class="assignment-card" variant="outlined">
-                        <v-card-title>{{ assignment.title }}</v-card-title>
+                        <v-card-title class="title">{{ assignment.title }}</v-card-title>
                         <v-divider></v-divider>
-                        <v-card-text>{{ assignment.description }}</v-card-text>
+                        <v-card-text class="description-text" >{{ assignment.description }}</v-card-text>
 
                         <v-card-actions>
                             <v-btn color="primary" @click="goToAssignmentDetails(assignment.id)">
@@ -70,11 +70,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 2%;
 }
 
 .assignment-card {
-    padding: 16px;
+    padding: 1%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -84,4 +84,20 @@ h1 {
     text-align: left;
     width: 100%;
 }
+
+.title {
+    flex-grow: 1;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.description-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;  /* Limit to 3 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 </style>
