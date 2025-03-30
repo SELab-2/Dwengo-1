@@ -1,7 +1,8 @@
 #
-# This file is used to define the production environment for the project.
-# It is used to deploy the project on a server.
-# Should not be used for local development.
+# Use this configuration to deploy the project on a server.
+#
+# This configuration builds the frontend and backend services as Docker images,
+# and uses the paths for the services, instead of ports, and enables SSL.
 #
 services:
     web:
@@ -35,12 +36,16 @@ services:
             - 'traefik.http.services.api.loadbalancer.server.port=3000'
 
     db:
-        # Also see compose.yml
+        extends:
+            file: ./compose.yml
+            service: db
         networks:
             - dwengo-1
 
     idp:
-        # Also see compose.yml
+        extends:
+            file: ./compose.yml
+            service: idp
         # TODO Replace with proper production command
         command: ['start-dev', '--http-port', '7080', '--https-port', '7443', '--import-realm']
         networks:
@@ -92,7 +97,15 @@ services:
             - dwengo-1
 
     logging:
-        # Also see compose.yml
+        image: grafana/loki:latest
+        ports:
+            - '9001:3102'
+            - '9095:9095'
+        command: -config.file=/etc/loki/config.yaml
+        restart: unless-stopped
+        volumes:
+            - ./config/loki/config.yml:/etc/loki/config.yaml
+            - dwengo_loki_data:/loki
         networks:
             - dwengo-1
 
@@ -107,6 +120,7 @@ services:
 volumes:
     dwengo_grafana_data:
     dwengo_letsencrypt:
+    dwengo_loki_data:
 
 networks:
     dwengo-1:

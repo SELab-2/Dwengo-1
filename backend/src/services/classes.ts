@@ -1,5 +1,4 @@
 import { getClassRepository, getStudentRepository, getTeacherInvitationRepository, getTeacherRepository } from '../data/repositories.js';
-import { Class } from '../entities/classes/class.entity.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToTeacherInvitationDTO, mapToTeacherInvitationDTOIds, TeacherInvitationDTO } from '../interfaces/teacher-invitation.js';
@@ -21,16 +20,14 @@ export async function getAllClasses(full: boolean): Promise<ClassDTO[] | string[
     return classes.map((cls) => cls.classId!);
 }
 
-export async function createClass(classData: ClassDTO): Promise<Class | null> {
+export async function createClass(classData: ClassDTO): Promise<ClassDTO | null> {
     const teacherRepository = getTeacherRepository();
     const teacherUsernames = classData.teachers || [];
-    const teachers = (await Promise.all(teacherUsernames.map((id) => teacherRepository.findByUsername(id)))).filter((teacher) => teacher != null);
+    const teachers = (await Promise.all(teacherUsernames.map((id) => teacherRepository.findByUsername(id)))).filter((teacher) => teacher !== null);
 
     const studentRepository = getStudentRepository();
     const studentUsernames = classData.students || [];
-    const students = (await Promise.all(studentUsernames.map((id) => studentRepository.findByUsername(id)))).filter((student) => student != null);
-
-    //Const cls = mapToClass(classData, teachers, students);
+    const students = (await Promise.all(studentUsernames.map((id) => studentRepository.findByUsername(id)))).filter((student) => student !== null);
 
     const classRepository = getClassRepository();
 
@@ -42,7 +39,7 @@ export async function createClass(classData: ClassDTO): Promise<Class | null> {
         });
         await classRepository.save(newClass);
 
-        return newClass;
+        return mapToClassDTO(newClass);
     } catch (e) {
         logger.error(e);
         return null;

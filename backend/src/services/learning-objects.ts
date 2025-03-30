@@ -46,6 +46,13 @@ export async function getLearningObjectById(hruid: string, language: string): Pr
 }
 
 /**
+ * Generic function to fetch learning paths
+ */
+function fetchLearningPaths(arg0: string[], language: string, arg2: string): LearningPathResponse | PromiseLike<LearningPathResponse> {
+    throw new Error('Function not implemented.');
+}
+
+/**
  * Generic function to fetch learning objects (full data or just HRUIDs)
  */
 async function fetchLearningObjects(hruid: string, full: boolean, language: string): Promise<FilteredLearningObject[] | string[]> {
@@ -85,6 +92,4 @@ export async function getLearningObjectsFromPath(hruid: string, language: string
 export async function getLearningObjectIdsFromPath(hruid: string, language: string): Promise<string[]> {
     return (await fetchLearningObjects(hruid, false, language)) as string[];
 }
-function fetchLearningPaths(arg0: string[], language: string, arg2: string): LearningPathResponse | PromiseLike<LearningPathResponse> {
-    throw new Error('Function not implemented.');
-}
+
