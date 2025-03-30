@@ -6,7 +6,7 @@ import { EnvVars, getEnvVar } from '../util/envvars.js';
 import { Language } from '../entities/content/language.js';
 import attachmentService from '../services/learning-objects/attachment-service.js';
 import { NotFoundError } from '@mikro-orm/core';
-import {BadRequestException} from "../exceptions/badRequestException";
+import {BadRequestException} from "../exceptions/bad-request-exception.js";
 
 function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIdentifier {
     if (!req.params.hruid) {
