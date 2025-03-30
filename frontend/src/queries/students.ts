@@ -1,9 +1,9 @@
 import { computed, toValue } from "vue";
 import type { MaybeRefOrGetter } from "vue";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/vue-query";
-import { getStudentController } from "@/controllers/controllers.ts";
+import {StudentController} from "@/controllers/students.ts";
 
-const studentController = getStudentController();
+const studentController = new StudentController();
 
 /** 🔑 Query keys */
 const STUDENTS_QUERY_KEY = (full: boolean) => ['students', full];

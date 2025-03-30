@@ -28,27 +28,20 @@ export class BaseController {
         return res.json();
     }
 
-    protected async post<T>(path: string, body?: unknown): Promise<T> {
-        const options: RequestInit = {
+    protected async post(path: string, body: unknown): Promise<void> {
+        const res = await fetch(`${this.baseUrl}${path}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-        };
-
-        if (body !== undefined) {
-            options.body = JSON.stringify(body);
-        }
-
-        const res = await fetch(`${this.baseUrl}${path}`, options);
+            body: JSON.stringify(body),
+        });
 
         if (!res.ok) {
             const errorData = await res.json().catch(() => ({}));
             throw new Error(errorData?.error || `Error ${res.status}: ${res.statusText}`);
         }
-
-        return res.json();
     }
 
-    protected async delete<T>(path: string): Promise<T> {
+    protected async delete(path: string): Promise<void> {
         const res = await fetch(`${this.baseUrl}${path}`, {
             method: "DELETE",
         });
@@ -57,11 +50,9 @@ export class BaseController {
             const errorData = await res.json().catch(() => ({}));
             throw new Error(errorData?.error || `Error ${res.status}: ${res.statusText}`);
         }
-
-        return res.json();
     }
 
-    protected async put<T>(path: string, body: unknown): Promise<T> {
+    protected async put(path: string, body: unknown): Promise<void> {
         const res = await fetch(`${this.baseUrl}${path}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -72,7 +63,5 @@ export class BaseController {
             const errorData = await res.json().catch(() => ({}));
             throw new Error(errorData?.error || `Error ${res.status}: ${res.statusText}`);
         }
-
-        return res.json();
     }
 }

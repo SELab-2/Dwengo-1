@@ -14,11 +14,11 @@ export class StudentController extends BaseController {
     }
 
     createStudent(data: any) {
-        return this.post<{ student: any }>("/", data);
+        return this.post("/", data);
     }
 
     deleteStudent(username: string) {
-        return this.delete<{ student: any }>(`/${username}`);
+        return this.delete(`/${username}`);
     }
 
     getClasses(username: string, full = true) {
@@ -46,10 +46,10 @@ export class StudentController extends BaseController {
     }
 
     createJoinRequest(username: string, classId: string) {
-        return this.post<any>(`/${username}/joinRequests/${classId}`);
+        return this.post(`/${username}/joinRequests}`, classId);
     }
 
     deleteJoinRequest(username: string, classId: string) {
-        return this.delete<any>(`/${username}/joinRequests/${classId}`);
+        return this.delete(`/${username}/joinRequests/${classId}`);
     }
 }

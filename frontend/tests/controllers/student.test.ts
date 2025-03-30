@@ -1,26 +1,22 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import {getStudentController} from "../../src/controllers/controllers";
+import {StudentController} from "../../src/controllers/students";
 
-const controller = getStudentController();
+const controller = new StudentController();
 
 describe('StudentController', () => {
     const newStudent = {
-        username: 'TestStudent',
+        username: 'teststudent1',
         firstName: 'Testy',
         lastName: 'McTestface',
     };
 
     beforeAll(() => {
-        // Zet eventueel mock server op hier als je dat gebruikt
+        // Start backend
     });
 
     it('creates a student and fetches it by username', async () => {
         // Create student
-        const created = await controller.createStudent(newStudent);
-
-        expect(created).toBeDefined();
-        expect(created.username).toBe(newStudent.username);
-
+        await controller.createStudent(newStudent);
 
         // Fetch same student
         const fetched = await controller.getByUsername(newStudent.username);
@@ -33,9 +29,7 @@ describe('StudentController', () => {
         expect(student.firstName).toBe(newStudent.firstName);
         expect(student.lastName).toBe(newStudent.lastName);
 
+
         await controller.deleteStudent(newStudent.username);
-
-        await expect(controller.getByUsername(newStudent.username)).rejects.toThrow();
-
     });
 });

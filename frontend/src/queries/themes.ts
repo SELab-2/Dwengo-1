@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/vue-query";
-import { getThemeController } from "@/controllers/controllers";
 import { type MaybeRefOrGetter, toValue } from "vue";
+import {ThemeController} from "@/controllers/themes.ts";
 
-const themeController = getThemeController();
+const themeController = new ThemeController();
 
 export const useThemeQuery = (language: MaybeRefOrGetter<string>) =>
     useQuery({
