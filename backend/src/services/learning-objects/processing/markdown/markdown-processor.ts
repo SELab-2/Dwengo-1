@@ -8,7 +8,6 @@ import { DwengoContentType } from '../content-type.js';
 import dwengoMarkedRenderer from './dwengo-marked-renderer.js';
 import { StringProcessor } from '../string-processor.js';
 import { ProcessingError } from '../processing-error.js';
-import { YAMLException } from 'js-yaml';
 
 class MarkdownProcessor extends StringProcessor {
     constructor() {
@@ -30,10 +29,6 @@ class MarkdownProcessor extends StringProcessor {
             const html = marked(mdText, { async: false });
             return MarkdownProcessor.replaceLinks(html); // Replace html image links path
         } catch (e: unknown) {
-            if (e instanceof YAMLException) {
-                throw new ProcessingError(e.message);
-            }
-
             throw new ProcessingError('Unknown error while processing markdown: ' + e);
         }
     }
