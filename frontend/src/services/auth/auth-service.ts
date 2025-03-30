@@ -5,7 +5,7 @@
 import { computed, reactive } from "vue";
 import type { AuthState, Role, UserManagersForRoles } from "@/services/auth/auth.d.ts";
 import { User, UserManager } from "oidc-client-ts";
-import { loadAuthConfig } from "@/services/auth/auth-config-loader.ts";
+import { AUTH_CONFIG_ENDPOINT, loadAuthConfig } from "@/services/auth/auth-config-loader.ts";
 import authStorage from "./auth-storage.ts";
 import { loginRoute } from "@/config.ts";
 import apiClient from "@/services/api-client.ts";
@@ -108,7 +108,7 @@ async function logout(): Promise<void> {
 apiClient.interceptors.request.use(
     async (reqConfig) => {
         const token = authState?.user?.access_token;
-        if (token) {
+        if (token && reqConfig.url !== AUTH_CONFIG_ENDPOINT) {
             reqConfig.headers.Authorization = `Bearer ${token}`;
         }
         return reqConfig;

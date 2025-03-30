@@ -60,7 +60,7 @@ export async function createStudentHandler(req: Request, res: Response) {
 
     if (!newUser) {
         res.status(500).json({
-            error: 'Something went wrong while creating student'
+            error: 'Something went wrong while creating student',
         });
         return;
     }
