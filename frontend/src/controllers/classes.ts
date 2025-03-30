@@ -30,4 +30,8 @@ export class ClassController extends BaseController {
     getTeacherInvitations(id: string, full = true) {
         return this.get<{ invitations: any[] }>(`/${id}/teacher-invitations`, { full });
     }
+
+    getAssignments(id: string, full = true) {
+        return this.get<{ assignments: any[] }>(`/${id}/assignments`, { full });
+    }
 }
