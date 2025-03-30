@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import MenuBar from "@/components/MenuBar.vue";
 import SingleAssignment from "@/views/assignments/SingleAssignment.vue";
 import SingleClass from "@/views/classes/SingleClass.vue";
 import SingleDiscussion from "@/views/discussions/SingleDiscussion.vue";
@@ -41,7 +40,6 @@ const router = createRouter({
 
         {
             path: "/user",
-            component: MenuBar,
             meta: { requiresAuth: true },
             children: [
                 {

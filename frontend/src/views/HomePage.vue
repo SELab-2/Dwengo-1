@@ -27,9 +27,10 @@
             <div class="container_left">
                 <img
                     :src="dwengoLogo"
+                    alt="Dwengo logo"
                     style="align-self: center"
                 />
-                <h> {{ t("homeTitle") }}</h>
+                <h1>{{ t("homeTitle") }}</h1>
                 <p class="info">
                     {{ t("homeIntroduction1") }}
                 </p>
@@ -57,7 +58,7 @@
                         width="125"
                         src="/assets/home/innovative.png"
                     ></v-img>
-                    <h class="big">{{ t("innovative") }}</h>
+                    <h2 class="big">{{ t("innovative") }}</h2>
                 </div>
                 <div class="img_small">
                     <v-img
@@ -65,7 +66,7 @@
                         width="125"
                         src="/assets/home/research_based.png"
                     ></v-img>
-                    <h class="big">{{ t("researchBased") }}</h>
+                    <h2 class="big">{{ t("researchBased") }}</h2>
                 </div>
                 <div class="img_small">
                     <v-img
@@ -73,7 +74,7 @@
                         width="125"
                         src="/assets/home/inclusive.png"
                     ></v-img>
-                    <h class="big">{{ t("sociallyRelevant") }}</h>
+                    <h2 class="big">{{ t("sociallyRelevant") }}</h2>
                 </div>
                 <div class="img_small">
                     <v-img
@@ -81,7 +82,7 @@
                         width="125"
                         src="/assets/home/socially_relevant.png"
                     ></v-img>
-                    <h class="big">{{ t("inclusive") }}</h>
+                    <h2 class="big">{{ t("inclusive") }}</h2>
                 </div>
             </div>
             <div class="container_right">
@@ -160,7 +161,7 @@
         margin-bottom: 10px;
     }
 
-    h {
+    h2 {
         font-size: large;
         font-weight: bold;
         align-self: center;

@@ -39,7 +39,7 @@ export async function getAllLearningObjects(req: Request, res: Response): Promis
         learningObjects = await learningObjectService.getLearningObjectIdsFromPath(learningPathId);
     }
 
-    res.json(learningObjects);
+    res.json({ learningObjects: learningObjects });
 }
 
 export async function getLearningObject(req: Request, res: Response): Promise<void> {
