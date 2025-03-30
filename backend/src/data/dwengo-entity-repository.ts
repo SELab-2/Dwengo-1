@@ -1,5 +1,5 @@
 import { EntityRepository, FilterQuery } from '@mikro-orm/core';
-import { EntityAlreadyExistsException } from '../exceptions/entity-already-exists-exception';
+import { EntityAlreadyExistsException } from '../exceptions/entity-already-exists-exception.js';
 
 export abstract class DwengoEntityRepository<T extends object> extends EntityRepository<T> {
     public async save(entity: T, options?: { preventOverwrite?: boolean }): Promise<void> {

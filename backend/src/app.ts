@@ -9,7 +9,7 @@ import { EnvVars, getNumericEnvVar } from './util/envvars.js';
 import apiRouter from './routes/router.js';
 import swaggerMiddleware from './swagger.js';
 import swaggerUi from 'swagger-ui-express';
-import { errorHandler } from './middleware/error-handling/error-handler';
+import { errorHandler } from './middleware/error-handling/error-handler.js';
 
 const logger: Logger = getLogger();
 
