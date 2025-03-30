@@ -39,7 +39,7 @@ export async function createStudentHandler(req: Request, res: Response) {
     const userData = req.body as StudentDTO;
 
     await createStudent(userData);
-    res.status(201);
+    res.sendStatus(201);
 }
 
 export async function deleteStudentHandler(req: Request, res: Response) {
@@ -47,7 +47,7 @@ export async function deleteStudentHandler(req: Request, res: Response) {
     requireFields({ username });
 
     await deleteStudent(username);
-    res.status(200);
+    res.sendStatus(200);
 }
 
 export async function getStudentClassesHandler(req: Request, res: Response): Promise<void> {
@@ -120,7 +120,7 @@ export async function createStudentRequestHandler(req: Request, res: Response): 
     requireFields({ username, classId });
 
     await createClassJoinRequest(username, classId);
-    res.status(201);
+    res.sendStatus(201);
 }
 
 export async function getStudentRequestHandler(req: Request, res: Response): Promise<void> {
@@ -137,7 +137,7 @@ export async function deleteClassJoinRequestHandler(req: Request, res: Response)
     requireFields({ username, classId });
 
     await deleteClassJoinRequest(username, classId);
-    res.status(204);
+    res.sendStatus(204);
 }
 
 
