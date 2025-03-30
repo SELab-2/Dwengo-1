@@ -1,10 +1,6 @@
 import { Request, Response } from 'express';
 import { FALLBACK_LANG } from '../config.js';
-import {
-    FilteredLearningObject,
-    LearningObjectIdentifier,
-    LearningPathIdentifier,
-} from '../interfaces/learning-content.js';
+import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../interfaces/learning-content.js';
 import learningObjectService from '../services/learning-objects/learning-object-service.js';
 import { envVars, getEnvVar } from '../util/envVars.js';
 import { Language } from '../entities/content/language.js';
