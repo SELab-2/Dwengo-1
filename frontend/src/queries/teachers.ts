@@ -24,7 +24,7 @@ export function useTeacherQuery(username: MaybeRefOrGetter<string | undefined>) 
     return useQuery({
         queryKey: computed(() => TEACHER_QUERY_KEY(toValue(username)!)),
         queryFn: () => teacherController.getByUsername(toValue(username)!),
-        enabled: () => !!toValue(username),
+        enabled: () => Boolean(toValue(username)),
     });
 }
 
@@ -32,7 +32,7 @@ export function useTeacherClassesQuery(username: MaybeRefOrGetter<string | undef
     return useQuery({
         queryKey: computed(() => TEACHER_CLASSES_QUERY_KEY(toValue(username)!, toValue(full))),
         queryFn: () => teacherController.getClasses(toValue(username)!, toValue(full)),
-        enabled: () => !!toValue(username),
+        enabled: () => Boolean(toValue(username)),
     });
 }
 
@@ -40,7 +40,7 @@ export function useTeacherStudentsQuery(username: MaybeRefOrGetter<string | unde
     return useQuery({
         queryKey: computed(() => TEACHER_STUDENTS_QUERY_KEY(toValue(username)!, toValue(full))),
         queryFn: () => teacherController.getStudents(toValue(username)!, toValue(full)),
-        enabled: () => !!toValue(username),
+        enabled: () => Boolean(toValue(username)),
     });
 }
 
@@ -48,7 +48,7 @@ export function useTeacherQuestionsQuery(username: MaybeRefOrGetter<string | und
     return useQuery({
         queryKey: computed(() => TEACHER_QUESTIONS_QUERY_KEY(toValue(username)!, toValue(full))),
         queryFn: () => teacherController.getQuestions(toValue(username)!, toValue(full)),
-        enabled: () => !!toValue(username),
+        enabled: () => Boolean(toValue(username)),
     });
 }
 
@@ -56,7 +56,7 @@ export function useTeacherJoinRequestsQuery(username: MaybeRefOrGetter<string | 
     return useQuery({
         queryKey: computed(() => JOIN_REQUESTS_QUERY_KEY(toValue(username)!, toValue(classId)!)),
         queryFn: () => teacherController.getStudentJoinRequests(toValue(username)!, toValue(classId)!),
-        enabled: () => !!toValue(username) && !!toValue(classId),
+        enabled: () => Boolean(toValue(username)) && Boolean(toValue(classId)),
     });
 }
 
