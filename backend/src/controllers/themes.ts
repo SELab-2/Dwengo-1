@@ -7,7 +7,7 @@ interface Translations {
 }
 
 export function getThemesHandler(req: Request, res: Response): void {
-    const language = (req.query.language as string || 'nl').toLowerCase();
+    const language = ((req.query.language as string) || 'nl').toLowerCase();
     const translations = loadTranslations<Translations>(language);
     const themeList = themes.map((theme) => ({
         key: theme.title,
