@@ -4,9 +4,9 @@ import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifie
 import learningObjectService from '../services/learning-objects/learning-object-service.js';
 import { EnvVars, getEnvVar } from '../util/envvars.js';
 import { Language } from '../entities/content/language.js';
-import { BadRequestException } from '../exceptions.js';
 import attachmentService from '../services/learning-objects/attachment-service.js';
 import { NotFoundError } from '@mikro-orm/core';
+import {BadRequestException} from "../exceptions/badRequestException";
 
 function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIdentifier {
     if (!req.params.hruid) {

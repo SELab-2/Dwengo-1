@@ -2,17 +2,16 @@ import {
     getClassRepository,
     getLearningObjectRepository,
     getQuestionRepository,
-    getStudentRepository,
     getTeacherRepository,
 } from '../data/repositories.js';
-import { Teacher } from '../entities/users/teacher.entity.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { getClassStudents } from './classes.js';
 import { StudentDTO } from '../interfaces/student.js';
 import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question.js';
-import { mapToUser } from '../interfaces/user.js';
 import { mapToTeacher, mapToTeacherDTO, TeacherDTO } from '../interfaces/teacher.js';
-import { teachersOnly } from '../middleware/auth/auth.js';
+import {UniqueConstraintViolationException} from "@mikro-orm/core";
+
+import {ConflictException} from "../exceptions/conflict-exception";
 
 export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | string[]> {
     const teacherRepository = getTeacherRepository();
@@ -40,8 +39,10 @@ export async function createTeacher(userData: TeacherDTO): Promise<TeacherDTO | 
 
         return mapToTeacherDTO(newTeacher);
     } catch (e) {
-        console.log(e);
-        return null;
+        if (e instanceof UniqueConstraintViolationException) {
+            throw new ConflictException(`There is already a user with username '${userData.username}'.`);
+        }
+        throw e;
     }
 }
 
