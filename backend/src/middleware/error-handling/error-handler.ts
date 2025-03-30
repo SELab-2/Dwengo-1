@@ -6,10 +6,10 @@ const logger: Logger = getLogger();
 
 export function errorHandler(err: unknown, req: Request, res: Response, _: NextFunction): void {
     if (err instanceof ExceptionWithHttpState) {
-        logger.warn(`An error occurred while handling request ${JSON.stringify(req)}: ${err.error} (-> HTTP ${err.status})`);
+        logger.warn(`An error occurred while handling a request: ${err} (-> HTTP ${err.status})`);
         res.status(err.status).json(err);
     } else {
-        logger.error(`Unexpected error occurred while handling request ${JSON.stringify(req)}: ${JSON.stringify(err)}`);
+        logger.error(`Unexpected error occurred while handing a request: ${JSON.stringify(err)}`);
         res.status(500).json(err);
     }
 }
