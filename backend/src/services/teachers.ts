@@ -1,9 +1,4 @@
-import {
-    getClassRepository,
-    getLearningObjectRepository,
-    getQuestionRepository,
-    getTeacherRepository,
-} from '../data/repositories.js';
+import { getClassRepository, getLearningObjectRepository, getQuestionRepository, getTeacherRepository } from '../data/repositories.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { getClassStudents } from './classes.js';
 import { StudentDTO } from '../interfaces/student.js';

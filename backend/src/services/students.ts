@@ -1,9 +1,4 @@
-import {
-    getClassRepository,
-    getGroupRepository,
-    getStudentRepository,
-    getSubmissionRepository,
-} from '../data/repositories.js';
+import { getClassRepository, getGroupRepository, getStudentRepository, getSubmissionRepository } from '../data/repositories.js';
 import { AssignmentDTO } from '../interfaces/assignment.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
