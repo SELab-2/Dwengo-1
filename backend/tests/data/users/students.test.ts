@@ -29,7 +29,7 @@ describe('StudentRepository', () => {
     });
 
     it('should return the queried student after he was added', async () => {
-        await studentRepository.insert(studentRepository.create({username, firstName, lastName}));
+        await studentRepository.insert(studentRepository.create({ username, firstName, lastName }));
 
         const retrievedStudent = await studentRepository.findByUsername(username);
         expect(retrievedStudent).toBeTruthy();

@@ -1,5 +1,5 @@
 import { Teacher } from '../entities/users/teacher.entity.js';
-import {getTeacherRepository} from "../data/repositories";
+import { getTeacherRepository } from '../data/repositories';
 
 export interface TeacherDTO {
     id: string;
@@ -27,6 +27,6 @@ export function mapToTeacher(teacherData: TeacherDTO): Teacher {
     return getTeacherRepository().create({
         username: teacherData.username,
         firstName: teacherData.firstName,
-        lastName: teacherData.lastName
+        lastName: teacherData.lastName,
     });
 }

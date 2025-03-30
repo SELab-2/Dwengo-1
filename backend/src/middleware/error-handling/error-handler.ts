@@ -1,6 +1,6 @@
-import {NextFunction, Request, Response} from "express";
-import {getLogger, Logger} from "../../logging/initalize";
-import {ExceptionWithHttpState} from "../../exceptions/exception-with-http-state";
+import { NextFunction, Request, Response } from 'express';
+import { getLogger, Logger } from '../../logging/initalize';
+import { ExceptionWithHttpState } from '../../exceptions/exception-with-http-state';
 
 const logger: Logger = getLogger();
 

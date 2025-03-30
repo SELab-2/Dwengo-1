@@ -1,4 +1,4 @@
-import {ExceptionWithHttpState} from "./exception-with-http-state.js";
+import { ExceptionWithHttpState } from './exception-with-http-state.js';
 
 /**
  * Exception for HTTP 404 Not Found

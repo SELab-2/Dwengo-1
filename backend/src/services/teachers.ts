@@ -1,9 +1,4 @@
-import {
-    getClassRepository,
-    getLearningObjectRepository,
-    getQuestionRepository,
-    getTeacherRepository,
-} from '../data/repositories.js';
+import { getClassRepository, getLearningObjectRepository, getQuestionRepository, getTeacherRepository } from '../data/repositories.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { getClassStudents } from './classes.js';
 import { StudentDTO } from '../interfaces/student.js';
@@ -31,7 +26,7 @@ export async function createTeacher(userData: TeacherDTO): Promise<TeacherDTO | 
     const teacherRepository = getTeacherRepository();
 
     const newTeacher = mapToTeacher(userData);
-    await teacherRepository.save(newTeacher, {preventOverwrite: true});
+    await teacherRepository.save(newTeacher, { preventOverwrite: true });
 
     return mapToTeacherDTO(newTeacher);
 }

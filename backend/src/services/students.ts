@@ -27,7 +27,7 @@ export async function createStudent(userData: StudentDTO): Promise<StudentDTO | 
     const studentRepository = getStudentRepository();
 
     const newStudent = mapToStudent(userData);
-    await studentRepository.save(newStudent, {preventOverwrite: true});
+    await studentRepository.save(newStudent, { preventOverwrite: true });
     return mapToStudentDTO(newStudent);
 }
 

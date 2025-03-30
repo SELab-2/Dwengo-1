@@ -1,4 +1,4 @@
-import {ThemeController} from "@/controllers/themes.ts";
+import { ThemeController } from "@/controllers/themes.ts";
 
 export function controllerGetter<T>(Factory: new () => T): () => T {
     let instance: T | undefined;

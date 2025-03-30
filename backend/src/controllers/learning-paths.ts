@@ -8,8 +8,8 @@ import {
     personalizedForGroup,
     personalizedForStudent,
 } from '../services/learning-paths/learning-path-personalization-util.js';
-import {BadRequestException} from "../exceptions/bad-request-exception.js";
-import {NotFoundException} from "../exceptions/not-found-exception.js";
+import { BadRequestException } from '../exceptions/bad-request-exception.js';
+import { NotFoundException } from '../exceptions/not-found-exception.js';
 
 /**
  * Fetch learning paths based on query parameters.
