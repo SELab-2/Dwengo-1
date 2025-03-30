@@ -7,7 +7,7 @@ import {
 } from '../data/repositories.js';
 import { Group } from '../entities/assignments/group.entity.js';
 import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
-import { mapToSubmissionDTO, SubmissionDTO } from '../interfaces/submission.js';
+import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
 import { getLogger } from '../logging/initalize.js';
 
 export async function getGroup(classId: string, assignmentNumber: number, groupNumber: number, full: boolean): Promise<GroupDTO | null> {
@@ -104,7 +104,12 @@ export async function getAllGroups(classId: string, assignmentNumber: number, fu
     return groups.map(mapToGroupDTOId);
 }
 
-export async function getGroupSubmissions(classId: string, assignmentNumber: number, groupNumber: number): Promise<SubmissionDTO[]> {
+export async function getGroupSubmissions(
+    classId: string,
+    assignmentNumber: number,
+    groupNumber: number,
+    full: boolean
+): Promise<SubmissionDTO[] | SubmissionDTOId[]> {
     const classRepository = getClassRepository();
     const cls = await classRepository.findById(classId);
 
@@ -129,5 +134,9 @@ export async function getGroupSubmissions(classId: string, assignmentNumber: num
     const submissionRepository = getSubmissionRepository();
     const submissions = await submissionRepository.findAllSubmissionsForGroup(group);
 
-    return submissions.map(mapToSubmissionDTO);
+    if (full) {
+        return submissions.map(mapToSubmissionDTO);
+    }
+
+    return submissions.map(mapToSubmissionDTOId);
 }

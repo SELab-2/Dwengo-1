@@ -10,21 +10,20 @@ import {
     getStudentSubmissions,
 } from '../services/students.js';
 import { StudentDTO } from '../interfaces/student.js';
-import { getLogger } from '../logging/initalize.js';
 
 // TODO: accept arguments (full, ...)
 // TODO: endpoints
 export async function getAllStudentsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
 
-    const students: StudentDTO[] | string[] = full ? await getAllStudents() : await getAllStudents();
+    const students = await getAllStudents(full);
 
     if (!students) {
         res.status(404).json({ error: `Student not found.` });
         return;
     }
 
-    res.status(201).json(students);
+    res.json({ students: students });
 }
 
 export async function getStudentHandler(req: Request, res: Response): Promise<void> {
@@ -44,7 +43,7 @@ export async function getStudentHandler(req: Request, res: Response): Promise<vo
         return;
     }
 
-    res.status(201).json(user);
+    res.json(user);
 }
 
 export async function createStudentHandler(req: Request, res: Response): Promise<void> {
@@ -58,6 +57,14 @@ export async function createStudentHandler(req: Request, res: Response): Promise
     }
 
     const newUser = await createStudent(userData);
+
+    if (!newUser) {
+        res.status(500).json({
+            error: 'Something went wrong while creating student'
+        });
+        return;
+    }
+
     res.status(201).json(newUser);
 }
 
@@ -81,25 +88,12 @@ export async function deleteStudentHandler(req: Request, res: Response): Promise
 }
 
 export async function getStudentClassesHandler(req: Request, res: Response): Promise<void> {
-    try {
-        const full = req.query.full === 'true';
-        const username = req.params.id;
+    const full = req.query.full === 'true';
+    const username = req.params.id;
 
-        const classes = await getStudentClasses(username, full);
+    const classes = await getStudentClasses(username, full);
 
-        res.json({
-            classes: classes,
-            endpoints: {
-                self: `${req.baseUrl}/${req.params.id}`,
-                classes: `${req.baseUrl}/${req.params.id}/invitations`,
-                questions: `${req.baseUrl}/${req.params.id}/assignments`,
-                students: `${req.baseUrl}/${req.params.id}/students`,
-            },
-        });
-    } catch (error) {
-        getLogger().error('Error fetching learning objects:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+    res.json({ classes: classes });
 }
 
 // TODO
@@ -130,8 +124,9 @@ export async function getStudentGroupsHandler(req: Request, res: Response): Prom
 
 export async function getStudentSubmissionsHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.id;
+    const full = req.query.full === 'true';
 
-    const submissions = await getStudentSubmissions(username);
+    const submissions = await getStudentSubmissions(username, full);
 
     res.json({
         submissions: submissions,

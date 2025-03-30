@@ -86,7 +86,7 @@ export async function createQuestion(questionDTO: QuestionDTO): Promise<Question
     return questionDTO;
 }
 
-export async function deleteQuestion(questionId: QuestionId): Promise<Question | null> {
+export async function deleteQuestion(questionId: QuestionId): Promise<QuestionDTO | null> {
     const questionRepository = getQuestionRepository();
 
     const question = await fetchQuestion(questionId);
@@ -101,5 +101,5 @@ export async function deleteQuestion(questionId: QuestionId): Promise<Question |
         return null;
     }
 
-    return question;
+    return mapToQuestionDTO(question);
 }

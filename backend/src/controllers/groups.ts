@@ -28,6 +28,11 @@ export async function getGroupHandler(req: Request<GroupParams>, res: Response):
 
     const group = await getGroup(classId, assignmentId, groupId, full);
 
+    if (!group) {
+        res.status(404).json({ error: 'Group not found' });
+        return;
+    }
+
     res.json(group);
 }
 
@@ -66,12 +71,12 @@ export async function createGroupHandler(req: Request, res: Response): Promise<v
         return;
     }
 
-    res.status(201).json({ group: group });
+    res.status(201).json(group);
 }
 
 export async function getGroupSubmissionsHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.classid;
-    // Const full = req.query.full === 'true';
+    const full = req.query.full === 'true';
 
     const assignmentId = Number(req.params.assignmentid);
 
@@ -87,7 +92,7 @@ export async function getGroupSubmissionsHandler(req: Request, res: Response): P
         return;
     }
 
-    const submissions = await getGroupSubmissions(classId, assignmentId, groupId);
+    const submissions = await getGroupSubmissions(classId, assignmentId, groupId, full);
 
     res.json({
         submissions: submissions,
