@@ -92,4 +92,3 @@ export async function getLearningObjectsFromPath(hruid: string, language: string
 export async function getLearningObjectIdsFromPath(hruid: string, language: string): Promise<string[]> {
     return (await fetchLearningObjects(hruid, false, language)) as string[];
 }
-
