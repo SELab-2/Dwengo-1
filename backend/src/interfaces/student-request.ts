@@ -1,13 +1,13 @@
-import {mapToStudentDTO, StudentDTO} from "./student";
-import {ClassJoinRequest, ClassJoinRequestStatus} from "../entities/classes/class-join-request.entity";
-import {getClassJoinRequestRepository} from "../data/repositories";
-import {Student} from "../entities/users/student.entity";
-import {Class} from "../entities/classes/class.entity";
+import { mapToStudentDTO, StudentDTO } from './student';
+import { ClassJoinRequest, ClassJoinRequestStatus } from '../entities/classes/class-join-request.entity';
+import { getClassJoinRequestRepository } from '../data/repositories';
+import { Student } from '../entities/users/student.entity';
+import { Class } from '../entities/classes/class.entity';
 
 export interface StudentRequestDTO {
     requester: StudentDTO;
     class: string;
-    status: ClassJoinRequestStatus
+    status: ClassJoinRequestStatus;
 }
 
 export function mapToStudentRequestDTO(request: ClassJoinRequest): StudentRequestDTO {

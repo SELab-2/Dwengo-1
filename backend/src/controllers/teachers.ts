@@ -3,16 +3,18 @@ import {
     createTeacher,
     deleteTeacher,
     getAllTeachers,
-    getClassesByTeacher, getJoinRequestsByClass,
+    getClassesByTeacher,
+    getJoinRequestsByClass,
     getStudentsByTeacher,
     getTeacher,
-    getTeacherQuestions, updateClassJoinRequestStatus
+    getTeacherQuestions,
+    updateClassJoinRequestStatus,
 } from '../services/teachers.js';
 import { ClassDTO } from '../interfaces/class.js';
 import { StudentDTO } from '../interfaces/student.js';
 import { QuestionDTO, QuestionId } from '../interfaces/question.js';
 import { TeacherDTO } from '../interfaces/teacher.js';
-import {requireFields} from "./error-helper.js";
+import { requireFields } from './error-helper.js';
 
 export async function getAllTeachersHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';

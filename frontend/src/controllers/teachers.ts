@@ -33,12 +33,12 @@ export class TeacherController extends BaseController {
         return this.get<{ questions: any[] }>(`/${username}/questions`, { full });
     }
 
-    getStudentJoinRequests(username: string, classId: string){
+    getStudentJoinRequests(username: string, classId: string) {
         return this.get<{ joinRequests: any[] }>(`/${username}/joinRequests/${classId}`);
     }
 
-    updateStudentJoinRequest(teacherUsername: string, classId: string, studentUsername: string, accepted: boolean){
-        return this.put(`/${teacherUsername}/joinRequests/${classId}/${studentUsername}`, accepted)
+    updateStudentJoinRequest(teacherUsername: string, classId: string, studentUsername: string, accepted: boolean) {
+        return this.put(`/${teacherUsername}/joinRequests/${classId}/${studentUsername}`, accepted);
     }
 
     // GetInvitations(id: string) {return this.get<{ invitations: string[] }>(`/${id}/invitations`);}

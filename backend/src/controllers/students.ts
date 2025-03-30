@@ -1,17 +1,20 @@
 import { Request, Response } from 'express';
 import {
     createClassJoinRequest,
-    createStudent, deleteClassJoinRequest,
+    createStudent,
+    deleteClassJoinRequest,
     deleteStudent,
-    getAllStudents, getJoinRequestsByStudent,
+    getAllStudents,
+    getJoinRequestsByStudent,
     getStudent,
     getStudentAssignments,
     getStudentClasses,
-    getStudentGroups, getStudentQuestions,
+    getStudentGroups,
+    getStudentQuestions,
     getStudentSubmissions,
 } from '../services/students.js';
 import { StudentDTO } from '../interfaces/student.js';
-import {requireFields} from "./error-helper.js";
+import { requireFields } from './error-helper.js';
 
 export async function getAllStudentsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
@@ -128,7 +131,7 @@ export async function getStudentRequestHandler(req: Request, res: Response): Pro
     requireFields({ username });
 
     const requests = await getJoinRequestsByStudent(username);
-    res.status(201).json({ requests })
+    res.status(201).json({ requests });
 }
 
 export async function deleteClassJoinRequestHandler(req: Request, res: Response) {
@@ -139,5 +142,3 @@ export async function deleteClassJoinRequestHandler(req: Request, res: Response)
     await deleteClassJoinRequest(username, classId);
     res.sendStatus(204);
 }
-
-

@@ -2,11 +2,13 @@ import express from 'express';
 import {
     createTeacherHandler,
     deleteTeacherHandler,
-    getAllTeachersHandler, getStudentJoinRequestHandler,
+    getAllTeachersHandler,
+    getStudentJoinRequestHandler,
     getTeacherClassHandler,
     getTeacherHandler,
     getTeacherQuestionHandler,
-    getTeacherStudentHandler, updateStudentJoinRequestHandler,
+    getTeacherStudentHandler,
+    updateStudentJoinRequestHandler,
 } from '../controllers/teachers.js';
 const router = express.Router();
 

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/vue-query";
 import { type MaybeRefOrGetter, toValue } from "vue";
-import {ThemeController} from "@/controllers/themes.ts";
+import { ThemeController } from "@/controllers/themes.ts";
 
 const themeController = new ThemeController();
 

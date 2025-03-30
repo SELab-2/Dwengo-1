@@ -15,6 +15,5 @@ export const TEST_STUDENTS = [
 
 // 🏗️ Functie die ORM entities maakt uit de data array
 export function makeTestStudents(em: EntityManager<IDatabaseDriver<Connection>>): Student[] {
-    return TEST_STUDENTS.map(data => em.create(Student, data));
+    return TEST_STUDENTS.map((data) => em.create(Student, data));
 }
-

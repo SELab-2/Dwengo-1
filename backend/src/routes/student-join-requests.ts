@@ -1,8 +1,5 @@
-import express from "express";
-import {
-    createStudentRequestHandler, deleteClassJoinRequestHandler,
-    getStudentRequestHandler,
-} from "../controllers/students";
+import express from 'express';
+import { createStudentRequestHandler, deleteClassJoinRequestHandler, getStudentRequestHandler } from '../controllers/students';
 
 const router = express.Router({ mergeParams: true });
 

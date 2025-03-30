@@ -1,20 +1,20 @@
-import { describe, it, expect, beforeAll } from 'vitest';
-import {TeacherController} from "../../src/controllers/teachers";
+import { describe, it, expect, beforeAll } from "vitest";
+import { TeacherController } from "../../src/controllers/teachers";
 
 const controller = new TeacherController();
 
-describe('TeacherController', () => {
+describe("TeacherController", () => {
     const newTeacher = {
-        username: 'testteacher3',
-        firstName: 'Testy',
-        lastName: 'McTestface',
+        username: "testteacher3",
+        firstName: "Testy",
+        lastName: "McTestface",
     };
 
     beforeAll(() => {
         // Start backend
     });
 
-    it('creates a student and fetches it by username', async () => {
+    it("creates a student and fetches it by username", async () => {
         // Create student
         await controller.createTeacher(newTeacher);
 
@@ -28,7 +28,6 @@ describe('TeacherController', () => {
         expect(teacher.username).toBe(newTeacher.username);
         expect(teacher.firstName).toBe(newTeacher.firstName);
         expect(teacher.lastName).toBe(newTeacher.lastName);
-
 
         await controller.deleteTeacher(newTeacher.username);
     });

@@ -1,7 +1,7 @@
 import { computed, toValue } from "vue";
 import type { MaybeRefOrGetter } from "vue";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/vue-query";
-import {TeacherController} from "@/controllers/teachers.ts";
+import { TeacherController } from "@/controllers/teachers.ts";
 
 const teacherController = new TeacherController();
 
@@ -28,7 +28,10 @@ export function useTeacherQuery(username: MaybeRefOrGetter<string | undefined>) 
     });
 }
 
-export function useTeacherClassesQuery(username: MaybeRefOrGetter<string | undefined>, full: MaybeRefOrGetter<boolean> = false) {
+export function useTeacherClassesQuery(
+    username: MaybeRefOrGetter<string | undefined>,
+    full: MaybeRefOrGetter<boolean> = false,
+) {
     return useQuery({
         queryKey: computed(() => TEACHER_CLASSES_QUERY_KEY(toValue(username)!, toValue(full))),
         queryFn: () => teacherController.getClasses(toValue(username)!, toValue(full)),
@@ -36,7 +39,10 @@ export function useTeacherClassesQuery(username: MaybeRefOrGetter<string | undef
     });
 }
 
-export function useTeacherStudentsQuery(username: MaybeRefOrGetter<string | undefined>, full: MaybeRefOrGetter<boolean> = false) {
+export function useTeacherStudentsQuery(
+    username: MaybeRefOrGetter<string | undefined>,
+    full: MaybeRefOrGetter<boolean> = false,
+) {
     return useQuery({
         queryKey: computed(() => TEACHER_STUDENTS_QUERY_KEY(toValue(username)!, toValue(full))),
         queryFn: () => teacherController.getStudents(toValue(username)!, toValue(full)),
@@ -44,7 +50,10 @@ export function useTeacherStudentsQuery(username: MaybeRefOrGetter<string | unde
     });
 }
 
-export function useTeacherQuestionsQuery(username: MaybeRefOrGetter<string | undefined>, full: MaybeRefOrGetter<boolean> = false) {
+export function useTeacherQuestionsQuery(
+    username: MaybeRefOrGetter<string | undefined>,
+    full: MaybeRefOrGetter<boolean> = false,
+) {
     return useQuery({
         queryKey: computed(() => TEACHER_QUESTIONS_QUERY_KEY(toValue(username)!, toValue(full))),
         queryFn: () => teacherController.getQuestions(toValue(username)!, toValue(full)),
@@ -52,7 +61,10 @@ export function useTeacherQuestionsQuery(username: MaybeRefOrGetter<string | und
     });
 }
 
-export function useTeacherJoinRequestsQuery(username: MaybeRefOrGetter<string | undefined>, classId: MaybeRefOrGetter<string | undefined>) {
+export function useTeacherJoinRequestsQuery(
+    username: MaybeRefOrGetter<string | undefined>,
+    classId: MaybeRefOrGetter<string | undefined>,
+) {
     return useQuery({
         queryKey: computed(() => JOIN_REQUESTS_QUERY_KEY(toValue(username)!, toValue(classId)!)),
         queryFn: () => teacherController.getStudentJoinRequests(toValue(username)!, toValue(classId)!),
@@ -66,7 +78,7 @@ export function useCreateTeacherMutation() {
     return useMutation({
         mutationFn: (data: any) => teacherController.createTeacher(data),
         onSuccess: () => {
-            await queryClient.invalidateQueries({ queryKey: ['teachers'] });
+            await queryClient.invalidateQueries({ queryKey: ["teachers"] });
         },
         onError: (err) => {
             alert("Create teacher failed:", err);
@@ -80,7 +92,7 @@ export function useDeleteTeacherMutation() {
     return useMutation({
         mutationFn: (username: string) => teacherController.deleteTeacher(username),
         onSuccess: () => {
-            await queryClient.invalidateQueries({ queryKey: ['teachers'] });
+            await queryClient.invalidateQueries({ queryKey: ["teachers"] });
         },
         onError: (err) => {
             alert("Delete teacher failed:", err);
@@ -92,7 +104,12 @@ export function useUpdateJoinRequestMutation() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ teacherUsername, classId, studentUsername, accepted }: {
+        mutationFn: ({
+            teacherUsername,
+            classId,
+            studentUsername,
+            accepted,
+        }: {
             teacherUsername: string;
             classId: string;
             studentUsername: string;

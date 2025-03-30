@@ -4,7 +4,7 @@ import {
     getGroupRepository,
     getQuestionRepository,
     getStudentRepository,
-    getSubmissionRepository
+    getSubmissionRepository,
 } from '../data/repositories.js';
 import { AssignmentDTO } from '../interfaces/assignment.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
@@ -13,17 +13,18 @@ import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student
 import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
 import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question.js';
-import {mapToStudentRequest, mapToStudentRequestDTO} from "../interfaces/student-request.js";
-import {Student} from "../entities/users/student.entity.js";
-import {NotFoundException} from "../exceptions/not-found-exception.js";
-import {fetchClass} from "./classes.js";
+import { mapToStudentRequest, mapToStudentRequestDTO } from '../interfaces/student-request.js';
+import { Student } from '../entities/users/student.entity.js';
+import { NotFoundException } from '../exceptions/not-found-exception.js';
+import { fetchClass } from './classes.js';
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();
     const users = await studentRepository.findAll();
 
-    if (full)
-        {return users.map(mapToStudentDTO);}
+    if (full) {
+        return users.map(mapToStudentDTO);
+    }
 
     return users.map((user) => user.username);
 }
@@ -33,7 +34,7 @@ export async function fetchStudent(username: string): Promise<Student> {
     const user = await studentRepository.findByUsername(username);
 
     if (!user) {
-        throw new NotFoundException("Student with username not found");
+        throw new NotFoundException('Student with username not found');
     }
 
     return user;
@@ -115,8 +116,9 @@ export async function getStudentQuestions(username: string, full: boolean): Prom
 
     const questionsDTO = questions.map(mapToQuestionDTO);
 
-    if (full)
-        {return questionsDTO;}
+    if (full) {
+        return questionsDTO;
+    }
 
     return questionsDTO.map(mapToQuestionId);
 }
@@ -145,7 +147,6 @@ export async function deleteClassJoinRequest(studentUsername: string, classId: s
 
     const student = await fetchStudent(studentUsername);
     const cls = await fetchClass(classId);
-
 
     const request = await requestRepo.findByStudentAndClass(student, cls);
 
