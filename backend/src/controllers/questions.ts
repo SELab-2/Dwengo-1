@@ -106,13 +106,14 @@ export async function deleteQuestionHandler(req: Request, res: Response): Promis
     const questionId = getQuestionId(req, res);
 
     if (!questionId) {
+        res.json(404).json({ error: 'Question not found' });
         return;
     }
 
     const question = await deleteQuestion(questionId);
 
     if (!question) {
-        res.status(400).json({ error: 'Could not find nor delete question' });
+        res.status(404).json({ error: 'Could not find nor delete question' });
     } else {
         res.json(question);
     }
