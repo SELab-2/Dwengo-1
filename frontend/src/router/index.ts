@@ -10,10 +10,11 @@ import CreateDiscussion from "@/views/discussions/CreateDiscussion.vue";
 import CallbackPage from "@/views/CallbackPage.vue";
 import UserDiscussions from "@/views/discussions/UserDiscussions.vue";
 import UserClasses from "@/views/classes/UserClasses.vue";
-import UserAssignments from "@/views/classes/UserAssignments.vue";
+import UserAssignments from "@/views/assignments/UserAssignments.vue";
 import authState from "@/services/auth/auth-service.ts";
 import UserHomePage from "@/views/homepage/UserHomePage.vue";
 import SingleTheme from "@/views/SingleTheme.vue";
+import EditAssignment from "@/views/assignments/EditAssignment.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -84,6 +85,11 @@ const router = createRouter({
                     path: ":id",
                     name: "SingleAssigment",
                     component: SingleAssignment,
+                },
+                {
+                    path: ":id/edit",
+                    name: "EditAssignment",
+                    component: EditAssignment,
                 },
             ]
         },
