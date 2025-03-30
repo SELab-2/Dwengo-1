@@ -12,11 +12,13 @@ import {
     getStudentQuestionsHandler,
     createStudentRequestHandler,
     getStudentRequestHandler,
-    updateClassJoinRequestHandler,
     deleteClassJoinRequestHandler
 } from '../../src/controllers/students.js';
 import {TEST_STUDENTS} from "../test_assets/users/students.testdata";
-import {BadRequestException, ConflictException, NotFoundException} from "../../src/exceptions";
+import {NotFoundException} from "../../src/exceptions/not-found-exception";
+import {BadRequestException} from "../../src/exceptions/bad-request-exception";
+import {ConflictException} from "../../src/exceptions/conflict-exception";
+import {EntityAlreadyExistsException} from "../../src/exceptions/entity-already-exists-exception";
 
 describe('Student controllers', () => {
     let req: Partial<Request>;
@@ -57,8 +59,8 @@ describe('Student controllers', () => {
     it('Create student', async () => {
         req = {
             body: {
-                username: 'coolstudent',
-                firstName: 'Cool',
+                username: 'NewstudentId21',
+                firstName: 'New',
                 lastName: 'Student'
             }
         };
@@ -69,7 +71,6 @@ describe('Student controllers', () => {
         expect(jsonMock).toHaveBeenCalled();
     });
 
-    // TODO create duplicate student id
 
     it('Create duplicate student', async () => {
         req = {
@@ -82,7 +83,7 @@ describe('Student controllers', () => {
 
         await expect(() => createStudentHandler(req as Request, res as Response))
             .rejects
-            .toThrowError(ConflictException);
+            .toThrowError(EntityAlreadyExistsException);
     });
 
     it('Create student no body', async () => {

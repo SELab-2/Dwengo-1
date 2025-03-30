@@ -7,8 +7,7 @@ import {
     getStudent,
     getStudentAssignments,
     getStudentClasses,
-    getStudentGroups,
-    getStudentQuestions,
+    getStudentGroups, getStudentQuestions,
     getStudentSubmissions,
 } from '../services/students.js';
 import { StudentDTO } from '../interfaces/student.js';

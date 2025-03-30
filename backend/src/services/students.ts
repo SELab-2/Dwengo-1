@@ -1,4 +1,11 @@
-import { getClassRepository, getGroupRepository, getStudentRepository, getSubmissionRepository } from '../data/repositories.js';
+import {
+    getClassJoinRequestRepository,
+    getClassRepository,
+    getGroupRepository,
+    getQuestionRepository,
+    getStudentRepository,
+    getSubmissionRepository
+} from '../data/repositories.js';
 import { AssignmentDTO } from '../interfaces/assignment.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
@@ -6,9 +13,10 @@ import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student
 import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
 import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question';
-import {ClassJoinRequestStatus} from "../entities/classes/class-join-request.entity";
-import {ConflictException, NotFoundException} from "../exceptions";
-import {mapToStudentRequestDTO} from "../interfaces/student-request";
+import {mapToStudentRequest, mapToStudentRequestDTO} from "../interfaces/student-request";
+import {Student} from "../entities/users/student.entity";
+import {NotFoundException} from "../exceptions/not-found-exception";
+import {fetchClass} from "./classes";
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();
@@ -97,4 +105,54 @@ export async function getStudentSubmissions(username: string, full: boolean): Pr
     }
 
     return submissions.map(mapToSubmissionDTOId);
+}
+
+export async function getStudentQuestions(username: string, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
+    const student = await fetchStudent(username);
+
+    const questionRepository = getQuestionRepository();
+    const questions = await questionRepository.findAllByAuthor(student);
+
+    const questionsDTO = questions.map(mapToQuestionDTO);
+
+    if (full)
+        return questionsDTO;
+
+    return questionsDTO.map(mapToQuestionId);
+}
+
+export async function createClassJoinRequest(studentUsername: string, classId: string) {
+    const classRepo = getClassRepository();
+    const requestRepo = getClassJoinRequestRepository();
+
+    const student = await fetchStudent(studentUsername); // throws error if student not found
+    const cls = await fetchClass(classId);
+
+    const request = mapToStudentRequest(student, cls);
+    await requestRepo.save(request, { preventOverwrite: true });
+}
+
+export async function getJoinRequestsByStudent(studentUsername: string) {
+    const requestRepo = getClassJoinRequestRepository();
+
+    const student = await fetchStudent(studentUsername);
+
+    const requests = await requestRepo.findAllRequestsBy(student);
+    return requests.map(mapToStudentRequestDTO);
+}
+
+export async function deleteClassJoinRequest(studentUsername: string, classId: string) {
+    const requestRepo = getClassJoinRequestRepository();
+
+    const student = await fetchStudent(studentUsername);
+    const cls = await fetchClass(classId);
+
+
+    const request = await requestRepo.findByStudentAndClass(student, cls);
+
+    if (!request) {
+        throw new NotFoundException('Join request not found');
+    }
+
+    await requestRepo.deleteBy(student, cls);
 }

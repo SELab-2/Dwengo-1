@@ -6,10 +6,8 @@ import {
     getTeacherRepository,
 } from '../data/repositories.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
-import { getClassStudents } from './class.js';
 import {mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId} from '../interfaces/question.js';
 import { mapToTeacher, mapToTeacherDTO, TeacherDTO } from '../interfaces/teacher.js';
-import {ConflictException, NotFoundException} from "../exceptions";
 import {Teacher} from "../entities/users/teacher.entity";
 import {fetchStudent} from "./students";
 import {ClassJoinRequest, ClassJoinRequestStatus} from "../entities/classes/class-join-request.entity";
@@ -24,6 +22,8 @@ import {QuestionRepository} from "../data/questions/question-repository";
 import {Question} from "../entities/questions/question.entity";
 import {ClassJoinRequestRepository} from "../data/classes/class-join-request-repository";
 import {Student} from "../entities/users/student.entity";
+import {NotFoundException} from "../exceptions/not-found-exception";
+import {getClassStudents} from "./classes";
 
 export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | string[]> {
     const teacherRepository: TeacherRepository = getTeacherRepository();

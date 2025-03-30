@@ -1,4 +1,4 @@
-import { BadRequestException } from '../exceptions.js';
+import {BadRequestException} from "../exceptions/bad-request-exception";
 
 /**
  * Checks for the presence of required fields and throws a BadRequestException
