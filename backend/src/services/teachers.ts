@@ -9,9 +9,6 @@ import { getClassStudents } from './classes.js';
 import { StudentDTO } from '../interfaces/student.js';
 import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question.js';
 import { mapToTeacher, mapToTeacherDTO, TeacherDTO } from '../interfaces/teacher.js';
-import {UniqueConstraintViolationException} from "@mikro-orm/core";
-
-import {ConflictException} from "../exceptions/conflict-exception";
 
 export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | string[]> {
     const teacherRepository = getTeacherRepository();
@@ -33,17 +30,10 @@ export async function getTeacher(username: string): Promise<TeacherDTO | null> {
 export async function createTeacher(userData: TeacherDTO): Promise<TeacherDTO | null> {
     const teacherRepository = getTeacherRepository();
 
-    try {
-        const newTeacher = teacherRepository.create(mapToTeacher(userData));
-        await teacherRepository.save(newTeacher);
+    const newTeacher = teacherRepository.create(mapToTeacher(userData));
+    await teacherRepository.save(newTeacher);
 
-        return mapToTeacherDTO(newTeacher);
-    } catch (e) {
-        if (e instanceof UniqueConstraintViolationException) {
-            throw new ConflictException(`There is already a user with username '${userData.username}'.`);
-        }
-        throw e;
-    }
+    return mapToTeacherDTO(newTeacher);
 }
 
 export async function deleteTeacher(username: string): Promise<TeacherDTO | null> {

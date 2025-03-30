@@ -5,9 +5,6 @@ import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js
 import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
-import {UniqueConstraintViolationException} from "@mikro-orm/core";
-
-import {ConflictException} from "../exceptions/conflict-exception";
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();
@@ -29,16 +26,9 @@ export async function getStudent(username: string): Promise<StudentDTO | null> {
 export async function createStudent(userData: StudentDTO): Promise<StudentDTO | null> {
     const studentRepository = getStudentRepository();
 
-    try {
-        const newStudent = mapToStudent(userData);
-        await studentRepository.save(newStudent);
-        return mapToStudentDTO(newStudent);
-    } catch (e: unknown) {
-        if (e instanceof UniqueConstraintViolationException) {
-            throw new ConflictException(`There is already a user with username '${userData.username}'.`);
-        }
-        throw e;
-    }
+    const newStudent = mapToStudent(userData);
+    await studentRepository.save(newStudent, {preventOverwrite: true});
+    return mapToStudentDTO(newStudent);
 }
 
 export async function deleteStudent(username: string): Promise<StudentDTO | null> {
