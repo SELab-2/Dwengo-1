@@ -49,6 +49,7 @@ function config(testingMode = false): Options {
             dbName: getEnvVar(envVars.DbName),
             subscribers: [new SqliteAutoincrementSubscriber()],
             entities: entities,
+            persistOnCreate: false, // Do not implicitly save entities when they are created via `create`.
             // EntitiesTs: entitiesTs,
 
             // Workaround: vitest: `TypeError: Unknown file extension ".ts"` (ERR_UNKNOWN_FILE_EXTENSION)
@@ -65,6 +66,7 @@ function config(testingMode = false): Options {
         user: getEnvVar(envVars.DbUsername),
         password: getEnvVar(envVars.DbPassword),
         entities: entities,
+        persistOnCreate: false, // Do not implicitly save entities when they are created via `create`.
         // EntitiesTs: entitiesTs,
 
         // Logging

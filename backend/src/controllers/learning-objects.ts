@@ -1,12 +1,16 @@
 import { Request, Response } from 'express';
 import { FALLBACK_LANG } from '../config.js';
-import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../interfaces/learning-content.js';
+import {
+    FilteredLearningObject,
+    LearningObjectIdentifier,
+    LearningPathIdentifier,
+} from '../interfaces/learning-content.js';
 import learningObjectService from '../services/learning-objects/learning-object-service.js';
 import { envVars, getEnvVar } from '../util/envVars.js';
 import { Language } from '../entities/content/language.js';
-import { BadRequestException } from '../exceptions/badRequestException.js';
 import attachmentService from '../services/learning-objects/attachment-service.js';
 import { NotFoundError } from '@mikro-orm/core';
+import { BadRequestException } from '../exceptions/bad-request-exception.js';
 
 function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIdentifier {
     if (!req.params.hruid) {

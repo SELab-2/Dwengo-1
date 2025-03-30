@@ -1,4 +1,9 @@
-import { getClassRepository, getGroupRepository, getStudentRepository, getSubmissionRepository } from '../data/repositories.js';
+import {
+    getClassRepository,
+    getGroupRepository,
+    getStudentRepository,
+    getSubmissionRepository,
+} from '../data/repositories.js';
 import { AssignmentDTO } from '../interfaces/assignment.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
@@ -27,15 +32,9 @@ export async function getStudent(username: string): Promise<StudentDTO | null> {
 export async function createStudent(userData: StudentDTO): Promise<StudentDTO | null> {
     const studentRepository = getStudentRepository();
 
-    try {
-        const newStudent = studentRepository.create(mapToStudent(userData));
-        await studentRepository.save(newStudent);
-
-        return mapToStudentDTO(newStudent);
-    } catch (e) {
-        getLogger().error(e);
-        return null;
-    }
+    const newStudent = mapToStudent(userData);
+    await studentRepository.save(newStudent, { preventOverwrite: true });
+    return mapToStudentDTO(newStudent);
 }
 
 export async function deleteStudent(username: string): Promise<StudentDTO | null> {
