@@ -9,6 +9,7 @@ import { EnvVars, getNumericEnvVar } from './util/envvars.js';
 import apiRouter from './routes/router.js';
 import swaggerMiddleware from './swagger.js';
 import swaggerUi from 'swagger-ui-express';
+import { errorHandler } from './middleware/error-handling/error-handler.js';
 
 const logger: Logger = getLogger();
 
@@ -25,6 +26,8 @@ app.use('/api', apiRouter);
 
 // Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerMiddleware);
+
+app.use(errorHandler);
 
 async function startServer() {
     await initORM();
