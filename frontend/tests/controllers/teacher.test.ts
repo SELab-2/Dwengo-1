@@ -5,7 +5,7 @@ const controller = new TeacherController();
 
 describe('TeacherController', () => {
     const newTeacher = {
-        username: 'testteacher',
+        username: 'testteacher3',
         firstName: 'Testy',
         lastName: 'McTestface',
     };

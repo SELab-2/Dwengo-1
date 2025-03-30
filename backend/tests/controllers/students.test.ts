@@ -14,11 +14,12 @@ import {
     getStudentRequestHandler,
     deleteClassJoinRequestHandler
 } from '../../src/controllers/students.js';
-import {TEST_STUDENTS} from "../test_assets/users/students.testdata";
-import {NotFoundException} from "../../src/exceptions/not-found-exception";
-import {BadRequestException} from "../../src/exceptions/bad-request-exception";
-import {ConflictException} from "../../src/exceptions/conflict-exception";
-import {EntityAlreadyExistsException} from "../../src/exceptions/entity-already-exists-exception";
+import {TEST_STUDENTS} from "../test_assets/users/students.testdata.js";
+import {NotFoundException} from "../../src/exceptions/not-found-exception.js";
+import {BadRequestException} from "../../src/exceptions/bad-request-exception.js";
+import {ConflictException} from "../../src/exceptions/conflict-exception.js";
+import {EntityAlreadyExistsException} from "../../src/exceptions/entity-already-exists-exception.js";
+import {StudentDTO} from "../../src/interfaces/student.js";
 
 describe('Student controllers', () => {
     let req: Partial<Request>;
@@ -26,6 +27,7 @@ describe('Student controllers', () => {
 
     let jsonMock: Mock;
     let statusMock: Mock;
+    let sendStatusMock: Mock;
 
     beforeAll(async () => {
         await setupTestApp();
@@ -34,9 +36,11 @@ describe('Student controllers', () => {
     beforeEach(() => {
         jsonMock = vi.fn();
         statusMock = vi.fn().mockReturnThis();
+        sendStatusMock = vi.fn().mockReturnThis();
         res = {
             json: jsonMock,
             status: statusMock,
+            sendStatus: sendStatusMock,
         };
     });
 
@@ -75,13 +79,13 @@ describe('Student controllers', () => {
 
         await createStudentHandler(req as Request, res as Response);
 
-        expect(statusMock).toHaveBeenCalledWith(201);
+        expect(sendStatusMock).toHaveBeenCalledWith(201);
 
         req = { params: { username: 'coolstudent' } };
 
         await deleteStudentHandler(req as Request, res as Response);
 
-        expect(statusMock).toHaveBeenCalledWith(200);
+        expect(sendStatusMock).toHaveBeenCalledWith(200);
     });
 
 
@@ -116,11 +120,11 @@ describe('Student controllers', () => {
 
         const result = jsonMock.mock.lastCall?.[0];
 
-        // check is DireStraits is part of the student list
-        const studentUsernames = result.students.map((s: any) => s.username);
+        // Check is DireStraits is part of the student list
+        const studentUsernames = result.students.map((s: StudentDTO) => s.username);
         expect(studentUsernames).toContain('DireStraits');
 
-        // check length, +1 because of create
+        // Check length, +1 because of create
         expect(result.students).toHaveLength(TEST_STUDENTS.length);
     });
 
@@ -192,7 +196,7 @@ describe('Student controllers', () => {
         );
 
         const result = jsonMock.mock.lastCall?.[0];
-        // console.log('[JOIN REQUESTS]', result.requests);
+        // Console.log('[JOIN REQUESTS]', result.requests);
         expect(result.requests.length).toBeGreaterThan(0);
     });
 
@@ -204,7 +208,7 @@ describe('Student controllers', () => {
 
         await createStudentRequestHandler(req as Request, res as Response);
 
-        expect(statusMock).toHaveBeenCalledWith(201);
+        expect(sendStatusMock).toHaveBeenCalledWith(201);
     });
 
     it('Create join request duplicate', async () => {
@@ -226,7 +230,7 @@ describe('Student controllers', () => {
 
         await deleteClassJoinRequestHandler(req as Request, res as Response);
 
-        expect(statusMock).toHaveBeenCalledWith(204);
+        expect(sendStatusMock).toHaveBeenCalledWith(204);
 
         await expect(() => deleteClassJoinRequestHandler(req as Request, res as Response))
             .rejects

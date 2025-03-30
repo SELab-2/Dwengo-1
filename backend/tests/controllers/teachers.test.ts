@@ -1,16 +1,17 @@
 import {beforeAll, beforeEach, describe, expect, it, Mock, vi} from "vitest";
 import {Request, Response} from "express";
-import {setupTestApp} from "../setup-tests";
-import {NotFoundException} from "../../src/exceptions/not-found-exception";
+import {setupTestApp} from "../setup-tests.js";
+import {NotFoundException} from "../../src/exceptions/not-found-exception.js";
 import {
     createTeacherHandler,
     deleteTeacherHandler,
     getAllTeachersHandler, getStudentJoinRequestHandler, getTeacherClassHandler,
     getTeacherHandler, getTeacherQuestionHandler, getTeacherStudentHandler, updateStudentJoinRequestHandler
-} from "../../src/controllers/teachers";
-import {BadRequestException} from "../../src/exceptions/bad-request-exception";
-import {EntityAlreadyExistsException} from "../../src/exceptions/entity-already-exists-exception";
-import {getStudentRequestHandler} from "../../src/controllers/students";
+} from "../../src/controllers/teachers.js";
+import {BadRequestException} from "../../src/exceptions/bad-request-exception.js";
+import {EntityAlreadyExistsException} from "../../src/exceptions/entity-already-exists-exception.js";
+import {getStudentRequestHandler} from "../../src/controllers/students.js";
+import {TeacherDTO} from "../../src/interfaces/teacher.js";
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
@@ -18,6 +19,7 @@ describe('Teacher controllers', () => {
 
     let jsonMock: Mock;
     let statusMock: Mock;
+    let sendStatusMock: Mock;
 
     beforeAll(async () => {
         await setupTestApp();
@@ -26,9 +28,11 @@ describe('Teacher controllers', () => {
     beforeEach(() => {
         jsonMock = vi.fn();
         statusMock = vi.fn().mockReturnThis();
+        sendStatusMock = vi.fn().mockReturnThis();
         res = {
             json: jsonMock,
             status: statusMock,
+            sendStatus: sendStatusMock,
         };
     });
 
@@ -67,13 +71,13 @@ describe('Teacher controllers', () => {
 
         await createTeacherHandler(req as Request, res as Response);
 
-        expect(statusMock).toHaveBeenCalledWith(201);
+        expect(sendStatusMock).toHaveBeenCalledWith(201);
 
         req = { params: { username: 'coolteacher' } };
 
         await deleteTeacherHandler(req as Request, res as Response);
 
-        expect(statusMock).toHaveBeenCalledWith(200);
+        expect(sendStatusMock).toHaveBeenCalledWith(200);
     });
 
     it('Create duplicate student', async () => {
@@ -107,7 +111,7 @@ describe('Teacher controllers', () => {
 
         const result = jsonMock.mock.lastCall?.[0];
 
-        const teacherUsernames = result.teachers.map((s: any) => s.username);
+        const teacherUsernames = result.teachers.map((s: TeacherDTO) => s.username);
         expect(teacherUsernames).toContain('FooFighters');
 
         expect(result.teachers).toHaveLength(4);
@@ -133,7 +137,7 @@ describe('Teacher controllers', () => {
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ classes: expect.anything() }));
 
         const result = jsonMock.mock.lastCall?.[0];
-        // console.log('[TEACHER CLASSES]', result);
+        // Console.log('[TEACHER CLASSES]', result);
         expect(result.classes.length).toBeGreaterThan(0);
     });
 
@@ -148,13 +152,13 @@ describe('Teacher controllers', () => {
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ students: expect.anything() }));
 
         const result = jsonMock.mock.lastCall?.[0];
-        // console.log('[TEACHER STUDENTS]', result.students);
+        // Console.log('[TEACHER STUDENTS]', result.students);
         expect(result.students.length).toBeGreaterThan(0);
     });
 
     /*
 
-    it('Get teacher questions', async () => {
+    It('Get teacher questions', async () => {
         req = {
             params: { username: 'FooFighters' },
             query: { full: 'true' },
@@ -184,7 +188,7 @@ describe('Teacher controllers', () => {
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ joinRequests: expect.anything() }));
 
         const result = jsonMock.mock.lastCall?.[0];
-        // console.log('[JOIN REQUESTS FOR CLASS]', result.joinRequests);
+        // Console.log('[JOIN REQUESTS FOR CLASS]', result.joinRequests);
         expect(result.joinRequests.length).toBeGreaterThan(0);
     });
 
@@ -197,7 +201,7 @@ describe('Teacher controllers', () => {
 
         await updateStudentJoinRequestHandler(req as Request, res as Response);
 
-        expect(statusMock).toHaveBeenCalledWith(200);
+        expect(sendStatusMock).toHaveBeenCalledWith(200);
 
         req = {
             params: { username: 'PinkFloyd' },
@@ -205,8 +209,7 @@ describe('Teacher controllers', () => {
 
         await getStudentRequestHandler(req as Request, res as Response);
 
-        const result = jsonMock.mock.lastCall?.[0];
-        const status = result.requests[0].status
+        const status: boolean = jsonMock.mock.lastCall?.[0].requests[0].status
         expect(status).toBeTruthy;
     });
 

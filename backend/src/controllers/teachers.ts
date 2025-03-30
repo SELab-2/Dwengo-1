@@ -12,7 +12,7 @@ import { ClassDTO } from '../interfaces/class.js';
 import { StudentDTO } from '../interfaces/student.js';
 import { QuestionDTO, QuestionId } from '../interfaces/question.js';
 import { TeacherDTO } from '../interfaces/teacher.js';
-import {requireFields} from "./error-helper";
+import {requireFields} from "./error-helper.js";
 
 export async function getAllTeachersHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
@@ -93,7 +93,7 @@ export async function getStudentJoinRequestHandler(req: Request, res: Response) 
 export async function updateStudentJoinRequestHandler(req: Request, res: Response) {
     const studentUsername = req.query.studentUsername as string;
     const classId = req.params.classId;
-    const accepted = req.body.accepted !== 'false'; // default = true
+    const accepted = req.body.accepted !== 'false'; // Default = true
     requireFields({ studentUsername, classId });
 
     await updateClassJoinRequestStatus(studentUsername, classId, accepted);

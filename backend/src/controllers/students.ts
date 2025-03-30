@@ -11,7 +11,7 @@ import {
     getStudentSubmissions,
 } from '../services/students.js';
 import { StudentDTO } from '../interfaces/student.js';
-import {requireFields} from "./error-helper";
+import {requireFields} from "./error-helper.js";
 
 export async function getAllStudentsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';

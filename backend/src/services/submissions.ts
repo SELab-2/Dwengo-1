@@ -1,4 +1,4 @@
-import { getGroupRepository, getSubmissionRepository } from '../data/repositories.js';
+import { getSubmissionRepository } from '../data/repositories.js';
 import { Language } from '../entities/content/language.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { mapToSubmission, mapToSubmissionDTO, SubmissionDTO } from '../interfaces/submission.js';
