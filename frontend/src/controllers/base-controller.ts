@@ -1,4 +1,4 @@
-import {apiConfig} from "@/config.ts";
+import { apiConfig } from "@/config.ts";
 
 export class BaseController {
     protected baseUrl: string;

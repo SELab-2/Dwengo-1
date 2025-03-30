@@ -54,14 +54,8 @@ export async function getTeacher(username: string): Promise<TeacherDTO> {
 export async function createTeacher(userData: TeacherDTO): Promise<void> {
     const teacherRepository: TeacherRepository = getTeacherRepository();
 
-    const user: Teacher | null = await teacherRepository.findByUsername(userData.username);
-
-    if (user){
-        throw new ConflictException("Teacher with that username already exists");
-    }
-
-    const newTeacher: Teacher = teacherRepository.create(mapToTeacher(userData));
-    await teacherRepository.save(newTeacher);
+    const newTeacher = mapToTeacher(userData);
+    await teacherRepository.save(newTeacher, { preventOverwrite: true });
 }
 
 export async function deleteTeacher(username: string): Promise<void> {

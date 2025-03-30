@@ -93,9 +93,10 @@ export async function getStudentGroupsHandler(req: Request, res: Response): Prom
 
 export async function getStudentSubmissionsHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
+    const full = req.query.full === 'true';
     requireFields({ username });
 
-    const submissions = await getStudentSubmissions(username);
+    const submissions = await getStudentSubmissions(username, full);
 
     res.json({
         submissions,

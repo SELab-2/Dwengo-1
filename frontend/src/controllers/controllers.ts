@@ -1,6 +1,5 @@
 import { StudentController } from "@/controllers/students.ts";
 import { TeacherController } from "@/controllers/teachers.ts";
-
 import {ThemeController} from "@/controllers/themes.ts";
 
 export function controllerGetter<T>(Factory: new () => T): () => T {

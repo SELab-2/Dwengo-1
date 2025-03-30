@@ -1,21 +1,13 @@
-import {
-    getClassJoinRequestRepository,
-    getClassRepository,
-    getGroupRepository,
-    getQuestionRepository,
-    getStudentRepository,
-    getSubmissionRepository,
-} from '../data/repositories.js';
+import { getClassRepository, getGroupRepository, getStudentRepository, getSubmissionRepository } from '../data/repositories.js';
 import { AssignmentDTO } from '../interfaces/assignment.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
-import { mapToSubmissionDTO, SubmissionDTO } from '../interfaces/submission.js';
+import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
 import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question';
 import {ClassJoinRequestStatus} from "../entities/classes/class-join-request.entity";
 import {ConflictException, NotFoundException} from "../exceptions";
-import {Student} from "../entities/users/student.entity";
 import {mapToStudentRequestDTO} from "../interfaces/student-request";
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
@@ -47,14 +39,8 @@ export async function getStudent(username: string): Promise<StudentDTO> {
 export async function createStudent(userData: StudentDTO): Promise<void> {
     const studentRepository = getStudentRepository();
 
-    const user = await studentRepository.findByUsername(userData.username);
-
-    if (user) {
-        throw new ConflictException("Student with that sername already exists");
-    }
-
-    const newStudent = studentRepository.create(mapToStudent(userData));
-    await studentRepository.save(newStudent);
+    const newStudent = mapToStudent(userData);
+    await studentRepository.save(newStudent, { preventOverwrite: true });
 }
 
 export async function deleteStudent(username: string): Promise<void> {
@@ -100,82 +86,15 @@ export async function getStudentGroups(username: string, full: boolean): Promise
     return groups.map(mapToGroupDTOId);
 }
 
-export async function getStudentSubmissions(username: string): Promise<SubmissionDTO[]> {
+export async function getStudentSubmissions(username: string, full: boolean): Promise<SubmissionDTO[] | SubmissionDTOId[]> {
     const student = await fetchStudent(username);
 
     const submissionRepository = getSubmissionRepository();
     const submissions = await submissionRepository.findAllSubmissionsForStudent(student);
 
-    return submissions.map(mapToSubmissionDTO);
-}
-
-export async function getStudentQuestions(username: string, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
-    const student = await fetchStudent(username);
-
-    const questionRepository = getQuestionRepository();
-    const questions = await questionRepository.findAllByAuthor(student);
-
-    const questionsDTO = questions.map(mapToQuestionDTO);
-
-    if (full)
-        return questionsDTO;
-
-    return questionsDTO.map(mapToQuestionId);
-}
-
-export async function createClassJoinRequest(studentUsername: string, classId: string) {
-    const classRepo = getClassRepository();
-    const requestRepo = getClassJoinRequestRepository();
-
-    const student = await fetchStudent(studentUsername);
-    const cls = await classRepo.findById(classId);
-
-    if (!cls){
-        throw new NotFoundException("Class with id not found");
+    if (full) {
+        return submissions.map(mapToSubmissionDTO);
     }
 
-    const req = await requestRepo.findByStudentAndClass(student, cls);
-
-    if (req){
-        throw new ConflictException("Request with student and class already exist");
-    }
-
-    const request = requestRepo.create({
-        requester: student,
-        class: cls,
-        status: ClassJoinRequestStatus.Open,
-    });
-
-    await requestRepo.save(request);
+    return submissions.map(mapToSubmissionDTOId);
 }
-
-export async function getJoinRequestsByStudent(studentUsername: string) {
-    const requestRepo = getClassJoinRequestRepository();
-
-    const student = await fetchStudent(studentUsername);
-
-    const requests = await requestRepo.findAllRequestsBy(student);
-    return requests.map(mapToStudentRequestDTO);
-}
-
-export async function deleteClassJoinRequest(studentUsername: string, classId: string) {
-    const requestRepo = getClassJoinRequestRepository();
-    const classRepo = getClassRepository();
-
-    const student = await fetchStudent(studentUsername);
-    const cls = await classRepo.findById(classId);
-
-    if (!cls) {
-        throw new NotFoundException('Class not found');
-    }
-
-    const request = await requestRepo.findByStudentAndClass(student, cls);
-
-    if (!request) {
-        throw new NotFoundException('Join request not found');
-    }
-
-    await requestRepo.deleteBy(student, cls);
-}
-
-
