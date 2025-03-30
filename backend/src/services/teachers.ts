@@ -30,8 +30,8 @@ export async function getTeacher(username: string): Promise<TeacherDTO | null> {
 export async function createTeacher(userData: TeacherDTO): Promise<TeacherDTO | null> {
     const teacherRepository = getTeacherRepository();
 
-    const newTeacher = teacherRepository.create(mapToTeacher(userData));
-    await teacherRepository.save(newTeacher);
+    const newTeacher = mapToTeacher(userData);
+    await teacherRepository.save(newTeacher, {preventOverwrite: true});
 
     return mapToTeacherDTO(newTeacher);
 }
