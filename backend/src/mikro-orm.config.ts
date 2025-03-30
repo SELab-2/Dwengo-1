@@ -65,6 +65,8 @@ function config(testingMode: boolean = false): Options {
         user: getEnvVar(EnvVars.DbUsername),
         password: getEnvVar(EnvVars.DbPassword),
         entities: entities,
+        persistOnCreate: false, // Entities should not be implicitly persisted when calling create(...), but only after
+                                // they were saved explicitly.
         // EntitiesTs: entitiesTs,
 
         // Logging
