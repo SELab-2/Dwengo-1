@@ -1,10 +1,18 @@
 import { getClassRepository, getStudentRepository, getTeacherInvitationRepository, getTeacherRepository } from '../data/repositories.js';
+import { Class } from '../entities/classes/class.entity.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToTeacherInvitationDTO, mapToTeacherInvitationDTOIds, TeacherInvitationDTO } from '../interfaces/teacher-invitation.js';
 import { getLogger } from '../logging/initalize.js';
 
 const logger = getLogger();
+
+async function fetchClass(classid: string): Promise<Class | null> {
+    const classRepository = getClassRepository();
+    const cls = await classRepository.findById(classid);
+
+    return cls;
+}
 
 export async function getAllClasses(full: boolean): Promise<ClassDTO[] | string[]> {
     const classRepository = getClassRepository();
@@ -47,8 +55,7 @@ export async function createClass(classData: ClassDTO): Promise<ClassDTO | null>
 }
 
 export async function getClass(classId: string): Promise<ClassDTO | null> {
-    const classRepository = getClassRepository();
-    const cls = await classRepository.findById(classId);
+    const cls = await fetchClass(classId);
 
     if (!cls) {
         return null;
@@ -57,24 +64,18 @@ export async function getClass(classId: string): Promise<ClassDTO | null> {
     return mapToClassDTO(cls);
 }
 
-async function fetchClassStudents(classId: string): Promise<StudentDTO[]> {
-    const classRepository = getClassRepository();
-    const cls = await classRepository.findById(classId);
+export async function getClassStudents(classId: string, full: boolean): Promise<StudentDTO[] | string[]> {
+    const cls = await fetchClass(classId);
 
     if (!cls) {
         return [];
     }
 
-    return cls.students.map(mapToStudentDTO);
-}
+    if (full) {
+        return cls.students.map(mapToStudentDTO);
+    }
 
-export async function getClassStudents(classId: string): Promise<StudentDTO[]> {
-    return await fetchClassStudents(classId);
-}
-
-export async function getClassStudentsIds(classId: string): Promise<string[]> {
-    const students: StudentDTO[] = await fetchClassStudents(classId);
-    return students.map((student) => student.username);
+    return cls.students.map((student) => student.username);
 }
 
 export async function getClassTeacherInvitations(classId: string, full: boolean): Promise<TeacherInvitationDTO[]> {

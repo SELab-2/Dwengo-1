@@ -1,6 +1,22 @@
-import { getAssignmentRepository, getClassRepository, getGroupRepository, getSubmissionRepository } from '../data/repositories.js';
+import { getAssignmentRepository, getClassRepository, getGroupRepository, getQuestionRepository, getSubmissionRepository } from '../data/repositories.js';
+import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { AssignmentDTO, mapToAssignment, mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment.js';
+import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
+
+export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment | null> {
+    const classRepository = getClassRepository();
+    const cls = await classRepository.findById(classid);
+
+    if (!cls) {
+        return null;
+    }
+
+    const assignmentRepository = getAssignmentRepository();
+    const assignment = await assignmentRepository.findByClassAndId(cls, assignmentNumber);
+
+    return assignment;
+}
 
 export async function getAllAssignments(classid: string, full: boolean): Promise<AssignmentDTO[]> {
     const classRepository = getClassRepository();
@@ -43,15 +59,7 @@ export async function createAssignment(classid: string, assignmentData: Assignme
 }
 
 export async function getAssignment(classid: string, id: number): Promise<AssignmentDTO | null> {
-    const classRepository = getClassRepository();
-    const cls = await classRepository.findById(classid);
-
-    if (!cls) {
-        return null;
-    }
-
-    const assignmentRepository = getAssignmentRepository();
-    const assignment = await assignmentRepository.findByClassAndId(cls, id);
+    const assignment = await fetchAssignment(classid, id);
 
     if (!assignment) {
         return null;
@@ -65,15 +73,7 @@ export async function getAssignmentsSubmissions(
     assignmentNumber: number,
     full: boolean
 ): Promise<SubmissionDTO[] | SubmissionDTOId[]> {
-    const classRepository = getClassRepository();
-    const cls = await classRepository.findById(classid);
-
-    if (!cls) {
-        return [];
-    }
-
-    const assignmentRepository = getAssignmentRepository();
-    const assignment = await assignmentRepository.findByClassAndId(cls, assignmentNumber);
+    const assignment = await fetchAssignment(classid, assignmentNumber);
 
     if (!assignment) {
         return [];
@@ -90,4 +90,25 @@ export async function getAssignmentsSubmissions(
     }
 
     return submissions.map(mapToSubmissionDTOId);
+}
+
+export async function getAssignmentsQuestions(
+    classid: string,
+    assignmentNumber: number,
+    full: boolean
+): Promise<QuestionDTO[] | QuestionId[]> {
+    const assignment = await fetchAssignment(classid, assignmentNumber);
+
+    if (!assignment) {
+        return [];
+    }
+
+    const questionRepository = getQuestionRepository();
+    const questions = await questionRepository.findAllByAssignment(assignment);
+
+    if (full) {
+        return questions.map(mapToQuestionDTO);
+    }
+
+    return questions.map(mapToQuestionDTO).map(mapToQuestionId); // mapToQuestionId should be updated
 }

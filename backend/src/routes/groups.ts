@@ -11,13 +11,6 @@ router.post('/', createGroupHandler);
 // Information about a group (members, ... [TODO DOC])
 router.get('/:groupid', getGroupHandler);
 
-router.get('/:groupid', getGroupSubmissionsHandler);
-
-// The list of questions a group has made
-router.get('/:id/questions', (req, res) => {
-    res.json({
-        questions: ['0'],
-    });
-});
+router.get('/:groupid/submissions', getGroupSubmissionsHandler);
 
 export default router;

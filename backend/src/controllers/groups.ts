@@ -12,6 +12,7 @@ interface GroupParams {
 export async function getGroupHandler(req: Request<GroupParams>, res: Response): Promise<void> {
     const classId = req.params.classid;
     const full = req.query.full === 'true';
+
     const assignmentId = +req.params.assignmentid;
 
     if (isNaN(assignmentId)) {

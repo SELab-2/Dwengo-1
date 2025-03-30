@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createClass, getAllClasses, getClass, getClassStudents, getClassStudentsIds, getClassTeacherInvitations } from '../services/classes.js';
+import { createClass, getAllClasses, getClass, getClassStudents, getClassTeacherInvitations } from '../services/classes.js';
 import { ClassDTO } from '../interfaces/class.js';
 
 export async function getAllClassesHandler(req: Request, res: Response): Promise<void> {
@@ -47,7 +47,7 @@ export async function getClassStudentsHandler(req: Request, res: Response): Prom
     const classId = req.params.id;
     const full = req.query.full === 'true';
 
-    const students = full ? await getClassStudents(classId) : await getClassStudentsIds(classId);
+    const students = getClassStudents(classId, full);
 
     res.json({
         students: students,

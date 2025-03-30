@@ -1,24 +1,20 @@
+import { assign } from '@mikro-orm/core';
 import {
     getAssignmentRepository,
     getClassRepository,
     getGroupRepository,
+    getQuestionRepository,
     getStudentRepository,
     getSubmissionRepository,
 } from '../data/repositories.js';
 import { Group } from '../entities/assignments/group.entity.js';
 import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
+import { fetchAssignment } from './assignments.js';
+import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question.js';
 
-export async function getGroup(classId: string, assignmentNumber: number, groupNumber: number, full: boolean): Promise<GroupDTO | null> {
-    const classRepository = getClassRepository();
-    const cls = await classRepository.findById(classId);
-
-    if (!cls) {
-        return null;
-    }
-
-    const assignmentRepository = getAssignmentRepository();
-    const assignment = await assignmentRepository.findByClassAndId(cls, assignmentNumber);
+async function fetchGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<Group | null> {
+    const assignment = await fetchAssignment(classId, assignmentNumber);
 
     if (!assignment) {
         return null;
@@ -26,6 +22,12 @@ export async function getGroup(classId: string, assignmentNumber: number, groupN
 
     const groupRepository = getGroupRepository();
     const group = await groupRepository.findByAssignmentAndGroupNumber(assignment, groupNumber);
+
+    return group; 
+}
+
+export async function getGroup(classId: string, assignmentNumber: number, groupNumber: number, full: boolean): Promise<GroupDTO | null> {
+    const group = await fetchGroup(classId, assignmentNumber, groupNumber);
 
     if (!group) {
         return null;
@@ -76,15 +78,7 @@ export async function createGroup(groupData: GroupDTO, classid: string, assignme
 }
 
 export async function getAllGroups(classId: string, assignmentNumber: number, full: boolean): Promise<GroupDTO[]> {
-    const classRepository = getClassRepository();
-    const cls = await classRepository.findById(classId);
-
-    if (!cls) {
-        return [];
-    }
-
-    const assignmentRepository = getAssignmentRepository();
-    const assignment = await assignmentRepository.findByClassAndId(cls, assignmentNumber);
+    const assignment = await fetchAssignment(classId, assignmentNumber);
 
     if (!assignment) {
         return [];
@@ -94,8 +88,6 @@ export async function getAllGroups(classId: string, assignmentNumber: number, fu
     const groups = await groupRepository.findAllGroupsForAssignment(assignment);
 
     if (full) {
-        console.log('full');
-        console.log(groups);
         return groups.map(mapToGroupDTO);
     }
 
@@ -108,22 +100,7 @@ export async function getGroupSubmissions(
     groupNumber: number,
     full: boolean
 ): Promise<SubmissionDTO[] | SubmissionDTOId[]> {
-    const classRepository = getClassRepository();
-    const cls = await classRepository.findById(classId);
-
-    if (!cls) {
-        return [];
-    }
-
-    const assignmentRepository = getAssignmentRepository();
-    const assignment = await assignmentRepository.findByClassAndId(cls, assignmentNumber);
-
-    if (!assignment) {
-        return [];
-    }
-
-    const groupRepository = getGroupRepository();
-    const group = await groupRepository.findByAssignmentAndGroupNumber(assignment, groupNumber);
+    const group = await fetchGroup(classId, assignmentNumber, groupNumber);
 
     if (!group) {
         return [];
