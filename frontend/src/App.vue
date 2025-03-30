@@ -5,13 +5,15 @@
     import { computed } from "vue";
 
     const route = useRoute();
-    await auth.loadUser();
-
     interface RouteMeta {
         requiresAuth?: boolean;
     }
 
     const showMenuBar = computed(() => (route.meta as RouteMeta).requiresAuth && auth.authState.user);
+
+    auth.loadUser().catch((_error) => {
+        // TODO Could not load user!
+    });
 </script>
 
 <template>

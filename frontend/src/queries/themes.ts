@@ -4,8 +4,8 @@ import { type MaybeRefOrGetter, toValue } from "vue";
 
 const themeController = getThemeController();
 
-export function useThemeQuery(language: MaybeRefOrGetter<string>): UseQueryReturnType<never, Error> {
-    useQuery({
+export function useThemeQuery(language: MaybeRefOrGetter<string>): UseQueryReturnType<unknown, Error> {
+    return useQuery({
         queryKey: ["themes", language],
         queryFn: async () => {
             const lang = toValue(language);
@@ -15,8 +15,8 @@ export function useThemeQuery(language: MaybeRefOrGetter<string>): UseQueryRetur
     });
 }
 
-export function useThemeHruidsQuery(themeKey: string | null): UseQueryReturnType<never, Error> {
-    useQuery({
+export function useThemeHruidsQuery(themeKey: string | null): UseQueryReturnType<unknown, Error> {
+    return useQuery({
         queryKey: ["theme-hruids", themeKey],
         queryFn: async () => themeController.getHruidsByKey(themeKey!),
         enabled: Boolean(themeKey),
