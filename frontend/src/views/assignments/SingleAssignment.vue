@@ -13,14 +13,17 @@
     const role = auth.authState.activeRole;
     const isTeacher = computed(() => role === 'teacher');
 
-    onMounted(async () => {
-        try {
-            // TODO: Replace with real data
-            assignment.value = assignments[0];
-        } catch (error) {
-            console.error(error);
-        }
-    });
+    const loadAssignment = async () => {
+        // TODO: Replace with real data
+        assignment.value = assignments[0];
+    };
+
+    const deleteAssignment = () => {
+        console.log('Delete assignment:', assignmentId.value);
+    };
+
+    onMounted(loadAssignment);
+
 </script>
 
 <template>
@@ -44,6 +47,16 @@
                     :to="`/assignment/${assignmentId}/edit`"
                 >
                     <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+
+                <v-btn
+                    v-if="isTeacher"
+                    icon
+                    variant="text"
+                    class="delete-btn"
+                    @click="deleteAssignment"
+                >
+                    <v-icon>mdi-delete</v-icon>
                 </v-btn>
             </div>
             <v-card-title class="text-h4">{{ assignment.title }}</v-card-title>
@@ -84,6 +97,12 @@
     margin-top: 2%;
     line-height: 1.6;
     font-size: 1.1rem;
+}
+
+.delete-btn {
+    position: absolute;
+    right: 1%;
+    color: red;
 }
 
 </style>

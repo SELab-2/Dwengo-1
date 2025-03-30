@@ -31,6 +31,9 @@
     const goToAssignmentDetails = (id: string) => {
         router.push(`/assignment/${id}`);
     };
+
+    const goToDeleteAssignment = (id: string) => {
+    };
 </script>
 
 <template>
@@ -55,6 +58,9 @@
                             </v-btn>
                             <v-btn v-if="isTeacher" color="secondary" @click="goToEditAssignment(assignment.id)">
                                 {{ t('edit') }}
+                            </v-btn>
+                            <v-btn v-if="isTeacher" color="secondary" @click="goToDeleteAssignment(assignment.id)">
+                                {{ t('delete') }}
                             </v-btn>
                         </v-card-actions>
                     </v-card>
