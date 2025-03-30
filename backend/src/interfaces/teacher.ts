@@ -1,5 +1,5 @@
 import { Teacher } from '../entities/users/teacher.entity.js';
-import { getTeacherRepository } from '../data/repositories';
+import { getTeacherRepository } from '../data/repositories.js';
 
 export interface TeacherDTO {
     id: string;
