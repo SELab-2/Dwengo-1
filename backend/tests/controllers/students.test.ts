@@ -40,10 +40,18 @@ describe('Student controllers', () => {
         };
     });
 
+    it('Get student', async () => {
+        req = { params: { username: 'DireStraits' }};
+
+        await getStudentHandler(req as Request, res as Response);
+
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ student: expect.anything() }));
+    });
+
     it('Student not found', async () => {
         req = { params: { username: 'doesnotexist' } };
 
-        await expect(() => deleteStudentHandler(req as Request, res as Response))
+        await expect(() => getStudentHandler(req as Request, res as Response))
             .rejects
             .toThrow(NotFoundException);
     });
@@ -56,10 +64,10 @@ describe('Student controllers', () => {
             .toThrowError(BadRequestException);
     });
 
-    it('Create student', async () => {
+    it('Create and delete student', async () => {
         req = {
             body: {
-                username: 'NewstudentId21',
+                username: 'coolstudent',
                 firstName: 'New',
                 lastName: 'Student'
             }
@@ -68,7 +76,12 @@ describe('Student controllers', () => {
         await createStudentHandler(req as Request, res as Response);
 
         expect(statusMock).toHaveBeenCalledWith(201);
-        expect(jsonMock).toHaveBeenCalled();
+
+        req = { params: { username: 'coolstudent' } };
+
+        await deleteStudentHandler(req as Request, res as Response);
+
+        expect(statusMock).toHaveBeenCalledWith(200);
     });
 
 
@@ -108,7 +121,7 @@ describe('Student controllers', () => {
         expect(studentUsernames).toContain('DireStraits');
 
         // check length, +1 because of create
-        expect(result.students).toHaveLength(TEST_STUDENTS.length + 1);
+        expect(result.students).toHaveLength(TEST_STUDENTS.length);
     });
 
     it('Student classes', async () => {
@@ -135,7 +148,7 @@ describe('Student controllers', () => {
     });
 
     it('Student submissions', async () => {
-        req = { params: { username: 'DireStraits' } };
+        req = { params: { username: 'DireStraits' }, query: { full: 'true' } };
 
         await getStudentSubmissionsHandler(req as Request, res as Response);
 
@@ -154,15 +167,6 @@ describe('Student controllers', () => {
 
         const result = jsonMock.mock.lastCall?.[0];
         expect(result.questions).to.have.length.greaterThan(0);
-    });
-
-    it('Delete student', async () => {
-        req = { params: { username: 'coolstudent' } };
-
-        await deleteStudentHandler(req as Request, res as Response);
-
-        expect(statusMock).toHaveBeenCalledWith(200);
-        expect(jsonMock).toHaveBeenCalled();
     });
 
     it('Deleting non-existent student', async () => {
@@ -194,7 +198,8 @@ describe('Student controllers', () => {
 
     it('Create join request', async () => {
         req = {
-            params: { username: 'Noordkaap', classId: 'id02' },
+            params: { username: 'Noordkaap' },
+            body: { classId: 'id02' }
         };
 
         await createStudentRequestHandler(req as Request, res as Response);
@@ -204,7 +209,8 @@ describe('Student controllers', () => {
 
     it('Create join request duplicate', async () => {
         req = {
-            params: { username: 'Tool', classId: 'id02' },
+            params: { username: 'Tool' },
+            body: { classId: 'id02' }
         };
 
         await expect(() => createStudentRequestHandler(req as Request, res as Response))

@@ -8,7 +8,7 @@ const router = express.Router({ mergeParams: true });
 
 router.get('/', getStudentRequestHandler);
 
-router.post('/:classId', createStudentRequestHandler);
+router.post('/', createStudentRequestHandler);
 
 router.delete('/:classId', deleteClassJoinRequestHandler);
 

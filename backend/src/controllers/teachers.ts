@@ -91,11 +91,11 @@ export async function getStudentJoinRequestHandler(req: Request, res: Response) 
 }
 
 export async function updateStudentJoinRequestHandler(req: Request, res: Response) {
-    const username = req.query.username as string;
+    const studentUsername = req.query.studentUsername as string;
     const classId = req.params.classId;
-    const accepted = req.query.accepted !== 'false'; // default = true
-    requireFields({ username, classId });
+    const accepted = req.body.accepted !== 'false'; // default = true
+    requireFields({ studentUsername, classId });
 
-    await updateClassJoinRequestStatus(username, classId, accepted);
+    await updateClassJoinRequestStatus(studentUsername, classId, accepted);
     res.status(200);
 }

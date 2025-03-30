@@ -116,7 +116,7 @@ export async function getStudentQuestionsHandler(req: Request, res: Response): P
 
 export async function createStudentRequestHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
-    const classId = req.params.classId;
+    const classId = req.body.classId;
     requireFields({ username, classId });
 
     await createClassJoinRequest(username, classId);
