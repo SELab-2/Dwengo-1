@@ -1,4 +1,5 @@
 import { Student } from '../entities/users/student.entity.js';
+import {getStudentRepository} from "../data/repositories";
 
 export interface StudentDTO {
     id: string;
@@ -23,7 +24,9 @@ export function mapToStudentDTO(student: Student): StudentDTO {
 }
 
 export function mapToStudent(studentData: StudentDTO): Student {
-    const student = new Student(studentData.username, studentData.firstName, studentData.lastName);
-
-    return student;
+    return getStudentRepository().create({
+        username: studentData.username,
+        firstName: studentData.firstName,
+        lastName: studentData.lastName
+    });
 }

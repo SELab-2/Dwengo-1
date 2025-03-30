@@ -2,7 +2,6 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { TeacherRepository } from '../../../src/data/users/teacher-repository';
 import { setupTestApp } from '../../setup-tests';
 import { getTeacherRepository } from '../../../src/data/repositories';
-import { Teacher } from '../../../src/entities/users/teacher.entity';
 
 const username = 'testteacher';
 const firstName = 'John';
@@ -30,7 +29,7 @@ describe('TeacherRepository', () => {
     });
 
     it('should return the queried teacher after he was added', async () => {
-        await teacherRepository.insert(new Teacher(username, firstName, lastName));
+        await teacherRepository.insert(teacherRepository.create({username, firstName, lastName}));
 
         const retrievedTeacher = await teacherRepository.findByUsername(username);
         expect(retrievedTeacher).toBeTruthy();

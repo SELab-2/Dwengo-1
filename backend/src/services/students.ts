@@ -1,6 +1,4 @@
 import { getClassRepository, getGroupRepository, getStudentRepository, getSubmissionRepository } from '../data/repositories.js';
-import { Class } from '../entities/classes/class.entity.js';
-import { Student } from '../entities/users/student.entity.js';
 import { AssignmentDTO } from '../interfaces/assignment.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
@@ -29,7 +27,7 @@ export async function createStudent(userData: StudentDTO): Promise<StudentDTO | 
     const studentRepository = getStudentRepository();
 
     try {
-        const newStudent = studentRepository.create(mapToStudent(userData));
+        const newStudent = mapToStudent(userData);
         await studentRepository.save(newStudent);
 
         return mapToStudentDTO(newStudent);
@@ -87,9 +85,7 @@ export async function getStudentAssignments(username: string, full: boolean): Pr
     const classRepository = getClassRepository();
     const classes = await classRepository.findByStudent(student);
 
-    const assignments = (await Promise.all(classes.map(async (cls) => await getAllAssignments(cls.classId!, full)))).flat();
-
-    return assignments;
+    return (await Promise.all(classes.map(async (cls) => await getAllAssignments(cls.classId!, full)))).flat();
 }
 
 export async function getStudentGroups(username: string, full: boolean): Promise<GroupDTO[]> {
