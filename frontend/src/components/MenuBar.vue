@@ -22,7 +22,7 @@
         { name: "English", code: "en" },
         { name: "Nederlands", code: "nl" },
         { name: "Français", code: "fr" },
-        { name: "Deutsch", code: "de" }
+        { name: "Deutsch", code: "de" },
     ]);
 
     // Logic to change the language of the website to the selected language
@@ -31,20 +31,26 @@
         localStorage.setItem("user-lang", langCode);
     };
 
-    // contains functionality to let the collapsed menu appear and disappear
-    // when the screen size varies
+    // Contains functionality to let the collapsed menu appear and disappear
+    // When the screen size varies
     const drawer = ref(false);
 
-    // when the user wants to logout, a popup is shown to verify this
-    // if verified, the user should be logged out
+    // When the user wants to logout, a popup is shown to verify this
+    // If verified, the user should be logged out
     const performLogout = () => {
         auth.logout();
     };
 </script>
 
 <template>
-    <v-app-bar class="app-bar" app>
-        <v-app-bar-nav-icon class="menu_collapsed" @click="drawer = !drawer" />
+    <v-app-bar
+        class="app-bar"
+        app
+    >
+        <v-app-bar-nav-icon
+            class="menu_collapsed"
+            @click="drawer = !drawer"
+        />
         <router-link
             to="/user"
             class="dwengo_home"
@@ -55,9 +61,7 @@
                     alt="Dwengo logo"
                     :src="dwengoLogo"
                 />
-                <p
-                    class="caption"
-                >
+                <p class="caption">
                     {{ t(`${role}`) }}
                 </p>
             </div>
@@ -156,7 +160,7 @@
             size="large"
             color="#0e6942"
             class="user-button"
-        >{{ initials }}</v-avatar
+            >{{ initials }}</v-avatar
         >
     </v-app-bar>
     <v-navigation-drawer
