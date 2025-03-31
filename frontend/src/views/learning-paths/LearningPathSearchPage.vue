@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import {loadResource, remoteResource} from "@/services/api-client/remote-resource.ts";
-    import type {LearningPath} from "@/services/learning-content/learning-path.ts";
+    import type {LearningPath} from "@/data-objects/learning-path.ts";
     import {useRoute, useRouter} from "vue-router";
     import {computed, watch} from "vue";
     import {searchLearningPaths} from "@/services/learning-content/learning-path-service.ts";

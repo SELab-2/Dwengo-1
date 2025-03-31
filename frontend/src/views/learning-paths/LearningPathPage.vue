@@ -1,15 +1,16 @@
 <script setup lang="ts">
-    import {Language} from "@/services/learning-content/language.ts";
-    import {getLearningPath} from "@/services/learning-content/learning-path-service.ts";
-    import UsingRemoteResource from "@/components/UsingRemoteResource.vue";
-    import {type LearningPath, LearningPathNode} from "@/services/learning-content/learning-path.ts";
+    import {Language} from "@/data-objects/language.ts";
+    import {type LearningPath, LearningPathNode} from "@/data-objects/learning-path.ts";
     import {computed, type ComputedRef, ref, watch} from "vue";
-    import type {LearningObject} from "@/services/learning-content/learning-object.ts";
+    import type {LearningObject} from "@/data-objects/learning-object.ts";
     import {useRoute, useRouter} from "vue-router";
-    import {loadResource, remoteResource, type SuccessState} from "@/services/api-client/remote-resource.ts";
+    import {type SuccessState} from "@/services/api-client/remote-resource.ts";
     import LearningObjectView from "@/views/learning-paths/LearningObjectView.vue";
     import {useI18n} from "vue-i18n";
     import LearningPathSearchField from "@/components/LearningPathSearchField.vue";
+    import {useGetLearningPathQuery} from "@/queries/learning-paths.ts";
+    import {useLearningObjectListForPathQuery} from "@/queries/learning-objects.ts";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
 
     const router = useRouter();
     const route = useRoute();
@@ -22,32 +23,15 @@
         forGroup?: string
     }
 
-    const learningPathResource = remoteResource<LearningPath>();
-    watch([() => props.hruid, () => props.language, () => route.query.forStudent, () => route.query.forGroup], () => {
-        loadResource(
-            learningPathResource,
-            getLearningPath(
-                props.hruid,
-                props.language,
-                route.query as QueryParams
-            )
-        )
-    }, {immediate: true});
+    const typedQuery = computed(() => route.query as QueryParams)
 
-    const learningObjectListResource = remoteResource<LearningObject[]>();
-    watch(learningPathResource, () => {
-        if (learningPathResource.state.type === "success") {
-            loadResource(learningObjectListResource, learningPathResource.state.data.learningObjectsAsList)
-        }
-    }, {immediate: true});
+    const learningPathQueryResult = useGetLearningPathQuery(props.hruid, props.language, typedQuery.value);
 
-    const nodesList: ComputedRef<LearningPathNode[] | null> = computed(() => {
-        if (learningPathResource.state.type === "success") {
-            return learningPathResource.state.data.nodesAsList;
-        } else {
-            return null;
-        }
-    })
+    const learningObjectListQueryResult = useLearningObjectListForPathQuery(learningPathQueryResult.data.value);
+
+    const nodesList: ComputedRef<LearningPathNode[] | null> = computed(() =>
+        (!learningPathQueryResult.isPending && !learningPathQueryResult.isError) ? learningPathQueryResult.data.value?.nodesAsList : null
+    );
 
     const currentNode = computed(() => {
         const currentHruid = props.learningObjectHruid;
@@ -74,8 +58,8 @@
         }
     });
 
-    watch(() => learningPathResource.state, (newValue) => {
-        if (!props.learningObjectHruid && newValue.type === "success") {
+    watch(() => learningPathQueryResult, (newValue) => {
+        if (learningPathQueryResult.isSuccess && false) {
             router.push({
                 path: router.currentRoute.value.path + "/" + (newValue as SuccessState<LearningPath>).data.startNode.learningobjectHruid,
                 query: route.query,
@@ -87,8 +71,8 @@
 
 
     function isLearningObjectCompleted(learningObject: LearningObject): boolean {
-        if (learningPathResource.state.type === "success") {
-            return learningPathResource.state.data.nodesAsList.filter(it =>
+        if (learningObjectListQueryResult.isSuccess) {
+            return learningPathQueryResult.data.value.nodesAsList.filter(it =>
                 it.learningobjectHruid === learningObject.key
                 && it.version === learningObject.version
                 && it.language == learningObject.language
@@ -124,8 +108,8 @@
 
 <template>
     <v-main>
-        <using-remote-resource
-            :resource="learningPathResource"
+        <using-query-result
+            :query-result="learningPathQueryResult"
             v-slot="learningPath: {data: LearningPath}"
         >
             <v-navigation-drawer v-model="navigationDrawerShown">
@@ -143,8 +127,8 @@
                 <v-divider></v-divider>
 
                 <div v-if="props.learningObjectHruid">
-                    <using-remote-resource
-                        :resource="learningObjectListResource"
+                    <using-query-result
+                        :query-result="learningObjectListQueryResult"
                         v-slot="learningObjects: {data: LearningObject[]}"
                     >
                         <v-list-item
@@ -163,7 +147,7 @@
                                 {{ node.estimatedTime }}'
                             </template>
                         </v-list-item>
-                    </using-remote-resource>
+                    </using-query-result>
                 </div>
             </v-navigation-drawer>
             <div class="control-bar-above-content">
@@ -201,7 +185,7 @@
                     {{ t("next") }}
                 </v-btn>
             </div>
-        </using-remote-resource>
+        </using-query-result>
     </v-main>
 </template>
 

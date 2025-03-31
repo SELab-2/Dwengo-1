@@ -1,23 +1,19 @@
 <script setup lang="ts">
-import {Language} from "@/services/learning-content/language.ts";
-import {watch} from "vue";
-import {getLearningObjectHTML} from "@/services/learning-content/learning-object-service.ts";
-import UsingRemoteResource from "@/components/UsingRemoteResource.vue";
-import {loadResource, remoteResource} from "@/services/api-client/remote-resource.ts";
+import {Language} from "@/data-objects/language.ts";
+import {type UseQueryReturnType} from "@tanstack/vue-query";
+import {useLearningObjectHTMLQuery} from "@/queries/learning-objects.ts";
+import UsingQueryResult from "@/components/UsingQueryResult.vue";
 
 const props = defineProps<{hruid: string, language: Language, version: number}>()
 
-const learningPathHtmlResource = remoteResource<Document>();
-watch(props, () => {
-    loadResource(learningPathHtmlResource, getLearningObjectHTML(props.hruid, props.language, props.version))
-}, {immediate: true});
+const learningObjectHtmlQueryResult: UseQueryReturnType<Document, Error> = useLearningObjectHTMLQuery(props.hruid, props.language, props.version);
 
 </script>
 
 <template>
-    <using-remote-resource :resource="learningPathHtmlResource" v-slot="learningPathHtml : {data: Document}">
+    <using-query-result :query-result="learningObjectHtmlQueryResult as UseQueryReturnType<Document, Error>" v-slot="learningPathHtml : {data: Document}">
         <div class="learning-object-container" v-html="learningPathHtml.data.body.innerHTML"></div>
-    </using-remote-resource>
+    </using-query-result>
 </template>
 
 <style scoped>
