@@ -1,13 +1,12 @@
 <script setup lang="ts">
-    import {loadResource, remoteResource} from "@/services/api-client/remote-resource.ts";
     import type {LearningPath} from "@/data-objects/learning-path.ts";
     import {useRoute, useRouter} from "vue-router";
-    import {computed, watch} from "vue";
-    import {searchLearningPaths} from "@/services/learning-content/learning-path-service.ts";
+    import {computed} from "vue";
     import {useI18n} from "vue-i18n";
-    import UsingRemoteResource from "@/components/UsingRemoteResource.vue";
     import {convertBase64ToImageSrc} from "@/utils/base64ToImage.ts";
     import LearningPathSearchField from "@/components/LearningPathSearchField.vue";
+    import {useSearchLearningPathQuery} from "@/queries/learning-paths.ts";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
 
     const route = useRoute();
     const router = useRouter();
@@ -15,12 +14,7 @@
 
     const query = computed(() => route.query.query as string | null);
 
-    const searchResultsResource = remoteResource<LearningPath[]>();
-    watch(query, () => {
-        if (query.value) {
-            loadResource(searchResultsResource, searchLearningPaths(query.value))
-        }
-    }, {immediate: true});
+    const searchQueryResults = useSearchLearningPathQuery(query);
 </script>
 
 <template>
@@ -28,7 +22,7 @@
         <learning-path-search-field class="search-field"></learning-path-search-field>
     </div>
 
-    <using-remote-resource :resource="searchResultsResource" v-slot="{ data }: {data: LearningPath[]}">
+    <using-query-result :query-result="searchQueryResults" v-slot="{ data }: {data: LearningPath[]}">
         <div class="results-grid" v-if="data.length > 0">
             <v-card
                 class="learning-path-card"
@@ -57,7 +51,7 @@
                 :text="t('noLearningPathsFoundDescription')"
             ></v-empty-state>
         </div>
-    </using-remote-resource>
+    </using-query-result>
     <div content="empty-state-container">
         <v-empty-state
             v-if="!query"
