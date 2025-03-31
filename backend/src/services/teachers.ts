@@ -76,28 +76,22 @@ export async function getClassesByTeacher(username: string, full: boolean): Prom
     return classes.map((cls) => cls.id);
 }
 
-export async function fetchStudentsByTeacher(username: string): Promise<StudentDTO[] | null> {
+export async function getStudentsByTeacher(username: string, full: boolean): Promise<StudentDTO[] | string[] | null> {
     const classes = (await getClassesByTeacher(username, false)) as string[];
 
     if (!classes) {
         return null;
     }
 
-    return (await Promise.all(classes.map(async (id) => getClassStudents(id)))).flat();
-}
-
-export async function getStudentsByTeacher(username: string, full: boolean): Promise<StudentDTO[] | string[] | null> {
-    const students = await fetchStudentsByTeacher(username);
-
-    if (!students) {
-        return null;
-    }
-
+    // workaround
+    let students;
     if (full) {
-        return students;
+        students = (await Promise.all(classes.map(async (id) => await getClassStudents(id, full) as StudentDTO[]))).flat();
+    } else {
+        students = (await Promise.all(classes.map(async (id) => await getClassStudents(id, full) as string[]))).flat();
     }
 
-    return students.map((student) => student.username);
+    return students;
 }
 
 export async function fetchTeacherQuestions(username: string): Promise<QuestionDTO[] | null> {

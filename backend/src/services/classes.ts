@@ -1,5 +1,6 @@
 import { getClassRepository, getStudentRepository, getTeacherInvitationRepository, getTeacherRepository } from '../data/repositories.js';
 import { Class } from '../entities/classes/class.entity.js';
+import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToTeacherInvitationDTO, mapToTeacherInvitationDTOIds, TeacherInvitationDTO } from '../interfaces/teacher-invitation.js';
@@ -7,9 +8,13 @@ import { getLogger } from '../logging/initalize.js';
 
 const logger = getLogger();
 
-async function fetchClass(classid: string): Promise<Class | null> {
+async function fetchClass(classid: string): Promise<Class> {
     const classRepository = getClassRepository();
     const cls = await classRepository.findById(classid);
+
+    if (!cls) {
+        throw new NotFoundException("Class not found");
+    }
 
     return cls;
 }
@@ -18,14 +23,16 @@ export async function getAllClasses(full: boolean): Promise<ClassDTO[] | string[
     const classRepository = getClassRepository();
     const classes = await classRepository.find({}, { populate: ['students', 'teachers'] });
 
-    if (!classes) {
-        return [];
-    }
-
     if (full) {
         return classes.map(mapToClassDTO);
     }
     return classes.map((cls) => cls.classId!);
+}
+
+export async function getClass(classId: string): Promise<ClassDTO | null> {
+    const cls = await fetchClass(classId);
+
+    return mapToClassDTO(cls);
 }
 
 export async function createClass(classData: ClassDTO): Promise<ClassDTO | null> {
@@ -54,22 +61,17 @@ export async function createClass(classData: ClassDTO): Promise<ClassDTO | null>
     }
 }
 
-export async function getClass(classId: string): Promise<ClassDTO | null> {
+export async function deleteClass(classId: string): Promise<ClassDTO> {
     const cls = await fetchClass(classId);
 
-    if (!cls) {
-        return null;
-    }
+    const classRepository = getClassRepository();
+    await classRepository.deleteById(classId);
 
     return mapToClassDTO(cls);
 }
 
 export async function getClassStudents(classId: string, full: boolean): Promise<StudentDTO[] | string[]> {
     const cls = await fetchClass(classId);
-
-    if (!cls) {
-        return [];
-    }
 
     if (full) {
         return cls.students.map(mapToStudentDTO);
@@ -79,12 +81,7 @@ export async function getClassStudents(classId: string, full: boolean): Promise<
 }
 
 export async function getClassTeacherInvitations(classId: string, full: boolean): Promise<TeacherInvitationDTO[]> {
-    const classRepository = getClassRepository();
-    const cls = await classRepository.findById(classId);
-
-    if (!cls) {
-        return [];
-    }
+    const cls = await fetchClass(classId);
 
     const teacherInvitationRepository = getTeacherInvitationRepository();
     const invitations = await teacherInvitationRepository.findAllInvitationsForClass(cls);
