@@ -1,8 +1,9 @@
 import { getClassRepository, getStudentRepository, getTeacherInvitationRepository, getTeacherRepository } from '../data/repositories.js';
-import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
+import { mapToClassDTO } from '../interfaces/class.js';
 import { mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToTeacherInvitationDTO, mapToTeacherInvitationDTOIds, TeacherInvitationDTO } from '../interfaces/teacher-invitation.js';
 import { getLogger } from '../logging/initalize.js';
+import { ClassDTO } from 'dwengo-1-common/src/interfaces/class';
 
 const logger = getLogger();
 
