@@ -22,6 +22,18 @@ export function useGetLearningPathQuery(
     })
 }
 
+export function useGetAllLearningPathsByThemeQuery(
+    theme: MaybeRefOrGetter<string>
+): UseQueryReturnType<LearningPath[], Error> {
+    return useQuery({
+        queryKey: [LEARNING_PATH_KEY, "getAllByTheme", theme],
+        queryFn: () => {
+            return learningPathController.getAllByTheme(toValue(theme))
+        },
+        enabled: () => Boolean(toValue(theme)),
+    })
+}
+
 export function useSearchLearningPathQuery(
     query: MaybeRefOrGetter<string>
 ): UseQueryReturnType<LearningPath[], Error>  {

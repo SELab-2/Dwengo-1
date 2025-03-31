@@ -65,9 +65,10 @@ const router = createRouter({
         },
 
         {
-            path: "/theme/:id",
+            path: "/theme/:theme",
             name: "Theme",
             component: SingleTheme,
+            props: true,
             meta: { requiresAuth: true },
         },
         {

@@ -21,4 +21,8 @@ export class LearningPathController extends BaseController {
         });
         return LearningPath.fromDTO(single(dtos));
     }
+    async getAllByTheme(theme: string) {
+        let dtos = await this.get<LearningPathDTO[]>("/", {theme});
+        return dtos.map(dto => LearningPath.fromDTO(dto));
+    }
 }

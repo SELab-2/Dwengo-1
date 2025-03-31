@@ -1,6 +1,4 @@
 import type {Language} from "@/data-objects/language.ts";
-import type {LearningObject} from "@/data-objects/learning-object.ts";
-import {getLearningObjectMetadata} from "@/services/learning-content/learning-object-service.ts";
 
 export interface LearningPathDTO {
     language: string;
@@ -52,10 +50,6 @@ export class LearningPathNode {
         public readonly updatedAt: Date,
         public readonly done: boolean = false
     ) {
-    }
-
-    get learningObject(): Promise<LearningObject> {
-        return getLearningObjectMetadata(this.learningobjectHruid, this.language, this.version);
     }
 
     static fromDTOAndOtherNodes(dto: LearningPathNodeDTO, otherNodes: LearningPathNodeDTO[]): LearningPathNode {
