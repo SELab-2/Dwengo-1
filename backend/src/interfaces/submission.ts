@@ -1,8 +1,9 @@
 import { Submission } from '../entities/assignments/submission.entity.js';
 import { Language } from '../entities/content/language.js';
-import { GroupDTO, mapToGroupDTO } from './group.js';
+import { mapToGroupDTO } from './group.js';
 import { mapToStudent, mapToStudentDTO, StudentDTO } from './student.js';
 import { LearningObjectIdentifier } from './learning-content.js';
+import { GroupDTO } from 'dwengo-1-common/src/interfaces/group';
 
 export interface SubmissionDTO {
     learningObjectIdentifier: LearningObjectIdentifier;

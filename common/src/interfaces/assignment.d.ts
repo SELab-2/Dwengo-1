@@ -1,4 +1,4 @@
-import { GroupDTO } from 'dwengo-1-backend/src/interfaces/group.js';
+import { GroupDTO } from './group';
 
 export interface AssignmentDTO {
     id: number;
