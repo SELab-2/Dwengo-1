@@ -1,5 +1,5 @@
-import { getGroupRepository, getSubmissionRepository } from '../data/repositories.js';
-import { Language } from '../entities/content/language.js';
+import { Language } from 'dwengo-1-common/src/util/language.js';
+import { getSubmissionRepository } from '../data/repositories.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { mapToSubmission, mapToSubmissionDTO } from '../interfaces/submission.js';
 import { SubmissionDTO } from 'dwengo-1-common/src/interfaces/submission';

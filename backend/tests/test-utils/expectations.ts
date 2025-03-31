@@ -2,7 +2,7 @@ import { AssertionError } from 'node:assert';
 import { LearningObject } from '../../src/entities/content/learning-object.entity';
 import { LearningPath as LearningPathEntity } from '../../src/entities/content/learning-path.entity';
 import { expect } from 'vitest';
-import {FilteredLearningObject, LearningPath} from "dwengo-1-common/src/interfaces/learning-content";
+import { FilteredLearningObject, LearningPath } from 'dwengo-1-common/src/interfaces/learning-content';
 
 // Ignored properties because they belang for example to the class, not to the entity itself.
 const IGNORE_PROPERTIES = ['parent'];
@@ -12,7 +12,13 @@ const IGNORE_PROPERTIES = ['parent'];
  * @param actual The actual entity retrieved from the database
  * @param expected The (previously added) entity we would expect to retrieve
  */
-export function expectToBeCorrectEntity<T extends object>(actual: { entity: T; name?: string }, expected: { entity: T; name?: string }): void {
+export function expectToBeCorrectEntity<T extends object>(
+    actual: { entity: T; name?: string },
+    expected: {
+        entity: T;
+        name?: string;
+    }
+): void {
     if (!actual.name) {
         actual.name = 'actual';
     }

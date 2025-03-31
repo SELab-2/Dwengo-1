@@ -1,5 +1,5 @@
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
-import { Language } from '../../../src/entities/content/language';
+import { Language } from 'dwengo-1-common/src/util/language';
 import { EnvVars, getEnvVar } from '../../../src/util/envvars';
 import { createLearningPathNode, createLearningPathTransition } from './learning-path-utils';
 import { LearningPathNode } from '../../../src/entities/content/learning-path-node.entity';

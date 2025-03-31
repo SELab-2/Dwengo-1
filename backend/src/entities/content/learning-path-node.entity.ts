@@ -1,7 +1,7 @@
 import { Entity, Enum, ManyToOne, OneToMany, PrimaryKey, Property, Rel } from '@mikro-orm/core';
-import { Language } from './language.js';
 import { LearningPath } from './learning-path.entity.js';
 import { LearningPathTransition } from './learning-path-transition.entity.js';
+import { Language } from 'dwengo-1-common/src/util/language.js';
 
 @Entity()
 export class LearningPathNode {

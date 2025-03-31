@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
 import learningPathService from '../services/learning-paths/learning-path-service.js';
-import { Language } from '../entities/content/language.js';
 import {
     PersonalizationTarget,
     personalizedForGroup,
@@ -10,6 +9,7 @@ import {
 } from '../services/learning-paths/learning-path-personalization-util.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
+import { Language } from 'dwengo-1-common/src/util/language.js';
 
 /**
  * Fetch learning paths based on query parameters.

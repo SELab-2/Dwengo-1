@@ -1,6 +1,6 @@
 import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { Language } from 'dwengo-1-common/src/util/language';
 import { Submission } from '../../../src/entities/assignments/submission.entity';
-import { Language } from '../../../src/entities/content/language';
 import { Student } from '../../../src/entities/users/student.entity';
 import { Group } from '../../../src/entities/assignments/group.entity';
 

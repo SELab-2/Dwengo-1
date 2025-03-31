@@ -1,6 +1,6 @@
 import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { LearningPath } from '../../entities/content/learning-path.entity.js';
-import { Language } from '../../entities/content/language.js';
+import { Language } from 'dwengo-1-common/src/util/language.js';
 
 export class LearningPathRepository extends DwengoEntityRepository<LearningPath> {
     public findByHruidAndLanguage(hruid: string, language: Language): Promise<LearningPath | null> {

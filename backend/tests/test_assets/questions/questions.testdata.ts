@@ -1,6 +1,6 @@
 import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { Language } from 'dwengo-1-common/src/util/language';
 import { Question } from '../../../src/entities/questions/question.entity';
-import { Language } from '../../../src/entities/content/language';
 import { Student } from '../../../src/entities/users/student.entity';
 
 export function makeTestQuestions(em: EntityManager<IDatabaseDriver<Connection>>, students: Array<Student>): Array<Question> {

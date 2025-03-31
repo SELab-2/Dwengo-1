@@ -1,8 +1,8 @@
 import { Entity, Enum, ManyToOne, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Class } from '../classes/class.entity.js';
 import { Group } from './group.entity.js';
-import { Language } from '../content/language.js';
 import { AssignmentRepository } from '../../data/assignments/assignment-repository.js';
+import { Language } from 'dwengo-1-common/src/util/language.js';
 
 @Entity({
     repository: () => AssignmentRepository,

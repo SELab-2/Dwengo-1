@@ -1,4 +1,4 @@
-import { Language } from '../../entities/content/language.js';
+import { Language } from 'dwengo-1-common/src/util/language.js';
 import { PersonalizationTarget } from './learning-path-personalization-util.js';
 import { LearningPath, LearningPathResponse } from 'dwengo-1-common/src/interfaces/learning-content';
 

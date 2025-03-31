@@ -9,11 +9,11 @@ import {
     getSubmissionRepository,
 } from '../../../src/data/repositories';
 import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
-import { Language } from '../../../src/entities/content/language';
 import { StudentRepository } from '../../../src/data/users/student-repository';
 import { GroupRepository } from '../../../src/data/assignments/group-repository';
 import { AssignmentRepository } from '../../../src/data/assignments/assignment-repository';
 import { ClassRepository } from '../../../src/data/classes/class-repository';
+import { Language } from 'dwengo-1-common/src/util/language';
 
 describe('SubmissionRepository', () => {
     let submissionRepository: SubmissionRepository;

@@ -1,6 +1,5 @@
 import { LearningObjectProvider } from './learning-object-provider.js';
 import { getLearningObjectRepository, getLearningPathRepository } from '../../data/repositories.js';
-import { Language } from '../../entities/content/language.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
 import { getUrlStringForLearningObject } from '../../util/links.js';
 import processingService from './processing/processing-service.js';
@@ -8,6 +7,7 @@ import { NotFoundError } from '@mikro-orm/core';
 import learningObjectService from './learning-object-service.js';
 import { getLogger, Logger } from '../../logging/initalize.js';
 import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from 'dwengo-1-common/src/interfaces/learning-content';
+import { Language } from 'dwengo-1-common/src/util/language.js';
 
 const logger: Logger = getLogger();
 
