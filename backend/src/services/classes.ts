@@ -3,8 +3,8 @@ import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToTeacherInvitationDTO, mapToTeacherInvitationDTOIds, TeacherInvitationDTO } from '../interfaces/teacher-invitation.js';
 import { getLogger } from '../logging/initalize.js';
-import { NotFoundException } from '../exceptions/not-found-exception';
-import { Class } from '../entities/classes/class.entity';
+import { NotFoundException } from '../exceptions/not-found-exception.js';
+import { Class } from '../entities/classes/class.entity.js';
 
 const logger = getLogger();
 
