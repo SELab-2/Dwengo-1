@@ -145,22 +145,24 @@
                     :query-result="learningObjectListQueryResult"
                     v-slot="learningObjects: {data: LearningObject[]}"
                 >
-                    <v-list-item
-                        link
-                        :to="{path: node.key, query: route.query}"
-                        :title="node.title"
-                        :active="node.key === props.learningObjectHruid"
-                        v-for="node in learningObjects.data"
-                    >
-                        <template v-slot:prepend>
-                            <v-icon
-                                :color="COLORS[getNavItemState(node)]"
-                                :icon="ICONS[getNavItemState(node)]"></v-icon>
-                        </template>
-                        <template v-slot:append>
-                            {{ node.estimatedTime }}'
-                        </template>
-                    </v-list-item>
+                    <template v-for="node in learningObjects.data">
+                        <v-list-item
+                            link
+                            :to="{path: node.key, query: route.query}"
+                            :title="node.title"
+                            :active="node.key === props.learningObjectHruid"
+                            v-if="!node.teacherExclusive || authService.authState.activeRole === 'teacher'"
+                        >
+                            <template v-slot:prepend>
+                                <v-icon
+                                    :color="COLORS[getNavItemState(node)]"
+                                    :icon="ICONS[getNavItemState(node)]"></v-icon>
+                            </template>
+                            <template v-slot:append>
+                                {{ node.estimatedTime }}'
+                            </template>
+                        </v-list-item>
+                    </template>
                 </using-query-result>
             </div>
         </v-navigation-drawer>

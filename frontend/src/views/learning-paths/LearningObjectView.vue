@@ -29,4 +29,10 @@ const learningObjectHtmlQueryResult: UseQueryReturnType<Document, Error> = useLe
         margin-top: 5px;
         margin-bottom: 5px;
     }
+    :deep(img) {
+        max-width: 80%;
+    }
+    :deep(h2), :deep(h3), :deep(h4), :deep(h5), :deep(h6) {
+        margin-top: 10px;
+    }
 </style>
