@@ -1,6 +1,6 @@
 import {GetEndpoint} from "@/services/api-client/endpoints/get-endpoint.ts";
-import type {LearningObject} from "@/services/learning-content/learning-object.ts";
-import type {Language} from "@/services/learning-content/language.ts";
+import type {LearningObject} from "@/data-objects/learning-object.ts";
+import type {Language} from "@/data-objects/language.ts";
 import {GetHtmlEndpoint} from "@/services/api-client/endpoints/get-html-endpoint.ts";
 
 const getLearningObjectMetadataEndpoint = new GetEndpoint<{hruid: string}, {language: Language, version: number}, LearningObject>(
