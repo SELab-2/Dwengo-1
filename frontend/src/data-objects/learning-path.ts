@@ -1,5 +1,5 @@
-import type {Language} from "@/services/learning-content/language.ts";
-import type {LearningObject} from "@/services/learning-content/learning-object.ts";
+import type {Language} from "@/data-objects/language.ts";
+import type {LearningObject} from "@/data-objects/learning-object.ts";
 import {getLearningObjectMetadata} from "@/services/learning-content/learning-object-service.ts";
 
 export interface LearningPathDTO {
@@ -110,10 +110,6 @@ export class LearningPath {
                             || currentNode.transitions[0]?.next;
         }
         return list;
-    }
-
-    public get learningObjectsAsList(): Promise<LearningObject[]> {
-        return Promise.all(this.nodesAsList.map(node => node.learningObject));
     }
 
     static fromDTO(dto: LearningPathDTO): LearningPath {
