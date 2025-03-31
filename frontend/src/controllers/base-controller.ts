@@ -1,73 +1,42 @@
 import { apiConfig } from "@/config.ts";
+import apiClient from "@/services/api-client/api-client.ts";
+import type {AxiosResponse, ResponseType} from "axios";
+import {HttpErrorResponseException} from "@/exception/http-error-response-exception.ts";
 
-export class BaseController {
+export abstract class BaseController {
     protected baseUrl: string;
 
-    constructor(basePath: string) {
+    protected constructor(basePath: string) {
         this.baseUrl = `${apiConfig.baseUrl}/${basePath}`;
     }
 
-    protected async get<T>(path: string, queryParams?: Record<string, any>): Promise<T> {
-        let url = `${this.baseUrl}${path}`;
-        if (queryParams) {
-            const query = new URLSearchParams();
-            Object.entries(queryParams).forEach(([key, value]) => {
-                if (value !== undefined && value !== null) {
-                    query.append(key, value.toString());
-                }
-            });
-            url += `?${query.toString()}`;
+    private assertSuccessResponse(response: AxiosResponse<unknown, unknown>) {
+        if (response.status / 200 !== 2) {
+            throw new HttpErrorResponseException(response);
         }
+    }
 
-        const res = await fetch(url);
-        if (!res.ok) {
-            const errorData = await res.json().catch(() => ({}));
-            throw new Error(errorData?.error || `Error ${res.status}: ${res.statusText}`);
-        }
-
-        return res.json();
+    protected async get<T>(path: string, queryParams?: Record<string, any>, responseType?: ResponseType): Promise<T> {
+        let response = await apiClient.get<T>(path, {params: queryParams, responseType});
+        this.assertSuccessResponse(response);
+        return response.data;
     }
 
     protected async post<T>(path: string, body: unknown): Promise<T> {
-        const res = await fetch(`${this.baseUrl}${path}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-        });
-
-        if (!res.ok) {
-            const errorData = await res.json().catch(() => ({}));
-            throw new Error(errorData?.error || `Error ${res.status}: ${res.statusText}`);
-        }
-
-        return res.json();
+        let response = await apiClient.post<T>(path, body);
+        this.assertSuccessResponse(response);
+        return response.data;
     }
 
     protected async delete<T>(path: string): Promise<T> {
-        const res = await fetch(`${this.baseUrl}${path}`, {
-            method: "DELETE",
-        });
-
-        if (!res.ok) {
-            const errorData = await res.json().catch(() => ({}));
-            throw new Error(errorData?.error || `Error ${res.status}: ${res.statusText}`);
-        }
-
-        return res.json();
+        let response = await apiClient.delete<T>(path)
+        this.assertSuccessResponse(response);
+        return response.data;
     }
 
     protected async put<T>(path: string, body: unknown): Promise<T> {
-        const res = await fetch(`${this.baseUrl}${path}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-        });
-
-        if (!res.ok) {
-            const errorData = await res.json().catch(() => ({}));
-            throw new Error(errorData?.error || `Error ${res.status}: ${res.statusText}`);
-        }
-
-        return res.json();
+        let response = await apiClient.put<T>(path, body);
+        this.assertSuccessResponse(response);
+        return response.data;
     }
 }
