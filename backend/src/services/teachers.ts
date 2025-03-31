@@ -1,11 +1,12 @@
 import { getClassRepository, getLearningObjectRepository, getQuestionRepository, getTeacherRepository } from '../data/repositories.js';
 import { mapToClassDTO } from '../interfaces/class.js';
 import { getClassStudents } from './classes.js';
-import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question.js';
+import { mapToQuestionDTO, mapToQuestionId } from '../interfaces/question.js';
 import { mapToTeacher, mapToTeacherDTO } from '../interfaces/teacher.js';
 import { ClassDTO } from 'dwengo-1-common/src/interfaces/class';
 import { TeacherDTO } from 'dwengo-1-common/src/interfaces/teacher';
 import { StudentDTO } from 'dwengo-1-common/src/interfaces/student';
+import { QuestionDTO, QuestionId } from 'dwengo-1-common/src/interfaces/question';
 
 export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | string[]> {
     const teacherRepository = getTeacherRepository();

@@ -1,5 +1,5 @@
 import { getAnswerRepository, getQuestionRepository } from '../data/repositories.js';
-import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question.js';
+import { mapToQuestionDTO, mapToQuestionId } from '../interfaces/question.js';
 import { Question } from '../entities/questions/question.entity.js';
 import { Answer } from '../entities/questions/answer.entity.js';
 import { mapToAnswerDTO, mapToAnswerId } from '../interfaces/answer.js';
@@ -8,6 +8,7 @@ import { LearningObjectIdentifier } from '../entities/content/learning-object-id
 import { mapToUser } from '../interfaces/user.js';
 import { Student } from '../entities/users/student.entity.js';
 import { mapToStudent } from '../interfaces/student.js';
+import { QuestionDTO, QuestionId } from 'dwengo-1-common/src/interfaces/question';
 
 export async function getAllQuestions(id: LearningObjectIdentifier, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
     const questionRepository: QuestionRepository = getQuestionRepository();

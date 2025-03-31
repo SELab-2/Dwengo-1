@@ -1,5 +1,5 @@
-import { QuestionDTO } from 'dwengo-1-backend/src/interfaces/question.js';
 import { UserDTO } from './user';
+import { QuestionDTO } from './question';
 
 export interface AnswerDTO {
     author: UserDTO;
