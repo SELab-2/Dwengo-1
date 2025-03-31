@@ -1,18 +1,6 @@
 import { Student } from '../entities/users/student.entity.js';
 import { getStudentRepository } from '../data/repositories.js';
-
-export interface StudentDTO {
-    id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    endpoints?: {
-        classes: string;
-        questions: string;
-        invitations: string;
-        groups: string;
-    };
-}
+import { StudentDTO } from 'dwengo-1-common/src/interfaces/student';
 
 export function mapToStudentDTO(student: Student): StudentDTO {
     return {
