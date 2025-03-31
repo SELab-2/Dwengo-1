@@ -1,4 +1,4 @@
-import type {Language} from "@/services/learning-content/language.ts";
+import type {Language} from "@/data-objects/language.ts";
 
 export interface EducationalGoal {
     source: string;
