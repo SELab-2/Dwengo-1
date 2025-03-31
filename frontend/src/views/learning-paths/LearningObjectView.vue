@@ -18,10 +18,15 @@ const learningObjectHtmlQueryResult: UseQueryReturnType<Document, Error> = useLe
 
 <style scoped>
     .learning-object-container {
-        margin: 20px;
+        padding: 20px;
     }
     :deep(hr) {
         margin-top: 10px;
         margin-bottom: 10px;
+    }
+    :deep(li) {
+        margin-left: 30px;
+        margin-top: 5px;
+        margin-bottom: 5px;
     }
 </style>

@@ -11,6 +11,7 @@
     import {useGetLearningPathQuery} from "@/queries/learning-paths.ts";
     import {useLearningObjectListForPathQuery} from "@/queries/learning-objects.ts";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import authService from "@/services/auth/auth-service.ts";
 
     const router = useRouter();
     const route = useRoute();
@@ -18,14 +19,29 @@
 
     const props = defineProps<{hruid: string, language: Language, learningObjectHruid?: string}>()
 
-    interface QueryParams {
+    interface Personalization {
         forStudent?: string,
         forGroup?: string
     }
 
-    const typedQuery = computed(() => route.query as QueryParams)
+    const personalization = computed(() => {
+        if (route.query.forStudent || route.query.forGroup) {
+            return {
+                forStudent: route.query.forStudent,
+                forGroup: route.query.forGroup
+            } as Personalization
+        } else {
+            return {
+                forStudent: authService.authState.user?.profile?.preferred_username
+            } as Personalization
+        }
+    });
 
-    const learningPathQueryResult = useGetLearningPathQuery(props.hruid, props.language, typedQuery.value);
+    const learningPathQueryResult = useGetLearningPathQuery(
+        props.hruid,
+        props.language,
+        personalization
+    );
 
     const learningObjectListQueryResult = useLearningObjectListForPathQuery(learningPathQueryResult.data);
 
@@ -107,82 +123,82 @@
 </script>
 
 <template>
-        <using-query-result
-            :query-result="learningPathQueryResult"
-            v-slot="learningPath: {data: LearningPath}"
-        >
-            <v-navigation-drawer v-model="navigationDrawerShown">
-                <v-list-item
-                    :title="learningPath.data.title"
-                    :subtitle="learningPath.data.description"
-                ></v-list-item>
-                <v-list-item>
-                    <template v-slot:subtitle>
-                        <p><v-icon :color="COLORS.notCompleted" :icon="ICONS.notCompleted"></v-icon> {{ t("legendNotCompletedYet") }}</p>
-                        <p><v-icon :color="COLORS.completed" :icon="ICONS.completed"></v-icon> {{ t("legendCompleted") }}</p>
-                        <p><v-icon :color="COLORS.teacherExclusive" :icon="ICONS.teacherExclusive"></v-icon> {{ t("legendTeacherExclusive") }}</p>
-                    </template>
-                </v-list-item>
-                <v-divider></v-divider>
-                <div v-if="props.learningObjectHruid">
-                    <using-query-result
-                        :query-result="learningObjectListQueryResult"
-                        v-slot="learningObjects: {data: LearningObject[]}"
+    <using-query-result
+        :query-result="learningPathQueryResult"
+        v-slot="learningPath: {data: LearningPath}"
+    >
+        <v-navigation-drawer v-model="navigationDrawerShown">
+            <v-list-item
+                :title="learningPath.data.title"
+                :subtitle="learningPath.data.description"
+            ></v-list-item>
+            <v-list-item>
+                <template v-slot:subtitle>
+                    <p><v-icon :color="COLORS.notCompleted" :icon="ICONS.notCompleted"></v-icon> {{ t("legendNotCompletedYet") }}</p>
+                    <p><v-icon :color="COLORS.completed" :icon="ICONS.completed"></v-icon> {{ t("legendCompleted") }}</p>
+                    <p><v-icon :color="COLORS.teacherExclusive" :icon="ICONS.teacherExclusive"></v-icon> {{ t("legendTeacherExclusive") }}</p>
+                </template>
+            </v-list-item>
+            <v-divider></v-divider>
+            <div v-if="props.learningObjectHruid">
+                <using-query-result
+                    :query-result="learningObjectListQueryResult"
+                    v-slot="learningObjects: {data: LearningObject[]}"
+                >
+                    <v-list-item
+                        link
+                        :to="{path: node.key, query: route.query}"
+                        :title="node.title"
+                        :active="node.key === props.learningObjectHruid"
+                        v-for="node in learningObjects.data"
                     >
-                        <v-list-item
-                            link
-                            :to="{path: node.key, query: route.query}"
-                            :title="node.title"
-                            :active="node.key === props.learningObjectHruid"
-                            v-for="node in learningObjects.data"
-                        >
-                            <template v-slot:prepend>
-                                <v-icon
-                                    :color="COLORS[getNavItemState(node)]"
-                                    :icon="ICONS[getNavItemState(node)]"></v-icon>
-                            </template>
-                            <template v-slot:append>
-                                {{ node.estimatedTime }}'
-                            </template>
-                        </v-list-item>
-                    </using-query-result>
-                </div>
-            </v-navigation-drawer>
-            <div class="control-bar-above-content">
-                <v-btn
-                    :icon="navigationDrawerShown ? 'mdi-menu-open' : 'mdi-menu'"
-                    class="navigation-drawer-toggle-button"
-                    variant="plain"
-                    @click="navigationDrawerShown = !navigationDrawerShown"></v-btn>
-                <div class="search-field-container">
-                    <learning-path-search-field></learning-path-search-field>
-                </div>
+                        <template v-slot:prepend>
+                            <v-icon
+                                :color="COLORS[getNavItemState(node)]"
+                                :icon="ICONS[getNavItemState(node)]"></v-icon>
+                        </template>
+                        <template v-slot:append>
+                            {{ node.estimatedTime }}'
+                        </template>
+                    </v-list-item>
+                </using-query-result>
             </div>
-            <learning-object-view
-                :hruid="currentNode.learningobjectHruid"
-                :language="currentNode.language"
-                :version="currentNode.version"
-                v-if="currentNode"
-            ></learning-object-view>
-            <div class="navigation-buttons-container">
-                <v-btn
-                    prepend-icon="mdi-chevron-left"
-                    variant="text"
-                    :disabled="!previousNode"
-                    :to="previousNode ? {path: previousNode.learningobjectHruid, query: route.query} : undefined"
-                >
-                    {{ t("previous") }}
-                </v-btn>
-                <v-btn
-                    append-icon="mdi-chevron-right"
-                    variant="text"
-                    :disabled="!nextNode"
-                    :to="nextNode ? {path: nextNode.learningobjectHruid, query: route.query} : undefined"
-                >
-                    {{ t("next") }}
-                </v-btn>
+        </v-navigation-drawer>
+        <div class="control-bar-above-content">
+            <v-btn
+                :icon="navigationDrawerShown ? 'mdi-menu-open' : 'mdi-menu'"
+                class="navigation-drawer-toggle-button"
+                variant="plain"
+                @click="navigationDrawerShown = !navigationDrawerShown"></v-btn>
+            <div class="search-field-container">
+                <learning-path-search-field></learning-path-search-field>
             </div>
-        </using-query-result>
+        </div>
+        <learning-object-view
+            :hruid="currentNode.learningobjectHruid"
+            :language="currentNode.language"
+            :version="currentNode.version"
+            v-if="currentNode"
+        ></learning-object-view>
+        <div class="navigation-buttons-container">
+            <v-btn
+                prepend-icon="mdi-chevron-left"
+                variant="text"
+                :disabled="!previousNode"
+                :to="previousNode ? {path: previousNode.learningobjectHruid, query: route.query} : undefined"
+            >
+                {{ t("previous") }}
+            </v-btn>
+            <v-btn
+                append-icon="mdi-chevron-right"
+                variant="text"
+                :disabled="!nextNode"
+                :to="nextNode ? {path: nextNode.learningobjectHruid, query: route.query} : undefined"
+            >
+                {{ t("next") }}
+            </v-btn>
+        </div>
+    </using-query-result>
 </template>
 
 <style scoped>

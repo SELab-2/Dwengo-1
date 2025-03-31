@@ -16,7 +16,7 @@ export function useGetLearningPathQuery(
         queryKey: [LEARNING_PATH_KEY, "get", hruid, language, options],
         queryFn: () => {
             const [hruidVal, languageVal, optionsVal] = [toValue(hruid), toValue(language), toValue(options)];
-            return learningPathController.getBy(hruidVal, languageVal)
+            return learningPathController.getBy(hruidVal, languageVal, optionsVal)
         },
         enabled: () => Boolean(toValue(hruid)) && Boolean(toValue(language)),
     })
