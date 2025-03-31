@@ -1,17 +1,5 @@
 import { User } from '../entities/users/user.entity.js';
-
-export interface UserDTO {
-    id?: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    endpoints?: {
-        self: string;
-        classes: string;
-        questions: string;
-        invitations: string;
-    };
-}
+import { UserDTO } from 'dwengo-1-common/src/interfaces/user';
 
 export function mapToUserDTO(user: User): UserDTO {
     return {
