@@ -1,7 +1,8 @@
 import { getGroupRepository, getSubmissionRepository } from '../data/repositories.js';
 import { Language } from '../entities/content/language.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
-import { mapToSubmission, mapToSubmissionDTO, SubmissionDTO } from '../interfaces/submission.js';
+import { mapToSubmission, mapToSubmissionDTO } from '../interfaces/submission.js';
+import { SubmissionDTO } from 'dwengo-1-common/src/interfaces/submission';
 
 export async function getSubmission(
     learningObjectHruid: string,

@@ -1,7 +1,8 @@
 import { getAssignmentRepository, getClassRepository, getGroupRepository, getSubmissionRepository } from '../data/repositories.js';
 import { mapToAssignment, mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment.js';
-import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
+import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
 import { AssignmentDTO } from 'dwengo-1-common/src/interfaces/assignment';
+import { SubmissionDTO, SubmissionDTOId } from 'dwengo-1-common/src/interfaces/submission';
 
 export async function getAllAssignments(classid: string, full: boolean): Promise<AssignmentDTO[]> {
     const classRepository = getClassRepository();

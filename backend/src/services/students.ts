@@ -2,11 +2,12 @@ import { getClassRepository, getGroupRepository, getStudentRepository, getSubmis
 import { mapToClassDTO } from '../interfaces/class.js';
 import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
-import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
+import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
 import { AssignmentDTO } from 'dwengo-1-common/src/interfaces/assignment';
 import { ClassDTO } from 'dwengo-1-common/src/interfaces/class';
 import { GroupDTO } from 'dwengo-1-common/src/interfaces/group';
+import { SubmissionDTO, SubmissionDTOId } from 'dwengo-1-common/src/interfaces/submission';
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();
