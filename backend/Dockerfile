@@ -6,6 +6,7 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY backend/package.json ./backend/
+COPY common/package.json ./common/
 
 RUN npm install --silent
 
@@ -14,10 +15,11 @@ RUN npm install --silent
 # Root tsconfig.json
 COPY tsconfig.json ./
 
-WORKDIR /app/backend
+COPY backend ./backend
+COPY common ./common
+COPY docs ./docs
 
-COPY backend ./
-COPY docs /app/docs
+WORKDIR /app/backend
 
 RUN npm run build
 
