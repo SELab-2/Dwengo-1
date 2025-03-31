@@ -19,7 +19,8 @@ import {
     createConditionTestLearningPathAndLearningObjects,
 } from '../../test-assets/learning-paths/test-conditions-example.js';
 import { Student } from '../../../src/entities/users/student.entity.js';
-import { LearningObjectNode, LearningPathResponse } from '../../../src/interfaces/learning-content.js';
+
+import {LearningObjectNode, LearningPathResponse} from "dwengo-1-common/src/interfaces/learning-content";
 
 async function initExampleData(): Promise<{ learningObject: LearningObject; learningPath: LearningPath }> {
     const learningObjectRepo = getLearningObjectRepository();

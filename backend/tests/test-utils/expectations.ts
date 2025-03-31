@@ -1,8 +1,8 @@
 import { AssertionError } from 'node:assert';
 import { LearningObject } from '../../src/entities/content/learning-object.entity';
-import { FilteredLearningObject, LearningPath } from '../../src/interfaces/learning-content';
 import { LearningPath as LearningPathEntity } from '../../src/entities/content/learning-path.entity';
 import { expect } from 'vitest';
+import {FilteredLearningObject, LearningPath} from "dwengo-1-common/src/interfaces/learning-content";
 
 // Ignored properties because they belang for example to the class, not to the entity itself.
 const IGNORE_PROPERTIES = ['parent'];

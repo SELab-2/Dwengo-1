@@ -1,5 +1,8 @@
 import { DWENGO_API_BASE } from '../../config.js';
 import { fetchWithLogging } from '../../util/api-helper.js';
+import dwengoApiLearningPathProvider from '../learning-paths/dwengo-api-learning-path-provider.js';
+import { LearningObjectProvider } from './learning-object-provider.js';
+import { getLogger, Logger } from '../../logging/initalize.js';
 import {
     FilteredLearningObject,
     LearningObjectIdentifier,
@@ -7,10 +10,7 @@ import {
     LearningObjectNode,
     LearningPathIdentifier,
     LearningPathResponse,
-} from '../../interfaces/learning-content.js';
-import dwengoApiLearningPathProvider from '../learning-paths/dwengo-api-learning-path-provider.js';
-import { LearningObjectProvider } from './learning-object-provider.js';
-import { getLogger, Logger } from '../../logging/initalize.js';
+} from 'dwengo-1-common/src/interfaces/learning-content';
 
 const logger: Logger = getLogger();
 
