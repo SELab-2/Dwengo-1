@@ -2,6 +2,7 @@ import {BaseController} from "@/controllers/base-controller.ts";
 import {LearningPath} from "@/data-objects/learning-path.ts";
 import type {LearningPathDTO} from "@/data-objects/learning-path.ts";
 import type {Language} from "@/data-objects/language.ts";
+import {single} from "@/utils/response-assertions.ts";
 
 export class LearningPathController extends BaseController {
     constructor() {
@@ -18,6 +19,6 @@ export class LearningPathController extends BaseController {
             forGroup: options?.forGroup,
             forStudent: options?.forStudent
         });
-        return dtos.map(dto => LearningPath.fromDTO(dto))
+        return LearningPath.fromDTO(single(dtos));
     }
 }

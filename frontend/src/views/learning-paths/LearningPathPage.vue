@@ -27,10 +27,10 @@
 
     const learningPathQueryResult = useGetLearningPathQuery(props.hruid, props.language, typedQuery.value);
 
-    const learningObjectListQueryResult = useLearningObjectListForPathQuery(learningPathQueryResult.data.value);
+    const learningObjectListQueryResult = useLearningObjectListForPathQuery(learningPathQueryResult.data);
 
     const nodesList: ComputedRef<LearningPathNode[] | null> = computed(() =>
-        (!learningPathQueryResult.isPending && !learningPathQueryResult.isError) ? learningPathQueryResult.data.value?.nodesAsList : null
+        learningPathQueryResult.isSuccess ? learningPathQueryResult.data.value?.nodesAsList : null
     );
 
     const currentNode = computed(() => {
@@ -107,7 +107,6 @@
 </script>
 
 <template>
-    <v-main>
         <using-query-result
             :query-result="learningPathQueryResult"
             v-slot="learningPath: {data: LearningPath}"
@@ -125,7 +124,6 @@
                     </template>
                 </v-list-item>
                 <v-divider></v-divider>
-
                 <div v-if="props.learningObjectHruid">
                     <using-query-result
                         :query-result="learningObjectListQueryResult"
@@ -160,7 +158,6 @@
                     <learning-path-search-field></learning-path-search-field>
                 </div>
             </div>
-
             <learning-object-view
                 :hruid="currentNode.learningobjectHruid"
                 :language="currentNode.language"
@@ -186,7 +183,6 @@
                 </v-btn>
             </div>
         </using-query-result>
-    </v-main>
 </template>
 
 <style scoped>

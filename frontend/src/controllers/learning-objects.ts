@@ -8,10 +8,10 @@ export class LearningObjectController extends BaseController {
     }
 
     async getMetadata(hruid: string, language: Language, version: number): Promise<LearningObject> {
-        return this.get<LearningObject>(`/learningObject/${hruid}`, {language, version});
+        return this.get<LearningObject>(`/${hruid}`, {language, version});
     }
 
     async getHTML(hruid: string, language: Language, version: number): Promise<Document> {
-        return this.get<Document>(`/learningObject/${hruid}/html`, {language, version}, "document");
+        return this.get<Document>(`/${hruid}/html`, {language, version}, "document");
     }
 }

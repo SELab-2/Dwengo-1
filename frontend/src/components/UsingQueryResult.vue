@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="T">
-    import {RemoteResource} from "@/services/api-client/remote-resource.ts";
-    import {computed, type MaybeRefOrGetter} from "vue";
+    import {computed} from "vue";
     import {useI18n} from "vue-i18n";
     import type {UseQueryReturnType} from "@tanstack/vue-query";
 
@@ -8,13 +7,12 @@
         queryResult: UseQueryReturnType<T, Error>
     }>()
 
+    const { isLoading, isError, isSuccess, data, error } = props.queryResult;
+
     const { t } = useI18n();
 
-    const isLoading = computed(() => props.queryResult.isFetching);
-    const data = computed(() => props.queryResult.data);
-    const error = computed(() => props.queryResult.error);
     const errorMessage = computed(() => {
-        let errorWithMessage = (error.value as {message: string}) || null;
+        let errorWithMessage = (error as {message: string}) || null;
         return errorWithMessage?.message || JSON.stringify(errorWithMessage)
     });
 </script>
@@ -23,14 +21,14 @@
     <div class="loading-div" v-if="isLoading">
         <v-progress-circular indeterminate></v-progress-circular>
     </div>
-    <div v-if="error">
+    <div v-if="isError">
         <v-empty-state
             icon="mdi-alert-circle-outline"
             :text="errorMessage"
             :title="t('error_title')"
         ></v-empty-state>
     </div>
-    <slot v-if="data" :data="data!"></slot>
+    <slot v-if="isSuccess && data" :data="data"></slot>
 </template>
 
 <style scoped>

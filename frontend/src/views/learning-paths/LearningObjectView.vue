@@ -6,7 +6,7 @@ import UsingQueryResult from "@/components/UsingQueryResult.vue";
 
 const props = defineProps<{hruid: string, language: Language, version: number}>()
 
-const learningObjectHtmlQueryResult: UseQueryReturnType<Document, Error> = useLearningObjectHTMLQuery(props.hruid, props.language, props.version);
+const learningObjectHtmlQueryResult: UseQueryReturnType<Document, Error> = useLearningObjectHTMLQuery(() => props.hruid, () => props.language, () => props.version);
 
 </script>
 

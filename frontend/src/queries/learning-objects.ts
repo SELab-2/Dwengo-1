@@ -47,10 +47,10 @@ export function useLearningObjectListForPathQuery(
             let learningObjects = [];
             for (let node of toValue(learningPath).nodesAsList) {
                 learningObjects.push(
-                    learningObjectController.getHTML(node.learningobjectHruid, node.language, node.version)
+                    learningObjectController.getMetadata(node.learningobjectHruid, node.language, node.version)
                 );
             }
-            return learningObjects;
+            return Promise.all(learningObjects);
         },
         enabled: () => Boolean(toValue(learningPath)),
     });

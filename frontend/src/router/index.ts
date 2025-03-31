@@ -12,7 +12,6 @@ import UserClasses from "@/views/classes/UserClasses.vue";
 import UserAssignments from "@/views/classes/UserAssignments.vue";
 import authState from "@/services/auth/auth-service.ts";
 import LearningPathPage from "@/views/learning-paths/LearningPathPage.vue";
-import path from "path";
 import LearningPathSearchPage from "@/views/learning-paths/LearningPathSearchPage.vue";
 import UserHomePage from "@/views/homepage/UserHomePage.vue";
 import SingleTheme from "@/views/SingleTheme.vue";
@@ -109,16 +108,15 @@ const router = createRouter({
         },
         {
             path: "/learningPath",
-            component: MenuBar,
             children: [
                 {
-                    path: "/search",
+                    path: "search",
                     name: "LearningPathSearchPage",
                     component: LearningPathSearchPage,
                     meta: { requiresAuth: true }
                 },
                 {
-                    path: "/:hruid/:language",
+                    path: ":hruid/:language",
                     name: "LearningPath",
                     component: LearningPathPage,
                     props: true,
