@@ -1,10 +1,10 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { Language } from 'dwengo-1-common/src/util/language';
 import { setupTestApp } from '../../setup-tests';
 import { LearningObject } from '../../../src/entities/content/learning-object.entity';
 import { getLearningObjectRepository, getLearningPathRepository } from '../../../src/data/repositories';
 import learningObjectExample from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example';
 import learningObjectService from '../../../src/services/learning-objects/learning-object-service';
+import { Language } from '../../../src/entities/content/language';
 import { envVars, getEnvVar } from '../../../src/util/envVars';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
 import learningPathExample from '../../test-assets/learning-paths/pn-werking-example';
@@ -73,18 +73,18 @@ describe('LearningObjectService', () => {
         });
         it(
             'returns the same HTML as the Dwengo API when queried with the identifier of a learning object that does ' +
-                'not start with the user content prefix',
+            'not start with the user content prefix',
             async () => {
                 const result = await learningObjectService.getLearningObjectHTML(DWENGO_TEST_LEARNING_OBJECT_ID);
                 expect(result).not.toBeNull();
 
                 const responseFromDwengoApi = await fetch(
                     getEnvVar(envVars.LearningContentRepoApiBaseUrl) +
-                        `/learningObject/getRaw?hruid=${DWENGO_TEST_LEARNING_OBJECT_ID.hruid}&language=${DWENGO_TEST_LEARNING_OBJECT_ID.language}&version=${DWENGO_TEST_LEARNING_OBJECT_ID.version}`
+                    `/learningObject/getRaw?hruid=${DWENGO_TEST_LEARNING_OBJECT_ID.hruid}&language=${DWENGO_TEST_LEARNING_OBJECT_ID.language}&version=${DWENGO_TEST_LEARNING_OBJECT_ID.version}`,
                 );
                 const responseHtml = await responseFromDwengoApi.text();
                 expect(result).toEqual(responseHtml);
-            }
+            },
         );
         it('returns null when queried with a non-existing identifier', async () => {
             const result = await learningObjectService.getLearningObjectHTML({

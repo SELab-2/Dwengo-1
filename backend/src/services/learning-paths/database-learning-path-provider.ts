@@ -1,6 +1,7 @@
 import { LearningPathProvider } from './learning-path-provider.js';
 import { LearningPath as LearningPathEntity } from '../../entities/content/learning-path.entity.js';
 import { getLearningPathRepository } from '../../data/repositories.js';
+import { Language } from '../../entities/content/language.js';
 import learningObjectService from '../learning-objects/learning-object-service.js';
 import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
@@ -12,7 +13,6 @@ import {
     LearningPathResponse,
     Transition,
 } from 'dwengo-1-common/src/interfaces/learning-content';
-import { Language } from 'dwengo-1-common/src/util/language.js';
 
 /**
  * Fetches the corresponding learning object for each of the nodes and creates a map that maps each node to its

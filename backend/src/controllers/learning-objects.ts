@@ -2,11 +2,11 @@ import { Request, Response } from 'express';
 import { FALLBACK_LANG } from '../config.js';
 import learningObjectService from '../services/learning-objects/learning-object-service.js';
 import { envVars, getEnvVar } from '../util/envVars.js';
+import { Language } from '../entities/content/language.js';
 import attachmentService from '../services/learning-objects/attachment-service.js';
 import { NotFoundError } from '@mikro-orm/core';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from 'dwengo-1-common/src/interfaces/learning-content';
-import { Language } from 'dwengo-1-common/src/util/language.js';
 
 function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIdentifier {
     if (!req.params.hruid) {

@@ -1,10 +1,10 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { Language } from 'dwengo-1-common/src/util/language';
 import { setupTestApp } from '../../setup-tests';
 import { QuestionRepository } from '../../../src/data/questions/question-repository';
 import { getQuestionRepository, getStudentRepository } from '../../../src/data/repositories';
 import { StudentRepository } from '../../../src/data/users/student-repository';
 import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
+import { Language } from '../../../src/entities/content/language';
 
 describe('QuestionRepository', () => {
     let questionRepository: QuestionRepository;

@@ -8,13 +8,13 @@ import InlineImageProcessor from '../image/inline-image-processor.js';
 import * as marked from 'marked';
 import { getUrlStringForLearningObjectHTML, isValidHttpUrl } from '../../../../util/links.js';
 import { ProcessingError } from '../processing-error.js';
+import { Language } from '../../../../entities/content/language.js';
 
 import Image = marked.Tokens.Image;
 import Heading = marked.Tokens.Heading;
 import Link = marked.Tokens.Link;
 import RendererObject = marked.RendererObject;
 import { LearningObjectIdentifier } from 'dwengo-1-common/src/interfaces/learning-content';
-import { Language } from 'dwengo-1-common/src/util/language.js';
 
 const prefixes = {
     learningObject: '@learning-object',

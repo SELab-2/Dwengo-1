@@ -1,7 +1,7 @@
 import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { Attachment } from '../../entities/content/attachment.entity.js';
+import { Language } from '../../entities/content/language';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier';
-import { Language } from 'dwengo-1-common/src/util/language.js';
 
 export class AttachmentRepository extends DwengoEntityRepository<Attachment> {
     public async findByLearningObjectIdAndName(learningObjectId: LearningObjectIdentifier, name: string): Promise<Attachment | null> {

@@ -1,5 +1,4 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { Language } from 'dwengo-1-common/src/util/language';
 import { LearningObject } from '../../../src/entities/content/learning-object.entity.js';
 import { setupTestApp } from '../../setup-tests.js';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity.js';
@@ -14,13 +13,14 @@ import learningPathExample from '../../test-assets/learning-paths/pn-werking-exa
 import databaseLearningPathProvider from '../../../src/services/learning-paths/database-learning-path-provider.js';
 import { expectToBeCorrectLearningPath } from '../../test-utils/expectations.js';
 import learningObjectService from '../../../src/services/learning-objects/learning-object-service.js';
+import { Language } from '../../../src/entities/content/language.js';
 import {
     ConditionTestLearningPathAndLearningObjects,
     createConditionTestLearningPathAndLearningObjects,
 } from '../../test-assets/learning-paths/test-conditions-example.js';
 import { Student } from '../../../src/entities/users/student.entity.js';
 
-import { LearningObjectNode, LearningPathResponse } from 'dwengo-1-common/src/interfaces/learning-content';
+import {LearningObjectNode, LearningPathResponse} from "dwengo-1-common/src/interfaces/learning-content";
 
 async function initExampleData(): Promise<{ learningObject: LearningObject; learningPath: LearningPath }> {
     const learningObjectRepo = getLearningObjectRepository();
@@ -103,11 +103,7 @@ function expectBranchingObjectNode(
 
 describe('DatabaseLearningPathProvider', () => {
     let example: { learningObject: LearningObject; learningPath: LearningPath };
-    let persTestData: {
-        learningContent: ConditionTestLearningPathAndLearningObjects;
-        studentA: Student;
-        studentB: Student;
-    };
+    let persTestData: { learningContent: ConditionTestLearningPathAndLearningObjects; studentA: Student; studentB: Student };
 
     beforeAll(async () => {
         await setupTestApp();

@@ -1,6 +1,6 @@
 import { EntityManager } from '@mikro-orm/core';
-import { Language } from 'dwengo-1-common/src/util/language';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
+import { Language } from '../../../src/entities/content/language';
 import { LearningPathTransition } from '../../../src/entities/content/learning-path-transition.entity';
 import { LearningPathNode } from '../../../src/entities/content/learning-path-node.entity';
 

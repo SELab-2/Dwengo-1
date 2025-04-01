@@ -1,4 +1,4 @@
-import { Language } from '../util/language';
+import { Language } from 'dwengo-1-backend/src/entities/content/language.js'
 
 export interface Transition {
     default: boolean;

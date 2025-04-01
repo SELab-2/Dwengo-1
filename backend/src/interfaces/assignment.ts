@@ -1,8 +1,8 @@
-import { languageMap } from 'dwengo-1-common/src/util/language.js';
 import { FALLBACK_LANG } from '../config.js';
 import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { Class } from '../entities/classes/class.entity.js';
 import { getLogger } from '../logging/initalize.js';
+import { languageMap } from '../entities/content/language.js';
 import { AssignmentDTO } from 'dwengo-1-common/src/interfaces/assignment';
 
 export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTO {

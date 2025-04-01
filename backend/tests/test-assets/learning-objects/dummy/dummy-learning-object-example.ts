@@ -1,6 +1,6 @@
 import { LearningObjectExample } from '../learning-object-example';
-import { Language } from 'dwengo-1-common/src/util/language';
 import { LearningObject } from '../../../../src/entities/content/learning-object.entity';
+import { Language } from '../../../../src/entities/content/language';
 import { loadTestAsset } from '../../../test-utils/load-test-asset';
 import { DwengoContentType } from '../../../../src/services/learning-objects/processing/content-type';
 import { envVars, getEnvVar } from '../../../../src/util/envVars';

@@ -1,4 +1,4 @@
-import { Language } from 'dwengo-1-common/src/util/language';
+import { Language } from './language.js';
 
 export class LearningObjectIdentifier {
     constructor(

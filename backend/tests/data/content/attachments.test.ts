@@ -4,7 +4,7 @@ import { getAttachmentRepository, getLearningObjectRepository } from '../../../s
 import { AttachmentRepository } from '../../../src/data/content/attachment-repository.js';
 import { LearningObjectRepository } from '../../../src/data/content/learning-object-repository.js';
 import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier.js';
-import { Language } from 'dwengo-1-common/src/util/language.js';
+import { Language } from '../../../src/entities/content/language.js';
 
 describe('AttachmentRepository', () => {
     let attachmentRepository: AttachmentRepository;
