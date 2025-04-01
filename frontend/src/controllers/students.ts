@@ -45,6 +45,10 @@ export class StudentController extends BaseController {
         return this.get<{ requests: any[] }>(`/${username}/joinRequests`);
     }
 
+    getJoinRequest(username: string, classId: string) {
+        return this.get<{ request: any[] }>(`/${username}/joinRequests/${classId}`);
+    }
+
     createJoinRequest(username: string, classId: string) {
         return this.post(`/${username}/joinRequests}`, classId);
     }

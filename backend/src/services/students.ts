@@ -125,10 +125,10 @@ export async function getStudentQuestions(username: string, full: boolean): Prom
     return questionsDTO.map(mapToQuestionId);
 }
 
-export async function createClassJoinRequest(studentUsername: string, classId: string) {
+export async function createClassJoinRequest(username: string, classId: string) {
     const requestRepo = getClassJoinRequestRepository();
 
-    const student = await fetchStudent(studentUsername); // Throws error if student not found
+    const student = await fetchStudent(username); // Throws error if student not found
     const cls = await fetchClass(classId);
 
     const request = mapToStudentRequest(student, cls);
@@ -136,19 +136,33 @@ export async function createClassJoinRequest(studentUsername: string, classId: s
     return mapToStudentRequestDTO(request);
 }
 
-export async function getJoinRequestsByStudent(studentUsername: string) {
+export async function getJoinRequestsByStudent(username: string) {
     const requestRepo = getClassJoinRequestRepository();
 
-    const student = await fetchStudent(studentUsername);
+    const student = await fetchStudent(username);
 
     const requests = await requestRepo.findAllRequestsBy(student);
     return requests.map(mapToStudentRequestDTO);
 }
 
-export async function deleteClassJoinRequest(studentUsername: string, classId: string) {
+export async function getJoinRequestByStudentClass(username: string, classId: string){
     const requestRepo = getClassJoinRequestRepository();
 
-    const student = await fetchStudent(studentUsername);
+    const student = await fetchStudent(username);
+    const cls = await fetchClass(classId);
+
+    const request = await requestRepo.findByStudentAndClass(student, cls);
+    if (!request){
+        throw new NotFoundException('Join request not found');
+    }
+
+    return mapToStudentRequestDTO(request);
+}
+
+export async function deleteClassJoinRequest(username: string, classId: string) {
+    const requestRepo = getClassJoinRequestRepository();
+
+    const student = await fetchStudent(username);
     const cls = await fetchClass(classId);
 
     const request = await requestRepo.findByStudentAndClass(student, cls);

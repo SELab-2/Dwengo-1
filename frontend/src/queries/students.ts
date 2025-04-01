@@ -121,6 +121,17 @@ export function useStudentJoinRequestsQuery(username: MaybeRefOrGetter<string | 
     });
 }
 
+export function useStudentJoinRequestQuery(
+    username: MaybeRefOrGetter<string | undefined>,
+    classId: MaybeRefOrGetter<string | undefined>,
+) {
+    return useQuery({
+        queryKey: computed(() => STUDENT_JOIN_REQUESTS_QUERY_KEY(toValue(username)!)),
+        queryFn: () => studentController.getJoinRequest(toValue(username)!, toValue(classId)!),
+        enabled: () => Boolean(toValue(username)),
+    });
+}
+
 /**
  * Mutation to create a join request for a class
  */

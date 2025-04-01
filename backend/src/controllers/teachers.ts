@@ -41,16 +41,16 @@ export async function createTeacherHandler(req: Request, res: Response) {
 
     const userData = req.body as TeacherDTO;
 
-    await createTeacher(userData);
-    res.sendStatus(201);
+    const teacher = await createTeacher(userData);
+    res.json({ teacher });
 }
 
 export async function deleteTeacherHandler(req: Request, res: Response) {
     const username = req.params.username;
     requireFields({ username });
 
-    await deleteTeacher(username);
-    res.sendStatus(200);
+    const teacher = await deleteTeacher(username);
+    res.json({ teacher });
 }
 
 export async function getTeacherClassHandler(req: Request, res: Response): Promise<void> {
@@ -98,6 +98,6 @@ export async function updateStudentJoinRequestHandler(req: Request, res: Respons
     const accepted = req.body.accepted !== 'false'; // Default = true
     requireFields({ studentUsername, classId });
 
-    await updateClassJoinRequestStatus(studentUsername, classId, accepted);
-    res.sendStatus(200);
+    const request = await updateClassJoinRequestStatus(studentUsername, classId, accepted);
+    res.json({ request });
 }

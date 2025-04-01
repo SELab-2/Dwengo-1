@@ -51,19 +51,21 @@ export async function getTeacher(username: string): Promise<TeacherDTO> {
     return mapToTeacherDTO(user);
 }
 
-export async function createTeacher(userData: TeacherDTO): Promise<void> {
+export async function createTeacher(userData: TeacherDTO): Promise<TeacherDTO> {
     const teacherRepository: TeacherRepository = getTeacherRepository();
 
     const newTeacher = mapToTeacher(userData);
     await teacherRepository.save(newTeacher, { preventOverwrite: true });
+    return mapToTeacherDTO(newTeacher);
 }
 
-export async function deleteTeacher(username: string): Promise<void> {
+export async function deleteTeacher(username: string): Promise<TeacherDTO> {
     const teacherRepository: TeacherRepository = getTeacherRepository();
 
-    await fetchTeacher(username); // Throws error if it does not exist
+    const teacher = await fetchTeacher(username); // Throws error if it does not exist
 
     await teacherRepository.deleteByUsername(username);
+    return mapToTeacherDTO(teacher);
 }
 
 async function fetchClassesByTeacher(username: string): Promise<ClassDTO[]> {
@@ -106,9 +108,6 @@ export async function getTeacherQuestions(username: string, full: boolean): Prom
     const learningObjectRepository: LearningObjectRepository = getLearningObjectRepository();
     const learningObjects: LearningObject[] = await learningObjectRepository.findAllByTeacher(teacher);
 
-    // Console.log(learningObjects)
-    // TODO returns empty
-
     if (!learningObjects || learningObjects.length === 0) {
         return [];
     }
@@ -138,7 +137,7 @@ export async function getJoinRequestsByClass(classId: string): Promise<StudentRe
     return requests.map(mapToStudentRequestDTO);
 }
 
-export async function updateClassJoinRequestStatus(studentUsername: string, classId: string, accepted: boolean = true): Promise<void> {
+export async function updateClassJoinRequestStatus(studentUsername: string, classId: string, accepted: boolean = true): Promise<StudentRequestDTO> {
     const requestRepo: ClassJoinRequestRepository = getClassJoinRequestRepository();
     const classRepo: ClassRepository = getClassRepository();
 
@@ -158,4 +157,5 @@ export async function updateClassJoinRequestStatus(studentUsername: string, clas
     request.status = accepted ? ClassJoinRequestStatus.Accepted : ClassJoinRequestStatus.Declined;
 
     await requestRepo.save(request);
+    return mapToStudentRequestDTO(request);
 }

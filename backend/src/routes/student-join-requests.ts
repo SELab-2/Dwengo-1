@@ -1,11 +1,18 @@
 import express from 'express';
-import { createStudentRequestHandler, deleteClassJoinRequestHandler, getStudentRequestHandler } from '../controllers/students.js';
+import {
+    createStudentRequestHandler,
+    deleteClassJoinRequestHandler,
+    getStudentRequestHandler,
+    getStudentRequestsHandler
+} from '../controllers/students.js';
 
 const router = express.Router({ mergeParams: true });
 
-router.get('/', getStudentRequestHandler);
+router.get('/', getStudentRequestsHandler);
 
 router.post('/', createStudentRequestHandler);
+
+router.get('/:classId', getStudentRequestHandler);
 
 router.delete('/:classId', deleteClassJoinRequestHandler);
 

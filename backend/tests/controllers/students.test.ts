@@ -11,8 +11,8 @@ import {
     getStudentSubmissionsHandler,
     getStudentQuestionsHandler,
     createStudentRequestHandler,
-    getStudentRequestHandler,
-    deleteClassJoinRequestHandler,
+    getStudentRequestsHandler,
+    deleteClassJoinRequestHandler, getStudentRequestHandler,
 } from '../../src/controllers/students.js';
 import { TEST_STUDENTS } from '../test_assets/users/students.testdata.js';
 import { NotFoundException } from '../../src/exceptions/not-found-exception.js';
@@ -176,7 +176,7 @@ describe('Student controllers', () => {
             params: { username: 'PinkFloyd' },
         };
 
-        await getStudentRequestHandler(req as Request, res as Response);
+        await getStudentRequestsHandler(req as Request, res as Response);
 
         expect(jsonMock).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -187,6 +187,20 @@ describe('Student controllers', () => {
         const result = jsonMock.mock.lastCall?.[0];
         // Console.log('[JOIN REQUESTS]', result.requests);
         expect(result.requests.length).toBeGreaterThan(0);
+    });
+
+    it('Get join request by student', async () => {
+        req = {
+            params: { username: 'PinkFloyd', classId: 'id02' },
+        };
+
+        await getStudentRequestHandler(req as Request, res as Response);
+
+        expect(jsonMock).toHaveBeenCalledWith(
+            expect.objectContaining({
+                request: expect.anything(),
+            })
+        );
     });
 
     it('Create join request', async () => {

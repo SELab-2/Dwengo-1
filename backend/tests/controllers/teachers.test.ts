@@ -15,7 +15,7 @@ import {
 } from '../../src/controllers/teachers.js';
 import { BadRequestException } from '../../src/exceptions/bad-request-exception.js';
 import { EntityAlreadyExistsException } from '../../src/exceptions/entity-already-exists-exception.js';
-import { getStudentRequestHandler } from '../../src/controllers/students.js';
+import { getStudentRequestsHandler } from '../../src/controllers/students.js';
 import { TeacherDTO } from '../../src/interfaces/teacher.js';
 
 describe('Teacher controllers', () => {
@@ -23,8 +23,6 @@ describe('Teacher controllers', () => {
     let res: Partial<Response>;
 
     let jsonMock: Mock;
-    let statusMock: Mock;
-    let sendStatusMock: Mock;
 
     beforeAll(async () => {
         await setupTestApp();
@@ -32,12 +30,8 @@ describe('Teacher controllers', () => {
 
     beforeEach(() => {
         jsonMock = vi.fn();
-        statusMock = vi.fn().mockReturnThis();
-        sendStatusMock = vi.fn().mockReturnThis();
         res = {
             json: jsonMock,
-            status: statusMock,
-            sendStatus: sendStatusMock,
         };
     });
 
@@ -52,33 +46,37 @@ describe('Teacher controllers', () => {
     it('Teacher not found', async () => {
         req = { params: { username: 'doesnotexist' } };
 
-        await expect(() => getTeacherHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
+        await expect(() => getTeacherHandler(req as Request, res as Response))
+            .rejects.toThrow(NotFoundException);
     });
 
     it('No username', async () => {
         req = { params: {} };
 
-        await expect(() => getTeacherHandler(req as Request, res as Response)).rejects.toThrowError(BadRequestException);
+        await expect(() => getTeacherHandler(req as Request, res as Response))
+            .rejects.toThrowError(BadRequestException);
     });
 
     it('Create and delete teacher', async () => {
+        const teacher = {
+            id: 'coolteacher',
+            username: 'coolteacher',
+            firstName: 'New',
+            lastName: 'Teacher',
+        }
         req = {
-            body: {
-                username: 'coolteacher',
-                firstName: 'New',
-                lastName: 'Teacher',
-            },
+            body: teacher,
         };
 
         await createTeacherHandler(req as Request, res as Response);
 
-        expect(sendStatusMock).toHaveBeenCalledWith(201);
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ teacher: expect.objectContaining(teacher) }));
 
         req = { params: { username: 'coolteacher' } };
 
         await deleteTeacherHandler(req as Request, res as Response);
 
-        expect(sendStatusMock).toHaveBeenCalledWith(200);
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ teacher: expect.objectContaining(teacher) }));
     });
 
     it('Create duplicate student', async () => {
@@ -90,13 +88,15 @@ describe('Teacher controllers', () => {
             },
         };
 
-        await expect(() => createTeacherHandler(req as Request, res as Response)).rejects.toThrowError(EntityAlreadyExistsException);
+        await expect(() => createTeacherHandler(req as Request, res as Response))
+            .rejects.toThrowError(EntityAlreadyExistsException);
     });
 
     it('Create teacher no body', async () => {
         req = { body: {} };
 
-        await expect(() => createTeacherHandler(req as Request, res as Response)).rejects.toThrowError(BadRequestException);
+        await expect(() => createTeacherHandler(req as Request, res as Response))
+            .rejects.toThrowError(BadRequestException);
     });
 
     it('Teacher list', async () => {
@@ -193,15 +193,15 @@ describe('Teacher controllers', () => {
             body: { accepted: 'true' },
         };
 
-        await updateStudentJoinRequestHandler(req as Request, res as Response);
+        const teacher = await updateStudentJoinRequestHandler(req as Request, res as Response);
 
-        expect(sendStatusMock).toHaveBeenCalledWith(200);
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ teacher: expect.objectContaining(teacher) }));
 
         req = {
             params: { username: 'PinkFloyd' },
         };
 
-        await getStudentRequestHandler(req as Request, res as Response);
+        await getStudentRequestsHandler(req as Request, res as Response);
 
         const status: boolean = jsonMock.mock.lastCall?.[0].requests[0].status;
         expect(status).toBeTruthy;

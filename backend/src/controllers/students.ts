@@ -4,7 +4,7 @@ import {
     createStudent,
     deleteClassJoinRequest,
     deleteStudent,
-    getAllStudents,
+    getAllStudents, getJoinRequestByStudentClass,
     getJoinRequestsByStudent,
     getStudent,
     getStudentAssignments,
@@ -116,12 +116,21 @@ export async function createStudentRequestHandler(req: Request, res: Response): 
     res.json({ request });
 }
 
-export async function getStudentRequestHandler(req: Request, res: Response): Promise<void> {
+export async function getStudentRequestsHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
     requireFields({ username });
 
     const requests = await getJoinRequestsByStudent(username);
     res.json({ requests });
+}
+
+export async function getStudentRequestHandler(req: Request, res: Response): Promise<void> {
+    const username = req.params.username as string;
+    const classId = req.params.classId;
+    requireFields({ username, classId });
+
+    const request = await getJoinRequestByStudentClass(username, classId);
+    res.json({ request });
 }
 
 export async function deleteClassJoinRequestHandler(req: Request, res: Response) {
