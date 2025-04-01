@@ -2,8 +2,8 @@ import {type MaybeRefOrGetter, toValue} from "vue";
 import type {Language} from "@/data-objects/language.ts";
 import {useQuery, type UseQueryReturnType} from "@tanstack/vue-query";
 import {getLearningObjectController} from "@/controllers/controllers.ts";
-import type {LearningObject} from "@/data-objects/learning-object.ts";
-import type {LearningPath} from "@/data-objects/learning-path.ts";
+import type {LearningObject} from "@/data-objects/learning-objects/learning-object.ts";
+import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
 
 const LEARNING_OBJECT_KEY = "learningObject";
 const learningObjectController = getLearningObjectController();
@@ -15,7 +15,7 @@ export function useLearningObjectMetadataQuery(
 ): UseQueryReturnType<LearningObject, Error> {
     return useQuery({
         queryKey: [LEARNING_OBJECT_KEY, "metadata", hruid, language, version],
-        queryFn: () => {
+        queryFn: async () => {
             const [hruidVal, languageVal, versionVal] = [toValue(hruid), toValue(language), toValue(version)];
             return learningObjectController.getMetadata(hruidVal, languageVal, versionVal)
         },
@@ -30,7 +30,7 @@ export function useLearningObjectHTMLQuery(
 ): UseQueryReturnType<Document, Error> {
     return useQuery({
         queryKey: [LEARNING_OBJECT_KEY, "html", hruid, language, version],
-        queryFn: () => {
+        queryFn: async () => {
             const [hruidVal, languageVal, versionVal] = [toValue(hruid), toValue(language), toValue(version)];
             return learningObjectController.getHTML(hruidVal, languageVal, versionVal)
         },
@@ -43,9 +43,9 @@ export function useLearningObjectListForPathQuery(
 ): UseQueryReturnType<LearningObject, Error> {
     return useQuery({
         queryKey: [LEARNING_OBJECT_KEY, "onPath", learningPath],
-        queryFn: () => {
-            let learningObjects = [];
-            for (let node of toValue(learningPath).nodesAsList) {
+        queryFn: async () => {
+            const learningObjects = [];
+            for (const node of toValue(learningPath).nodesAsList) {
                 learningObjects.push(
                     learningObjectController.getMetadata(node.learningobjectHruid, node.language, node.version)
                 );

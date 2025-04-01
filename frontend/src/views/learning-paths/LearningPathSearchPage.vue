@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import type {LearningPath} from "@/data-objects/learning-path.ts";
-    import {useRoute, useRouter} from "vue-router";
+    import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
+    import {useRoute} from "vue-router";
     import {computed} from "vue";
     import {useI18n} from "vue-i18n";
     import LearningPathSearchField from "@/components/LearningPathSearchField.vue";
@@ -9,7 +9,6 @@
     import LearningPathsGrid from "@/components/LearningPathsGrid.vue";
 
     const route = useRoute();
-    const router = useRouter();
     const { t } = useI18n();
 
     const query = computed(() => route.query.query as string | null);

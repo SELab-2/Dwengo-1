@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import {convertBase64ToImageSrc} from "@/utils/base64ToImage.ts";
-import type {LearningPath} from "@/data-objects/learning-path.ts";
+import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
 import {useI18n} from "vue-i18n";
 
 const { t } = useI18n();
@@ -15,6 +15,7 @@ const props = defineProps<{learningPaths: LearningPath[]}>();
             class="learning-path-card"
             link
             :to="`/learningPath/${learningPath.hruid}/${learningPath.language}/${learningPath.startNode.learningobjectHruid}`"
+            :key="[learningPath.hruid, learningPath.language]"
             v-for="learningPath in props.learningPaths"
         >
             <v-img

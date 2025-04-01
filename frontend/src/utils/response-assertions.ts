@@ -1,4 +1,5 @@
-import {InvalidResponseException, NotFoundException} from "@/services/api-client/api-exceptions.ts";
+import {NotFoundException} from "@/exception/not-found-exception.ts";
+import {InvalidResponseException} from "@/exception/invalid-response-exception.ts";
 
 export function single<T>(list: T[]): T {
     if (list.length === 1) {

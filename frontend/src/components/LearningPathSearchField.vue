@@ -10,12 +10,12 @@
 
     const query = computed({
         get: () => route.query.query as string | null,
-        set: (newValue) => router.push({path: SEARCH_PATH, query: {query: newValue}})
+        set: async (newValue) => router.push({path: SEARCH_PATH, query: {query: newValue}})
     });
 
     const queryInput = ref(query.value);
 
-    function search() {
+    function search(): void {
         query.value = queryInput.value;
     }
 </script>

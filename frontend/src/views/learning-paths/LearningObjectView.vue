@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {Language} from "@/data-objects/language.ts";
-import {type UseQueryReturnType} from "@tanstack/vue-query";
+import type {UseQueryReturnType} from "@tanstack/vue-query";
 import {useLearningObjectHTMLQuery} from "@/queries/learning-objects.ts";
 import UsingQueryResult from "@/components/UsingQueryResult.vue";
 

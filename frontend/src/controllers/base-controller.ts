@@ -9,40 +9,42 @@ export abstract class BaseController {
         this.basePath = basePath;
     }
 
-    private assertSuccessResponse(response: AxiosResponse<unknown, unknown>) {
+    private static assertSuccessResponse(response: AxiosResponse<unknown, unknown>): void {
         if (response.status / 100 !== 2) {
             throw new HttpErrorResponseException(response);
         }
     }
 
-    private absolutePathFor(path: string) {
-        return "/" + this.basePath + path;
-    }
-
-    protected async get<T>(path: string, queryParams?: Record<string, any>, responseType?: ResponseType): Promise<T> {
-        let response = await apiClient.get<T>(
+    protected async get<T>(path: string, queryParams?: QueryParams, responseType?: ResponseType): Promise<T> {
+        const response = await apiClient.get<T>(
             this.absolutePathFor(path),
             {params: queryParams, responseType}
         );
-        this.assertSuccessResponse(response);
+        BaseController.assertSuccessResponse(response);
         return response.data;
     }
 
     protected async post<T>(path: string, body: unknown): Promise<T> {
-        let response = await apiClient.post<T>(this.absolutePathFor(path), body);
-        this.assertSuccessResponse(response);
+        const response = await apiClient.post<T>(this.absolutePathFor(path), body);
+        BaseController.assertSuccessResponse(response);
         return response.data;
     }
 
     protected async delete<T>(path: string): Promise<T> {
-        let response = await apiClient.delete<T>(this.absolutePathFor(path))
-        this.assertSuccessResponse(response);
+        const response = await apiClient.delete<T>(this.absolutePathFor(path))
+        BaseController.assertSuccessResponse(response);
         return response.data;
     }
 
     protected async put<T>(path: string, body: unknown): Promise<T> {
-        let response = await apiClient.put<T>(this.absolutePathFor(path), body);
-        this.assertSuccessResponse(response);
+        const response = await apiClient.put<T>(this.absolutePathFor(path), body);
+        BaseController.assertSuccessResponse(response);
         return response.data;
     }
+
+    private absolutePathFor(path: string): string {
+        return "/" + this.basePath + path;
+    }
 }
+
+type QueryParams = Record<string, string | number | boolean | undefined>;

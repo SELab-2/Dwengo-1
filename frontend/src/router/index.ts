@@ -15,6 +15,7 @@ import LearningPathPage from "@/views/learning-paths/LearningPathPage.vue";
 import LearningPathSearchPage from "@/views/learning-paths/LearningPathSearchPage.vue";
 import UserHomePage from "@/views/homepage/UserHomePage.vue";
 import SingleTheme from "@/views/SingleTheme.vue";
+import LearningObjectView from "@/views/learning-paths/LearningObjectView.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -117,21 +118,20 @@ const router = createRouter({
                     meta: { requiresAuth: true }
                 },
                 {
-                    path: ":hruid/:language",
+                    path: ":hruid/:language/:learningObjectHruid",
                     name: "LearningPath",
                     component: LearningPathPage,
                     props: true,
                     meta: { requiresAuth: true },
-                    children: [
-                        {
-                            path: ":learningObjectHruid",
-                            component: LearningPathPage,
-                            props: true,
-                            meta: { requiresAuth: true }
-                        }
-                    ]
                 },
             ]
+        },
+        {
+            path: "/learningObject/:hruid/:language/:version/raw",
+            name: "LearningObjectView",
+            component: LearningObjectView,
+            props: true,
+            meta: { requiresAuth: true }
         },
         {
             path: "/:catchAll(.*)",

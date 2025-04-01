@@ -1,6 +1,4 @@
 <script setup lang="ts">
-    import auth from "@/services/auth/auth-service.ts";
-    import apiClient from "@/services/api-client/api-client.ts";
     import { ref } from "vue";
     import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
     import { useI18n } from "vue-i18n";

@@ -1,6 +1,6 @@
 import {BaseController} from "@/controllers/base-controller.ts";
 import type {Language} from "@/data-objects/language.ts";
-import type {LearningObject} from "@/data-objects/learning-object.ts";
+import type {LearningObject} from "@/data-objects/learning-objects/learning-object.ts";
 
 export class LearningObjectController extends BaseController {
     constructor() {

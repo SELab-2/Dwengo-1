@@ -1,14 +1,6 @@
 import type {Language} from "@/data-objects/language.ts";
-
-export interface EducationalGoal {
-    source: string;
-    id: string;
-}
-
-export interface ReturnValue {
-    callback_url: string;
-    callback_schema: Record<string, any>;
-}
+import type {ReturnValue} from "@/data-objects/learning-objects/return-value.ts";
+import type {EducationalGoal} from "@/data-objects/learning-objects/educational-goal.ts";
 
 export interface LearningObject {
     key: string;

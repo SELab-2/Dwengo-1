@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {LearningPath} from "@/data-objects/learning-path.ts";
+import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
 import LearningPathsGrid from "@/components/LearningPathsGrid.vue";
 import UsingQueryResult from "@/components/UsingQueryResult.vue";
 import {useGetAllLearningPathsByThemeQuery} from "@/queries/learning-paths.ts";
@@ -23,7 +23,7 @@ const learningPathsForThemeQueryResult = useGetAllLearningPathsByThemeQuery(() =
 const { t } = useI18n();
 const searchFilter = ref("");
 
-function filterLearningPaths(learningPaths: LearningPath[]) {
+function filterLearningPaths(learningPaths: LearningPath[]): LearningPath[] {
     return learningPaths.filter(it =>
         it.title.toLowerCase().includes(searchFilter.value.toLowerCase())
         || it.description.toLowerCase().includes(searchFilter.value.toLowerCase)

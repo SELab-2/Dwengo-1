@@ -1,10 +1,9 @@
 <script setup lang="ts">
     import {Language} from "@/data-objects/language.ts";
-    import {type LearningPath, LearningPathNode} from "@/data-objects/learning-path.ts";
-    import {computed, type ComputedRef, ref, watch} from "vue";
-    import type {LearningObject} from "@/data-objects/learning-object.ts";
-    import {useRoute, useRouter} from "vue-router";
-    import {type SuccessState} from "@/services/api-client/remote-resource.ts";
+    import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
+    import {computed, type ComputedRef, ref} from "vue";
+    import type {LearningObject} from "@/data-objects/learning-objects/learning-object.ts";
+    import {useRoute} from "vue-router";
     import LearningObjectView from "@/views/learning-paths/LearningObjectView.vue";
     import {useI18n} from "vue-i18n";
     import LearningPathSearchField from "@/components/LearningPathSearchField.vue";
@@ -12,8 +11,8 @@
     import {useLearningObjectListForPathQuery} from "@/queries/learning-objects.ts";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import authService from "@/services/auth/auth-service.ts";
+    import {LearningPathNode} from "@/data-objects/learning-paths/learning-path-node.ts";
 
-    const router = useRouter();
     const route = useRoute();
     const { t } = useI18n();
 
@@ -30,11 +29,11 @@
                 forStudent: route.query.forStudent,
                 forGroup: route.query.forGroup
             } as Personalization
-        } else {
+        }
             return {
                 forStudent: authService.authState.user?.profile?.preferred_username
             } as Personalization
-        }
+
     });
 
     const learningPathQueryResult = useGetLearningPathQuery(
@@ -51,61 +50,45 @@
 
     const currentNode = computed(() => {
         const currentHruid = props.learningObjectHruid;
-        if (nodesList.value) {
-            return nodesList.value.filter(it => it.learningobjectHruid === currentHruid)[0]
-        }
+        return nodesList.value?.find(it => it.learningobjectHruid === currentHruid);
     });
 
     const nextNode = computed(() => {
         if (!currentNode.value || !nodesList.value)
-            return;
+            return undefined;
         const currentIndex = nodesList.value?.indexOf(currentNode.value);
-        if (currentIndex < nodesList.value?.length) {
-            return nodesList.value?.[currentIndex + 1];
-        }
+        return currentIndex < nodesList.value?.length ? nodesList.value?.[currentIndex + 1] : undefined;
     });
 
     const previousNode = computed(() => {
         if (!currentNode.value || !nodesList.value)
-            return;
+            return undefined;
         const currentIndex = nodesList.value?.indexOf(currentNode.value);
-        if (currentIndex < nodesList.value?.length) {
-            return nodesList.value?.[currentIndex - 1];
-        }
-    });
-
-    watch(() => learningPathQueryResult, (newValue) => {
-        if (learningPathQueryResult.isSuccess && false) {
-            router.push({
-                path: router.currentRoute.value.path + "/" + (newValue as SuccessState<LearningPath>).data.startNode.learningobjectHruid,
-                query: route.query,
-            });
-        }
+        return currentIndex < nodesList.value?.length ? nodesList.value?.[currentIndex - 1] : undefined;
     });
 
     const navigationDrawerShown = ref(true);
 
-
     function isLearningObjectCompleted(learningObject: LearningObject): boolean {
         if (learningObjectListQueryResult.isSuccess) {
-            return learningPathQueryResult.data.value.nodesAsList.filter(it =>
+            return learningPathQueryResult.data.value.nodesAsList.find(it =>
                 it.learningobjectHruid === learningObject.key
                 && it.version === learningObject.version
-                && it.language == learningObject.language
-            )[0].done;
+                && it.language === learningObject.language
+            ).done;
         }
         return false;
     }
 
     type NavItemState = "teacherExclusive" | "completed" | "notCompleted";
 
-    const ICONS: {[key: NavItemState]: string} = {
+    const ICONS: Record<NavItemState, string> = {
         teacherExclusive: "mdi-information",
         completed: "mdi-checkbox-marked-circle-outline",
         notCompleted: "mdi-checkbox-blank-circle-outline"
     }
 
-    const COLORS: {[key: NavItemState]: string | undefined}  = {
+    const COLORS: Record<NavItemState, string | undefined>  = {
         teacherExclusive: "info",
         completed: "success",
         notCompleted: undefined
@@ -116,9 +99,9 @@
             return "teacherExclusive";
         } else if (isLearningObjectCompleted(learningObject)) {
             return "completed";
-        } else {
-            return "notCompleted";
         }
+            return "notCompleted";
+
     }
 </script>
 
@@ -151,6 +134,7 @@
                             :to="{path: node.key, query: route.query}"
                             :title="node.title"
                             :active="node.key === props.learningObjectHruid"
+                            :key="node.key"
                             v-if="!node.teacherExclusive || authService.authState.activeRole === 'teacher'"
                         >
                             <template v-slot:prepend>

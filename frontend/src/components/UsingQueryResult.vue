@@ -12,7 +12,7 @@
     const { t } = useI18n();
 
     const errorMessage = computed(() => {
-        let errorWithMessage = (error.value as {message: string}) || null;
+        const errorWithMessage = (error.value as {message: string}) || null;
         return errorWithMessage?.message || JSON.stringify(errorWithMessage)
     });
 </script>
