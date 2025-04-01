@@ -1,5 +1,5 @@
 import { mapToUserDTO, UserDTO } from './user.js';
-import {mapToQuestionDTO, mapToQuestionDTOId, QuestionDTO, QuestionId} from './question.js';
+import { mapToQuestionDTO, mapToQuestionDTOId, QuestionDTO, QuestionId } from './question.js';
 import { Answer } from '../entities/questions/answer.entity.js';
 
 export interface AnswerDTO {

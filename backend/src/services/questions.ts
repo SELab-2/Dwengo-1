@@ -1,5 +1,5 @@
 import { getAnswerRepository, getQuestionRepository } from '../data/repositories.js';
-import {mapToQuestionDTO, mapToQuestionDTOId, QuestionDTO, QuestionId} from '../interfaces/question.js';
+import { mapToQuestionDTO, mapToQuestionDTOId, QuestionDTO, QuestionId } from '../interfaces/question.js';
 import { Question } from '../entities/questions/question.entity.js';
 import { Answer } from '../entities/questions/answer.entity.js';
 import { AnswerDTO, AnswerId, mapToAnswerDTO, mapToAnswerDTOId } from '../interfaces/answer.js';

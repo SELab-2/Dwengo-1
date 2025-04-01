@@ -12,13 +12,8 @@ import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js
 import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
-import {
-    mapToQuestionDTO,
-    mapToQuestionDTOId,
-    QuestionDTO,
-    QuestionId
-} from '../interfaces/question.js';
-import {mapToStudentRequest, mapToStudentRequestDTO, StudentRequestDTO} from '../interfaces/student-request.js';
+import { mapToQuestionDTO, mapToQuestionDTOId, QuestionDTO, QuestionId } from '../interfaces/question.js';
+import { mapToStudentRequest, mapToStudentRequestDTO, StudentRequestDTO } from '../interfaces/student-request.js';
 import { Student } from '../entities/users/student.entity.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { fetchClass } from './classes.js';
@@ -148,14 +143,14 @@ export async function getJoinRequestsByStudent(username: string): Promise<Studen
     return requests.map(mapToStudentRequestDTO);
 }
 
-export async function getJoinRequestByStudentClass(username: string, classId: string): Promise<StudentRequestDTO>{
+export async function getJoinRequestByStudentClass(username: string, classId: string): Promise<StudentRequestDTO> {
     const requestRepo = getClassJoinRequestRepository();
 
     const student = await fetchStudent(username);
     const cls = await fetchClass(classId);
 
     const request = await requestRepo.findByStudentAndClass(student, cls);
-    if (!request){
+    if (!request) {
         throw new NotFoundException('Join request not found');
     }
 

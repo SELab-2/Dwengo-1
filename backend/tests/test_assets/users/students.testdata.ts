@@ -1,4 +1,4 @@
-import { EntityManager} from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { Student } from '../../../src/entities/users/student.entity';
 
 // 🔓 Ruwe testdata array — herbruikbaar in assertions

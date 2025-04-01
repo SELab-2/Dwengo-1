@@ -37,7 +37,12 @@ export class TeacherController extends BaseController {
         return this.get<{ joinRequests: any[] }>(`/${username}/joinRequests/${classId}`);
     }
 
-    async updateStudentJoinRequest(teacherUsername: string, classId: string, studentUsername: string, accepted: boolean) {
+    async updateStudentJoinRequest(
+        teacherUsername: string,
+        classId: string,
+        studentUsername: string,
+        accepted: boolean,
+    ) {
         return this.put(`/${teacherUsername}/joinRequests/${classId}/${studentUsername}`, accepted);
     }
 
