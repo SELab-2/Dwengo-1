@@ -121,5 +121,11 @@
         "skipLibCheck": true,
         /* Skip type checking all .d.ts files. */
         "resolveJsonModule": true
-    }
+    },
+    "files": [],
+    "references": [
+        { "path": "backend" },
+        { "path": "common" },
+        { "path": "frontend" }
+    ]
 }
