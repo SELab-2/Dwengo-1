@@ -1,30 +1,31 @@
 import { getAssignmentRepository, getClassRepository, getGroupRepository, getQuestionRepository, getSubmissionRepository } from '../data/repositories.js';
 import { Assignment } from '../entities/assignments/assignment.entity.js';
+import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { AssignmentDTO, mapToAssignment, mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment.js';
 import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
+import { fetchClass } from './classes.js';
 
-export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment | null> {
+export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
     const classRepository = getClassRepository();
     const cls = await classRepository.findById(classid);
 
     if (!cls) {
-        return null;
+        throw new NotFoundException('Could not find assignment\'s class');
     }
 
     const assignmentRepository = getAssignmentRepository();
     const assignment = await assignmentRepository.findByClassAndId(cls, assignmentNumber);
 
+    if (!assignment) {
+        throw new NotFoundException('Could not find assignment');
+    }
+
     return assignment;
 }
 
 export async function getAllAssignments(classid: string, full: boolean): Promise<AssignmentDTO[]> {
-    const classRepository = getClassRepository();
-    const cls = await classRepository.findById(classid);
-
-    if (!cls) {
-        return [];
-    }
+    const cls = await fetchClass(classid);
 
     const assignmentRepository = getAssignmentRepository();
     const assignments = await assignmentRepository.findAllAssignmentsInClass(cls);

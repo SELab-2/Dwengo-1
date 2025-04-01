@@ -2,13 +2,7 @@ import { Request, Response } from 'express';
 import { createAssignment, getAllAssignments, getAssignment, getAssignmentsSubmissions } from '../services/assignments.js';
 import { AssignmentDTO } from '../interfaces/assignment.js';
 
-// Typescript is annoy with with parameter forwarding from class.ts
-interface AssignmentParams {
-    classid: string;
-    id: string;
-}
-
-export async function getAllAssignmentsHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
+export async function getAllAssignmentsHandler(req: Request, res: Response): Promise<void> {
     const classid = req.params.classid;
     const full = req.query.full === 'true';
 
@@ -19,7 +13,7 @@ export async function getAllAssignmentsHandler(req: Request<AssignmentParams>, r
     });
 }
 
-export async function createAssignmentHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
+export async function createAssignmentHandler(req: Request, res: Response): Promise<void> {
     const classid = req.params.classid;
     const assignmentData = req.body as AssignmentDTO;
 
@@ -40,7 +34,7 @@ export async function createAssignmentHandler(req: Request<AssignmentParams>, re
     res.status(201).json(assignment);
 }
 
-export async function getAssignmentHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
+export async function getAssignmentHandler(req: Request, res: Response): Promise<void> {
     const id = +req.params.id;
     const classid = req.params.classid;
 
@@ -59,7 +53,7 @@ export async function getAssignmentHandler(req: Request<AssignmentParams>, res: 
     res.json(assignment);
 }
 
-export async function getAssignmentsSubmissionsHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
+export async function getAssignmentsSubmissionsHandler(req: Request, res: Response): Promise<void> {
     const classid = req.params.classid;
     const assignmentNumber = +req.params.id;
     const full = req.query.full === 'true';

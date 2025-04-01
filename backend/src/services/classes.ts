@@ -8,7 +8,7 @@ import { getLogger } from '../logging/initalize.js';
 
 const logger = getLogger();
 
-async function fetchClass(classid: string): Promise<Class> {
+export async function fetchClass(classid: string): Promise<Class> {
     const classRepository = getClassRepository();
     const cls = await classRepository.findById(classid);
 
