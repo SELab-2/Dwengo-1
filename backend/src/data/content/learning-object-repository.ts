@@ -2,7 +2,6 @@ import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { Teacher } from '../../entities/users/teacher.entity.js';
-import { Language } from 'dwengo-1-common/src/util/language.js';
 
 export class LearningObjectRepository extends DwengoEntityRepository<LearningObject> {
     public async findByIdentifier(identifier: LearningObjectIdentifier): Promise<LearningObject | null> {
