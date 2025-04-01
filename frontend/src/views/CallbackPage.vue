@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { useRouter } from "vue-router";
-    import {onMounted, ref, type Ref} from "vue";
+    import { onMounted, ref, type Ref } from "vue";
     import auth from "../services/auth/auth-service.ts";
 
     const router = useRouter();

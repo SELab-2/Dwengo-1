@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    import {useI18n} from "vue-i18n";
-    import {useRoute, useRouter} from "vue-router";
-    import {computed, ref} from "vue";
+    import { useI18n } from "vue-i18n";
+    import { useRoute, useRouter } from "vue-router";
+    import { computed, ref } from "vue";
     const route = useRoute();
     const router = useRouter();
     const { t } = useI18n();
@@ -10,7 +10,7 @@
 
     const query = computed({
         get: () => route.query.query as string | null,
-        set: async (newValue) => router.push({path: SEARCH_PATH, query: {query: newValue}})
+        set: async (newValue) => router.push({ path: SEARCH_PATH, query: { query: newValue } }),
     });
 
     const queryInput = ref(query.value);
@@ -31,6 +31,4 @@
     ></v-text-field>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

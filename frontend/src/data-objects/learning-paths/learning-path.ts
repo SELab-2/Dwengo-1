@@ -1,6 +1,6 @@
-import type {Language} from "@/data-objects/language.ts";
-import {LearningPathNode} from "@/data-objects/learning-paths/learning-path-node.ts";
-import type {LearningPathDTO} from "@/data-objects/learning-paths/learning-path-dto.ts";
+import type { Language } from "@/data-objects/language.ts";
+import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
+import type { LearningPathDTO } from "@/data-objects/learning-paths/learning-path-dto.ts";
 
 export interface LearningPathNodeDTO {
     _id: string;
@@ -33,21 +33,21 @@ export class LearningPath {
     public readonly amountOfNodes: number;
     public readonly amountOfNodesLeft: number;
     public readonly keywords: string[];
-    public readonly targetAges: {min: number; max: number};
+    public readonly targetAges: { min: number; max: number };
     public readonly startNode: LearningPathNode;
     public readonly image?: string; // Image might be missing, so it's optional
 
     constructor(options: {
-        language: string,
-        hruid: string,
-        title: string,
-        description: string,
-        amountOfNodes: number,
-        amountOfNodesLeft: number,
-        keywords: string[],
-        targetAges: {min: number; max: number},
-        startNode: LearningPathNode,
-        image?: string // Image might be missing, so it's optional
+        language: string;
+        hruid: string;
+        title: string;
+        description: string;
+        amountOfNodes: number;
+        amountOfNodesLeft: number;
+        keywords: string[];
+        targetAges: { min: number; max: number };
+        startNode: LearningPathNode;
+        image?: string; // Image might be missing, so it's optional
     }) {
         this.language = options.language;
         this.hruid = options.hruid;
@@ -66,14 +66,13 @@ export class LearningPath {
         let currentNode = this.startNode;
         while (currentNode) {
             list.push(currentNode);
-            currentNode = currentNode.transitions.find(it => it.default)?.next
-                            || currentNode.transitions[0]?.next;
+            currentNode = currentNode.transitions.find((it) => it.default)?.next || currentNode.transitions[0]?.next;
         }
         return list;
     }
 
     static fromDTO(dto: LearningPathDTO): LearningPath {
-        const startNodeDto = dto.nodes.filter(it => it.start_node === true);
+        const startNodeDto = dto.nodes.filter((it) => it.start_node === true);
         if (startNodeDto.length !== 1) {
             throw new Error(`Invalid learning path: ${dto.hruid}/${dto.language}!
                                 Expected precisely one start node, but there were ${startNodeDto.length}.`);
@@ -85,10 +84,10 @@ export class LearningPath {
             description: dto.description,
             amountOfNodes: dto.num_nodes,
             amountOfNodesLeft: dto.num_nodes_left,
-            keywords: dto.keywords.split(' '),
-            targetAges: {min: dto.min_age, max: dto.max_age},
+            keywords: dto.keywords.split(" "),
+            targetAges: { min: dto.min_age, max: dto.max_age },
             startNode: LearningPathNode.fromDTOAndOtherNodes(startNodeDto[0], dto.nodes),
-            image: dto.image
+            image: dto.image,
         });
     }
 }

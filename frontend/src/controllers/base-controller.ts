@@ -1,6 +1,6 @@
 import apiClient from "@/services/api-client/api-client.ts";
-import type {AxiosResponse, ResponseType} from "axios";
-import {HttpErrorResponseException} from "@/exception/http-error-response-exception.ts";
+import type { AxiosResponse, ResponseType } from "axios";
+import { HttpErrorResponseException } from "@/exception/http-error-response-exception.ts";
 
 export abstract class BaseController {
     protected basePath: string;
@@ -16,10 +16,7 @@ export abstract class BaseController {
     }
 
     protected async get<T>(path: string, queryParams?: QueryParams, responseType?: ResponseType): Promise<T> {
-        const response = await apiClient.get<T>(
-            this.absolutePathFor(path),
-            {params: queryParams, responseType}
-        );
+        const response = await apiClient.get<T>(this.absolutePathFor(path), { params: queryParams, responseType });
         BaseController.assertSuccessResponse(response);
         return response.data;
     }
@@ -31,7 +28,7 @@ export abstract class BaseController {
     }
 
     protected async delete<T>(path: string): Promise<T> {
-        const response = await apiClient.delete<T>(this.absolutePathFor(path))
+        const response = await apiClient.delete<T>(this.absolutePathFor(path));
         BaseController.assertSuccessResponse(response);
         return response.data;
     }

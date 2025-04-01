@@ -1,10 +1,10 @@
 <script setup lang="ts">
-    import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
-    import {useRoute} from "vue-router";
-    import {computed} from "vue";
-    import {useI18n} from "vue-i18n";
+    import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
+    import { useRoute } from "vue-router";
+    import { computed } from "vue";
+    import { useI18n } from "vue-i18n";
     import LearningPathSearchField from "@/components/LearningPathSearchField.vue";
-    import {useSearchLearningPathQuery} from "@/queries/learning-paths.ts";
+    import { useSearchLearningPathQuery } from "@/queries/learning-paths.ts";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import LearningPathsGrid from "@/components/LearningPathsGrid.vue";
 
@@ -21,7 +21,10 @@
         <learning-path-search-field class="search-field"></learning-path-search-field>
     </div>
 
-    <using-query-result :query-result="searchQueryResults" v-slot="{ data }: {data: LearningPath[]}">
+    <using-query-result
+        :query-result="searchQueryResults"
+        v-slot="{ data }: { data: LearningPath[] }"
+    >
         <learning-paths-grid :learning-paths="data"></learning-paths-grid>
     </using-query-result>
     <div content="empty-state-container">

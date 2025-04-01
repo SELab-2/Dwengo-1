@@ -49,7 +49,7 @@ export async function getLearningObject(req: Request, res: Response): Promise<vo
     const learningObject = await learningObjectService.getLearningObjectById(learningObjectId);
 
     if (!learningObject) {
-        throw new NotFoundException("Learning object not found");
+        throw new NotFoundException('Learning object not found');
     }
 
     res.json(learningObject);
