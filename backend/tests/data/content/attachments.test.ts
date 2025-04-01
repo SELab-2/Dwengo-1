@@ -17,11 +17,11 @@ describe('AttachmentRepository', () => {
     });
 
     it('should return the requested attachment', async () => {
-        const id = new LearningObjectIdentifier('id02', Language.English, '1');
+        const id = new LearningObjectIdentifier('id02', Language.English, 1);
         const learningObject = await learningObjectRepository.findByIdentifier(id);
 
         const attachment = await attachmentRepository.findByMostRecentVersionOfLearningObjectAndName(
-            learningObject!,
+            learningObject!.hruid,
             Language.English,
             'attachment01'
         );

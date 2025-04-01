@@ -1,16 +1,16 @@
-import { EnvVars, getEnvVar } from '../util/envvars.js';
+import { envVars, getEnvVar } from '../util/envVars.js';
 
-type FrontendIdpConfig = {
+interface FrontendIdpConfig {
     authority: string;
     clientId: string;
     scope: string;
     responseType: string;
-};
+}
 
-type FrontendAuthConfig = {
+interface FrontendAuthConfig {
     student: FrontendIdpConfig;
     teacher: FrontendIdpConfig;
-};
+}
 
 const SCOPE = 'openid profile email';
 const RESPONSE_TYPE = 'code';
@@ -18,14 +18,14 @@ const RESPONSE_TYPE = 'code';
 export function getFrontendAuthConfig(): FrontendAuthConfig {
     return {
         student: {
-            authority: getEnvVar(EnvVars.IdpStudentUrl),
-            clientId: getEnvVar(EnvVars.IdpStudentClientId),
+            authority: getEnvVar(envVars.IdpStudentUrl),
+            clientId: getEnvVar(envVars.IdpStudentClientId),
             scope: SCOPE,
             responseType: RESPONSE_TYPE,
         },
         teacher: {
-            authority: getEnvVar(EnvVars.IdpTeacherUrl),
-            clientId: getEnvVar(EnvVars.IdpTeacherClientId),
+            authority: getEnvVar(envVars.IdpTeacherUrl),
+            clientId: getEnvVar(envVars.IdpTeacherClientId),
             scope: SCOPE,
             responseType: RESPONSE_TYPE,
         },

@@ -1,0 +1,14 @@
+{
+    "name": "dwengo-1-docs",
+    "version": "0.0.1",
+    "description": "Documentation for Dwengo-1",
+    "private": true,
+    "scripts": {
+        "build": "npm run architecture && npm run swagger",
+        "architecture": "python3 -m venv .venv && source .venv/bin/activate && pip install -r docs/requirements.txt && python docs/architecture/schema.py",
+        "swagger": "tsx api/generate.ts"
+    },
+    "devDependencies": {
+        "swagger-autogen": "^2.23.7"
+    }
+}

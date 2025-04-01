@@ -1,18 +1,14 @@
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { Submission } from '../../../src/entities/assignments/submission.entity';
 import { Language } from '../../../src/entities/content/language';
 import { Student } from '../../../src/entities/users/student.entity';
 import { Group } from '../../../src/entities/assignments/group.entity';
 
-export function makeTestSubmissions(
-    em: EntityManager<IDatabaseDriver<Connection>>,
-    students: Array<Student>,
-    groups: Array<Group>
-): Array<Submission> {
+export function makeTestSubmissions(em: EntityManager, students: Student[], groups: Group[]): Submission[] {
     const submission01 = em.create(Submission, {
         learningObjectHruid: 'id03',
         learningObjectLanguage: Language.English,
-        learningObjectVersion: '1',
+        learningObjectVersion: 1,
         submissionNumber: 1,
         submitter: students[0],
         submissionTime: new Date(2025, 2, 20),
@@ -23,7 +19,7 @@ export function makeTestSubmissions(
     const submission02 = em.create(Submission, {
         learningObjectHruid: 'id03',
         learningObjectLanguage: Language.English,
-        learningObjectVersion: '1',
+        learningObjectVersion: 1,
         submissionNumber: 2,
         submitter: students[0],
         submissionTime: new Date(2025, 2, 25),
@@ -34,7 +30,7 @@ export function makeTestSubmissions(
     const submission03 = em.create(Submission, {
         learningObjectHruid: 'id02',
         learningObjectLanguage: Language.English,
-        learningObjectVersion: '1',
+        learningObjectVersion: 1,
         submissionNumber: 1,
         submitter: students[0],
         submissionTime: new Date(2025, 2, 20),
@@ -44,7 +40,7 @@ export function makeTestSubmissions(
     const submission04 = em.create(Submission, {
         learningObjectHruid: 'id02',
         learningObjectLanguage: Language.English,
-        learningObjectVersion: '1',
+        learningObjectVersion: 1,
         submissionNumber: 2,
         submitter: students[0],
         submissionTime: new Date(2025, 2, 25),
@@ -54,7 +50,7 @@ export function makeTestSubmissions(
     const submission05 = em.create(Submission, {
         learningObjectHruid: 'id01',
         learningObjectLanguage: Language.English,
-        learningObjectVersion: '1',
+        learningObjectVersion: 1,
         submissionNumber: 1,
         submitter: students[1],
         submissionTime: new Date(2025, 2, 20),

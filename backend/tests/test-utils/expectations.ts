@@ -21,11 +21,11 @@ export function expectToBeCorrectEntity<T extends object>(actual: { entity: T; n
     }
     for (const property in expected.entity) {
         if (
-            property! in IGNORE_PROPERTIES &&
+            property in IGNORE_PROPERTIES &&
             expected.entity[property] !== undefined && // If we don't expect a certain value for a property, we assume it can be filled in by the database however it wants.
             typeof expected.entity[property] !== 'function' // Functions obviously are not persisted via the database
         ) {
-            if (!actual.entity.hasOwnProperty(property)) {
+            if (!Object.prototype.hasOwnProperty.call(actual.entity, property)) {
                 throw new AssertionError({
                     message: `${expected.name} has defined property ${property}, but ${actual.name} is missing it.`,
                 });
@@ -69,7 +69,7 @@ export function expectToBeCorrectEntity<T extends object>(actual: { entity: T; n
  * @param filtered the representation as FilteredLearningObject
  * @param original the original entity added to the database
  */
-export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearningObject, original: LearningObject) {
+export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearningObject, original: LearningObject): void {
     expect(filtered.uuid).toEqual(original.uuid);
     expect(filtered.version).toEqual(original.version);
     expect(filtered.language).toEqual(original.language);
@@ -105,7 +105,7 @@ export function expectToBeCorrectLearningPath(
     learningPath: LearningPath,
     expectedEntity: LearningPathEntity,
     learningObjectsOnPath: FilteredLearningObject[]
-) {
+): void {
     expect(learningPath.hruid).toEqual(expectedEntity.hruid);
     expect(learningPath.language).toEqual(expectedEntity.language);
     expect(learningPath.description).toEqual(expectedEntity.description);
@@ -136,10 +136,10 @@ export function expectToBeCorrectLearningPath(
             version: node.version,
         };
         expect(expectedLearningPathNodes.keys()).toContainEqual(nodeKey);
-        const expectedNode = [...expectedLearningPathNodes.entries()].filter(
+        const expectedNode = [...expectedLearningPathNodes.entries()].find(
             ([key, _]) => key.learningObjectHruid === nodeKey.learningObjectHruid && key.language === node.language && key.version === node.version
-        )[0][1];
-        expect(node.start_node).toEqual(expectedNode?.startNode);
+        )![1];
+        expect(node.start_node).toEqual(expectedNode.startNode);
 
         expect(new Set(node.transitions.map((it) => it.next.hruid))).toEqual(
             new Set(expectedNode.transitions.map((it) => it.next.learningObjectHruid))

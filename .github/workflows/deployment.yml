@@ -1,0 +1,19 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+        - main
+
+jobs:
+  docker:
+    name: Deploy with docker
+    runs-on: [self-hosted, Linux, X64]
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Start docker
+        run: docker compose -f compose.yml -f compose.prod.yml up --build -d
+        

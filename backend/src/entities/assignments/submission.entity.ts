@@ -16,10 +16,10 @@ export class Submission {
     learningObjectLanguage!: Language;
 
     @PrimaryKey({ type: 'numeric' })
-    learningObjectVersion: number = 1;
+    learningObjectVersion = 1;
 
-    @PrimaryKey({ type: 'integer' })
-    submissionNumber!: number;
+    @PrimaryKey({ type: 'integer', autoincrement: true })
+    submissionNumber?: number;
 
     @ManyToOne({
         entity: () => Student,

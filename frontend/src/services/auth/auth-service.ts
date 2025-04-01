@@ -5,33 +5,19 @@
 import { computed, reactive } from "vue";
 import type { AuthState, Role, UserManagersForRoles } from "@/services/auth/auth.d.ts";
 import { User, UserManager } from "oidc-client-ts";
-import { loadAuthConfig } from "@/services/auth/auth-config-loader.ts";
+import { AUTH_CONFIG_ENDPOINT, loadAuthConfig } from "@/services/auth/auth-config-loader.ts";
 import authStorage from "./auth-storage.ts";
 import { loginRoute } from "@/config.ts";
 import apiClient from "@/services/api-client.ts";
 import router from "@/router";
 import type { AxiosError } from "axios";
 
-const authConfig = await loadAuthConfig();
-
-const userManagers: UserManagersForRoles = {
-    student: new UserManager(authConfig.student),
-    teacher: new UserManager(authConfig.teacher),
-};
-
-/**
- * Load the information about who is currently logged in from the IDP.
- */
-async function loadUser(): Promise<User | null> {
-    const activeRole = authStorage.getActiveRole();
-    if (!activeRole) {
-        return null;
-    }
-    const user = await userManagers[activeRole].getUser();
-    authState.user = user;
-    authState.accessToken = user?.access_token || null;
-    authState.activeRole = activeRole || null;
-    return user;
+async function getUserManagers(): Promise<UserManagersForRoles> {
+    const authConfig = await loadAuthConfig();
+    return {
+        student: new UserManager(authConfig.student),
+        teacher: new UserManager(authConfig.teacher),
+    };
 }
 
 /**
@@ -43,12 +29,27 @@ const authState = reactive<AuthState>({
     activeRole: authStorage.getActiveRole() || null,
 });
 
+/**
+ * Load the information about who is currently logged in from the IDP.
+ */
+async function loadUser(): Promise<User | null> {
+    const activeRole = authStorage.getActiveRole();
+    if (!activeRole) {
+        return null;
+    }
+    const user = await (await getUserManagers())[activeRole].getUser();
+    authState.user = user;
+    authState.accessToken = user?.access_token || null;
+    authState.activeRole = activeRole || null;
+    return user;
+}
+
 const isLoggedIn = computed(() => authState.user !== null);
 
 /**
  * Redirect the user to the login page where he/she can choose whether to log in as a student or teacher.
  */
-async function initiateLogin() {
+async function initiateLogin(): Promise<void> {
     await router.push(loginRoute);
 }
 
@@ -59,7 +60,7 @@ async function initiateLogin() {
 async function loginAs(role: Role): Promise<void> {
     // Storing it in local storage so that it won't be lost when redirecting outside of the app.
     authStorage.setActiveRole(role);
-    await userManagers[role].signinRedirect();
+    await (await getUserManagers())[role].signinRedirect();
 }
 
 /**
@@ -70,26 +71,26 @@ async function handleLoginCallback(): Promise<void> {
     if (!activeRole) {
         throw new Error("Login callback received, but the user is not logging in!");
     }
-    authState.user = (await userManagers[activeRole].signinCallback()) || null;
+    authState.user = (await (await getUserManagers())[activeRole].signinCallback()) || null;
 }
 
 /**
  * Refresh an expired authorization token.
  */
-async function renewToken() {
+async function renewToken(): Promise<User | null> {
     const activeRole = authStorage.getActiveRole();
     if (!activeRole) {
-        console.log("Can't renew the token: Not logged in!");
+        // FIXME console.log("Can't renew the token: Not logged in!");
         await initiateLogin();
-        return;
+        return null;
     }
     try {
-        return await userManagers[activeRole].signinSilent();
-    } catch (error) {
-        console.log("Can't renew the token:");
-        console.log(error);
+        return await (await getUserManagers())[activeRole].signinSilent();
+    } catch (_error) {
+        // FIXME console.log("Can't renew the token: " + error);
         await initiateLogin();
     }
+    return null;
 }
 
 /**
@@ -98,7 +99,7 @@ async function renewToken() {
 async function logout(): Promise<void> {
     const activeRole = authStorage.getActiveRole();
     if (activeRole) {
-        await userManagers[activeRole].signoutRedirect();
+        await (await getUserManagers())[activeRole].signoutRedirect();
         authStorage.deleteActiveRole();
     }
 }
@@ -107,12 +108,12 @@ async function logout(): Promise<void> {
 apiClient.interceptors.request.use(
     async (reqConfig) => {
         const token = authState?.user?.access_token;
-        if (token) {
+        if (token && reqConfig.url !== AUTH_CONFIG_ENDPOINT) {
             reqConfig.headers.Authorization = `Bearer ${token}`;
         }
         return reqConfig;
     },
-    (error) => Promise.reject(error),
+    async (error) => Promise.reject(error),
 );
 
 // Registering interceptor to refresh the token when a request failed because it was expired.
@@ -120,8 +121,8 @@ apiClient.interceptors.response.use(
     (response) => response,
     async (error: AxiosError<{ message?: string }>) => {
         if (error.response?.status === 401) {
-            if (error.response!.data.message === "token_expired") {
-                console.log("Access token expired, trying to refresh...");
+            if (error.response.data.message === "token_expired") {
+                // FIXME console.log("Access token expired, trying to refresh...");
                 await renewToken();
                 return apiClient(error.config!); // Retry the request
             } // Apparently, the user got a 401 because he was not logged in yet at all. Redirect him to login.

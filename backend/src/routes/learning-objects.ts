@@ -1,6 +1,9 @@
 import express from 'express';
 import { getAllLearningObjects, getAttachment, getLearningObject, getLearningObjectHTML } from '../controllers/learning-objects.js';
 
+import submissionRoutes from './submissions.js';
+import questionRoutes from './questions.js';
+
 const router = express.Router();
 
 // DWENGO learning objects
@@ -20,6 +23,10 @@ router.get('/', getAllLearningObjects);
 // Route to fetch data of one learning object based on its hruid
 // Example: http://localhost:3000/learningObject/un_ai7
 router.get('/:hruid', getLearningObject);
+
+router.use('/:hruid/submissions', submissionRoutes);
+
+router.use('/:hruid/:version/questions', questionRoutes);
 
 // Parameter: hruid of learning object
 // Query: language, version (optional)

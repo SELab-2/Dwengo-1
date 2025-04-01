@@ -3,7 +3,7 @@ import { TrueFalse } from 'gift-pegjs';
 import { ProcessingError } from '../../processing-error.js';
 
 export class TrueFalseQuestionRenderer extends GIFTQuestionRenderer<TrueFalse> {
-    render(question: TrueFalse, questionNumber: number): string {
+    override render(_question: TrueFalse, _questionNumber: number): string {
         throw new ProcessingError("The question type 'TrueFalse' is not supported yet!");
     }
 }

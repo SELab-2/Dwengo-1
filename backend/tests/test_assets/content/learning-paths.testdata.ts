@@ -1,10 +1,10 @@
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
 import { Language } from '../../../src/entities/content/language';
 import { LearningPathTransition } from '../../../src/entities/content/learning-path-transition.entity';
 import { LearningPathNode } from '../../../src/entities/content/learning-path-node.entity';
 
-export function makeTestLearningPaths(em: EntityManager<IDatabaseDriver<Connection>>): Array<LearningPath> {
+export function makeTestLearningPaths(em: EntityManager): LearningPath[] {
     const learningPathNode01: LearningPathNode = new LearningPathNode();
     const learningPathNode02: LearningPathNode = new LearningPathNode();
     const learningPathNode03: LearningPathNode = new LearningPathNode();
@@ -67,7 +67,7 @@ export function makeTestLearningPaths(em: EntityManager<IDatabaseDriver<Connecti
     learningPathNode05.transitions = [transitions05];
     learningPathNode05.version = 1;
 
-    const nodes01: Array<LearningPathNode> = [
+    const nodes01: LearningPathNode[] = [
         // LearningPathNode01,
         // LearningPathNode02,
     ];
@@ -77,11 +77,11 @@ export function makeTestLearningPaths(em: EntityManager<IDatabaseDriver<Connecti
         admins: [],
         title: 'repertoire Tool',
         description: 'all about Tool',
-        image: '',
+        image: null,
         nodes: nodes01,
     });
 
-    const nodes02: Array<LearningPathNode> = [
+    const nodes02: LearningPathNode[] = [
         // LearningPathNode03,
         // LearningPathNode04,
         // LearningPathNode05,
@@ -92,7 +92,7 @@ export function makeTestLearningPaths(em: EntityManager<IDatabaseDriver<Connecti
         admins: [],
         title: 'repertoire Dire Straits',
         description: 'all about Dire Straits',
-        image: '',
+        image: null,
         nodes: nodes02,
     });
 

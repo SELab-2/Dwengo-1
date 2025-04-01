@@ -1,14 +1,14 @@
 import express from 'express';
-import { getThemes, getThemeByTitle } from '../controllers/themes.js';
+import { getThemesHandler, getHruidsByThemeHandler } from '../controllers/themes.js';
 
 const router = express.Router();
 
 // Query: language
 //  Route to fetch list of {key, title, description, image} themes in their respective language
-router.get('/', getThemes);
+router.get('/', getThemesHandler);
 
 // Arg: theme (key)
 //  Route to fetch list of hruids based on theme
-router.get('/:theme', getThemeByTitle);
+router.get('/:theme', getHruidsByThemeHandler);
 
 export default router;

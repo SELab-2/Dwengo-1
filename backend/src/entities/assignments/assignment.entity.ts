@@ -4,13 +4,18 @@ import { Group } from './group.entity.js';
 import { Language } from '../content/language.js';
 import { AssignmentRepository } from '../../data/assignments/assignment-repository.js';
 
-@Entity({ repository: () => AssignmentRepository })
+@Entity({
+    repository: () => AssignmentRepository,
+})
 export class Assignment {
-    @ManyToOne({ entity: () => Class, primary: true })
+    @ManyToOne({
+        entity: () => Class,
+        primary: true,
+    })
     within!: Class;
 
-    @PrimaryKey({ type: 'number' })
-    id!: number;
+    @PrimaryKey({ type: 'number', autoincrement: true })
+    id?: number;
 
     @Property({ type: 'string' })
     title!: string;
@@ -21,9 +26,14 @@ export class Assignment {
     @Property({ type: 'string' })
     learningPathHruid!: string;
 
-    @Enum({ items: () => Language })
+    @Enum({
+        items: () => Language,
+    })
     learningPathLanguage!: Language;
 
-    @OneToMany({ entity: () => Group, mappedBy: 'assignment' })
+    @OneToMany({
+        entity: () => Group,
+        mappedBy: 'assignment',
+    })
     groups!: Group[];
 }

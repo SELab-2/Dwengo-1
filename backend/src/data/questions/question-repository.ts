@@ -2,9 +2,10 @@ import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { Question } from '../../entities/questions/question.entity.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { Student } from '../../entities/users/student.entity.js';
+import { LearningObject } from '../../entities/content/learning-object.entity.js';
 
 export class QuestionRepository extends DwengoEntityRepository<Question> {
-    public createQuestion(question: { loId: LearningObjectIdentifier; author: Student; content: string }): Promise<Question> {
+    public async createQuestion(question: { loId: LearningObjectIdentifier; author: Student; content: string }): Promise<Question> {
         const questionEntity = this.create({
             learningObjectHruid: question.loId.hruid,
             learningObjectLanguage: question.loId.language,
@@ -20,7 +21,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         questionEntity.content = question.content;
         return this.insert(questionEntity);
     }
-    public findAllQuestionsAboutLearningObject(loId: LearningObjectIdentifier): Promise<Question[]> {
+    public async findAllQuestionsAboutLearningObject(loId: LearningObjectIdentifier): Promise<Question[]> {
         return this.findAll({
             where: {
                 learningObjectHruid: loId.hruid,
@@ -32,12 +33,25 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
             },
         });
     }
-    public removeQuestionByLearningObjectAndSequenceNumber(loId: LearningObjectIdentifier, sequenceNumber: number): Promise<void> {
+    public async removeQuestionByLearningObjectAndSequenceNumber(loId: LearningObjectIdentifier, sequenceNumber: number): Promise<void> {
         return this.deleteWhere({
             learningObjectHruid: loId.hruid,
             learningObjectLanguage: loId.language,
             learningObjectVersion: loId.version,
             sequenceNumber: sequenceNumber,
+        });
+    }
+
+    public async findAllByLearningObjects(learningObjects: LearningObject[]): Promise<Question[]> {
+        const objectIdentifiers = learningObjects.map((lo) => ({
+            learningObjectHruid: lo.hruid,
+            learningObjectLanguage: lo.language,
+            learningObjectVersion: lo.version,
+        }));
+
+        return this.findAll({
+            where: { $or: objectIdentifiers },
+            orderBy: { timestamp: 'ASC' },
         });
     }
 }

@@ -2,19 +2,19 @@ import { Request, Response } from 'express';
 import { FALLBACK_LANG } from '../config.js';
 import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../interfaces/learning-content.js';
 import learningObjectService from '../services/learning-objects/learning-object-service.js';
-import { EnvVars, getEnvVar } from '../util/envvars.js';
+import { envVars, getEnvVar } from '../util/envVars.js';
 import { Language } from '../entities/content/language.js';
-import { BadRequestException } from '../exceptions.js';
 import attachmentService from '../services/learning-objects/attachment-service.js';
 import { NotFoundError } from '@mikro-orm/core';
+import { BadRequestException } from '../exceptions/bad-request-exception.js';
 
 function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIdentifier {
     if (!req.params.hruid) {
         throw new BadRequestException('HRUID is required.');
     }
     return {
-        hruid: req.params.hruid as string,
-        language: (req.query.language || getEnvVar(EnvVars.FallbackLanguage)) as Language,
+        hruid: req.params.hruid,
+        language: (req.query.language || getEnvVar(envVars.FallbackLanguage)) as Language,
         version: parseInt(req.query.version as string),
     };
 }
@@ -24,7 +24,7 @@ function getLearningPathIdentifierFromRequest(req: Request): LearningPathIdentif
         throw new BadRequestException('HRUID is required.');
     }
     return {
-        hruid: req.params.hruid as string,
+        hruid: req.params.hruid,
         language: (req.query.language as Language) || FALLBACK_LANG,
     };
 }
@@ -40,7 +40,7 @@ export async function getAllLearningObjects(req: Request, res: Response): Promis
         learningObjects = await learningObjectService.getLearningObjectIdsFromPath(learningPathId);
     }
 
-    res.json(learningObjects);
+    res.json({ learningObjects: learningObjects });
 }
 
 export async function getLearningObject(req: Request, res: Response): Promise<void> {
