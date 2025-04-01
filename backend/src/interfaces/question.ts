@@ -10,15 +10,19 @@ export interface QuestionDTO {
     content: string;
 }
 
-/**
- * Convert a Question entity to a DTO format.
- */
-export function mapToQuestionDTO(question: Question): QuestionDTO {
-    const learningObjectIdentifier = {
+function getLearningObjectIdentifier(question: Question): LearningObjectIdentifier {
+    return {
         hruid: question.learningObjectHruid,
         language: question.learningObjectLanguage,
         version: question.learningObjectVersion,
     };
+}
+
+/**
+ * Convert a Question entity to a DTO format.
+ */
+export function mapToQuestionDTO(question: Question): QuestionDTO {
+    const learningObjectIdentifier = getLearningObjectIdentifier(question);
 
     return {
         learningObjectIdentifier,
@@ -34,9 +38,11 @@ export interface QuestionId {
     sequenceNumber: number;
 }
 
-export function mapToQuestionId(question: QuestionDTO): QuestionId {
+export function mapToQuestionDTOId(question: Question): QuestionId {
+    const learningObjectIdentifier = getLearningObjectIdentifier(question);
+
     return {
-        learningObjectIdentifier: question.learningObjectIdentifier,
+        learningObjectIdentifier,
         sequenceNumber: question.sequenceNumber!,
     };
 }

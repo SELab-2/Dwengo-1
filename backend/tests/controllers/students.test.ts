@@ -189,7 +189,7 @@ describe('Student controllers', () => {
         expect(result.requests.length).toBeGreaterThan(0);
     });
 
-    it('Get join request by student', async () => {
+    it('Get join request by student and class', async () => {
         req = {
             params: { username: 'PinkFloyd', classId: 'id02' },
         };

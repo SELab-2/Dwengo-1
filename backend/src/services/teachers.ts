@@ -6,7 +6,12 @@ import {
     getTeacherRepository,
 } from '../data/repositories.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
-import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question.js';
+import {
+    mapToQuestionDTO,
+    mapToQuestionDTOId,
+    QuestionDTO,
+    QuestionId
+} from '../interfaces/question.js';
 import { mapToTeacher, mapToTeacherDTO, TeacherDTO } from '../interfaces/teacher.js';
 import { Teacher } from '../entities/users/teacher.entity.js';
 import { fetchStudent } from './students.js';
@@ -115,13 +120,12 @@ export async function getTeacherQuestions(username: string, full: boolean): Prom
     // Fetch all questions related to these learning objects
     const questionRepository: QuestionRepository = getQuestionRepository();
     const questions: Question[] = await questionRepository.findAllByLearningObjects(learningObjects);
-    const questionsDTO: QuestionDTO[] = questions.map(mapToQuestionDTO);
 
     if (full) {
-        return questionsDTO;
+        return questions.map(mapToQuestionDTO);
     }
 
-    return questionsDTO.map(mapToQuestionId);
+    return questions.map(mapToQuestionDTOId);
 }
 
 export async function getJoinRequestsByClass(classId: string): Promise<StudentRequestDTO[]> {
