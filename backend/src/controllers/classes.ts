@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import { createClass, getAllClasses, getClass, getClassStudents, getClassTeacherInvitations } from '../services/classes.js';
+import { createClass, deleteClass, getAllClasses, getClass, getClassStudents, getClassTeacherInvitations } from '../services/classes.js';
 import { ClassDTO } from '../interfaces/class.js';
+import { NotFoundException } from '../exceptions/not-found-exception.js';
 
 export async function getAllClassesHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
@@ -28,7 +29,7 @@ export async function createClassHandler(req: Request, res: Response): Promise<v
         return;
     }
 
-    res.status(201).json(cls);
+    res.status(201).json({ cls });
 }
 
 export async function getClassHandler(req: Request, res: Response): Promise<void> {
@@ -40,7 +41,14 @@ export async function getClassHandler(req: Request, res: Response): Promise<void
         return;
     }
 
-    res.json(cls);
+    res.json({ cls });
+}
+
+export async function deleteClassHandler(req: Request, res: Response): Promise<void> {
+    const classId = req.params.id;
+    const cls = await deleteClass(classId);
+
+    res.json({ cls });
 }
 
 export async function getClassStudentsHandler(req: Request, res: Response): Promise<void> {

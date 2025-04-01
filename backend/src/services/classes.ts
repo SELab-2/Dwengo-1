@@ -64,6 +64,10 @@ export async function createClass(classData: ClassDTO): Promise<ClassDTO | null>
 export async function deleteClass(classId: string): Promise<ClassDTO> {
     const cls = await fetchClass(classId);
 
+    if (!cls) {
+        throw new NotFoundException('Could not delete class because it does not exist');
+    }
+
     const classRepository = getClassRepository();
     await classRepository.deleteById(classId);
 

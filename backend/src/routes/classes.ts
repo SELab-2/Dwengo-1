@@ -15,8 +15,9 @@ router.get('/', getAllClassesHandler);
 
 router.post('/', createClassHandler);
 
-// Information about an class with id 'id'
 router.get('/:id', getClassHandler);
+
+router.delete('/:id', deleteClassHandler);
 
 router.get('/:id/teacher-invitations', getTeacherInvitationsHandler);
 
