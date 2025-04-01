@@ -11,4 +11,7 @@ export default defineConfig({
             "@": fileURLToPath(new URL("./src", import.meta.url)),
         },
     },
+    build: {
+        target: "esnext", //Browsers can handle the latest ES features
+    },
 });
