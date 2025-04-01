@@ -10,7 +10,7 @@ import { Language } from '../../../src/entities/content/language.js';
 function expectToHaveFoundPrecisely(expected: LearningPath, result: LearningPath[]): void {
     expect(result).toHaveProperty('length');
     expect(result.length).toBe(1);
-    expectToBeCorrectEntity({ entity: result[0]! }, { entity: expected });
+    expectToBeCorrectEntity({ entity: result[0] }, { entity: expected });
 }
 
 function expectToHaveFoundNothing(result: LearningPath[]): void {

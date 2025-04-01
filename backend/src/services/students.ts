@@ -5,6 +5,7 @@ import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js
 import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
+import { getLogger } from '../logging/initalize.js';
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();
@@ -45,7 +46,7 @@ export async function deleteStudent(username: string): Promise<StudentDTO | null
 
         return mapToStudentDTO(user);
     } catch (e) {
-        console.log(e);
+        getLogger().error(e);
         return null;
     }
 }

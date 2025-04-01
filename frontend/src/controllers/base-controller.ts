@@ -7,7 +7,7 @@ export class BaseController {
         this.baseUrl = `${apiConfig.baseUrl}/${basePath}`;
     }
 
-    protected async get<T>(path: string, queryParams?: Record<string, any>): Promise<T> {
+    protected async get<T>(path: string, queryParams?: Record<string, string | number | boolean>): Promise<T> {
         let url = `${this.baseUrl}${path}`;
         if (queryParams) {
             const query = new URLSearchParams();

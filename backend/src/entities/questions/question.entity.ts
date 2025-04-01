@@ -15,7 +15,7 @@ export class Question {
     learningObjectLanguage!: Language;
 
     @PrimaryKey({ type: 'number' })
-    learningObjectVersion: number = 1;
+    learningObjectVersion = 1;
 
     @PrimaryKey({ type: 'integer', autoincrement: true })
     sequenceNumber?: number;

@@ -43,7 +43,7 @@ export async function getTeacherHandler(req: Request, res: Response): Promise<vo
     res.json(user);
 }
 
-export async function createTeacherHandler(req: Request, res: Response) {
+export async function createTeacherHandler(req: Request, res: Response): Promise<void> {
     const userData = req.body as TeacherDTO;
 
     if (!userData.username || !userData.firstName || !userData.lastName) {
@@ -63,7 +63,7 @@ export async function createTeacherHandler(req: Request, res: Response) {
     res.status(201).json(newUser);
 }
 
-export async function deleteTeacherHandler(req: Request, res: Response) {
+export async function deleteTeacherHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
 
     if (!username) {
@@ -83,7 +83,7 @@ export async function deleteTeacherHandler(req: Request, res: Response) {
 }
 
 export async function getTeacherClassHandler(req: Request, res: Response): Promise<void> {
-    const username = req.params.username as string;
+    const username = req.params.username;
     const full = req.query.full === 'true';
 
     if (!username) {
@@ -102,7 +102,7 @@ export async function getTeacherClassHandler(req: Request, res: Response): Promi
 }
 
 export async function getTeacherStudentHandler(req: Request, res: Response): Promise<void> {
-    const username = req.params.username as string;
+    const username = req.params.username;
     const full = req.query.full === 'true';
 
     if (!username) {
@@ -121,7 +121,7 @@ export async function getTeacherStudentHandler(req: Request, res: Response): Pro
 }
 
 export async function getTeacherQuestionHandler(req: Request, res: Response): Promise<void> {
-    const username = req.params.username as string;
+    const username = req.params.username;
     const full = req.query.full === 'true';
 
     if (!username) {

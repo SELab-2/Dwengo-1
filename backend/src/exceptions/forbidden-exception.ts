@@ -6,7 +6,7 @@ import { ExceptionWithHttpState } from './exception-with-http-state.js';
 export class ForbiddenException extends ExceptionWithHttpState {
     status = 403;
 
-    constructor(message: string = 'Forbidden') {
+    constructor(message = 'Forbidden') {
         super(403, message);
     }
 }

@@ -15,7 +15,7 @@ class ExternProcessor extends StringProcessor {
         super(DwengoContentType.EXTERN);
     }
 
-    override renderFn(externURL: string) {
+    override renderFn(externURL: string): string {
         if (!isValidHttpUrl(externURL)) {
             throw new ProcessingError('The url is not valid: ' + externURL);
         }

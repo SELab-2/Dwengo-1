@@ -1,6 +1,7 @@
 import { DWENGO_API_BASE } from '../config.js';
 import { fetchWithLogging } from '../util/api-helper.js';
 import { FilteredLearningObject, LearningObjectMetadata, LearningObjectNode, LearningPathResponse } from '../interfaces/learning-content.js';
+import { getLogger } from '../logging/initalize.js';
 
 function filterData(data: LearningObjectMetadata, htmlUrl: string): FilteredLearningObject {
     return {
@@ -37,7 +38,7 @@ export async function getLearningObjectById(hruid: string, language: string): Pr
     );
 
     if (!metadata) {
-        console.error(`⚠️ WARNING: Learning object "${hruid}" not found.`);
+        getLogger().error(`⚠️ WARNING: Learning object "${hruid}" not found.`);
         return null;
     }
 
@@ -48,7 +49,7 @@ export async function getLearningObjectById(hruid: string, language: string): Pr
 /**
  * Generic function to fetch learning paths
  */
-function fetchLearningPaths(arg0: string[], language: string, arg2: string): LearningPathResponse | PromiseLike<LearningPathResponse> {
+function fetchLearningPaths(_arg0: string[], _language: string, _arg2: string): LearningPathResponse | PromiseLike<LearningPathResponse> {
     throw new Error('Function not implemented.');
 }
 
@@ -60,7 +61,7 @@ async function fetchLearningObjects(hruid: string, full: boolean, language: stri
         const learningPathResponse: LearningPathResponse = await fetchLearningPaths([hruid], language, `Learning path for HRUID "${hruid}"`);
 
         if (!learningPathResponse.success || !learningPathResponse.data?.length) {
-            console.error(`⚠️ WARNING: Learning path "${hruid}" exists but contains no learning objects.`);
+            getLogger().error(`⚠️ WARNING: Learning path "${hruid}" exists but contains no learning objects.`);
             return [];
         }
 
@@ -74,7 +75,7 @@ async function fetchLearningObjects(hruid: string, full: boolean, language: stri
             objects.filter((obj): obj is FilteredLearningObject => obj !== null)
         );
     } catch (error) {
-        console.error('❌ Error fetching learning objects:', error);
+        getLogger().error('❌ Error fetching learning objects:', error);
         return [];
     }
 }
