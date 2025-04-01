@@ -6,7 +6,7 @@ import learningObjectExample from '../../test-assets/learning-objects/pn-werking
 import learningObjectService from '../../../src/services/learning-objects/learning-object-service';
 import { LearningObjectIdentifier, LearningPathIdentifier } from '../../../src/interfaces/learning-content';
 import { Language } from '../../../src/entities/content/language';
-import { EnvVars, getEnvVar } from '../../../src/util/envvars';
+import { envVars, getEnvVar } from '../../../src/util/envVars';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
 import learningPathExample from '../../test-assets/learning-paths/pn-werking-example';
 
@@ -79,7 +79,7 @@ describe('LearningObjectService', () => {
                 expect(result).not.toBeNull();
 
                 const responseFromDwengoApi = await fetch(
-                    getEnvVar(EnvVars.LearningContentRepoApiBaseUrl) +
+                    getEnvVar(envVars.LearningContentRepoApiBaseUrl) +
                         `/learningObject/getRaw?hruid=${DWENGO_TEST_LEARNING_OBJECT_ID.hruid}&language=${DWENGO_TEST_LEARNING_OBJECT_ID.language}&version=${DWENGO_TEST_LEARNING_OBJECT_ID.version}`
                 );
                 const responseHtml = await responseFromDwengoApi.text();

@@ -1,7 +1,7 @@
 import cors from 'cors';
-import { EnvVars, getEnvVar } from '../util/envvars.js';
+import { envVars, getEnvVar } from '../util/envVars.js';
 
 export default cors({
-    origin: getEnvVar(EnvVars.CorsAllowedOrigins).split(','),
-    allowedHeaders: getEnvVar(EnvVars.CorsAllowedHeaders).split(','),
+    origin: getEnvVar(envVars.CorsAllowedOrigins).split(','),
+    allowedHeaders: getEnvVar(envVars.CorsAllowedHeaders).split(','),
 });

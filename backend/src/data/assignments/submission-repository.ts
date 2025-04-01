@@ -5,7 +5,10 @@ import { LearningObjectIdentifier } from '../../entities/content/learning-object
 import { Student } from '../../entities/users/student.entity.js';
 
 export class SubmissionRepository extends DwengoEntityRepository<Submission> {
-    public findSubmissionByLearningObjectAndSubmissionNumber(loId: LearningObjectIdentifier, submissionNumber: number): Promise<Submission | null> {
+    public async findSubmissionByLearningObjectAndSubmissionNumber(
+        loId: LearningObjectIdentifier,
+        submissionNumber: number
+    ): Promise<Submission | null> {
         return this.findOne({
             learningObjectHruid: loId.hruid,
             learningObjectLanguage: loId.language,
@@ -14,7 +17,7 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
         });
     }
 
-    public findMostRecentSubmissionForStudent(loId: LearningObjectIdentifier, submitter: Student): Promise<Submission | null> {
+    public async findMostRecentSubmissionForStudent(loId: LearningObjectIdentifier, submitter: Student): Promise<Submission | null> {
         return this.findOne(
             {
                 learningObjectHruid: loId.hruid,
@@ -26,7 +29,7 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
         );
     }
 
-    public findMostRecentSubmissionForGroup(loId: LearningObjectIdentifier, group: Group): Promise<Submission | null> {
+    public async findMostRecentSubmissionForGroup(loId: LearningObjectIdentifier, group: Group): Promise<Submission | null> {
         return this.findOne(
             {
                 learningObjectHruid: loId.hruid,
@@ -38,15 +41,15 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
         );
     }
 
-    public findAllSubmissionsForGroup(group: Group): Promise<Submission[]> {
+    public async findAllSubmissionsForGroup(group: Group): Promise<Submission[]> {
         return this.find({ onBehalfOf: group });
     }
 
-    public findAllSubmissionsForStudent(student: Student): Promise<Submission[]> {
+    public async findAllSubmissionsForStudent(student: Student): Promise<Submission[]> {
         return this.find({ submitter: student });
     }
 
-    public deleteSubmissionByLearningObjectAndSubmissionNumber(loId: LearningObjectIdentifier, submissionNumber: number): Promise<void> {
+    public async deleteSubmissionByLearningObjectAndSubmissionNumber(loId: LearningObjectIdentifier, submissionNumber: number): Promise<void> {
         return this.deleteWhere({
             learningObjectHruid: loId.hruid,
             learningObjectLanguage: loId.language,

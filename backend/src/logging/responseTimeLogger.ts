@@ -1,7 +1,7 @@
 import { getLogger, Logger } from './initalize.js';
 import { Request, Response } from 'express';
 
-export function responseTimeLogger(req: Request, res: Response, time: number) {
+export function responseTimeLogger(req: Request, res: Response, time: number): void {
     const logger: Logger = getLogger();
 
     const method = req.method;

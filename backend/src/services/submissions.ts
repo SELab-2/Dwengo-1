@@ -21,21 +21,26 @@ export async function getSubmission(
     return mapToSubmissionDTO(submission);
 }
 
-export async function createSubmission(submissionDTO: SubmissionDTO) {
+export async function createSubmission(submissionDTO: SubmissionDTO): Promise<SubmissionDTO | null> {
     const submissionRepository = getSubmissionRepository();
     const submission = mapToSubmission(submissionDTO);
 
     try {
-        const newSubmission = await submissionRepository.create(submission);
+        const newSubmission = submissionRepository.create(submission);
         await submissionRepository.save(newSubmission);
-    } catch (e) {
+    } catch (_) {
         return null;
     }
 
     return mapToSubmissionDTO(submission);
 }
 
-export async function deleteSubmission(learningObjectHruid: string, language: Language, version: number, submissionNumber: number) {
+export async function deleteSubmission(
+    learningObjectHruid: string,
+    language: Language,
+    version: number,
+    submissionNumber: number
+): Promise<SubmissionDTO | null> {
     const submissionRepository = getSubmissionRepository();
 
     const submission = getSubmission(learningObjectHruid, language, version, submissionNumber);

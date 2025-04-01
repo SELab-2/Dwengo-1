@@ -4,8 +4,8 @@ import { ThemeController } from "@/controllers/themes.ts";
 
 const themeController = new ThemeController();
 
-export const useThemeQuery = (language: MaybeRefOrGetter<string>) =>
-    useQuery({
+export function useThemeQuery(language: MaybeRefOrGetter<string | undefined>){
+    return useQuery({
         queryKey: ["themes", language],
         queryFn: () => {
             const lang = toValue(language);
@@ -13,10 +13,12 @@ export const useThemeQuery = (language: MaybeRefOrGetter<string>) =>
         },
         enabled: () => Boolean(toValue(language)),
     });
+}
 
-export const useThemeHruidsQuery = (themeKey: string | null) =>
-    useQuery({
+export function useThemeHruidsQuery(themeKey: MaybeRefOrGetter<string | undefined>){
+    return useQuery({
         queryKey: ["theme-hruids", themeKey],
-        queryFn: () => themeController.getHruidsByKey(themeKey!),
+        queryFn: () => themeController.getHruidsByKey(toValue(themeKey)!),
         enabled: Boolean(themeKey),
     });
+}

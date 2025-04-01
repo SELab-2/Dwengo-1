@@ -3,6 +3,7 @@ import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { Class } from '../entities/classes/class.entity.js';
 import { languageMap } from '../entities/content/language.js';
 import { GroupDTO } from './group.js';
+import { getLogger } from '../logging/initalize.js';
 
 export interface AssignmentDTO {
     id: number;
@@ -45,6 +46,8 @@ export function mapToAssignment(assignmentData: AssignmentDTO, cls: Class): Assi
     assignment.learningPathHruid = assignmentData.learningPath;
     assignment.learningPathLanguage = languageMap[assignmentData.language] || FALLBACK_LANG;
     assignment.within = cls;
+
+    getLogger().debug(assignment);
 
     return assignment;
 }

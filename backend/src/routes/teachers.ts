@@ -32,7 +32,7 @@ router.get('/:username/joinRequests/:classId', getStudentJoinRequestHandler);
 router.put('/:username/joinRequests/:classId/:studentUsername', updateStudentJoinRequestHandler);
 
 // Invitations to other classes a teacher received
-router.get('/:id/invitations', (req, res) => {
+router.get('/:id/invitations', (_req, res) => {
     res.json({
         invitations: ['0'],
     });

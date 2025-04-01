@@ -4,16 +4,16 @@ import { ClassJoinRequest, ClassJoinRequestStatus } from '../../entities/classes
 import { Student } from '../../entities/users/student.entity.js';
 
 export class ClassJoinRequestRepository extends DwengoEntityRepository<ClassJoinRequest> {
-    public findAllRequestsBy(requester: Student): Promise<ClassJoinRequest[]> {
+    public async findAllRequestsBy(requester: Student): Promise<ClassJoinRequest[]> {
         return this.findAll({ where: { requester: requester } });
     }
-    public findAllOpenRequestsTo(clazz: Class): Promise<ClassJoinRequest[]> {
+    public async findAllOpenRequestsTo(clazz: Class): Promise<ClassJoinRequest[]> {
         return this.findAll({ where: { class: clazz, status: ClassJoinRequestStatus.Open } }); // TODO check if works like this
     }
-    public findByStudentAndClass(requester: Student, clazz: Class): Promise<ClassJoinRequest | null> {
+    public async findByStudentAndClass(requester: Student, clazz: Class): Promise<ClassJoinRequest | null> {
         return this.findOne({ requester, class: clazz });
     }
-    public deleteBy(requester: Student, clazz: Class): Promise<void> {
+    public async deleteBy(requester: Student, clazz: Class): Promise<void> {
         return this.deleteWhere({ requester: requester, class: clazz });
     }
 }
