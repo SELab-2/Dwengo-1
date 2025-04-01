@@ -34,19 +34,9 @@
                     icon
                     variant="text"
                     class="back-btn"
-                    to="user/assignment"
+                    to="/user/assignment"
                 >
                     <v-icon>mdi-arrow-left</v-icon>
-                </v-btn>
-
-                <v-btn
-                    v-if="isTeacher"
-                    icon
-                    variant="text"
-                    class="edit-btn"
-                    :to="`/assignment/${assignmentId}/edit`"
-                >
-                    <v-icon>mdi-pencil</v-icon>
                 </v-btn>
 
                 <v-btn

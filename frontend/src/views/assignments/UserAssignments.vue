@@ -18,6 +18,8 @@
         // fetch all student's or teacher's assignments
     };
 
+
+
     onMounted(loadAssignments);
 
     const goToCreateAssignment = () => {
@@ -55,9 +57,6 @@
                         <v-card-actions>
                             <v-btn color="primary" @click="goToAssignmentDetails(assignment.id)">
                                 {{ t('view-assignment') }}
-                            </v-btn>
-                            <v-btn v-if="isTeacher" color="secondary" @click="goToEditAssignment(assignment.id)">
-                                {{ t('edit') }}
                             </v-btn>
                             <v-btn v-if="isTeacher" color="secondary" @click="goToDeleteAssignment(assignment.id)">
                                 {{ t('delete') }}
