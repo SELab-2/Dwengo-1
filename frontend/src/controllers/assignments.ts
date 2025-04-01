@@ -21,16 +21,15 @@ export class AssignmentController extends BaseController {
         return this.delete<{ assignment: any }>(`/${num}`);
     }
 
-
     getSubmissions(assignmentNumber: number, full = true) {
         return this.get<{ submissions: any[] }>(`/${assignmentNumber}/submissions`, { full });
     }
 
     getQuestions(assignmentNumber: number, full = true) {
-        return this.get<{ questions: any[]}>(`/${assignmentNumber}/questions`, { full });
+        return this.get<{ questions: any[] }>(`/${assignmentNumber}/questions`, { full });
     }
 
     getGroups(assignmentNumber: number, full = true) {
-        return this.get<{ groups: any[]}>(`/${assignmentNumber}/groups`, { full });
+        return this.get<{ groups: any[] }>(`/${assignmentNumber}/groups`, { full });
     }
 }

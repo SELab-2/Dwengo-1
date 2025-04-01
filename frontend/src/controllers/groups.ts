@@ -21,7 +21,6 @@ export class GroupController extends BaseController {
         return this.delete<{ group: any }>(`/${num}`);
     }
 
-
     getSubmissions(groupNumber: number, full = true) {
         return this.get<{ groups: any[] }>(`/${groupNumber}/submissions`, { full });
     }

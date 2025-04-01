@@ -1,6 +1,5 @@
 import { BaseController } from "./base-controller";
 
-
 export class ClassController extends BaseController {
     constructor() {
         super("class");
@@ -22,7 +21,6 @@ export class ClassController extends BaseController {
         return this.delete<{ class: any }>(`/${id}`);
     }
 
-    
     getStudents(id: string, full = true) {
         return this.get<{ students: any[] }>(`/${id}/students`, { full });
     }
