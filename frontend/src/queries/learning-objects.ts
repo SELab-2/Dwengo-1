@@ -39,13 +39,13 @@ export function useLearningObjectHTMLQuery(
 }
 
 export function useLearningObjectListForPathQuery(
-    learningPath: MaybeRefOrGetter<LearningPath>
-): UseQueryReturnType<LearningObject, Error> {
+    learningPath: MaybeRefOrGetter<LearningPath | undefined>
+): UseQueryReturnType<LearningObject[], Error> {
     return useQuery({
         queryKey: [LEARNING_OBJECT_KEY, "onPath", learningPath],
         queryFn: async () => {
-            const learningObjects = [];
-            for (const node of toValue(learningPath).nodesAsList) {
+            const learningObjects: Promise<LearningObject>[] = [];
+            for (const node of toValue(learningPath)!.nodesAsList) {
                 learningObjects.push(
                     learningObjectController.getMetadata(node.learningobjectHruid, node.language, node.version)
                 );

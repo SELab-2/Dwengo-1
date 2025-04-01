@@ -33,12 +33,12 @@ export function useGetAllLearningPathsByThemeQuery(
 }
 
 export function useSearchLearningPathQuery(
-    query: MaybeRefOrGetter<string>
+    query: MaybeRefOrGetter<string | undefined>
 ): UseQueryReturnType<LearningPath[], Error>  {
     return useQuery({
         queryKey: [LEARNING_PATH_KEY, "search", query],
         queryFn: async () => {
-            const queryVal = toValue(query);
+            const queryVal = toValue(query)!;
             return learningPathController.search(queryVal);
         },
         enabled: () => Boolean(toValue(query)),

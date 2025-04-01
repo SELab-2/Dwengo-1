@@ -45,7 +45,7 @@
     const learningObjectListQueryResult = useLearningObjectListForPathQuery(learningPathQueryResult.data);
 
     const nodesList: ComputedRef<LearningPathNode[] | null> = computed(() =>
-        learningPathQueryResult.isSuccess ? learningPathQueryResult.data.value?.nodesAsList : null
+        learningPathQueryResult.data.value?.nodesAsList ?? null
     );
 
     const currentNode = computed(() => {
@@ -71,11 +71,11 @@
 
     function isLearningObjectCompleted(learningObject: LearningObject): boolean {
         if (learningObjectListQueryResult.isSuccess) {
-            return learningPathQueryResult.data.value.nodesAsList.find(it =>
+            return learningPathQueryResult.data.value?.nodesAsList?.find(it =>
                 it.learningobjectHruid === learningObject.key
                 && it.version === learningObject.version
                 && it.language === learningObject.language
-            ).done;
+            )?.done ?? false;
         }
         return false;
     }

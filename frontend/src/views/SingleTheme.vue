@@ -14,9 +14,7 @@ const language = computed(() => locale.value);
 
 const themeQueryResult = useThemeQuery(language);
 
-const currentThemeInfo = computed(() =>
-    themeQueryResult.isSuccess.value ? themeQueryResult.data.value.filter(it => it.key === props.theme)[0] : undefined
-);
+const currentThemeInfo = computed(() => themeQueryResult.data.value?.find(it => it.key === props.theme));
 
 const learningPathsForThemeQueryResult = useGetAllLearningPathsByThemeQuery(() => props.theme);
 
@@ -26,7 +24,7 @@ const searchFilter = ref("");
 function filterLearningPaths(learningPaths: LearningPath[]): LearningPath[] {
     return learningPaths.filter(it =>
         it.title.toLowerCase().includes(searchFilter.value.toLowerCase())
-        || it.description.toLowerCase().includes(searchFilter.value.toLowerCase)
+        || it.description.toLowerCase().includes(searchFilter.value.toLowerCase())
     );
 }
 
@@ -35,8 +33,8 @@ function filterLearningPaths(learningPaths: LearningPath[]): LearningPath[] {
 <template>
     <div class="container">
         <using-query-result :query-result="themeQueryResult">
-            <h1>{{ currentThemeInfo.title }}</h1>
-            <p>{{ currentThemeInfo.description }}</p>
+            <h1>{{ currentThemeInfo!!.title }}</h1>
+            <p>{{ currentThemeInfo!!.description }}</p>
             <div class="search-field-container">
                 <v-text-field
                     class="search-field"

@@ -11,7 +11,7 @@
     const route = useRoute();
     const { t } = useI18n();
 
-    const query = computed(() => route.query.query as string | null);
+    const query = computed(() => route.query.query as string | undefined);
 
     const searchQueryResults = useSearchLearningPathQuery(query);
 </script>
