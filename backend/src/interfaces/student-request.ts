@@ -18,7 +18,7 @@ export function mapToStudentRequestDTO(request: ClassJoinRequest): StudentReques
     };
 }
 
-export function mapToStudentRequest(student: Student, cls: Class) {
+export function mapToStudentRequest(student: Student, cls: Class): ClassJoinRequest {
     return getClassJoinRequestRepository().create({
         requester: student,
         class: cls,

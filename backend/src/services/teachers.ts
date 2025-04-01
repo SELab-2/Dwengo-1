@@ -90,7 +90,7 @@ export async function getClassesByTeacher(username: string, full: boolean): Prom
     return classes.map((cls) => cls.id);
 }
 
-export async function getStudentsByTeacher(username: string, full: boolean) {
+export async function getStudentsByTeacher(username: string, full: boolean): Promise<StudentDTO[] | string[]> {
     const classes: ClassDTO[] = await fetchClassesByTeacher(username);
 
     if (!classes || classes.length === 0) {
@@ -141,7 +141,7 @@ export async function getJoinRequestsByClass(classId: string): Promise<StudentRe
     return requests.map(mapToStudentRequestDTO);
 }
 
-export async function updateClassJoinRequestStatus(studentUsername: string, classId: string, accepted: boolean = true): Promise<StudentRequestDTO> {
+export async function updateClassJoinRequestStatus(studentUsername: string, classId: string, accepted = true): Promise<StudentRequestDTO> {
     const requestRepo: ClassJoinRequestRepository = getClassJoinRequestRepository();
     const classRepo: ClassRepository = getClassRepository();
 

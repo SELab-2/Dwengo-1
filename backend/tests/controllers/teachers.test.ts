@@ -9,7 +9,6 @@ import {
     getStudentJoinRequestHandler,
     getTeacherClassHandler,
     getTeacherHandler,
-    getTeacherQuestionHandler,
     getTeacherStudentHandler,
     updateStudentJoinRequestHandler,
 } from '../../src/controllers/teachers.js';
@@ -46,14 +45,14 @@ describe('Teacher controllers', () => {
     it('Teacher not found', async () => {
         req = { params: { username: 'doesnotexist' } };
 
-        await expect(() => getTeacherHandler(req as Request, res as Response))
+        await expect(async () => getTeacherHandler(req as Request, res as Response))
             .rejects.toThrow(NotFoundException);
     });
 
     it('No username', async () => {
         req = { params: {} };
 
-        await expect(() => getTeacherHandler(req as Request, res as Response))
+        await expect(async () => getTeacherHandler(req as Request, res as Response))
             .rejects.toThrowError(BadRequestException);
     });
 
@@ -88,14 +87,14 @@ describe('Teacher controllers', () => {
             },
         };
 
-        await expect(() => createTeacherHandler(req as Request, res as Response))
+        await expect(async () => createTeacherHandler(req as Request, res as Response))
             .rejects.toThrowError(EntityAlreadyExistsException);
     });
 
     it('Create teacher no body', async () => {
         req = { body: {} };
 
-        await expect(() => createTeacherHandler(req as Request, res as Response))
+        await expect(async () => createTeacherHandler(req as Request, res as Response))
             .rejects.toThrowError(BadRequestException);
     });
 
@@ -117,7 +116,7 @@ describe('Teacher controllers', () => {
     it('Deleting non-existent student', async () => {
         req = { params: { username: 'doesnotexist' } };
 
-        await expect(() => deleteTeacherHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
+        await expect(async () => deleteTeacherHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
     });
 
     it('Get teacher classes', async () => {
@@ -193,9 +192,9 @@ describe('Teacher controllers', () => {
             body: { accepted: 'true' },
         };
 
-        const teacher = await updateStudentJoinRequestHandler(req as Request, res as Response);
+        await updateStudentJoinRequestHandler(req as Request, res as Response);
 
-        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ teacher: expect.objectContaining(teacher) }));
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ request: expect.anything() }));
 
         req = {
             params: { username: 'PinkFloyd' },
@@ -204,6 +203,6 @@ describe('Teacher controllers', () => {
         await getStudentRequestsHandler(req as Request, res as Response);
 
         const status: boolean = jsonMock.mock.lastCall?.[0].requests[0].status;
-        expect(status).toBeTruthy;
+        expect(status).toBeTruthy();
     });
 });

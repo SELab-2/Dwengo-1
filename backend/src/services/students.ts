@@ -12,8 +12,13 @@ import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js
 import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
-import { mapToQuestionDTO, mapToQuestionId, QuestionDTO, QuestionId } from '../interfaces/question.js';
-import { mapToStudentRequest, mapToStudentRequestDTO } from '../interfaces/student-request.js';
+import {
+    mapToQuestionDTO,
+    mapToQuestionDTOId,
+    QuestionDTO,
+    QuestionId
+} from '../interfaces/question.js';
+import {mapToStudentRequest, mapToStudentRequestDTO, StudentRequestDTO} from '../interfaces/student-request.js';
 import { Student } from '../entities/users/student.entity.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { fetchClass } from './classes.js';
@@ -116,16 +121,14 @@ export async function getStudentQuestions(username: string, full: boolean): Prom
     const questionRepository = getQuestionRepository();
     const questions = await questionRepository.findAllByAuthor(student);
 
-    const questionsDTO = questions.map(mapToQuestionDTO);
-
     if (full) {
-        return questionsDTO;
+        return questions.map(mapToQuestionDTO);
     }
 
-    return questionsDTO.map(mapToQuestionId);
+    return questions.map(mapToQuestionDTOId);
 }
 
-export async function createClassJoinRequest(username: string, classId: string) {
+export async function createClassJoinRequest(username: string, classId: string): Promise<StudentRequestDTO> {
     const requestRepo = getClassJoinRequestRepository();
 
     const student = await fetchStudent(username); // Throws error if student not found
@@ -136,7 +139,7 @@ export async function createClassJoinRequest(username: string, classId: string) 
     return mapToStudentRequestDTO(request);
 }
 
-export async function getJoinRequestsByStudent(username: string) {
+export async function getJoinRequestsByStudent(username: string): Promise<StudentRequestDTO[]> {
     const requestRepo = getClassJoinRequestRepository();
 
     const student = await fetchStudent(username);
@@ -145,7 +148,7 @@ export async function getJoinRequestsByStudent(username: string) {
     return requests.map(mapToStudentRequestDTO);
 }
 
-export async function getJoinRequestByStudentClass(username: string, classId: string){
+export async function getJoinRequestByStudentClass(username: string, classId: string): Promise<StudentRequestDTO>{
     const requestRepo = getClassJoinRequestRepository();
 
     const student = await fetchStudent(username);
@@ -159,7 +162,7 @@ export async function getJoinRequestByStudentClass(username: string, classId: st
     return mapToStudentRequestDTO(request);
 }
 
-export async function deleteClassJoinRequest(username: string, classId: string) {
+export async function deleteClassJoinRequest(username: string, classId: string): Promise<StudentRequestDTO> {
     const requestRepo = getClassJoinRequestRepository();
 
     const student = await fetchStudent(username);

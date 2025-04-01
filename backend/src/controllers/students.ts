@@ -33,7 +33,7 @@ export async function getStudentHandler(req: Request, res: Response): Promise<vo
     res.json({ student });
 }
 
-export async function createStudentHandler(req: Request, res: Response) {
+export async function createStudentHandler(req: Request, res: Response): Promise<void> {
     const username = req.body.username;
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
@@ -45,7 +45,7 @@ export async function createStudentHandler(req: Request, res: Response) {
     res.json({ student });
 }
 
-export async function deleteStudentHandler(req: Request, res: Response) {
+export async function deleteStudentHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
     requireFields({ username });
 
@@ -125,7 +125,7 @@ export async function getStudentRequestsHandler(req: Request, res: Response): Pr
 }
 
 export async function getStudentRequestHandler(req: Request, res: Response): Promise<void> {
-    const username = req.params.username as string;
+    const username = req.params.username;
     const classId = req.params.classId;
     requireFields({ username, classId });
 
@@ -133,8 +133,8 @@ export async function getStudentRequestHandler(req: Request, res: Response): Pro
     res.json({ request });
 }
 
-export async function deleteClassJoinRequestHandler(req: Request, res: Response) {
-    const username = req.params.username as string;
+export async function deleteClassJoinRequestHandler(req: Request, res: Response): Promise<void> {
+    const username = req.params.username;
     const classId = req.params.classId;
     requireFields({ username, classId });
 

@@ -1,4 +1,4 @@
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { EntityManager} from '@mikro-orm/core';
 import { Student } from '../../../src/entities/users/student.entity';
 
 // 🔓 Ruwe testdata array — herbruikbaar in assertions
@@ -14,6 +14,6 @@ export const TEST_STUDENTS = [
 ];
 
 // 🏗️ Functie die ORM entities maakt uit de data array
-export function makeTestStudents(em: EntityManager<IDatabaseDriver<Connection>>): Student[] {
+export function makeTestStudents(em: EntityManager): Student[] {
     return TEST_STUDENTS.map((data) => em.create(Student, data));
 }

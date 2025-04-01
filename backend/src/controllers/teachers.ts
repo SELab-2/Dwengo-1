@@ -33,7 +33,7 @@ export async function getTeacherHandler(req: Request, res: Response): Promise<vo
     res.json({ teacher });
 }
 
-export async function createTeacherHandler(req: Request, res: Response) {
+export async function createTeacherHandler(req: Request, res: Response): Promise<void> {
     const username = req.body.username;
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
@@ -45,7 +45,7 @@ export async function createTeacherHandler(req: Request, res: Response) {
     res.json({ teacher });
 }
 
-export async function deleteTeacherHandler(req: Request, res: Response) {
+export async function deleteTeacherHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
     requireFields({ username });
 
@@ -54,7 +54,7 @@ export async function deleteTeacherHandler(req: Request, res: Response) {
 }
 
 export async function getTeacherClassHandler(req: Request, res: Response): Promise<void> {
-    const username = req.params.username as string;
+    const username = req.params.username;
     const full = req.query.full === 'true';
     requireFields({ username });
 
@@ -64,7 +64,7 @@ export async function getTeacherClassHandler(req: Request, res: Response): Promi
 }
 
 export async function getTeacherStudentHandler(req: Request, res: Response): Promise<void> {
-    const username = req.params.username as string;
+    const username = req.params.username;
     const full = req.query.full === 'true';
     requireFields({ username });
 
@@ -74,7 +74,7 @@ export async function getTeacherStudentHandler(req: Request, res: Response): Pro
 }
 
 export async function getTeacherQuestionHandler(req: Request, res: Response): Promise<void> {
-    const username = req.params.username as string;
+    const username = req.params.username;
     const full = req.query.full === 'true';
     requireFields({ username });
 
@@ -83,7 +83,7 @@ export async function getTeacherQuestionHandler(req: Request, res: Response): Pr
     res.json({ questions });
 }
 
-export async function getStudentJoinRequestHandler(req: Request, res: Response) {
+export async function getStudentJoinRequestHandler(req: Request, res: Response): Promise<void> {
     const username = req.query.username as string;
     const classId = req.params.classId;
     requireFields({ username, classId });
@@ -92,7 +92,7 @@ export async function getStudentJoinRequestHandler(req: Request, res: Response) 
     res.json({ joinRequests });
 }
 
-export async function updateStudentJoinRequestHandler(req: Request, res: Response) {
+export async function updateStudentJoinRequestHandler(req: Request, res: Response): Promise<void> {
     const studentUsername = req.query.studentUsername as string;
     const classId = req.params.classId;
     const accepted = req.body.accepted !== 'false'; // Default = true
