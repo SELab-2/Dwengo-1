@@ -106,9 +106,6 @@ export async function getTeacherQuestions(username: string, full: boolean): Prom
     const learningObjectRepository: LearningObjectRepository = getLearningObjectRepository();
     const learningObjects: LearningObject[] = await learningObjectRepository.findAllByTeacher(teacher);
 
-    // Console.log(learningObjects)
-    // TODO returns empty
-
     if (!learningObjects || learningObjects.length === 0) {
         return [];
     }
