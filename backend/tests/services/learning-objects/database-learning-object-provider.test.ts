@@ -78,7 +78,7 @@ describe('DatabaseLearningObjectProvider', () => {
         });
         it('should throw an error if queried with a path identifier for which there is no learning path', async () => {
             await expect(
-                (async () => {
+                (async (): Promise<void> => {
                     await databaseLearningObjectProvider.getLearningObjectIdsFromPath({
                         hruid: 'non_existing_hruid',
                         language: Language.Dutch,
@@ -97,7 +97,7 @@ describe('DatabaseLearningObjectProvider', () => {
         });
         it('should throw an error if queried with a path identifier for which there is no learning path', async () => {
             await expect(
-                (async () => {
+                (async (): Promise<void> => {
                     await databaseLearningObjectProvider.getLearningObjectsFromPath({
                         hruid: 'non_existing_hruid',
                         language: Language.Dutch,

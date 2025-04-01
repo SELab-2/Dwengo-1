@@ -1,14 +1,10 @@
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { Submission } from '../../../src/entities/assignments/submission.entity';
 import { Language } from '../../../src/entities/content/language';
 import { Student } from '../../../src/entities/users/student.entity';
 import { Group } from '../../../src/entities/assignments/group.entity';
 
-export function makeTestSubmissions(
-    em: EntityManager<IDatabaseDriver<Connection>>,
-    students: Array<Student>,
-    groups: Array<Group>
-): Array<Submission> {
+export function makeTestSubmissions(em: EntityManager, students: Student[], groups: Group[]): Submission[] {
     const submission01 = em.create(Submission, {
         learningObjectHruid: 'id03',
         learningObjectLanguage: Language.English,

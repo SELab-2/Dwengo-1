@@ -22,13 +22,13 @@ const router = createRouter({
         {
             path: "/",
             name: "home",
-            component: () => import("../views/HomePage.vue"),
+            component: async (): Promise<unknown> => import("../views/HomePage.vue"),
             meta: { requiresAuth: false },
         },
         {
             path: "/login",
             name: "LoginPage",
-            component: () => import("../views/LoginPage.vue"),
+            component: async (): Promise<unknown> => import("../views/LoginPage.vue"),
             meta: { requiresAuth: false },
         },
         {
@@ -142,7 +142,7 @@ const router = createRouter({
     ],
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _from, next) => {
     // Verify if user is logged in before accessing certain routes
     if (to.meta.requiresAuth) {
         if (!authState.isLoggedIn.value) {

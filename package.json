@@ -5,11 +5,11 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "npm run build --ws",
-        "format": "npm run format --ws",
-        "format-check": "npm run format-check --ws",
-        "lint": "npm run lint --ws",
-        "test:unit": "npm run test:unit --ws"
+        "build": "npm run build --workspace=backend --workspace=frontend",
+        "format": "npm run format --workspace=backend --workspace=frontend",
+        "format-check": "npm run format-check --workspace=backend --workspace=frontend",
+        "lint": "npm run lint --workspace=backend --workspace=frontend",
+        "test:unit": "npm run test:unit --workspace=backend --workspace=frontend"
     },
     "workspaces": [
         "backend",

@@ -28,7 +28,7 @@ router.get('/:username/students', getTeacherStudentHandler);
 router.get('/:username/questions', getTeacherQuestionHandler);
 
 // Invitations to other classes a teacher received
-router.get('/:id/invitations', (req, res) => {
+router.get('/:id/invitations', (_req, res) => {
     res.json({
         invitations: ['0'],
     });

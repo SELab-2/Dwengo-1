@@ -1,7 +1,7 @@
 import { createLogger, format, Logger as WinstonLogger, transports } from 'winston';
 import LokiTransport from 'winston-loki';
 import { LokiLabels } from 'loki-logger-ts';
-import { EnvVars, getEnvVar } from '../util/envvars.js';
+import { envVars, getEnvVar } from '../util/envVars.js';
 
 export class Logger extends WinstonLogger {
     constructor() {
@@ -9,7 +9,7 @@ export class Logger extends WinstonLogger {
     }
 }
 
-const Labels: LokiLabels = {
+const lokiLabels: LokiLabels = {
     source: 'Dwengo-Backend',
     service: 'API',
     host: 'localhost',
@@ -22,28 +22,28 @@ function initializeLogger(): Logger {
         return logger;
     }
 
-    const logLevel = getEnvVar(EnvVars.LogLevel);
+    const logLevel = getEnvVar(envVars.LogLevel);
 
     const consoleTransport = new transports.Console({
-        level: getEnvVar(EnvVars.LogLevel),
+        level: getEnvVar(envVars.LogLevel),
         format: format.combine(format.cli(), format.colorize()),
     });
 
-    if (getEnvVar(EnvVars.RunMode) === 'dev') {
+    if (getEnvVar(envVars.RunMode) === 'dev') {
         return createLogger({
             transports: [consoleTransport],
         });
     }
 
-    const lokiHost = getEnvVar(EnvVars.LokiHost);
+    const lokiHost = getEnvVar(envVars.LokiHost);
 
     const lokiTransport: LokiTransport = new LokiTransport({
         host: lokiHost,
-        labels: Labels,
+        labels: lokiLabels,
         level: logLevel,
         json: true,
         format: format.combine(format.timestamp(), format.json()),
-        onConnectionError: (err) => {
+        onConnectionError: (err): void => {
             // eslint-disable-next-line no-console
             console.error(`Connection error: ${err}`);
         },

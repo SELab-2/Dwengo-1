@@ -9,8 +9,8 @@
         try {
             await auth.handleLoginCallback();
             await router.replace("/user"); // Redirect to theme page
-        } catch (error) {
-            console.error("OIDC callback error:", error);
+        } catch (_error) {
+            // FIXME console.error("OIDC callback error:", error);
         }
     });
 </script>

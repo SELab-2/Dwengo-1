@@ -1,6 +1,7 @@
 import { getAssignmentRepository, getClassRepository, getGroupRepository, getSubmissionRepository } from '../data/repositories.js';
 import { AssignmentDTO, mapToAssignment, mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
+import { getLogger } from '../logging/initalize.js';
 
 export async function getAllAssignments(classid: string, full: boolean): Promise<AssignmentDTO[]> {
     const classRepository = getClassRepository();
@@ -37,7 +38,7 @@ export async function createAssignment(classid: string, assignmentData: Assignme
 
         return mapToAssignmentDTO(newAssignment);
     } catch (e) {
-        console.error(e);
+        getLogger().error(e);
         return null;
     }
 }
@@ -83,7 +84,7 @@ export async function getAssignmentsSubmissions(
     const groups = await groupRepository.findAllGroupsForAssignment(assignment);
 
     const submissionRepository = getSubmissionRepository();
-    const submissions = (await Promise.all(groups.map((group) => submissionRepository.findAllSubmissionsForGroup(group)))).flat();
+    const submissions = (await Promise.all(groups.map(async (group) => submissionRepository.findAllSubmissionsForGroup(group)))).flat();
 
     if (full) {
         return submissions.map(mapToSubmissionDTO);

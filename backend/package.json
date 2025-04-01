@@ -11,7 +11,7 @@
         "format": "prettier --write src/",
         "format-check": "prettier --check src/",
         "lint": "eslint . --fix",
-        "test:unit": "vitest"
+        "test:unit": "vitest --run"
     },
     "dependencies": {
         "@mikro-orm/core": "6.4.9",

@@ -13,12 +13,4 @@ export class Student extends User {
 
     @ManyToMany(() => Group)
     groups!: Collection<Group>;
-
-    constructor(
-        public username: string,
-        public firstName: string,
-        public lastName: string
-    ) {
-        super();
-    }
 }
