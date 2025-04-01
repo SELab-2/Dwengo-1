@@ -2,13 +2,13 @@ import { LearningObjectExample } from '../learning-object-example';
 import { Language } from 'dwengo-1-common/src/util/language';
 import { LearningObject } from '../../../../src/entities/content/learning-object.entity';
 import { loadTestAsset } from '../../../test-utils/load-test-asset';
-import { EnvVars, getEnvVar } from '../../../../src/util/envvars';
+import { envVars, getEnvVar } from '../../../../src/util/envVars';
 import { DwengoContentType } from '../../../../src/services/learning-objects/processing/content-type';
 
 const example: LearningObjectExample = {
     createLearningObject: () => {
         const learningObject = new LearningObject();
-        learningObject.hruid = `${getEnvVar(EnvVars.UserContentPrefix)}test_essay`;
+        learningObject.hruid = `${getEnvVar(envVars.UserContentPrefix)}test_essay`;
         learningObject.language = Language.English;
         learningObject.version = 1;
         learningObject.title = 'Essay question for testing';

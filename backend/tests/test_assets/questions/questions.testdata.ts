@@ -1,9 +1,9 @@
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { Language } from 'dwengo-1-common/src/util/language';
 import { Question } from '../../../src/entities/questions/question.entity';
 import { Student } from '../../../src/entities/users/student.entity';
 
-export function makeTestQuestions(em: EntityManager<IDatabaseDriver<Connection>>, students: Array<Student>): Array<Question> {
+export function makeTestQuestions(em: EntityManager, students: Student[]): Question[] {
     const question01 = em.create(Question, {
         learningObjectLanguage: Language.English,
         learningObjectVersion: 1,

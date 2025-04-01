@@ -1,9 +1,9 @@
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { Language } from 'dwengo-1-common/src/util/language';
 import { Assignment } from '../../../src/entities/assignments/assignment.entity';
 import { Class } from '../../../src/entities/classes/class.entity';
 
-export function makeTestAssignemnts(em: EntityManager<IDatabaseDriver<Connection>>, classes: Array<Class>): Array<Assignment> {
+export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assignment[] {
     const assignment01 = em.create(Assignment, {
         within: classes[0],
         id: 1,

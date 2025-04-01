@@ -4,18 +4,18 @@ import testMultipleChoiceExample from '../learning-objects/test-multiple-choice/
 import { dummyLearningObject } from '../learning-objects/dummy/dummy-learning-object-example';
 import { createLearningPathNode, createLearningPathTransition } from './learning-path-utils';
 import { LearningObject } from '../../../src/entities/content/learning-object.entity';
-import { EnvVars, getEnvVar } from '../../../src/util/envvars';
+import { envVars, getEnvVar } from '../../../src/util/envVars';
 
-export type ConditionTestLearningPathAndLearningObjects = {
+export interface ConditionTestLearningPathAndLearningObjects {
     branchingObject: LearningObject;
     extraExerciseObject: LearningObject;
     finalObject: LearningObject;
     learningPath: LearningPath;
-};
+}
 
-export function createConditionTestLearningPathAndLearningObjects() {
+export function createConditionTestLearningPathAndLearningObjects(): ConditionTestLearningPathAndLearningObjects {
     const learningPath = new LearningPath();
-    learningPath.hruid = `${getEnvVar(EnvVars.UserContentPrefix)}test_conditions`;
+    learningPath.hruid = `${getEnvVar(envVars.UserContentPrefix)}test_conditions`;
     learningPath.language = Language.English;
     learningPath.title = 'Example learning path with conditional transitions';
     learningPath.description = 'This learning path was made for the purpose of testing conditional transitions';
@@ -78,7 +78,3 @@ export function createConditionTestLearningPathAndLearningObjects() {
         learningPath: learningPath,
     };
 }
-
-const example: LearningPathExample = {
-    createLearningPath: () => createConditionTestLearningPathAndLearningObjects().learningPath,
-};

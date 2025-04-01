@@ -14,7 +14,7 @@ router.get('/:groupid', getGroupHandler);
 router.get('/:groupid', getGroupSubmissionsHandler);
 
 // The list of questions a group has made
-router.get('/:id/questions', (req, res) => {
+router.get('/:id/questions', (_req, res) => {
     res.json({
         questions: ['0'],
     });

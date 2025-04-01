@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { getLogger, Logger } from '../logging/initalize.js';
+import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 
 const logger: Logger = getLogger();
 
@@ -17,8 +18,8 @@ export async function fetchWithLogging<T>(
     url: string,
     description: string,
     options?: {
-        params?: Record<string, any>;
-        query?: Record<string, any>;
+        params?: Record<string, unknown> | LearningObjectIdentifier;
+        query?: Record<string, unknown>;
         responseType?: 'json' | 'text';
     }
 ): Promise<T | null> {
@@ -26,18 +27,21 @@ export async function fetchWithLogging<T>(
         const config: AxiosRequestConfig = options || {};
         const response = await axios.get<T>(url, config);
         return response.data;
-    } catch (error: any) {
-        if (error.response) {
-            if (error.response.status === 404) {
-                logger.debug(`❌ ERROR: ${description} not found (404) at "${url}".`);
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            if (error.response) {
+                if (error.response.status === 404) {
+                    logger.debug(`❌ ERROR: ${description} not found (404) at "${url}".`);
+                } else {
+                    logger.debug(
+                        `❌ ERROR: Failed to fetch ${description}. Status: ${error.response.status} - ${error.response.statusText} (URL: "${url}")`
+                    );
+                }
             } else {
-                logger.debug(
-                    `❌ ERROR: Failed to fetch ${description}. Status: ${error.response.status} - ${error.response.statusText} (URL: "${url}")`
-                );
+                logger.debug(`❌ ERROR: Network or unexpected error when fetching ${description}:`, error.message);
             }
-        } else {
-            logger.debug(`❌ ERROR: Network or unexpected error when fetching ${description}:`, error.message);
         }
+        logger.error(`❌ ERROR: Unknown error while fetching ${description}.`, error);
         return null;
     }
 }

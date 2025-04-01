@@ -1,11 +1,11 @@
 import dwengoApiLearningPathProvider from './dwengo-api-learning-path-provider.js';
 import databaseLearningPathProvider from './database-learning-path-provider.js';
-import { EnvVars, getEnvVar } from '../../util/envvars.js';
+import { envVars, getEnvVar } from '../../util/envVars.js';
 import { PersonalizationTarget } from './learning-path-personalization-util.js';
 import { LearningPath, LearningPathResponse } from 'dwengo-1-common/src/interfaces/learning-content';
 import { Language } from 'dwengo-1-common/src/util/language.js';
 
-const userContentPrefix = getEnvVar(EnvVars.UserContentPrefix);
+const userContentPrefix = getEnvVar(envVars.UserContentPrefix);
 const allProviders = [dwengoApiLearningPathProvider, databaseLearningPathProvider];
 
 /**
@@ -49,7 +49,9 @@ const learningPathService = {
      * Search learning paths in the data source using the given search string.
      */
     async searchLearningPaths(query: string, language: Language, personalizedFor?: PersonalizationTarget): Promise<LearningPath[]> {
-        const providerResponses = await Promise.all(allProviders.map((provider) => provider.searchLearningPaths(query, language, personalizedFor)));
+        const providerResponses = await Promise.all(
+            allProviders.map(async (provider) => provider.searchLearningPaths(query, language, personalizedFor))
+        );
         return providerResponses.flat();
     },
 };

@@ -26,11 +26,15 @@ export async function getAllClasses(full: boolean): Promise<ClassDTO[] | string[
 export async function createClass(classData: ClassDTO): Promise<ClassDTO | null> {
     const teacherRepository = getTeacherRepository();
     const teacherUsernames = classData.teachers || [];
-    const teachers = (await Promise.all(teacherUsernames.map((id) => teacherRepository.findByUsername(id)))).filter((teacher) => teacher !== null);
+    const teachers = (await Promise.all(teacherUsernames.map(async (id) => teacherRepository.findByUsername(id)))).filter(
+        (teacher) => teacher !== null
+    );
 
     const studentRepository = getStudentRepository();
     const studentUsernames = classData.students || [];
-    const students = (await Promise.all(studentUsernames.map((id) => studentRepository.findByUsername(id)))).filter((student) => student !== null);
+    const students = (await Promise.all(studentUsernames.map(async (id) => studentRepository.findByUsername(id)))).filter(
+        (student) => student !== null
+    );
 
     const classRepository = getClassRepository();
 

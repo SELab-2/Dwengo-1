@@ -17,7 +17,7 @@ function getObjectId(req: Request, res: Response): LearningObjectIdentifier | nu
     return {
         hruid,
         language: (lang as Language) || FALLBACK_LANG,
-        version: +version,
+        version: Number(version),
     };
 }
 

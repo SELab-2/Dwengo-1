@@ -90,7 +90,7 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
             metadataUrl,
             `Metadata for Learning Object HRUID "${id.hruid}" (language ${id.language})`,
             {
-                params: id,
+                params: { ...id },
             }
         );
 
@@ -123,7 +123,7 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
     async getLearningObjectHTML(id: LearningObjectIdentifier): Promise<string | null> {
         const htmlUrl = `${DWENGO_API_BASE}/learningObject/getRaw`;
         const html = await fetchWithLogging<string>(htmlUrl, `Metadata for Learning Object HRUID "${id.hruid}" (language ${id.language})`, {
-            params: id,
+            params: { ...id },
         });
 
         if (!html) {

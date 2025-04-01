@@ -58,7 +58,7 @@ export interface EducationalGoal {
 
 export interface ReturnValue {
     callback_url: string;
-    callback_schema: Record<string, any>;
+    callback_schema: Record<string, unknown>;
 }
 
 export interface LearningObjectMetadata {

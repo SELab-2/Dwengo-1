@@ -5,5 +5,7 @@ export class LearningObjectIdentifier {
         public hruid: string,
         public language: Language,
         public version: number
-    ) {}
+    ) {
+        // Do nothing
+    }
 }

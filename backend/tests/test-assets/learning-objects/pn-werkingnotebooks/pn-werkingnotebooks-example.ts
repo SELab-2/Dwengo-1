@@ -2,16 +2,18 @@ import { LearningObjectExample } from '../learning-object-example';
 import { Language } from 'dwengo-1-common/src/util/language';
 import { DwengoContentType } from '../../../../src/services/learning-objects/processing/content-type';
 import { loadTestAsset } from '../../../test-utils/load-test-asset';
-import { EducationalGoal, LearningObject, ReturnValue } from '../../../../src/entities/content/learning-object.entity';
+import { LearningObject } from '../../../../src/entities/content/learning-object.entity';
 import { Attachment } from '../../../../src/entities/content/attachment.entity';
-import { EnvVars, getEnvVar } from '../../../../src/util/envvars';
+import { envVars, getEnvVar } from '../../../../src/util/envVars';
+import { EducationalGoal } from '../../../../src/entities/content/educational-goal.entity';
+import { ReturnValue } from '../../../../src/entities/content/return-value.entity';
 
 const ASSETS_PREFIX = 'learning-objects/pn-werkingnotebooks/';
 
 const example: LearningObjectExample = {
     createLearningObject: () => {
         const learningObject = new LearningObject();
-        learningObject.hruid = `${getEnvVar(EnvVars.UserContentPrefix)}pn_werkingnotebooks`;
+        learningObject.hruid = `${getEnvVar(envVars.UserContentPrefix)}pn_werkingnotebooks`;
         learningObject.version = 3;
         learningObject.language = Language.Dutch;
         learningObject.title = 'Werken met notebooks';

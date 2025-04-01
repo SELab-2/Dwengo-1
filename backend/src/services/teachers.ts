@@ -7,6 +7,7 @@ import { ClassDTO } from 'dwengo-1-common/src/interfaces/class';
 import { TeacherDTO } from 'dwengo-1-common/src/interfaces/teacher';
 import { StudentDTO } from 'dwengo-1-common/src/interfaces/student';
 import { QuestionDTO, QuestionId } from 'dwengo-1-common/src/interfaces/question';
+import { getLogger } from '../logging/initalize.js';
 
 export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | string[]> {
     const teacherRepository = getTeacherRepository();
@@ -48,7 +49,7 @@ export async function deleteTeacher(username: string): Promise<TeacherDTO | null
 
         return mapToTeacherDTO(user);
     } catch (e) {
-        console.log(e);
+        getLogger().error(e);
         return null;
     }
 }

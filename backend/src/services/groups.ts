@@ -10,6 +10,7 @@ import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
 import { GroupDTO } from 'dwengo-1-common/src/interfaces/group';
 import { SubmissionDTO, SubmissionDTOId } from 'dwengo-1-common/src/interfaces/submission';
+import { getLogger } from '../logging/initalize.js';
 
 export async function getGroup(classId: string, assignmentNumber: number, groupNumber: number, full: boolean): Promise<GroupDTO | null> {
     const classRepository = getClassRepository();
@@ -44,9 +45,11 @@ export async function createGroup(groupData: GroupDTO, classid: string, assignme
     const studentRepository = getStudentRepository();
 
     const memberUsernames = (groupData.members as string[]) || []; // TODO check if groupdata.members is a list
-    const members = (await Promise.all([...memberUsernames].map((id) => studentRepository.findByUsername(id)))).filter((student) => student !== null);
+    const members = (await Promise.all([...memberUsernames].map(async (id) => studentRepository.findByUsername(id)))).filter(
+        (student) => student !== null
+    );
 
-    console.log(members);
+    getLogger().debug(members);
 
     const classRepository = getClassRepository();
     const cls = await classRepository.findById(classid);
@@ -72,7 +75,7 @@ export async function createGroup(groupData: GroupDTO, classid: string, assignme
 
         return newGroup;
     } catch (e) {
-        console.log(e);
+        getLogger().error(e);
         return null;
     }
 }
@@ -96,8 +99,7 @@ export async function getAllGroups(classId: string, assignmentNumber: number, fu
     const groups = await groupRepository.findAllGroupsForAssignment(assignment);
 
     if (full) {
-        console.log('full');
-        console.log(groups);
+        getLogger().debug({ full: full, groups: groups });
         return groups.map(mapToGroupDTO);
     }
 

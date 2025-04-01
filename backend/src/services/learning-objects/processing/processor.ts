@@ -9,7 +9,9 @@ import { DwengoContentType } from './content-type.js';
  * Based on https://github.com/dwengovzw/Learning-Object-Repository/blob/main/app/processors/processor.js
  */
 abstract class Processor<T> {
-    protected constructor(public contentType: DwengoContentType) {}
+    protected constructor(public contentType: DwengoContentType) {
+        // Do nothing
+    }
 
     /**
      * Render the given object.

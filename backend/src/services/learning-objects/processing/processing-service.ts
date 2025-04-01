@@ -21,7 +21,7 @@ const EMBEDDED_LEARNING_OBJECT_PLACEHOLDER = /<learning-object hruid="([^"]+)" l
 const LEARNING_OBJECT_DOES_NOT_EXIST = "<div class='non-existing-learning-object' />";
 
 class ProcessingService {
-    private processors!: Map<DwengoContentType, Processor<any>>;
+    private processors!: Map<DwengoContentType, Processor<DwengoContentType>>;
 
     constructor() {
         const processors = [
