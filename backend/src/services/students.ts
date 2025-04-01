@@ -45,19 +45,21 @@ export async function getStudent(username: string): Promise<StudentDTO> {
     return mapToStudentDTO(user);
 }
 
-export async function createStudent(userData: StudentDTO): Promise<void> {
+export async function createStudent(userData: StudentDTO): Promise<StudentDTO> {
     const studentRepository = getStudentRepository();
 
     const newStudent = mapToStudent(userData);
     await studentRepository.save(newStudent, { preventOverwrite: true });
+    return userData;
 }
 
-export async function deleteStudent(username: string): Promise<void> {
+export async function deleteStudent(username: string): Promise<StudentDTO> {
     const studentRepository = getStudentRepository();
 
-    await fetchStudent(username); // Throws error if it does not exist
+    const student = await fetchStudent(username); // Throws error if it does not exist
 
     await studentRepository.deleteByUsername(username);
+    return mapToStudentDTO(student);
 }
 
 export async function getStudentClasses(username: string, full: boolean): Promise<ClassDTO[] | string[]> {
@@ -131,6 +133,7 @@ export async function createClassJoinRequest(studentUsername: string, classId: s
 
     const request = mapToStudentRequest(student, cls);
     await requestRepo.save(request, { preventOverwrite: true });
+    return mapToStudentRequestDTO(request);
 }
 
 export async function getJoinRequestsByStudent(studentUsername: string) {
@@ -155,4 +158,5 @@ export async function deleteClassJoinRequest(studentUsername: string, classId: s
     }
 
     await requestRepo.deleteBy(student, cls);
+    return mapToStudentRequestDTO(request);
 }

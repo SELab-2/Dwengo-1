@@ -30,7 +30,7 @@ export async function getStudentHandler(req: Request, res: Response): Promise<vo
 
     const student = await getStudent(username);
 
-    res.status(201).json({ student });
+    res.json({ student });
 }
 
 export async function createStudentHandler(req: Request, res: Response) {
@@ -41,16 +41,16 @@ export async function createStudentHandler(req: Request, res: Response) {
 
     const userData = req.body as StudentDTO;
 
-    await createStudent(userData);
-    res.sendStatus(201);
+    const student = await createStudent(userData);
+    res.json({ student });
 }
 
 export async function deleteStudentHandler(req: Request, res: Response) {
     const username = req.params.username;
     requireFields({ username });
 
-    await deleteStudent(username);
-    res.sendStatus(200);
+    const student = await deleteStudent(username);
+    res.json({ student });
 }
 
 export async function getStudentClassesHandler(req: Request, res: Response): Promise<void> {
@@ -60,9 +60,7 @@ export async function getStudentClassesHandler(req: Request, res: Response): Pro
 
     const classes = await getStudentClasses(username, full);
 
-    res.json({
-        classes,
-    });
+    res.json({ classes });
 }
 
 // TODO
@@ -76,9 +74,7 @@ export async function getStudentAssignmentsHandler(req: Request, res: Response):
 
     const assignments = getStudentAssignments(username, full);
 
-    res.json({
-        assignments,
-    });
+    res.json({ assignments });
 }
 
 export async function getStudentGroupsHandler(req: Request, res: Response): Promise<void> {
@@ -88,9 +84,7 @@ export async function getStudentGroupsHandler(req: Request, res: Response): Prom
 
     const groups = await getStudentGroups(username, full);
 
-    res.json({
-        groups,
-    });
+    res.json({ groups });
 }
 
 export async function getStudentSubmissionsHandler(req: Request, res: Response): Promise<void> {
@@ -100,9 +94,7 @@ export async function getStudentSubmissionsHandler(req: Request, res: Response):
 
     const submissions = await getStudentSubmissions(username, full);
 
-    res.json({
-        submissions,
-    });
+    res.json({ submissions });
 }
 
 export async function getStudentQuestionsHandler(req: Request, res: Response): Promise<void> {
@@ -112,9 +104,7 @@ export async function getStudentQuestionsHandler(req: Request, res: Response): P
 
     const questions = await getStudentQuestions(username, full);
 
-    res.json({
-        questions,
-    });
+    res.json({ questions });
 }
 
 export async function createStudentRequestHandler(req: Request, res: Response): Promise<void> {
@@ -122,8 +112,8 @@ export async function createStudentRequestHandler(req: Request, res: Response): 
     const classId = req.body.classId;
     requireFields({ username, classId });
 
-    await createClassJoinRequest(username, classId);
-    res.sendStatus(201);
+    const request = await createClassJoinRequest(username, classId);
+    res.json({ request });
 }
 
 export async function getStudentRequestHandler(req: Request, res: Response): Promise<void> {
@@ -131,7 +121,7 @@ export async function getStudentRequestHandler(req: Request, res: Response): Pro
     requireFields({ username });
 
     const requests = await getJoinRequestsByStudent(username);
-    res.status(201).json({ requests });
+    res.json({ requests });
 }
 
 export async function deleteClassJoinRequestHandler(req: Request, res: Response) {
@@ -139,6 +129,6 @@ export async function deleteClassJoinRequestHandler(req: Request, res: Response)
     const classId = req.params.classId;
     requireFields({ username, classId });
 
-    await deleteClassJoinRequest(username, classId);
-    res.sendStatus(204);
+    const request = await deleteClassJoinRequest(username, classId);
+    res.json({ request });
 }

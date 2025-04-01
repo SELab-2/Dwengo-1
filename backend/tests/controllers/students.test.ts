@@ -26,8 +26,6 @@ describe('Student controllers', () => {
     let res: Partial<Response>;
 
     let jsonMock: Mock;
-    let statusMock: Mock;
-    let sendStatusMock: Mock;
 
     beforeAll(async () => {
         await setupTestApp();
@@ -35,12 +33,8 @@ describe('Student controllers', () => {
 
     beforeEach(() => {
         jsonMock = vi.fn();
-        statusMock = vi.fn().mockReturnThis();
-        sendStatusMock = vi.fn().mockReturnThis();
         res = {
             json: jsonMock,
-            status: statusMock,
-            sendStatus: sendStatusMock,
         };
     });
 
@@ -55,33 +49,39 @@ describe('Student controllers', () => {
     it('Student not found', async () => {
         req = { params: { username: 'doesnotexist' } };
 
-        await expect(() => getStudentHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
+        await expect(() => getStudentHandler(req as Request, res as Response))
+            .rejects.toThrow(NotFoundException);
     });
 
     it('No username', async () => {
         req = { params: {} };
 
-        await expect(() => getStudentHandler(req as Request, res as Response)).rejects.toThrowError(BadRequestException);
+        await expect(() => getStudentHandler(req as Request, res as Response))
+            .rejects.toThrowError(BadRequestException);
     });
 
     it('Create and delete student', async () => {
+        const student = {
+            id: 'coolstudent',
+            username: 'coolstudent',
+            firstName: 'New',
+            lastName: 'Student',
+        } as StudentDTO;
         req = {
-            body: {
-                username: 'coolstudent',
-                firstName: 'New',
-                lastName: 'Student',
-            },
+            body: student
         };
 
         await createStudentHandler(req as Request, res as Response);
 
-        expect(sendStatusMock).toHaveBeenCalledWith(201);
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ student: expect.objectContaining(student) }));
+
+        console.log(jsonMock)
 
         req = { params: { username: 'coolstudent' } };
 
         await deleteStudentHandler(req as Request, res as Response);
 
-        expect(sendStatusMock).toHaveBeenCalledWith(200);
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ student: expect.objectContaining(student) }));
     });
 
     it('Create duplicate student', async () => {
@@ -93,13 +93,15 @@ describe('Student controllers', () => {
             },
         };
 
-        await expect(() => createStudentHandler(req as Request, res as Response)).rejects.toThrowError(EntityAlreadyExistsException);
+        await expect(() => createStudentHandler(req as Request, res as Response))
+            .rejects.toThrowError(EntityAlreadyExistsException);
     });
 
     it('Create student no body', async () => {
         req = { body: {} };
 
-        await expect(() => createStudentHandler(req as Request, res as Response)).rejects.toThrowError(BadRequestException);
+        await expect(() => createStudentHandler(req as Request, res as Response))
+            .rejects.toThrowError(BadRequestException);
     });
 
     it('Student list', async () => {
@@ -176,7 +178,6 @@ describe('Student controllers', () => {
 
         await getStudentRequestHandler(req as Request, res as Response);
 
-        expect(statusMock).toHaveBeenCalledWith(201);
         expect(jsonMock).toHaveBeenCalledWith(
             expect.objectContaining({
                 requests: expect.anything(),
@@ -196,7 +197,7 @@ describe('Student controllers', () => {
 
         await createStudentRequestHandler(req as Request, res as Response);
 
-        expect(sendStatusMock).toHaveBeenCalledWith(201);
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ request: expect.anything() }));
     });
 
     it('Create join request duplicate', async () => {
@@ -205,7 +206,8 @@ describe('Student controllers', () => {
             body: { classId: 'id02' },
         };
 
-        await expect(() => createStudentRequestHandler(req as Request, res as Response)).rejects.toThrow(ConflictException);
+        await expect(() => createStudentRequestHandler(req as Request, res as Response))
+            .rejects.toThrow(ConflictException);
     });
 
     it('Delete join request', async () => {
@@ -215,8 +217,9 @@ describe('Student controllers', () => {
 
         await deleteClassJoinRequestHandler(req as Request, res as Response);
 
-        expect(sendStatusMock).toHaveBeenCalledWith(204);
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ request: expect.anything() }));
 
-        await expect(() => deleteClassJoinRequestHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
+        await expect(() => deleteClassJoinRequestHandler(req as Request, res as Response))
+            .rejects.toThrow(NotFoundException);
     });
 });
