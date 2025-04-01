@@ -9,7 +9,7 @@ import { Language } from '../../../src/entities/content/language';
 import learningObjectExample from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example';
 import learningPathExample from '../../test-assets/learning-paths/pn-werking-example';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
-import {FilteredLearningObject} from "dwengo-1-common/src/interfaces/learning-content";
+import { FilteredLearningObject } from 'dwengo-1-common/src/interfaces/learning-content';
 
 async function initExampleData(): Promise<{ learningObject: LearningObject; learningPath: LearningPath }> {
     const learningObjectRepo = getLearningObjectRepository();

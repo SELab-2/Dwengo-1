@@ -6,11 +6,7 @@ import processingService from './processing/processing-service.js';
 import { NotFoundError } from '@mikro-orm/core';
 import learningObjectService from './learning-object-service.js';
 import { getLogger, Logger } from '../../logging/initalize.js';
-import {
-    FilteredLearningObject,
-    LearningObjectIdentifier,
-    LearningPathIdentifier,
-} from 'dwengo-1-common/src/interfaces/learning-content';
+import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from 'dwengo-1-common/src/interfaces/learning-content';
 
 const logger: Logger = getLogger();
 

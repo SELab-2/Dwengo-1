@@ -73,18 +73,18 @@ describe('LearningObjectService', () => {
         });
         it(
             'returns the same HTML as the Dwengo API when queried with the identifier of a learning object that does ' +
-            'not start with the user content prefix',
+                'not start with the user content prefix',
             async () => {
                 const result = await learningObjectService.getLearningObjectHTML(DWENGO_TEST_LEARNING_OBJECT_ID);
                 expect(result).not.toBeNull();
 
                 const responseFromDwengoApi = await fetch(
                     getEnvVar(envVars.LearningContentRepoApiBaseUrl) +
-                    `/learningObject/getRaw?hruid=${DWENGO_TEST_LEARNING_OBJECT_ID.hruid}&language=${DWENGO_TEST_LEARNING_OBJECT_ID.language}&version=${DWENGO_TEST_LEARNING_OBJECT_ID.version}`,
+                        `/learningObject/getRaw?hruid=${DWENGO_TEST_LEARNING_OBJECT_ID.hruid}&language=${DWENGO_TEST_LEARNING_OBJECT_ID.language}&version=${DWENGO_TEST_LEARNING_OBJECT_ID.version}`
                 );
                 const responseHtml = await responseFromDwengoApi.text();
                 expect(result).toEqual(responseHtml);
-            },
+            }
         );
         it('returns null when queried with a non-existing identifier', async () => {
             const result = await learningObjectService.getLearningObjectHTML({
