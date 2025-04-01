@@ -5,55 +5,55 @@ export class StudentController extends BaseController {
         super("student");
     }
 
-    getAll(full = true) {
+    async getAll(full = true) {
         return this.get<{ students: any[] }>("/", { full });
     }
 
-    getByUsername(username: string) {
+    async getByUsername(username: string) {
         return this.get<{ student: any }>(`/${username}`);
     }
 
-    createStudent(data: any) {
+    async createStudent(data: any) {
         return this.post("/", data);
     }
 
-    deleteStudent(username: string) {
+    async deleteStudent(username: string) {
         return this.delete(`/${username}`);
     }
 
-    getClasses(username: string, full = true) {
+    async getClasses(username: string, full = true) {
         return this.get<{ classes: any[] }>(`/${username}/classes`, { full });
     }
 
-    getAssignments(username: string, full = true) {
+    async getAssignments(username: string, full = true) {
         return this.get<{ assignments: any[] }>(`/${username}/assignments`, { full });
     }
 
-    getGroups(username: string, full = true) {
+    async getGroups(username: string, full = true) {
         return this.get<{ groups: any[] }>(`/${username}/groups`, { full });
     }
 
-    getSubmissions(username: string) {
+    async getSubmissions(username: string) {
         return this.get<{ submissions: any[] }>(`/${username}/submissions`);
     }
 
-    getQuestions(username: string, full = true) {
+    async getQuestions(username: string, full = true) {
         return this.get<{ questions: any[] }>(`/${username}/questions`, { full });
     }
 
-    getJoinRequests(username: string) {
+    async getJoinRequests(username: string) {
         return this.get<{ requests: any[] }>(`/${username}/joinRequests`);
     }
 
-    getJoinRequest(username: string, classId: string) {
+    async getJoinRequest(username: string, classId: string) {
         return this.get<{ request: any[] }>(`/${username}/joinRequests/${classId}`);
     }
 
-    createJoinRequest(username: string, classId: string) {
+    async createJoinRequest(username: string, classId: string) {
         return this.post(`/${username}/joinRequests}`, classId);
     }
 
-    deleteJoinRequest(username: string, classId: string) {
+    async deleteJoinRequest(username: string, classId: string) {
         return this.delete(`/${username}/joinRequests/${classId}`);
     }
 }

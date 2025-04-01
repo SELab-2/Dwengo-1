@@ -18,14 +18,14 @@ const STUDENT_JOIN_REQUESTS_QUERY_KEY = (username: string) => ["student-join-req
 export function useStudentsQuery(full: MaybeRefOrGetter<boolean> = true) {
     return useQuery({
         queryKey: computed(() => STUDENTS_QUERY_KEY(toValue(full))),
-        queryFn: () => studentController.getAll(toValue(full)),
+        queryFn: async () => studentController.getAll(toValue(full)),
     });
 }
 
 export function useStudentQuery(username: MaybeRefOrGetter<string | undefined>) {
     return useQuery({
         queryKey: computed(() => STUDENT_QUERY_KEY(toValue(username)!)),
-        queryFn: () => studentController.getByUsername(toValue(username)!),
+        queryFn: async () => studentController.getByUsername(toValue(username)!),
         enabled: () => Boolean(toValue(username)),
     });
 }
@@ -36,7 +36,7 @@ export function useStudentClassesQuery(
 ) {
     return useQuery({
         queryKey: computed(() => STUDENT_CLASSES_QUERY_KEY(toValue(username)!, toValue(full))),
-        queryFn: () => studentController.getClasses(toValue(username)!, toValue(full)),
+        queryFn: async () => studentController.getClasses(toValue(username)!, toValue(full)),
         enabled: () => Boolean(toValue(username)),
     });
 }
@@ -47,7 +47,7 @@ export function useStudentAssignmentsQuery(
 ) {
     return useQuery({
         queryKey: computed(() => STUDENT_ASSIGNMENTS_QUERY_KEY(toValue(username)!, toValue(full))),
-        queryFn: () => studentController.getAssignments(toValue(username)!, toValue(full)),
+        queryFn: async () => studentController.getAssignments(toValue(username)!, toValue(full)),
         enabled: () => Boolean(toValue(username)),
     });
 }
@@ -58,7 +58,7 @@ export function useStudentGroupsQuery(
 ) {
     return useQuery({
         queryKey: computed(() => STUDENT_GROUPS_QUERY_KEY(toValue(username)!, toValue(full))),
-        queryFn: () => studentController.getGroups(toValue(username)!, toValue(full)),
+        queryFn: async () => studentController.getGroups(toValue(username)!, toValue(full)),
         enabled: () => Boolean(toValue(username)),
     });
 }
@@ -66,7 +66,7 @@ export function useStudentGroupsQuery(
 export function useStudentSubmissionsQuery(username: MaybeRefOrGetter<string | undefined>) {
     return useQuery({
         queryKey: computed(() => STUDENT_SUBMISSIONS_QUERY_KEY(toValue(username)!)),
-        queryFn: () => studentController.getSubmissions(toValue(username)!),
+        queryFn: async () => studentController.getSubmissions(toValue(username)!),
         enabled: () => Boolean(toValue(username)),
     });
 }
@@ -77,7 +77,7 @@ export function useStudentQuestionsQuery(
 ) {
     return useQuery({
         queryKey: computed(() => STUDENT_QUESTIONS_QUERY_KEY(toValue(username)!, toValue(full))),
-        queryFn: () => studentController.getQuestions(toValue(username)!, toValue(full)),
+        queryFn: async () => studentController.getQuestions(toValue(username)!, toValue(full)),
         enabled: () => Boolean(toValue(username)),
     });
 }
@@ -86,7 +86,7 @@ export function useCreateStudentMutation() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: any) => studentController.createStudent(data),
+        mutationFn: async (data: any) => studentController.createStudent(data),
         onSuccess: () => {
             await queryClient.invalidateQueries({ queryKey: ["students"] });
         },
@@ -103,7 +103,7 @@ export function useDeleteStudentMutation() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (username: string) => studentController.deleteStudent(username),
+        mutationFn: async (username: string) => studentController.deleteStudent(username),
         onSuccess: () => {
             await queryClient.invalidateQueries({ queryKey: ["students"] });
         },
@@ -116,7 +116,7 @@ export function useDeleteStudentMutation() {
 export function useStudentJoinRequestsQuery(username: MaybeRefOrGetter<string | undefined>) {
     return useQuery({
         queryKey: computed(() => STUDENT_JOIN_REQUESTS_QUERY_KEY(toValue(username)!)),
-        queryFn: () => studentController.getJoinRequests(toValue(username)!),
+        queryFn: async () => studentController.getJoinRequests(toValue(username)!),
         enabled: () => Boolean(toValue(username)),
     });
 }
@@ -127,7 +127,7 @@ export function useStudentJoinRequestQuery(
 ) {
     return useQuery({
         queryKey: computed(() => STUDENT_JOIN_REQUESTS_QUERY_KEY(toValue(username)!)),
-        queryFn: () => studentController.getJoinRequest(toValue(username)!, toValue(classId)!),
+        queryFn: async () => studentController.getJoinRequest(toValue(username)!, toValue(classId)!),
         enabled: () => Boolean(toValue(username)),
     });
 }
@@ -139,7 +139,7 @@ export function useCreateJoinRequestMutation() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ username, classId }: { username: string; classId: string }) =>
+        mutationFn: async ({ username, classId }: { username: string; classId: string }) =>
             studentController.createJoinRequest(username, classId),
         onSuccess: (_, { username }) => {
             await queryClient.invalidateQueries({ queryKey: STUDENT_JOIN_REQUESTS_QUERY_KEY(username) });
@@ -157,7 +157,7 @@ export function useDeleteJoinRequestMutation() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ username, classId }: { username: string; classId: string }) =>
+        mutationFn: async ({ username, classId }: { username: string; classId: string }) =>
             studentController.deleteJoinRequest(username, classId),
         onSuccess: (_, { username }) => {
             await queryClient.invalidateQueries({ queryKey: STUDENT_JOIN_REQUESTS_QUERY_KEY(username) });

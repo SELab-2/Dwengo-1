@@ -7,7 +7,7 @@ const themeController = new ThemeController();
 export function useThemeQuery(language: MaybeRefOrGetter<string | undefined>) {
     return useQuery({
         queryKey: ["themes", language],
-        queryFn: () => {
+        queryFn: async () => {
             const lang = toValue(language);
             return themeController.getAll(lang);
         },
@@ -18,7 +18,7 @@ export function useThemeQuery(language: MaybeRefOrGetter<string | undefined>) {
 export function useThemeHruidsQuery(themeKey: MaybeRefOrGetter<string | undefined>) {
     return useQuery({
         queryKey: ["theme-hruids", themeKey],
-        queryFn: () => themeController.getHruidsByKey(toValue(themeKey)!),
+        queryFn: async () => themeController.getHruidsByKey(toValue(themeKey)!),
         enabled: Boolean(themeKey),
     });
 }
