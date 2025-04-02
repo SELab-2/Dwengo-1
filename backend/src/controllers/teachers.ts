@@ -11,10 +11,7 @@ import {
     updateClassJoinRequestStatus,
 } from '../services/teachers.js';
 import { requireFields } from './error-helper.js';
-import { TeacherDTO } from 'dwengo-1-common/src/interfaces/teacher';
-import { ClassDTO } from 'dwengo-1-common/src/interfaces/class';
-import { StudentDTO } from 'dwengo-1-common/src/interfaces/student';
-import { QuestionDTO, QuestionId } from 'dwengo-1-common/src/interfaces/question';
+import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 
 export async function getAllTeachersHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
@@ -58,7 +55,7 @@ export async function getTeacherClassHandler(req: Request, res: Response): Promi
     const full = req.query.full === 'true';
     requireFields({ username });
 
-    const classes: ClassDTO[] | string[] = await getClassesByTeacher(username, full);
+    const classes = await getClassesByTeacher(username, full);
 
     res.json({ classes });
 }
@@ -68,7 +65,7 @@ export async function getTeacherStudentHandler(req: Request, res: Response): Pro
     const full = req.query.full === 'true';
     requireFields({ username });
 
-    const students: StudentDTO[] | string[] = await getStudentsByTeacher(username, full);
+    const students = await getStudentsByTeacher(username, full);
 
     res.json({ students });
 }
@@ -78,7 +75,7 @@ export async function getTeacherQuestionHandler(req: Request, res: Response): Pr
     const full = req.query.full === 'true';
     requireFields({ username });
 
-    const questions: QuestionDTO[] | QuestionId[] = await getTeacherQuestions(username, full);
+    const questions = await getTeacherQuestions(username, full);
 
     res.json({ questions });
 }

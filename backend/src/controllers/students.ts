@@ -14,8 +14,8 @@ import {
     getStudentQuestions,
     getStudentSubmissions,
 } from '../services/students.js';
-import { StudentDTO } from '../interfaces/student.js';
 import { requireFields } from './error-helper.js';
+import { StudentDTO } from '@dwengo-1/common/interfaces/student';
 
 export async function getAllStudentsHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';

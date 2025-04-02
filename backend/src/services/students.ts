@@ -6,17 +6,23 @@ import {
     getStudentRepository,
     getSubmissionRepository,
 } from '../data/repositories.js';
-import { AssignmentDTO } from '../interfaces/assignment.js';
-import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
-import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
-import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
-import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
+import { mapToClassDTO } from '../interfaces/class.js';
+import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
+import { mapToStudent, mapToStudentDTO } from '../interfaces/student.js';
+import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
-import { mapToQuestionDTO, mapToQuestionDTOId, QuestionDTO, QuestionId } from '../interfaces/question.js';
-import { mapToStudentRequest, mapToStudentRequestDTO, StudentRequestDTO } from '../interfaces/student-request.js';
+import { mapToQuestionDTO, mapToQuestionDTOId } from '../interfaces/question.js';
+import { mapToStudentRequest, mapToStudentRequestDTO } from '../interfaces/student-request.js';
 import { Student } from '../entities/users/student.entity.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { fetchClass } from './classes.js';
+import { StudentDTO } from '@dwengo-1/common/interfaces/student';
+import { ClassDTO } from '@dwengo-1/common/interfaces/class';
+import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
+import { GroupDTO } from '@dwengo-1/common/interfaces/group';
+import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
+import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
+import {ClassJoinRequestDTO} from '@dwengo-1/common/interfaces/class-join-request';
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();
@@ -123,7 +129,7 @@ export async function getStudentQuestions(username: string, full: boolean): Prom
     return questions.map(mapToQuestionDTOId);
 }
 
-export async function createClassJoinRequest(username: string, classId: string): Promise<StudentRequestDTO> {
+export async function createClassJoinRequest(username: string, classId: string): Promise<ClassJoinRequestDTO> {
     const requestRepo = getClassJoinRequestRepository();
 
     const student = await fetchStudent(username); // Throws error if student not found
@@ -134,7 +140,7 @@ export async function createClassJoinRequest(username: string, classId: string):
     return mapToStudentRequestDTO(request);
 }
 
-export async function getJoinRequestsByStudent(username: string): Promise<StudentRequestDTO[]> {
+export async function getJoinRequestsByStudent(username: string): Promise<ClassJoinRequestDTO[]> {
     const requestRepo = getClassJoinRequestRepository();
 
     const student = await fetchStudent(username);
@@ -143,7 +149,7 @@ export async function getJoinRequestsByStudent(username: string): Promise<Studen
     return requests.map(mapToStudentRequestDTO);
 }
 
-export async function getJoinRequestByStudentClass(username: string, classId: string): Promise<StudentRequestDTO> {
+export async function getJoinRequestByStudentClass(username: string, classId: string): Promise<ClassJoinRequestDTO> {
     const requestRepo = getClassJoinRequestRepository();
 
     const student = await fetchStudent(username);
@@ -157,7 +163,7 @@ export async function getJoinRequestByStudentClass(username: string, classId: st
     return mapToStudentRequestDTO(request);
 }
 
-export async function deleteClassJoinRequest(username: string, classId: string): Promise<StudentRequestDTO> {
+export async function deleteClassJoinRequest(username: string, classId: string): Promise<ClassJoinRequestDTO> {
     const requestRepo = getClassJoinRequestRepository();
 
     const student = await fetchStudent(username);

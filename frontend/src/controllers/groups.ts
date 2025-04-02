@@ -1,4 +1,4 @@
-import type { GroupDTO } from "dwengo-1-common/src/interfaces/group";
+import type { GroupDTO } from "@dwengo-1/interfaces/group";
 
 export interface GroupsResponse {
     groups: GroupDTO[];

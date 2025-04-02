@@ -5,17 +5,16 @@ import {
     getQuestionRepository,
     getTeacherRepository,
 } from '../data/repositories.js';
-import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
-import { mapToQuestionDTO, mapToQuestionDTOId, QuestionDTO, QuestionId } from '../interfaces/question.js';
-import { mapToTeacher, mapToTeacherDTO, TeacherDTO } from '../interfaces/teacher.js';
+import { mapToClassDTO } from '../interfaces/class.js';
+import { mapToQuestionDTO, mapToQuestionDTOId } from '../interfaces/question.js';
+import { mapToTeacher, mapToTeacherDTO } from '../interfaces/teacher.js';
 import { Teacher } from '../entities/users/teacher.entity.js';
 import { fetchStudent } from './students.js';
-import { ClassJoinRequest, ClassJoinRequestStatus } from '../entities/classes/class-join-request.entity.js';
-import { mapToStudentRequestDTO, StudentRequestDTO } from '../interfaces/student-request.js';
+import { ClassJoinRequest } from '../entities/classes/class-join-request.entity.js';
+import { mapToStudentRequestDTO } from '../interfaces/student-request.js';
 import { TeacherRepository } from '../data/users/teacher-repository.js';
 import { ClassRepository } from '../data/classes/class-repository.js';
 import { Class } from '../entities/classes/class.entity.js';
-import { StudentDTO } from '../interfaces/student.js';
 import { LearningObjectRepository } from '../data/content/learning-object-repository.js';
 import { LearningObject } from '../entities/content/learning-object.entity.js';
 import { QuestionRepository } from '../data/questions/question-repository.js';
@@ -24,6 +23,12 @@ import { ClassJoinRequestRepository } from '../data/classes/class-join-request-r
 import { Student } from '../entities/users/student.entity.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { getClassStudents } from './classes.js';
+import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
+import { ClassDTO } from '@dwengo-1/common/interfaces/class';
+import { StudentDTO } from '@dwengo-1/common/interfaces/student';
+import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
+import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
+import { ClassJoinRequestStatus } from '@dwengo-1/common/util/class-join-request';
 
 export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | string[]> {
     const teacherRepository: TeacherRepository = getTeacherRepository();
@@ -123,7 +128,7 @@ export async function getTeacherQuestions(username: string, full: boolean): Prom
     return questions.map(mapToQuestionDTOId);
 }
 
-export async function getJoinRequestsByClass(classId: string): Promise<StudentRequestDTO[]> {
+export async function getJoinRequestsByClass(classId: string): Promise<ClassJoinRequestDTO[]> {
     const classRepository: ClassRepository = getClassRepository();
     const cls: Class | null = await classRepository.findById(classId);
 
@@ -136,7 +141,7 @@ export async function getJoinRequestsByClass(classId: string): Promise<StudentRe
     return requests.map(mapToStudentRequestDTO);
 }
 
-export async function updateClassJoinRequestStatus(studentUsername: string, classId: string, accepted = true): Promise<StudentRequestDTO> {
+export async function updateClassJoinRequestStatus(studentUsername: string, classId: string, accepted = true): Promise<ClassJoinRequestDTO> {
     const requestRepo: ClassJoinRequestRepository = getClassJoinRequestRepository();
     const classRepo: ClassRepository = getClassRepository();
 

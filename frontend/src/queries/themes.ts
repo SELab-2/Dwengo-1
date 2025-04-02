@@ -1,7 +1,7 @@
 import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
 import { type MaybeRefOrGetter, toValue } from "vue";
 import { ThemeController } from "@/controllers/themes.ts";
-import type { Theme } from "dwengo-1-common/src/interfaces/theme";
+import type { Theme } from "../../../common/src/interfaces/theme";
 
 const themeController = new ThemeController();
 
