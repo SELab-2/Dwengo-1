@@ -105,7 +105,10 @@
         :query-result="learningPathQueryResult"
         v-slot="learningPath: { data: LearningPath }"
     >
-        <v-navigation-drawer v-model="navigationDrawerShown" :width="350">
+        <v-navigation-drawer
+            v-model="navigationDrawerShown"
+            :width="350"
+        >
             <v-list-item>
                 <template v-slot:title>
                     <div class="learning-path-title">{{ learningPath.data.title }}</div>
