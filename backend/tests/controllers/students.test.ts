@@ -20,7 +20,7 @@ import { NotFoundException } from '../../src/exceptions/not-found-exception.js';
 import { BadRequestException } from '../../src/exceptions/bad-request-exception.js';
 import { ConflictException } from '../../src/exceptions/conflict-exception.js';
 import { EntityAlreadyExistsException } from '../../src/exceptions/entity-already-exists-exception.js';
-import {StudentDTO} from "dwengo-1-common/src/interfaces/student";
+import { StudentDTO } from 'dwengo-1-common/src/interfaces/student';
 
 describe('Student controllers', () => {
     let req: Partial<Request>;
