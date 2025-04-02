@@ -12,6 +12,7 @@
         "format": "prettier --write src/",
         "format-check": "prettier --check src/",
         "lint": "eslint . --fix",
+        "pretest:unit": "npm run build",
         "test:unit": "vitest --run"
     },
     "dependencies": {

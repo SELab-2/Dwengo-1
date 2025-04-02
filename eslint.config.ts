@@ -17,7 +17,7 @@ export default [
     includeIgnoreFile(gitignorePath),
     {
         ignores: ['**/dist/**', '**/.node_modules/**', '**/coverage/**', '**/.github/**'],
-        files: ['**/*.ts', '**/*.cts', '**.*.mts', '**/*.ts'],
+        files: ['**/*.ts', '**/*.cts', '**.*.mts'],
     },
     {
         languageOptions: {
