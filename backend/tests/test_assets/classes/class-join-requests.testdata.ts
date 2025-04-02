@@ -1,5 +1,5 @@
 import { EntityManager } from '@mikro-orm/core';
-import { ClassJoinRequest, ClassJoinRequestStatus } from '../../../src/entities/classes/class-join-request.entity';
+import { ClassJoinRequest } from '../../../src/entities/classes/class-join-request.entity';
 import { Student } from '../../../src/entities/users/student.entity';
 import { Class } from '../../../src/entities/classes/class.entity';
 
