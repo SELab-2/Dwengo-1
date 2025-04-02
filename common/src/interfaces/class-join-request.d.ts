@@ -1,4 +1,4 @@
-import {StudentDTO} from "./student";
+import { StudentDTO } from './student';
 
 export interface ClassJoinRequestDTO {
     requester: StudentDTO;

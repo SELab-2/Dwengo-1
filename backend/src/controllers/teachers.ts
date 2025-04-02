@@ -11,10 +11,10 @@ import {
     updateClassJoinRequestStatus,
 } from '../services/teachers.js';
 import { requireFields } from './error-helper.js';
-import {TeacherDTO} from "dwengo-1-common/src/interfaces/teacher";
-import {ClassDTO} from "dwengo-1-common/src/interfaces/class";
-import {StudentDTO} from "dwengo-1-common/src/interfaces/student";
-import {QuestionDTO, QuestionId} from "dwengo-1-common/src/interfaces/question";
+import { TeacherDTO } from 'dwengo-1-common/src/interfaces/teacher';
+import { ClassDTO } from 'dwengo-1-common/src/interfaces/class';
+import { StudentDTO } from 'dwengo-1-common/src/interfaces/student';
+import { QuestionDTO, QuestionId } from 'dwengo-1-common/src/interfaces/question';
 
 export async function getAllTeachersHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';

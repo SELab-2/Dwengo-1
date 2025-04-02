@@ -1,12 +1,15 @@
 import { BaseController } from "@/controllers/base-controller.ts";
-import type {JoinRequestResponse, JoinRequestsResponse, StudentsResponse} from "@/controllers/students.ts";
-import type {QuestionsResponse} from "@/controllers/questions.ts";
-import type {ClassesResponse} from "@/controllers/classes.ts";
-import type {TeacherDTO} from "dwengo-1-common/src/interfaces/teacher";
+import type { JoinRequestResponse, JoinRequestsResponse, StudentsResponse } from "@/controllers/students.ts";
+import type { QuestionsResponse } from "@/controllers/questions.ts";
+import type { ClassesResponse } from "@/controllers/classes.ts";
+import type { TeacherDTO } from "dwengo-1-common/src/interfaces/teacher";
 
-export interface TeachersResponse { teachers: TeacherDTO[] | string[] }
-export interface TeacherResponse { teacher: TeacherDTO }
-
+export interface TeachersResponse {
+    teachers: TeacherDTO[] | string[];
+}
+export interface TeacherResponse {
+    teacher: TeacherDTO;
+}
 
 export class TeacherController extends BaseController {
     constructor() {
@@ -45,8 +48,16 @@ export class TeacherController extends BaseController {
         return this.get<JoinRequestsResponse>(`/${username}/joinRequests/${classId}`);
     }
 
-    async updateStudentJoinRequest(teacherUsername: string, classId: string, studentUsername: string, accepted: boolean): Promise<JoinRequestResponse> {
-        return this.put<JoinRequestResponse>(`/${teacherUsername}/joinRequests/${classId}/${studentUsername}`, accepted);
+    async updateStudentJoinRequest(
+        teacherUsername: string,
+        classId: string,
+        studentUsername: string,
+        accepted: boolean,
+    ): Promise<JoinRequestResponse> {
+        return this.put<JoinRequestResponse>(
+            `/${teacherUsername}/joinRequests/${classId}/${studentUsername}`,
+            accepted,
+        );
     }
 
     // GetInvitations(id: string) {return this.get<{ invitations: string[] }>(`/${id}/invitations`);}
