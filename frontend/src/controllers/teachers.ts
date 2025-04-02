@@ -4,8 +4,8 @@ import type {QuestionsResponse} from "@/controllers/questions.ts";
 import type {ClassesResponse} from "@/controllers/classes.ts";
 import type {TeacherDTO} from "dwengo-1-common/src/interfaces/teacher";
 
-export type TeachersResponse = { teachers: TeacherDTO[] | string[] };
-export type TeacherResponse = { teacher: TeacherDTO | string };
+export interface TeachersResponse { teachers: TeacherDTO[] | string[] }
+export interface TeacherResponse { teacher: TeacherDTO | string }
 
 
 export class TeacherController extends BaseController {
@@ -21,7 +21,7 @@ export class TeacherController extends BaseController {
         return this.get<TeacherResponse>(`/${username}`);
     }
 
-    async createTeacher(data: any): Promise<TeacherResponse> {
+    async createTeacher(data: TeacherDTO): Promise<TeacherResponse> {
         return this.post<TeacherResponse>("/", data);
     }
 

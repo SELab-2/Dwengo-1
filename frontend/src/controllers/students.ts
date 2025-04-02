@@ -7,10 +7,10 @@ import type {SubmissionsResponse} from "@/controllers/submissions.ts";
 import type {QuestionsResponse} from "@/controllers/questions.ts";
 import type {ClassJoinRequestDTO} from "dwengo-1-common/src/interfaces/class-join-request";
 
-export type StudentsResponse = { students: StudentDTO[] | string[] };
-export type StudentResponse = { student: StudentDTO };
-export type JoinRequestsResponse = { requests: ClassJoinRequestDTO[] };
-export type JoinRequestResponse = { request: ClassJoinRequestDTO };
+export interface StudentsResponse { students: StudentDTO[] | string[] }
+export interface StudentResponse { student: StudentDTO }
+export interface JoinRequestsResponse { requests: ClassJoinRequestDTO[] }
+export interface JoinRequestResponse { request: ClassJoinRequestDTO }
 
 
 export class StudentController extends BaseController {
