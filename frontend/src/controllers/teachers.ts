@@ -1,44 +1,52 @@
 import { BaseController } from "@/controllers/base-controller.ts";
+import type {JoinRequestResponse, JoinRequestsResponse, StudentsResponse} from "@/controllers/students.ts";
+import type {QuestionsResponse} from "@/controllers/questions.ts";
+import type {ClassesResponse} from "@/controllers/classes.ts";
+import type {TeacherDTO} from "dwengo-1-common/src/interfaces/teacher";
+
+export type TeachersResponse = { teachers: TeacherDTO[] | string[] };
+export type TeacherResponse = { teacher: TeacherDTO | string };
+
 
 export class TeacherController extends BaseController {
     constructor() {
         super("teacher");
     }
 
-    getAll(full = false) {
-        return this.get<{ teachers: any[] }>("/", { full });
+    async getAll(full = false): Promise<TeachersResponse> {
+        return this.get<TeachersResponse>("/", { full });
     }
 
-    getByUsername(username: string) {
-        return this.get<any>(`/${username}`);
+    async getByUsername(username: string): Promise<TeacherResponse> {
+        return this.get<TeacherResponse>(`/${username}`);
     }
 
-    createTeacher(data: any) {
-        return this.post("/", data);
+    async createTeacher(data: any): Promise<TeacherResponse> {
+        return this.post<TeacherResponse>("/", data);
     }
 
-    deleteTeacher(username: string) {
-        return this.delete(`/${username}`);
+    async deleteTeacher(username: string): Promise<TeacherResponse> {
+        return this.delete<TeacherResponse>(`/${username}`);
     }
 
-    getClasses(username: string, full = false) {
-        return this.get<any[]>(`/${username}/classes`, { full });
+    async getClasses(username: string, full = false): Promise<ClassesResponse> {
+        return this.get<ClassesResponse>(`/${username}/classes`, { full });
     }
 
-    getStudents(username: string, full = false) {
-        return this.get<{ students: any[] }>(`/${username}/students`, { full });
+    async getStudents(username: string, full = false): Promise<StudentsResponse> {
+        return this.get<StudentsResponse>(`/${username}/students`, { full });
     }
 
-    getQuestions(username: string, full = false) {
-        return this.get<{ questions: any[] }>(`/${username}/questions`, { full });
+    async getQuestions(username: string, full = false): Promise<QuestionsResponse> {
+        return this.get<QuestionsResponse>(`/${username}/questions`, { full });
     }
 
-    getStudentJoinRequests(username: string, classId: string) {
-        return this.get<{ joinRequests: any[] }>(`/${username}/joinRequests/${classId}`);
+    async getStudentJoinRequests(username: string, classId: string): Promise<JoinRequestsResponse> {
+        return this.get<JoinRequestsResponse>(`/${username}/joinRequests/${classId}`);
     }
 
-    updateStudentJoinRequest(teacherUsername: string, classId: string, studentUsername: string, accepted: boolean) {
-        return this.put(`/${teacherUsername}/joinRequests/${classId}/${studentUsername}`, accepted);
+    async updateStudentJoinRequest(teacherUsername: string, classId: string, studentUsername: string, accepted: boolean): Promise<JoinRequestResponse> {
+        return this.put<JoinRequestResponse>(`/${teacherUsername}/joinRequests/${classId}/${studentUsername}`, accepted);
     }
 
     // GetInvitations(id: string) {return this.get<{ invitations: string[] }>(`/${id}/invitations`);}

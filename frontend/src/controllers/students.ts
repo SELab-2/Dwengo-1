@@ -1,59 +1,72 @@
 import { BaseController } from "@/controllers/base-controller.ts";
+import type {StudentDTO} from "dwengo-1-common/src/interfaces/student";
+import type {ClassesResponse} from "@/controllers/classes.ts";
+import type {AssignmentsResponse} from "@/controllers/assignments.ts";
+import type {GroupsResponse} from "@/controllers/groups.ts";
+import type {SubmissionsResponse} from "@/controllers/submissions.ts";
+import type {QuestionsResponse} from "@/controllers/questions.ts";
+import type {ClassJoinRequestDTO} from "dwengo-1-common/src/interfaces/class-join-request";
+
+export type StudentsResponse = { students: StudentDTO[] | string[] };
+export type StudentResponse = { student: StudentDTO };
+export type JoinRequestsResponse = { requests: ClassJoinRequestDTO[] };
+export type JoinRequestResponse = { request: ClassJoinRequestDTO };
+
 
 export class StudentController extends BaseController {
     constructor() {
         super("student");
     }
 
-    getAll(full = true) {
-        return this.get<{ students: any[] }>("/", { full });
+    async getAll(full = true): Promise<StudentsResponse> {
+        return this.get<StudentsResponse>("/", { full });
     }
 
-    getByUsername(username: string) {
-        return this.get<{ student: any }>(`/${username}`);
+    async getByUsername(username: string): Promise<StudentResponse> {
+        return this.get<StudentResponse>(`/${username}`);
     }
 
-    createStudent(data: any) {
-        return this.post("/", data);
+    async createStudent(data: StudentDTO): Promise<StudentResponse> {
+        return this.post<StudentResponse>("/", data);
     }
 
-    deleteStudent(username: string) {
-        return this.delete(`/${username}`);
+    async deleteStudent(username: string): Promise<StudentResponse> {
+        return this.delete<StudentResponse>(`/${username}`);
     }
 
-    getClasses(username: string, full = true) {
-        return this.get<{ classes: any[] }>(`/${username}/classes`, { full });
+    async getClasses(username: string, full = true): Promise<ClassesResponse> {
+        return this.get<ClassesResponse>(`/${username}/classes`, { full });
     }
 
-    getAssignments(username: string, full = true) {
-        return this.get<{ assignments: any[] }>(`/${username}/assignments`, { full });
+    async getAssignments(username: string, full = true): Promise<AssignmentsResponse> {
+        return this.get<AssignmentsResponse>(`/${username}/assignments`, { full });
     }
 
-    getGroups(username: string, full = true) {
-        return this.get<{ groups: any[] }>(`/${username}/groups`, { full });
+    async getGroups(username: string, full = true): Promise<GroupsResponse> {
+        return this.get<GroupsResponse>(`/${username}/groups`, { full });
     }
 
-    getSubmissions(username: string) {
-        return this.get<{ submissions: any[] }>(`/${username}/submissions`);
+    async getSubmissions(username: string): Promise<SubmissionsResponse> {
+        return this.get<SubmissionsResponse>(`/${username}/submissions`);
     }
 
-    getQuestions(username: string, full = true) {
-        return this.get<{ questions: any[] }>(`/${username}/questions`, { full });
+    async getQuestions(username: string, full = true): Promise<QuestionsResponse> {
+        return this.get<QuestionsResponse>(`/${username}/questions`, { full });
     }
 
-    getJoinRequests(username: string) {
-        return this.get<{ requests: any[] }>(`/${username}/joinRequests`);
+    async getJoinRequests(username: string): Promise<JoinRequestsResponse> {
+        return this.get<JoinRequestsResponse>(`/${username}/joinRequests`);
     }
 
-    getJoinRequest(username: string, classId: string) {
-        return this.get<{ request: any[] }>(`/${username}/joinRequests/${classId}`);
+    async getJoinRequest(username: string, classId: string): Promise<JoinRequestResponse> {
+        return this.get<JoinRequestResponse>(`/${username}/joinRequests/${classId}`);
     }
 
-    createJoinRequest(username: string, classId: string) {
-        return this.post(`/${username}/joinRequests}`, classId);
+    async createJoinRequest(username: string, classId: string): Promise<JoinRequestResponse> {
+        return this.post<JoinRequestResponse>(`/${username}/joinRequests}`, classId);
     }
 
-    deleteJoinRequest(username: string, classId: string) {
-        return this.delete(`/${username}/joinRequests/${classId}`);
+    async deleteJoinRequest(username: string, classId: string): Promise<JoinRequestResponse> {
+        return this.delete<JoinRequestResponse>(`/${username}/joinRequests/${classId}`);
     }
 }

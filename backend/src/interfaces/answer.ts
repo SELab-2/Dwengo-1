@@ -16,10 +16,10 @@ export function mapToAnswerDTO(answer: Answer): AnswerDTO {
     };
 }
 
-export function mapToAnswerId(answer: AnswerDTO): AnswerId {
+export function mapToAnswerDTOId(answer: Answer): AnswerId {
     return {
         author: answer.author.username,
         toQuestion: mapToQuestionDTOId(answer.toQuestion),
-        sequenceNumber: answer.sequenceNumber,
+        sequenceNumber: answer.sequenceNumber!,
     };
 }
