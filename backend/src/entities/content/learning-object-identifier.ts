@@ -1,4 +1,4 @@
-import { Language } from "@dwengo-1/common/util/language";
+import { Language } from '@dwengo-1/common/util/language';
 
 export class LearningObjectIdentifier {
     constructor(

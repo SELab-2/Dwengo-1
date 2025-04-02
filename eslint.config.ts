@@ -24,7 +24,7 @@ export default [
             '**/prettier.config.js',
             'docs/.venv/**',
             'prettier.config.js',
-            'frontend/prettier.config.js'
+            'frontend/prettier.config.js',
         ],
         files: ['**/*.ts', '**/*.cts', '**.*.mts'],
     },
@@ -214,6 +214,6 @@ export default [
             'no-multi-assign': 'error',
             'no-nested-ternary': 'error',
             'no-object-constructor': 'error',
-        }
+        },
     },
 ];

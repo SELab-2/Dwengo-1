@@ -69,7 +69,7 @@ async function fetchLearningObjects(learningPathId: LearningPathIdentifier, full
             nodes.map(async (node) => {
                 const learningObjectId: LearningObjectIdentifier = {
                     hruid: node.learningobject_hruid,
-                    language: learningPathId.language
+                    language: learningPathId.language,
                 };
                 return dwengoApiLearningObjectProvider.getLearningObjectById(learningObjectId);
             })
