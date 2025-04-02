@@ -16,7 +16,16 @@ export default [
     prettierConfig,
     includeIgnoreFile(gitignorePath),
     {
-        ignores: ['**/dist/**', '**/.node_modules/**', '**/coverage/**', '**/.github/**'],
+        ignores: [
+            '**/dist/**',
+            '**/.node_modules/**',
+            '**/coverage/**',
+            '**/.github/**',
+            '**/prettier.config.js',
+            'docs/.venv/**',
+            'prettier.config.js',
+            'frontend/prettier.config.js'
+        ],
         files: ['**/*.ts', '**/*.cts', '**.*.mts'],
     },
     {
@@ -205,6 +214,6 @@ export default [
             'no-multi-assign': 'error',
             'no-nested-ternary': 'error',
             'no-object-constructor': 'error',
-        },
+        }
     },
 ];
