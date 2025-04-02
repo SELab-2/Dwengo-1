@@ -72,11 +72,6 @@ export class LearningPath {
     }
 
     static fromDTO(dto: LearningPathDTO): LearningPath {
-        const startNodeDto = dto.nodes.filter((it) => it.start_node === true);
-        if (startNodeDto.length !== 1) {
-            throw new Error(`Invalid learning path: ${dto.hruid}/${dto.language}!
-                                Expected precisely one start node, but there were ${startNodeDto.length}.`);
-        }
         return new LearningPath({
             language: dto.language,
             hruid: dto.hruid,
@@ -86,8 +81,17 @@ export class LearningPath {
             amountOfNodesLeft: dto.num_nodes_left,
             keywords: dto.keywords.split(" "),
             targetAges: { min: dto.min_age, max: dto.max_age },
-            startNode: LearningPathNode.fromDTOAndOtherNodes(startNodeDto[0], dto.nodes),
+            startNode: LearningPathNode.fromDTOAndOtherNodes(LearningPath.getStartNode(dto), dto.nodes),
             image: dto.image,
         });
+    }
+
+    static getStartNode(dto: LearningPathDTO): LearningPathNodeDTO {
+        const startNodeDtos = dto.nodes.filter((it) => it.start_node === true);
+        if (startNodeDtos.length < 1) { // The learning path has no starting node -> use the first node.
+            return dto.nodes[0];
+        } else { // The learning path has 1 or more starting nodes -> use the first start node.
+            return startNodeDtos[0];
+        }
     }
 }

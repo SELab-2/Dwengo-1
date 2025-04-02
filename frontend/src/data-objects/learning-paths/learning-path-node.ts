@@ -34,24 +34,21 @@ export class LearningPathNode {
             version: dto.version,
             language: dto.language,
             transitions: dto.transitions.map((transDto) => {
-                const nextNodeDto = otherNodes.filter(
+                const nextNodeDto = otherNodes.find(
                     (it) =>
                         it.learningobject_hruid === transDto.next.hruid &&
                         it.language === transDto.next.language &&
                         it.version === transDto.next.version,
                 );
-                if (nextNodeDto.length !== 1) {
-                    throw new Error(
-                        `Invalid learning path! There is a transition to node` +
-                            `${transDto.next.hruid}/${transDto.next.language}/${transDto.next.version}, but there are` +
-                            `${nextNodeDto.length} such nodes.`,
-                    );
+                if (nextNodeDto) {
+                    return {
+                        next: LearningPathNode.fromDTOAndOtherNodes(nextNodeDto, otherNodes),
+                        default: transDto.default,
+                    };
+                } else {
+                    return undefined
                 }
-                return {
-                    next: LearningPathNode.fromDTOAndOtherNodes(nextNodeDto[0], otherNodes),
-                    default: transDto.default,
-                };
-            }),
+            }).filter(it => it !== undefined),
             createdAt: new Date(dto.created_at),
             updatedAt: new Date(dto.updatedAt),
             done: dto.done,
