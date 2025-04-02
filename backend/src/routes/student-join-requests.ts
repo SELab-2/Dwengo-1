@@ -3,7 +3,7 @@ import {
     createStudentRequestHandler,
     deleteClassJoinRequestHandler,
     getStudentRequestHandler,
-    getStudentRequestsHandler
+    getStudentRequestsHandler,
 } from '../controllers/students.js';
 
 const router = express.Router({ mergeParams: true });

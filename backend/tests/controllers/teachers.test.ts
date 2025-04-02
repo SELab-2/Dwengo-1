@@ -46,15 +46,13 @@ describe('Teacher controllers', () => {
     it('Teacher not found', async () => {
         req = { params: { username: 'doesnotexist' } };
 
-        await expect(async () => getTeacherHandler(req as Request, res as Response))
-            .rejects.toThrow(NotFoundException);
+        await expect(async () => getTeacherHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
     });
 
     it('No username', async () => {
         req = { params: {} };
 
-        await expect(async () => getTeacherHandler(req as Request, res as Response))
-            .rejects.toThrowError(BadRequestException);
+        await expect(async () => getTeacherHandler(req as Request, res as Response)).rejects.toThrowError(BadRequestException);
     });
 
     it('Create and delete teacher', async () => {
@@ -63,7 +61,7 @@ describe('Teacher controllers', () => {
             username: 'coolteacher',
             firstName: 'New',
             lastName: 'Teacher',
-        }
+        };
         req = {
             body: teacher,
         };
@@ -88,15 +86,13 @@ describe('Teacher controllers', () => {
             },
         };
 
-        await expect(async () => createTeacherHandler(req as Request, res as Response))
-            .rejects.toThrowError(EntityAlreadyExistsException);
+        await expect(async () => createTeacherHandler(req as Request, res as Response)).rejects.toThrowError(EntityAlreadyExistsException);
     });
 
     it('Create teacher no body', async () => {
         req = { body: {} };
 
-        await expect(async () => createTeacherHandler(req as Request, res as Response))
-            .rejects.toThrowError(BadRequestException);
+        await expect(async () => createTeacherHandler(req as Request, res as Response)).rejects.toThrowError(BadRequestException);
     });
 
     it('Teacher list', async () => {

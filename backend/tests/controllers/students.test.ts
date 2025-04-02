@@ -12,7 +12,8 @@ import {
     getStudentQuestionsHandler,
     createStudentRequestHandler,
     getStudentRequestsHandler,
-    deleteClassJoinRequestHandler, getStudentRequestHandler,
+    deleteClassJoinRequestHandler,
+    getStudentRequestHandler,
 } from '../../src/controllers/students.js';
 import { TEST_STUDENTS } from '../test_assets/users/students.testdata.js';
 import { NotFoundException } from '../../src/exceptions/not-found-exception.js';
@@ -49,15 +50,13 @@ describe('Student controllers', () => {
     it('Student not found', async () => {
         req = { params: { username: 'doesnotexist' } };
 
-        await expect(async () => getStudentHandler(req as Request, res as Response))
-            .rejects.toThrow(NotFoundException);
+        await expect(async () => getStudentHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
     });
 
     it('No username', async () => {
         req = { params: {} };
 
-        await expect(async () => getStudentHandler(req as Request, res as Response))
-            .rejects.toThrowError(BadRequestException);
+        await expect(async () => getStudentHandler(req as Request, res as Response)).rejects.toThrowError(BadRequestException);
     });
 
     it('Create and delete student', async () => {
@@ -68,7 +67,7 @@ describe('Student controllers', () => {
             lastName: 'Student',
         } as StudentDTO;
         req = {
-            body: student
+            body: student,
         };
 
         await createStudentHandler(req as Request, res as Response);
@@ -91,15 +90,13 @@ describe('Student controllers', () => {
             },
         };
 
-        await expect(async () => createStudentHandler(req as Request, res as Response))
-            .rejects.toThrowError(EntityAlreadyExistsException);
+        await expect(async () => createStudentHandler(req as Request, res as Response)).rejects.toThrowError(EntityAlreadyExistsException);
     });
 
     it('Create student no body', async () => {
         req = { body: {} };
 
-        await expect(async () => createStudentHandler(req as Request, res as Response))
-            .rejects.toThrowError(BadRequestException);
+        await expect(async () => createStudentHandler(req as Request, res as Response)).rejects.toThrowError(BadRequestException);
     });
 
     it('Student list', async () => {
@@ -218,8 +215,7 @@ describe('Student controllers', () => {
             body: { classId: 'id02' },
         };
 
-        await expect(async () => createStudentRequestHandler(req as Request, res as Response))
-            .rejects.toThrow(ConflictException);
+        await expect(async () => createStudentRequestHandler(req as Request, res as Response)).rejects.toThrow(ConflictException);
     });
 
     it('Delete join request', async () => {
@@ -231,7 +227,6 @@ describe('Student controllers', () => {
 
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ request: expect.anything() }));
 
-        await expect(async () => deleteClassJoinRequestHandler(req as Request, res as Response))
-            .rejects.toThrow(NotFoundException);
+        await expect(async () => deleteClassJoinRequestHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
     });
 });

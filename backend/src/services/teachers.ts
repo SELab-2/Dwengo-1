@@ -6,12 +6,7 @@ import {
     getTeacherRepository,
 } from '../data/repositories.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
-import {
-    mapToQuestionDTO,
-    mapToQuestionDTOId,
-    QuestionDTO,
-    QuestionId
-} from '../interfaces/question.js';
+import { mapToQuestionDTO, mapToQuestionDTOId, QuestionDTO, QuestionId } from '../interfaces/question.js';
 import { mapToTeacher, mapToTeacherDTO, TeacherDTO } from '../interfaces/teacher.js';
 import { Teacher } from '../entities/users/teacher.entity.js';
 import { fetchStudent } from './students.js';
