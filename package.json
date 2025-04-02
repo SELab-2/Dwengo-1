@@ -5,14 +5,15 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "npm run build --workspace=backend --workspace=frontend",
-        "format": "npm run format --workspace=backend --workspace=frontend",
-        "format-check": "npm run format-check --workspace=backend --workspace=frontend",
-        "lint": "npm run lint --workspace=backend --workspace=frontend",
+        "build": "npm run build --workspaces --if-present",
+        "format": "npm run format --workspace=backend --workspace=common --workspace=frontend",
+        "format-check": "npm run format-check --workspace=backend --workspace=common --workspace=frontend",
+        "lint": "npm run lint --workspace=backend --workspace=common --workspace=frontend",
         "test:unit": "npm run test:unit --workspace=backend --workspace=frontend"
     },
     "workspaces": [
         "backend",
+        "common",
         "frontend",
         "docs"
     ],

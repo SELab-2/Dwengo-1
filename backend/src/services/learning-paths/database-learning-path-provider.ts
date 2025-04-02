@@ -1,5 +1,4 @@
 import { LearningPathProvider } from './learning-path-provider.js';
-import { FilteredLearningObject, LearningObjectNode, LearningPath, LearningPathResponse, Transition } from '../../interfaces/learning-content.js';
 import { LearningPath as LearningPathEntity } from '../../entities/content/learning-path.entity.js';
 import { getLearningPathRepository } from '../../data/repositories.js';
 import { Language } from '../../entities/content/language.js';
@@ -7,6 +6,13 @@ import learningObjectService from '../learning-objects/learning-object-service.j
 import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
 import { getLastSubmissionForCustomizationTarget, isTransitionPossible, PersonalizationTarget } from './learning-path-personalization-util.js';
+import {
+    FilteredLearningObject,
+    LearningObjectNode,
+    LearningPath,
+    LearningPathResponse,
+    Transition,
+} from 'dwengo-1-common/src/interfaces/learning-content';
 
 /**
  * Fetches the corresponding learning object for each of the nodes and creates a map that maps each node to its

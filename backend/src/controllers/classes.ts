@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { createClass, getAllClasses, getClass, getClassStudents, getClassStudentsIds, getClassTeacherInvitations } from '../services/classes.js';
-import { ClassDTO } from '../interfaces/class.js';
+
+import { ClassDTO } from 'dwengo-1-common/src/interfaces/class';
 
 export async function getAllClassesHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';

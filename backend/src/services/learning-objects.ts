@@ -1,6 +1,12 @@
 import { DWENGO_API_BASE } from '../config.js';
 import { fetchWithLogging } from '../util/api-helper.js';
-import { FilteredLearningObject, LearningObjectMetadata, LearningObjectNode, LearningPathResponse } from '../interfaces/learning-content.js';
+
+import {
+    FilteredLearningObject,
+    LearningObjectMetadata,
+    LearningObjectNode,
+    LearningPathResponse,
+} from 'dwengo-1-common/src/interfaces/learning-content';
 import { getLogger } from '../logging/initalize.js';
 
 function filterData(data: LearningObjectMetadata, htmlUrl: string): FilteredLearningObject {

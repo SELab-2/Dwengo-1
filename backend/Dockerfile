@@ -1,11 +1,14 @@
-FROM node:22 AS build-stage
+FROM node:22
 
-WORKDIR /app
+WORKDIR /app/dwengo
+
+COPY ./backend/i18n ./i18n
 
 # Install dependencies
 
 COPY package*.json ./
 COPY backend/package.json ./backend/
+COPY common/package.json ./common/
 
 RUN npm install --silent
 
@@ -14,25 +17,13 @@ RUN npm install --silent
 # Root tsconfig.json
 COPY tsconfig.json ./
 
-WORKDIR /app/backend
+COPY backend ./backend
+COPY common ./common
+COPY docs ./docs
 
-COPY backend ./
-COPY docs /app/docs
-
-RUN npm run build
-
-FROM node:22 AS production-stage
-
-WORKDIR /app
-
-COPY package-lock.json backend/package.json ./
-
-RUN npm install --silent --only=production
-
-COPY ./docs /docs
-COPY ./backend/i18n /app/i18n
-COPY --from=build-stage /app/backend/dist ./dist/
+RUN npm run build --workspace=common
+RUN npm run build --workspace=backend
 
 EXPOSE 3000
 
-CMD ["node", "--env-file=.env", "dist/app.js"]
+CMD ["node", "--env-file=/app/dwengo/backend/.env", "/app/dwengo/backend/dist/app.js"]

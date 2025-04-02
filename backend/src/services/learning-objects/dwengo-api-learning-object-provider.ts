@@ -1,5 +1,8 @@
 import { DWENGO_API_BASE } from '../../config.js';
 import { fetchWithLogging } from '../../util/api-helper.js';
+import dwengoApiLearningPathProvider from '../learning-paths/dwengo-api-learning-path-provider.js';
+import { LearningObjectProvider } from './learning-object-provider.js';
+import { getLogger, Logger } from '../../logging/initalize.js';
 import {
     FilteredLearningObject,
     LearningObjectIdentifier,
@@ -7,10 +10,7 @@ import {
     LearningObjectNode,
     LearningPathIdentifier,
     LearningPathResponse,
-} from '../../interfaces/learning-content.js';
-import dwengoApiLearningPathProvider from '../learning-paths/dwengo-api-learning-path-provider.js';
-import { LearningObjectProvider } from './learning-object-provider.js';
-import { getLogger, Logger } from '../../logging/initalize.js';
+} from 'dwengo-1-common/src/interfaces/learning-content';
 
 const logger: Logger = getLogger();
 
@@ -90,7 +90,7 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
             metadataUrl,
             `Metadata for Learning Object HRUID "${id.hruid}" (language ${id.language})`,
             {
-                params: id,
+                params: { ...id },
             }
         );
 
@@ -123,7 +123,7 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
     async getLearningObjectHTML(id: LearningObjectIdentifier): Promise<string | null> {
         const htmlUrl = `${DWENGO_API_BASE}/learningObject/getRaw`;
         const html = await fetchWithLogging<string>(htmlUrl, `Metadata for Learning Object HRUID "${id.hruid}" (language ${id.language})`, {
-            params: id,
+            params: { ...id },
         });
 
         if (!html) {

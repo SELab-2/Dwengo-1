@@ -1,12 +1,7 @@
 import { TeacherInvitation } from '../entities/classes/teacher-invitation.entity.js';
-import { ClassDTO, mapToClassDTO } from './class.js';
-import { mapToUserDTO, UserDTO } from './user.js';
-
-export interface TeacherInvitationDTO {
-    sender: string | UserDTO;
-    receiver: string | UserDTO;
-    class: string | ClassDTO;
-}
+import { mapToClassDTO } from './class.js';
+import { mapToUserDTO } from './user.js';
+import { TeacherInvitationDTO } from 'dwengo-1-common/src/interfaces/teacher-invitation';
 
 export function mapToTeacherInvitationDTO(invitation: TeacherInvitation): TeacherInvitationDTO {
     return {

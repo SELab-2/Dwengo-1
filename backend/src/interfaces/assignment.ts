@@ -1,19 +1,9 @@
 import { FALLBACK_LANG } from '../config.js';
 import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { Class } from '../entities/classes/class.entity.js';
-import { languageMap } from '../entities/content/language.js';
-import { GroupDTO } from './group.js';
 import { getLogger } from '../logging/initalize.js';
-
-export interface AssignmentDTO {
-    id: number;
-    class: string; // Id of class 'within'
-    title: string;
-    description: string;
-    learningPath: string;
-    language: string;
-    groups?: GroupDTO[] | string[]; // TODO
-}
+import { languageMap } from '../entities/content/language.js';
+import { AssignmentDTO } from 'dwengo-1-common/src/interfaces/assignment';
 
 export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTO {
     return {

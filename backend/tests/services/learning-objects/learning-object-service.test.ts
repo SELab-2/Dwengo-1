@@ -4,11 +4,11 @@ import { LearningObject } from '../../../src/entities/content/learning-object.en
 import { getLearningObjectRepository, getLearningPathRepository } from '../../../src/data/repositories';
 import learningObjectExample from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example';
 import learningObjectService from '../../../src/services/learning-objects/learning-object-service';
-import { LearningObjectIdentifier, LearningPathIdentifier } from '../../../src/interfaces/learning-content';
 import { Language } from '../../../src/entities/content/language';
 import { envVars, getEnvVar } from '../../../src/util/envVars';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
 import learningPathExample from '../../test-assets/learning-paths/pn-werking-example';
+import { LearningObjectIdentifier, LearningPathIdentifier } from 'dwengo-1-common/src/interfaces/learning-content';
 
 const EXPECTED_DWENGO_LEARNING_OBJECT_TITLE = 'Werken met notebooks';
 const DWENGO_TEST_LEARNING_OBJECT_ID: LearningObjectIdentifier = {
@@ -105,7 +105,10 @@ describe('LearningObjectService', () => {
             expect(new Set(result.map((it) => it.key))).toEqual(DWENGO_TEST_LEARNING_PATH_HRUIDS);
         });
         it('returns an empty list when queried with a non-existing learning path id', async () => {
-            const result = await learningObjectService.getLearningObjectsFromPath({ hruid: 'non_existing', language: Language.Dutch });
+            const result = await learningObjectService.getLearningObjectsFromPath({
+                hruid: 'non_existing',
+                language: Language.Dutch,
+            });
             expect(result).toEqual([]);
         });
     });
@@ -120,7 +123,10 @@ describe('LearningObjectService', () => {
             expect(new Set(result)).toEqual(DWENGO_TEST_LEARNING_PATH_HRUIDS);
         });
         it('returns an empty list when queried with a non-existing learning path id', async () => {
-            const result = await learningObjectService.getLearningObjectIdsFromPath({ hruid: 'non_existing', language: Language.Dutch });
+            const result = await learningObjectService.getLearningObjectIdsFromPath({
+                hruid: 'non_existing',
+                language: Language.Dutch,
+            });
             expect(result).toEqual([]);
         });
     });

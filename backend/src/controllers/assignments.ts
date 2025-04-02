@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { createAssignment, getAllAssignments, getAssignment, getAssignmentsSubmissions } from '../services/assignments.js';
-import { AssignmentDTO } from '../interfaces/assignment.js';
+
+import { AssignmentDTO } from 'dwengo-1-common/src/interfaces/assignment';
 
 // Typescript is annoying with parameter forwarding from class.ts
 interface AssignmentParams {

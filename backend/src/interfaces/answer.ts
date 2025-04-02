@@ -1,14 +1,7 @@
-import { mapToUserDTO, UserDTO } from './user.js';
-import {mapToQuestionDTO, mapToQuestionDTOId, QuestionDTO, QuestionId} from './question.js';
+import { mapToUserDTO } from './user.js';
+import { mapToQuestionDTO, mapToQuestionDTOId } from './question.js';
 import { Answer } from '../entities/questions/answer.entity.js';
-
-export interface AnswerDTO {
-    author: UserDTO;
-    toQuestion: QuestionDTO;
-    sequenceNumber: number;
-    timestamp: string;
-    content: string;
-}
+import { AnswerDTO, AnswerId } from 'dwengo-1-common/src/interfaces/answer';
 
 /**
  * Convert a Question entity to a DTO format.
@@ -23,16 +16,10 @@ export function mapToAnswerDTO(answer: Answer): AnswerDTO {
     };
 }
 
-export interface AnswerId {
-    author: string;
-    toQuestion: QuestionId;
-    sequenceNumber: number;
-}
-
-export function mapToAnswerDTOId(answer: Answer): AnswerId {
+export function mapToAnswerId(answer: AnswerDTO): AnswerId {
     return {
         author: answer.author.username,
         toQuestion: mapToQuestionDTOId(answer.toQuestion),
-        sequenceNumber: answer.sequenceNumber!,
+        sequenceNumber: answer.sequenceNumber,
     };
 }

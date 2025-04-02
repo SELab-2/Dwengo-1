@@ -1,26 +1,7 @@
 import { Submission } from '../entities/assignments/submission.entity.js';
-import { Language } from '../entities/content/language.js';
-import { GroupDTO, mapToGroupDTO } from './group.js';
-import { mapToStudent, mapToStudentDTO, StudentDTO } from './student.js';
-import { LearningObjectIdentifier } from './learning-content.js';
-
-export interface SubmissionDTO {
-    learningObjectIdentifier: LearningObjectIdentifier;
-
-    submissionNumber?: number;
-    submitter: StudentDTO;
-    time?: Date;
-    group?: GroupDTO;
-    content: string;
-}
-
-export interface SubmissionDTOId {
-    learningObjectHruid: string;
-    learningObjectLanguage: Language;
-    learningObjectVersion: number;
-
-    submissionNumber?: number;
-}
+import { mapToGroupDTO } from './group.js';
+import { mapToStudent, mapToStudentDTO } from './student.js';
+import { SubmissionDTO, SubmissionDTOId } from 'dwengo-1-common/src/interfaces/submission';
 
 export function mapToSubmissionDTO(submission: Submission): SubmissionDTO {
     return {
