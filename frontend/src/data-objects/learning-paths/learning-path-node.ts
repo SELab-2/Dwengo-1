@@ -33,22 +33,23 @@ export class LearningPathNode {
             learningobjectHruid: dto.learningobject_hruid,
             version: dto.version,
             language: dto.language,
-            transitions: dto.transitions.map((transDto) => {
-                const nextNodeDto = otherNodes.find(
-                    (it) =>
-                        it.learningobject_hruid === transDto.next.hruid &&
-                        it.language === transDto.next.language &&
-                        it.version === transDto.next.version,
-                );
-                if (nextNodeDto) {
-                    return {
-                        next: LearningPathNode.fromDTOAndOtherNodes(nextNodeDto, otherNodes),
-                        default: transDto.default,
-                    };
-                } 
-                    return undefined
-                
-            }).filter(it => it !== undefined),
+            transitions: dto.transitions
+                .map((transDto) => {
+                    const nextNodeDto = otherNodes.find(
+                        (it) =>
+                            it.learningobject_hruid === transDto.next.hruid &&
+                            it.language === transDto.next.language &&
+                            it.version === transDto.next.version,
+                    );
+                    if (nextNodeDto) {
+                        return {
+                            next: LearningPathNode.fromDTOAndOtherNodes(nextNodeDto, otherNodes),
+                            default: transDto.default,
+                        };
+                    }
+                    return undefined;
+                })
+                .filter((it) => it !== undefined),
             createdAt: new Date(dto.created_at),
             updatedAt: new Date(dto.updatedAt),
             done: dto.done,

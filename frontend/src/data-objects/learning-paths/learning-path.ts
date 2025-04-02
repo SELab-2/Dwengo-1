@@ -88,10 +88,10 @@ export class LearningPath {
 
     static getStartNode(dto: LearningPathDTO): LearningPathNodeDTO {
         const startNodeDtos = dto.nodes.filter((it) => it.start_node === true);
-        if (startNodeDtos.length < 1) { // The learning path has no starting node -> use the first node.
+        if (startNodeDtos.length < 1) {
+            // The learning path has no starting node -> use the first node.
             return dto.nodes[0];
-        }  // The learning path has 1 or more starting nodes -> use the first start node.
-            return startNodeDtos[0];
-        
+        } // The learning path has 1 or more starting nodes -> use the first start node.
+        return startNodeDtos[0];
     }
 }
