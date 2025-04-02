@@ -6,7 +6,7 @@ import {
     LearningObjectMetadata,
     LearningObjectNode,
     LearningPathResponse,
-} from 'dwengo-1-common/src/interfaces/learning-content';
+} from '@dwengo-1/common/interfaces/learning-content';
 import { getLogger } from '../logging/initalize.js';
 
 function filterData(data: LearningObjectMetadata, htmlUrl: string): FilteredLearningObject {

@@ -1,7 +1,7 @@
 import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
-import { Language } from '../content/language.js';
 import { Student } from '../users/student.entity.js';
 import { QuestionRepository } from '../../data/questions/question-repository.js';
+import { Language } from '@dwengo-1/common/util/language';
 
 @Entity({ repository: () => QuestionRepository })
 export class Question {

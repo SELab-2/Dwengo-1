@@ -1,7 +1,7 @@
 import { Submission } from '../entities/assignments/submission.entity.js';
 import { mapToGroupDTO } from './group.js';
 import { mapToStudent, mapToStudentDTO } from './student.js';
-import { SubmissionDTO, SubmissionDTOId } from 'dwengo-1-common/src/interfaces/submission';
+import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
 
 export function mapToSubmissionDTO(submission: Submission): SubmissionDTO {
     return {

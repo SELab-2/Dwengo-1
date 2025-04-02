@@ -5,11 +5,11 @@ import example from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-w
 import { LearningObject } from '../../../src/entities/content/learning-object.entity';
 import databaseLearningObjectProvider from '../../../src/services/learning-objects/database-learning-object-provider';
 import { expectToBeCorrectFilteredLearningObject } from '../../test-utils/expectations';
-import { Language } from '../../../src/entities/content/language';
+import { Language } from '@dwengo-1/common/util/language';
 import learningObjectExample from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example';
 import learningPathExample from '../../test-assets/learning-paths/pn-werking-example';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
-import { FilteredLearningObject } from 'dwengo-1-common/src/interfaces/learning-content';
+import { FilteredLearningObject } from '@dwengo-1/common/interfaces/learning-content';
 
 async function initExampleData(): Promise<{ learningObject: LearningObject; learningPath: LearningPath }> {
     const learningObjectRepo = getLearningObjectRepository();

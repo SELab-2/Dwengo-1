@@ -10,7 +10,7 @@ import {
     getStudentSubmissions,
 } from '../services/students.js';
 
-import { StudentDTO } from 'dwengo-1-common/src/interfaces/student';
+import { StudentDTO } from '@dwengo-1/common/interfaces/student';
 
 // TODO: accept arguments (full, ...)
 // TODO: endpoints

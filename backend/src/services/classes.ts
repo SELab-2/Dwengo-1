@@ -3,9 +3,9 @@ import { mapToClassDTO } from '../interfaces/class.js';
 import { mapToStudentDTO } from '../interfaces/student.js';
 import { mapToTeacherInvitationDTO, mapToTeacherInvitationDTOIds } from '../interfaces/teacher-invitation.js';
 import { getLogger } from '../logging/initalize.js';
-import { ClassDTO } from 'dwengo-1-common/src/interfaces/class';
-import { TeacherInvitationDTO } from 'dwengo-1-common/src/interfaces/teacher-invitation';
-import { StudentDTO } from 'dwengo-1-common/src/interfaces/student';
+import { ClassDTO } from '@dwengo-1/common/interfaces/class';
+import { TeacherInvitationDTO } from '@dwengo-1/common/interfaces/teacher-invitation';
+import { StudentDTO } from '@dwengo-1/common/interfaces/student';
 
 const logger = getLogger();
 

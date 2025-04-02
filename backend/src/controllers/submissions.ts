@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import { createSubmission, deleteSubmission, getSubmission } from '../services/submissions.js';
-import { Language, languageMap } from '../entities/content/language.js';
-
-import { SubmissionDTO } from 'dwengo-1-common/src/interfaces/submission';
+import { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
+import { Language, languageMap } from '@dwengo-1/common/util/language';
 
 interface SubmissionParams {
     hruid: string;

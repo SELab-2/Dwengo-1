@@ -1,6 +1,6 @@
-import { Language } from '../../entities/content/language.js';
+import { LearningPath, LearningPathResponse } from '@dwengo-1/common/interfaces/learning-content';
 import { PersonalizationTarget } from './learning-path-personalization-util.js';
-import { LearningPath, LearningPathResponse } from 'dwengo-1-common/src/interfaces/learning-content';
+import { Language } from '@dwengo-1/common/util/language';
 
 /**
  * Generic interface for a service which provides access to learning paths from a data source.

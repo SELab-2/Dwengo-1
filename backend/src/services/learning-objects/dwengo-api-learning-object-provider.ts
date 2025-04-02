@@ -10,7 +10,7 @@ import {
     LearningObjectNode,
     LearningPathIdentifier,
     LearningPathResponse,
-} from 'dwengo-1-common/src/interfaces/learning-content';
+} from '@dwengo-1/common/interfaces/learning-content';
 
 const logger: Logger = getLogger();
 

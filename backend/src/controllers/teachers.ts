@@ -8,8 +8,7 @@ import {
     getStudentsByTeacher,
     getTeacher,
 } from '../services/teachers.js';
-
-import { TeacherDTO } from 'dwengo-1-common/src/interfaces/teacher';
+import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 
 export async function getAllTeachersHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';

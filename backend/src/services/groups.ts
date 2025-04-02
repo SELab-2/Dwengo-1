@@ -8,8 +8,8 @@ import {
 import { Group } from '../entities/assignments/group.entity.js';
 import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
-import { GroupDTO } from 'dwengo-1-common/src/interfaces/group';
-import { SubmissionDTO, SubmissionDTOId } from 'dwengo-1-common/src/interfaces/submission';
+import { GroupDTO } from '@dwengo-1/common/interfaces/group';
+import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
 import { getLogger } from '../logging/initalize.js';
 
 export async function getGroup(classId: string, assignmentNumber: number, groupNumber: number, full: boolean): Promise<GroupDTO | null> {

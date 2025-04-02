@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import { createQuestion, deleteQuestion, getAllQuestions, getAnswersByQuestion, getQuestion } from '../services/questions.js';
 import { FALLBACK_LANG, FALLBACK_SEQ_NUM } from '../config.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
-import { Language } from '../entities/content/language.js';
-import { QuestionDTO, QuestionId } from 'dwengo-1-common/src/interfaces/question';
+import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
+import { Language } from '@dwengo-1/common/util/language';
 
 function getObjectId(req: Request, res: Response): LearningObjectIdentifier | null {
     const { hruid, version } = req.params;

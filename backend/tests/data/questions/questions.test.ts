@@ -4,7 +4,7 @@ import { QuestionRepository } from '../../../src/data/questions/question-reposit
 import { getQuestionRepository, getStudentRepository } from '../../../src/data/repositories';
 import { StudentRepository } from '../../../src/data/users/student-repository';
 import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
-import { Language } from '../../../src/entities/content/language';
+import { Language } from '@dwengo-1/common/util/language';
 
 describe('QuestionRepository', () => {
     let questionRepository: QuestionRepository;

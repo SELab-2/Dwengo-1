@@ -1,8 +1,8 @@
 import { Student } from '../users/student.entity.js';
 import { Group } from './group.entity.js';
 import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
-import { Language } from '../content/language.js';
 import { SubmissionRepository } from '../../data/assignments/submission-repository.js';
+import { Language } from '@dwengo-1/common/util/language';
 
 @Entity({ repository: () => SubmissionRepository })
 export class Submission {

@@ -2,7 +2,7 @@ import { Collection } from '@mikro-orm/core';
 import { Class } from '../entities/classes/class.entity.js';
 import { Student } from '../entities/users/student.entity.js';
 import { Teacher } from '../entities/users/teacher.entity.js';
-import { ClassDTO } from 'dwengo-1-common/src/interfaces/class';
+import { ClassDTO } from '@dwengo-1/common/interfaces/class';
 
 export function mapToClassDTO(cls: Class): ClassDTO {
     return {

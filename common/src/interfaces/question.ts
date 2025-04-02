@@ -1,3 +1,4 @@
+import { LearningObjectIdentifier } from './learning-content';
 import { StudentDTO } from './student';
 
 export interface QuestionDTO {

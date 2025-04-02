@@ -1,6 +1,6 @@
 import { Question } from '../entities/questions/question.entity.js';
 import { mapToStudentDTO } from './student.js';
-import { QuestionDTO, QuestionId } from 'dwengo-1-common/src/interfaces/question';
+import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 
 /**
  * Convert a Question entity to a DTO format.

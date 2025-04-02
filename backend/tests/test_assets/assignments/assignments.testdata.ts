@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Assignment } from '../../../src/entities/assignments/assignment.entity';
 import { Class } from '../../../src/entities/classes/class.entity';
-import { Language } from '../../../src/entities/content/language';
+import { Language } from '@dwengo-1/common/util/language';
 
 export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assignment[] {
     const assignment01 = em.create(Assignment, {
