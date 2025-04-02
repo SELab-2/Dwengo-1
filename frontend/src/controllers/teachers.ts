@@ -5,7 +5,7 @@ import type {ClassesResponse} from "@/controllers/classes.ts";
 import type {TeacherDTO} from "dwengo-1-common/src/interfaces/teacher";
 
 export interface TeachersResponse { teachers: TeacherDTO[] | string[] }
-export interface TeacherResponse { teacher: TeacherDTO | string }
+export interface TeacherResponse { teacher: TeacherDTO }
 
 
 export class TeacherController extends BaseController {

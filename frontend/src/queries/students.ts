@@ -45,10 +45,10 @@ function STUDENT_SUBMISSIONS_QUERY_KEY(username: string): [string, string] {
 function STUDENT_QUESTIONS_QUERY_KEY(username: string, full: boolean): [string, string, boolean] {
     return ["student-questions", username, full];
 }
-function STUDENT_JOIN_REQUESTS_QUERY_KEY(username: string): [string, string] {
+export function STUDENT_JOIN_REQUESTS_QUERY_KEY(username: string): [string, string] {
     return ["student-join-requests", username];
 }
-function STUDENT_JOIN_REQUEST_QUERY_KEY(username: string, classId: string): [string, string, string] {
+export function STUDENT_JOIN_REQUEST_QUERY_KEY(username: string, classId: string): [string, string, string] {
     return ["student-join-request", username, classId];
 }
 
@@ -172,8 +172,9 @@ export function useDeleteStudentMutation(): UseMutationReturnType<
 
     return useMutation({
         mutationFn: async (username) => studentController.deleteStudent(username),
-        onSuccess: async () => {
+        onSuccess: async (deletedUser) => {
             await queryClient.invalidateQueries({ queryKey: ["students"] });
+            await queryClient.invalidateQueries({ queryKey: STUDENT_QUERY_KEY(deletedUser.student.username) });
         },
     });
 }
@@ -188,8 +189,8 @@ export function useCreateJoinRequestMutation(): UseMutationReturnType<
 
     return useMutation({
         mutationFn: async ({ username, classId }) => studentController.createJoinRequest(username, classId),
-        onSuccess: async ({ username }) => {
-            await queryClient.invalidateQueries({ queryKey: STUDENT_JOIN_REQUESTS_QUERY_KEY(username) });
+        onSuccess: async (newJoinRequest) => {
+            await queryClient.invalidateQueries({ queryKey: STUDENT_JOIN_REQUESTS_QUERY_KEY(newJoinRequest.request.requester) });
         },
     });
 }
@@ -204,8 +205,11 @@ export function useDeleteJoinRequestMutation(): UseMutationReturnType<
 
     return useMutation({
         mutationFn: async ({ username, classId }) => studentController.deleteJoinRequest(username, classId),
-        onSuccess: async ({ username }) => {
+        onSuccess: async (deletedJoinRequest) => {
+            const username = deletedJoinRequest.request.requester;
+            const classId = deletedJoinRequest.request.class;
             await queryClient.invalidateQueries({ queryKey: STUDENT_JOIN_REQUESTS_QUERY_KEY(username) });
+            await queryClient.invalidateQueries({ queryKey: STUDENT_JOIN_REQUEST_QUERY_KEY(username, classId) });
         },
     });
 }

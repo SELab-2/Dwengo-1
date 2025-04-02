@@ -3,10 +3,4 @@ export interface TeacherDTO {
     username: string;
     firstName: string;
     lastName: string;
-    endpoints?: {
-        classes: string;
-        questions: string;
-        invitations: string;
-        groups: string;
-    };
 }

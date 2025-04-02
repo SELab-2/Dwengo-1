@@ -8,17 +8,11 @@ import {
     UseQueryReturnType,
 } from "@tanstack/vue-query";
 import {TeacherController, type TeacherResponse, type TeachersResponse} from "@/controllers/teachers.ts";
-import type {
-    TeacherDTO,
-    ClassDTO,
-    StudentDTO,
-    QuestionDTO,
-    QuestionId,
-    JoinRequestDTO,
-} from "dwengo-1-common/src/interfaces";
 import type {ClassesResponse} from "@/controllers/classes.ts";
 import type {JoinRequestResponse, JoinRequestsResponse, StudentsResponse} from "@/controllers/students.ts";
-import type {QuestionsResponse} from "@/controllers/questions.ts"; // pas dit aan naar jouw pad indien nodig
+import type {QuestionsResponse} from "@/controllers/questions.ts";
+import type {TeacherDTO} from "dwengo-1-common/src/interfaces/teacher";
+import {STUDENT_JOIN_REQUEST_QUERY_KEY, STUDENT_JOIN_REQUESTS_QUERY_KEY} from "@/queries/students.ts";
 
 const teacherController = new TeacherController();
 
@@ -133,8 +127,9 @@ export function useDeleteTeacherMutation(): UseMutationReturnType<
 
     return useMutation({
         mutationFn: (username: string) => teacherController.deleteTeacher(username),
-        onSuccess: async () => {
+        onSuccess: async (deletedTeacher) => {
             await queryClient.invalidateQueries({ queryKey: ["teachers"] });
+            await queryClient.invalidateQueries({ queryKey: TEACHER_QUERY_KEY(deletedTeacher.teacher.username) });
         },
     });
 }
@@ -150,11 +145,11 @@ export function useUpdateJoinRequestMutation(): UseMutationReturnType<
     return useMutation({
         mutationFn: ({ teacherUsername, classId, studentUsername, accepted }) =>
             teacherController.updateStudentJoinRequest(teacherUsername, classId, studentUsername, accepted),
-        onSuccess: async (_, { teacherUsername, classId }) => {
-            await queryClient.invalidateQueries({
-                queryKey: JOIN_REQUESTS_QUERY_KEY(teacherUsername, classId),
-                // TODO
-            });
+        onSuccess: async (deletedJoinRequest) => {
+            const username = deletedJoinRequest.request.requester;
+            const classId = deletedJoinRequest.request.class;
+            await queryClient.invalidateQueries({ queryKey: STUDENT_JOIN_REQUESTS_QUERY_KEY(username) });
+            await queryClient.invalidateQueries({ queryKey: STUDENT_JOIN_REQUEST_QUERY_KEY(username, classId) });
         },
     });
 }
