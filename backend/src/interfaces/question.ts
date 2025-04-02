@@ -1,7 +1,6 @@
 import { Question } from '../entities/questions/question.entity.js';
 import { mapToStudentDTO } from './student.js';
-import { QuestionDTO, QuestionId } from 'dwengo-1-common/src/interfaces/question';
-import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier';
+import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 
 function getLearningObjectIdentifier(question: Question): LearningObjectIdentifier {
     return {

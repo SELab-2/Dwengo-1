@@ -1,6 +1,6 @@
 import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { Attachment } from '../../entities/content/attachment.entity.js';
-import { Language } from '../../entities/content/language';
+import { Language } from '@dwengo-1/common/util/language';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier';
 
 export class AttachmentRepository extends DwengoEntityRepository<Attachment> {

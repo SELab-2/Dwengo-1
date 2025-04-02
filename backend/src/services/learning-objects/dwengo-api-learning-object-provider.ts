@@ -10,7 +10,7 @@ import {
     LearningObjectNode,
     LearningPathIdentifier,
     LearningPathResponse,
-} from 'dwengo-1-common/src/interfaces/learning-content';
+} from '@dwengo-1/common/interfaces/learning-content';
 
 const logger: Logger = getLogger();
 
@@ -66,12 +66,13 @@ async function fetchLearningObjects(learningPathId: LearningPathIdentifier, full
         }
 
         const objects = await Promise.all(
-            nodes.map(async (node) =>
-                dwengoApiLearningObjectProvider.getLearningObjectById({
+            nodes.map(async (node) => {
+                const learningObjectId: LearningObjectIdentifier = {
                     hruid: node.learningobject_hruid,
-                    language: learningPathId.language,
-                })
-            )
+                    language: learningPathId.language
+                };
+                return dwengoApiLearningObjectProvider.getLearningObjectById(learningObjectId);
+            })
         );
         return objects.filter((obj): obj is FilteredLearningObject => obj !== null);
     } catch (error) {

@@ -1,4 +1,4 @@
-import { LearningObjectIdentifier } from 'dwengo-1-common/src/interfaces/learning-content';
+import { LearningObjectIdentifier } from "@dwengo-1/common/interfaces/learning-content";
 
 export function isValidHttpUrl(url: string): boolean {
     try {

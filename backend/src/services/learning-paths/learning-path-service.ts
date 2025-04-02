@@ -1,9 +1,9 @@
 import dwengoApiLearningPathProvider from './dwengo-api-learning-path-provider.js';
 import databaseLearningPathProvider from './database-learning-path-provider.js';
 import { envVars, getEnvVar } from '../../util/envVars.js';
-import { Language } from '../../entities/content/language.js';
 import { PersonalizationTarget } from './learning-path-personalization-util.js';
-import { LearningPath, LearningPathResponse } from 'dwengo-1-common/src/interfaces/learning-content';
+import { LearningPath, LearningPathResponse } from '@dwengo-1/common/interfaces/learning-content';
+import { Language } from '@dwengo-1/common/util/language';
 
 const userContentPrefix = getEnvVar(envVars.UserContentPrefix);
 const allProviders = [dwengoApiLearningPathProvider, databaseLearningPathProvider];

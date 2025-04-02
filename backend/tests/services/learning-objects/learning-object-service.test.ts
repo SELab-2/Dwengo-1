@@ -4,11 +4,11 @@ import { LearningObject } from '../../../src/entities/content/learning-object.en
 import { getLearningObjectRepository, getLearningPathRepository } from '../../../src/data/repositories';
 import learningObjectExample from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example';
 import learningObjectService from '../../../src/services/learning-objects/learning-object-service';
-import { Language } from '../../../src/entities/content/language';
 import { envVars, getEnvVar } from '../../../src/util/envVars';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
 import learningPathExample from '../../test-assets/learning-paths/pn-werking-example';
-import { LearningObjectIdentifier, LearningPathIdentifier } from 'dwengo-1-common/src/interfaces/learning-content';
+import { LearningObjectIdentifier, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import { Language } from '@dwengo-1/common/util/language';
 
 const EXPECTED_DWENGO_LEARNING_OBJECT_TITLE = 'Werken met notebooks';
 const DWENGO_TEST_LEARNING_OBJECT_ID: LearningObjectIdentifier = {

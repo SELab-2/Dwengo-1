@@ -5,8 +5,8 @@ import { DwengoContentType } from '../../services/learning-objects/processing/co
 import { v4 } from 'uuid';
 import { LearningObjectRepository } from '../../data/content/learning-object-repository.js';
 import { EducationalGoal } from './educational-goal.entity.js';
-import { Language } from './language.js';
 import { ReturnValue } from './return-value.entity.js';
+import { Language } from '@dwengo-1/common/util/language';
 
 @Entity({ repository: () => LearningObjectRepository })
 export class LearningObject {

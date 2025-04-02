@@ -1,4 +1,4 @@
-import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from 'dwengo-1-common/src/interfaces/learning-content';
+import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
 
 export interface LearningObjectProvider {
     /**

@@ -4,8 +4,10 @@
     "compilerOptions": {
         "rootDir": "./src",
         "outDir": "./dist",
-        "resolveJsonModule": true,
-        "sourceMap": true,
-        "composite": true
-    }
+    },
+    "references": [
+        {
+            "path": "../common"
+        }
+    ]
 }

@@ -6,8 +6,8 @@ import { mapToAnswerDTO, mapToAnswerDTOId } from '../interfaces/answer.js';
 import { QuestionRepository } from '../data/questions/question-repository.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { mapToStudent } from '../interfaces/student.js';
-import { QuestionDTO, QuestionId } from 'dwengo-1-common/src/interfaces/question';
-import { AnswerDTO, AnswerId } from 'dwengo-1-common/src/interfaces/answer';
+import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
+import { AnswerDTO, AnswerId } from '@dwengo-1/common/interfaces/answer';
 
 export async function getAllQuestions(id: LearningObjectIdentifier, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
     const questionRepository: QuestionRepository = getQuestionRepository();
@@ -71,9 +71,14 @@ export async function createQuestion(questionDTO: QuestionDTO): Promise<Question
 
     const author = mapToStudent(questionDTO.author);
 
+    const loId: LearningObjectIdentifier = {
+        ...questionDTO.learningObjectIdentifier,
+        version: questionDTO.learningObjectIdentifier.version ?? 1,
+    }
+
     try {
         await questionRepository.createQuestion({
-            loId: questionDTO.learningObjectIdentifier,
+            loId,
             author,
             content: questionDTO.content,
         });
@@ -93,8 +98,13 @@ export async function deleteQuestion(questionId: QuestionId): Promise<QuestionDT
         return null;
     }
 
+    const loId : LearningObjectIdentifier = {
+        ...questionId.learningObjectIdentifier,
+        version: questionId.learningObjectIdentifier.version ?? 1
+    }
+
     try {
-        await questionRepository.removeQuestionByLearningObjectAndSequenceNumber(questionId.learningObjectIdentifier, questionId.sequenceNumber);
+        await questionRepository.removeQuestionByLearningObjectAndSequenceNumber(loId, questionId.sequenceNumber);
     } catch (_) {
         return null;
     }

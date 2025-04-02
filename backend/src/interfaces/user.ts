@@ -1,5 +1,5 @@
 import { User } from '../entities/users/user.entity.js';
-import { UserDTO } from 'dwengo-1-common/src/interfaces/user';
+import { UserDTO } from '@dwengo-1/common/interfaces/user';
 
 export function mapToUserDTO(user: User): UserDTO {
     return {

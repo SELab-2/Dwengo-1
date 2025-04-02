@@ -1,6 +1,6 @@
 import { Student } from '../entities/users/student.entity.js';
 import { getStudentRepository } from '../data/repositories.js';
-import { StudentDTO } from 'dwengo-1-common/src/interfaces/student';
+import { StudentDTO } from '@dwengo-1/common/interfaces/student';
 
 export function mapToStudentDTO(student: Student): StudentDTO {
     return {

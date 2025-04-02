@@ -1,4 +1,7 @@
 import { GroupDTO } from './group';
+import { LearningObjectIdentifier } from './learning-content';
+import { StudentDTO } from './student';
+import { Language } from '../util/language';
 
 export interface SubmissionDTO {
     learningObjectIdentifier: LearningObjectIdentifier;

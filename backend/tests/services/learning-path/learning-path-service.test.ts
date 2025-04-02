@@ -5,8 +5,8 @@ import { LearningPath } from '../../../src/entities/content/learning-path.entity
 import { getLearningObjectRepository, getLearningPathRepository } from '../../../src/data/repositories';
 import learningObjectExample from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example';
 import learningPathExample from '../../test-assets/learning-paths/pn-werking-example';
-import { Language } from '../../../src/entities/content/language';
 import learningPathService from '../../../src/services/learning-paths/learning-path-service';
+import { Language } from '@dwengo-1/common/util/language';
 
 async function initExampleData(): Promise<{ learningObject: LearningObject; learningPath: LearningPath }> {
     const learningObjectRepo = getLearningObjectRepository();
