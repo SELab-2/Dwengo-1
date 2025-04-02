@@ -43,7 +43,7 @@ export function useTeachersQuery(
 ): UseQueryReturnType<TeachersResponse, Error> {
     return useQuery({
         queryKey: computed(() => TEACHERS_QUERY_KEY(toValue(full))),
-        queryFn: () => teacherController.getAll(toValue(full)),
+        queryFn: async () => teacherController.getAll(toValue(full)),
     });
 }
 
@@ -52,7 +52,7 @@ export function useTeacherQuery(
 ): UseQueryReturnType<TeacherResponse, Error> {
     return useQuery({
         queryKey: computed(() => TEACHER_QUERY_KEY(toValue(username)!)),
-        queryFn: () => teacherController.getByUsername(toValue(username)!),
+        queryFn: async () => teacherController.getByUsername(toValue(username)!),
         enabled: () => Boolean(toValue(username)),
     });
 }
@@ -63,7 +63,7 @@ export function useTeacherClassesQuery(
 ): UseQueryReturnType<ClassesResponse, Error> {
     return useQuery({
         queryKey: computed(() => TEACHER_CLASSES_QUERY_KEY(toValue(username)!, toValue(full))),
-        queryFn: () => teacherController.getClasses(toValue(username)!, toValue(full)),
+        queryFn: async () => teacherController.getClasses(toValue(username)!, toValue(full)),
         enabled: () => Boolean(toValue(username)),
     });
 }
@@ -74,7 +74,7 @@ export function useTeacherStudentsQuery(
 ): UseQueryReturnType<StudentsResponse, Error> {
     return useQuery({
         queryKey: computed(() => TEACHER_STUDENTS_QUERY_KEY(toValue(username)!, toValue(full))),
-        queryFn: () => teacherController.getStudents(toValue(username)!, toValue(full)),
+        queryFn: async () => teacherController.getStudents(toValue(username)!, toValue(full)),
         enabled: () => Boolean(toValue(username)),
     });
 }
@@ -85,7 +85,7 @@ export function useTeacherQuestionsQuery(
 ): UseQueryReturnType<QuestionsResponse, Error> {
     return useQuery({
         queryKey: computed(() => TEACHER_QUESTIONS_QUERY_KEY(toValue(username)!, toValue(full))),
-        queryFn: () => teacherController.getQuestions(toValue(username)!, toValue(full)),
+        queryFn: async () => teacherController.getQuestions(toValue(username)!, toValue(full)),
         enabled: () => Boolean(toValue(username)),
     });
 }
@@ -96,7 +96,7 @@ export function useTeacherJoinRequestsQuery(
 ): UseQueryReturnType<JoinRequestsResponse, Error> {
     return useQuery({
         queryKey: computed(() => JOIN_REQUESTS_QUERY_KEY(toValue(username)!, toValue(classId)!)),
-        queryFn: () => teacherController.getStudentJoinRequests(toValue(username)!, toValue(classId)!),
+        queryFn: async () => teacherController.getStudentJoinRequests(toValue(username)!, toValue(classId)!),
         enabled: () => Boolean(toValue(username)) && Boolean(toValue(classId)),
     });
 }
@@ -110,7 +110,7 @@ export function useCreateTeacherMutation(): UseMutationReturnType<
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: TeacherDTO) => teacherController.createTeacher(data),
+        mutationFn: async (data: TeacherDTO) => teacherController.createTeacher(data),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ["teachers"] });
         },
@@ -126,7 +126,7 @@ export function useDeleteTeacherMutation(): UseMutationReturnType<
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (username: string) => teacherController.deleteTeacher(username),
+        mutationFn: async (username: string) => teacherController.deleteTeacher(username),
         onSuccess: async (deletedTeacher) => {
             await queryClient.invalidateQueries({ queryKey: ["teachers"] });
             await queryClient.invalidateQueries({ queryKey: TEACHER_QUERY_KEY(deletedTeacher.teacher.username) });
@@ -143,7 +143,7 @@ export function useUpdateJoinRequestMutation(): UseMutationReturnType<
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ teacherUsername, classId, studentUsername, accepted }) =>
+        mutationFn: async ({ teacherUsername, classId, studentUsername, accepted }) =>
             teacherController.updateStudentJoinRequest(teacherUsername, classId, studentUsername, accepted),
         onSuccess: async (deletedJoinRequest) => {
             const username = deletedJoinRequest.request.requester;

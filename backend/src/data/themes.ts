@@ -1,7 +1,4 @@
-export interface Theme {
-    title: string;
-    hruids: string[];
-}
+import {Theme} from "dwengo-1-common/src/interfaces/theme";
 
 export const themes: Theme[] = [
     {
