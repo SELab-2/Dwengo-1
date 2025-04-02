@@ -115,7 +115,7 @@ const router = createRouter({
                     path: "search",
                     name: "LearningPathSearchPage",
                     component: LearningPathSearchPage,
-                    meta: { requiresAuth: true }
+                    meta: { requiresAuth: true },
                 },
                 {
                     path: ":hruid/:language/:learningObjectHruid",
@@ -124,14 +124,14 @@ const router = createRouter({
                     props: true,
                     meta: { requiresAuth: true },
                 },
-            ]
+            ],
         },
         {
             path: "/learningObject/:hruid/:language/:version/raw",
             name: "LearningObjectView",
             component: LearningObjectView,
             props: true,
-            meta: { requiresAuth: true }
+            meta: { requiresAuth: true },
         },
         {
             path: "/:catchAll(.*)",

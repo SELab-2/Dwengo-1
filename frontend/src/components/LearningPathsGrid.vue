@@ -1,16 +1,17 @@
 <script setup lang="ts">
+    import { convertBase64ToImageSrc } from "@/utils/base64ToImage.ts";
+    import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
+    import { useI18n } from "vue-i18n";
 
-import {convertBase64ToImageSrc} from "@/utils/base64ToImage.ts";
-import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
-import {useI18n} from "vue-i18n";
-
-const { t } = useI18n();
-const props = defineProps<{learningPaths: LearningPath[]}>();
-
+    const { t } = useI18n();
+    const props = defineProps<{ learningPaths: LearningPath[] }>();
 </script>
 
 <template>
-    <div class="results-grid" v-if="props.learningPaths.length > 0">
+    <div
+        class="results-grid"
+        v-if="props.learningPaths.length > 0"
+    >
         <v-card
             class="learning-path-card"
             link
@@ -27,12 +28,15 @@ const props = defineProps<{learningPaths: LearningPath[]}>();
             <v-card-title class="learning-path-title">{{ learningPath.title }}</v-card-title>
             <v-card-subtitle>
                 <v-icon icon="mdi-human-male-boy"></v-icon>
-                <span>{{ learningPath.targetAges.min }} - {{ learningPath.targetAges.max }} {{ t('yearsAge') }}</span>
+                <span>{{ learningPath.targetAges.min }} - {{ learningPath.targetAges.max }} {{ t("yearsAge") }}</span>
             </v-card-subtitle>
             <v-card-text>{{ learningPath.description }}</v-card-text>
         </v-card>
     </div>
-    <div content="empty-state-container" v-else>
+    <div
+        content="empty-state-container"
+        v-else
+    >
         <v-empty-state
             icon="mdi-emoticon-sad-outline"
             :title="t('noLearningPathsFound')"

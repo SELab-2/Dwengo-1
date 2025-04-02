@@ -1,9 +1,9 @@
-import {type MaybeRefOrGetter, toValue} from "vue";
-import type {Language} from "@/data-objects/language.ts";
-import {useQuery, type UseQueryReturnType} from "@tanstack/vue-query";
-import {getLearningObjectController} from "@/controllers/controllers.ts";
-import type {LearningObject} from "@/data-objects/learning-objects/learning-object.ts";
-import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
+import { type MaybeRefOrGetter, toValue } from "vue";
+import type { Language } from "@/data-objects/language.ts";
+import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
+import { getLearningObjectController } from "@/controllers/controllers.ts";
+import type { LearningObject } from "@/data-objects/learning-objects/learning-object.ts";
+import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
 
 const LEARNING_OBJECT_KEY = "learningObject";
 const learningObjectController = getLearningObjectController();
@@ -11,13 +11,13 @@ const learningObjectController = getLearningObjectController();
 export function useLearningObjectMetadataQuery(
     hruid: MaybeRefOrGetter<string>,
     language: MaybeRefOrGetter<Language>,
-    version: MaybeRefOrGetter<number>
+    version: MaybeRefOrGetter<number>,
 ): UseQueryReturnType<LearningObject, Error> {
     return useQuery({
         queryKey: [LEARNING_OBJECT_KEY, "metadata", hruid, language, version],
         queryFn: async () => {
             const [hruidVal, languageVal, versionVal] = [toValue(hruid), toValue(language), toValue(version)];
-            return learningObjectController.getMetadata(hruidVal, languageVal, versionVal)
+            return learningObjectController.getMetadata(hruidVal, languageVal, versionVal);
         },
         enabled: () => Boolean(toValue(hruid)) && Boolean(toValue(language)) && Boolean(toValue(version)),
     });
@@ -26,20 +26,20 @@ export function useLearningObjectMetadataQuery(
 export function useLearningObjectHTMLQuery(
     hruid: MaybeRefOrGetter<string>,
     language: MaybeRefOrGetter<Language>,
-    version: MaybeRefOrGetter<number>
+    version: MaybeRefOrGetter<number>,
 ): UseQueryReturnType<Document, Error> {
     return useQuery({
         queryKey: [LEARNING_OBJECT_KEY, "html", hruid, language, version],
         queryFn: async () => {
             const [hruidVal, languageVal, versionVal] = [toValue(hruid), toValue(language), toValue(version)];
-            return learningObjectController.getHTML(hruidVal, languageVal, versionVal)
+            return learningObjectController.getHTML(hruidVal, languageVal, versionVal);
         },
         enabled: () => Boolean(toValue(hruid)) && Boolean(toValue(language)) && Boolean(toValue(version)),
     });
 }
 
 export function useLearningObjectListForPathQuery(
-    learningPath: MaybeRefOrGetter<LearningPath | undefined>
+    learningPath: MaybeRefOrGetter<LearningPath | undefined>,
 ): UseQueryReturnType<LearningObject[], Error> {
     return useQuery({
         queryKey: [LEARNING_OBJECT_KEY, "onPath", learningPath],
@@ -47,7 +47,7 @@ export function useLearningObjectListForPathQuery(
             const learningObjects: Promise<LearningObject>[] = [];
             for (const node of toValue(learningPath)!.nodesAsList) {
                 learningObjects.push(
-                    learningObjectController.getMetadata(node.learningobjectHruid, node.language, node.version)
+                    learningObjectController.getMetadata(node.learningobjectHruid, node.language, node.version),
                 );
             }
             return Promise.all(learningObjects);

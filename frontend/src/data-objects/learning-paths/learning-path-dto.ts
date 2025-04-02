@@ -1,4 +1,4 @@
-import type {LearningPathNodeDTO} from "@/data-objects/learning-paths/learning-path.ts";
+import type { LearningPathNodeDTO } from "@/data-objects/learning-paths/learning-path.ts";
 
 export interface LearningPathDTO {
     language: string;

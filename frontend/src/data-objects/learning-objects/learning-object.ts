@@ -1,6 +1,6 @@
-import type {Language} from "@/data-objects/language.ts";
-import type {ReturnValue} from "@/data-objects/learning-objects/return-value.ts";
-import type {EducationalGoal} from "@/data-objects/learning-objects/educational-goal.ts";
+import type { Language } from "@/data-objects/language.ts";
+import type { ReturnValue } from "@/data-objects/learning-objects/return-value.ts";
+import type { EducationalGoal } from "@/data-objects/learning-objects/educational-goal.ts";
 
 export interface LearningObject {
     key: string;
