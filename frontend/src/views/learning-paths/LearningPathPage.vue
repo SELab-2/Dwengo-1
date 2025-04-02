@@ -110,11 +110,15 @@
         :query-result="learningPathQueryResult"
         v-slot="learningPath: {data: LearningPath}"
     >
-        <v-navigation-drawer v-model="navigationDrawerShown">
-            <v-list-item
-                :title="learningPath.data.title"
-                :subtitle="learningPath.data.description"
-            ></v-list-item>
+        <v-navigation-drawer v-model="navigationDrawerShown" :width="350">
+            <v-list-item>
+                <template v-slot:title>
+                    <div class="learning-path-title">{{ learningPath.data.title }}</div>
+                </template>
+                <template v-slot:subtitle>
+                    <div>{{ learningPath.data.description }}</div>
+                </template>
+            </v-list-item>
             <v-list-item>
                 <template v-slot:subtitle>
                     <p><v-icon :color="COLORS.notCompleted" :icon="ICONS.notCompleted"></v-icon> {{ t("legendNotCompletedYet") }}</p>
@@ -188,6 +192,9 @@
 </template>
 
 <style scoped>
+    .learning-path-title {
+        white-space: normal;
+    }
     .search-field-container {
         min-width: 250px;
     }

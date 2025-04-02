@@ -24,7 +24,7 @@ const props = defineProps<{learningPaths: LearningPath[]}>();
                 cover
                 v-if="learningPath.image"
             ></v-img>
-            <v-card-title>{{ learningPath.title }}</v-card-title>
+            <v-card-title class="learning-path-title">{{ learningPath.title }}</v-card-title>
             <v-card-subtitle>
                 <v-icon icon="mdi-human-male-boy"></v-icon>
                 <span>{{ learningPath.targetAges.min }} - {{ learningPath.targetAges.max }} {{ t('yearsAge') }}</span>
@@ -44,6 +44,9 @@ const props = defineProps<{learningPaths: LearningPath[]}>();
 <style scoped>
     .learning-path-card {
         width: 300px;
+    }
+    .learning-path-title {
+        white-space: normal;
     }
     .results-grid {
         margin: 20px;
