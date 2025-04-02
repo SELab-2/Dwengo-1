@@ -24,31 +24,31 @@ import type {StudentDTO} from "dwengo-1-common/src/interfaces/student";
 const studentController = new StudentController();
 
 /** 🔑 Query keys */
-function STUDENTS_QUERY_KEY(full: boolean): [string, boolean] {
+function studentsQueryKey(full: boolean): [string, boolean] {
     return ["students", full];
 }
-function STUDENT_QUERY_KEY(username: string): [string, string] {
+function studentQueryKey(username: string): [string, string] {
     return ["student", username];
 }
-function STUDENT_CLASSES_QUERY_KEY(username: string, full: boolean): [string, string, boolean] {
+function studentClassesQueryKey(username: string, full: boolean): [string, string, boolean] {
     return ["student-classes", username, full];
 }
-function STUDENT_ASSIGNMENTS_QUERY_KEY(username: string, full: boolean): [string, string, boolean] {
+function studentAssignmentsQueryKey(username: string, full: boolean): [string, string, boolean] {
     return ["student-assignments", username, full];
 }
-function STUDENT_GROUPS_QUERY_KEY(username: string, full: boolean): [string, string, boolean] {
+function studentGroupsQueryKeys(username: string, full: boolean): [string, string, boolean] {
     return ["student-groups", username, full];
 }
-function STUDENT_SUBMISSIONS_QUERY_KEY(username: string): [string, string] {
+function studentSubmissionsQueryKey(username: string): [string, string] {
     return ["student-submissions", username];
 }
-function STUDENT_QUESTIONS_QUERY_KEY(username: string, full: boolean): [string, string, boolean] {
+function studentQuestionsQueryKey(username: string, full: boolean): [string, string, boolean] {
     return ["student-questions", username, full];
 }
-export function STUDENT_JOIN_REQUESTS_QUERY_KEY(username: string): [string, string] {
+export function studentJoinRequestsQueryKey(username: string): [string, string] {
     return ["student-join-requests", username];
 }
-export function STUDENT_JOIN_REQUEST_QUERY_KEY(username: string, classId: string): [string, string, string] {
+export function studentJoinRequestQueryKey(username: string, classId: string): [string, string, string] {
     return ["student-join-request", username, classId];
 }
 
@@ -56,7 +56,7 @@ export function useStudentsQuery(
     full: MaybeRefOrGetter<boolean> = true
 ): UseQueryReturnType<StudentsResponse, Error> {
     return useQuery({
-        queryKey: computed(() => STUDENTS_QUERY_KEY(toValue(full))),
+        queryKey: computed(() => studentsQueryKey(toValue(full))),
         queryFn: async () => studentController.getAll(toValue(full)),
     });
 }
@@ -65,7 +65,7 @@ export function useStudentQuery(
     username: MaybeRefOrGetter<string | undefined>
 ): UseQueryReturnType<StudentResponse, Error> {
     return useQuery({
-        queryKey: computed(() => STUDENT_QUERY_KEY(toValue(username)!)),
+        queryKey: computed(() => studentQueryKey(toValue(username)!)),
         queryFn: async () => studentController.getByUsername(toValue(username)!),
         enabled: () => Boolean(toValue(username)),
     });
@@ -76,7 +76,7 @@ export function useStudentClassesQuery(
     full: MaybeRefOrGetter<boolean> = true
 ): UseQueryReturnType<ClassesResponse, Error> {
     return useQuery({
-        queryKey: computed(() => STUDENT_CLASSES_QUERY_KEY(toValue(username)!, toValue(full))),
+        queryKey: computed(() => studentClassesQueryKey(toValue(username)!, toValue(full))),
         queryFn: async () => studentController.getClasses(toValue(username)!, toValue(full)),
         enabled: () => Boolean(toValue(username)),
     });
@@ -87,7 +87,7 @@ export function useStudentAssignmentsQuery(
     full: MaybeRefOrGetter<boolean> = true
 ): UseQueryReturnType<AssignmentsResponse, Error> {
     return useQuery({
-        queryKey: computed(() => STUDENT_ASSIGNMENTS_QUERY_KEY(toValue(username)!, toValue(full))),
+        queryKey: computed(() => studentAssignmentsQueryKey(toValue(username)!, toValue(full))),
         queryFn: async () => studentController.getAssignments(toValue(username)!, toValue(full)),
         enabled: () => Boolean(toValue(username)),
     });
@@ -98,7 +98,7 @@ export function useStudentGroupsQuery(
     full: MaybeRefOrGetter<boolean> = true
 ): UseQueryReturnType<GroupsResponse, Error> {
     return useQuery({
-        queryKey: computed(() => STUDENT_GROUPS_QUERY_KEY(toValue(username)!, toValue(full))),
+        queryKey: computed(() => studentGroupsQueryKeys(toValue(username)!, toValue(full))),
         queryFn: async () => studentController.getGroups(toValue(username)!, toValue(full)),
         enabled: () => Boolean(toValue(username)),
     });
@@ -108,7 +108,7 @@ export function useStudentSubmissionsQuery(
     username: MaybeRefOrGetter<string | undefined>
 ): UseQueryReturnType<SubmissionsResponse, Error> {
     return useQuery({
-        queryKey: computed(() => STUDENT_SUBMISSIONS_QUERY_KEY(toValue(username)!)),
+        queryKey: computed(() => studentSubmissionsQueryKey(toValue(username)!)),
         queryFn: async () => studentController.getSubmissions(toValue(username)!),
         enabled: () => Boolean(toValue(username)),
     });
@@ -119,7 +119,7 @@ export function useStudentQuestionsQuery(
     full: MaybeRefOrGetter<boolean> = true
 ): UseQueryReturnType<QuestionsResponse, Error> {
     return useQuery({
-        queryKey: computed(() => STUDENT_QUESTIONS_QUERY_KEY(toValue(username)!, toValue(full))),
+        queryKey: computed(() => studentQuestionsQueryKey(toValue(username)!, toValue(full))),
         queryFn: async () => studentController.getQuestions(toValue(username)!, toValue(full)),
         enabled: () => Boolean(toValue(username)),
     });
@@ -129,7 +129,7 @@ export function useStudentJoinRequestsQuery(
     username: MaybeRefOrGetter<string | undefined>
 ): UseQueryReturnType<JoinRequestsResponse, Error> {
     return useQuery({
-        queryKey: computed(() => STUDENT_JOIN_REQUESTS_QUERY_KEY(toValue(username)!)),
+        queryKey: computed(() => studentJoinRequestsQueryKey(toValue(username)!)),
         queryFn: async () => studentController.getJoinRequests(toValue(username)!),
         enabled: () => Boolean(toValue(username)),
     });
@@ -140,7 +140,7 @@ export function useStudentJoinRequestQuery(
     classId: MaybeRefOrGetter<string | undefined>
 ): UseQueryReturnType<JoinRequestResponse, Error> {
     return useQuery({
-        queryKey: computed(() => STUDENT_JOIN_REQUEST_QUERY_KEY(toValue(username)!, toValue(classId)!)),
+        queryKey: computed(() => studentJoinRequestQueryKey(toValue(username)!, toValue(classId)!)),
         queryFn: async () => studentController.getJoinRequest(toValue(username)!, toValue(classId)!),
         enabled: () => Boolean(toValue(username)) && Boolean(toValue(classId)),
     });
@@ -174,7 +174,7 @@ export function useDeleteStudentMutation(): UseMutationReturnType<
         mutationFn: async (username) => studentController.deleteStudent(username),
         onSuccess: async (deletedUser) => {
             await queryClient.invalidateQueries({ queryKey: ["students"] });
-            await queryClient.invalidateQueries({ queryKey: STUDENT_QUERY_KEY(deletedUser.student.username) });
+            await queryClient.invalidateQueries({ queryKey: studentQueryKey(deletedUser.student.username) });
         },
     });
 }
@@ -190,7 +190,7 @@ export function useCreateJoinRequestMutation(): UseMutationReturnType<
     return useMutation({
         mutationFn: async ({ username, classId }) => studentController.createJoinRequest(username, classId),
         onSuccess: async (newJoinRequest) => {
-            await queryClient.invalidateQueries({ queryKey: STUDENT_JOIN_REQUESTS_QUERY_KEY(newJoinRequest.request.requester) });
+            await queryClient.invalidateQueries({ queryKey: studentJoinRequestsQueryKey(newJoinRequest.request.requester) });
         },
     });
 }
@@ -208,8 +208,8 @@ export function useDeleteJoinRequestMutation(): UseMutationReturnType<
         onSuccess: async (deletedJoinRequest) => {
             const username = deletedJoinRequest.request.requester;
             const classId = deletedJoinRequest.request.class;
-            await queryClient.invalidateQueries({ queryKey: STUDENT_JOIN_REQUESTS_QUERY_KEY(username) });
-            await queryClient.invalidateQueries({ queryKey: STUDENT_JOIN_REQUEST_QUERY_KEY(username, classId) });
+            await queryClient.invalidateQueries({ queryKey: studentJoinRequestsQueryKey(username) });
+            await queryClient.invalidateQueries({ queryKey: studentJoinRequestQueryKey(username, classId) });
         },
     });
 }
