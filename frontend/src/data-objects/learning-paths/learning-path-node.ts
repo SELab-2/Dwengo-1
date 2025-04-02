@@ -45,9 +45,9 @@ export class LearningPathNode {
                         next: LearningPathNode.fromDTOAndOtherNodes(nextNodeDto, otherNodes),
                         default: transDto.default,
                     };
-                } else {
+                } 
                     return undefined
-                }
+                
             }).filter(it => it !== undefined),
             createdAt: new Date(dto.created_at),
             updatedAt: new Date(dto.updatedAt),
