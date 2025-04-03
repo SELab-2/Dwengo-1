@@ -3,10 +3,4 @@ export interface UserDTO {
     username: string;
     firstName: string;
     lastName: string;
-    endpoints?: {
-        self: string;
-        classes: string;
-        questions: string;
-        invitations: string;
-    };
 }
