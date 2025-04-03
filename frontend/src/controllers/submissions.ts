@@ -7,7 +7,7 @@ export interface SubmissionsResponse {
 
 export interface SubmissionResponse {
     submission: SubmissionDTO;
-};
+}
 
 export class SubmissionController extends BaseController {
     constructor(classid: string, assignmentNumber: number, groupNumber: number) {
