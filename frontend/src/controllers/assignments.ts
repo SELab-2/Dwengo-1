@@ -1,15 +1,15 @@
 import { BaseController } from "./base-controller";
-import type { AssignmentDTO } from "@dwengo-1/interfaces/assignment";
+import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
 import type { SubmissionsResponse } from "./submissions";
 import type { QuestionsResponse } from "./questions";
 import type { GroupsResponse } from "./groups";
 
 export interface AssignmentsResponse {
-    assignments: AssignmentDTO[];
+    assignments: AssignmentDTO[] | string[];
 }
 
 export interface AssignmentResponse {
-    assignments: AssignmentDTO;
+    assignment: AssignmentDTO;
 }
 
 export class AssignmentController extends BaseController {
