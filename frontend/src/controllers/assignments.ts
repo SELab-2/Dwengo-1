@@ -1,9 +1,16 @@
 import { BaseController } from "./base-controller";
 import type { AssignmentDTO } from "@dwengo-1/interfaces/assignment";
+import type { SubmissionsResponse } from "./submissions";
+import type { QuestionsResponse } from "./questions";
+import type { GroupsResponse } from "./groups";
 
 export interface AssignmentsResponse {
     assignments: AssignmentDTO[];
-} // TODO ID
+}
+
+export interface AssignmentResponse {
+    assignments: AssignmentDTO;
+}
 
 export class AssignmentController extends BaseController {
     constructor(classid: string) {
@@ -11,30 +18,30 @@ export class AssignmentController extends BaseController {
     }
 
     getAll(full = true) {
-        return this.get<{ assignments: any[] }>(`/`, { full });
+        return this.get<AssignmentsResponse>(`/`, { full });
     }
 
     getByNumber(num: number) {
-        return this.get<{ assignment: any }>(`/${num}`);
+        return this.get<AssignmentResponse>(`/${num}`);
     }
 
     createAssignment(data: any) {
-        return this.post<{ assignment: any }>(`/`, data);
+        return this.post<AssignmentResponse>(`/`, data);
     }
 
     deleteAssignment(num: number) {
-        return this.delete<{ assignment: any }>(`/${num}`);
+        return this.delete<AssignmentResponse>(`/${num}`);
     }
 
     getSubmissions(assignmentNumber: number, full = true) {
-        return this.get<{ submissions: any[] }>(`/${assignmentNumber}/submissions`, { full });
+        return this.get<SubmissionsResponse>(`/${assignmentNumber}/submissions`, { full });
     }
 
     getQuestions(assignmentNumber: number, full = true) {
-        return this.get<{ questions: any[] }>(`/${assignmentNumber}/questions`, { full });
+        return this.get<QuestionsResponse>(`/${assignmentNumber}/questions`, { full });
     }
 
     getGroups(assignmentNumber: number, full = true) {
-        return this.get<{ groups: any[] }>(`/${assignmentNumber}/groups`, { full });
+        return this.get<GroupsResponse>(`/${assignmentNumber}/groups`, { full });
     }
 }
