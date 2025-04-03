@@ -1,4 +1,9 @@
 import { BaseController } from "./base-controller";
+import type { GroupDTO } from "@dwengo-1/interfaces/group";
+
+export interface GroupsResponse {
+    groups: GroupDTO[];
+} // | TODO id
 
 export class GroupController extends BaseController {
     constructor(classid: string, assignmentNumber: number) {

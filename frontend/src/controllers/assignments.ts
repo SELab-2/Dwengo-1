@@ -1,4 +1,9 @@
 import { BaseController } from "./base-controller";
+import type { AssignmentDTO } from "@dwengo-1/interfaces/assignment";
+
+export interface AssignmentsResponse {
+    assignments: AssignmentDTO[];
+} // TODO ID
 
 export class AssignmentController extends BaseController {
     constructor(classid: string) {

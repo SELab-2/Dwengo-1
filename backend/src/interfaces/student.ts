@@ -1,17 +1,6 @@
 import { Student } from '../entities/users/student.entity.js';
-
-export interface StudentDTO {
-    id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    endpoints?: {
-        classes: string;
-        questions: string;
-        invitations: string;
-        groups: string;
-    };
-}
+import { getStudentRepository } from '../data/repositories.js';
+import { StudentDTO } from '@dwengo-1/common/interfaces/student';
 
 export function mapToStudentDTO(student: Student): StudentDTO {
     return {
@@ -23,7 +12,9 @@ export function mapToStudentDTO(student: Student): StudentDTO {
 }
 
 export function mapToStudent(studentData: StudentDTO): Student {
-    const student = new Student(studentData.username, studentData.firstName, studentData.lastName);
-
-    return student;
+    return getStudentRepository().create({
+        username: studentData.username,
+        firstName: studentData.firstName,
+        lastName: studentData.lastName,
+    });
 }

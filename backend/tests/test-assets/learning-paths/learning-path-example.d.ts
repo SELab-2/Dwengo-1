@@ -1,3 +1,3 @@
-type LearningPathExample = {
+interface LearningPathExample {
     createLearningPath: () => LearningPath;
-};
+}

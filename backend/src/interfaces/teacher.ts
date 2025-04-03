@@ -1,17 +1,6 @@
 import { Teacher } from '../entities/users/teacher.entity.js';
-
-export interface TeacherDTO {
-    id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    endpoints?: {
-        classes: string;
-        questions: string;
-        invitations: string;
-        groups: string;
-    };
-}
+import { getTeacherRepository } from '../data/repositories.js';
+import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 
 export function mapToTeacherDTO(teacher: Teacher): TeacherDTO {
     return {
@@ -22,8 +11,10 @@ export function mapToTeacherDTO(teacher: Teacher): TeacherDTO {
     };
 }
 
-export function mapToTeacher(TeacherData: TeacherDTO): Teacher {
-    const teacher = new Teacher(TeacherData.username, TeacherData.firstName, TeacherData.lastName);
-
-    return teacher;
+export function mapToTeacher(teacherData: TeacherDTO): Teacher {
+    return getTeacherRepository().create({
+        username: teacherData.username,
+        firstName: teacherData.firstName,
+        lastName: teacherData.lastName,
+    });
 }

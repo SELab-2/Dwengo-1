@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { createAssignment, getAllAssignments, getAssignment, getAssignmentsSubmissions } from '../services/assignments.js';
-import { AssignmentDTO } from '../interfaces/assignment.js';
+import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 
-// Typescript is annoy with with parameter forwarding from class.ts
+// Typescript is annoying with parameter forwarding from class.ts
 interface AssignmentParams {
     classid: string;
     id: string;
@@ -41,7 +41,7 @@ export async function createAssignmentHandler(req: Request<AssignmentParams>, re
 }
 
 export async function getAssignmentHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
-    const id = +req.params.id;
+    const id = Number(req.params.id);
     const classid = req.params.classid;
 
     if (isNaN(id)) {
@@ -61,7 +61,7 @@ export async function getAssignmentHandler(req: Request<AssignmentParams>, res: 
 
 export async function getAssignmentsSubmissionsHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
     const classid = req.params.classid;
-    const assignmentNumber = +req.params.id;
+    const assignmentNumber = Number(req.params.id);
     const full = req.query.full === 'true';
 
     if (isNaN(assignmentNumber)) {

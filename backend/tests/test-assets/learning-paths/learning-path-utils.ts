@@ -1,9 +1,14 @@
-import { Language } from '../../../src/entities/content/language';
+import { Language } from '@dwengo-1/common/util/language';
 import { LearningPathTransition } from '../../../src/entities/content/learning-path-transition.entity';
 import { LearningPathNode } from '../../../src/entities/content/learning-path-node.entity';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
 
-export function createLearningPathTransition(node: LearningPathNode, transitionNumber: number, condition: string | null, to: LearningPathNode) {
+export function createLearningPathTransition(
+    node: LearningPathNode,
+    transitionNumber: number,
+    condition: string | null,
+    to: LearningPathNode
+): LearningPathTransition {
     const trans = new LearningPathTransition();
     trans.node = node;
     trans.transitionNumber = transitionNumber;
@@ -19,7 +24,7 @@ export function createLearningPathNode(
     version: number,
     language: Language,
     startNode: boolean
-) {
+): LearningPathNode {
     const node = new LearningPathNode();
     node.learningPath = learningPath;
     node.nodeNumber = nodeNumber;

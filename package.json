@@ -1,18 +1,23 @@
 {
-    "name": "dwengo-1-monorepo",
+    "name": "dwengo-1",
     "version": "0.1.1",
     "description": "Monorepo for Dwengo-1",
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "npm run build --ws",
-        "format": "npm run format --ws",
-        "format-check": "npm run format-check --ws",
-        "lint": "npm run lint --ws",
-        "test:unit": "npm run test:unit --ws"
+        "prebuild": "npm run clean",
+        "build": "tsc --build tsconfig.build.json",
+        "clean": "tsc --build tsconfig.build.json --clean",
+        "watch": "tsc --build tsconfig.build.json --watch",
+        "format": "npm run format --workspace=backend --workspace=common --workspace=frontend",
+        "format-check": "npm run format-check --workspace=backend --workspace=common --workspace=frontend",
+        "lint": "npm run lint --workspace=backend --workspace=common --workspace=frontend",
+        "pretest:unit": "npm run build",
+        "test:unit": "npm run test:unit --workspace=backend --workspace=frontend"
     },
     "workspaces": [
         "backend",
+        "common",
         "frontend",
         "docs"
     ],

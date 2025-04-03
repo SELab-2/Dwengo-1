@@ -5,12 +5,12 @@ import { LearningPathRepository } from '../../../src/data/content/learning-path-
 import example from '../../test-assets/learning-paths/pn-werking-example.js';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity.js';
 import { expectToBeCorrectEntity } from '../../test-utils/expectations.js';
-import { Language } from '../../../src/entities/content/language.js';
+import { Language } from '@dwengo-1/common/util/language';
 
 function expectToHaveFoundPrecisely(expected: LearningPath, result: LearningPath[]): void {
     expect(result).toHaveProperty('length');
     expect(result.length).toBe(1);
-    expectToBeCorrectEntity({ entity: result[0]! }, { entity: expected });
+    expectToBeCorrectEntity({ entity: result[0] }, { entity: expected });
 }
 
 function expectToHaveFoundNothing(result: LearningPath[]): void {

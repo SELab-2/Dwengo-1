@@ -13,13 +13,14 @@ import learningPathExample from '../../test-assets/learning-paths/pn-werking-exa
 import databaseLearningPathProvider from '../../../src/services/learning-paths/database-learning-path-provider.js';
 import { expectToBeCorrectLearningPath } from '../../test-utils/expectations.js';
 import learningObjectService from '../../../src/services/learning-objects/learning-object-service.js';
-import { Language } from '../../../src/entities/content/language.js';
+import { Language } from '@dwengo-1/common/util/language';
 import {
     ConditionTestLearningPathAndLearningObjects,
     createConditionTestLearningPathAndLearningObjects,
 } from '../../test-assets/learning-paths/test-conditions-example.js';
 import { Student } from '../../../src/entities/users/student.entity.js';
-import { LearningObjectNode, LearningPathResponse } from '../../../src/interfaces/learning-content.js';
+
+import { LearningObjectNode, LearningPathResponse } from '@dwengo-1/common/interfaces/learning-content';
 
 async function initExampleData(): Promise<{ learningObject: LearningObject; learningPath: LearningPath }> {
     const learningObjectRepo = getLearningObjectRepository();
@@ -45,8 +46,6 @@ async function initPersonalizationTestData(): Promise<{
     await learningObjectRepo.save(learningContent.finalObject);
     await learningObjectRepo.save(learningContent.extraExerciseObject);
     await learningPathRepo.save(learningContent.learningPath);
-
-    console.log(await getSubmissionRepository().findAll({}));
 
     const studentA = studentRepo.create({
         username: 'student_a',
@@ -124,7 +123,7 @@ describe('DatabaseLearningPathProvider', () => {
 
             const learningObjectsOnPath = (
                 await Promise.all(
-                    example.learningPath.nodes.map((node) =>
+                    example.learningPath.nodes.map(async (node) =>
                         learningObjectService.getLearningObjectById({
                             hruid: node.learningObjectHruid,
                             version: node.version,

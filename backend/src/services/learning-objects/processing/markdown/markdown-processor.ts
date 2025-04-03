@@ -14,25 +14,23 @@ class MarkdownProcessor extends StringProcessor {
         super(DwengoContentType.TEXT_MARKDOWN);
     }
 
-    override renderFn(mdText: string) {
-        let html = '';
-        try {
-            marked.use({ renderer: dwengoMarkedRenderer });
-            html = marked(mdText, { async: false });
-            html = this.replaceLinks(html); // Replace html image links path
-        } catch (e: any) {
-            throw new ProcessingError(e.message);
-        }
-        return html;
-    }
-
-    replaceLinks(html: string) {
+    static replaceLinks(html: string): string {
         const proc = new InlineImageProcessor();
         html = html.replace(
             /<img.*?src="(.*?)".*?(alt="(.*?)")?.*?(title="(.*?)")?.*?>/g,
-            (match: string, src: string, alt: string, altText: string, title: string, titleText: string) => proc.render(src)
+            (_match: string, src: string, _alt: string, _altText: string, _title: string, _titleText: string) => proc.render(src)
         );
         return html;
+    }
+
+    override renderFn(mdText: string): string {
+        try {
+            marked.use({ renderer: dwengoMarkedRenderer });
+            const html = marked(mdText, { async: false });
+            return MarkdownProcessor.replaceLinks(html); // Replace html image links path
+        } catch (e: unknown) {
+            throw new ProcessingError('Unknown error while processing markdown: ' + e);
+        }
     }
 }
 

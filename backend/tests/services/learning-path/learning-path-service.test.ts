@@ -5,8 +5,8 @@ import { LearningPath } from '../../../src/entities/content/learning-path.entity
 import { getLearningObjectRepository, getLearningPathRepository } from '../../../src/data/repositories';
 import learningObjectExample from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example';
 import learningPathExample from '../../test-assets/learning-paths/pn-werking-example';
-import { Language } from '../../../src/entities/content/language';
 import learningPathService from '../../../src/services/learning-paths/learning-path-service';
+import { Language } from '@dwengo-1/common/util/language';
 
 async function initExampleData(): Promise<{ learningObject: LearningObject; learningPath: LearningPath }> {
     const learningObjectRepo = getLearningObjectRepository();
@@ -39,8 +39,8 @@ describe('LearningPathService', () => {
             expect(result.success).toBeTruthy();
             expect(result.data?.filter((it) => it.hruid === TEST_DWENGO_LEARNING_PATH_HRUID).length).not.toBe(0);
             expect(result.data?.filter((it) => it.hruid === example.learningPath.hruid).length).not.toBe(0);
-            expect(result.data?.filter((it) => it.hruid === TEST_DWENGO_LEARNING_PATH_HRUID)[0].title).toEqual(TEST_DWENGO_LEARNING_PATH_TITLE);
-            expect(result.data?.filter((it) => it.hruid === example.learningPath.hruid)[0].title).toEqual(example.learningPath.title);
+            expect(result.data?.find((it) => it.hruid === TEST_DWENGO_LEARNING_PATH_HRUID)?.title).toEqual(TEST_DWENGO_LEARNING_PATH_TITLE);
+            expect(result.data?.find((it) => it.hruid === example.learningPath.hruid)?.title).toEqual(example.learningPath.title);
         });
         it('should include both the learning objects from the Dwengo API and learning objects from the database in its response', async () => {
             const result = await learningPathService.fetchLearningPaths([example.learningPath.hruid], example.learningPath.language, 'the source');
@@ -48,8 +48,8 @@ describe('LearningPathService', () => {
             expect(result.data?.length).toBe(1);
 
             // Should include all the nodes, even those pointing to foreign learning objects.
-            expect([...result.data![0].nodes.map((it) => it.learningobject_hruid)].sort()).toEqual(
-                example.learningPath.nodes.map((it) => it.learningObjectHruid).sort()
+            expect([...result.data![0].nodes.map((it) => it.learningobject_hruid)].sort((a, b) => a.localeCompare(b))).toEqual(
+                example.learningPath.nodes.map((it) => it.learningObjectHruid).sort((a, b) => a.localeCompare(b))
             );
         });
     });

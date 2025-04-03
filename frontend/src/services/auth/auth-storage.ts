@@ -12,7 +12,7 @@ export default {
      * Set the role the user is currently logged in as from the local persistent storage.
      * This should happen when the user logs in with another account.
      */
-    setActiveRole(role: Role) {
+    setActiveRole(role: Role): void {
         localStorage.setItem("activeRole", role);
     },
 
@@ -20,7 +20,7 @@ export default {
      * Remove the saved current role from the local persistent storage.
      * This should happen when the user is logged out.
      */
-    deleteActiveRole() {
+    deleteActiveRole(): void {
         localStorage.removeItem("activeRole");
     },
 };

@@ -5,15 +5,16 @@ import cors from './middleware/cors.js';
 import { getLogger, Logger } from './logging/initalize.js';
 import { responseTimeLogger } from './logging/responseTimeLogger.js';
 import responseTime from 'response-time';
-import { EnvVars, getNumericEnvVar } from './util/envvars.js';
+import { envVars, getNumericEnvVar } from './util/envVars.js';
 import apiRouter from './routes/router.js';
 import swaggerMiddleware from './swagger.js';
 import swaggerUi from 'swagger-ui-express';
+import { errorHandler } from './middleware/error-handling/error-handler.js';
 
 const logger: Logger = getLogger();
 
 const app: Express = express();
-const port: string | number = getNumericEnvVar(EnvVars.Port);
+const port: string | number = getNumericEnvVar(envVars.Port);
 
 app.use(express.json());
 app.use(cors);
@@ -26,7 +27,9 @@ app.use('/api', apiRouter);
 // Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerMiddleware);
 
-async function startServer() {
+app.use(errorHandler);
+
+async function startServer(): Promise<void> {
     await initORM();
 
     app.listen(port, () => {
