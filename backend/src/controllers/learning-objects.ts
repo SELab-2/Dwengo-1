@@ -1,12 +1,16 @@
 import { Request, Response } from 'express';
 import { FALLBACK_LANG } from '../config.js';
-import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../interfaces/learning-content.js';
 import learningObjectService from '../services/learning-objects/learning-object-service.js';
 import { Language } from '@dwengo-1/common/util/language';
 import attachmentService from '../services/learning-objects/attachment-service.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { envVars, getEnvVar } from '../util/envVars.js';
+import {
+    FilteredLearningObject,
+    LearningObjectIdentifier,
+    LearningPathIdentifier
+} from "@dwengo-1/common/interfaces/learning-content";
 
 function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIdentifier {
     if (!req.params.hruid) {
