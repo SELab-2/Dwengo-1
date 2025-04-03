@@ -1,16 +1,21 @@
 import { Question } from '../entities/questions/question.entity.js';
 import { mapToStudentDTO } from './student.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
+import { LearningObjectIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+
+function getLearningObjectIdentifier(question: Question): LearningObjectIdentifier {
+    return {
+        hruid: question.learningObjectHruid,
+        language: question.learningObjectLanguage,
+        version: question.learningObjectVersion,
+    };
+}
 
 /**
  * Convert a Question entity to a DTO format.
  */
 export function mapToQuestionDTO(question: Question): QuestionDTO {
-    const learningObjectIdentifier = {
-        hruid: question.learningObjectHruid,
-        language: question.learningObjectLanguage,
-        version: question.learningObjectVersion,
-    };
+    const learningObjectIdentifier = getLearningObjectIdentifier(question);
 
     return {
         learningObjectIdentifier,
@@ -21,9 +26,11 @@ export function mapToQuestionDTO(question: Question): QuestionDTO {
     };
 }
 
-export function mapToQuestionId(question: QuestionDTO): QuestionId {
+export function mapToQuestionDTOId(question: Question): QuestionId {
+    const learningObjectIdentifier = getLearningObjectIdentifier(question);
+
     return {
-        learningObjectIdentifier: question.learningObjectIdentifier,
+        learningObjectIdentifier,
         sequenceNumber: question.sequenceNumber!,
     };
 }

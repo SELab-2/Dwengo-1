@@ -1,11 +1,12 @@
 import { BaseController } from "@/controllers/base-controller.ts";
+import type { Theme } from "@dwengo-1/interfaces/theme";
 
 export class ThemeController extends BaseController {
     constructor() {
         super("theme");
     }
 
-    async getAll(language: string | null = null): Promise<unknown> {
+    async getAll(language: string | null = null): Promise<Theme[]> {
         const query = language ? { language } : undefined;
         return this.get("/", query);
     }

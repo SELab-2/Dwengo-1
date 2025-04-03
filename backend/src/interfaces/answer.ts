@@ -1,5 +1,5 @@
 import { mapToUserDTO } from './user.js';
-import { mapToQuestionDTO, mapToQuestionId } from './question.js';
+import { mapToQuestionDTO, mapToQuestionDTOId } from './question.js';
 import { Answer } from '../entities/questions/answer.entity.js';
 import { AnswerDTO, AnswerId } from '@dwengo-1/common/interfaces/answer';
 
@@ -16,10 +16,10 @@ export function mapToAnswerDTO(answer: Answer): AnswerDTO {
     };
 }
 
-export function mapToAnswerId(answer: AnswerDTO): AnswerId {
+export function mapToAnswerDTOId(answer: Answer): AnswerId {
     return {
         author: answer.author.username,
-        toQuestion: mapToQuestionId(answer.toQuestion),
-        sequenceNumber: answer.sequenceNumber,
+        toQuestion: mapToQuestionDTOId(answer.toQuestion),
+        sequenceNumber: answer.sequenceNumber!,
     };
 }

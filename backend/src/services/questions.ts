@@ -1,8 +1,8 @@
 import { getAnswerRepository, getQuestionRepository } from '../data/repositories.js';
-import { mapToQuestionDTO, mapToQuestionId } from '../interfaces/question.js';
+import { mapToQuestionDTO, mapToQuestionDTOId } from '../interfaces/question.js';
 import { Question } from '../entities/questions/question.entity.js';
 import { Answer } from '../entities/questions/answer.entity.js';
-import { mapToAnswerDTO, mapToAnswerId } from '../interfaces/answer.js';
+import { mapToAnswerDTO, mapToAnswerDTOId } from '../interfaces/answer.js';
 import { QuestionRepository } from '../data/questions/question-repository.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { mapToStudent } from '../interfaces/student.js';
@@ -17,13 +17,11 @@ export async function getAllQuestions(id: LearningObjectIdentifier, full: boolea
         return [];
     }
 
-    const questionsDTO: QuestionDTO[] = questions.map(mapToQuestionDTO);
-
     if (full) {
-        return questionsDTO;
+        return questions.map(mapToQuestionDTO);
     }
 
-    return questionsDTO.map(mapToQuestionId);
+    return questions.map(mapToQuestionDTOId);
 }
 
 async function fetchQuestion(questionId: QuestionId): Promise<Question | null> {
@@ -61,13 +59,11 @@ export async function getAnswersByQuestion(questionId: QuestionId, full: boolean
         return [];
     }
 
-    const answersDTO = answers.map(mapToAnswerDTO);
-
     if (full) {
-        return answersDTO;
+        return answers.map(mapToAnswerDTO);
     }
 
-    return answersDTO.map(mapToAnswerId);
+    return answers.map(mapToAnswerDTOId);
 }
 
 export async function createQuestion(questionDTO: QuestionDTO): Promise<QuestionDTO | null> {
