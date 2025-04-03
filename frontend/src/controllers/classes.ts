@@ -10,31 +10,31 @@ export class ClassController extends BaseController {
         super("class");
     }
 
-    getAll(full = true) {
+    async getAll(full = true) {
         return this.get<{ classes: any[] }>(`/`, { full });
     }
 
-    getById(id: string) {
+    async getById(id: string) {
         return this.get<{ class: any }>(`/${id}`);
     }
 
-    createClass(data: any) {
+    async createClass(data: any) {
         return this.post<{ class: any }>(`/`, data);
     }
 
-    deleteClass(id: string) {
+    async deleteClass(id: string) {
         return this.delete<{ class: any }>(`/${id}`);
     }
 
-    getStudents(id: string, full = true) {
+    async getStudents(id: string, full = true) {
         return this.get<{ students: any[] }>(`/${id}/students`, { full });
     }
 
-    getTeacherInvitations(id: string, full = true) {
+    async getTeacherInvitations(id: string, full = true) {
         return this.get<{ invitations: any[] }>(`/${id}/teacher-invitations`, { full });
     }
 
-    getAssignments(id: string, full = true) {
+    async getAssignments(id: string, full = true) {
         return this.get<{ assignments: any[] }>(`/${id}/assignments`, { full });
     }
 }
