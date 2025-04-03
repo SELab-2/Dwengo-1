@@ -74,7 +74,7 @@ export async function createQuestion(questionDTO: QuestionDTO): Promise<Question
     const loId: LearningObjectIdentifier = {
         ...questionDTO.learningObjectIdentifier,
         version: questionDTO.learningObjectIdentifier.version ?? 1,
-    }
+    };
 
     try {
         await questionRepository.createQuestion({
@@ -98,10 +98,10 @@ export async function deleteQuestion(questionId: QuestionId): Promise<QuestionDT
         return null;
     }
 
-    const loId : LearningObjectIdentifier = {
+    const loId: LearningObjectIdentifier = {
         ...questionId.learningObjectIdentifier,
-        version: questionId.learningObjectIdentifier.version ?? 1
-    }
+        version: questionId.learningObjectIdentifier.version ?? 1,
+    };
 
     try {
         await questionRepository.removeQuestionByLearningObjectAndSequenceNumber(loId, questionId.sequenceNumber);
