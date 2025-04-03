@@ -5,19 +5,19 @@ export class SubmissionController extends BaseController {
         super(`class/${classid}/assignments/${assignmentNumber}/groups/${groupNumber}`);
     }
 
-    getAll(full = true) {
+    async getAll(full = true) {
         return this.get<any>(`/`, { full });
     }
 
-    getByNumber(submissionNumber: number) {
+    async getByNumber(submissionNumber: number) {
         return this.get<any>(`/${submissionNumber}`);
     }
 
-    createSubmission(data: any) {
+    async createSubmission(data: any) {
         return this.post<any>(`/`, data);
     }
 
-    deleteSubmission(submissionNumber: number) {
+    async deleteSubmission(submissionNumber: number) {
         return this.delete<any>(`/${submissionNumber}`);
     }
 }
