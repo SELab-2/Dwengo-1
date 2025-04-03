@@ -1,4 +1,4 @@
-import {Theme} from "@dwengo-1/common/interfaces/theme";
+import { Theme } from '@dwengo-1/common/interfaces/theme';
 
 export const themes: Theme[] = [
     {

@@ -3,8 +3,8 @@ import { ClassJoinRequest } from '../entities/classes/class-join-request.entity.
 import { getClassJoinRequestRepository } from '../data/repositories.js';
 import { Student } from '../entities/users/student.entity.js';
 import { Class } from '../entities/classes/class.entity.js';
-import {ClassJoinRequestDTO} from "@dwengo-1/common/interfaces/class-join-request";
-import {ClassJoinRequestStatus} from "@dwengo-1/common/util/class-join-request";
+import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
+import { ClassJoinRequestStatus } from '@dwengo-1/common/util/class-join-request';
 
 export function mapToStudentRequestDTO(request: ClassJoinRequest): ClassJoinRequestDTO {
     return {
