@@ -1,6 +1,6 @@
 import { EntityManager } from '@mikro-orm/core';
 import { LearningObject } from '../../../src/entities/content/learning-object.entity';
-import { Language } from '../../../src/entities/content/language';
+import { Language } from '@dwengo-1/common/util/language';
 import { DwengoContentType } from '../../../src/services/learning-objects/processing/content-type';
 import { ReturnValue } from '../../../src/entities/content/return-value.entity';
 

@@ -1,14 +1,6 @@
 import { Question } from '../entities/questions/question.entity.js';
-import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
-import { mapToStudentDTO, StudentDTO } from './student.js';
-
-export interface QuestionDTO {
-    learningObjectIdentifier: LearningObjectIdentifier;
-    sequenceNumber?: number;
-    author: StudentDTO;
-    timestamp?: string;
-    content: string;
-}
+import { mapToStudentDTO } from './student.js';
+import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 
 /**
  * Convert a Question entity to a DTO format.
@@ -27,11 +19,6 @@ export function mapToQuestionDTO(question: Question): QuestionDTO {
         timestamp: question.timestamp.toISOString(),
         content: question.content,
     };
-}
-
-export interface QuestionId {
-    learningObjectIdentifier: LearningObjectIdentifier;
-    sequenceNumber: number;
 }
 
 export function mapToQuestionId(question: QuestionDTO): QuestionId {

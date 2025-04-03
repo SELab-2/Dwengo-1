@@ -4,7 +4,7 @@ import { AnswerRepository } from '../../../src/data/questions/answer-repository'
 import { getAnswerRepository, getQuestionRepository, getTeacherRepository } from '../../../src/data/repositories';
 import { QuestionRepository } from '../../../src/data/questions/question-repository';
 import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
-import { Language } from '../../../src/entities/content/language';
+import { Language } from '@dwengo-1/common/util/language';
 import { TeacherRepository } from '../../../src/data/users/teacher-repository';
 
 describe('AnswerRepository', () => {

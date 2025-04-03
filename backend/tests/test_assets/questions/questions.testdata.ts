@@ -1,6 +1,6 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Question } from '../../../src/entities/questions/question.entity';
-import { Language } from '../../../src/entities/content/language';
+import { Language } from '@dwengo-1/common/util/language';
 import { Student } from '../../../src/entities/users/student.entity';
 
 export function makeTestQuestions(em: EntityManager, students: Student[]): Question[] {

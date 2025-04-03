@@ -1,5 +1,5 @@
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
-import { Language } from '../../../src/entities/content/language';
+import { Language } from '@dwengo-1/common/util/language';
 import testMultipleChoiceExample from '../learning-objects/test-multiple-choice/test-multiple-choice-example';
 import { dummyLearningObject } from '../learning-objects/dummy/dummy-learning-object-example';
 import { createLearningPathNode, createLearningPathTransition } from './learning-path-utils';

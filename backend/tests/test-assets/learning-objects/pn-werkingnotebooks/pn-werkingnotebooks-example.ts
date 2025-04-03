@@ -1,5 +1,5 @@
 import { LearningObjectExample } from '../learning-object-example';
-import { Language } from '../../../../src/entities/content/language';
+import { Language } from '@dwengo-1/common/util/language';
 import { DwengoContentType } from '../../../../src/services/learning-objects/processing/content-type';
 import { loadTestAsset } from '../../../test-utils/load-test-asset';
 import { LearningObject } from '../../../../src/entities/content/learning-object.entity';

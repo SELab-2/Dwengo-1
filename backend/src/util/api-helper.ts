@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { getLogger, Logger } from '../logging/initalize.js';
-import { LearningObjectIdentifier } from '../interfaces/learning-content.js';
+import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 
 const logger: Logger = getLogger();
 

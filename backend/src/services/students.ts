@@ -1,10 +1,14 @@
 import { getClassRepository, getGroupRepository, getStudentRepository, getSubmissionRepository } from '../data/repositories.js';
-import { AssignmentDTO } from '../interfaces/assignment.js';
-import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
-import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
-import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
-import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
+import { mapToClassDTO } from '../interfaces/class.js';
+import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
+import { mapToStudent, mapToStudentDTO } from '../interfaces/student.js';
+import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
+import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
+import { ClassDTO } from '@dwengo-1/common/interfaces/class';
+import { GroupDTO } from '@dwengo-1/common/interfaces/group';
+import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
+import { StudentDTO } from '@dwengo-1/common/interfaces/student';
 import { getLogger } from '../logging/initalize.js';
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
