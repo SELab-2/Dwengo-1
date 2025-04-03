@@ -48,8 +48,8 @@ describe('LearningPathService', () => {
             expect(result.data?.length).toBe(1);
 
             // Should include all the nodes, even those pointing to foreign learning objects.
-            expect([...result.data![0].nodes.map((it) => it.learningobject_hruid)].sort()).toEqual(
-                example.learningPath.nodes.map((it) => it.learningObjectHruid).sort()
+            expect([...result.data![0].nodes.map((it) => it.learningobject_hruid)].sort((a, b) => a.localeCompare(b))).toEqual(
+                example.learningPath.nodes.map((it) => it.learningObjectHruid).sort((a, b) => a.localeCompare(b))
             );
         });
     });
