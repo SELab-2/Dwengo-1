@@ -1,9 +1,9 @@
 import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
 import { type MaybeRefOrGetter, toValue } from "vue";
-import { ThemeController } from "@/controllers/themes.ts";
-import type { Theme } from "../../../common/src/interfaces/theme";
+import type { Theme } from "@dwengo-1/interfaces/theme";
+import {getThemeController} from "@/controllers/controllers.ts";
 
-const themeController = new ThemeController();
+const themeController = getThemeController();
 
 export function useThemeQuery(language: MaybeRefOrGetter<string | undefined>): UseQueryReturnType<Theme[], Error> {
     return useQuery({

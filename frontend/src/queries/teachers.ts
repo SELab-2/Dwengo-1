@@ -5,7 +5,7 @@ import { TeacherController, type TeacherResponse, type TeachersResponse } from "
 import type { ClassesResponse } from "@/controllers/classes.ts";
 import type { JoinRequestResponse, JoinRequestsResponse, StudentsResponse } from "@/controllers/students.ts";
 import type { QuestionsResponse } from "@/controllers/questions.ts";
-import type { TeacherDTO } from "dwengo-1-common/src/interfaces/teacher";
+import type { TeacherDTO } from "@dwengo-1/interfaces/teacher";
 import { studentJoinRequestQueryKey, studentJoinRequestsQueryKey } from "@/queries/students.ts";
 
 const teacherController = new TeacherController();
