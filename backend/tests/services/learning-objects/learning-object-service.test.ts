@@ -109,7 +109,7 @@ describe('LearningObjectService', () => {
                 hruid: 'non_existing',
                 language: Language.Dutch,
             });
-            expect(result).toEqual([]);
+            expect(result).toStrictEqual([]);
         });
     });
 
@@ -127,7 +127,7 @@ describe('LearningObjectService', () => {
                 hruid: 'non_existing',
                 language: Language.Dutch,
             });
-            expect(result).toEqual([]);
+            expect(result).toStrictEqual([]);
         });
     });
 });
