@@ -29,6 +29,12 @@ jobs:
     if: '! github.event.pull_request.draft'
     runs-on: [self-hosted, Linux, X64]
 
+    permissions:
+      # Required to checkout the code
+      contents: read
+      # Required to put a comment into the pull-request
+      pull-requests: write
+
     strategy:
       matrix:
         node-version: [22.x]
