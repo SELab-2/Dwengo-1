@@ -59,3 +59,4 @@ jobs:
         json-summary-path: './backend/coverage/coverage-summary.json'
         json-final-path: './backend/coverage/coverage-final.json'
         vite-config-path: './backend/vitest.config.ts'
+        file-coverage-mode: all
