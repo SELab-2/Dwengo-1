@@ -1,9 +1,9 @@
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { Answer } from '../../../src/entities/questions/answer.entity';
 import { Teacher } from '../../../src/entities/users/teacher.entity';
 import { Question } from '../../../src/entities/questions/question.entity';
 
-export function makeTestAnswers(em: EntityManager<IDatabaseDriver<Connection>>, teachers: Array<Teacher>, questions: Array<Question>): Array<Answer> {
+export function makeTestAnswers(em: EntityManager, teachers: Teacher[], questions: Question[]): Answer[] {
     const answer01 = em.create(Answer, {
         author: teachers[0],
         toQuestion: questions[1],

@@ -5,11 +5,11 @@ import example from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-w
 import { LearningObject } from '../../../src/entities/content/learning-object.entity';
 import databaseLearningObjectProvider from '../../../src/services/learning-objects/database-learning-object-provider';
 import { expectToBeCorrectFilteredLearningObject } from '../../test-utils/expectations';
-import { FilteredLearningObject } from '../../../src/interfaces/learning-content';
-import { Language } from '../../../src/entities/content/language';
+import { Language } from '@dwengo-1/common/util/language';
 import learningObjectExample from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example';
 import learningPathExample from '../../test-assets/learning-paths/pn-werking-example';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
+import { FilteredLearningObject } from '@dwengo-1/common/interfaces/learning-content';
 
 async function initExampleData(): Promise<{ learningObject: LearningObject; learningPath: LearningPath }> {
     const learningObjectRepo = getLearningObjectRepository();
@@ -37,7 +37,7 @@ describe('DatabaseLearningObjectProvider', () => {
         it('should return the learning object when it is queried by its id', async () => {
             const result: FilteredLearningObject | null = await databaseLearningObjectProvider.getLearningObjectById(exampleLearningObject);
             expect(result).toBeTruthy();
-            expectToBeCorrectFilteredLearningObject(result!, exampleLearningObject);
+            expectToBeCorrectFilteredLearningObject(result, exampleLearningObject);
         });
 
         it('should return the learning object when it is queried by only hruid and language (but not version)', async () => {
@@ -46,7 +46,7 @@ describe('DatabaseLearningObjectProvider', () => {
                 language: exampleLearningObject.language,
             });
             expect(result).toBeTruthy();
-            expectToBeCorrectFilteredLearningObject(result!, exampleLearningObject);
+            expectToBeCorrectFilteredLearningObject(result, exampleLearningObject);
         });
 
         it('should return null when queried with an id that does not exist', async () => {
@@ -60,7 +60,8 @@ describe('DatabaseLearningObjectProvider', () => {
     describe('getLearningObjectHTML', () => {
         it('should return the correct rendering of the learning object', async () => {
             const result = await databaseLearningObjectProvider.getLearningObjectHTML(exampleLearningObject);
-            expect(result).toEqual(example.getHTMLRendering());
+            // Set newlines so your tests are platform-independent.
+            expect(result).toEqual(example.getHTMLRendering().replace(/\r\n/g, '\n'));
         });
         it('should return null for a non-existing learning object', async () => {
             const result = await databaseLearningObjectProvider.getLearningObjectHTML({
@@ -77,7 +78,7 @@ describe('DatabaseLearningObjectProvider', () => {
         });
         it('should throw an error if queried with a path identifier for which there is no learning path', async () => {
             await expect(
-                (async () => {
+                (async (): Promise<void> => {
                     await databaseLearningObjectProvider.getLearningObjectIdsFromPath({
                         hruid: 'non_existing_hruid',
                         language: Language.Dutch,
@@ -96,7 +97,7 @@ describe('DatabaseLearningObjectProvider', () => {
         });
         it('should throw an error if queried with a path identifier for which there is no learning path', async () => {
             await expect(
-                (async () => {
+                (async (): Promise<void> => {
                     await databaseLearningObjectProvider.getLearningObjectsFromPath({
                         hruid: 'non_existing_hruid',
                         language: Language.Dutch,

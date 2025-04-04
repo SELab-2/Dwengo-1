@@ -1,18 +1,23 @@
 {
-    "name": "dwengo-1-monorepo",
+    "name": "dwengo-1",
     "version": "0.1.1",
     "description": "Monorepo for Dwengo-1",
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "npm run build --ws",
-        "format": "npm run format --ws",
-        "format-check": "npm run format-check --ws",
-        "lint": "npm run lint --ws",
-        "test:unit": "npm run test:unit -w backend -w frontend"
+        "prebuild": "npm run clean",
+        "build": "tsc --build tsconfig.build.json",
+        "clean": "tsc --build tsconfig.build.json --clean",
+        "watch": "tsc --build tsconfig.build.json --watch",
+        "format": "npm run format --workspace=backend --workspace=common --workspace=frontend",
+        "format-check": "npm run format-check --workspace=backend --workspace=common --workspace=frontend",
+        "lint": "npm run lint --workspace=backend --workspace=common --workspace=frontend",
+        "pretest:unit": "npm run build",
+        "test:unit": "npm run test:unit --workspace=backend --workspace=frontend"
     },
     "workspaces": [
         "backend",
+        "common",
         "frontend",
         "docs"
     ],
@@ -31,6 +36,7 @@
         "@types/eslint-config-prettier": "^6.11.3",
         "@typescript-eslint/eslint-plugin": "^8.24.1",
         "@typescript-eslint/parser": "^8.24.1",
+        "@vitest/coverage-v8": "^3.0.8",
         "eslint": "^9.20.1",
         "eslint-config-prettier": "^10.0.1",
         "jiti": "^2.4.2",

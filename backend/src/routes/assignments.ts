@@ -19,7 +19,7 @@ router.get('/:id', getAssignmentHandler);
 
 router.get('/:id/submissions', getAssignmentsSubmissionsHandler);
 
-router.get('/:id/questions', (req, res) => {
+router.get('/:id/questions', (_req, res) => {
     res.json({
         questions: ['0'],
     });

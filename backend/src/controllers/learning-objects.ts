@@ -1,20 +1,20 @@
 import { Request, Response } from 'express';
 import { FALLBACK_LANG } from '../config.js';
-import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../interfaces/learning-content.js';
 import learningObjectService from '../services/learning-objects/learning-object-service.js';
-import { EnvVars, getEnvVar } from '../util/envvars.js';
-import { Language } from '../entities/content/language.js';
-import { BadRequestException } from '../exceptions.js';
+import { Language } from '@dwengo-1/common/util/language';
 import attachmentService from '../services/learning-objects/attachment-service.js';
-import { NotFoundError } from '@mikro-orm/core';
+import { BadRequestException } from '../exceptions/bad-request-exception.js';
+import { NotFoundException } from '../exceptions/not-found-exception.js';
+import { envVars, getEnvVar } from '../util/envVars.js';
+import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
 
 function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIdentifier {
     if (!req.params.hruid) {
         throw new BadRequestException('HRUID is required.');
     }
     return {
-        hruid: req.params.hruid as string,
-        language: (req.query.language || getEnvVar(EnvVars.FallbackLanguage)) as Language,
+        hruid: req.params.hruid,
+        language: (req.query.language || getEnvVar(envVars.FallbackLanguage)) as Language,
         version: parseInt(req.query.version as string),
     };
 }
@@ -24,7 +24,7 @@ function getLearningPathIdentifierFromRequest(req: Request): LearningPathIdentif
         throw new BadRequestException('HRUID is required.');
     }
     return {
-        hruid: req.params.hruid as string,
+        hruid: req.params.hruid,
         language: (req.query.language as Language) || FALLBACK_LANG,
     };
 }
@@ -40,13 +40,18 @@ export async function getAllLearningObjects(req: Request, res: Response): Promis
         learningObjects = await learningObjectService.getLearningObjectIdsFromPath(learningPathId);
     }
 
-    res.json(learningObjects);
+    res.json({ learningObjects: learningObjects });
 }
 
 export async function getLearningObject(req: Request, res: Response): Promise<void> {
     const learningObjectId = getLearningObjectIdentifierFromRequest(req);
 
     const learningObject = await learningObjectService.getLearningObjectById(learningObjectId);
+
+    if (!learningObject) {
+        throw new NotFoundException('Learning object not found');
+    }
+
     res.json(learningObject);
 }
 
@@ -63,7 +68,7 @@ export async function getAttachment(req: Request, res: Response): Promise<void> 
     const attachment = await attachmentService.getAttachment(learningObjectId, name);
 
     if (!attachment) {
-        throw new NotFoundError(`Attachment ${name} not found`);
+        throw new NotFoundException(`Attachment ${name} not found`);
     }
     res.setHeader('Content-Type', attachment.mimeType).send(attachment.content);
 }

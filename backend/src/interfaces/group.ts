@@ -1,12 +1,7 @@
 import { Group } from '../entities/assignments/group.entity.js';
-import { AssignmentDTO, mapToAssignmentDTO } from './assignment.js';
-import { mapToStudentDTO, StudentDTO } from './student.js';
-
-export interface GroupDTO {
-    assignment: number | AssignmentDTO;
-    groupNumber: number;
-    members: string[] | StudentDTO[];
-}
+import { mapToAssignmentDTO } from './assignment.js';
+import { mapToStudentDTO } from './student.js';
+import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 
 export function mapToGroupDTO(group: Group): GroupDTO {
     return {

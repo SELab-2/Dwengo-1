@@ -1,18 +1,9 @@
+import { languageMap } from '@dwengo-1/common/util/language';
 import { FALLBACK_LANG } from '../config.js';
 import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { Class } from '../entities/classes/class.entity.js';
-import { languageMap } from '../entities/content/language.js';
-import { GroupDTO, mapToGroupDTO } from './group.js';
-
-export interface AssignmentDTO {
-    id: number;
-    class: string; // Id of class 'within'
-    title: string;
-    description: string;
-    learningPath: string;
-    language: string;
-    groups?: GroupDTO[] | string[]; // TODO
-}
+import { getLogger } from '../logging/initalize.js';
+import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 
 export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTO {
     return {
@@ -46,7 +37,7 @@ export function mapToAssignment(assignmentData: AssignmentDTO, cls: Class): Assi
     assignment.learningPathLanguage = languageMap[assignmentData.language] || FALLBACK_LANG;
     assignment.within = cls;
 
-    console.log(assignment);
+    getLogger().debug(assignment);
 
     return assignment;
 }

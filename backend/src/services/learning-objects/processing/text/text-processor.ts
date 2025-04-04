@@ -11,7 +11,7 @@ class TextProcessor extends StringProcessor {
         super(DwengoContentType.TEXT_PLAIN);
     }
 
-    override renderFn(text: string) {
+    override renderFn(text: string): string {
         // Sanitize plain text to prevent xss.
         return DOMPurify.sanitize(text);
     }

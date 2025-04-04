@@ -2,16 +2,16 @@
     import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
     import auth from "@/services/auth/auth-service.ts";
 
-    function loginAsStudent() {
-        auth.loginAs("student");
+    async function loginAsStudent(): Promise<void> {
+        await auth.loginAs("student");
     }
 
-    function loginAsTeacher() {
-        auth.loginAs("teacher");
+    async function loginAsTeacher(): Promise<void> {
+        await auth.loginAs("teacher");
     }
 
-    function performLogout() {
-        auth.logout();
+    async function performLogout(): Promise<void> {
+        await auth.logout();
     }
 </script>
 
@@ -70,6 +70,7 @@
                 You are currently logged in as {{ auth.authState.user!.profile.name }} ({{ auth.authState.activeRole }})
             </p>
             <v-btn @click="performLogout">Logout</v-btn>
+            <v-btn to="/user">home</v-btn>
         </div>
     </main>
 </template>

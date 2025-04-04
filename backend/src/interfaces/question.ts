@@ -1,26 +1,21 @@
 import { Question } from '../entities/questions/question.entity.js';
-import { UserDTO } from './user.js';
-import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
-import { mapToStudentDTO, StudentDTO } from './student.js';
-import { TeacherDTO } from './teacher.js';
+import { mapToStudentDTO } from './student.js';
+import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
+import { LearningObjectIdentifier } from '@dwengo-1/common/interfaces/learning-content';
 
-export interface QuestionDTO {
-    learningObjectIdentifier: LearningObjectIdentifier;
-    sequenceNumber?: number;
-    author: StudentDTO;
-    timestamp?: string;
-    content: string;
+function getLearningObjectIdentifier(question: Question): LearningObjectIdentifier {
+    return {
+        hruid: question.learningObjectHruid,
+        language: question.learningObjectLanguage,
+        version: question.learningObjectVersion,
+    };
 }
 
 /**
  * Convert a Question entity to a DTO format.
  */
 export function mapToQuestionDTO(question: Question): QuestionDTO {
-    const learningObjectIdentifier = {
-        hruid: question.learningObjectHruid,
-        language: question.learningObjectLanguage,
-        version: question.learningObjectVersion,
-    };
+    const learningObjectIdentifier = getLearningObjectIdentifier(question);
 
     return {
         learningObjectIdentifier,
@@ -31,14 +26,11 @@ export function mapToQuestionDTO(question: Question): QuestionDTO {
     };
 }
 
-export interface QuestionId {
-    learningObjectIdentifier: LearningObjectIdentifier;
-    sequenceNumber: number;
-}
+export function mapToQuestionDTOId(question: Question): QuestionId {
+    const learningObjectIdentifier = getLearningObjectIdentifier(question);
 
-export function mapToQuestionId(question: QuestionDTO): QuestionId {
     return {
-        learningObjectIdentifier: question.learningObjectIdentifier,
+        learningObjectIdentifier,
         sequenceNumber: question.sequenceNumber!,
     };
 }

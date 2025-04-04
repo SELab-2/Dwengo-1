@@ -1,22 +1,19 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { setupTestApp } from '../../setup-tests';
 import { QuestionRepository } from '../../../src/data/questions/question-repository';
-import { getLearningObjectRepository, getQuestionRepository, getStudentRepository } from '../../../src/data/repositories';
+import { getQuestionRepository, getStudentRepository } from '../../../src/data/repositories';
 import { StudentRepository } from '../../../src/data/users/student-repository';
-import { LearningObjectRepository } from '../../../src/data/content/learning-object-repository';
 import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
-import { Language } from '../../../src/entities/content/language';
+import { Language } from '@dwengo-1/common/util/language';
 
 describe('QuestionRepository', () => {
     let questionRepository: QuestionRepository;
     let studentRepository: StudentRepository;
-    let learningObjectRepository: LearningObjectRepository;
 
     beforeAll(async () => {
         await setupTestApp();
         questionRepository = getQuestionRepository();
         studentRepository = getStudentRepository();
-        learningObjectRepository = getLearningObjectRepository();
     });
 
     it('should return all questions part of the given learning object', async () => {

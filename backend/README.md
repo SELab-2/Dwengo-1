@@ -4,21 +4,22 @@
 
 ```shell
 npm install
+
+# Start de nodige services voor ontwikkeling
+cd ../ # Ga naar de root van de repository
+docker compose up -d
 ```
 
-Setup the environment variables in a `.env` file in the root of the project. You can use the `.env.example` file as a template.
+Zet de omgevingsvariabelen in een `.env` bestand in de root van het project.
+Je kan het `.env.example` bestand als template gebruiken.
 
-### Development
+### Ontwikkeling
 
 ```shell
+# Omgevingsvariabelen
+cp .env.development.example .env.development.local
+
 npm run dev
-```
-
-### Production
-
-```shell
-npm run build
-npm run start
 ```
 
 ### Tests
@@ -28,6 +29,20 @@ Voer volgend commando uit om de unit tests uit te voeren:
 ```
 npm run test:unit
 ```
+
+### Productie
+
+```shell
+# Omgevingsvariabelen
+cp .env.example .env
+# Configureer de .env file met de juiste waarden!
+nano .env
+
+npm run build
+npm run start
+```
+
+Zie ook de [installatiehandleiding](https://github.com/SELab-2/Dwengo-1/wiki/Administrator:-Productie-omgeving).
 
 ## Keycloak configuratie
 

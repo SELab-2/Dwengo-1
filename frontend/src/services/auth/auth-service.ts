@@ -5,10 +5,10 @@
 import { computed, reactive } from "vue";
 import type { AuthState, Role, UserManagersForRoles } from "@/services/auth/auth.d.ts";
 import { User, UserManager } from "oidc-client-ts";
-import { loadAuthConfig } from "@/services/auth/auth-config-loader.ts";
+import { AUTH_CONFIG_ENDPOINT, loadAuthConfig } from "@/services/auth/auth-config-loader.ts";
 import authStorage from "./auth-storage.ts";
 import { loginRoute } from "@/config.ts";
-import apiClient from "@/services/api-client.ts";
+import apiClient from "@/services/api-client/api-client.ts";
 import router from "@/router";
 import type { AxiosError } from "axios";
 
@@ -19,6 +19,15 @@ async function getUserManagers(): Promise<UserManagersForRoles> {
         teacher: new UserManager(authConfig.teacher),
     };
 }
+
+/**
+ * Information about the current authentication state.
+ */
+const authState = reactive<AuthState>({
+    user: null,
+    accessToken: null,
+    activeRole: authStorage.getActiveRole() || null,
+});
 
 /**
  * Load the information about who is currently logged in from the IDP.
@@ -35,21 +44,12 @@ async function loadUser(): Promise<User | null> {
     return user;
 }
 
-/**
- * Information about the current authentication state.
- */
-const authState = reactive<AuthState>({
-    user: null,
-    accessToken: null,
-    activeRole: authStorage.getActiveRole() || null,
-});
-
 const isLoggedIn = computed(() => authState.user !== null);
 
 /**
  * Redirect the user to the login page where he/she can choose whether to log in as a student or teacher.
  */
-async function initiateLogin() {
+async function initiateLogin(): Promise<void> {
     await router.push(loginRoute);
 }
 
@@ -77,20 +77,20 @@ async function handleLoginCallback(): Promise<void> {
 /**
  * Refresh an expired authorization token.
  */
-async function renewToken() {
+async function renewToken(): Promise<User | null> {
     const activeRole = authStorage.getActiveRole();
     if (!activeRole) {
-        console.log("Can't renew the token: Not logged in!");
+        // FIXME console.log("Can't renew the token: Not logged in!");
         await initiateLogin();
-        return;
+        return null;
     }
     try {
         return await (await getUserManagers())[activeRole].signinSilent();
-    } catch (error) {
-        console.log("Can't renew the token:");
-        console.log(error);
+    } catch (_error) {
+        // FIXME console.log("Can't renew the token: " + error);
         await initiateLogin();
     }
+    return null;
 }
 
 /**
@@ -108,12 +108,12 @@ async function logout(): Promise<void> {
 apiClient.interceptors.request.use(
     async (reqConfig) => {
         const token = authState?.user?.access_token;
-        if (token) {
+        if (token && reqConfig.url !== AUTH_CONFIG_ENDPOINT) {
             reqConfig.headers.Authorization = `Bearer ${token}`;
         }
         return reqConfig;
     },
-    (error) => Promise.reject(error),
+    async (error) => Promise.reject(error),
 );
 
 // Registering interceptor to refresh the token when a request failed because it was expired.
@@ -121,8 +121,8 @@ apiClient.interceptors.response.use(
     (response) => response,
     async (error: AxiosError<{ message?: string }>) => {
         if (error.response?.status === 401) {
-            if (error.response!.data.message === "token_expired") {
-                console.log("Access token expired, trying to refresh...");
+            if (error.response.data.message === "token_expired") {
+                // FIXME console.log("Access token expired, trying to refresh...");
                 await renewToken();
                 return apiClient(error.config!); // Retry the request
             } // Apparently, the user got a 401 because he was not logged in yet at all. Redirect him to login.

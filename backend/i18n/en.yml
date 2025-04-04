@@ -1,0 +1,345 @@
+# translate theme pages
+
+strengths:
+    title: Our strengths
+    innovative: Innovative
+    research_based: Research-based
+    inclusive: Inclusive
+    socially_relevant: Socially relevant
+    innovative_text: We continuously add new projects and apply new methodologies in our projects.
+    research_based_text: All learning materials of Dwengo are based on profound scientific research.
+    inclusive_text: We target all children, making gender inclusion and accessibility for disadvantaged children a priority.
+    socially_relevant_text: We look for projects that fit current events and are socially relevant.
+    summary: We develop innovative workshops and educational resources, and we provide them to students around the globe in collaboration with teachers and volunteers. Our train-the-trainer sessions enable them to bring our hands-on workshops to the students.
+    main: We continuously add new projects and methodologies to all our projects. For these projects, we always look for a socially relevant theme. Additionally, we ensure that our didactic material is based on scientific research and always keep an eye on inclusivity.
+    quote:
+        text: You make something practical, learn how to use the hardware and create something new.
+        name: Matthias and Bruno
+        affiliation: Grade 10
+
+curricula_page:
+    title: Our teaching topics
+    read_more: Read more
+    curricula_files: Files
+    algorithms:
+        title: Algorithms
+        sub_title: Algorithms
+        description: 'Students in the second and third grade (secondary education) learn how to use algorithms to solve problems. They learn how to design algorithms and analyze the efficiency of algorithms. They also learn how to use algorithms to solve problems.'
+        contact: ''
+        teaser: https://www.youtube.com/embed/2B6gZ9HdQ1Y
+    basics_ai:
+        title: Basics of AI
+        sub_title: Basics of AI
+        description: 'This theme brings together various activities covering the basic principles of Artificial Intelligence (AI). Students learn what AI is, how it works, and how it can be applied in different domains.'
+        contact: ''
+
+    kiks:
+        title: AI and Climate
+        sub_title: KIKS
+        description: 'Students in the third grade (SO) investigate how plants adapt to climate change through their stomata. They use artificial intelligence and image recognition to count these stomata.'
+        contact: ''
+        teaser: https://www.youtube.com/embed/dO-E33G20co
+        curricula_files:
+            - file_title: 'Project Sheet KIKS'
+              file_info: 'This is a brief overview of the KIKS project with project structure and characteristics.'
+              file_location: '/assets/files/kiks/projectfiche_kiks.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'The manual - also available in print'
+              file_info: 'We want to provide teachers with background knowledge about the content of this project: climate change, the biology of stomata, how plants adapt to climate change through stomata, the scientific research of UGent and Plantentuin Meise underlying this project, citizen science, what artificial intelligence (AI) is, the history of AI, its use and ethics, principles of digital images, mathematics behind algorithms, and foundations of currently most-used AI techniques. We also explain how we implemented KIKS in the classroom.'
+              file_location: '/assets/files/kiks/KIKS_handleiding_eerstedruk.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Student Course'
+              file_info: 'With the student course, we provide an example of a possible, comprehensive trajectory that a teacher can go through with students. The trajectory includes climate change, the biology of stomata with a microscopy assignment, how plants adapt to climate change through stomata, the scientific research of UGent and Plantentuin Meise, collecting data to train a neural network, what artificial intelligence (AI) is, the history of AI, its use and ethics, principles of digital images, working with convolutions, mathematics behind the Perceptron algorithm, linear and non-linear classification of data, and foundations of machine learning.'
+              file_location: '/assets/files/kiks/KIKS_leerlingencursus_eerstedruk.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Curriculum Goals'
+              file_info: 'Within the KIKS project, many curriculum goals can be addressed. The teacher determines which goals are related to the project. Moreover, the project offers many opportunities to actively engage and let students learn independently, as well as teach ICT skills. KIKS can also be used for a research assignment. In the final objectives and curricula of various educational bodies, many goals can be found linking KIKS with biology, geography, and mathematics.'
+              file_location: '/assets/files/kiks/Leerdoelen-KIKS.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Making a Nail Polish Impression of a Leaf Part'
+              file_info: 'To know the number of stomata on a part of a plant leaf, we examine the leaf surface under the microscope. We can remove a piece of the thin cuticle of the leaf for this, but for some plants, it is not so successful, for example, due to the stiffness of the leaf. However, this can be compensated by using the same method as the researchers at Plantentuin Meise, namely, taking an impression of a part of the leaf surface with transparent nail polish. The microscopic image can be photographed with a smartphone.'
+              file_location: 'https://vimeo.com/467062270'
+              file_icon_name: 'play_arrow'
+              link_name: 'Watch'
+    socialrobot:
+        title: Social Robot
+        sub_title: Robotics in the classroom
+        description: 'While first-year students (secondary education) build and program a social robot, they learn to solve complex problems through computational thinking. They playfully work on the new end terms for digital competencies.'
+        contact: Questions? Contact us at team@aiopschool.be. The press can contact Francis Wyffels via Francis@dwengo.org.
+        teaser: https://www.youtube.com/embed/tqSnpAKLsu8
+        curricula_files:
+            - file_title: 'Project Sheet Social Robot'
+              file_info: "This is a brief overview of the 'Social Robot' project with project structure and characteristics."
+              file_location: '/assets/files/socialrobot/projectfiche_socialerobot.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Collage of Social Robots'
+              file_info: 'The robots in this photo are creations of first-year secondary education students or prototypes.'
+              file_location: '/assets/files/socialrobot/collage.png'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: "Construction Kit for 'Social Robot' Project"
+              file_info: 'Do you want your students to design and build a social robot too? This is possible via the construction kit of Dwengovzw. The figure shows the current composition of the construction kit. Interested? Contact us by email or find more information on this project page.'
+              file_location: '/assets/files/socialrobot/constructiekit_socialerobot.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'From Project to End Terms'
+              file_info: "The end terms that can be worked on are linked to the different phases of the 'Social Robot' project."
+              file_location: '/assets/files/socialrobot/EindtermenAStroomSsocialeRobot.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Emotion Machine (Incomplete) - Computational Thinking (Unplugged Activity)'
+              file_info: 'Unplugged activity'
+              file_location: '/assets/files/socialrobot/emotiemachine_gewoon_nl.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Emotion Machine (Task) - Computational Thinking (Unplugged Activity)'
+              file_info: 'Unplugged activity'
+              file_location: '/assets/files/socialrobot/emotiemachine_gids.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Emotion Machine (Complete) - Computational Thinking (Unplugged Activity)'
+              file_info: 'Unplugged activity'
+              file_location: '/assets/files/socialrobot/emotiemachine_ingevuld_nl.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Emotion Machine with LED Matrix - Computational Thinking (Unplugged Activity)'
+              file_info: 'Unplugged activity'
+              file_location: '/assets/files/socialrobot/emotiemachine_matrices_nl.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: "Teacher's Guide"
+              file_info: 'The bundled sheets explain the use of the Dwenguino and the sensors and actuators.'
+              file_location: '/assets/files/socialrobot/ficheboekje_lkn.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Information Sheets for Students'
+              file_info: 'These information sheets explain the use of the Dwenguino and sensors and actuators.'
+              file_location: '/assets/files/socialrobot/fichesSocialeRobot_lln.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Create a Face - Computational Thinking (Unplugged Activity)'
+              file_info: 'Unplugged activity'
+              file_location: '/assets/files/socialrobot/maakeengezicht_activiteit.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Tasks for Exercises in the MOOC'
+              file_info: 'An overview of programming exercises in the MOOC'
+              file_location: '/assets/files/socialrobot/Opgaven_MOOC.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: "Poster 'Social Robot' Project"
+              file_info: 'The poster displays the different aspects of the project.'
+              file_location: '/assets/files/socialrobot/posterSocialeRobot_nl_Qo4ANmV.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: "Manual 'Hello Robot!'"
+              file_info: 'With this lesson booklet, you bring your own social robot to life.'
+              file_location: '/assets/files/socialrobot/handleiding_hallo_robot.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+    chatbot:
+        title: Language Technology at School
+        sub_title: Getting Started with a Chatbot
+        description: 'Where language and technology come together, the domain of Natural Language Processing emerges. Can a computer understand, translate, or even write texts? Can a computer recognize emotions? Students in the second and third grades (SO) learn all about it in this package.'
+        contact: Questions? Contact us at team@aiopschool.be. The press can contact Francis Wyffels via Francis@dwengo.org.
+        teaser: https://www.youtube.com/embed/tqSnpAKLsu8
+        curricula_files:
+            - file_title: 'Project Sheet Chatbot'
+              file_info: 'This is a brief overview of the Chatbot project with project structure and characteristics.'
+              file_location: '/assets/files/chatbot/projectfiche_chatbot.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'BrAInfood Chatbots'
+              file_info: 'In this BrAInfood - aimed at young people - the Knowledge Center Data & Society provides more information about chatbots. The BrAInfood includes a fictional story about Lotte talking to a chatbot and presumably providing information about her to companies. Further, some points related to chatbots are explained, along with some tips for young people to better protect their (personal) data. In this way, we aim to make young people more aware of how chatbots work and encourage them to reflect on the data collected about them.'
+              file_location: '/assets/files/chatbot/Brainfood13_Chatbots_NL.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'BrAInfood Personalized Newsfeeds'
+              file_info: 'In this BrAInfood from the Knowledge Center Data & Society, tips are given on how to keep control over your newsfeed.'
+              file_location: '/assets/files/chatbot/brainfoodaanbevelingnieuws.jpg'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: "Manual 'Chatbot' - Also available in print"
+              file_info: "Teachers acquire sufficient background information through this manual to work with (a part of) the 'Chatbot' project in the classroom. The book covers various aspects of language technology, such as the history of artificial intelligence, its ethical aspects, sentiment analysis, and cyberbullying detection, chatbots, speaking digital assistants, and author recognition. It also addresses the STEM objectives and the objectives related to digital competence and media literacy."
+              file_location: '/assets/files/chatbot/Chatbot_handleiding_eerstedruk.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: "Improbotics - Lesson Plan - Teacher's Version"
+              file_info: 'In the theater performance Improbotics, a social robot improvises in the scenes. The lesson plan provides information about the technologies used.'
+              file_location: '/assets/files/chatbot/Improbotics_lesmap_Leerkracht.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Improbotics - Lesson Plan - Students'
+              file_info: 'In the theater performance Improbotics, a social robot improvises in the scenes. The lesson plan provides information about the technologies used.'
+              file_location: '/assets/files/chatbot/Improbotics_lesmap_Leerling.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+    care:
+        title: AI in Healthcare
+        sub_title: AI Systems Assisting in Healthcare
+        description: 'Hospitals are already using artificial intelligence today. Students in the second and third grades (SO) discover the existing systems and how they help doctors make decisions. This way, students learn the principles of the decision tree, a commonly used technique in machine learning.'
+        contact: ''
+        teaser: https://www.youtube.com/embed/dO-E33G20co
+        curricula_files:
+            - file_title: 'Project Sheet AI in Healthcare'
+              file_info: 'This is a brief overview of the AI in Healthcare project with project structure and characteristics.'
+              file_location: '/assets/files/care/projectfiche_aiindezorg.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Sprouts'
+              file_info: "A game as an introduction to 'Graphs'."
+              file_location: '/assets/files/care/Sprouts.mov'
+              file_icon_name: 'play_arrow'
+              link_name: 'Download'
+            - file_title: 'Explanation of Exercises on Graphs from the Student Course'
+              file_info: 'Which figures represent the same graph? A more formal approach.'
+              file_location: '/assets/files/care/dezelfdegraafFormeel.mov'
+              file_icon_name: 'play_arrow'
+              link_name: 'Download'
+            - file_title: 'Explanation of Exercises on Graphs from the Student Course'
+              file_info: 'Which figures represent the same graph? An approach with colors.'
+              file_location: '/assets/files/care/dezelfdeGraaf.mov'
+              file_icon_name: 'play_arrow'
+              link_name: 'Download'
+            - file_title: 'Student Course - Finality Throughflow'
+              file_info: 'Student course.'
+              file_location: '/assets/files/care/AIinHealthcare_throughflow_firstedition.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Card Set - Also available in print'
+              file_info: 'With this card set, you can make students reflect on the ethical aspects of new technologies. What about privacy? Are social contacts not at risk? Which technologies are welcomed? What is undesirable? Are the new technologies affordable for everyone?'
+              file_location: '/assets/files/care/Cardset_AIinHealthcare_AIOpSchool_Dwengo.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Manual for Card Set'
+              file_info: 'This manual provides additional explanation for the card set.'
+              file_location: '/assets/files/care/AIinHealthcareCardset_InstructionForTeacher.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: "Decision Tree 'mBrAIn' Project in Non-compact Form"
+              file_info: "In the research project 'mBrain,' which aims to develop an app predicting a migraine attack, a decision tree was constructed. This decision tree addresses a binary classification problem: there are only two classes, 'Migraine' and 'No Migraine.' (Sources: Femke Ongenae. (2021), UGent; Van Hoecke, S., Ongenae, F., Paemeleire, K., & Vandenbussche, N. (2020). App moet hoofdpijn voorspellen. EOS Wetenschap Special, Technologie en gezondheid, 25.) We have transformed the shape of this decision tree into a binary decision tree to demonstrate that this form is not always user-friendly. For more explanation, see chapter 4 of the student course of this project."
+              file_location: '/assets/files/care/MBrainBeslissingsboom.png'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Search for Speech - Computational Thinking (unplugged activity)'
+              file_info: 'Locked-in syndrome is one of the worst medical conditions. You are completely paralyzed, except that you might still be able to blink with one eye. Your intelligent mind is trapped in a useless body: you can feel everything but cannot communicate. It can happen to anyone, out of nowhere, as a result of a stroke. If you want to help people with the locked-in syndrome, is it best to become a doctor or a nurse? Or can you also help as a computer scientist?'
+              file_location: '/assets/files/care/ZoektochtNaarSpraak.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+    stem:
+        title: Python in STEM
+        sub_title: Data Visualizations with Python
+        description: "In this package, you'll learn to tackle complex problems more easily and quickly with the programming language Python. Programming can indeed play a connecting role between science, technology, design, and applied mathematics. In short, thanks to Python, we get the best out of STEM."
+        contact: Questions? Contact us at team@aiopschool.be. The press can contact Francis Wyffels via Francis@dwengo.org.
+        teaser: https://www.youtube.com/embed/tqSnpAKLsu8
+    agriculture:
+        title: AI in Agriculture
+        sub_title: AI in agriculture
+        description: 'Removing rotten tomatoes during harvest? Artificial intelligence can help with that. But how? Students in the second and third grades (SO) get hands-on experience with AI. Perhaps a vibrating conveyor belt can improve the system even more?'
+        contact: Questions? Contact us at team@aiopschool.be. The press can contact Francis Wyffels via Francis@dwengo.org.
+        teaser: https://www.youtube.com/embed/tqSnpAKLsu8
+        curricula_files:
+            - file_title: 'Design'
+              file_info: 'Design of the conveyor belt'
+              file_location: '/assets/files/art/Transportband_InnoVET_RCH.zip'
+              file_icon_name: 'description'
+              link_name: 'Download'
+    art:
+        title: AI in Art
+        sub_title: Drawing Robots in the Classroom
+        description: 'Can we create art with artificial intelligence? Students in the second and third grades (SO) express their creativity with AI and reflect on the result. Is this art? They also discover how AI can protect our cultural heritage.'
+        contact: ''
+        teaser: https://www.youtube.com/embed/dO-E33G20co
+    wegostem:
+        title: WeGoSTEM
+        sub_title: Drawing Robots in the Classroom
+        description: 'We challenge third-grade (BO) children to program a drawing robot. Through play, children learn a lot of STEM skills, from technology to computational thinking.'
+        contact: Questions? Contact us at team@aiopschool.be. The press can contact Francis Wyffels via Francis@dwengo.org.
+        teaser: https://www.youtube.com/embed/tqSnpAKLsu8
+
+    computational_thinking:
+        title: Computational Thinking
+        sub_title: Computational Thinking in the Classroom
+        description: "How can we solve complex problems with the help of a computer? Thanks to computational thinking! You can learn this through various activities with or without a computer. We'll help you get started."
+        contact: Questions? Contact us at team@aiopschool.be. The press can contact Francis Wyffels via Francis@dwengo.org.
+        teaser: https://www.youtube.com/embed/tqSnpAKLsu8
+        curricula_files:
+            - file_title: 'Concepts and Approach to Computational Thinking'
+              file_info: 'poster'
+              file_location: '/assets/files/computational_thinking/CDposterDwengo2.png'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Explaining Four Concepts of Computational Thinking'
+              file_info: 'Presentation on four concepts of computational thinking: decomposition, pattern recognition, abstraction, and algorithm. You can download the PDF, open it, present it using CTRL-L, and navigate with the arrow keys.'
+              file_location: '/assets/files/computational_thinking/CD4concepten_33V3gBg.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Concepts and Principles'
+              file_info: 'Overview'
+              file_location: '/assets/files/computational_thinking/Icoontjes.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Unplugged Activity - Emotion Machine (Assignment)'
+              file_info: 'How can you stimulate emotions in a robot?'
+              file_location: '/assets/files/computational_thinking/emotiemachine_gids.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Unplugged Activity - Emotion Machine'
+              file_info: 'How can you stimulate emotions in a robot?'
+              file_location: '/assets/files/computational_thinking/emotiemachine_gewoon_nl.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Unplugged Activity - Color by Number'
+              file_info: "Images can be represented in many ways. In this color by number puzzle, you have to reconstruct an image using the given list of numbers; this list tells you which color to fill in each square ('pixel')."
+              file_location: '/assets/files/computational_thinking/kleurenopnummer1.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Unplugged Activity - Human Computer Network'
+              file_info: 'In this activity, students learn how data transfer over the Internet works. Computers, smartphones, and other devices connected via the Internet can communicate with each other. To understand each other, this communication must follow certain agreements. We call these agreements a protocol.'
+              file_location: '/assets/files/computational_thinking/menselijkComputernetwerk.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Unplugged Activity - Compression'
+              file_info: 'To send images over networks, we want to represent information with as little data as possible. Compression comes into play here. Using algorithms, images are represented with as few numbers as possible, but in a way that you can still recover the original figure. Other algorithms restore the original image when the information reaches its destination.'
+              file_location: '/assets/files/computational_thinking/puzzel-gecomprimeerdepixel11.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Unplugged Activity - Program a Human'
+              file_info: "Computers cannot interpret, so they literally execute every instruction you give them. The programmer's challenge is to solve problems by breaking them down into small steps that the computer can execute and giving the instructions to the computer correctly."
+              file_location: '/assets/files/computational_thinking/programmeerEensEenMens.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+            - file_title: 'Unplugged Activity - Search for Speech'
+              file_info: 'Locked-in syndrome is one of the worst medical conditions. You are completely paralyzed, except that you may still be able to blink with one eye. Your intelligent mind is trapped in a useless body: you can feel everything but cannot communicate. It can happen to anyone, out of nowhere, as a result of a stroke. If you wanted to help people with locked-in syndrome, would you be better off as a doctor or nurse? Or can you help as a computer scientist?'
+              file_location: '/assets/files/computational_thinking/ZoektochtNaarSpraak.pdf'
+              file_icon_name: 'description'
+              link_name: 'Download'
+    math_with_python:
+        title: Python in Math Class
+        sub_title: Python in Mathematics
+        description: 'The programming language Python offers great possibilities to enrich the math class. From the Pythagorean theorem to creating your own graphs, digital image processing, and linear regression, everything becomes clearer with Python.'
+        contact: ''
+        teaser: https://www.youtube.com/embed/dO-E33G20co
+    python_programming:
+        title: Programming with Python
+        sub_title: Basic Programming in Python
+        description: "Want to learn the basic principles of programming? You can do it perfectly with this package. We use Python and learn all about sequences, repetition structure, and decision structure. That's exactly what's in the end terms. And more!"
+        contact: Questions? Contact us at team@aiopschool.be. The press can contact Francis Wyffels via Francis@dwengo.org.
+        teaser: https://www.youtube.com/embed/tqSnpAKLsu8
+    physical_computing:
+        title: Physical Computing
+        sub_title: Program Robots in the Classroom
+        description: 'Build a musical instrument, car, or weather station? You can do that with Dwenguino, a microcontroller platform with its own programming environment. Students from both primary and secondary education can get started with it right away. In real life or in our simulator, block-based or textual.'
+        contact: Questions? Contact us at team@aiopschool.be. The press can contact Francis Wyffels via Francis@dwengo.org.
+        teaser: https://www.youtube.com/embed/tqSnpAKLsu8
+        curricula_files:
+            - file_title: 'Bouw jouw eigen robot'
+              file_info: 'Build your own driving robot.'
+              file_location: '/assets/files/physical_computing/bouwjouweigenrobot.pdf'
+              file_icon_name: 'link'
+              link_name: 'Download'

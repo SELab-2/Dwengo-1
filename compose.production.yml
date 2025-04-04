@@ -1,0 +1,126 @@
+#
+# Use this configuration to deploy the project on a server.
+#
+# This configuration builds the frontend and backend services as Docker images,
+# and uses the paths for the services, instead of ports, and enables SSL.
+#
+services:
+    web:
+        build:
+            context: .
+            dockerfile: frontend/Dockerfile
+        restart: unless-stopped
+        networks:
+            - dwengo-1
+        labels:
+            - 'traefik.enable=true'
+            - 'traefik.http.routers.web.rule=PathPrefix(`/`)'
+            - 'traefik.http.services.web.loadbalancer.server.port=8080'
+
+    api:
+        build:
+            context: .
+            dockerfile: backend/Dockerfile
+        restart: unless-stopped
+        volumes:
+            # TODO Replace with environment keys
+            - ./backend/.env:/app/.env
+        depends_on:
+            - db
+            - logging
+        networks:
+            - dwengo-1
+        labels:
+            - 'traefik.enable=true'
+            - 'traefik.http.routers.api.rule=PathPrefix(`/api`)'
+            - 'traefik.http.services.api.loadbalancer.server.port=3000'
+
+    db:
+        extends:
+            file: ./compose.yml
+            service: db
+        networks:
+            - dwengo-1
+
+    idp:
+        extends:
+            file: ./compose.yml
+            service: idp
+        # TODO Replace with proper production command
+        command: ['start-dev', '--http-port', '7080', '--https-port', '7443', '--import-realm']
+        networks:
+            - dwengo-1
+        labels:
+            - 'traefik.enable=true'
+            - 'traefik.http.routers.idp.rule=PathPrefix(`/idp`)'
+            - 'traefik.http.services.idp.loadbalancer.server.port=7080'
+        env_file:
+            - ./config/idp/.env
+        environment:
+            KC_HOSTNAME: 'sel2-1.ugent.be'
+            PROXY_ADDRESS_FORWARDING: 'true'
+            KC_PROXY_HEADERS: 'xforwarded'
+            KC_HTTP_ENABLED: 'true'
+            KC_HTTP_RELATIVE_PATH: '/idp'
+
+    reverse-proxy:
+        image: traefik:v3.3
+        ports:
+            - '80:80/tcp'
+            - '443:443/tcp'
+        command:
+            # Add Docker provider
+            - '--providers.docker=true'
+            - '--providers.docker.exposedbydefault=false'
+
+            # Add web entrypoint
+            - '--entrypoints.web.address=:80/tcp'
+            - '--entrypoints.web.http.redirections.entryPoint.to=websecure'
+            - '--entrypoints.web.http.redirections.entryPoint.scheme=https'
+
+            # Add websecure entrypoint
+            - '--entrypoints.websecure.address=:443/tcp'
+            - '--entrypoints.websecure.http.tls=true'
+            - '--entrypoints.websecure.http.tls.certResolver=letsencrypt'
+            - '--entrypoints.websecure.http.tls.domains[0].main=sel2-1.ugent.be'
+
+            # Certificates
+            - '--certificatesresolvers.letsencrypt.acme.httpchallenge=true'
+            - '--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web'
+            - '--certificatesresolvers.letsencrypt.acme.email=timo.demeyst@ugent.be'
+            - '--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json'
+        restart: unless-stopped
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - dwengo_letsencrypt:/letsencrypt
+        networks:
+            - dwengo-1
+
+    logging:
+        image: grafana/loki:latest
+        ports:
+            - '9001:3102'
+            - '9095:9095'
+        command: -config.file=/etc/loki/config.yaml
+        restart: unless-stopped
+        volumes:
+            - ./config/loki/config.yml:/etc/loki/config.yaml
+            - dwengo_loki_data:/loki
+        networks:
+            - dwengo-1
+
+    dashboards:
+        image: grafana/grafana:latest
+        ports:
+            - '9002:3000'
+        restart: unless-stopped
+        volumes:
+            - dwengo_grafana_data:/var/lib/grafana
+
+volumes:
+    dwengo_grafana_data:
+    dwengo_letsencrypt:
+    dwengo_loki_data:
+
+networks:
+    dwengo-1:

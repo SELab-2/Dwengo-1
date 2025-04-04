@@ -32,7 +32,7 @@ class GiftProcessor extends StringProcessor {
         super(DwengoContentType.GIFT);
     }
 
-    override renderFn(giftString: string) {
+    override renderFn(giftString: string): string {
         const quizQuestions: GIFTQuestion[] = parse(giftString);
 
         let html = "<div class='learning-object-gift'>\n";
