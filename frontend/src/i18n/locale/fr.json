@@ -56,5 +56,20 @@
         "high-school": "16-18 ans",
         "older": "18 et plus"
     },
-    "read-more": "En savoir plus"
+    "read-more": "En savoir plus",
+    "code": "code",
+    "class": "classe",
+    "invitations": "invitations",
+    "createClass" : "créer une classe",
+    "createClassInstructions": "Entrez un nom pour votre classe et cliquez sur créer. Une fenêtre apparaît avec un code que vous pouvez copier. Donnez ce code à vos élèves et ils pourront rejoindre votre classe.",
+    "classname": "nom de classe",
+    "EnterNameOfClass": "saisir un nom de classe.",
+    "create": "créer",
+    "sender": "expéditeur",
+    "nameIsMandatory": "le nom de classe est obligatoire",
+    "onlyUse" : "n'utiliser que des lettres, des chiffres, des tirets (-) et des traits de soulignement (_)",
+    "close": "fermer",
+    "copied": "copié!",
+    "accept": "accepter",
+    "deny": "refuser"
 }

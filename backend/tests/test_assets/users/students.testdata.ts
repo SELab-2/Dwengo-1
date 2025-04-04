@@ -1,5 +1,6 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Student } from '../../../src/entities/users/student.entity';
+import { fixupRule } from '@eslint/compat';
 
 // 🔓 Ruwe testdata array — herbruikbaar in assertions
 export const TEST_STUDENTS = [
@@ -11,6 +12,8 @@ export const TEST_STUDENTS = [
     { username: 'TheDoors', firstName: 'Jim', lastName: 'Morisson' },
     // ⚠️ Deze mag niet gebruikt worden in elke test!
     { username: 'Nirvana', firstName: 'Kurt', lastName: 'Cobain' },
+    // makes sure when logged in as leerling1, there exists a corresponding user
+    { username: 'testleerling1', firstName: 'Gerald', lastName: 'Schmittinger'},
 ];
 
 // 🏗️ Functie die ORM entities maakt uit de data array

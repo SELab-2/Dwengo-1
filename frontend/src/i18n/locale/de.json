@@ -56,5 +56,20 @@
     "noLearningPathsFoundDescription": "Es gibt keine Lernpfade, die zu Ihrem Suchbegriff passen.",
     "legendNotCompletedYet": "Noch nicht fertig",
     "legendCompleted": "Fertig",
-    "legendTeacherExclusive": "Information für Lehrkräfte"
+    "legendTeacherExclusive": "Information für Lehrkräfte",
+    "code": "code",
+    "class": "klasse",
+    "invitations": "einladungen",
+    "createClass" : "Klasse erstellen",
+    "createClassInstructions": "Geben Sie einen Namen für Ihre Klasse ein und klicken Sie auf „Erstellen“. Es erscheint ein Fenster mit einem Code, den Sie kopieren können. Geben Sie diesen Code an Ihre Schüler weiter und sie können Ihrer Klasse beitreten.",
+    "classname": "Klassenname",
+    "EnterNameOfClass": "einen Klassennamen eingeben.",
+    "create": "erstellen",
+    "sender": "Absender",
+    "nameIsMandatory": "classname ist obligatorisch",
+    "onlyUse" : "nur Buchstaben, Zahlen, Bindestriche (-) und Unterstriche (_) verwenden",
+    "close": "schließen",
+    "copied": "kopiert!",
+    "accept": "akzeptieren",
+    "deny": "verweigern"
 }

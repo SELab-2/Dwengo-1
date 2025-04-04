@@ -8,46 +8,11 @@
 
     const role: string = authState.authState.activeRole!;
 
-    // TODO : temp data until frontend controllers are ready
-    type Teacher = {
-        username: string;
-        firstName: string;
-        lastName: string;
-        classes: Array<Class>;
-    };
-
-    type Student = {
-        username: string;
-        firstName: string;
-        lastName: string;
-        classes: Array<Class>;
-    };
-
-    type Class = {
-        id: string;
-        displayName: string;
-        teachers: Array<Teacher>;
-        students: Array<Student>;
-    };
-
-    const student01: Student = { username: "id01", firstName: "Mark", lastName: "Knopfler", classes: [] };
-    const student02: Student = { username: "id01", firstName: "John", lastName: "Hiat", classes: [] };
-    const student03: Student = { username: "id01", firstName: "Aaron", lastName: "Lewis", classes: [] };
-
-    const class01: Class = { id: "class01", displayName: "class 01", teachers: [], students: [student01, student02] };
-    const class02: Class = { id: "class02", displayName: "class 02", teachers: [], students: [student01, student03] };
-    const class03: Class = { id: "class03", displayName: "class 03", teachers: [], students: [student02, student03] };
-
-    student01.classes = [class01, class02];
-    student02.classes = [class01, class03];
-    student03.classes = [class02, class03];
-
-    const classes: Array<Class> = [class01, class02, class03];
-
-    // Handle the class join requests
+    // For students: code that they give in when sending a class join request
+    // For teachers: code that they get when they create a new class
     const code = ref<string>("");
 
-    // The code needs to be formatted as v4 to be valid
+    // The code a student sends in to join a class needs to be formatted as v4 to be valid
     // These rules are used to display a message to the user if they use a code that has an invalid format
     const codeRules = [
         (value: string | undefined) => {
@@ -55,19 +20,28 @@
             return t("invalidFormat");
         },
     ];
-    // Submitting a code will send a request if the code is valid
+
+    // function called when a student submits a code to join a class
     function submitCode() {
+        // check if the code is valid
         if (code.value !== undefined && validate(code.value) && version(code.value) === 4) {
-            // TODO: temp function until frontend controllers are ready
+            // TODO: temp function that does not use the backend
             console.log("Code submitted:", code.value);
         }
     }
 
-    // Handle dialog for showing members of a class
+    // Boolean that handles visibility for dialogs
+    // For students: clicking on membercount will show a dialog with all members
+    // For teachers: creating a class will generate a popup with the generated code
     const dialog = ref(false);
+
+    // list of students in the selected class
     const students = ref<Array<string>>([]);
+
+    // selected class itself
     const selectedClass = ref<Class | null>(null);
 
+    // function to display all members of a class
     function openDialog(c: Class) {
         selectedClass.value = c;
         if (selectedClass.value !== undefined) {
@@ -75,33 +49,233 @@
             dialog.value = true;
         }
     }
+
+    // function to handle a accepted invitation request
+    function acceptRequest() {
+        //TODO
+        console.log("request accepted");
+    }
+
+    // function to handle a denied invitation request
+    function denyRequest() {
+        //TODO
+        console.log("request denied");
+    }
+
+    // catch the value a teacher inserts when making a class
+    const className = ref<string>("");
+
+    // The name can only contain dash, underscore letters and numbers
+    // These rules are used to display a message to the user if the name is not valid
+    const nameRules = [
+        (value: string | undefined) => {
+            if (value) return true;
+            return t("nameIsMandatory");
+        },
+        (value: string | undefined) => {
+            if (value && /^[a-zA-Z0-9_-]+$/.test(value)) return true;
+            return t("onlyUse");
+        },
+    ];
+
+    // function called when a teacher creates a class
+    function createClass() {
+        // check if the class name is valid
+        if (className && className.value.length > 0 && /^[a-zA-Z0-9_-]+$/.test(className.value)) {
+            //TODO
+            console.log("created class with name: " + className.value);
+
+            // show the generated code to share with the class
+            dialog.value = true;
+            code.value = "04c7c759-c41e-4ea9-968a-1e2a987ce0ed";
+        }
+    }
+
+    // if the unique code is copied, set this to true so it's being displayed for the user
+    const copied = ref(false);
+
+    // copy the generated code to the clipboard
+    function copyToClipboard() {
+        navigator.clipboard.writeText(code.value);
+        copied.value = true;
+    }
 </script>
 <template>
     <main>
         <h1 class="title">{{ t("classes") }}</h1>
+        <v-container
+            fluid
+            class="ma-4"
+        >
+            <v-row
+                no-gutters
+                fluid
+            >
+                <v-col
+                    cols="12"
+                    sm="6"
+                    md="6"
+                >
+                    <v-table class="table">
+                        <thead>
+                            <tr>
+                                <th class="header">{{ t("classes") }}</th>
+                                <th
+                                    class="header"
+                                    v-if="role === 'teacher'"
+                                >
+                                    {{ t("code") }}
+                                </th>
+                                <th class="header">{{ t("members") }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="c in classes"
+                                :key="c.id"
+                            >
+                                <td v-if="role === 'student'">{{ c.displayName }}</td>
+                                <td v-else>
+                                    <v-btn
+                                        :to="`/user/class/${c.id}`"
+                                        variant="text"
+                                    >
+                                        {{ c.displayName }}
+                                        <v-icon end> mdi-menu-right </v-icon>
+                                    </v-btn>
+                                </td>
+                                <td v-if="role === 'teacher'">{{ c.id }}</td>
+                                <td
+                                    v-if="role === 'student'"
+                                    class="link"
+                                    @click="openDialog(c)"
+                                >
+                                    {{ c.students.length }}
+                                </td>
+                                <td v-else>{{ c.students.length }}</td>
+                            </tr>
+                        </tbody>
+                    </v-table>
+                </v-col>
+                <v-col
+                    cols="12"
+                    sm="6"
+                    md="6"
+                >
+                    <div v-if="role === 'teacher'">
+                        <h2>{{ t("createClass") }}</h2>
 
-        <v-table class="table">
+                        <v-sheet
+                            class="pa-4 sheet"
+                            max-width="600px"
+                        >
+                            <p>{{ t("createClassInstructions") }}</p>
+                            <v-form @submit.prevent>
+                                <v-text-field
+                                    class="mt-4"
+                                    :label="`${t('classname')}`"
+                                    v-model="className"
+                                    :placeholder="`${t('EnterNameOfClass')}`"
+                                    :rules="nameRules"
+                                    variant="outlined"
+                                ></v-text-field>
+                                <v-btn
+                                    class="mt-4"
+                                    color="#f6faf2"
+                                    type="submit"
+                                    @click="createClass"
+                                    block
+                                    >{{ t("create") }}</v-btn
+                                >
+                            </v-form>
+                        </v-sheet>
+                        <v-container>
+                            <v-dialog
+                                v-model="dialog"
+                                max-width="400px"
+                            >
+                                <v-card>
+                                    <v-card-title class="headline">code</v-card-title>
+                                    <v-card-text>
+                                        <v-text-field
+                                            v-model="code"
+                                            readonly
+                                            append-inner-icon="mdi-content-copy"
+                                            @click:append-inner="copyToClipboard"
+                                        ></v-text-field>
+                                        <v-slide-y-transition>
+                                            <div
+                                                v-if="copied"
+                                                class="text-center mt-2"
+                                            >
+                                                {{ t("copied") }}
+                                            </div>
+                                        </v-slide-y-transition>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                            text
+                                            @click="
+                                                dialog = false;
+                                                copied = false;
+                                            "
+                                            > {{ t("close") }} </v-btn
+                                        >
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        </v-container>
+                    </div>
+                </v-col>
+            </v-row>
+        </v-container>
+
+        <h1
+            v-if="role === 'teacher'"
+            class="title"
+        >
+            {{ t("invitations") }}
+        </h1>
+        <v-table
+            v-if="role === 'teacher'"
+            class="table"
+        >
             <thead>
                 <tr>
-                    <th class="header">{{ t("classes") }}</th>
-                    <th class="header">{{ t("members") }}</th>
+                    <th class="header">{{ t("class") }}</th>
+                    <th class="header">{{ t("sender") }}</th>
+                    <th class="header"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr
-                    v-for="c in classes"
-                    :key="c.id"
+                    v-for="i in invitations"
+                    :key="i.id"
                 >
-                    <td>{{ c.displayName }}</td>
-                    <td
-                        class="link"
-                        @click="openDialog(c)"
-                    >
-                        {{ c.students.length }}
+                    <td>
+                        {{ i.class.displayName }}
+                    </td>
+                    <td>{{ i.sender.firstName + " " + i.sender.lastName }}</td>
+                    <td class="text-right">
+                        <div>
+                            <v-btn
+                                color="green"
+                                @click="acceptRequest"
+                                class="mr-2"
+                                > {{ t("accept") }} </v-btn
+                            >
+                            <v-btn
+                                color="red"
+                                @click="denyRequest"
+                                > {{ t("deny") }} </v-btn
+                            >
+                        </div>
                     </td>
                 </tr>
             </tbody>
         </v-table>
+
         <v-dialog
             v-model="dialog"
             width="400"
@@ -146,7 +320,7 @@
                         ></v-text-field>
                         <v-btn
                             class="mt-4"
-                            style="background-color: #f6faf2"
+                            color="#f6faf2"
                             type="submit"
                             @click="submitCode"
                             block
@@ -190,7 +364,7 @@
     }
 
     .table {
-        width: 60%;
+        width: 90%;
         padding-top: 10px;
         border-collapse: collapse;
     }

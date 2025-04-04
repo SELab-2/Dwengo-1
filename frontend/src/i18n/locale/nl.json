@@ -56,5 +56,20 @@
         "high-school": "3e graad secundair",
         "older": "Hoger onderwijs"
     },
-    "read-more": "Lees meer"
+    "read-more": "Lees meer",
+    "code": "code",
+    "class": "klas",
+    "invitations": "uitnodigingen",
+    "createClass" : "klas aanmaken",
+    "createClassInstructions": "Voer een naam in voor je klas en klik op create. Er verschijnt een venster met een code die je kunt kopiëren. Geef deze code aan je leerlingen en ze kunnen deelnemen aan je klas.",
+    "classname": "klasnaam",
+    "EnterNameOfClass": "Geef een klasnaam op.",
+    "create": "aanmaken",
+    "sender": "afzender",
+    "nameIsMandatory": "klasnaam is verplicht",
+    "onlyUse" : "gebruik enkel letters, cijfers, dashes (-) en underscores (_)",
+    "close": "sluiten",
+    "copied": "gekopieerd!",
+    "accept": "accepteren",
+    "deny": "weigeren"
 }
