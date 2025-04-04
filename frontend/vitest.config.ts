@@ -10,11 +10,11 @@ export default mergeConfig(
             exclude: [...configDefaults.exclude, "e2e/**"],
             root: fileURLToPath(new URL("./", import.meta.url)),
             coverage: {
-                reporter: ['text', 'json-summary', 'json'],
+                reporter: ["text", "json-summary", "json"],
                 // If you want a coverage reports even if your tests are failing, include the reportOnFailure option
                 reportOnFailure: true,
-                exclude: ['**/*config*'],
-              },
+                exclude: ["**/*config*"],
+            },
         },
     }),
 );
