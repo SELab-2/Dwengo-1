@@ -38,6 +38,12 @@ jobs:
     if: '! github.event.pull_request.draft'
     runs-on: [self-hosted, Linux, X64]
 
+    permissions:
+      # Required to checkout the code
+      contents: read
+      # Required to put a comment into the pull-request
+      pull-requests: write
+
     strategy:
       matrix:
         node-version: [22.x]
@@ -51,4 +57,13 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: npm run test:unit -w frontend
+    - run: npm run test:coverage -w frontend
+    - name: 'Report Frontend Coverage'
+      # Set if: always() to also generate the report if tests are failing
+      # Only works if you set `reportOnFailure: true` in your vite config as specified above
+      if: always() 
+      uses:  davelosert/vitest-coverage-report-action@v2
+      with:
+        name: 'Frontend'
+        json-summary-path: './frontend/coverage/coverage-summary.json'
+        json-final-path: './frontend/coverage/coverage-final.json'
