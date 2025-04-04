@@ -42,4 +42,14 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: npm run test:unit -w backend
+    - run: npm run test:coverage -w backend
+    - name: 'Report Backend Coverage'
+      # Set if: always() to also generate the report if tests are failing
+      # Only works if you set `reportOnFailure: true` in your vite config as specified above
+      if: always() 
+      uses:  davelosert/vitest-coverage-report-action@v2
+      with:
+        name: 'Backend'
+        json-summary-path: './backend/coverage/coverage-summary.json'
+        json-final-path: './backend/coverage/coverage-final.json'
+        vite-config-path: './backend/vitest.config.ts'
