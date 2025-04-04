@@ -67,3 +67,4 @@ jobs:
         name: 'Frontend'
         json-summary-path: './frontend/coverage/coverage-summary.json'
         json-final-path: './frontend/coverage/coverage-final.json'
+        vite-config-path: './frontend/vitest.config.ts'
