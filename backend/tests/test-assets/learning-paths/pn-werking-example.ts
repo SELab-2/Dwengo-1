@@ -1,6 +1,6 @@
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
 import { Language } from '../../../src/entities/content/language';
-import { EnvVars, getEnvVar } from '../../../src/util/envvars';
+import { envVars, getEnvVar } from '../../../src/util/envVars';
 import { createLearningPathNode, createLearningPathTransition } from './learning-path-utils';
 import { LearningPathNode } from '../../../src/entities/content/learning-path-node.entity';
 
@@ -19,7 +19,7 @@ const example: LearningPathExample = {
     createLearningPath: () => {
         const path = new LearningPath();
         path.language = Language.Dutch;
-        path.hruid = `${getEnvVar(EnvVars.UserContentPrefix)}pn_werking`;
+        path.hruid = `${getEnvVar(envVars.UserContentPrefix)}pn_werking`;
         path.title = 'Werken met notebooks';
         path.description = 'Een korte inleiding tot Python notebooks. Hoe ga je gemakkelijk en efficiënt met de notebooks aan de slag?';
         path.nodes = createNodes(path);

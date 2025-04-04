@@ -6,9 +6,13 @@ const TEACHER_IDP_PREFIX = IDP_PREFIX + 'TEACHER_';
 const CORS_PREFIX = PREFIX + 'CORS_';
 const LOGGING_PREFIX = PREFIX + 'LOGGING_';
 
-type EnvVar = { key: string; required?: boolean; defaultValue?: any };
+interface EnvVar {
+    key: string;
+    required?: boolean;
+    defaultValue?: number | string | boolean;
+}
 
-export const EnvVars: { [key: string]: EnvVar } = {
+export const envVars: Record<string, EnvVar> = {
     Port: { key: PREFIX + 'PORT', defaultValue: 3000 },
     LearningContentRepoApiBaseUrl: { key: PREFIX + 'LEARNING_CONTENT_REPO_API_BASE_URL', defaultValue: 'https://dwengo.org/backend/api' },
     FallbackLanguage: { key: PREFIX + 'FALLBACK_LANGUAGE', defaultValue: 'nl' },
@@ -52,7 +56,7 @@ export function getEnvVar(envVar: EnvVar): string {
     } else if (envVar.required) {
         throw new Error(`Missing environment variable: ${envVar.key}`);
     } else {
-        return envVar.defaultValue || '';
+        return String(envVar.defaultValue) || '';
     }
 }
 

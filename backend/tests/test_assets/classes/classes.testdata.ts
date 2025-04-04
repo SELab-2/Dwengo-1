@@ -1,11 +1,11 @@
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { Class } from '../../../src/entities/classes/class.entity';
 import { Student } from '../../../src/entities/users/student.entity';
 import { Teacher } from '../../../src/entities/users/teacher.entity';
 
-export function makeTestClasses(em: EntityManager<IDatabaseDriver<Connection>>, students: Array<Student>, teachers: Array<Teacher>): Array<Class> {
+export function makeTestClasses(em: EntityManager, students: Student[], teachers: Teacher[]): Class[] {
     const studentsClass01 = students.slice(0, 7);
-    const teacherClass01: Array<Teacher> = teachers.slice(0, 1);
+    const teacherClass01: Teacher[] = teachers.slice(0, 1);
 
     const class01 = em.create(Class, {
         classId: 'id01',
@@ -14,8 +14,8 @@ export function makeTestClasses(em: EntityManager<IDatabaseDriver<Connection>>, 
         students: studentsClass01,
     });
 
-    const studentsClass02: Array<Student> = students.slice(0, 2).concat(students.slice(3, 4));
-    const teacherClass02: Array<Teacher> = teachers.slice(1, 2);
+    const studentsClass02: Student[] = students.slice(0, 2).concat(students.slice(3, 4));
+    const teacherClass02: Teacher[] = teachers.slice(1, 2);
 
     const class02 = em.create(Class, {
         classId: 'id02',
@@ -24,8 +24,8 @@ export function makeTestClasses(em: EntityManager<IDatabaseDriver<Connection>>, 
         students: studentsClass02,
     });
 
-    const studentsClass03: Array<Student> = students.slice(1, 4);
-    const teacherClass03: Array<Teacher> = teachers.slice(2, 3);
+    const studentsClass03: Student[] = students.slice(1, 4);
+    const teacherClass03: Teacher[] = teachers.slice(2, 3);
 
     const class03 = em.create(Class, {
         classId: 'id03',
@@ -34,8 +34,8 @@ export function makeTestClasses(em: EntityManager<IDatabaseDriver<Connection>>, 
         students: studentsClass03,
     });
 
-    const studentsClass04: Array<Student> = students.slice(0, 2);
-    const teacherClass04: Array<Teacher> = teachers.slice(2, 3);
+    const studentsClass04: Student[] = students.slice(0, 2);
+    const teacherClass04: Teacher[] = teachers.slice(2, 3);
 
     const class04 = em.create(Class, {
         classId: 'id04',

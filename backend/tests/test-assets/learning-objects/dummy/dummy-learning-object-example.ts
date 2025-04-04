@@ -3,7 +3,7 @@ import { LearningObject } from '../../../../src/entities/content/learning-object
 import { Language } from '../../../../src/entities/content/language';
 import { loadTestAsset } from '../../../test-utils/load-test-asset';
 import { DwengoContentType } from '../../../../src/services/learning-objects/processing/content-type';
-import { EnvVars, getEnvVar } from '../../../../src/util/envvars';
+import { envVars, getEnvVar } from '../../../../src/util/envVars';
 
 /**
  * Create a dummy learning object to be used in tests where multiple learning objects are needed (for example for use
@@ -11,9 +11,9 @@ import { EnvVars, getEnvVar } from '../../../../src/util/envvars';
  */
 export function dummyLearningObject(hruid: string, language: Language, title: string): LearningObjectExample {
     return {
-        createLearningObject: () => {
+        createLearningObject: (): LearningObject => {
             const learningObject = new LearningObject();
-            learningObject.hruid = getEnvVar(EnvVars.UserContentPrefix) + hruid;
+            learningObject.hruid = getEnvVar(envVars.UserContentPrefix) + hruid;
             learningObject.language = language;
             learningObject.version = 1;
             learningObject.title = title;

@@ -46,8 +46,6 @@ async function initPersonalizationTestData(): Promise<{
     await learningObjectRepo.save(learningContent.extraExerciseObject);
     await learningPathRepo.save(learningContent.learningPath);
 
-    console.log(await getSubmissionRepository().findAll({}));
-
     const studentA = studentRepo.create({
         username: 'student_a',
         firstName: 'Aron',
@@ -124,7 +122,7 @@ describe('DatabaseLearningPathProvider', () => {
 
             const learningObjectsOnPath = (
                 await Promise.all(
-                    example.learningPath.nodes.map((node) =>
+                    example.learningPath.nodes.map(async (node) =>
                         learningObjectService.getLearningObjectById({
                             hruid: node.learningObjectHruid,
                             version: node.version,

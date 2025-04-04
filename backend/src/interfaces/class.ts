@@ -9,12 +9,6 @@ export interface ClassDTO {
     teachers: string[];
     students: string[];
     joinRequests: string[];
-    endpoints?: {
-        self: string;
-        invitations: string;
-        assignments: string;
-        students: string;
-    };
 }
 
 export function mapToClassDTO(cls: Class): ClassDTO {

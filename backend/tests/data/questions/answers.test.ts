@@ -23,9 +23,9 @@ describe('AnswerRepository', () => {
         const id = new LearningObjectIdentifier('id05', Language.English, 1);
         const questions = await questionRepository.findAllQuestionsAboutLearningObject(id);
 
-        const question = questions.filter((it) => it.sequenceNumber == 2)[0];
+        const question = questions.find((it) => it.sequenceNumber === 2);
 
-        const answers = await answerRepository.findAllAnswersToQuestion(question);
+        const answers = await answerRepository.findAllAnswersToQuestion(question!);
 
         expect(answers).toBeTruthy();
         expect(answers).toHaveLength(2);

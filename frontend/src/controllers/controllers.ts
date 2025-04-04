@@ -1,11 +1,11 @@
-import {ThemeController} from "@/controllers/themes.ts";
+import { ThemeController } from "@/controllers/themes.ts";
 
-export function controllerGetter<T>(Factory: new () => T): () => T {
+export function controllerGetter<T>(factory: new () => T): () => T {
     let instance: T | undefined;
 
     return (): T => {
         if (!instance) {
-            instance = new Factory();
+            instance = new factory();
         }
         return instance;
     };

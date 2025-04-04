@@ -1,8 +1,6 @@
 import { Question } from '../entities/questions/question.entity.js';
-import { UserDTO } from './user.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { mapToStudentDTO, StudentDTO } from './student.js';
-import { TeacherDTO } from './teacher.js';
 
 export interface QuestionDTO {
     learningObjectIdentifier: LearningObjectIdentifier;

@@ -1,16 +1,16 @@
-import {BaseController} from "@/controllers/base-controller.ts";
+import { BaseController } from "@/controllers/base-controller.ts";
 
 export class ThemeController extends BaseController {
     constructor() {
         super("theme");
     }
 
-    getAll(language: string | null = null) {
+    async getAll(language: string | null = null): Promise<unknown> {
         const query = language ? { language } : undefined;
-        return this.get<any[]>("/", query);
+        return this.get("/", query);
     }
 
-    getHruidsByKey(themeKey: string) {
+    async getHruidsByKey(themeKey: string): Promise<string[]> {
         return this.get<string[]>(`/${encodeURIComponent(themeKey)}`);
     }
 }

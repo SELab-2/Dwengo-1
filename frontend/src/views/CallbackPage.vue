@@ -8,9 +8,9 @@
     onMounted(async () => {
         try {
             await auth.handleLoginCallback();
-            await router.replace("/"); // Redirect to home (or dashboard)
-        } catch (error) {
-            console.error("OIDC callback error:", error);
+            await router.replace("/user"); // Redirect to theme page
+        } catch (_error) {
+            // FIXME console.error("OIDC callback error:", error);
         }
     });
 </script>

@@ -3,6 +3,12 @@ import { Student } from '../users/student.entity.js';
 import { Class } from './class.entity.js';
 import { ClassJoinRequestRepository } from '../../data/classes/class-join-request-repository.js';
 
+export enum ClassJoinRequestStatus {
+    Open = 'open',
+    Accepted = 'accepted',
+    Declined = 'declined',
+}
+
 @Entity({
     repository: () => ClassJoinRequestRepository,
 })
@@ -21,10 +27,4 @@ export class ClassJoinRequest {
 
     @Enum(() => ClassJoinRequestStatus)
     status!: ClassJoinRequestStatus;
-}
-
-export enum ClassJoinRequestStatus {
-    Open = 'open',
-    Accepted = 'accepted',
-    Declined = 'declined',
 }

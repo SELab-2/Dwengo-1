@@ -1,12 +1,13 @@
-import { EnvVars, getEnvVar } from '../../util/envvars.js';
+import { envVars, getEnvVar } from '../../util/envVars.js';
 import { expressjwt } from 'express-jwt';
+import * as jwt from 'jsonwebtoken';
 import { JwtPayload } from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
 import * as express from 'express';
-import * as jwt from 'jsonwebtoken';
 import { AuthenticatedRequest } from './authenticated-request.js';
 import { AuthenticationInfo } from './authentication-info.js';
-import { ForbiddenException, UnauthorizedException } from '../../exceptions.js';
+import { UnauthorizedException } from '../../exceptions/unauthorized-exception.js';
+import { ForbiddenException } from '../../exceptions/forbidden-exception.js';
 
 const JWKS_CACHE = true;
 const JWKS_RATE_LIMIT = true;
@@ -32,12 +33,12 @@ function createJwksClient(uri: string): jwksClient.JwksClient {
 
 const idpConfigs = {
     student: {
-        issuer: getEnvVar(EnvVars.IdpStudentUrl),
-        jwksClient: createJwksClient(getEnvVar(EnvVars.IdpStudentJwksEndpoint)),
+        issuer: getEnvVar(envVars.IdpStudentUrl),
+        jwksClient: createJwksClient(getEnvVar(envVars.IdpStudentJwksEndpoint)),
     },
     teacher: {
-        issuer: getEnvVar(EnvVars.IdpTeacherUrl),
-        jwksClient: createJwksClient(getEnvVar(EnvVars.IdpTeacherJwksEndpoint)),
+        issuer: getEnvVar(envVars.IdpTeacherUrl),
+        jwksClient: createJwksClient(getEnvVar(envVars.IdpTeacherJwksEndpoint)),
     },
 };
 
@@ -63,7 +64,7 @@ const verifyJwtToken = expressjwt({
         }
         return signingKey.getPublicKey();
     },
-    audience: getEnvVar(EnvVars.IdpAudience),
+    audience: getEnvVar(envVars.IdpAudience),
     algorithms: [JWT_ALGORITHM],
     credentialsRequired: false,
     requestProperty: REQUEST_PROPERTY_FOR_JWT_PAYLOAD,
@@ -74,7 +75,7 @@ const verifyJwtToken = expressjwt({
  */
 function getAuthenticationInfo(req: AuthenticatedRequest): AuthenticationInfo | undefined {
     if (!req.jwtPayload) {
-        return;
+        return undefined;
     }
     const issuer = req.jwtPayload.iss;
     let accountType: 'student' | 'teacher';
@@ -84,8 +85,9 @@ function getAuthenticationInfo(req: AuthenticatedRequest): AuthenticationInfo | 
     } else if (issuer === idpConfigs.teacher.issuer) {
         accountType = 'teacher';
     } else {
-        return;
+        return undefined;
     }
+
     return {
         accountType: accountType,
         username: req.jwtPayload[JWT_PROPERTY_NAMES.username]!,
@@ -100,10 +102,10 @@ function getAuthenticationInfo(req: AuthenticatedRequest): AuthenticationInfo | 
  * Add the AuthenticationInfo object with the information about the current authentication to the request in order
  * to avoid that the routers have to deal with the JWT token.
  */
-const addAuthenticationInfo = (req: AuthenticatedRequest, res: express.Response, next: express.NextFunction) => {
+function addAuthenticationInfo(req: AuthenticatedRequest, _res: express.Response, next: express.NextFunction): void {
     req.auth = getAuthenticationInfo(req);
     next();
-};
+}
 
 export const authenticateUser = [verifyJwtToken, addAuthenticationInfo];
 
@@ -113,9 +115,8 @@ export const authenticateUser = [verifyJwtToken, addAuthenticationInfo];
  * @param accessCondition Predicate over the current AuthenticationInfo. Access is only granted when this evaluates
  *                        to true.
  */
-export const authorize =
-    (accessCondition: (auth: AuthenticationInfo) => boolean) =>
-    (req: AuthenticatedRequest, res: express.Response, next: express.NextFunction): void => {
+export function authorize(accessCondition: (auth: AuthenticationInfo) => boolean) {
+    return (req: AuthenticatedRequest, _res: express.Response, next: express.NextFunction): void => {
         if (!req.auth) {
             throw new UnauthorizedException();
         } else if (!accessCondition(req.auth)) {
@@ -124,6 +125,7 @@ export const authorize =
             next();
         }
     };
+}
 
 /**
  * Middleware which rejects all unauthenticated users, but accepts all authenticated users.

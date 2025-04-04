@@ -1,25 +1,24 @@
-import { useQuery } from '@tanstack/vue-query';
-import { getThemeController } from '@/controllers/controllers';
-import {type MaybeRefOrGetter, toValue} from "vue";
+import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
+import { getThemeController } from "@/controllers/controllers";
+import { type MaybeRefOrGetter, toValue } from "vue";
 
 const themeController = getThemeController();
 
-export const useThemeQuery = (language: MaybeRefOrGetter<string>) => {
+export function useThemeQuery(language: MaybeRefOrGetter<string>): UseQueryReturnType<unknown, Error> {
     return useQuery({
-        queryKey: ['themes', language],
-        queryFn: () => {
+        queryKey: ["themes", language],
+        queryFn: async () => {
             const lang = toValue(language);
             return themeController.getAll(lang);
         },
-        enabled: () => !!toValue(language),
+        enabled: () => Boolean(toValue(language)),
     });
-};
+}
 
-export const useThemeHruidsQuery = (themeKey: string | null) => {
+export function useThemeHruidsQuery(themeKey: string | null): UseQueryReturnType<unknown, Error> {
     return useQuery({
-        queryKey: ['theme-hruids', themeKey],
-        queryFn: () => themeController.getHruidsByKey(themeKey!),
-        enabled: !!themeKey,
+        queryKey: ["theme-hruids", themeKey],
+        queryFn: async () => themeController.getHruidsByKey(themeKey!),
+        enabled: Boolean(themeKey),
     });
-};
-
+}

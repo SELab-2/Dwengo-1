@@ -5,7 +5,7 @@ import { Language } from '../../entities/content/language.js';
 import { Teacher } from '../../entities/users/teacher.entity.js';
 
 export class LearningObjectRepository extends DwengoEntityRepository<LearningObject> {
-    public findByIdentifier(identifier: LearningObjectIdentifier): Promise<LearningObject | null> {
+    public async findByIdentifier(identifier: LearningObjectIdentifier): Promise<LearningObject | null> {
         return this.findOne(
             {
                 hruid: identifier.hruid,
@@ -18,7 +18,7 @@ export class LearningObjectRepository extends DwengoEntityRepository<LearningObj
         );
     }
 
-    public findLatestByHruidAndLanguage(hruid: string, language: Language) {
+    public async findLatestByHruidAndLanguage(hruid: string, language: Language): Promise<LearningObject | null> {
         return this.findOne(
             {
                 hruid: hruid,
@@ -33,7 +33,7 @@ export class LearningObjectRepository extends DwengoEntityRepository<LearningObj
         );
     }
 
-    public findAllByTeacher(teacher: Teacher): Promise<LearningObject[]> {
+    public async findAllByTeacher(teacher: Teacher): Promise<LearningObject[]> {
         return this.find(
             { admins: teacher },
             { populate: ['admins'] } // Make sure to load admin relations
