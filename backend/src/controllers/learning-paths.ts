@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
 import learningPathService from '../services/learning-paths/learning-path-service.js';
-import { Language } from '../entities/content/language.js';
+import { Language } from '@dwengo-1/common/util/language';
 import {
     PersonalizationTarget,
     personalizedForGroup,

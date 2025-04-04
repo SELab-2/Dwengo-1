@@ -1,10 +1,11 @@
 import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
-import { getThemeController } from "@/controllers/controllers";
 import { type MaybeRefOrGetter, toValue } from "vue";
+import type { Theme } from "@dwengo-1/interfaces/theme";
+import { getThemeController } from "@/controllers/controllers.ts";
 
 const themeController = getThemeController();
 
-export function useThemeQuery(language: MaybeRefOrGetter<string>): UseQueryReturnType<unknown, Error> {
+export function useThemeQuery(language: MaybeRefOrGetter<string | undefined>): UseQueryReturnType<Theme[], Error> {
     return useQuery({
         queryKey: ["themes", language],
         queryFn: async () => {
@@ -15,10 +16,12 @@ export function useThemeQuery(language: MaybeRefOrGetter<string>): UseQueryRetur
     });
 }
 
-export function useThemeHruidsQuery(themeKey: string | null): UseQueryReturnType<unknown, Error> {
+export function useThemeHruidsQuery(
+    themeKey: MaybeRefOrGetter<string | undefined>,
+): UseQueryReturnType<string[], Error> {
     return useQuery({
         queryKey: ["theme-hruids", themeKey],
-        queryFn: async () => themeController.getHruidsByKey(themeKey!),
+        queryFn: async () => themeController.getHruidsByKey(toValue(themeKey)!),
         enabled: Boolean(themeKey),
     });
 }

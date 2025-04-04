@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { createGroup, getAllGroups, getGroup, getGroupSubmissions } from '../services/groups.js';
-import { GroupDTO } from '../interfaces/group.js';
+import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 
 // Typescript is annoywith with parameter forwarding from class.ts
 interface GroupParams {

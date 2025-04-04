@@ -8,7 +8,7 @@ import { User, UserManager } from "oidc-client-ts";
 import { AUTH_CONFIG_ENDPOINT, loadAuthConfig } from "@/services/auth/auth-config-loader.ts";
 import authStorage from "./auth-storage.ts";
 import { loginRoute } from "@/config.ts";
-import apiClient from "@/services/api-client.ts";
+import apiClient from "@/services/api-client/api-client.ts";
 import router from "@/router";
 import type { AxiosError } from "axios";
 
