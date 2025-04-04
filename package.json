@@ -13,7 +13,8 @@
         "format-check": "npm run format-check --workspace=backend --workspace=common --workspace=frontend",
         "lint": "npm run lint --workspace=backend --workspace=common --workspace=frontend",
         "pretest:unit": "npm run build",
-        "test:unit": "npm run test:unit --workspace=backend --workspace=frontend"
+        "test:unit": "npm run test:unit --workspace=backend --workspace=frontend",
+        "test:coverage": "npm run test:coverage --workspace=backend --workspace=frontend"
     },
     "workspaces": [
         "backend",
