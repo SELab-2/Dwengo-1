@@ -4,11 +4,11 @@ import { Student } from '../../../src/entities/users/student.entity';
 import { Teacher } from '../../../src/entities/users/teacher.entity';
 
 export function makeTestClasses(em: EntityManager, students: Student[], teachers: Teacher[]): Class[] {
-    const studentsClass01 = students.slice(0, 7);
+    const studentsClass01 = students.slice(0, 8);
     const teacherClass01: Teacher[] = teachers.slice(0, 1);
 
     const class01 = em.create(Class, {
-        classId: 'id01',
+        classId: '8764b861-90a6-42e5-9732-c0d9eb2f55f9',
         displayName: 'class01',
         teachers: teacherClass01,
         students: studentsClass01,
@@ -18,7 +18,7 @@ export function makeTestClasses(em: EntityManager, students: Student[], teachers
     const teacherClass02: Teacher[] = teachers.slice(1, 2);
 
     const class02 = em.create(Class, {
-        classId: 'id02',
+        classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89',
         displayName: 'class02',
         teachers: teacherClass02,
         students: studentsClass02,
@@ -28,7 +28,7 @@ export function makeTestClasses(em: EntityManager, students: Student[], teachers
     const teacherClass03: Teacher[] = teachers.slice(2, 3);
 
     const class03 = em.create(Class, {
-        classId: 'id03',
+        classId: '80dcc3e0-1811-4091-9361-42c0eee91cfa',
         displayName: 'class03',
         teachers: teacherClass03,
         students: studentsClass03,
@@ -38,7 +38,7 @@ export function makeTestClasses(em: EntityManager, students: Student[], teachers
     const teacherClass04: Teacher[] = teachers.slice(2, 3);
 
     const class04 = em.create(Class, {
-        classId: 'id04',
+        classId: '33d03536-83b8-4880-9982-9bbf2f908ddf',
         displayName: 'class04',
         teachers: teacherClass04,
         students: studentsClass04,
