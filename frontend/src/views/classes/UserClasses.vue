@@ -5,13 +5,14 @@
     import { validate, version } from "uuid";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
-    import { useStudentClassesQuery } from "@/queries/students";
+    import { useCreateJoinRequestMutation, useStudentClassesQuery } from "@/queries/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
     import { StudentController } from "@/controllers/students";
 
     const { t } = useI18n();
     const studentController: StudentController = new StudentController();
 
+    // TODO: remove and use correct type
     interface Invitation {
         id: string;
         class: ClassDTO;
@@ -19,38 +20,76 @@
         receiver: TeacherDTO;
     }
 
-    const classes: ComputedRef<ClassDTO[]> = computed(() => {
-        const result: ClassDTO[] = [];
-        if (!classesResponse.value) {
-            return result;
-        } 
-            if (classesResponse.value.classes.length === 0) {
-                return result;
-            }
-            if (typeof classesResponse.value.classes[0] === "string") {
-                for (const classid of classesResponse.value.classes) {
-                    // TODO when class queries are ready
-                }
-                return result;
-            }
-            return classesResponse.value.classes as ClassDTO[];
-        
-    });
+    // determine if role is student or teacher to render correct view
+    const role: string = authState.authState.activeRole!;
 
+    // username of logged in student or teacher
     const username = ref<string | undefined>(undefined);
 
-    const { data: classesResponse, isLoading, error } = useStudentClassesQuery(username);
-
+    // find the username of the logged in user so it can be used to fetch other information
+    // when loading the page
     onMounted(async () => {
         const userObject = await authState.loadUser();
         username.value = userObject?.profile?.preferred_username ?? undefined;
     });
 
-    // Get role of user
-    const role: string = authState.authState.activeRole!;
+    // fetch all classes of the logged in student
+    const { data: classesResponse, isLoading, error } = useStudentClassesQuery(username);
 
-    // TODO: change to DTO
-    const invitations = ref<Invitation[]>([]);
+    // empty list when classes are not yet loaded, else the list of classes of the user
+    const classes: ComputedRef<ClassDTO[]> = computed(() => {
+
+        // the classes are not yet fetched
+        if (!classesResponse.value) {
+            return [];
+        }
+            // the user has no classes
+            if (classesResponse.value.classes.length === 0) {
+                return [];
+            }
+            if (typeof classesResponse.value.classes[0] === "string") {
+                // should not occur because value of *full* is true
+                // must be caught because typescript can't know the type
+                // i chose to return an empty list if this occurs
+                // it is also possible to fetch all classes from the id's returned
+                return [];
+            }
+            return classesResponse.value.classes as ClassDTO[];
+        
+    });
+
+    // students of selected class are shown when logged in student presses on the member count
+    const selectedClass = ref<ClassDTO | null>(null);
+    const students = ref<StudentDTO[]>([]);
+
+    // Boolean that handles visibility for dialogs
+    // For students: clicking on membercount will show a dialog with all members
+    // For teachers: creating a class will generate a popup with the generated code
+    const dialog = ref(false);
+
+    // Function to display all members of a class in a dialog
+    async function openDialog(c: ClassDTO) {
+        selectedClass.value = c;
+
+        // Clear previous value
+        students.value = [];
+        dialog.value = true;
+
+        // fetch students from their usernames to display their full names
+        const studentDTOs: (StudentDTO | null)[] = await Promise.all(
+            c.students.map(async (uid) => {
+                try {
+                    const res = await studentController.getByUsername(uid);
+                    return res.student;
+                } catch (_) {
+                    return null;
+                }
+            }),
+        );
+
+        // only show students that are not fetched ass *null*
+        students.value = studentDTOs.filter(Boolean) as StudentDTO[];
+    }
 
     // For students: code that they give in when sending a class join request
     // For teachers: code that they get when they create a new class
@@ -65,46 +104,21 @@
         },
     ];
 
+    const { mutate, isError } = useCreateJoinRequestMutation();
+
     // Function called when a student submits a code to join a class
     function submitCode() {
         // Check if the code is valid
         if (code.value !== undefined && validate(code.value) && version(code.value) === 4) {
-            // TODO: temp function that does not use the backend
+            // TODO: uncomment when fixed
+            // mutate( { username : username.value! , classId : code.value });
+            
             console.log("Code submitted:", code.value);
         }
     }
 
-    // Boolean that handles visibility for dialogs
-    // For students: clicking on membercount will show a dialog with all members
-    // For teachers: creating a class will generate a popup with the generated code
-    const dialog = ref(false);
-
-    // List of students in the selected class
-    const students = ref<StudentDTO[]>([]);
-
-    // Selected class itself
-    const selectedClass = ref<ClassDTO | null>(null);
-
-    // Function to display all members of a class
-    async function openDialog(c: ClassDTO) {
-        selectedClass.value = c;
-
-        // Clear previous value
-        students.value = [];
-        dialog.value = true;
-
-        const studentDTOs: (StudentDTO | null)[] = await Promise.all(
-            c.students.map(async (uid) => {
-                try {
-                    const res = await studentController.getByUsername(uid);
-                    return res.student;
-                } catch (_) {
-                    return null;
-                }
-            }),
-        );
-        students.value = studentDTOs.filter(Boolean) as StudentDTO[];
-    }
+    // TODO: implement correctly
+    const invitations = ref<Invitation[]>([]);
 
     // Function to handle a accepted invitation request
     function acceptRequest() {
@@ -118,7 +132,7 @@
         console.log("request denied");
     }
 
-    // Catch the value a teacher inserts when making a class
+    // teacher should be able to set a displayname when making a class
     const className = ref<string>("");
 
     // The name can only contain dash, underscore letters and numbers
@@ -147,7 +161,7 @@
         }
     }
 
-    // If the unique code is copied, set this to true so it's being displayed for the user
+    // show the teacher, copying of the code was a successs
     const copied = ref(false);
 
     // Copy the generated code to the clipboard
