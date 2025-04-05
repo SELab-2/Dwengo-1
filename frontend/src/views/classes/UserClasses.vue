@@ -1,13 +1,16 @@
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
-    import { computed, onMounted, ref, type ComputedRef } from "vue";
+    import { computed, onMounted, ref, watch, watchEffect, type ComputedRef } from "vue";
     import { validate, version } from "uuid";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
-    import { useStudentClassesQuery } from "@/queries/students";
+    import { useStudentClassesQuery, useStudentQuery } from "@/queries/students";
+    import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
+    import { StudentController } from "@/controllers/students";
 
     const { t } = useI18n();
+    const studentController: StudentController = new StudentController();
 
     type Invitation = {
         id: string;
@@ -16,16 +19,16 @@
         receiver: TeacherDTO;
     };
 
-    const classes : ComputedRef<ClassDTO[]> = computed(() => {
+    const classes: ComputedRef<ClassDTO[]> = computed(() => {
         const response = classesResponse.value;
-        let result : ClassDTO[] = []
-        if (!classesResponse.value){
-            return result
+        let result: ClassDTO[] = [];
+        if (!classesResponse.value) {
+            return result;
         } else {
             if (classesResponse.value.classes.length === 0) {
                 return result;
             }
-            if (typeof classesResponse.value.classes[0] === 'string'){
+            if (typeof classesResponse.value.classes[0] === "string") {
                 for (const classid of classesResponse.value.classes) {
                     // TODO when class queries are ready
                 }
@@ -34,7 +37,6 @@
             return classesResponse.value.classes as ClassDTO[];
         }
     });
-        
 
     const username = ref<string | undefined>(undefined);
 
@@ -79,19 +81,30 @@
     const dialog = ref(false);
 
     // list of students in the selected class
-    const students = ref<Array<string>>([]);
+    const students = ref<Array<StudentDTO>>([]);
 
     // selected class itself
     const selectedClass = ref<ClassDTO | null>(null);
 
     // function to display all members of a class
-    function openDialog(c: ClassDTO) {
+    async function openDialog(c: ClassDTO) {
         selectedClass.value = c;
-        if (selectedClass.value !== undefined) {
-            // students.value = selectedClass.value.students.map((student) => `${student.firstName} ${student.lastName}`);
-            students.value = [];
-            dialog.value = true;
-        }
+
+        // clear previous value
+        students.value = [];
+        dialog.value = true;
+
+        const studentDTOs: (StudentDTO | null)[] = await Promise.all(
+            c.students.map(async (uid) => {
+                try {
+                    const res = await studentController.getByUsername(uid);
+                    return res.student;
+                } catch (e) {
+                    return null;
+                }
+            }),
+        );
+        students.value = studentDTOs.filter(Boolean) as StudentDTO[];
     }
 
     // function to handle a accepted invitation request
@@ -352,9 +365,9 @@
                         <ul>
                             <li
                                 v-for="student in students"
-                                :key="student"
+                                :key="student.username"
                             >
-                                {{ student }}
+                                {{ student.firstName + " " + student.lastName }}
                             </li>
                         </ul>
                     </v-card-text>
