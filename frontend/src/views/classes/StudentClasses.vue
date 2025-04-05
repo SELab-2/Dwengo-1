@@ -53,7 +53,7 @@
     const dialog = ref(false);
 
     // Function to display all members of a class in a dialog
-    async function openDialog(c: ClassDTO) : Promise<void> {
+    async function openDialog(c: ClassDTO): Promise<void> {
         selectedClass.value = c;
 
         // Clear previous value
@@ -83,23 +83,49 @@
     // These rules are used to display a message to the user if they use a code that has an invalid format
     const codeRules = [
         (value: string | undefined): string | boolean => {
-            if (value !== undefined && validate(value) && version(value) === 4) return true;
-            return t("invalidFormat");
+            if (value === undefined || value === "") {
+                return true;
+            } else if (value !== undefined && validate(value) && version(value) === 4) {
+                return true;
+            } else {
+                return t("invalidFormat");
+            }
         },
     ];
 
     // Used to send the actual class join request
-    const { mutate, isError } = useCreateJoinRequestMutation();
+    const { mutate } = useCreateJoinRequestMutation();
 
     // Function called when a student submits a code to join a class
     function submitCode() {
         // Check if the code is valid
         if (code.value !== undefined && validate(code.value) && version(code.value) === 4) {
-            mutate( { username : username.value! , classId : code.value });
-
-            console.log("Code submitted:", code.value);
+            mutate(
+                { username: username.value!, classId: code.value },
+                {
+                    onSuccess: () => {
+                        showSnackbar(t("sent"), "success");
+                    },
+                    onError: (e) => {
+                        showSnackbar(t("failed") + ": " + e.message, "error");
+                    },
+                },
+            );
+            code.value = "";
         }
     }
+
+    const snackbar = ref({
+        visible: false,
+        message: "",
+        color: "success",
+    });
+
+    const showSnackbar = (message: string, color: string) => {
+        snackbar.value.message = message;
+        snackbar.value.color = color;
+        snackbar.value.visible = true;
+    };
 </script>
 <template>
     <main>
@@ -217,6 +243,13 @@
                 </div>
             </div>
         </div>
+        <v-snackbar
+            v-model="snackbar.visible"
+            :color="snackbar.color"
+            timeout="3000"
+        >
+            {{ snackbar.message }}
+        </v-snackbar>
     </main>
 </template>
 <style scoped>
