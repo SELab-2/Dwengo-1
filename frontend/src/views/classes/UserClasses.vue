@@ -1,30 +1,29 @@
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
-    import { computed, onMounted, ref, watch, watchEffect, type ComputedRef } from "vue";
+    import { computed, onMounted, ref, type ComputedRef } from "vue";
     import { validate, version } from "uuid";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
-    import { useStudentClassesQuery, useStudentQuery } from "@/queries/students";
+    import { useStudentClassesQuery } from "@/queries/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
     import { StudentController } from "@/controllers/students";
 
     const { t } = useI18n();
     const studentController: StudentController = new StudentController();
 
-    type Invitation = {
+    interface Invitation {
         id: string;
         class: ClassDTO;
         sender: TeacherDTO;
         receiver: TeacherDTO;
-    };
+    }
 
     const classes: ComputedRef<ClassDTO[]> = computed(() => {
-        const response = classesResponse.value;
-        let result: ClassDTO[] = [];
+        const result: ClassDTO[] = [];
         if (!classesResponse.value) {
             return result;
-        } else {
+        } 
             if (classesResponse.value.classes.length === 0) {
                 return result;
             }
@@ -35,7 +34,7 @@
                 return result;
             }
             return classesResponse.value.classes as ClassDTO[];
-        }
+        
     });
 
     const username = ref<string | undefined>(undefined);
@@ -47,11 +46,11 @@
         username.value = userObject?.profile?.preferred_username ?? undefined;
     });
 
-    // get role of user
+    // Get role of user
     const role: string = authState.authState.activeRole!;
 
     // TODO: change to DTO
-    const invitations = ref<Array<Invitation>>([]);
+    const invitations = ref<Invitation[]>([]);
 
     // For students: code that they give in when sending a class join request
     // For teachers: code that they get when they create a new class
@@ -60,15 +59,15 @@
     // The code a student sends in to join a class needs to be formatted as v4 to be valid
     // These rules are used to display a message to the user if they use a code that has an invalid format
     const codeRules = [
-        (value: string | undefined) => {
+        (value: string | undefined) : string | boolean => {
             if (value !== undefined && validate(value) && version(value) === 4) return true;
             return t("invalidFormat");
         },
     ];
 
-    // function called when a student submits a code to join a class
+    // Function called when a student submits a code to join a class
     function submitCode() {
-        // check if the code is valid
+        // Check if the code is valid
         if (code.value !== undefined && validate(code.value) && version(code.value) === 4) {
             // TODO: temp function that does not use the backend
             console.log("Code submitted:", code.value);
@@ -80,17 +79,17 @@
     // For teachers: creating a class will generate a popup with the generated code
     const dialog = ref(false);
 
-    // list of students in the selected class
-    const students = ref<Array<StudentDTO>>([]);
+    // List of students in the selected class
+    const students = ref<StudentDTO[]>([]);
 
-    // selected class itself
+    // Selected class itself
     const selectedClass = ref<ClassDTO | null>(null);
 
-    // function to display all members of a class
+    // Function to display all members of a class
     async function openDialog(c: ClassDTO) {
         selectedClass.value = c;
 
-        // clear previous value
+        // Clear previous value
         students.value = [];
         dialog.value = true;
 
@@ -99,7 +98,7 @@
                 try {
                     const res = await studentController.getByUsername(uid);
                     return res.student;
-                } catch (e) {
+                } catch (_) {
                     return null;
                 }
             }),
@@ -107,19 +106,19 @@
         students.value = studentDTOs.filter(Boolean) as StudentDTO[];
     }
 
-    // function to handle a accepted invitation request
+    // Function to handle a accepted invitation request
     function acceptRequest() {
         //TODO
         console.log("request accepted");
     }
 
-    // function to handle a denied invitation request
+    // Function to handle a denied invitation request
     function denyRequest() {
         //TODO
         console.log("request denied");
     }
 
-    // catch the value a teacher inserts when making a class
+    // Catch the value a teacher inserts when making a class
     const className = ref<string>("");
 
     // The name can only contain dash, underscore letters and numbers
@@ -135,23 +134,23 @@
         },
     ];
 
-    // function called when a teacher creates a class
+    // Function called when a teacher creates a class
     function createClass() {
-        // check if the class name is valid
-        if (className && className.value.length > 0 && /^[a-zA-Z0-9_-]+$/.test(className.value)) {
+        // Check if the class name is valid
+        if (className.value && className.value.length > 0 && /^[a-zA-Z0-9_-]+$/.test(className.value)) {
             //TODO
             console.log("created class with name: " + className.value);
 
-            // show the generated code to share with the class
+            // Show the generated code to share with the class
             dialog.value = true;
             code.value = "04c7c759-c41e-4ea9-968a-1e2a987ce0ed";
         }
     }
 
-    // if the unique code is copied, set this to true so it's being displayed for the user
+    // If the unique code is copied, set this to true so it's being displayed for the user
     const copied = ref(false);
 
-    // copy the generated code to the clipboard
+    // Copy the generated code to the clipboard
     function copyToClipboard() {
         navigator.clipboard.writeText(code.value);
         copied.value = true;
