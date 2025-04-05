@@ -19,58 +19,48 @@
         username.value = userObject?.profile?.preferred_username ?? undefined;
     });
 
-    // fetch all classes of the logged in teacher
+    // Fetch all classes of the logged in teacher
     const { data: classesResponse, isLoading, error } = useTeacherClassesQuery(username, true);
 
     // Empty list when classes are not yet loaded, else the list of classes of the user
-    const classes: ComputedRef<ClassDTO[]> = computed(
-        () => {
-            // the classes are not yet fetched
-            if (!classesResponse.value) {
-                return [];
-            }
-            // the user has no classes
-            if (classesResponse.value.classes.length === 0) {
-                return [];
-            }
-            if (typeof classesResponse.value.classes[0] === "string") {
-                // should not occur because value of *full* is true
-                // must be caught because typescript can't know the type
-                // i chose to return an empty list if this occurs
-                // it is also possible to fetch all classes from the id's returned
-                return [];
-            }
-            return classesResponse.value.classes as ClassDTO[];
-        },
-
-            
-            
-    );
+    const classes: ComputedRef<ClassDTO[]> = computed(() => {
+        // The classes are not yet fetched
+        if (!classesResponse.value) {
+            return [];
+        }
+        // The user has no classes
+        if (classesResponse.value.classes.length === 0) {
+            return [];
+        }
+        if (typeof classesResponse.value.classes[0] === "string") {
+            // Should not occur because value of *full* is true
+            // Must be caught because typescript can't know the type
+            // I chose to return an empty list if this occurs
+            // It is also possible to fetch all classes from the id's returned
+            return [];
+        }
+        return classesResponse.value.classes as ClassDTO[];
+    });
 
     // Boolean that handles visibility for dialogs
     // Creating a class will generate a popup with the generated code
     const dialog = ref(false);
 
-    // Duntion to display the dialog showing generated code for created class
-    function openDialog(): void {
-        //TODO
-    }
-
     // Code generated when new class was created
     const code = ref<string>("");
 
-    // TODO: implement correctly
+    // TODO: waiting on frontend controllers
     const invitations = ref<TeacherInvitationDTO[]>([]);
 
     // Function to handle a accepted invitation request
-    function acceptRequest() {
-        //TODO
+    function acceptRequest(): void {
+        //TODO > waiting on updated frontend controllers
         console.log("request accepted");
     }
 
     // Function to handle a denied invitation request
-    function denyRequest() {
-        //TODO
+    function denyRequest(): void {
+        //TODO > waiting on frontend controllers
         console.log("request denied");
     }
 
@@ -80,26 +70,26 @@
     // The name can only contain dash, underscore letters and numbers
     // These rules are used to display a message to the user if the name is not valid
     const nameRules = [
-        (value: string | undefined) => {
-            if (value) return true;
-            return t("nameIsMandatory");
-        },
-        (value: string | undefined) => {
-            if (value && /^[a-zA-Z0-9_-]+$/.test(value)) return true;
+        (value: string | undefined): string | boolean => {
+            if (!value) return true;
+            if (value && (/^[a-zA-Z0-9_-]+$/.test(value))) return true;
             return t("onlyUse");
         },
     ];
 
     // Function called when a teacher creates a class
-    function createClass() {
+    function createClass(): void {
         // Check if the class name is valid
         if (className.value && className.value.length > 0 && /^[a-zA-Z0-9_-]+$/.test(className.value)) {
-            //TODO
+            //TODO > waiting on updated frontend controllers
             console.log("created class with name: " + className.value);
 
             // Show the generated code to share with the class
             dialog.value = true;
             code.value = "04c7c759-c41e-4ea9-968a-1e2a987ce0ed";
+        }
+        if (!className.value || className.value === "") {
+            alert("classname should not be empty")
         }
     }
 
@@ -107,8 +97,8 @@
     const copied = ref(false);
 
     // Copy the generated code to the clipboard
-    function copyToClipboard() {
-        navigator.clipboard.writeText(code.value);
+    async function copyToClipboard(): Promise<void> {
+        await navigator.clipboard.writeText(code.value);
         copied.value = true;
     }
 </script>
