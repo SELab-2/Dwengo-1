@@ -13,15 +13,18 @@ import { makeTestAnswers } from "./tests/test_assets/questions/answers.testdata.
 import { makeTestQuestions } from "./tests/test_assets/questions/questions.testdata.js";
 import { makeTestStudents } from "./tests/test_assets/users/students.testdata.js";
 import { makeTestTeachers } from "./tests/test_assets/users/teachers.testdata.js";
+import { getLogger, Logger } from './src/logging/initalize.js';
 
-export async function seedDatabase() {
+const logger: Logger = getLogger();
+
+export async function seedDatabase() : Promise<void> {
     dotenv.config({ path: '.env.development.local' });
     const orm = await initORM();
     await orm.schema.clearDatabase();
 
     const em = forkEntityManager();
 
-    console.log("seeding database...")
+    logger.info("seeding database...")
 
     const students = makeTestStudents(em);
     const teachers = makeTestTeachers(em);
@@ -61,9 +64,9 @@ export async function seedDatabase() {
         ...submissions,
     ]);
 
-    console.log('Development database seeded successfully!');
+    logger.info('Development database seeded successfully!');
 
     await orm.close();
 }
 
-seedDatabase().catch(console.error);
+seedDatabase().catch(logger.error);
