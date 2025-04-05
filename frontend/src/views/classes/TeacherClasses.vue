@@ -4,16 +4,10 @@
     import { computed, onMounted, ref, type ComputedRef } from "vue";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
+    import type { TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
+    import { useTeacherClassesQuery } from "@/queries/teachers";
 
     const { t } = useI18n();
-
-    // TODO: remove and use correct type
-    interface Invitation {
-        id: string;
-        class: ClassDTO;
-        sender: TeacherDTO;
-        receiver: TeacherDTO;
-    }
 
     // Username of logged in teacher
     const username = ref<string | undefined>(undefined);
@@ -25,31 +19,32 @@
         username.value = userObject?.profile?.preferred_username ?? undefined;
     });
 
-    // TODO: fetch all classes of the logged in teacher
-    const isLoading = ref(false);
-    const error = ref<Error | null>(null);
-    // Const { data: classesResponse, isLoading, error } = useStudentClassesQuery(username);
+    // fetch all classes of the logged in teacher
+    const { data: classesResponse, isLoading, error } = useTeacherClassesQuery(username, true);
 
     // Empty list when classes are not yet loaded, else the list of classes of the user
-    const classes: ComputedRef<ClassDTO[]> = computed(() => 
-         []
-        // TODO
-        // // the classes are not yet fetched
-        // If (!classesResponse.value) {
-        //     Return [];
-        // }
-        //     // the user has no classes
-        //     If (classesResponse.value.classes.length === 0) {
-        //         Return [];
-        //     }
-        //     If (typeof classesResponse.value.classes[0] === "string") {
-        //         // should not occur because value of *full* is true
-        //         // must be caught because typescript can't know the type
-        //         // i chose to return an empty list if this occurs
-        //         // it is also possible to fetch all classes from the id's returned
-        //         Return [];
-        //     }
-        //     Return classesResponse.value.classes as ClassDTO[];
+    const classes: ComputedRef<ClassDTO[]> = computed(
+        () => {
+            // the classes are not yet fetched
+            if (!classesResponse.value) {
+                return [];
+            }
+            // the user has no classes
+            if (classesResponse.value.classes.length === 0) {
+                return [];
+            }
+            if (typeof classesResponse.value.classes[0] === "string") {
+                // should not occur because value of *full* is true
+                // must be caught because typescript can't know the type
+                // i chose to return an empty list if this occurs
+                // it is also possible to fetch all classes from the id's returned
+                return [];
+            }
+            return classesResponse.value.classes as ClassDTO[];
+        },
+
+            
+            
     );
 
     // Boolean that handles visibility for dialogs
@@ -57,7 +52,7 @@
     const dialog = ref(false);
 
     // Duntion to display the dialog showing generated code for created class
-    function openDialog() : void {
+    function openDialog(): void {
         //TODO
     }
 
@@ -65,7 +60,7 @@
     const code = ref<string>("");
 
     // TODO: implement correctly
-    const invitations = ref<Invitation[]>([]);
+    const invitations = ref<TeacherInvitationDTO[]>([]);
 
     // Function to handle a accepted invitation request
     function acceptRequest() {
@@ -271,12 +266,12 @@
                 <tbody>
                     <tr
                         v-for="i in invitations"
-                        :key="i.id"
+                        :key="(i.class as ClassDTO).id"
                     >
                         <td>
-                            {{ i.class.displayName }}
+                            {{ (i.class as ClassDTO).displayName }}
                         </td>
-                        <td>{{ i.sender.firstName + " " + i.sender.lastName }}</td>
+                        <td>{{ (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName }}</td>
                         <td class="text-right">
                             <div>
                                 <v-btn
