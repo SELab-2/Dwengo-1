@@ -5,7 +5,7 @@ import { Teacher } from '../../../src/entities/users/teacher.entity';
 
 export function makeTestClasses(em: EntityManager, students: Student[], teachers: Teacher[]): Class[] {
     const studentsClass01 = students.slice(0, 8);
-    const teacherClass01: Teacher[] = teachers.slice(0, 1);
+    const teacherClass01: Teacher[] = teachers.slice(4,5);
 
     const class01 = em.create(Class, {
         classId: '8764b861-90a6-42e5-9732-c0d9eb2f55f9',
