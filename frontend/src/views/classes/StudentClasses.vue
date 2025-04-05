@@ -3,7 +3,6 @@
     import authState from "@/services/auth/auth-service.ts";
     import { computed, onMounted, ref, type ComputedRef } from "vue";
     import { validate, version } from "uuid";
-    import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { useCreateJoinRequestMutation, useStudentClassesQuery } from "@/queries/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
@@ -12,56 +11,56 @@
     const { t } = useI18n();
     const studentController: StudentController = new StudentController();
 
-    // username of logged in student
+    // Username of logged in student
     const username = ref<string | undefined>(undefined);
 
-    // find the username of the logged in user so it can be used to fetch other information
-    // when loading the page
+    // Find the username of the logged in user so it can be used to fetch other information
+    // When loading the page
     onMounted(async () => {
         const userObject = await authState.loadUser();
         username.value = userObject?.profile?.preferred_username ?? undefined;
     });
 
-    // fetch all classes of the logged in student
+    // Fetch all classes of the logged in student
     const { data: classesResponse, isLoading, error } = useStudentClassesQuery(username);
 
-    // empty list when classes are not yet loaded, else the list of classes of the user
+    // Empty list when classes are not yet loaded, else the list of classes of the user
     const classes: ComputedRef<ClassDTO[]> = computed(() => {
-        // the classes are not yet fetched
+        // The classes are not yet fetched
         if (!classesResponse.value) {
             return [];
         }
-        // the user has no classes
+        // The user has no classes
         if (classesResponse.value.classes.length === 0) {
             return [];
         }
         if (typeof classesResponse.value.classes[0] === "string") {
-            // should not occur because value of *full* is true
-            // must be caught because typescript can't know the type
-            // i chose to return an empty list if this occurs
-            // it is also possible to fetch all classes from the id's returned
+            // Should not occur because value of *full* is true
+            // Must be caught because typescript can't know the type
+            // I chose to return an empty list if this occurs
+            // It is also possible to fetch all classes from the id's returned
             return [];
         }
         return classesResponse.value.classes as ClassDTO[];
     });
 
-    // students of selected class are shown when logged in student presses on the member count
+    // Students of selected class are shown when logged in student presses on the member count
     const selectedClass = ref<ClassDTO | null>(null);
     const students = ref<StudentDTO[]>([]);
 
     // Boolean that handles visibility for dialogs
-    // clicking on membercount will show a dialog with all members
+    // Clicking on membercount will show a dialog with all members
     const dialog = ref(false);
 
     // Function to display all members of a class in a dialog
-    async function openDialog(c: ClassDTO) {
+    async function openDialog(c: ClassDTO) : Promise<void> {
         selectedClass.value = c;
 
         // Clear previous value
         students.value = [];
         dialog.value = true;
 
-        // fetch students from their usernames to display their full names
+        // Fetch students from their usernames to display their full names
         const studentDTOs: (StudentDTO | null)[] = await Promise.all(
             c.students.map(async (uid) => {
                 try {
@@ -73,11 +72,11 @@
             }),
         );
 
-        // only show students that are not fetched ass *null*
+        // Only show students that are not fetched ass *null*
         students.value = studentDTOs.filter(Boolean) as StudentDTO[];
     }
 
-    // hold the code a student gives in to join a class
+    // Hold the code a student gives in to join a class
     const code = ref<string>("");
 
     // The code a student sends in to join a class needs to be formatted as v4 to be valid
@@ -89,15 +88,14 @@
         },
     ];
 
-    // used to send the actual class join request
+    // Used to send the actual class join request
     const { mutate, isError } = useCreateJoinRequestMutation();
 
     // Function called when a student submits a code to join a class
     function submitCode() {
         // Check if the code is valid
         if (code.value !== undefined && validate(code.value) && version(code.value) === 4) {
-            // TODO: uncomment when fixed
-            // mutate( { username : username.value! , classId : code.value });
+            mutate( { username : username.value! , classId : code.value });
 
             console.log("Code submitted:", code.value);
         }

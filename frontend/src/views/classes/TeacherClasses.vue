@@ -2,12 +2,8 @@
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
     import { computed, onMounted, ref, type ComputedRef } from "vue";
-    import { validate, version } from "uuid";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
-    import { useCreateJoinRequestMutation, useStudentClassesQuery } from "@/queries/students";
-    import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
-    import { StudentController } from "@/controllers/students";
 
     const { t } = useI18n();
 
@@ -19,11 +15,11 @@
         receiver: TeacherDTO;
     }
 
-    // username of logged in teacher
+    // Username of logged in teacher
     const username = ref<string | undefined>(undefined);
 
-    // find the username of the logged in user so it can be used to fetch other information
-    // when loading the page
+    // Find the username of the logged in user so it can be used to fetch other information
+    // When loading the page
     onMounted(async () => {
         const userObject = await authState.loadUser();
         username.value = userObject?.profile?.preferred_username ?? undefined;
@@ -32,40 +28,40 @@
     // TODO: fetch all classes of the logged in teacher
     const isLoading = ref(false);
     const error = ref<Error | null>(null);
-    // const { data: classesResponse, isLoading, error } = useStudentClassesQuery(username);
+    // Const { data: classesResponse, isLoading, error } = useStudentClassesQuery(username);
 
-    // empty list when classes are not yet loaded, else the list of classes of the user
-    const classes: ComputedRef<ClassDTO[]> = computed(() => {
-        return [];
+    // Empty list when classes are not yet loaded, else the list of classes of the user
+    const classes: ComputedRef<ClassDTO[]> = computed(() => 
+         []
         // TODO
         // // the classes are not yet fetched
-        // if (!classesResponse.value) {
-        //     return [];
+        // If (!classesResponse.value) {
+        //     Return [];
         // }
         //     // the user has no classes
-        //     if (classesResponse.value.classes.length === 0) {
-        //         return [];
+        //     If (classesResponse.value.classes.length === 0) {
+        //         Return [];
         //     }
-        //     if (typeof classesResponse.value.classes[0] === "string") {
+        //     If (typeof classesResponse.value.classes[0] === "string") {
         //         // should not occur because value of *full* is true
         //         // must be caught because typescript can't know the type
         //         // i chose to return an empty list if this occurs
         //         // it is also possible to fetch all classes from the id's returned
-        //         return [];
+        //         Return [];
         //     }
-        //     return classesResponse.value.classes as ClassDTO[];
-    });
+        //     Return classesResponse.value.classes as ClassDTO[];
+    );
 
     // Boolean that handles visibility for dialogs
-    // creating a class will generate a popup with the generated code
+    // Creating a class will generate a popup with the generated code
     const dialog = ref(false);
 
-    // duntion to display the dialog showing generated code for created class
-    function openDialog() {
+    // Duntion to display the dialog showing generated code for created class
+    function openDialog() : void {
         //TODO
     }
 
-    // code generated when new class was created
+    // Code generated when new class was created
     const code = ref<string>("");
 
     // TODO: implement correctly
@@ -83,7 +79,7 @@
         console.log("request denied");
     }
 
-    // teacher should be able to set a displayname when making a class
+    // Teacher should be able to set a displayname when making a class
     const className = ref<string>("");
 
     // The name can only contain dash, underscore letters and numbers
@@ -112,7 +108,7 @@
         }
     }
 
-    // show the teacher, copying of the code was a successs
+    // Show the teacher, copying of the code was a successs
     const copied = ref(false);
 
     // Copy the generated code to the clipboard

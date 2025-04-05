@@ -3,7 +3,7 @@
     import TeacherClasses from "./TeacherClasses.vue";
     import StudentClasses from "./StudentClasses.vue";
 
-    // determine if role is student or teacher to render correct view
+    // Determine if role is student or teacher to render correct view
     const role: string = authState.authState.activeRole!;
 </script>
 
