@@ -71,5 +71,7 @@
     "close": "sluiten",
     "copied": "gekopieerd!",
     "accept": "accepteren",
-    "deny": "weigeren"
+    "deny": "weigeren",
+    "sent": "verzonden",
+    "failed": "mislukt"
 }

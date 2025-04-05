@@ -71,5 +71,7 @@
     "close": "schließen",
     "copied": "kopiert!",
     "accept": "akzeptieren",
-    "deny": "verweigern"
+    "deny": "verweigern",
+    "sent": "sent",
+    "failed": "gescheitert"
 }

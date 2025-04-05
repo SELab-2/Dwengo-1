@@ -71,5 +71,7 @@
     "close": "fermer",
     "copied": "copié!",
     "accept": "accepter",
-    "deny": "refuser"
+    "deny": "refuser",
+    "sent": "envoyé",
+    "failed": "échoué"
 }
