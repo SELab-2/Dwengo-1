@@ -1,21 +1,20 @@
 import { getAnswerRepository, getQuestionRepository } from '../data/repositories.js';
-import { mapToQuestionDTO, mapToQuestionDTOId } from '../interfaces/question.js';
+import {mapToLearningObjectID, mapToQuestionDTO, mapToQuestionDTOId} from '../interfaces/question.js';
 import { Question } from '../entities/questions/question.entity.js';
 import { Answer } from '../entities/questions/answer.entity.js';
 import { mapToAnswerDTO, mapToAnswerDTOId } from '../interfaces/answer.js';
 import { QuestionRepository } from '../data/questions/question-repository.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
-import { mapToStudent } from '../interfaces/student.js';
+import {mapToStudent, mapToStudentDTO} from '../interfaces/student.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { AnswerDTO, AnswerId } from '@dwengo-1/common/interfaces/answer';
+import {NotFoundException} from "../exceptions/not-found-exception";
+import {fetchStudent} from "./students";
+import {Student} from "../entities/users/student.entity";
 
 export async function getAllQuestions(id: LearningObjectIdentifier, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
     const questionRepository: QuestionRepository = getQuestionRepository();
     const questions = await questionRepository.findAllQuestionsAboutLearningObject(id);
-
-    if (!questions) {
-        return [];
-    }
 
     if (full) {
         return questions.map(mapToQuestionDTO);
@@ -24,24 +23,22 @@ export async function getAllQuestions(id: LearningObjectIdentifier, full: boolea
     return questions.map(mapToQuestionDTOId);
 }
 
-async function fetchQuestion(questionId: QuestionId): Promise<Question | null> {
+async function fetchQuestion(questionId: QuestionId): Promise<Question> {
     const questionRepository = getQuestionRepository();
+    const question = await questionRepository.findByLearningObjectAndSequenceNumber(
+        mapToLearningObjectID(questionId.learningObjectIdentifier),
+        questionId.sequenceNumber
+    );
 
-    return await questionRepository.findOne({
-        learningObjectHruid: questionId.learningObjectIdentifier.hruid,
-        learningObjectLanguage: questionId.learningObjectIdentifier.language,
-        learningObjectVersion: questionId.learningObjectIdentifier.version,
-        sequenceNumber: questionId.sequenceNumber,
-    });
-}
-
-export async function getQuestion(questionId: QuestionId): Promise<QuestionDTO | null> {
-    const question = await fetchQuestion(questionId);
-
-    if (!question) {
-        return null;
+    if (!question){
+        throw new NotFoundException('Question with loID and sequence number not found');
     }
 
+    return question;
+}
+
+export async function getQuestion(questionId: QuestionId): Promise<QuestionDTO> {
+    const question = await fetchQuestion(questionId);
     return mapToQuestionDTO(question);
 }
 
@@ -49,15 +46,7 @@ export async function getAnswersByQuestion(questionId: QuestionId, full: boolean
     const answerRepository = getAnswerRepository();
     const question = await fetchQuestion(questionId);
 
-    if (!question) {
-        return [];
-    }
-
     const answers: Answer[] = await answerRepository.findAllAnswersToQuestion(question);
-
-    if (!answers) {
-        return [];
-    }
 
     if (full) {
         return answers.map(mapToAnswerDTO);
@@ -68,23 +57,20 @@ export async function getAnswersByQuestion(questionId: QuestionId, full: boolean
 
 export async function createQuestion(questionDTO: QuestionDTO): Promise<QuestionDTO | null> {
     const questionRepository = getQuestionRepository();
-
-    const author = mapToStudent(questionDTO.author);
-
-    const loId: LearningObjectIdentifier = {
-        ...questionDTO.learningObjectIdentifier,
-        version: questionDTO.learningObjectIdentifier.version ?? 1,
-    };
-
-    try {
-        await questionRepository.createQuestion({
-            loId,
-            author,
-            content: questionDTO.content,
-        });
-    } catch (_) {
-        return null;
+    let author: Student;
+    if (typeof questionDTO.author === "string" ){
+        author = await fetchStudent(questionDTO.author);
+    } else {
+        author = mapToStudent(questionDTO.author)
     }
+
+
+    await questionRepository.createQuestion({
+        loId: mapToLearningObjectID(questionDTO.learningObjectIdentifier),
+        author,
+        content: questionDTO.content,
+    });
+
 
     return questionDTO;
 }

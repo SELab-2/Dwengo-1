@@ -61,4 +61,13 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
             orderBy: { timestamp: 'DESC' }, // New to old
         });
     }
+
+    public async findByLearningObjectAndSequenceNumber(loId: LearningObjectIdentifier, sequenceNumber: number){
+        return this.findOne({
+            learningObjectHruid: loId.hruid,
+            learningObjectLanguage: loId.language,
+            learningObjectVersion: loId.version,
+            sequenceNumber
+        });
+    }
 }

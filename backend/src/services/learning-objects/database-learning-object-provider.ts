@@ -6,7 +6,7 @@ import processingService from './processing/processing-service.js';
 import { NotFoundError } from '@mikro-orm/core';
 import learningObjectService from './learning-object-service.js';
 import { getLogger, Logger } from '../../logging/initalize.js';
-import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import { FilteredLearningObject, LearningObjectIdentifierDTO, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
 
 const logger: Logger = getLogger();
 
@@ -40,7 +40,7 @@ function convertLearningObject(learningObject: LearningObject | null): FilteredL
     };
 }
 
-async function findLearningObjectEntityById(id: LearningObjectIdentifier): Promise<LearningObject | null> {
+async function findLearningObjectEntityById(id: LearningObjectIdentifierDTO): Promise<LearningObject | null> {
     const learningObjectRepo = getLearningObjectRepository();
 
     return learningObjectRepo.findLatestByHruidAndLanguage(id.hruid, id.language);
@@ -53,7 +53,7 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
     /**
      * Fetches a single learning object by its HRUID
      */
-    async getLearningObjectById(id: LearningObjectIdentifier): Promise<FilteredLearningObject | null> {
+    async getLearningObjectById(id: LearningObjectIdentifierDTO): Promise<FilteredLearningObject | null> {
         const learningObject = await findLearningObjectEntityById(id);
         return convertLearningObject(learningObject);
     },
@@ -61,7 +61,7 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
     /**
      * Obtain a HTML-rendering of the learning object with the given identifier (as a string).
      */
-    async getLearningObjectHTML(id: LearningObjectIdentifier): Promise<string | null> {
+    async getLearningObjectHTML(id: LearningObjectIdentifierDTO): Promise<string | null> {
         const learningObjectRepo = getLearningObjectRepository();
 
         const learningObject = await learningObjectRepo.findLatestByHruidAndLanguage(id.hruid, id.language);

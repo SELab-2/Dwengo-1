@@ -14,7 +14,7 @@ import { LearningObject } from '../../../entities/content/learning-object.entity
 import Processor from './processor.js';
 import { DwengoContentType } from './content-type.js';
 import { replaceAsync } from '../../../util/async.js';
-import { LearningObjectIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import { LearningObjectIdentifierDTO } from '@dwengo-1/common/interfaces/learning-content';
 import { Language } from '@dwengo-1/common/util/language';
 
 const EMBEDDED_LEARNING_OBJECT_PLACEHOLDER = /<learning-object hruid="([^"]+)" language="([^"]+)" version="([^"]+)"\/>/g;
@@ -50,7 +50,7 @@ class ProcessingService {
      */
     async render(
         learningObject: LearningObject,
-        fetchEmbeddedLearningObjects?: (loId: LearningObjectIdentifier) => Promise<LearningObject | null>
+        fetchEmbeddedLearningObjects?: (loId: LearningObjectIdentifierDTO) => Promise<LearningObject | null>
     ): Promise<string> {
         const html = this.processors.get(learningObject.contentType)!.renderLearningObject(learningObject);
         if (fetchEmbeddedLearningObjects) {
