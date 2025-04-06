@@ -35,6 +35,16 @@ export async function getGroup(classId: string, assignmentNumber: number, groupN
     return mapToGroupDTO(group);
 }
 
+export async function deleteGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<GroupDTO> {
+    const group = await fetchGroup(classId, assignmentNumber, groupNumber);
+    const assignment = await fetchAssignment(classId, assignmentNumber);
+    
+    const groupRepository = getGroupRepository();
+    await groupRepository.deleteByAssignmentAndGroupNumber(assignment, groupNumber);
+
+    return mapToGroupDTO(group);
+}
+
 export async function getExistingGroupFromGroupDTO(groupData: GroupDTO) {
     const classId = typeof(groupData.class) === 'string' ? groupData.class : groupData.class.id;
     const assignmentNumber = typeof(groupData.assignment) === 'number' ? groupData.assignment : groupData.assignment.id;

@@ -1,14 +1,11 @@
 import { Request, Response } from 'express';
-import { createGroup, getAllGroups, getGroup, getGroupSubmissions } from '../services/groups.js';
+import { createGroup, deleteGroup, getAllGroups, getGroup, getGroupSubmissions } from '../services/groups.js';
 import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 import { requireFields } from './error-helper.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { getLogger } from '../logging/initalize.js';
 
-export async function getGroupHandler(req: Request, res: Response): Promise<void> {
-    const classId = req.params.classid;
-    const assignmentId = parseInt(req.params.assignmentid);
-    const groupId = parseInt(req.params.groupid);
+function checkGroupFields(classId: any, assignmentId: any, groupId: any) {
     requireFields({ classId, assignmentId, groupId });
 
     if (isNaN(assignmentId)) {
@@ -18,13 +15,26 @@ export async function getGroupHandler(req: Request, res: Response): Promise<void
     if (isNaN(groupId)) {
         throw new BadRequestException('Group id must be a number');
     }
+}
+
+export async function getGroupHandler(req: Request, res: Response): Promise<void> {
+    const classId = req.params.classid;
+    const assignmentId = parseInt(req.params.assignmentid);
+    const groupId = parseInt(req.params.groupid);
+    checkGroupFields(classId, assignmentId, groupId);
 
     const group = await getGroup(classId, assignmentId, groupId);
 
-    if (!group) {
-        res.status(404).json({ error: 'Group not found' });
-        return;
-    }
+    res.json({ group });
+}
+
+export async function deleteGroupHandler(req: Request, res: Response): Promise<void> {
+    const classId = req.params.classid;
+    const assignmentId = parseInt(req.params.assignmentid);
+    const groupId = parseInt(req.params.groupid);
+    checkGroupFields(classId, assignmentId, groupId);
+
+    const group = await deleteGroup(classId, assignmentId, groupId);
 
     res.json({ group });
 }
