@@ -15,6 +15,8 @@ import {
 } from '../services/classes.js';
 import { ClassDTO } from '@dwengo-1/common/interfaces/class';
 import {requireFields} from "./error-helper";
+import { EntityDTO } from '@mikro-orm/core';
+import { Class } from '../entities/classes/class.entity.js';
 
 export async function getAllClassesHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
@@ -46,7 +48,7 @@ export async function putClassHandler(req: Request, res: Response): Promise<void
     const classId = req.params.id;
     requireFields({ classId });
 
-    const newData = req.body as Partial<ClassDTO>;
+    const newData = req.body as Partial<EntityDTO<Class>>;
     const cls = await putClass(classId, newData);
 
     res.json({ class: cls });
