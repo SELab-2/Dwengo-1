@@ -7,19 +7,17 @@ import { Language, languageMap } from '@dwengo-1/common/util/language';
 import { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
 import { requireFields } from './error-helper.js';
 
-
-
 export async function getSubmissionHandler(req: Request, res: Response): Promise<void> {
     const lohruid = req.params.hruid;
     const lang = languageMap[req.query.language as string] || Language.Dutch;
     const version = (req.query.version || 1) as number;
     const submissionNumber = Number(req.params.id);
     requireFields({ lohruid, submissionNumber });
-    
+
     if (isNaN(submissionNumber)) {
         throw new BadRequestException('Submission number must be a number');
     }
-    
+
     const loId = new LearningObjectIdentifier(lohruid, lang, version);
     const submission = await getSubmission(loId, submissionNumber);
 
@@ -54,7 +52,7 @@ export async function deleteSubmissionHandler(req: Request, res: Response): Prom
     requireFields({ hruid, submissionNumber });
 
     if (isNaN(submissionNumber)) {
-        throw new BadRequestException('Submission number must be a number'); 
+        throw new BadRequestException('Submission number must be a number');
     }
 
     const loId = new LearningObjectIdentifier(hruid, lang, version);

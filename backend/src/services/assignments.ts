@@ -1,5 +1,11 @@
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
-import { getAssignmentRepository, getClassRepository, getGroupRepository, getQuestionRepository, getSubmissionRepository } from '../data/repositories.js';
+import {
+    getAssignmentRepository,
+    getClassRepository,
+    getGroupRepository,
+    getQuestionRepository,
+    getSubmissionRepository,
+} from '../data/repositories.js';
 import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { mapToAssignment, mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment.js';
@@ -18,7 +24,7 @@ export async function fetchAssignment(classid: string, assignmentNumber: number)
     const cls = await classRepository.findById(classid);
 
     if (!cls) {
-        throw new NotFoundException('Could not find assignment\'s class');
+        throw new NotFoundException("Could not find assignment's class");
     }
 
     const assignmentRepository = getAssignmentRepository();
@@ -48,10 +54,10 @@ export async function createAssignment(classid: string, assignmentData: Assignme
     const cls = await fetchClass(classid);
 
     const assignment = mapToAssignment(assignmentData, cls);
-    
+
     const assignmentRepository = getAssignmentRepository();
     const newAssignment = assignmentRepository.create(assignment);
-    await assignmentRepository.save(newAssignment, {preventOverwrite: true});
+    await assignmentRepository.save(newAssignment, { preventOverwrite: true });
 
     return mapToAssignmentDTO(newAssignment);
 }
@@ -90,9 +96,7 @@ export async function getAssignmentsSubmissions(
     const groups = await groupRepository.findAllGroupsForAssignment(assignment);
 
     const submissionRepository = getSubmissionRepository();
-    const submissions = (await Promise.all(
-        groups.map(async (group) => submissionRepository.findAllSubmissionsForGroup(group))
-    )).flat();
+    const submissions = (await Promise.all(groups.map(async (group) => submissionRepository.findAllSubmissionsForGroup(group)))).flat();
 
     if (full) {
         return submissions.map(mapToSubmissionDTO);
@@ -101,11 +105,7 @@ export async function getAssignmentsSubmissions(
     return submissions.map(mapToSubmissionDTOId);
 }
 
-export async function getAssignmentsQuestions(
-    classid: string,
-    assignmentNumber: number,
-    full: boolean
-): Promise<QuestionDTO[] | QuestionId[]> {
+export async function getAssignmentsQuestions(classid: string, assignmentNumber: number, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
     const assignment = await fetchAssignment(classid, assignmentNumber);
 
     const questionRepository = getQuestionRepository();

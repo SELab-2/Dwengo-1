@@ -8,7 +8,8 @@ import {
     deleteClassTeacherHandler,
     getAllClassesHandler,
     getClassHandler,
-    getClassStudentsHandler, getClassTeachersHandler,
+    getClassStudentsHandler,
+    getClassTeachersHandler,
     getTeacherInvitationsHandler,
     putClassHandler,
 } from '../controllers/classes.js';

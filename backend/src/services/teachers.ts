@@ -22,7 +22,7 @@ import { Question } from '../entities/questions/question.entity.js';
 import { ClassJoinRequestRepository } from '../data/classes/class-join-request-repository.js';
 import { Student } from '../entities/users/student.entity.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
-import {getClassStudents, getClassStudentsDTO} from './classes.js';
+import { getClassStudents, getClassStudentsDTO } from './classes.js';
 import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { ClassDTO } from '@dwengo-1/common/interfaces/class';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
@@ -102,9 +102,9 @@ export async function getStudentsByTeacher(username: string, full: boolean): Pro
     const students: StudentDTO[] = (await Promise.all(classIds.map(async (username) => await getClassStudentsDTO(username)))).flat();
 
     if (full) {
-        return students
+        return students;
     }
-    
+
     return students.map((student) => student.username);
 }
 

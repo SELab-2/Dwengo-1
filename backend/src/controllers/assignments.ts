@@ -1,8 +1,15 @@
 import { Request, Response } from 'express';
-import { createAssignment, deleteAssignment, getAllAssignments, getAssignment, getAssignmentsSubmissions, putAssignment } from '../services/assignments.js';
+import {
+    createAssignment,
+    deleteAssignment,
+    getAllAssignments,
+    getAssignment,
+    getAssignmentsSubmissions,
+    putAssignment,
+} from '../services/assignments.js';
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
-import {requireFields} from "./error-helper";
-import {BadRequestException} from "../exceptions/bad-request-exception";
+import { requireFields } from './error-helper';
+import { BadRequestException } from '../exceptions/bad-request-exception';
 import { getLogger } from '../logging/initalize.js';
 import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { EntityDTO } from '@mikro-orm/core';
@@ -37,7 +44,7 @@ export async function getAssignmentHandler(req: Request, res: Response): Promise
     requireFields({ id, classid });
 
     if (isNaN(id)) {
-        throw new BadRequestException("Assignment id should be a number")
+        throw new BadRequestException('Assignment id should be a number');
     }
 
     const assignment = await getAssignment(classid, id);
@@ -51,7 +58,7 @@ export async function putAssignmentHandler(req: Request, res: Response): Promise
     requireFields({ id, classid });
 
     if (isNaN(id)) {
-        throw new BadRequestException("Assignment id should be a number")
+        throw new BadRequestException('Assignment id should be a number');
     }
 
     const assignmentData = req.body as Partial<EntityDTO<Assignment>>;
@@ -66,10 +73,10 @@ export async function deleteAssignmentHandler(req: Request, res: Response): Prom
     requireFields({ id, classid });
 
     if (isNaN(id)) {
-        throw new BadRequestException("Assignment id should be a number");
+        throw new BadRequestException('Assignment id should be a number');
     }
 
-    const assignment = await deleteAssignment(classid, id); 
+    const assignment = await deleteAssignment(classid, id);
 }
 
 export async function getAssignmentsSubmissionsHandler(req: Request, res: Response): Promise<void> {
@@ -79,7 +86,7 @@ export async function getAssignmentsSubmissionsHandler(req: Request, res: Respon
     requireFields({ assignmentNumber, classid });
 
     if (isNaN(assignmentNumber)) {
-        throw new BadRequestException("Assignment id should be a number")
+        throw new BadRequestException('Assignment id should be a number');
     }
 
     const submissions = await getAssignmentsSubmissions(classid, assignmentNumber, full);

@@ -8,10 +8,7 @@ import { fetchStudent } from './students.js';
 import { fetchGroup, getExistingGroupFromGroupDTO } from './groups.js';
 import { Submission } from '../entities/assignments/submission.entity.js';
 
-export async function fetchSubmission(
-    loId: LearningObjectIdentifier,
-    submissionNumber: number,
-): Promise<Submission> {
+export async function fetchSubmission(loId: LearningObjectIdentifier, submissionNumber: number): Promise<Submission> {
     const submissionRepository = getSubmissionRepository();
     const submission = await submissionRepository.findSubmissionByLearningObjectAndSubmissionNumber(loId, submissionNumber);
 
@@ -22,17 +19,12 @@ export async function fetchSubmission(
     return submission;
 }
 
-export async function getSubmission(
-    loId: LearningObjectIdentifier,
-    submissionNumber: number
-): Promise<SubmissionDTO> {
+export async function getSubmission(loId: LearningObjectIdentifier, submissionNumber: number): Promise<SubmissionDTO> {
     const submission = await fetchSubmission(loId, submissionNumber);
     return mapToSubmissionDTO(submission);
 }
 
-export async function getAllSubmissions(
-    loId: LearningObjectIdentifier,
-): Promise<SubmissionDTO[]> {
+export async function getAllSubmissions(loId: LearningObjectIdentifier): Promise<SubmissionDTO[]> {
     const submissionRepository = getSubmissionRepository();
     const submissions = await submissionRepository.findByLearningObject(loId);
 
@@ -52,7 +44,7 @@ export async function createSubmission(submissionDTO: SubmissionDTO): Promise<Su
 
 export async function deleteSubmission(loId: LearningObjectIdentifier, submissionNumber: number): Promise<SubmissionDTO> {
     const submission = await fetchSubmission(loId, submissionNumber);
-    
+
     const submissionRepository = getSubmissionRepository();
     await submissionRepository.deleteSubmissionByLearningObjectAndSubmissionNumber(loId, submissionNumber);
 
