@@ -38,6 +38,7 @@ export async function getAllSubmissionsHandler(req: Request, res: Response): Pro
     res.json({ submissions });
 }
 
+// TODO: gerald moet nog dingen toevoegen aan de databank voor dat dit gefinaliseerd kan worden
 export async function createSubmissionHandler(req: Request, res: Response): Promise<void> {
     const submissionDTO = req.body as SubmissionDTO;
     const submission = await createSubmission(submissionDTO);

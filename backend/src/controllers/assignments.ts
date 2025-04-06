@@ -7,7 +7,6 @@ import {BadRequestException} from "../exceptions/bad-request-exception";
 export async function getAllAssignmentsHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.classid;
     const full = req.query.full === 'true';
-    requireFields({ classId });
 
     const assignments = await getAllAssignments(classId, full);
 

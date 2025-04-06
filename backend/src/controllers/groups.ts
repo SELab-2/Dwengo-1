@@ -3,6 +3,7 @@ import { createGroup, getAllGroups, getGroup, getGroupSubmissions } from '../ser
 import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 import { requireFields } from './error-helper.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
+import { getLogger } from '../logging/initalize.js';
 
 export async function getGroupHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.classid;
