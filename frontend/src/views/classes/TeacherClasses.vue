@@ -6,8 +6,10 @@
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import type { TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
     import { useTeacherClassesQuery } from "@/queries/teachers";
+    import { ClassController, type ClassResponse } from "@/controllers/classes";
 
     const { t } = useI18n();
+    const classController = new ClassController();
 
     // Username of logged in teacher
     const username = ref<string | undefined>(undefined);
@@ -20,7 +22,7 @@
     });
 
     // Fetch all classes of the logged in teacher
-    const { data: classesResponse, isLoading, error } = useTeacherClassesQuery(username, true);
+    const { data: classesResponse, isLoading, error, refetch } = useTeacherClassesQuery(username, true);
 
     // Empty list when classes are not yet loaded, else the list of classes of the user
     const classes: ComputedRef<ClassDTO[]> = computed(() => {
@@ -72,25 +74,51 @@
     const nameRules = [
         (value: string | undefined): string | boolean => {
             if (!value) return true;
-            if (value && (/^[a-zA-Z0-9_-]+$/.test(value))) return true;
+            if (value && /^[a-zA-Z0-9_-]+$/.test(value)) return true;
             return t("onlyUse");
         },
     ];
 
     // Function called when a teacher creates a class
-    function createClass(): void {
+    async function createClass(): Promise<void> {
         // Check if the class name is valid
         if (className.value && className.value.length > 0 && /^[a-zA-Z0-9_-]+$/.test(className.value)) {
-            //TODO > waiting on updated frontend controllers
-            console.log("created class with name: " + className.value);
+            try {
+                const classDto: ClassDTO = {
+                    id: "",
+                    displayName: className.value,
+                    teachers: [username.value!],
+                    students: [],
+                    joinRequests: [],
+                };
+                const classResponse : ClassResponse = await classController.createClass(classDto);
+                const createdClass : ClassDTO = classResponse.cls;
+                code.value = createdClass.id;
+                dialog.value = true;
+                showSnackbar(t("created"), "success");
 
-            // Show the generated code to share with the class
-            dialog.value = true;
-            code.value = "04c7c759-c41e-4ea9-968a-1e2a987ce0ed";
+                // reload the table with classes
+                await refetch();
+
+            } catch (e: any) {
+                showSnackbar(t("wrong"), "error");
+            }
         }
         if (!className.value || className.value === "") {
-            alert("classname should not be empty")
+            alert("classname should not be empty");
         }
+    }
+
+    const snackbar = ref({
+        visible: false,
+        message: "",
+        color: "success",
+    });
+
+    function showSnackbar(message: string, color: string): void {
+        snackbar.value.message = message;
+        snackbar.value.color = color;
+        snackbar.value.visible = true;
     }
 
     // Show the teacher, copying of the code was a successs
@@ -283,6 +311,13 @@
                 </tbody>
             </v-table>
         </div>
+        <v-snackbar
+            v-model="snackbar.visible"
+            :color="snackbar.color"
+            timeout="3000"
+        >
+            {{ snackbar.message }}
+        </v-snackbar>
     </main>
 </template>
 <style scoped>
