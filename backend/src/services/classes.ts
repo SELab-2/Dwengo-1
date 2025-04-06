@@ -9,9 +9,10 @@ import { ClassDTO } from '@dwengo-1/common/interfaces/class';
 import { TeacherInvitationDTO } from '@dwengo-1/common/interfaces/teacher-invitation';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
 import {fetchTeacher} from "./teachers";
-import {fetchStudent} from "./students";
+import {fetchStudent, getStudent} from "./students";
 import {TeacherDTO} from "@dwengo-1/common/interfaces/teacher";
 import {mapToTeacherDTO} from "../interfaces/teacher";
+import { EntityDTO } from '@mikro-orm/core';
 
 export async function fetchClass(classid: string): Promise<Class> {
     const classRepository = getClassRepository();
@@ -55,6 +56,16 @@ export async function createClass(classData: ClassDTO): Promise<ClassDTO> {
     await classRepository.save(newClass, {preventOverwrite: true});
 
     return mapToClassDTO(newClass);
+}
+
+export async function putClass(classId: string, classData: Partial<ClassDTO>): Promise<ClassDTO> {
+    const cls = await fetchClass(classId);
+
+    const classRepository = getClassRepository();
+    classRepository.assign(cls, classData as Partial<EntityDTO<Class>>);
+    await classRepository.getEntityManager().flush();
+
+    return mapToClassDTO(cls);
 }
 
 export async function deleteClass(classId: string): Promise<ClassDTO> {
@@ -107,6 +118,7 @@ export async function deleteClassStudent(classId: string, username: string): Pro
     
     const classRepository = getClassRepository();
     classRepository.assign(cls, { students: cls.students.filter((student) => student.username !== username) });
+    await classRepository.getEntityManager().flush();
 
     return mapToClassDTO(cls);
 }
@@ -116,6 +128,7 @@ export async function deleteClassTeacher(classId: string, username: string): Pro
     
     const classRepository = getClassRepository();
     classRepository.assign(cls, { teachers: cls.teachers.filter((teacher) => teacher.username !== username) });
+    await classRepository.getEntityManager().flush();
 
     return mapToClassDTO(cls);
 }
@@ -126,6 +139,7 @@ export async function addClassStudent(classId: string, username: string): Promis
 
     const classRepository = getClassRepository();
     classRepository.assign(cls, { students: [...cls.students, newStudent] });
+    await classRepository.getEntityManager().flush();
 
     return mapToClassDTO(cls);
 }
@@ -136,6 +150,7 @@ export async function addClassTeacher(classId: string, username: string): Promis
 
     const classRepository = getClassRepository();
     classRepository.assign(cls, { teachers: [...cls.teachers, newTeacher] });
+    await classRepository.getEntityManager().flush();
 
     return mapToClassDTO(cls);
 }

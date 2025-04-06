@@ -10,7 +10,8 @@ import {
     getClass,
     getClassStudents,
     getClassTeacherInvitations,
-    getClassTeachers
+    getClassTeachers,
+    putClass
 } from '../services/classes.js';
 import { ClassDTO } from '@dwengo-1/common/interfaces/class';
 import {requireFields} from "./error-helper";
@@ -37,6 +38,16 @@ export async function getClassHandler(req: Request, res: Response): Promise<void
     requireFields({ classId });
 
     const cls = await getClass(classId);
+
+    res.json({ class: cls });
+}
+
+export async function putClassHandler(req: Request, res: Response): Promise<void> {
+    const classId = req.params.id;
+    requireFields({ classId });
+
+    const newData = req.body as Partial<ClassDTO>;
+    const cls = await putClass(classId, newData);
 
     res.json({ class: cls });
 }

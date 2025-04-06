@@ -8,6 +8,7 @@ import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submissi
 import { fetchClass } from './classes.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
+import { getLogger } from '../logging/initalize.js';
 
 export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
     const classRepository = getClassRepository();

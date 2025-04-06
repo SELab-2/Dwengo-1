@@ -10,6 +10,7 @@ import {
     getClassHandler,
     getClassStudentsHandler, getClassTeachersHandler,
     getTeacherInvitationsHandler,
+    putClassHandler,
 } from '../controllers/classes.js';
 import assignmentRouter from './assignments.js';
 
@@ -21,6 +22,8 @@ router.get('/', getAllClassesHandler);
 router.post('/', createClassHandler);
 
 router.get('/:id', getClassHandler);
+
+router.put('/:id', putClassHandler);
 
 router.delete('/:id', deleteClassHandler);
 

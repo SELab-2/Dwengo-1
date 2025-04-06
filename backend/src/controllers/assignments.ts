@@ -3,6 +3,7 @@ import { createAssignment, deleteAssignment, getAllAssignments, getAssignment, g
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 import {requireFields} from "./error-helper";
 import {BadRequestException} from "../exceptions/bad-request-exception";
+import { getLogger } from '../logging/initalize.js';
 
 export async function getAllAssignmentsHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.classid;
