@@ -101,3 +101,41 @@ export async function getClassTeacherInvitations(classId: string, full: boolean)
 
     return invitations.map(mapToTeacherInvitationDTOIds);
 }
+
+export async function deleteClassStudent(classId: string, username: string): Promise<ClassDTO> {
+    const cls = await fetchClass(classId);
+    
+    const classRepository = getClassRepository();
+    classRepository.assign(cls, { students: cls.students.filter((student) => student.username !== username) });
+
+    return mapToClassDTO(cls);
+}
+
+export async function deleteClassTeacher(classId: string, username: string): Promise<ClassDTO> {
+    const cls = await fetchClass(classId);
+    
+    const classRepository = getClassRepository();
+    classRepository.assign(cls, { teachers: cls.teachers.filter((teacher) => teacher.username !== username) });
+
+    return mapToClassDTO(cls);
+}
+
+export async function addClassStudent(classId: string, username: string): Promise<ClassDTO> {
+    const cls = await fetchClass(classId);
+    const newStudent = await fetchStudent(username);
+
+    const classRepository = getClassRepository();
+    classRepository.assign(cls, { students: [...cls.students, newStudent] });
+
+    return mapToClassDTO(cls);
+}
+
+export async function addClassTeacher(classId: string, username: string): Promise<ClassDTO> {
+    const cls = await fetchClass(classId);
+    const newTeacher = await fetchTeacher(username);
+
+    const classRepository = getClassRepository();
+    classRepository.assign(cls, { teachers: [...cls.teachers, newTeacher] });
+
+    return mapToClassDTO(cls);
+}

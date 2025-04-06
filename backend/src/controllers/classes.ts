@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import {
+    addClassStudent,
+    addClassTeacher,
     createClass,
     deleteClass,
+    deleteClassStudent,
+    deleteClassTeacher,
     getAllClasses,
     getClass,
     getClassStudents,
@@ -72,4 +76,44 @@ export async function getTeacherInvitationsHandler(req: Request, res: Response):
     const invitations = await getClassTeacherInvitations(classId, full);
 
     res.json({ invitations });
+}
+
+export async function deleteClassStudentHandler(req: Request, res: Response): Promise<void> {
+    const classId = req.params.id;
+    const username = req.params.username;
+    requireFields({ classId, username });
+
+    const cls = await deleteClassStudent(classId, username);
+
+    res.json({ class: cls });
+}
+
+export async function deleteClassTeacherHandler(req: Request, res: Response): Promise<void> {
+    const classId = req.params.id;
+    const username = req.params.username;
+    requireFields({ classId, username });
+
+    const cls = await deleteClassTeacher(classId, username);
+
+    res.json({ class: cls });
+}
+
+export async function addClassStudentHandler(req: Request, res: Response): Promise<void> {
+    const classId = req.params.id;
+    const username = req.body.username;
+    requireFields({ classId, username });
+
+    const cls = await addClassStudent(classId, username);
+
+    res.json({ class: cls });
+}
+
+export async function addClassTeacherHandler(req: Request, res: Response): Promise<void> {
+    const classId = req.params.id;
+    const username = req.body.username;
+    requireFields({ classId, username });
+
+    const cls = await addClassTeacher(classId, username);
+
+    res.json({ class: cls });
 }
