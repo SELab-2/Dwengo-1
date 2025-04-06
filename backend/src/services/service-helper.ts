@@ -10,7 +10,7 @@ import { DwengoEntityRepository } from "../data/dwengo-entity-repository";
  * 
  * @returns Nothing.
  */
-export async function putObject<T extends Object, DTO>(
+export async function putObject<T extends object, DTO>(
     object: T, 
     data: Partial<EntityDTO<FromEntityType<T>>>, 
     repo: DwengoEntityRepository<T>
