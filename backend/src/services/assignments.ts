@@ -64,7 +64,7 @@ export async function getAssignment(classid: string, id: number): Promise<Assign
 export async function putAssignment(classid: string, id: number, assignmentData: Partial<EntityDTO<Assignment>>): Promise<AssignmentDTO> {
     const assignment = await fetchAssignment(classid, id);
     
-    await putObject<Assignment, AssignmentDTO>(assignment, assignmentData, getAssignmentRepository());
+    await putObject<Assignment>(assignment, assignmentData, getAssignmentRepository());
 
     return mapToAssignmentDTO(assignment);
 }

@@ -1,5 +1,5 @@
 import express from 'express';
-import { createGroupHandler, deleteGroupHandler, getAllGroupsHandler, getGroupHandler, getGroupSubmissionsHandler } from '../controllers/groups.js';
+import { createGroupHandler, deleteGroupHandler, getAllGroupsHandler, getGroupHandler, getGroupSubmissionsHandler, putGroupHandler } from '../controllers/groups.js';
 
 const router = express.Router({ mergeParams: true });
 
@@ -9,6 +9,8 @@ router.get('/', getAllGroupsHandler);
 router.post('/', createGroupHandler);
 
 router.get('/:groupid', getGroupHandler);
+
+router.put('/:groupid', putGroupHandler);
 
 router.delete('/:groupid', deleteGroupHandler);
 

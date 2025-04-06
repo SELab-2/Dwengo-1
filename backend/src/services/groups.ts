@@ -1,4 +1,4 @@
-import { assign } from '@mikro-orm/core';
+import { assign, EntityDTO } from '@mikro-orm/core';
 import {
     getAssignmentRepository,
     getClassRepository,
@@ -16,6 +16,7 @@ import { getLogger } from '../logging/initalize.js';
 import { fetchAssignment } from './assignments.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { fetchClass } from './classes.js';
+import { putObject } from './service-helper.js';
 
 export async function fetchGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<Group> {
     const assignment = await fetchAssignment(classId, assignmentNumber);
@@ -32,6 +33,19 @@ export async function fetchGroup(classId: string, assignmentNumber: number, grou
 
 export async function getGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<GroupDTO> {
     const group = await fetchGroup(classId, assignmentNumber, groupNumber);
+    return mapToGroupDTO(group);
+}
+
+export async function putGroup(
+    classId: string, 
+    assignmentNumber: number, 
+    groupNumber: number, 
+    groupData: Partial<EntityDTO<Group>>
+): Promise<GroupDTO> {
+    const group = await fetchGroup(classId, assignmentNumber, groupNumber);
+
+    await putObject<Group>(group, groupData, getGroupRepository());
+
     return mapToGroupDTO(group);
 }
 

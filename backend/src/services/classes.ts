@@ -62,7 +62,7 @@ export async function createClass(classData: ClassDTO): Promise<ClassDTO> {
 export async function putClass(classId: string, classData: Partial<EntityDTO<Class>>): Promise<ClassDTO> {
     const cls = await fetchClass(classId);
 
-    await putObject<Class, ClassDTO>(cls, classData, getClassRepository());
+    await putObject<Class>(cls, classData, getClassRepository());
 
     return mapToClassDTO(cls);
 }
@@ -116,7 +116,7 @@ export async function deleteClassStudent(classId: string, username: string): Pro
     const cls = await fetchClass(classId);
     
     const newStudents = { students: cls.students.filter((student) => student.username !== username) };
-    await putObject<Class, ClassDTO>(cls, newStudents, getClassRepository());
+    await putObject<Class>(cls, newStudents, getClassRepository());
 
     return mapToClassDTO(cls);
 }
@@ -125,7 +125,7 @@ export async function deleteClassTeacher(classId: string, username: string): Pro
     const cls = await fetchClass(classId);
     
     const newTeachers = { teachers: cls.teachers.filter((teacher) => teacher.username !== username) };
-    await putObject<Class, ClassDTO>(cls, newTeachers, getClassRepository());
+    await putObject<Class>(cls, newTeachers, getClassRepository());
 
     return mapToClassDTO(cls);
 }
@@ -135,7 +135,7 @@ export async function addClassStudent(classId: string, username: string): Promis
     const newStudent = await fetchStudent(username);
 
     const newStudents = { students: [...cls.students, newStudent] }
-    await putObject<Class, ClassDTO>(cls, newStudents, getClassRepository());
+    await putObject<Class>(cls, newStudents, getClassRepository());
     
     return mapToClassDTO(cls);
 }
@@ -145,7 +145,7 @@ export async function addClassTeacher(classId: string, username: string): Promis
     const newTeacher = await fetchTeacher(username);
 
     const newTeachers = { teachers: [...cls.teachers, newTeacher] };
-    await putObject<Class, ClassDTO>(cls, newTeachers, getClassRepository());    
+    await putObject<Class>(cls, newTeachers, getClassRepository());    
 
     return mapToClassDTO(cls);
 }

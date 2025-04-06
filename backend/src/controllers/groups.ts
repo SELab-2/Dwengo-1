@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
-import { createGroup, deleteGroup, getAllGroups, getGroup, getGroupSubmissions } from '../services/groups.js';
+import { createGroup, deleteGroup, getAllGroups, getGroup, getGroupSubmissions, putGroup } from '../services/groups.js';
 import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 import { requireFields } from './error-helper.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { getLogger } from '../logging/initalize.js';
+import { EntityDTO } from '@mikro-orm/core';
+import { Group } from '../entities/assignments/group.entity.js';
 
 function checkGroupFields(classId: any, assignmentId: any, groupId: any) {
     requireFields({ classId, assignmentId, groupId });
@@ -24,6 +26,17 @@ export async function getGroupHandler(req: Request, res: Response): Promise<void
     checkGroupFields(classId, assignmentId, groupId);
 
     const group = await getGroup(classId, assignmentId, groupId);
+
+    res.json({ group });
+}
+
+export async function putGroupHandler(req: Request, res: Response): Promise<void> {
+    const classId = req.params.classid;
+    const assignmentId = parseInt(req.params.assignmentid);
+    const groupId = parseInt(req.params.groupid);
+    checkGroupFields(classId, assignmentId, groupId);
+
+    const group = await putGroup(classId, assignmentId, groupId, req.body as Partial<EntityDTO<Group>>);
 
     res.json({ group });
 }
