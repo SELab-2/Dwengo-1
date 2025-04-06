@@ -19,10 +19,20 @@ export class AnswerRepository extends DwengoEntityRepository<Answer> {
             orderBy: { sequenceNumber: 'ASC' },
         });
     }
+    public async findAnswer(question: Question, sequenceNumber: number) {
+        return this.findOne({
+            toQuestion: question, sequenceNumber
+        });
+    }
     public async removeAnswerByQuestionAndSequenceNumber(question: Question, sequenceNumber: number): Promise<void> {
         return this.deleteWhere({
             toQuestion: question,
             sequenceNumber: sequenceNumber,
         });
+    }
+    public async updateContent(answer: Answer, newContent: string){
+        answer.content = newContent;
+        await this.save(answer);
+        return answer;
     }
 }

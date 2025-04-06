@@ -1,11 +1,16 @@
-import { UserDTO } from './user';
 import { QuestionDTO, QuestionId } from './question';
+import {TeacherDTO} from "./teacher";
 
 export interface AnswerDTO {
-    author: UserDTO;
+    author: TeacherDTO;
     toQuestion: QuestionDTO;
     sequenceNumber: number;
     timestamp: string;
+    content: string;
+}
+
+export interface AnswerData {
+    author: string;
     content: string;
 }
 

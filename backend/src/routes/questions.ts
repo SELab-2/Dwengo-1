@@ -3,9 +3,10 @@ import {
     createQuestionHandler,
     deleteQuestionHandler,
     getAllQuestionsHandler,
-    getQuestionAnswersHandler,
     getQuestionHandler,
 } from '../controllers/questions.js';
+import answerRoutes from './answers.js';
+
 const router = express.Router({ mergeParams: true });
 
 // Query language
@@ -20,6 +21,6 @@ router.delete('/:seq', deleteQuestionHandler);
 // Information about a question with id
 router.get('/:seq', getQuestionHandler);
 
-router.get('/answers/:seq', getQuestionAnswersHandler);
+router.use('/:seq/answer', answerRoutes);
 
 export default router;

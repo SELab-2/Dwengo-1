@@ -70,4 +70,10 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
             sequenceNumber
         });
     }
+
+    public async updateContent(question: Question, newContent: string): Promise<Question> {
+        question.content = newContent;
+        await this.save(question);
+        return question;
+    }
 }
