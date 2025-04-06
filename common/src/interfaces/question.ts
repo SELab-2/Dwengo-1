@@ -4,7 +4,7 @@ import { StudentDTO } from './student';
 export interface QuestionDTO {
     learningObjectIdentifier: LearningObjectIdentifierDTO;
     sequenceNumber?: number;
-    author: StudentDTO | string;
+    author: string;
     timestamp?: string;
     content: string;
 }

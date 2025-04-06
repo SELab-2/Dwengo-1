@@ -5,12 +5,10 @@ import { Answer } from '../entities/questions/answer.entity.js';
 import { mapToAnswerDTO, mapToAnswerDTOId } from '../interfaces/answer.js';
 import { QuestionRepository } from '../data/questions/question-repository.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
-import {mapToStudent, mapToStudentDTO} from '../interfaces/student.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { AnswerDTO, AnswerId } from '@dwengo-1/common/interfaces/answer';
 import {NotFoundException} from "../exceptions/not-found-exception";
 import {fetchStudent} from "./students";
-import {Student} from "../entities/users/student.entity";
 
 export async function getAllQuestions(id: LearningObjectIdentifier, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
     const questionRepository: QuestionRepository = getQuestionRepository();
@@ -57,20 +55,13 @@ export async function getAnswersByQuestion(questionId: QuestionId, full: boolean
 
 export async function createQuestion(questionDTO: QuestionDTO): Promise<QuestionDTO | null> {
     const questionRepository = getQuestionRepository();
-    let author: Student;
-    if (typeof questionDTO.author === "string" ){
-        author = await fetchStudent(questionDTO.author);
-    } else {
-        author = mapToStudent(questionDTO.author)
-    }
-
+    const author = await fetchStudent(questionDTO.author);
 
     await questionRepository.createQuestion({
         loId: mapToLearningObjectID(questionDTO.learningObjectIdentifier),
         author,
         content: questionDTO.content,
     });
-
 
     return questionDTO;
 }
@@ -80,20 +71,11 @@ export async function deleteQuestion(questionId: QuestionId): Promise<QuestionDT
 
     const question = await fetchQuestion(questionId);
 
-    if (!question) {
-        return null;
-    }
-
     const loId: LearningObjectIdentifier = {
         ...questionId.learningObjectIdentifier,
         version: questionId.learningObjectIdentifier.version ?? 1,
     };
 
-    try {
-        await questionRepository.removeQuestionByLearningObjectAndSequenceNumber(loId, questionId.sequenceNumber);
-    } catch (_) {
-        return null;
-    }
-
+    await questionRepository.removeQuestionByLearningObjectAndSequenceNumber(loId, questionId.sequenceNumber);
     return mapToQuestionDTO(question);
 }
