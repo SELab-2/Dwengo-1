@@ -154,7 +154,7 @@
                                 >
                                     <td>
                                         <v-btn
-                                            :to="`/user/class/${c.id}`"
+                                            :to="`/class/${c.id}`"
                                             variant="text"
                                         >
                                             {{ c.displayName }}
