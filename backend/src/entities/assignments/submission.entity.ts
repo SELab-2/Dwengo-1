@@ -22,6 +22,12 @@ export class Submission {
     submissionNumber?: number;
 
     @ManyToOne({
+        entity: () => Group,
+        primary: true
+    })
+    onBehalfOf: Group;
+
+    @ManyToOne({
         entity: () => Student,
     })
     submitter!: Student;
@@ -29,11 +35,7 @@ export class Submission {
     @Property({ type: 'datetime' })
     submissionTime!: Date;
 
-    @ManyToOne({
-        entity: () => Group,
-        nullable: true,
-    })
-    onBehalfOf?: Group;
+
 
     @Property({ type: 'json' })
     content!: string;
