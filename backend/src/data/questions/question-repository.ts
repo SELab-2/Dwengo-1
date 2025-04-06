@@ -56,7 +56,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         });
     }
 
-    public findAllByAssignment(assignment: Assignment): Promise<Question[]> {
+    public async findAllByAssignment(assignment: Assignment): Promise<Question[]> {
         return this.find({
             author: assignment.groups.flatMap(group => group.members),
             learningObjectHruid: assignment.learningPathHruid,

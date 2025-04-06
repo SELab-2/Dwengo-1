@@ -25,7 +25,7 @@ export function mapToAssignmentDTO(assignment: Assignment): AssignmentDTO {
         description: assignment.description,
         learningPath: assignment.learningPathHruid,
         language: assignment.learningPathLanguage,
-        // groups: assignment.groups.map(mapToGroupDTO),
+        // Groups: assignment.groups.map(mapToGroupDTO),
     };
 }
 

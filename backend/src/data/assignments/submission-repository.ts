@@ -17,7 +17,7 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
         });
     }
 
-    public findByLearningObject(loId: LearningObjectIdentifier): Promise<Submission[]> {
+    public async findByLearningObject(loId: LearningObjectIdentifier): Promise<Submission[]> {
         return this.find({
             learningObjectHruid: loId.hruid,
             learningObjectLanguage: loId.language,
@@ -25,7 +25,7 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
         });
     }
 
-    public findMostRecentSubmissionForStudent(loId: LearningObjectIdentifier, submitter: Student): Promise<Submission | null> {
+    public async findMostRecentSubmissionForStudent(loId: LearningObjectIdentifier, submitter: Student): Promise<Submission | null> {
         return this.findOne(
             {
                 learningObjectHruid: loId.hruid,
