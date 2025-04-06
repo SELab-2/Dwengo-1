@@ -56,18 +56,18 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         });
     }
 
-<<<<<<< HEAD
     public findAllByAssignment(assignment: Assignment): Promise<Question[]> {
         return this.find({
             author: assignment.groups.flatMap(group => group.members),
             learningObjectHruid: assignment.learningPathHruid,
             learningObjectLanguage: assignment.learningPathLanguage,
-=======
+        });
+    }
+    
     public async findAllByAuthor(author: Student): Promise<Question[]> {
         return this.findAll({
             where: { author },
             orderBy: { timestamp: 'DESC' }, // New to old
->>>>>>> 6c3dbc99bb1afb79fa867505e52656c49bada1b6
         });
     }
 }
