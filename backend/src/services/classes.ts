@@ -134,9 +134,9 @@ export async function addClassStudent(classId: string, username: string): Promis
     const cls = await fetchClass(classId);
     const newStudent = await fetchStudent(username);
 
-    const newStudents = { students: [...cls.students, newStudent] }
+    const newStudents = { students: [...cls.students, newStudent] };
     await putObject<Class>(cls, newStudents, getClassRepository());
-    
+
     return mapToClassDTO(cls);
 }
 
@@ -145,7 +145,7 @@ export async function addClassTeacher(classId: string, username: string): Promis
     const newTeacher = await fetchTeacher(username);
 
     const newTeachers = { teachers: [...cls.teachers, newTeacher] };
-    await putObject<Class>(cls, newTeachers, getClassRepository());    
+    await putObject<Class>(cls, newTeachers, getClassRepository());
 
     return mapToClassDTO(cls);
 }

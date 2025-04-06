@@ -1,5 +1,12 @@
 import express from 'express';
-import { createGroupHandler, deleteGroupHandler, getAllGroupsHandler, getGroupHandler, getGroupSubmissionsHandler, putGroupHandler } from '../controllers/groups.js';
+import {
+    createGroupHandler,
+    deleteGroupHandler,
+    getAllGroupsHandler,
+    getGroupHandler,
+    getGroupSubmissionsHandler,
+    putGroupHandler,
+} from '../controllers/groups.js';
 
 const router = express.Router({ mergeParams: true });
 

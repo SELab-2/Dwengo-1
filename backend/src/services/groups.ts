@@ -37,9 +37,9 @@ export async function getGroup(classId: string, assignmentNumber: number, groupN
 }
 
 export async function putGroup(
-    classId: string, 
-    assignmentNumber: number, 
-    groupNumber: number, 
+    classId: string,
+    assignmentNumber: number,
+    groupNumber: number,
     groupData: Partial<EntityDTO<Group>>
 ): Promise<GroupDTO> {
     const group = await fetchGroup(classId, assignmentNumber, groupNumber);
