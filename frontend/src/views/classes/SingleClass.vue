@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
-    import { computed, onMounted, ref, type ComputedRef } from "vue";
+    import { onMounted, ref } from "vue";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import type { TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
@@ -42,12 +42,12 @@
         // Fetch all students of the class
         const studentsResponse: StudentsResponse = await classController.getStudents(classId);
         if (studentsResponse && studentsResponse.students) students.value = studentsResponse.students as StudentDTO[];
-
     });
 
     // TODO: Boolean that handles visibility for dialogs
-    // Creating a class will generate a popup with the generated code
+    // popup to verify removing student
     const dialog = ref(false);
+    const selectedStudent = ref<StudentDTO | null>(null);
 
     // TODO: waiting on frontend controllers
     const invitations = ref<TeacherInvitationDTO[]>([]);
@@ -64,9 +64,14 @@
         console.log("request denied");
     }
 
+    function showPopup(s: StudentDTO): void {
+        selectedStudent.value = s;
+        dialog.value = true;
+    }
+
     // remove student from class
-    function removeStudentFromclass(s: StudentDTO): void {
-        //TODO
+    function removeStudentFromclass(): void {
+        
     }
 </script>
 <template>
@@ -112,7 +117,7 @@
                                         {{ s.firstName + " " + s.lastName }}
                                     </td>
                                     <td>
-                                        <v-btn @click="removeStudentFromclass(s)"> remove </v-btn>
+                                        <v-btn @click="showPopup"> {{ t("remove") }} </v-btn>
                                     </td>
                                 </tr>
                             </tbody>
@@ -120,48 +125,30 @@
                     </v-col>
                 </v-row>
             </v-container>
-
-            <h1 class="title">
-                {{ t("invitations") }}
-            </h1>
-            <v-table class="table">
-                <thead>
-                    <tr>
-                        <th class="header">{{ t("class") }}</th>
-                        <th class="header">{{ t("sender") }}</th>
-                        <th class="header"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        v-for="i in invitations"
-                        :key="(i.class as ClassDTO).id"
-                    >
-                        <td>
-                            {{ (i.class as ClassDTO).displayName }}
-                        </td>
-                        <td>{{ (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName }}</td>
-                        <td class="text-right">
-                            <div>
-                                <v-btn
-                                    color="green"
-                                    @click="acceptRequest"
-                                    class="mr-2"
-                                >
-                                    {{ t("accept") }}
-                                </v-btn>
-                                <v-btn
-                                    color="red"
-                                    @click="denyRequest"
-                                >
-                                    {{ t("deny") }}
-                                </v-btn>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </v-table>
         </div>
+        <v-dialog
+            v-model="dialog"
+            max-width="400px"
+        >
+            <v-card>
+                <v-card-title class="headline">{{ t("areusure") }}</v-card-title>
+
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        text
+                        @click="dialog = false"
+                    >
+                        {{ t("cancel") }}
+                    </v-btn>
+                    <v-btn
+                        text
+                        @click="removeStudentFromclass"
+                        >{{ t("yes") }}</v-btn
+                    >
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </main>
 </template>
 <style scoped>
