@@ -3,7 +3,15 @@ import { createSubmissionHandler, deleteSubmissionHandler, getAllSubmissionsHand
 const router = express.Router({ mergeParams: true });
 
 // Root endpoint used to search objects
+<<<<<<< HEAD
 router.get('/', getAllSubmissionsHandler);
+=======
+router.get('/', (_req, res) => {
+    res.json({
+        submissions: ['0', '1'],
+    });
+});
+>>>>>>> 6c3dbc99bb1afb79fa867505e52656c49bada1b6
 
 router.post('/:id', createSubmissionHandler);
 

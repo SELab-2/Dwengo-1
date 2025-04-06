@@ -55,4 +55,4 @@ const doc = {
 const outputFile = './swagger.json';
 const routes = ['../../backend/src/app.ts'];
 
-swaggerAutogen({ openapi: '3.1.0' })(outputFile, routes, doc);
+await swaggerAutogen({ openapi: '3.1.0' })(outputFile, routes, doc);

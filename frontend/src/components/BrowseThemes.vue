@@ -1,9 +1,10 @@
 <script setup lang="ts">
     import ThemeCard from "@/components/ThemeCard.vue";
-    import { ref, watchEffect, computed } from "vue";
+    import { ref, watchEffect, computed, type Ref } from "vue";
     import { useI18n } from "vue-i18n";
     import { AGE_TO_THEMES, THEMESITEMS } from "@/utils/constants.ts";
     import { useThemeQuery } from "@/queries/themes.ts";
+    import type { Theme } from "@/data-objects/theme.ts";
 
     const props = defineProps({
         selectedTheme: { type: String, required: true },
@@ -15,11 +16,11 @@
 
     const { data: allThemes, isLoading, error } = useThemeQuery(language);
 
-    const allCards = ref([]);
-    const cards = ref([]);
+    const allCards: Ref<Theme[]> = ref([]);
+    const cards: Ref<Theme[]> = ref([]);
 
     watchEffect(() => {
-        const themes = allThemes.value ?? [];
+        const themes: Theme[] = allThemes.value ?? [];
         allCards.value = themes;
 
         if (props.selectedTheme) {

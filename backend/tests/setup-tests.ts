@@ -14,7 +14,7 @@ import { makeTestQuestions } from './test_assets/questions/questions.testdata.js
 import { makeTestAnswers } from './test_assets/questions/answers.testdata.js';
 import { makeTestSubmissions } from './test_assets/assignments/submission.testdata.js';
 
-export async function setupTestApp() {
+export async function setupTestApp(): Promise<void> {
     dotenv.config({ path: '.env.test' });
     await initORM(true);
 

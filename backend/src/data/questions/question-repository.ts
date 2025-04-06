@@ -6,7 +6,7 @@ import { LearningObject } from '../../entities/content/learning-object.entity.js
 import { Assignment } from '../../entities/assignments/assignment.entity.js';
 
 export class QuestionRepository extends DwengoEntityRepository<Question> {
-    public createQuestion(question: { loId: LearningObjectIdentifier; author: Student; content: string }): Promise<Question> {
+    public async createQuestion(question: { loId: LearningObjectIdentifier; author: Student; content: string }): Promise<Question> {
         const questionEntity = this.create({
             learningObjectHruid: question.loId.hruid,
             learningObjectLanguage: question.loId.language,
@@ -22,7 +22,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         questionEntity.content = question.content;
         return this.insert(questionEntity);
     }
-    public findAllQuestionsAboutLearningObject(loId: LearningObjectIdentifier): Promise<Question[]> {
+    public async findAllQuestionsAboutLearningObject(loId: LearningObjectIdentifier): Promise<Question[]> {
         return this.findAll({
             where: {
                 learningObjectHruid: loId.hruid,
@@ -34,7 +34,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
             },
         });
     }
-    public removeQuestionByLearningObjectAndSequenceNumber(loId: LearningObjectIdentifier, sequenceNumber: number): Promise<void> {
+    public async removeQuestionByLearningObjectAndSequenceNumber(loId: LearningObjectIdentifier, sequenceNumber: number): Promise<void> {
         return this.deleteWhere({
             learningObjectHruid: loId.hruid,
             learningObjectLanguage: loId.language,
@@ -56,11 +56,18 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         });
     }
 
+<<<<<<< HEAD
     public findAllByAssignment(assignment: Assignment): Promise<Question[]> {
         return this.find({
             author: assignment.groups.flatMap(group => group.members),
             learningObjectHruid: assignment.learningPathHruid,
             learningObjectLanguage: assignment.learningPathLanguage,
+=======
+    public async findAllByAuthor(author: Student): Promise<Question[]> {
+        return this.findAll({
+            where: { author },
+            orderBy: { timestamp: 'DESC' }, // New to old
+>>>>>>> 6c3dbc99bb1afb79fa867505e52656c49bada1b6
         });
     }
 }

@@ -1,12 +1,18 @@
 import { LearningPathProvider } from './learning-path-provider.js';
-import { FilteredLearningObject, LearningObjectNode, LearningPath, LearningPathResponse, Transition } from '../../interfaces/learning-content.js';
 import { LearningPath as LearningPathEntity } from '../../entities/content/learning-path.entity.js';
 import { getLearningPathRepository } from '../../data/repositories.js';
-import { Language } from '../../entities/content/language.js';
 import learningObjectService from '../learning-objects/learning-object-service.js';
 import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
 import { getLastSubmissionForCustomizationTarget, isTransitionPossible, PersonalizationTarget } from './learning-path-personalization-util.js';
+import {
+    FilteredLearningObject,
+    LearningObjectNode,
+    LearningPath,
+    LearningPathResponse,
+    Transition,
+} from '@dwengo-1/common/interfaces/learning-content';
+import { Language } from '@dwengo-1/common/util/language';
 
 /**
  * Fetches the corresponding learning object for each of the nodes and creates a map that maps each node to its
@@ -18,14 +24,14 @@ async function getLearningObjectsForNodes(nodes: LearningPathNode[]): Promise<Ma
     // Its corresponding learning object.
     const nullableNodesToLearningObjects = new Map<LearningPathNode, FilteredLearningObject | null>(
         await Promise.all(
-            nodes.map((node) =>
+            nodes.map(async (node) =>
                 learningObjectService
                     .getLearningObjectById({
                         hruid: node.learningObjectHruid,
                         version: node.version,
                         language: node.language,
                     })
-                    .then((learningObject) => <[LearningPathNode, FilteredLearningObject | null]>[node, learningObject])
+                    .then((learningObject) => [node, learningObject] as [LearningPathNode, FilteredLearningObject | null])
             )
         )
     );
@@ -117,7 +123,7 @@ async function convertNodes(
     nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>,
     personalizedFor?: PersonalizationTarget
 ): Promise<LearningObjectNode[]> {
-    const nodesPromise = Array.from(nodesToLearningObjects.entries()).map((entry) =>
+    const nodesPromise = Array.from(nodesToLearningObjects.entries()).map(async (entry) =>
         convertNode(entry[0], entry[1], personalizedFor, nodesToLearningObjects)
     );
     return await Promise.all(nodesPromise);
@@ -152,7 +158,7 @@ function convertTransition(
         throw new Error(`Learning object ${transition.next.learningObjectHruid}/${transition.next.language}/${transition.next.version} not found!`);
     } else {
         return {
-            _id: '' + index, // Retained for backwards compatibility. The index uniquely identifies the transition within the learning path.
+            _id: String(index), // Retained for backwards compatibility. The index uniquely identifies the transition within the learning path.
             default: false, // We don't work with default transitions but retain this for backwards compatibility.
             next: {
                 _id: nextNode._id + index, // Construct a unique ID for the transition for backwards compatibility.
@@ -179,11 +185,11 @@ const databaseLearningPathProvider: LearningPathProvider = {
     ): Promise<LearningPathResponse> {
         const learningPathRepo = getLearningPathRepository();
 
-        const learningPaths = (await Promise.all(hruids.map((hruid) => learningPathRepo.findByHruidAndLanguage(hruid, language)))).filter(
+        const learningPaths = (await Promise.all(hruids.map(async (hruid) => learningPathRepo.findByHruidAndLanguage(hruid, language)))).filter(
             (learningPath) => learningPath !== null
         );
         const filteredLearningPaths = await Promise.all(
-            learningPaths.map((learningPath, index) => convertLearningPath(learningPath, index, personalizedFor))
+            learningPaths.map(async (learningPath, index) => convertLearningPath(learningPath, index, personalizedFor))
         );
 
         return {
@@ -200,7 +206,7 @@ const databaseLearningPathProvider: LearningPathProvider = {
         const learningPathRepo = getLearningPathRepository();
 
         const searchResults = await learningPathRepo.findByQueryStringAndLanguage(query, language);
-        return await Promise.all(searchResults.map((result, index) => convertLearningPath(result, index, personalizedFor)));
+        return await Promise.all(searchResults.map(async (result, index) => convertLearningPath(result, index, personalizedFor)));
     },
 };
 

@@ -1,8 +1,8 @@
 import { Student } from '../users/student.entity.js';
 import { Group } from './group.entity.js';
 import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
-import { Language } from '../content/language.js';
 import { SubmissionRepository } from '../../data/assignments/submission-repository.js';
+import { Language } from '@dwengo-1/common/util/language';
 
 @Entity({ repository: () => SubmissionRepository })
 export class Submission {
@@ -16,7 +16,7 @@ export class Submission {
     learningObjectLanguage!: Language;
 
     @PrimaryKey({ type: 'numeric' })
-    learningObjectVersion: number = 1;
+    learningObjectVersion = 1;
 
     @PrimaryKey({ type: 'integer', autoincrement: true })
     submissionNumber?: number;

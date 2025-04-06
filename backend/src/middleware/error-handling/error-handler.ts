@@ -4,7 +4,7 @@ import { ExceptionWithHttpState } from '../../exceptions/exception-with-http-sta
 
 const logger: Logger = getLogger();
 
-export function errorHandler(err: unknown, req: Request, res: Response, _: NextFunction): void {
+export function errorHandler(err: unknown, _req: Request, res: Response, _: NextFunction): void {
     if (err instanceof ExceptionWithHttpState) {
         logger.warn(`An error occurred while handling a request: ${err} (-> HTTP ${err.status})`);
         res.status(err.status).json(err);

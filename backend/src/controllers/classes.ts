@@ -1,45 +1,38 @@
 import { Request, Response } from 'express';
-import { createClass, deleteClass, getAllClasses, getClass, getClassStudents, getClassTeacherInvitations } from '../services/classes.js';
-import { ClassDTO } from '../interfaces/class.js';
-import { NotFoundException } from '../exceptions/not-found-exception.js';
+import {
+    createClass,
+    deleteClass,
+    getAllClasses,
+    getClass,
+    getClassStudents,
+    getClassTeacherInvitations,
+    getClassTeachers
+} from '../services/classes.js';
+import { ClassDTO } from '@dwengo-1/common/interfaces/class';
+import {requireFields} from "./error-helper";
 
 export async function getAllClassesHandler(req: Request, res: Response): Promise<void> {
     const full = req.query.full === 'true';
     const classes = await getAllClasses(full);
 
-    res.json({
-        classes: classes,
-    });
+    res.json({ classes });
 }
 
 export async function createClassHandler(req: Request, res: Response): Promise<void> {
+    const displayName = req.body.displayName;
+    requireFields({ displayName });
+
     const classData = req.body as ClassDTO;
-
-    if (!classData.displayName) {
-        res.status(400).json({
-            error: 'Missing one or more required fields: displayName',
-        });
-        return;
-    }
-
     const cls = await createClass(classData);
 
-    if (!cls) {
-        res.status(500).json({ error: 'Something went wrong while creating class' });
-        return;
-    }
-
-    res.status(201).json({ cls });
+    res.json({ cls });
 }
 
 export async function getClassHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.id;
-    const cls = await getClass(classId);
+    requireFields({ classId });
 
-    if (!cls) {
-        res.status(404).json({ error: 'Class not found' });
-        return;
-    }
+    const cls = await getClass(classId);
 
     res.json({ cls });
 }
@@ -54,21 +47,29 @@ export async function deleteClassHandler(req: Request, res: Response): Promise<v
 export async function getClassStudentsHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.id;
     const full = req.query.full === 'true';
+    requireFields({ classId });
 
-    const students = getClassStudents(classId, full);
+    const students = await getClassStudents(classId, full);
 
-    res.json({
-        students: students,
-    });
+    res.json({ students });
+}
+
+export async function getClassTeachersHandler(req: Request, res: Response): Promise<void> {
+    const classId = req.params.id;
+    const full = req.query.full === 'true';
+    requireFields({ classId });
+
+    const teachers = await getClassTeachers(classId, full);
+
+    res.json({ teachers });
 }
 
 export async function getTeacherInvitationsHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.id;
     const full = req.query.full === 'true';
+    requireFields({ classId });
 
     const invitations = await getClassTeacherInvitations(classId, full);
 
-    res.json({
-        invitations: invitations,
-    });
+    res.json({ invitations });
 }

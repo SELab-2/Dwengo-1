@@ -1,6 +1,6 @@
 import { LoggerOptions, Options } from '@mikro-orm/core';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { EnvVars, getEnvVar, getNumericEnvVar } from './util/envvars.js';
+import { envVars, getEnvVar, getNumericEnvVar } from './util/envVars.js';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { MikroOrmLogger } from './logging/mikroOrmLogger.js';
 
@@ -42,11 +42,11 @@ const entities = [
     Question,
 ];
 
-function config(testingMode: boolean = false): Options {
+function config(testingMode = false): Options {
     if (testingMode) {
         return {
             driver: SqliteDriver,
-            dbName: getEnvVar(EnvVars.DbName),
+            dbName: getEnvVar(envVars.DbName),
             subscribers: [new SqliteAutoincrementSubscriber()],
             entities: entities,
             persistOnCreate: false, // Do not implicitly save entities when they are created via `create`.
@@ -54,23 +54,23 @@ function config(testingMode: boolean = false): Options {
 
             // Workaround: vitest: `TypeError: Unknown file extension ".ts"` (ERR_UNKNOWN_FILE_EXTENSION)
             // (see https://mikro-orm.io/docs/guide/project-setup#testing-the-endpoint)
-            dynamicImportProvider: (id) => import(id),
+            dynamicImportProvider: async (id) => import(id),
         };
     }
 
     return {
         driver: PostgreSqlDriver,
-        host: getEnvVar(EnvVars.DbHost),
-        port: getNumericEnvVar(EnvVars.DbPort),
-        dbName: getEnvVar(EnvVars.DbName),
-        user: getEnvVar(EnvVars.DbUsername),
-        password: getEnvVar(EnvVars.DbPassword),
+        host: getEnvVar(envVars.DbHost),
+        port: getNumericEnvVar(envVars.DbPort),
+        dbName: getEnvVar(envVars.DbName),
+        user: getEnvVar(envVars.DbUsername),
+        password: getEnvVar(envVars.DbPassword),
         entities: entities,
         persistOnCreate: false, // Do not implicitly save entities when they are created via `create`.
         // EntitiesTs: entitiesTs,
 
         // Logging
-        debug: getEnvVar(EnvVars.LogLevel) === 'debug',
+        debug: getEnvVar(envVars.LogLevel) === 'debug',
         loggerFactory: (options: LoggerOptions) => new MikroOrmLogger(options),
     };
 }
