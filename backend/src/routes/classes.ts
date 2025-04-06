@@ -1,6 +1,7 @@
 import express from 'express';
 import {
     createClassHandler,
+    deleteClassHandler,
     getAllClassesHandler,
     getClassHandler,
     getClassStudentsHandler, getClassTeachersHandler,
