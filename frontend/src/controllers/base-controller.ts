@@ -10,7 +10,7 @@ export abstract class BaseController {
     }
 
     private static assertSuccessResponse(response: AxiosResponse<unknown, unknown>): void {
-        if (response.status / 100 !== 2) {
+        if (response.status < 200 || response.status >= 300) {
             throw new HttpErrorResponseException(response);
         }
     }
