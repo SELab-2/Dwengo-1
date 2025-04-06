@@ -9,6 +9,9 @@ import { fetchClass } from './classes.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
 import { getLogger } from '../logging/initalize.js';
+import { EntityData, EntityDTO, FromEntityType } from '@mikro-orm/core';
+import { DwengoEntityRepository } from '../data/dwengo-entity-repository.js';
+import { putObject } from './service-helper.js';
 
 export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
     const classRepository = getClassRepository();
@@ -55,6 +58,14 @@ export async function createAssignment(classid: string, assignmentData: Assignme
 
 export async function getAssignment(classid: string, id: number): Promise<AssignmentDTO> {
     const assignment = await fetchAssignment(classid, id);
+    return mapToAssignmentDTO(assignment);
+}
+
+export async function putAssignment(classid: string, id: number, assignmentData: Partial<EntityDTO<Assignment>>): Promise<AssignmentDTO> {
+    const assignment = await fetchAssignment(classid, id);
+    
+    await putObject<Assignment, AssignmentDTO>(assignment, assignmentData, getAssignmentRepository());
+
     return mapToAssignmentDTO(assignment);
 }
 

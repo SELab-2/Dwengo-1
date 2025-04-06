@@ -43,6 +43,20 @@ export async function getAssignmentHandler(req: Request, res: Response): Promise
     res.json({ assignment });
 }
 
+export async function putAssignmentHandler(req: Request, res: Response): Promise<void> {
+    const id = Number(req.params.id);
+    const classid = req.params.classid;
+    requireFields({ id, classid });
+
+    if (isNaN(id)) {
+        throw new BadRequestException("Assignment id should be a number")
+    }
+
+    const assignment = await putAssignment(classid, id);
+
+    res.json({ assignment });
+}
+
 export async function deleteAssignmentHandler(req: Request, res: Response): Promise<void> {
     const id = Number(req.params.id);
     const classid = req.params.classid;
