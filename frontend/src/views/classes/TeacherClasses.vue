@@ -85,7 +85,7 @@
                     joinRequests: [],
                 };
                 const classResponse: ClassResponse = await classController.createClass(classDto);
-                const createdClass: ClassDTO = classResponse.cls;
+                const createdClass: ClassDTO = classResponse.class;
                 code.value = createdClass.id;
                 dialog.value = true;
                 showSnackbar(t("created"), "success");

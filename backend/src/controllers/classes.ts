@@ -28,7 +28,7 @@ export async function createClassHandler(req: Request, res: Response): Promise<v
         return;
     }
 
-    res.status(201).json({ cls });
+    res.status(201).json({ class: cls });
 }
 
 export async function getClassHandler(req: Request, res: Response): Promise<void> {
@@ -40,7 +40,7 @@ export async function getClassHandler(req: Request, res: Response): Promise<void
         return;
     }
 
-    res.json(cls);
+    res.json({ class: cls });
 }
 
 export async function getClassStudentsHandler(req: Request, res: Response): Promise<void> {
