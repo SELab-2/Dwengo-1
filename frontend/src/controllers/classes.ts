@@ -9,7 +9,7 @@ export interface ClassesResponse {
 }
 
 export interface ClassResponse {
-    class: ClassDTO;
+    cls: ClassDTO;
 }
 
 export interface TeacherInvitationsResponse {
