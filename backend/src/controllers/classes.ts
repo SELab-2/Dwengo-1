@@ -25,7 +25,7 @@ export async function createClassHandler(req: Request, res: Response): Promise<v
     const classData = req.body as ClassDTO;
     const cls = await createClass(classData);
 
-    res.json({ cls });
+    res.json({ class: cls });
 }
 
 export async function getClassHandler(req: Request, res: Response): Promise<void> {
@@ -34,14 +34,14 @@ export async function getClassHandler(req: Request, res: Response): Promise<void
 
     const cls = await getClass(classId);
 
-    res.json({ cls });
+    res.json({ class: cls });
 }
 
 export async function deleteClassHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.id;
     const cls = await deleteClass(classId);
 
-    res.json({ cls });
+    res.json({ class: cls });
 }
 
 export async function getClassStudentsHandler(req: Request, res: Response): Promise<void> {
