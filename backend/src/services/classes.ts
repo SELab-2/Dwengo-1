@@ -8,10 +8,10 @@ import { Class } from '../entities/classes/class.entity.js';
 import { ClassDTO } from '@dwengo-1/common/interfaces/class';
 import { TeacherInvitationDTO } from '@dwengo-1/common/interfaces/teacher-invitation';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
-import {fetchTeacher} from "./teachers";
-import {fetchStudent, getStudent} from "./students";
-import {TeacherDTO} from "@dwengo-1/common/interfaces/teacher";
-import {mapToTeacherDTO} from "../interfaces/teacher";
+import { fetchTeacher } from './teachers';
+import { fetchStudent, getStudent } from './students';
+import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
+import { mapToTeacherDTO } from '../interfaces/teacher';
 import { EntityDTO } from '@mikro-orm/core';
 import { putObject } from './service-helper.js';
 
@@ -20,7 +20,7 @@ export async function fetchClass(classid: string): Promise<Class> {
     const cls = await classRepository.findById(classid);
 
     if (!cls) {
-        throw new NotFoundException("Class not found");
+        throw new NotFoundException('Class not found');
     }
 
     return cls;
@@ -43,10 +43,10 @@ export async function getClass(classId: string): Promise<ClassDTO> {
 
 export async function createClass(classData: ClassDTO): Promise<ClassDTO> {
     const teacherUsernames = classData.teachers || [];
-    const teachers = (await Promise.all(teacherUsernames.map(async (id) => fetchTeacher(id) )));
+    const teachers = await Promise.all(teacherUsernames.map(async (id) => fetchTeacher(id)));
 
     const studentUsernames = classData.students || [];
-    const students = (await Promise.all(studentUsernames.map(async (id) => fetchStudent(id) )));
+    const students = await Promise.all(studentUsernames.map(async (id) => fetchStudent(id)));
 
     const classRepository = getClassRepository();
     const newClass = classRepository.create({
@@ -54,7 +54,7 @@ export async function createClass(classData: ClassDTO): Promise<ClassDTO> {
         teachers: teachers,
         students: students,
     });
-    await classRepository.save(newClass, {preventOverwrite: true});
+    await classRepository.save(newClass, { preventOverwrite: true });
 
     return mapToClassDTO(newClass);
 }
@@ -93,7 +93,7 @@ export async function getClassStudentsDTO(classId: string): Promise<StudentDTO[]
 export async function getClassTeachers(classId: string, full: boolean): Promise<TeacherDTO[] | string[]> {
     const cls = await fetchClass(classId);
 
-    if (full){
+    if (full) {
         return cls.teachers.map(mapToTeacherDTO);
     }
     return cls.teachers.map((student) => student.username);
@@ -114,7 +114,7 @@ export async function getClassTeacherInvitations(classId: string, full: boolean)
 
 export async function deleteClassStudent(classId: string, username: string): Promise<ClassDTO> {
     const cls = await fetchClass(classId);
-    
+
     const newStudents = { students: cls.students.filter((student) => student.username !== username) };
     await putObject<Class, ClassDTO>(cls, newStudents, getClassRepository());
 
@@ -123,7 +123,7 @@ export async function deleteClassStudent(classId: string, username: string): Pro
 
 export async function deleteClassTeacher(classId: string, username: string): Promise<ClassDTO> {
     const cls = await fetchClass(classId);
-    
+
     const newTeachers = { teachers: cls.teachers.filter((teacher) => teacher.username !== username) };
     await putObject<Class, ClassDTO>(cls, newTeachers, getClassRepository());
 
@@ -134,9 +134,9 @@ export async function addClassStudent(classId: string, username: string): Promis
     const cls = await fetchClass(classId);
     const newStudent = await fetchStudent(username);
 
-    const newStudents = { students: [...cls.students, newStudent] }
+    const newStudents = { students: [...cls.students, newStudent] };
     await putObject<Class, ClassDTO>(cls, newStudents, getClassRepository());
-    
+
     return mapToClassDTO(cls);
 }
 
@@ -145,7 +145,7 @@ export async function addClassTeacher(classId: string, username: string): Promis
     const newTeacher = await fetchTeacher(username);
 
     const newTeachers = { teachers: [...cls.teachers, newTeacher] };
-    await putObject<Class, ClassDTO>(cls, newTeachers, getClassRepository());    
+    await putObject<Class, ClassDTO>(cls, newTeachers, getClassRepository());
 
     return mapToClassDTO(cls);
 }

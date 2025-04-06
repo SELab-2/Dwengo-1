@@ -58,12 +58,12 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
 
     public async findAllByAssignment(assignment: Assignment): Promise<Question[]> {
         return this.find({
-            author: assignment.groups.flatMap(group => group.members),
+            author: assignment.groups.flatMap((group) => group.members),
             learningObjectHruid: assignment.learningPathHruid,
             learningObjectLanguage: assignment.learningPathLanguage,
         });
     }
-    
+
     public async findAllByAuthor(author: Student): Promise<Question[]> {
         return this.findAll({
             where: { author },

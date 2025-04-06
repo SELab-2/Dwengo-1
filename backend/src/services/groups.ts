@@ -27,7 +27,7 @@ export async function fetchGroup(classId: string, assignmentNumber: number, grou
         throw new NotFoundException('Could not find group');
     }
 
-    return group; 
+    return group;
 }
 
 export async function getGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<GroupDTO> {
@@ -38,7 +38,7 @@ export async function getGroup(classId: string, assignmentNumber: number, groupN
 export async function deleteGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<GroupDTO> {
     const group = await fetchGroup(classId, assignmentNumber, groupNumber);
     const assignment = await fetchAssignment(classId, assignmentNumber);
-    
+
     const groupRepository = getGroupRepository();
     await groupRepository.deleteByAssignmentAndGroupNumber(assignment, groupNumber);
 
@@ -46,8 +46,8 @@ export async function deleteGroup(classId: string, assignmentNumber: number, gro
 }
 
 export async function getExistingGroupFromGroupDTO(groupData: GroupDTO) {
-    const classId = typeof(groupData.class) === 'string' ? groupData.class : groupData.class.id;
-    const assignmentNumber = typeof(groupData.assignment) === 'number' ? groupData.assignment : groupData.assignment.id;
+    const classId = typeof groupData.class === 'string' ? groupData.class : groupData.class.id;
+    const assignmentNumber = typeof groupData.assignment === 'number' ? groupData.assignment : groupData.assignment.id;
     const groupNumber = groupData.groupNumber;
 
     return await fetchGroup(classId, assignmentNumber, groupNumber);
