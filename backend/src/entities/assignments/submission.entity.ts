@@ -25,7 +25,7 @@ export class Submission {
         entity: () => Group,
         primary: true
     })
-    onBehalfOf: Group;
+    onBehalfOf!: Group;
 
     @ManyToOne({
         entity: () => Student,

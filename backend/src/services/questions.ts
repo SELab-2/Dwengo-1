@@ -1,4 +1,9 @@
-import { getAnswerRepository, getQuestionRepository } from '../data/repositories.js';
+import {
+    getAnswerRepository,
+    getClassRepository,
+    getGroupRepository,
+    getQuestionRepository
+} from '../data/repositories.js';
 import { mapToQuestionDTO, mapToQuestionDTOId } from '../interfaces/question.js';
 import { Question } from '../entities/questions/question.entity.js';
 import { Answer } from '../entities/questions/answer.entity.js';
@@ -8,6 +13,8 @@ import { LearningObjectIdentifier } from '../entities/content/learning-object-id
 import { mapToStudent } from '../interfaces/student.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { AnswerDTO, AnswerId } from '@dwengo-1/common/interfaces/answer';
+import {AssignmentDTO} from "@dwengo-1/common/interfaces/assignment";
+import {mapToAssignment} from "../interfaces/assignment";
 
 export async function getAllQuestions(id: LearningObjectIdentifier, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
     const questionRepository: QuestionRepository = getQuestionRepository();
@@ -76,11 +83,15 @@ export async function createQuestion(questionDTO: QuestionDTO): Promise<Question
         version: questionDTO.learningObjectIdentifier.version ?? 1,
     };
 
+    const clazz = await getClassRepository().findById((questionDTO.inGroup.assignment as AssignmentDTO).class)
+    const assignment = mapToAssignment(questionDTO.inGroup.assignment as AssignmentDTO, clazz!);
+    const inGroup = await getGroupRepository().findByAssignmentAndGroupNumber(assignment, questionDTO.inGroup.groupNumber);
+
     try {
         await questionRepository.createQuestion({
             loId,
             author,
-            inGroup: questionDTO.inGroup,
+            inGroup: inGroup!,
             content: questionDTO.content,
         });
     } catch (_) {
