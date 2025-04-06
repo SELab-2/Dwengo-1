@@ -2,14 +2,12 @@
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
     import { onMounted, ref } from "vue";
-    import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import type { TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
-    import { useTeacherClassesQuery } from "@/queries/teachers";
     import { useRoute } from "vue-router";
     import { ClassController, type ClassResponse } from "@/controllers/classes";
     import type { StudentsResponse } from "@/controllers/students";
-    import { type StudentDTO } from "@dwengo-1/common/interfaces/student";
+    import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
 
     const { t } = useI18n();
 
@@ -17,7 +15,7 @@
     const username = ref<string | undefined>(undefined);
     const classController: ClassController = new ClassController();
 
-    // find class id from route
+    // Find class id from route
     const route = useRoute();
     const classId: string = route.params.id as string;
 
@@ -31,9 +29,8 @@
         const userObject = await authState.loadUser();
         username.value = userObject?.profile?.preferred_username ?? undefined;
 
-        // get class of which information should be shown
+        // Get class of which information should be shown
         const classResponse: ClassResponse = await classController.getById(classId);
-        console.log(classResponse);
         if (classResponse && classResponse.class) {
             currentClass.value = classResponse.class;
             isLoading.value = false;
@@ -45,7 +42,7 @@
     });
 
     // TODO: Boolean that handles visibility for dialogs
-    // popup to verify removing student
+    // Popup to verify removing student
     const dialog = ref(false);
     const selectedStudent = ref<StudentDTO | null>(null);
 
@@ -69,9 +66,9 @@
         dialog.value = true;
     }
 
-    // remove student from class
+    // Remove student from class
     function removeStudentFromclass(): void {
-        
+        console.log("student removed");
     }
 </script>
 <template>

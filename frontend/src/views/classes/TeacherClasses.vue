@@ -90,14 +90,14 @@
                 dialog.value = true;
                 showSnackbar(t("created"), "success");
 
-                // reload the table with classes
+                // Reload the table with classes
                 await refetch();
-            } catch (e: any) {
+            } catch (_) {
                 showSnackbar(t("wrong"), "error");
             }
         }
         if (!className.value || className.value === "") {
-            alert("classname should not be empty");
+            showSnackbar(t("name is mandatory"), "error");
         }
     }
 
