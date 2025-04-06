@@ -50,6 +50,12 @@
                 </v-btn>
             </div>
             <v-card-title class="text-h4">{{ assignment.title }}</v-card-title>
+            <v-container class="assignment-class">
+                {{ t('class') }}:
+                <span class="class-name">
+                    {{ assignment.class }}
+                  </span>
+            </v-container>
             <v-card-subtitle>
                 <v-btn
                     :to="`/learningPath/${assignment.learningPathHruid}`"
@@ -77,8 +83,7 @@
 }
 
 .assignment-card {
-    width: 90%;
-    max-width: 900px;
+    width: 85%;
     padding: 2%;
     border-radius: 12px;
 }
@@ -93,6 +98,15 @@
     position: absolute;
     right: 1%;
     color: red;
+}
+
+.assignment-class {
+    color: #666;
+}
+
+.class-name {
+    font-weight: 500;
+    color: #333;
 }
 
 </style>

@@ -52,5 +52,6 @@
     "title": "Title",
     "pick-class": "Pick a class",
     "choose-students": "Select students",
-    "create-group": "Create group"
+    "create-group": "Create group",
+    "class": "class"
 }

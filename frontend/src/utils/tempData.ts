@@ -65,6 +65,7 @@ export const assignments: Assignment[] = Array.from({length: 4}, (_, i) => ({
     id: `assignment${i}`,
     title: `Assignment ${i}`,
     learningPathHruid: 'lphruid',
+    class: `class 0${i+1}`,
     description:
         "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. " +
         "Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, " +
