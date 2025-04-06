@@ -34,13 +34,6 @@
         if (classesResponse.value.classes.length === 0) {
             return [];
         }
-        if (typeof classesResponse.value.classes[0] === "string") {
-            // Should not occur because value of *full* is true
-            // Must be caught because typescript can't know the type
-            // I chose to return an empty list if this occurs
-            // It is also possible to fetch all classes from the id's returned
-            return [];
-        }
         return classesResponse.value.classes as ClassDTO[];
     });
 
