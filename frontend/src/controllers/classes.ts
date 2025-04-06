@@ -3,6 +3,7 @@ import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
 import type { StudentsResponse } from "./students";
 import type { AssignmentsResponse } from "./assignments";
 import type { TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
+import type {TeachersResponse} from "@/controllers/teachers.ts";
 
 export interface ClassesResponse {
     classes: ClassDTO[] | string[];
@@ -43,6 +44,10 @@ export class ClassController extends BaseController {
 
     async getStudents(id: string, full = true): Promise<StudentsResponse> {
         return this.get<StudentsResponse>(`/${id}/students`, { full });
+    }
+
+    async getTeachers(id: string, full = true): Promise<TeachersResponse> {
+        return this.get<TeachersResponse>(`/${id}/teachers`, { full });
     }
 
     // TODO
