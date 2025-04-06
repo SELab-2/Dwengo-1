@@ -17,31 +17,31 @@ export class AssignmentController extends BaseController {
         super(`class/${classid}/assignments`);
     }
 
-    async getAll(full = true) {
+    async getAll(full = true): Promise<AssignmentsResponse> {
         return this.get<AssignmentsResponse>(`/`, { full });
     }
 
-    async getByNumber(num: number) {
+    async getByNumber(num: number): Promise<AssignmentResponse> {
         return this.get<AssignmentResponse>(`/${num}`);
     }
 
-    async createAssignment(data: any) {
+    async createAssignment(data: AssignmentDTO): Promise<AssignmentResponse> {
         return this.post<AssignmentResponse>(`/`, data);
     }
 
-    async deleteAssignment(num: number) {
+    async deleteAssignment(num: number): Promise<AssignmentResponse> {
         return this.delete<AssignmentResponse>(`/${num}`);
     }
 
-    async getSubmissions(assignmentNumber: number, full = true) {
+    async getSubmissions(assignmentNumber: number, full = true): Promise<SubmissionsResponse> {
         return this.get<SubmissionsResponse>(`/${assignmentNumber}/submissions`, { full });
     }
 
-    async getQuestions(assignmentNumber: number, full = true) {
+    async getQuestions(assignmentNumber: number, full = true): Promise<QuestionsResponse> {
         return this.get<QuestionsResponse>(`/${assignmentNumber}/questions`, { full });
     }
 
-    async getGroups(assignmentNumber: number, full = true) {
+    async getGroups(assignmentNumber: number, full = true): Promise<GroupsResponse> {
         return this.get<GroupsResponse>(`/${assignmentNumber}/groups`, { full });
     }
 }

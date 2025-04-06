@@ -16,27 +16,27 @@ export class GroupController extends BaseController {
         super(`class/${classid}/assignments/${assignmentNumber}/groups`);
     }
 
-    async getAll(full = true) {
+    async getAll(full = true): Promise<GroupsResponse> {
         return this.get<GroupsResponse>(`/`, { full });
     }
 
-    async getByNumber(num: number) {
+    async getByNumber(num: number): Promise<GroupResponse> {
         return this.get<GroupResponse>(`/${num}`);
     }
 
-    async createGroup(data: any) {
+    async createGroup(data: GroupDTO): Promise<GroupResponse> {
         return this.post<GroupResponse>(`/`, data);
     }
 
-    async deleteGroup(num: number) {
+    async deleteGroup(num: number): Promise<GroupResponse> {
         return this.delete<GroupResponse>(`/${num}`);
     }
 
-    async getSubmissions(groupNumber: number, full = true) {
+    async getSubmissions(groupNumber: number, full = true): Promise<SubmissionsResponse> {
         return this.get<SubmissionsResponse>(`/${groupNumber}/submissions`, { full });
     }
 
-    async getQuestions(groupNumber: number, full = true) {
+    async getQuestions(groupNumber: number, full = true): Promise<QuestionsResponse> {
         return this.get<QuestionsResponse>(`/${groupNumber}/questions`, { full });
     }
 }
