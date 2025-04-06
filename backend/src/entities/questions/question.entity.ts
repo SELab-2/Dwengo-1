@@ -2,6 +2,7 @@ import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { Student } from '../users/student.entity.js';
 import { QuestionRepository } from '../../data/questions/question-repository.js';
 import { Language } from '@dwengo-1/common/util/language';
+import {Group} from "../assignments/group.entity";
 
 @Entity({ repository: () => QuestionRepository })
 export class Question {
@@ -21,7 +22,7 @@ export class Question {
     sequenceNumber?: number;
 
     @ManyToOne({ entity: () => Group, primary: true })
-    inGroup: Group;
+    inGroup!: Group;
 
     @ManyToOne({
         entity: () => Student,

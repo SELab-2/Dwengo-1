@@ -80,6 +80,7 @@ export async function createQuestion(questionDTO: QuestionDTO): Promise<Question
         await questionRepository.createQuestion({
             loId,
             author,
+            inGroup: questionDTO.inGroup,
             content: questionDTO.content,
         });
     } catch (_) {

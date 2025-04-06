@@ -3,15 +3,16 @@ import { Question } from '../../entities/questions/question.entity.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { Student } from '../../entities/users/student.entity.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
+import {Group} from "../../entities/assignments/group.entity";
 
 export class QuestionRepository extends DwengoEntityRepository<Question> {
-    public async createQuestion(question: { loId: LearningObjectIdentifier; author: Student; group: Group, content: string }): Promise<Question> {
+    public async createQuestion(question: { loId: LearningObjectIdentifier; author: Student; inGroup: Group, content: string }): Promise<Question> {
         const questionEntity = this.create({
             learningObjectHruid: question.loId.hruid,
             learningObjectLanguage: question.loId.language,
             learningObjectVersion: question.loId.version,
             author: question.author,
-            group: question.group,
+            inGroup: question.inGroup,
             content: question.content,
             timestamp: new Date(),
         });
@@ -19,7 +20,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         questionEntity.learningObjectLanguage = question.loId.language;
         questionEntity.learningObjectVersion = question.loId.version;
         questionEntity.author = question.author;
-        questionEntity.group = question.group;
+        questionEntity.inGroup = question.inGroup;
         questionEntity.content = question.content;
         return this.insert(questionEntity);
     }

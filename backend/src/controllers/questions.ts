@@ -88,7 +88,7 @@ export async function getQuestionAnswersHandler(req: Request, res: Response): Pr
 export async function createQuestionHandler(req: Request, res: Response): Promise<void> {
     const questionDTO = req.body as QuestionDTO;
 
-    if (!questionDTO.learningObjectIdentifier || !questionDTO.author || !questionDTO.content) {
+    if (!questionDTO.learningObjectIdentifier || !questionDTO.author || !questionDTO.inGroup || !questionDTO.content) {
         res.status(400).json({ error: 'Missing required fields: identifier and content' });
         return;
     }
