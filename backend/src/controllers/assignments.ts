@@ -22,8 +22,8 @@ export async function createAssignmentHandler(req: Request, res: Response): Prom
     const title = req.body.title;
 
     requireFields({ description, language, learningPath, title });
-    const assignmentData = req.body as AssignmentDTO;
 
+    const assignmentData = req.body as AssignmentDTO;
     const assignment = await createAssignment(classid, assignmentData);
 
     res.json({ assignment });
