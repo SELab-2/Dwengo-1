@@ -21,7 +21,8 @@ export class AnswerRepository extends DwengoEntityRepository<Answer> {
     }
     public async findAnswer(question: Question, sequenceNumber: number) {
         return this.findOne({
-            toQuestion: question, sequenceNumber
+            toQuestion: question,
+            sequenceNumber,
         });
     }
     public async removeAnswerByQuestionAndSequenceNumber(question: Question, sequenceNumber: number): Promise<void> {
@@ -30,7 +31,7 @@ export class AnswerRepository extends DwengoEntityRepository<Answer> {
             sequenceNumber: sequenceNumber,
         });
     }
-    public async updateContent(answer: Answer, newContent: string){
+    public async updateContent(answer: Answer, newContent: string) {
         answer.content = newContent;
         await this.save(answer);
         return answer;

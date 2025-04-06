@@ -1,10 +1,5 @@
 import express from 'express';
-import {
-    createQuestionHandler,
-    deleteQuestionHandler,
-    getAllQuestionsHandler,
-    getQuestionHandler,
-} from '../controllers/questions.js';
+import { createQuestionHandler, deleteQuestionHandler, getAllQuestionsHandler, getQuestionHandler } from '../controllers/questions.js';
 import answerRoutes from './answers.js';
 
 const router = express.Router({ mergeParams: true });

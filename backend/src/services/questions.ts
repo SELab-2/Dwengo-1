@@ -1,12 +1,12 @@
 import { getQuestionRepository } from '../data/repositories.js';
-import {mapToLearningObjectID, mapToQuestionDTO, mapToQuestionDTOId} from '../interfaces/question.js';
+import { mapToLearningObjectID, mapToQuestionDTO, mapToQuestionDTOId } from '../interfaces/question.js';
 import { Question } from '../entities/questions/question.entity.js';
 import { QuestionRepository } from '../data/questions/question-repository.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
-import {QuestionData, QuestionDTO, QuestionId} from '@dwengo-1/common/interfaces/question';
-import {NotFoundException} from "../exceptions/not-found-exception";
-import {FALLBACK_VERSION_NUM} from "../config";
-import {fetchStudent} from "./students";
+import { QuestionData, QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
+import { NotFoundException } from '../exceptions/not-found-exception';
+import { FALLBACK_VERSION_NUM } from '../config';
+import { fetchStudent } from './students';
 
 export async function getAllQuestions(id: LearningObjectIdentifier, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
     const questionRepository: QuestionRepository = getQuestionRepository();
@@ -26,7 +26,7 @@ export async function fetchQuestion(questionId: QuestionId): Promise<Question> {
         questionId.sequenceNumber
     );
 
-    if (!question){
+    if (!question) {
         throw new NotFoundException('Question with loID and sequence number not found');
     }
 
@@ -44,7 +44,9 @@ export async function createQuestion(loId: LearningObjectIdentifier, questionDat
     const content = questionData.content;
 
     const question = await questionRepository.createQuestion({
-        loId, author, content
+        loId,
+        author,
+        content,
     });
 
     return mapToQuestionDTO(question);
@@ -70,5 +72,3 @@ export async function updateQuestion(questionId: QuestionId, questionData: Quest
     const newQuestion = await questionRepository.updateContent(question, questionData.content);
     return mapToQuestionDTO(newQuestion);
 }
-
-
