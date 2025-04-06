@@ -67,6 +67,11 @@ export async function getClassStudents(classId: string, full: boolean): Promise<
     return cls.students.map((student) => student.username);
 }
 
+export async function getClassStudentsDTO(classId: string): Promise<StudentDTO[]> {
+    const cls = await fetchClass(classId);
+    return cls.students.map(mapToStudentDTO);
+}
+
 export async function getClassTeachers(classId: string, full: boolean): Promise<TeacherDTO[] | string[]> {
     const cls = await fetchClass(classId);
 

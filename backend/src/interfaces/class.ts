@@ -10,7 +10,6 @@ export function mapToClassDTO(cls: Class): ClassDTO {
         displayName: cls.displayName,
         teachers: cls.teachers.map((teacher) => teacher.username),
         students: cls.students.map((student) => student.username),
-        joinRequests: [], // TODO
     };
 }
 
