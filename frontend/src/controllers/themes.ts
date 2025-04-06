@@ -1,5 +1,5 @@
 import { BaseController } from "@/controllers/base-controller.ts";
-import type { Theme } from "@dwengo-1/interfaces/theme";
+import type { Theme } from "@dwengo-1/common/interfaces/theme";
 
 export class ThemeController extends BaseController {
     constructor() {
