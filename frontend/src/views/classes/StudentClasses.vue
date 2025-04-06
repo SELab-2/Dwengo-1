@@ -80,9 +80,8 @@
                 return true;
             } else if (value !== undefined && validate(value) && version(value) === 4) {
                 return true;
-            } 
-                return t("invalidFormat");
-            
+            }
+            return t("invalidFormat");
         },
     ];
 
@@ -90,7 +89,7 @@
     const { mutate } = useCreateJoinRequestMutation();
 
     // Function called when a student submits a code to join a class
-    function submitCode() : void {
+    function submitCode(): void {
         // Check if the code is valid
         if (code.value !== undefined && validate(code.value) && version(code.value) === 4) {
             mutate(
@@ -114,11 +113,11 @@
         color: "success",
     });
 
-    function showSnackbar(message: string, color: string) : void {
+    function showSnackbar(message: string, color: string): void {
         snackbar.value.message = message;
         snackbar.value.color = color;
         snackbar.value.visible = true;
-    };
+    }
 </script>
 <template>
     <main>

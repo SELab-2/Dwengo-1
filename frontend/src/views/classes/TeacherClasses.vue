@@ -84,15 +84,14 @@
                     students: [],
                     joinRequests: [],
                 };
-                const classResponse : ClassResponse = await classController.createClass(classDto);
-                const createdClass : ClassDTO = classResponse.cls;
+                const classResponse: ClassResponse = await classController.createClass(classDto);
+                const createdClass: ClassDTO = classResponse.cls;
                 code.value = createdClass.id;
                 dialog.value = true;
                 showSnackbar(t("created"), "success");
 
                 // reload the table with classes
                 await refetch();
-
             } catch (e: any) {
                 showSnackbar(t("wrong"), "error");
             }
