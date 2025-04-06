@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
-import { createAssignment, deleteAssignment, getAllAssignments, getAssignment, getAssignmentsSubmissions } from '../services/assignments.js';
+import { createAssignment, deleteAssignment, getAllAssignments, getAssignment, getAssignmentsSubmissions, putAssignment } from '../services/assignments.js';
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 import {requireFields} from "./error-helper";
 import {BadRequestException} from "../exceptions/bad-request-exception";
 import { getLogger } from '../logging/initalize.js';
+import { Assignment } from '../entities/assignments/assignment.entity.js';
+import { EntityDTO } from '@mikro-orm/core';
 
 export async function getAllAssignmentsHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.classid;
@@ -52,7 +54,8 @@ export async function putAssignmentHandler(req: Request, res: Response): Promise
         throw new BadRequestException("Assignment id should be a number")
     }
 
-    const assignment = await putAssignment(classid, id);
+    const assignmentData = req.body as Partial<EntityDTO<Assignment>>;
+    const assignment = await putAssignment(classid, id, assignmentData);
 
     res.json({ assignment });
 }

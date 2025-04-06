@@ -5,6 +5,7 @@ import {
     getAllAssignmentsHandler,
     getAssignmentHandler,
     getAssignmentsSubmissionsHandler,
+    putAssignmentHandler,
 } from '../controllers/assignments.js';
 import groupRouter from './groups.js';
 
@@ -15,6 +16,8 @@ router.get('/', getAllAssignmentsHandler);
 router.post('/', createAssignmentHandler);
 
 router.get('/:id', getAssignmentHandler);
+
+router.put('/:id', putAssignmentHandler);
 
 router.delete('/:id', deleteAssignmentHandler);
 
