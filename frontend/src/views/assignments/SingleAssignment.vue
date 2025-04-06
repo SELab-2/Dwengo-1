@@ -18,6 +18,18 @@
         assignment.value = assignments[0];
     };
 
+    const myUsername = "id01"; //TODO: replace by username of logged in user
+
+
+    // Display group members
+    const myGroup = computed(() => {
+        if (!assignment.value || !assignment.value.groups) return null;
+        console.log(assignment.value.groups)
+        return assignment.value.groups.find(group =>
+            group.members.some(m => m.username === myUsername)
+        );
+    });
+
     const deleteAssignment = () => {
         console.log('Delete assignment:', assignmentId.value);
     };
@@ -50,12 +62,6 @@
                 </v-btn>
             </div>
             <v-card-title class="text-h4">{{ assignment.title }}</v-card-title>
-            <v-container class="assignment-class">
-                {{ t('class') }}:
-                <span class="class-name">
-                    {{ assignment.class }}
-                  </span>
-            </v-container>
             <v-card-subtitle>
                 <v-btn
                     :to="`/learningPath/${assignment.learningPathHruid}`"
@@ -69,6 +75,43 @@
             <v-card-text class="description">
                 {{ assignment.description }}
             </v-card-text>
+
+            <v-card-text class="group-section">
+                <h3>{{ t("group") }}</h3>
+
+                <!-- Student view -->
+                <div v-if="!isTeacher">
+                    <div v-if="myGroup">
+                        <ul>
+                            <li v-for="student in myGroup.members" :key="student.username">
+                                {{ student.firstName + ' ' + student.lastName}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Teacher view -->
+                <div v-else>
+                    <v-expansion-panels>
+                        <v-expansion-panel
+                            v-for="(group, index) in assignment.groups"
+                            :key="group.id"
+                        >
+                            <v-expansion-panel-title>
+                                {{ t("group") }} {{ index + 1 }}
+                            </v-expansion-panel-title>
+                            <v-expansion-panel-text>
+                                <ul>
+                                    <li v-for="student in group.members" :key="student.username">
+                                        {{ student.firstName + ' ' + student.lastName }}
+                                    </li>
+                                </ul>
+                            </v-expansion-panel-text>
+                        </v-expansion-panel>
+                    </v-expansion-panels>
+                </div>
+            </v-card-text>
+
         </v-card>
     </div>
 </template>
@@ -100,14 +143,19 @@
     color: red;
 }
 
-.assignment-class {
-    color: #666;
+.group-section {
+    margin-top: 2rem;
 }
 
-.class-name {
-    font-weight: 500;
-    color: #333;
+.group-section h3 {
+    margin-bottom: 0.5rem;
 }
+
+.group-section ul {
+    padding-left: 1.2rem;
+    list-style-type: disc;
+}
+
 
 </style>
 

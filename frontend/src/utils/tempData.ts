@@ -61,6 +61,7 @@ type Assignment = {
     description: string;
 };
 
+
 export const assignments: Assignment[] = Array.from({length: 4}, (_, i) => ({
     id: `assignment${i}`,
     title: `Assignment ${i}`,
@@ -80,6 +81,23 @@ export const assignments: Assignment[] = Array.from({length: 4}, (_, i) => ({
         "Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. " +
         "Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. " +
         "Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,",
+    groups: [
+        {
+            id: 'group1',
+            members: [
+                student01,
+                student02
+            ]
+        },
+        {
+            id: 'group2',
+            members: [
+                student01,
+                student03
+            ]
+        }
+    ]
 }));
+
 
 export const classes: Array<Class> = [class01, class02, class03];
