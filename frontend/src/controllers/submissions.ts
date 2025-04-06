@@ -14,19 +14,19 @@ export class SubmissionController extends BaseController {
         super(`class/${classid}/assignments/${assignmentNumber}/groups/${groupNumber}`);
     }
 
-    async getAll(full = true) {
+    async getAll(full = true): Promise<SubmissionsResponse> {
         return this.get<SubmissionsResponse>(`/`, { full });
     }
 
-    async getByNumber(submissionNumber: number) {
+    async getByNumber(submissionNumber: number): Promise<SubmissionResponse> {
         return this.get<SubmissionResponse>(`/${submissionNumber}`);
     }
 
-    async createSubmission(data: any) {
+    async createSubmission(data: any): Promise<SubmissionResponse> {
         return this.post<SubmissionResponse>(`/`, data);
     }
 
-    async deleteSubmission(submissionNumber: number) {
+    async deleteSubmission(submissionNumber: number): Promise<SubmissionResponse> {
         return this.delete<SubmissionResponse>(`/${submissionNumber}`);
     }
 }
