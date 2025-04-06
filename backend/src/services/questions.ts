@@ -52,7 +52,7 @@ export async function createQuestion(loId: LearningObjectIdentifier, questionDat
 
 export async function deleteQuestion(questionId: QuestionId): Promise<QuestionDTO> {
     const questionRepository = getQuestionRepository();
-    const question = await fetchQuestion(questionId); // throws error if not found
+    const question = await fetchQuestion(questionId); // Throws error if not found
 
     const loId: LearningObjectIdentifier = {
         ...questionId.learningObjectIdentifier,
