@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createAssignment, getAllAssignments, getAssignment, getAssignmentsSubmissions } from '../services/assignments.js';
+import { createAssignment, deleteAssignment, getAllAssignments, getAssignment, getAssignmentsSubmissions } from '../services/assignments.js';
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 import {requireFields} from "./error-helper";
 import {BadRequestException} from "../exceptions/bad-request-exception";
@@ -40,6 +40,18 @@ export async function getAssignmentHandler(req: Request, res: Response): Promise
     const assignment = await getAssignment(classid, id);
 
     res.json({ assignment });
+}
+
+export async function deleteAssignmentHandler(req: Request, res: Response): Promise<void> {
+    const id = Number(req.params.id);
+    const classid = req.params.classid;
+    requireFields({ id, classid });
+
+    if (isNaN(id)) {
+        throw new BadRequestException("Assignment id should be a number");
+    }
+
+    const assignment = await deleteAssignment(classid, id); 
 }
 
 export async function getAssignmentsSubmissionsHandler(req: Request, res: Response): Promise<void> {

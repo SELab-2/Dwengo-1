@@ -57,6 +57,16 @@ export async function getAssignment(classid: string, id: number): Promise<Assign
     return mapToAssignmentDTO(assignment);
 }
 
+export async function deleteAssignment(classid: string, id: number): Promise<AssignmentDTO> {
+    const assignment = await fetchAssignment(classid, id);
+    const cls = await fetchClass(classid);
+
+    const assignmentRepository = getAssignmentRepository();
+    await assignmentRepository.deleteByClassAndId(cls, id);
+
+    return mapToAssignmentDTO(assignment);
+}
+
 export async function getAssignmentsSubmissions(
     classid: string,
     assignmentNumber: number,
