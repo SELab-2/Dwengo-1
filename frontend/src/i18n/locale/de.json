@@ -73,5 +73,7 @@
     "accept": "akzeptieren",
     "deny": "verweigern",
     "sent": "sent",
-    "failed": "gescheitert"
+    "failed": "gescheitert",
+    "wrong": "etwas ist schief gelaufen",
+    "created": "erstellt"
 }

@@ -73,5 +73,7 @@
     "deny": "deny",
     "createClassInstructions": "Enter a name for your class and click on create. A window will appear with a code that you can copy. Give this code to your students and they will be able to join.",
     "sent": "sent",
-    "failed": "failed"
+    "failed": "failed",
+    "wrong": "something went wrong",
+    "created": "created"
 }

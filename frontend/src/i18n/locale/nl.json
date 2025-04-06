@@ -73,5 +73,7 @@
     "accept": "accepteren",
     "deny": "weigeren",
     "sent": "verzonden",
-    "failed": "mislukt"
+    "failed": "mislukt",
+    "wrong": "er ging iets verkeerd",
+    "created": "gecreëerd"
 }
