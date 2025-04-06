@@ -22,7 +22,7 @@ export class SubmissionController extends BaseController {
         return this.get<SubmissionResponse>(`/${submissionNumber}`);
     }
 
-    async createSubmission(data: any): Promise<SubmissionResponse> {
+    async createSubmission(data: unknown): Promise<SubmissionResponse> {
         return this.post<SubmissionResponse>(`/`, data);
     }
 
