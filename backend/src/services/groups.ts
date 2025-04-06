@@ -14,79 +14,57 @@ import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
 import { getLogger } from '../logging/initalize.js';
 import { fetchAssignment } from './assignments.js';
+import { NotFoundException } from '../exceptions/not-found-exception.js';
+import { fetchClass } from './classes.js';
 
-async function fetchGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<Group | null> {
+export async function fetchGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<Group> {
     const assignment = await fetchAssignment(classId, assignmentNumber);
-
-    if (!assignment) {
-        return null;
-    }
 
     const groupRepository = getGroupRepository();
     const group = await groupRepository.findByAssignmentAndGroupNumber(assignment, groupNumber);
 
+    if (!group) {
+        throw new NotFoundException('Could not find group');
+    }
+
     return group; 
 }
 
-export async function getGroup(classId: string, assignmentNumber: number, groupNumber: number, full: boolean): Promise<GroupDTO | null> {
+export async function getGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<GroupDTO> {
     const group = await fetchGroup(classId, assignmentNumber, groupNumber);
-
-    if (!group) {
-        return null;
-    }
-
-    if (full) {
-        return mapToGroupDTO(group);
-    }
-
-    return mapToGroupDTOId(group);
+    return mapToGroupDTO(group);
 }
 
-export async function createGroup(groupData: GroupDTO, classid: string, assignmentNumber: number): Promise<Group | null> {
+export async function getExistingGroupFromGroupDTO(groupData: GroupDTO) {
+    const classId = typeof(groupData.class) === 'string' ? groupData.class : groupData.class.id;
+    const assignmentNumber = typeof(groupData.assignment) === 'number' ? groupData.assignment : groupData.assignment.id;
+    const groupNumber = groupData.groupNumber;
+
+    return await fetchGroup(classId, assignmentNumber, groupNumber);
+}
+
+export async function createGroup(groupData: GroupDTO, classid: string, assignmentNumber: number): Promise<GroupDTO> {
     const studentRepository = getStudentRepository();
 
-    const memberUsernames = (groupData.members as string[]) || []; // TODO check if groupdata.members is a list
+    const memberUsernames = (groupData.members as string[]) || [];
     const members = (await Promise.all([...memberUsernames].map(async (id) => studentRepository.findByUsername(id)))).filter(
         (student) => student !== null
     );
 
-    getLogger().debug(members);
-
-    const classRepository = getClassRepository();
-    const cls = await classRepository.findById(classid);
-
-    if (!cls) {
-        return null;
-    }
-
-    const assignmentRepository = getAssignmentRepository();
-    const assignment = await assignmentRepository.findByClassAndId(cls, assignmentNumber);
-
-    if (!assignment) {
-        return null;
-    }
+    const assignment = await fetchAssignment(classid, assignmentNumber);
 
     const groupRepository = getGroupRepository();
-    try {
-        const newGroup = groupRepository.create({
-            assignment: assignment,
-            members: members,
-        });
-        await groupRepository.save(newGroup);
+    const newGroup = groupRepository.create({
+        assignment: assignment,
+        members: members,
+    });
+    await groupRepository.save(newGroup);
 
-        return newGroup;
-    } catch (e) {
-        getLogger().error(e);
-        return null;
-    }
+    return mapToGroupDTO(newGroup);
 }
 
 export async function getAllGroups(classId: string, assignmentNumber: number, full: boolean): Promise<GroupDTO[]> {
     const assignment = await fetchAssignment(classId, assignmentNumber);
-
-    if (!assignment) {
-        return [];
-    }
 
     const groupRepository = getGroupRepository();
     const groups = await groupRepository.findAllGroupsForAssignment(assignment);
@@ -105,10 +83,6 @@ export async function getGroupSubmissions(
     full: boolean
 ): Promise<SubmissionDTO[] | SubmissionDTOId[]> {
     const group = await fetchGroup(classId, assignmentNumber, groupNumber);
-
-    if (!group) {
-        return [];
-    }
 
     const submissionRepository = getSubmissionRepository();
     const submissions = await submissionRepository.findAllSubmissionsForGroup(group);

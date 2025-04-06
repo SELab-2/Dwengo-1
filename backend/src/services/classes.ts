@@ -26,7 +26,7 @@ export async function fetchClass(classid: string): Promise<Class> {
 
 export async function getAllClasses(full: boolean): Promise<ClassDTO[] | string[]> {
     const classRepository = getClassRepository();
-    const classes = await classRepository.find({}, { populate: ['students', 'teachers'] });
+    const classes = await classRepository.findAll({ populate: ['students', 'teachers'] });
 
     if (full) {
         return classes.map(mapToClassDTO);
@@ -34,13 +34,12 @@ export async function getAllClasses(full: boolean): Promise<ClassDTO[] | string[
     return classes.map((cls) => cls.classId!);
 }
 
-export async function getClass(classId: string): Promise<ClassDTO | null> {
+export async function getClass(classId: string): Promise<ClassDTO> {
     const cls = await fetchClass(classId);
-
     return mapToClassDTO(cls);
 }
 
-export async function createClass(classData: ClassDTO): Promise<ClassDTO | null> {
+export async function createClass(classData: ClassDTO): Promise<ClassDTO> {
     const teacherUsernames = classData.teachers || [];
     const teachers = (await Promise.all(teacherUsernames.map(async (id) => fetchTeacher(id) )));
 
@@ -48,7 +47,6 @@ export async function createClass(classData: ClassDTO): Promise<ClassDTO | null>
     const students = (await Promise.all(studentUsernames.map(async (id) => fetchStudent(id) )));
 
     const classRepository = getClassRepository();
-
     const newClass = classRepository.create({
         displayName: classData.displayName,
         teachers: teachers,

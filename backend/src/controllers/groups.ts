@@ -8,7 +8,6 @@ export async function getGroupHandler(req: Request, res: Response): Promise<void
     const classId = req.params.classid;
     const assignmentId = parseInt(req.params.assignmentid);
     const groupId = parseInt(req.params.groupid);
-    const full = req.query.full === 'true';
     requireFields({ classId, assignmentId, groupId });
 
     if (isNaN(assignmentId)) {
@@ -19,7 +18,7 @@ export async function getGroupHandler(req: Request, res: Response): Promise<void
         throw new BadRequestException('Group id must be a number');
     }
 
-    const group = await getGroup(classId, assignmentId, groupId, full);
+    const group = await getGroup(classId, assignmentId, groupId);
 
     if (!group) {
         res.status(404).json({ error: 'Group not found' });
@@ -65,7 +64,7 @@ export async function getGroupSubmissionsHandler(req: Request, res: Response): P
     const assignmentId = Number(req.params.assignmentid);
     const groupId = Number(req.params.groupid);
     const full = req.query.full === 'true';
-    
+
     requireFields({ classId, assignmentId, groupId });
 
     if (isNaN(assignmentId)) {

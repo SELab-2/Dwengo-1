@@ -4,11 +4,14 @@ import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { mapToSubmission, mapToSubmissionDTO } from '../interfaces/submission.js';
 import { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
 import { Language } from '@dwengo-1/common/util/language';
+import { fetchStudent } from './students.js';
+import { fetchGroup, getExistingGroupFromGroupDTO } from './groups.js';
+import { Submission } from '../entities/assignments/submission.entity.js';
 
-export async function getSubmission(
+export async function fetchSubmission(
     loId: LearningObjectIdentifier,
-    submissionNumber: number
-): Promise<SubmissionDTO> {
+    submissionNumber: number,
+): Promise<Submission> {
     const submissionRepository = getSubmissionRepository();
     const submission = await submissionRepository.findSubmissionByLearningObjectAndSubmissionNumber(loId, submissionNumber);
 
@@ -16,6 +19,14 @@ export async function getSubmission(
         throw new NotFoundException('Could not find submission');
     }
 
+    return submission;
+}
+
+export async function getSubmission(
+    loId: LearningObjectIdentifier,
+    submissionNumber: number
+): Promise<SubmissionDTO> {
+    const submission = await fetchSubmission(loId, submissionNumber);
     return mapToSubmissionDTO(submission);
 }
 
@@ -28,30 +39,22 @@ export async function getAllSubmissions(
     return submissions.map(mapToSubmissionDTO);
 }
 
-export async function createSubmission(submissionDTO: SubmissionDTO): Promise<SubmissionDTO | null> {
-    const submissionRepository = getSubmissionRepository();
-    const submission = mapToSubmission(submissionDTO);
+export async function createSubmission(submissionDTO: SubmissionDTO): Promise<SubmissionDTO> {
+    const submitter = await fetchStudent(submissionDTO.submitter.username);
+    const group = submissionDTO.group ? await getExistingGroupFromGroupDTO(submissionDTO.group) : undefined;
 
-    try {
-        const newSubmission = submissionRepository.create(submission);
-        await submissionRepository.save(newSubmission);
-    } catch (_) {
-        return null;
-    }
+    const submissionRepository = getSubmissionRepository();
+    const submission = mapToSubmission(submissionDTO, submitter, group);
+    await submissionRepository.save(submission);
 
     return mapToSubmissionDTO(submission);
 }
 
 export async function deleteSubmission(loId: LearningObjectIdentifier, submissionNumber: number): Promise<SubmissionDTO> {
+    const submission = await fetchSubmission(loId, submissionNumber);
+    
     const submissionRepository = getSubmissionRepository();
-
-    const submission = await getSubmission(loId, submissionNumber);
-
-    if (!submission) {
-        throw new NotFoundException('Could not delete submission because it does not exist');
-    }
-
     await submissionRepository.deleteSubmissionByLearningObjectAndSubmissionNumber(loId, submissionNumber);
 
-    return submission;
+    return mapToSubmissionDTO(submission);
 }
