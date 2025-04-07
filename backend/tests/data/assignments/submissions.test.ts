@@ -15,6 +15,8 @@ import {GroupRepository} from '../../../src/data/assignments/group-repository';
 import {AssignmentRepository} from '../../../src/data/assignments/assignment-repository';
 import {ClassRepository} from '../../../src/data/classes/class-repository';
 import {Submission} from "../../../src/entities/assignments/submission.entity";
+import {Class} from "../../../src/entities/classes/class.entity";
+import {Assignment} from "../../../src/entities/assignments/assignment.entity";
 
 export function checkSubmissionsForStudentNoordkaap(result: Submission[]) {
     sortSubmissions(result);
@@ -79,40 +81,48 @@ describe('SubmissionRepository', () => {
         expect(submission?.submissionTime.getDate()).toBe(25);
     });
 
-    it('should find all submissions for all groups of a student', async () => {
-        const result = await submissionRepository.findAllSubmissionsForAllGroupsOfStudent("Noordkaap");
-        expect(result.length).toBe(5);
-
-        checkSubmissionsForStudentNoordkaap(result);
-    });
-
-    it('should find all submissions for a certain assignment', async () => {
-        const clazz = await classRepository.findById('id01');
-        const assignment = await assignmentRepository.findByClassAndId(clazz!, 1);
-        const result = await submissionRepository.findAllSubmissionsForAssignment(assignment!);
-
+    let clazz: Class | null;
+    let assignment: Assignment | null;
+    let loId: LearningObjectIdentifier;
+    it('should find all submissions for a certain learning object and assignment', async () => {
+        clazz = await classRepository.findById('id01');
+        assignment = await assignmentRepository.findByClassAndId(clazz!, 1);
+        loId = {
+            hruid: "id02",
+            language: Language.English,
+            version: 1
+        };
+        const result = await submissionRepository.findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!);
         sortSubmissions(result);
 
-        expect(result).toHaveLength(5);
+        expect(result).toHaveLength(3);
 
-        expect(result[0].learningObjectHruid).toBe("id01");
+        // submission3 should be found (for learning object 'id02' by group #1 for Assignment #1 in class 'id01')
+        expect(result[0].learningObjectHruid).toBe(loId.hruid);
         expect(result[0].submissionNumber).toBe(1);
 
-        expect(result[1].learningObjectHruid).toBe("id02");
-        expect(result[1].submissionNumber).toBe(1);
+        // submission4 should be found (for learning object 'id02' by group #1 for Assignment #1 in class 'id01')
+        expect(result[1].learningObjectHruid).toBe(loId.hruid);
+        expect(result[1].submissionNumber).toBe(2);
 
-        expect(result[2].learningObjectHruid).toBe("id02");
-        expect(result[2].submissionNumber).toBe(2);
+        // submission8 should be found (for learning object 'id02' by group #2 for Assignment #1 in class 'id01')
+        expect(result[2].learningObjectHruid).toBe(loId.hruid);
+        expect(result[2].submissionNumber).toBe(3);
+    });
 
-        expect(result[3].learningObjectHruid).toBe("id03");
-        expect(result[3].submissionNumber).toBe(1);
+    it("should find only the submissions for a certain learning object and assignment made for the user's group", async () => {
+        const result =
+            await submissionRepository.findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!, "Tool");
+        // (student Tool is in group #2)
 
-        expect(result[4].learningObjectHruid).toBe("id03");
-        expect(result[4].submissionNumber).toBe(2);
+        expect(result).toHaveLength(1);
 
-        // But not submission7 (id01, submission number: 3), since it was submitted for an assignment
+        // submission8 should be found (for learning object 'id02' by group #2 for Assignment #1 in class 'id01')
+        expect(result[0].learningObjectHruid).toBe(loId.hruid);
+        expect(result[0].submissionNumber).toBe(3);
 
-        sortSubmissions(result);
+        // The other submissions found in the previous test case should not be found anymore as they were made on
+        // behalf of group #1 which Tool is no member of.
     });
 
     it('should not find a deleted submission', async () => {
