@@ -1,5 +1,5 @@
 import {
-    getAnswerRepository,
+    getAnswerRepository, getAssignmentRepository,
     getClassRepository,
     getGroupRepository,
     getQuestionRepository
@@ -13,8 +13,27 @@ import { LearningObjectIdentifier } from '../entities/content/learning-object-id
 import { mapToStudent } from '../interfaces/student.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { AnswerDTO, AnswerId } from '@dwengo-1/common/interfaces/answer';
-import {AssignmentDTO} from "@dwengo-1/common/interfaces/assignment";
-import {mapToAssignment} from "../interfaces/assignment";
+import { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
+import { mapToAssignment } from "../interfaces/assignment";
+
+export async function getQuestionsAboutLearningObjectInAssignment(
+    loId: LearningObjectIdentifier,
+    classId: string,
+    assignmentId: number,
+    full: boolean,
+    studentUsername?: string
+): Promise<QuestionDTO[] | QuestionId[]> {
+    const assignment = await getAssignmentRepository()
+        .findByClassIdAndAssignmentId(classId, assignmentId);
+
+    const questions = await getQuestionRepository()
+        .findAllQuestionsAboutLearningObjectInAssignment(loId, assignment!, studentUsername);
+
+    if (full)
+        return questions.map(q => mapToQuestionDTO(q));
+    else
+        return questions.map(q => mapToQuestionDTOId(q));
+}
 
 export async function getAllQuestions(id: LearningObjectIdentifier, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
     const questionRepository: QuestionRepository = getQuestionRepository();

@@ -4,6 +4,7 @@ import { LearningObjectIdentifier } from '../../entities/content/learning-object
 import { Student } from '../../entities/users/student.entity.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
 import {Group} from "../../entities/assignments/group.entity";
+import {Assignment} from "../../entities/assignments/assignment.entity";
 
 export class QuestionRepository extends DwengoEntityRepository<Question> {
     public async createQuestion(question: { loId: LearningObjectIdentifier; author: Student; inGroup: Group, content: string }): Promise<Question> {
@@ -62,6 +63,36 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         return this.findAll({
             where: { author },
             orderBy: { timestamp: 'DESC' }, // New to old
+        });
+    }
+
+    /**
+     * Looks up all questions for the given learning object which were asked as part of the given assignment.
+     * When forStudentUsername is set, only the questions within the given user's group are shown.
+     */
+    public async findAllQuestionsAboutLearningObjectInAssignment(
+        loId: LearningObjectIdentifier,
+        assignment: Assignment,
+        forStudentUsername?: string
+    ): Promise<Question[]> {
+        let inGroup = forStudentUsername ? {
+            assignment,
+            members: {
+                $some: {
+                    username: forStudentUsername
+                }
+            }
+        } : {
+            assignment
+        };
+
+        return this.findAll({
+            where: {
+                learningObjectHruid: loId.hruid,
+                learningObjectLanguage: loId.language,
+                learningObjectVersion: loId.version,
+                inGroup
+            }
         });
     }
 }
