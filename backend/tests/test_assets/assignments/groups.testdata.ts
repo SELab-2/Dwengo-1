@@ -28,5 +28,11 @@ export function makeTestGroups(em: EntityManager, students: Student[], assignmen
         members: students.slice(3, 4),
     });
 
-    return [group01, group02, group03, group04];
+    const group05 = em.create(Group, {
+        assignment: assignments[3],
+        groupNumber: 1,
+        members: students.slice(0, 2),
+    });
+
+    return [group01, group02, group03, group04, group05];
 }

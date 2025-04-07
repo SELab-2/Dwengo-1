@@ -3,6 +3,7 @@ import { Group } from '../../entities/assignments/group.entity.js';
 import { Submission } from '../../entities/assignments/submission.entity.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { Student } from '../../entities/users/student.entity.js';
+import {Assignment} from "../../entities/assignments/assignment.entity";
 
 export class SubmissionRepository extends DwengoEntityRepository<Submission> {
     public async findSubmissionByLearningObjectAndSubmissionNumber(
@@ -48,6 +49,30 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
                 populate: ["onBehalfOf.members"]
             }
         );
+    }
+
+    public async findAllSubmissionsForAllGroupsOfStudent(studentUsername: string): Promise<Submission[]> {
+        return this.findAll({
+            where: {
+                onBehalfOf: {
+                    members: {
+                        $some: {
+                            username: studentUsername
+                        }
+                    },
+                }
+            }
+        });
+    }
+
+    public async findAllSubmissionsForAssignment(assignment: Assignment): Promise<Submission[]> {
+        return this.findAll({
+            where: {
+                onBehalfOf: {
+                    assignment
+                }
+            }
+        });
     }
 
     public async findAllSubmissionsForStudent(student: Student): Promise<Submission[]> {

@@ -60,5 +60,27 @@ export function makeTestSubmissions(em: EntityManager, students: Student[], grou
         content: '',
     });
 
-    return [submission01, submission02, submission03, submission04, submission05];
+    const submission06 = em.create(Submission, {
+        learningObjectHruid: 'id01',
+        learningObjectLanguage: Language.English,
+        learningObjectVersion: 1,
+        submissionNumber: 2,
+        submitter: students[1],
+        submissionTime: new Date(2025, 2, 25),
+        onBehalfOf: groups[4],
+        content: '',
+    });
+
+    const submission07 = em.create(Submission, {
+        learningObjectHruid: 'id01',
+        learningObjectLanguage: Language.English,
+        learningObjectVersion: 1,
+        submissionNumber: 3,
+        submitter: students[3],
+        submissionTime: new Date(2025, 3, 25),
+        onBehalfOf: groups[3],
+        content: '',
+    });
+
+    return [submission01, submission02, submission03, submission04, submission05, submission06, submission07];
 }
