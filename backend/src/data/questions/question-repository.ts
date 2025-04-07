@@ -3,7 +3,7 @@ import { Question } from '../../entities/questions/question.entity.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { Student } from '../../entities/users/student.entity.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
-import {Loaded} from "@mikro-orm/core";
+import { Loaded } from '@mikro-orm/core';
 
 export class QuestionRepository extends DwengoEntityRepository<Question> {
     public async createQuestion(question: { loId: LearningObjectIdentifier; author: Student; content: string }): Promise<Question> {
@@ -68,7 +68,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
             learningObjectHruid: loId.hruid,
             learningObjectLanguage: loId.language,
             learningObjectVersion: loId.version,
-            sequenceNumber
+            sequenceNumber,
         });
     }
 

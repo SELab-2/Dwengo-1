@@ -28,13 +28,13 @@ export abstract class BaseController {
     }
 
     protected async delete<T>(path: string, queryParams?: QueryParams): Promise<T> {
-        const response = await apiClient.delete<T>(this.absolutePathFor(path), { params: queryParams} );
+        const response = await apiClient.delete<T>(this.absolutePathFor(path), { params: queryParams });
         BaseController.assertSuccessResponse(response);
         return response.data;
     }
 
     protected async put<T>(path: string, body: unknown, queryParams?: QueryParams): Promise<T> {
-        const response = await apiClient.put<T>(this.absolutePathFor(path), body, { params: queryParams});
+        const response = await apiClient.put<T>(this.absolutePathFor(path), body, { params: queryParams });
         BaseController.assertSuccessResponse(response);
         return response.data;
     }

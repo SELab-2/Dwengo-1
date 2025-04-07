@@ -2,7 +2,7 @@ import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { Answer } from '../../entities/questions/answer.entity.js';
 import { Question } from '../../entities/questions/question.entity.js';
 import { Teacher } from '../../entities/users/teacher.entity.js';
-import {Loaded} from "@mikro-orm/core";
+import { Loaded } from '@mikro-orm/core';
 
 export class AnswerRepository extends DwengoEntityRepository<Answer> {
     public async createAnswer(answer: { toQuestion: Question; author: Teacher; content: string }): Promise<Answer> {
@@ -22,7 +22,8 @@ export class AnswerRepository extends DwengoEntityRepository<Answer> {
     }
     public async findAnswer(question: Question, sequenceNumber: number): Promise<Loaded<Answer> | null> {
         return this.findOne({
-            toQuestion: question, sequenceNumber
+            toQuestion: question,
+            sequenceNumber,
         });
     }
     public async removeAnswerByQuestionAndSequenceNumber(question: Question, sequenceNumber: number): Promise<void> {

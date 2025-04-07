@@ -1,14 +1,10 @@
-import {beforeAll, beforeEach, describe, expect, it, Mock, vi} from "vitest";
-import {Request, Response} from "express";
-import {setupTestApp} from "../setup-tests";
-import {
-    getAllQuestionsHandler,
-    getQuestionHandler, updateQuestionHandler
-} from "../../src/controllers/questions";
-import {Language} from "@dwengo-1/common/util/language";
-import {NotFoundException} from "../../src/exceptions/not-found-exception";
-import {BadRequestException} from "../../src/exceptions/bad-request-exception";
-
+import { beforeAll, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
+import { Request, Response } from 'express';
+import { setupTestApp } from '../setup-tests';
+import { getAllQuestionsHandler, getQuestionHandler, updateQuestionHandler } from '../../src/controllers/questions';
+import { Language } from '@dwengo-1/common/util/language';
+import { NotFoundException } from '../../src/exceptions/not-found-exception';
+import { BadRequestException } from '../../src/exceptions/bad-request-exception';
 
 describe('Questions controllers', () => {
     let req: Partial<Request>;
@@ -43,7 +39,7 @@ describe('Questions controllers', () => {
 
     it('Get question', async () => {
         req = {
-            params: { hruid: 'id05', version: '1', seq: '1'},
+            params: { hruid: 'id05', version: '1', seq: '1' },
             query: { lang: Language.English, full: 'true' },
         };
 
@@ -52,11 +48,11 @@ describe('Questions controllers', () => {
 
         // Const result = jsonMock.mock.lastCall?.[0];
         // Console.log(result.question);
-    })
+    });
 
     it('Get question with fallback sequence number and version', async () => {
         req = {
-            params: { hruid: 'id05'},
+            params: { hruid: 'id05' },
             query: { lang: Language.English, full: 'true' },
         };
 
@@ -65,17 +61,16 @@ describe('Questions controllers', () => {
 
         // Const result = jsonMock.mock.lastCall?.[0];
         // Console.log(result.question);
-    })
+    });
 
     it('Get question hruid does not exist', async () => {
         req = {
-            params: { hruid: 'id_not_exist'},
+            params: { hruid: 'id_not_exist' },
             query: { lang: Language.English, full: 'true' },
         };
 
-        await expect( async () => getQuestionHandler(req as Request, res as Response))
-            .rejects.toThrow(NotFoundException);
-    })
+        await expect(async () => getQuestionHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
+    });
 
     it('Get question no hruid given', async () => {
         req = {
@@ -83,9 +78,8 @@ describe('Questions controllers', () => {
             query: { lang: Language.English, full: 'true' },
         };
 
-        await expect( async () => getQuestionHandler(req as Request, res as Response))
-            .rejects.toThrow(BadRequestException);
-    })
+        await expect(async () => getQuestionHandler(req as Request, res as Response)).rejects.toThrow(BadRequestException);
+    });
 
     /*
     It('Create and delete question', async() => {
@@ -104,12 +98,12 @@ describe('Questions controllers', () => {
 
      */
 
-    it('Update question', async() => {
-        const newContent = "updated question";
+    it('Update question', async () => {
+        const newContent = 'updated question';
         req = {
-            params: { hruid: 'id05', version: '1', seq: '1'},
+            params: { hruid: 'id05', version: '1', seq: '1' },
             query: { lang: Language.English },
-            body: { content: newContent }
+            body: { content: newContent },
         };
 
         await updateQuestionHandler(req as Request, res as Response);
