@@ -50,7 +50,6 @@ export class ClassController extends BaseController {
         return this.get<TeachersResponse>(`/${id}/teachers`, { full });
     }
 
-    // TODO
     async getTeacherInvitations(id: string, full = true): Promise<TeacherInvitationsResponse> {
         return this.get<TeacherInvitationsResponse>(`/${id}/teacher-invitations`, { full });
     }
