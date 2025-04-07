@@ -1,11 +1,11 @@
-import {getAnswerRepository} from "../data/repositories";
-import {Answer} from "../entities/questions/answer.entity";
-import {mapToAnswerDTO, mapToAnswerDTOId} from "../interfaces/answer";
-import {fetchTeacher} from "./teachers";
-import {fetchQuestion} from "./questions";
-import {QuestionId} from "@dwengo-1/common/interfaces/question";
-import {AnswerData, AnswerDTO, AnswerId} from "@dwengo-1/common/interfaces/answer";
-import {NotFoundException} from "../exceptions/not-found-exception";
+import { getAnswerRepository } from '../data/repositories';
+import { Answer } from '../entities/questions/answer.entity';
+import { mapToAnswerDTO, mapToAnswerDTOId } from '../interfaces/answer';
+import { fetchTeacher } from './teachers';
+import { fetchQuestion } from './questions';
+import { QuestionId } from '@dwengo-1/common/interfaces/question';
+import { AnswerData, AnswerDTO, AnswerId } from '@dwengo-1/common/interfaces/answer';
+import { NotFoundException } from '../exceptions/not-found-exception';
 
 export async function getAnswersByQuestion(questionId: QuestionId, full: boolean): Promise<AnswerDTO[] | AnswerId[]> {
     const answerRepository = getAnswerRepository();
@@ -27,7 +27,9 @@ export async function createAnswer(questionId: QuestionId, answerData: AnswerDat
     const content = answerData.content;
 
     const answer = await answerRepository.createAnswer({
-        toQuestion, author, content
+        toQuestion,
+        author,
+        content,
     });
     return mapToAnswerDTO(answer);
 }
@@ -37,7 +39,7 @@ async function fetchAnswer(questionId: QuestionId, sequenceNumber: number): Prom
     const question = await fetchQuestion(questionId);
     const answer = await answerRepository.findAnswer(question, sequenceNumber);
 
-    if (!answer){
+    if (!answer) {
         throw new NotFoundException('Answer with questionID and sequence number not found');
     }
 

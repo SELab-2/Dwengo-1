@@ -1,17 +1,19 @@
-import {QuestionController, type QuestionResponse, type QuestionsResponse} from "@/controllers/questions.ts";
-import type {QuestionData, QuestionId} from "@dwengo-1/common/interfaces/question";
-import type {LearningObjectIdentifierDTO} from "@dwengo-1/common/interfaces/learning-content";
-import {computed, type MaybeRefOrGetter, toValue} from "vue";
+import { QuestionController, type QuestionResponse, type QuestionsResponse } from "@/controllers/questions.ts";
+import type { QuestionData, QuestionId } from "@dwengo-1/common/interfaces/question";
+import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
+import { computed, type MaybeRefOrGetter, toValue } from "vue";
 import {
     useMutation,
     type UseMutationReturnType,
     useQuery,
     useQueryClient,
-    type UseQueryReturnType
+    type UseQueryReturnType,
 } from "@tanstack/vue-query";
 
-
-export function questionsQueryKey(loId: LearningObjectIdentifierDTO, full: boolean): [string, string, number, string, boolean] {
+export function questionsQueryKey(
+    loId: LearningObjectIdentifierDTO,
+    full: boolean,
+): [string, string, number, string, boolean] {
     return ["questions", loId.hruid, loId.version, loId.language, full];
 }
 
@@ -65,7 +67,7 @@ export function useUpdateQuestionMutation(
     const sequenceNumber = toValue(questionId).sequenceNumber;
 
     return useMutation({
-        mutationFn: async ( data ) => new QuestionController(loId).update(sequenceNumber, data),
+        mutationFn: async (data) => new QuestionController(loId).update(sequenceNumber, data),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: questionsQueryKey(toValue(loId), true) });
             await queryClient.invalidateQueries({ queryKey: questionsQueryKey(toValue(loId), false) });
