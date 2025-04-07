@@ -1,9 +1,9 @@
-import {Request, Response} from "express";
-import {requireFields} from "./error-helper";
-import {getLearningObjectId, getQuestionId} from "./questions";
-import {createAnswer, deleteAnswer, getAnswer, getAnswersByQuestion, updateAnswer} from "../services/answers";
-import {FALLBACK_SEQ_NUM} from "../config";
-import {AnswerData} from "@dwengo-1/common/interfaces/answer";
+import { Request, Response } from 'express';
+import { requireFields } from './error-helper';
+import { getLearningObjectId, getQuestionId } from './questions';
+import { createAnswer, deleteAnswer, getAnswer, getAnswersByQuestion, updateAnswer } from '../services/answers';
+import { FALLBACK_SEQ_NUM } from '../config';
+import { AnswerData } from '@dwengo-1/common/interfaces/answer';
 
 export async function getAllAnswersHandler(req: Request, res: Response): Promise<void> {
     const hruid = req.params.hruid;
@@ -11,7 +11,7 @@ export async function getAllAnswersHandler(req: Request, res: Response): Promise
     const language = req.query.lang as string;
     const seq = req.params.seq;
     const full = req.query.full === 'true';
-    requireFields({ hruid })
+    requireFields({ hruid });
 
     const learningObjectId = getLearningObjectId(hruid, version, language);
     const questionId = getQuestionId(learningObjectId, seq);
@@ -21,13 +21,13 @@ export async function getAllAnswersHandler(req: Request, res: Response): Promise
     res.json({ answers });
 }
 
-export async function getAnswerHandler(req: Request, res: Response): Promise<void>{
+export async function getAnswerHandler(req: Request, res: Response): Promise<void> {
     const hruid = req.params.hruid;
     const version = req.params.version;
     const language = req.query.lang as string;
     const seq = req.params.seq;
     const seqAnswer = req.params.seqAnswer;
-    requireFields({ hruid })
+    requireFields({ hruid });
 
     const learningObjectId = getLearningObjectId(hruid, version, language);
     const questionId = getQuestionId(learningObjectId, seq);
@@ -43,7 +43,7 @@ export async function createAnswerHandler(req: Request, res: Response): Promise<
     const version = req.params.version;
     const language = req.query.lang as string;
     const seq = req.params.seq;
-    requireFields({ hruid })
+    requireFields({ hruid });
 
     const learningObjectId = getLearningObjectId(hruid, version, language);
     const questionId = getQuestionId(learningObjectId, seq);
@@ -65,7 +65,7 @@ export async function deleteAnswerHandler(req: Request, res: Response): Promise<
     const language = req.query.lang as string;
     const seq = req.params.seq;
     const seqAnswer = req.params.seqAnswer;
-    requireFields({ hruid })
+    requireFields({ hruid });
 
     const learningObjectId = getLearningObjectId(hruid, version, language);
     const questionId = getQuestionId(learningObjectId, seq);
@@ -76,15 +76,13 @@ export async function deleteAnswerHandler(req: Request, res: Response): Promise<
     res.json({ answer });
 }
 
-
-
 export async function updateAnswerHandler(req: Request, res: Response): Promise<void> {
     const hruid = req.params.hruid;
     const version = req.params.version;
     const language = req.query.lang as string;
     const seq = req.params.seq;
     const seqAnswer = req.params.seqAnswer;
-    requireFields({ hruid })
+    requireFields({ hruid });
 
     const learningObjectId = getLearningObjectId(hruid, version, language);
     const questionId = getQuestionId(learningObjectId, seq);

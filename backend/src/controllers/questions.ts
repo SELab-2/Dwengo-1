@@ -1,15 +1,10 @@
 import { Request, Response } from 'express';
-import {
-    createQuestion,
-    deleteQuestion,
-    getAllQuestions,
-    getQuestion, updateQuestion
-} from '../services/questions.js';
-import {FALLBACK_LANG, FALLBACK_SEQ_NUM, FALLBACK_VERSION_NUM} from '../config.js';
+import { createQuestion, deleteQuestion, getAllQuestions, getQuestion, updateQuestion } from '../services/questions.js';
+import { FALLBACK_LANG, FALLBACK_SEQ_NUM, FALLBACK_VERSION_NUM } from '../config.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
-import {QuestionData, QuestionId} from '@dwengo-1/common/interfaces/question';
+import { QuestionData, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { Language } from '@dwengo-1/common/util/language';
-import {requireFields} from "./error-helper";
+import { requireFields } from './error-helper';
 
 export function getLearningObjectId(hruid: string, version: string, lang: string): LearningObjectIdentifier {
     return {
@@ -31,7 +26,7 @@ export async function getAllQuestionsHandler(req: Request, res: Response): Promi
     const version = req.params.version;
     const language = req.query.lang as string;
     const full = req.query.full === 'true';
-    requireFields({ hruid })
+    requireFields({ hruid });
 
     const learningObjectId = getLearningObjectId(hruid, version, language);
 
@@ -45,7 +40,7 @@ export async function getQuestionHandler(req: Request, res: Response): Promise<v
     const version = req.params.version;
     const language = req.query.lang as string;
     const seq = req.params.seq;
-    requireFields({ hruid })
+    requireFields({ hruid });
 
     const learningObjectId = getLearningObjectId(hruid, version, language);
     const questionId = getQuestionId(learningObjectId, seq);
@@ -53,14 +48,13 @@ export async function getQuestionHandler(req: Request, res: Response): Promise<v
     const question = await getQuestion(questionId);
 
     res.json({ question });
-
 }
 
 export async function createQuestionHandler(req: Request, res: Response): Promise<void> {
     const hruid = req.params.hruid;
     const version = req.params.version;
     const language = req.query.lang as string;
-    requireFields({ hruid })
+    requireFields({ hruid });
 
     const loId = getLearningObjectId(hruid, version, language);
 
@@ -73,7 +67,6 @@ export async function createQuestionHandler(req: Request, res: Response): Promis
     const question = await createQuestion(loId, questionData);
 
     res.json({ question });
-
 }
 
 export async function deleteQuestionHandler(req: Request, res: Response): Promise<void> {
@@ -81,7 +74,7 @@ export async function deleteQuestionHandler(req: Request, res: Response): Promis
     const version = req.params.version;
     const language = req.query.lang as string;
     const seq = req.params.seq;
-    requireFields({ hruid })
+    requireFields({ hruid });
 
     const learningObjectId = getLearningObjectId(hruid, version, language);
     const questionId = getQuestionId(learningObjectId, seq);
@@ -96,7 +89,7 @@ export async function updateQuestionHandler(req: Request, res: Response): Promis
     const version = req.params.version;
     const language = req.query.lang as string;
     const seq = req.params.seq;
-    requireFields({ hruid })
+    requireFields({ hruid });
 
     const learningObjectId = getLearningObjectId(hruid, version, language);
     const questionId = getQuestionId(learningObjectId, seq);

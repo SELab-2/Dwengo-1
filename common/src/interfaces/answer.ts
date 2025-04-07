@@ -1,5 +1,5 @@
 import { QuestionDTO, QuestionId } from './question';
-import {TeacherDTO} from "./teacher";
+import { TeacherDTO } from './teacher';
 
 export interface AnswerDTO {
     author: TeacherDTO;
