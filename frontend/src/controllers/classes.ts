@@ -55,7 +55,7 @@ export class ClassController extends BaseController {
     }
 
     async deleteStudent(id: string, username: string): Promise<ClassResponse> {
-        return this.delete<ClassResponse>(`/${id}/students/${ username }`);
+        return this.delete<ClassResponse>(`/${id}/students/${username}`);
     }
 
     async getTeachers(id: string, full = true): Promise<TeachersResponse> {
@@ -67,7 +67,7 @@ export class ClassController extends BaseController {
     }
 
     async deleteTeacher(id: string, username: string): Promise<ClassResponse> {
-        return this.delete<ClassResponse>(`/${id}/teachers/${ username }`);
+        return this.delete<ClassResponse>(`/${id}/teachers/${username}`);
     }
 
     async getTeacherInvitations(id: string, full = true): Promise<TeacherInvitationsResponse> {
