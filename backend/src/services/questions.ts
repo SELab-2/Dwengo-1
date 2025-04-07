@@ -54,10 +54,11 @@ export async function deleteQuestion(questionId: QuestionId): Promise<QuestionDT
     const questionRepository = getQuestionRepository();
     const question = await fetchQuestion(questionId); // throws error if not found
 
-    const loId: LearningObjectIdentifier = {
-        ...questionId.learningObjectIdentifier,
-        version: questionId.learningObjectIdentifier.version ?? FALLBACK_VERSION_NUM,
-    };
+    const loId : LearningObjectIdentifier = {
+        hruid: questionId.learningObjectIdentifier.hruid,
+        language: questionId.learningObjectIdentifier.language,
+        version: questionId.learningObjectIdentifier.version || FALLBACK_VERSION_NUM
+    }
 
     await questionRepository.removeQuestionByLearningObjectAndSequenceNumber(loId, questionId.sequenceNumber);
     return mapToQuestionDTO(question);
