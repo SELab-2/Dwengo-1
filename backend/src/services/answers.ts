@@ -59,7 +59,7 @@ export async function deleteAnswer(questionId: QuestionId, sequenceNumber: numbe
     return mapToAnswerDTO(answer);
 }
 
-export async function updateAnswer(questionId: QuestionId, sequenceNumber: number, answerData: AnswerData){
+export async function updateAnswer(questionId: QuestionId, sequenceNumber: number, answerData: AnswerData): Promise<AnswerDTO> {
     const answerRepository = getAnswerRepository();
     const answer = await fetchAnswer(questionId, sequenceNumber);
 

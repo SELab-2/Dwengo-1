@@ -37,7 +37,7 @@ describe('Questions controllers', () => {
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ questions: expect.anything() }));
 
         const result = jsonMock.mock.lastCall?.[0];
-        // console.log(result.questions);
+        // Console.log(result.questions);
         expect(result.questions).to.have.length.greaterThan(1);
     });
 
@@ -50,8 +50,8 @@ describe('Questions controllers', () => {
         await getQuestionHandler(req as Request, res as Response);
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ question: expect.anything() }));
 
-        // const result = jsonMock.mock.lastCall?.[0];
-        // console.log(result.question);
+        // Const result = jsonMock.mock.lastCall?.[0];
+        // Console.log(result.question);
     })
 
     it('Get question with fallback sequence number and version', async () => {
@@ -63,8 +63,8 @@ describe('Questions controllers', () => {
         await getQuestionHandler(req as Request, res as Response);
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ question: expect.anything() }));
 
-        // const result = jsonMock.mock.lastCall?.[0];
-        // console.log(result.question);
+        // Const result = jsonMock.mock.lastCall?.[0];
+        // Console.log(result.question);
     })
 
     it('Get question hruid does not exist', async () => {
@@ -88,7 +88,7 @@ describe('Questions controllers', () => {
     })
 
     /*
-    it('Create and delete question', async() => {
+    It('Create and delete question', async() => {
         req = {
             params: { hruid: 'id05', version: '1', seq: '2'},
             query: { lang: Language.English },
@@ -117,7 +117,7 @@ describe('Questions controllers', () => {
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ question: expect.anything() }));
 
         const result = jsonMock.mock.lastCall?.[0];
-        // console.log(result.question);
+        // Console.log(result.question);
         expect(result.question.content).to.eq(newContent);
     });
 });

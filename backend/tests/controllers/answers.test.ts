@@ -33,7 +33,7 @@ describe('Questions controllers', () => {
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({answers: expect.anything()}));
 
         const result = jsonMock.mock.lastCall?.[0];
-        // console.log(result.answers);
+        // Console.log(result.answers);
         expect(result.questions).to.have.length.greaterThan(1);
     });
 
@@ -46,8 +46,8 @@ describe('Questions controllers', () => {
         await getAnswerHandler(req as Request, res as Response);
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({answer: expect.anything()}));
 
-        // const result = jsonMock.mock.lastCall?.[0];
-        // console.log(result.answer);
+        // Const result = jsonMock.mock.lastCall?.[0];
+        // Console.log(result.answer);
     });
 
     it('Get answer hruid does not exist', async () => {
@@ -83,7 +83,7 @@ describe('Questions controllers', () => {
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ answer: expect.anything() }));
 
         const result = jsonMock.mock.lastCall?.[0];
-        // console.log(result.question);
+        // Console.log(result.question);
         expect(result.answer.content).to.eq(newContent);
     });
 
