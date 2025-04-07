@@ -32,6 +32,10 @@ export class GroupController extends BaseController {
         return this.delete<GroupResponse>(`/${num}`);
     }
 
+    async updateGroup(num: number, data: Partial<GroupDTO>): Promise<GroupResponse> {
+        return this.put<GroupResponse>(`/${num}`, data);
+    }
+
     async getSubmissions(groupNumber: number, full = true): Promise<SubmissionsResponse> {
         return this.get<SubmissionsResponse>(`/${groupNumber}/submissions`, { full });
     }
