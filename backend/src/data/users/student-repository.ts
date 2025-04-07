@@ -1,5 +1,4 @@
 import { Student } from '../../entities/users/student.entity.js';
-import { User } from '../../entities/users/user.entity.js';
 import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 // Import { UserRepository } from './user-repository.js';
 

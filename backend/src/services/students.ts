@@ -1,23 +1,20 @@
 import { getClassRepository, getGroupRepository, getStudentRepository, getSubmissionRepository } from '../data/repositories.js';
-import { Class } from '../entities/classes/class.entity.js';
-import { Student } from '../entities/users/student.entity.js';
 import { AssignmentDTO } from '../interfaces/assignment.js';
 import { ClassDTO, mapToClassDTO } from '../interfaces/class.js';
 import { GroupDTO, mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToStudent, mapToStudentDTO, StudentDTO } from '../interfaces/student.js';
-import { mapToSubmissionDTO, SubmissionDTO } from '../interfaces/submission.js';
+import { mapToSubmissionDTO, mapToSubmissionDTOId, SubmissionDTO, SubmissionDTOId } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
-import { UserService } from './users.js';
 
-export async function getAllStudents(): Promise<StudentDTO[]> {
+export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();
-    const users = await studentRepository.findAll();
-    return users.map(mapToStudentDTO);
-}
+    const students = await studentRepository.findAll();
 
-export async function getAllStudentIds(): Promise<string[]> {
-    const users = await getAllStudents();
-    return users.map((user) => user.username);
+    if (full) {
+        return students.map(mapToStudentDTO);
+    }
+
+    return students.map((student) => student.username);
 }
 
 export async function getStudent(username: string): Promise<StudentDTO | null> {
@@ -29,15 +26,9 @@ export async function getStudent(username: string): Promise<StudentDTO | null> {
 export async function createStudent(userData: StudentDTO): Promise<StudentDTO | null> {
     const studentRepository = getStudentRepository();
 
-    try {
-        const newStudent = studentRepository.create(mapToStudent(userData));
-        await studentRepository.save(newStudent);
-
-        return mapToStudentDTO(newStudent);
-    } catch (e) {
-        console.log(e);
-        return null;
-    }
+    const newStudent = mapToStudent(userData);
+    await studentRepository.save(newStudent, { preventOverwrite: true });
+    return mapToStudentDTO(newStudent);
 }
 
 export async function deleteStudent(username: string): Promise<StudentDTO | null> {
@@ -88,9 +79,7 @@ export async function getStudentAssignments(username: string, full: boolean): Pr
     const classRepository = getClassRepository();
     const classes = await classRepository.findByStudent(student);
 
-    const assignments = (await Promise.all(classes.map(async (cls) => await getAllAssignments(cls.classId!, full)))).flat();
-
-    return assignments;
+    return (await Promise.all(classes.map(async (cls) => await getAllAssignments(cls.classId!, full)))).flat();
 }
 
 export async function getStudentGroups(username: string, full: boolean): Promise<GroupDTO[]> {
@@ -111,7 +100,7 @@ export async function getStudentGroups(username: string, full: boolean): Promise
     return groups.map(mapToGroupDTOId);
 }
 
-export async function getStudentSubmissions(username: string): Promise<SubmissionDTO[]> {
+export async function getStudentSubmissions(username: string, full: boolean): Promise<SubmissionDTO[] | SubmissionDTOId[]> {
     const studentRepository = getStudentRepository();
     const student = await studentRepository.findByUsername(username);
 
@@ -122,5 +111,9 @@ export async function getStudentSubmissions(username: string): Promise<Submissio
     const submissionRepository = getSubmissionRepository();
     const submissions = await submissionRepository.findAllSubmissionsForStudent(student);
 
-    return submissions.map(mapToSubmissionDTO);
+    if (full) {
+        return submissions.map(mapToSubmissionDTO);
+    }
+
+    return submissions.map(mapToSubmissionDTOId);
 }

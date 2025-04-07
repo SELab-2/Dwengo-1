@@ -8,7 +8,7 @@
     onMounted(async () => {
         try {
             await auth.handleLoginCallback();
-            await router.replace("/"); // Redirect to home (or dashboard)
+            await router.replace("/user"); // Redirect to theme page
         } catch (error) {
             console.error("OIDC callback error:", error);
         }

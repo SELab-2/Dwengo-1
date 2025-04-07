@@ -37,7 +37,7 @@ export async function createAssignmentHandler(req: Request<AssignmentParams>, re
         return;
     }
 
-    res.status(201).json({ assignment: assignment });
+    res.status(201).json(assignment);
 }
 
 export async function getAssignmentHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
@@ -62,13 +62,14 @@ export async function getAssignmentHandler(req: Request<AssignmentParams>, res: 
 export async function getAssignmentsSubmissionsHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
     const classid = req.params.classid;
     const assignmentNumber = +req.params.id;
+    const full = req.query.full === 'true';
 
     if (isNaN(assignmentNumber)) {
         res.status(400).json({ error: 'Assignment id must be a number' });
         return;
     }
 
-    const submissions = await getAssignmentsSubmissions(classid, assignmentNumber);
+    const submissions = await getAssignmentsSubmissions(classid, assignmentNumber, full);
 
     res.json({
         submissions: submissions,

@@ -3,7 +3,6 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { EnvVars, getEnvVar, getNumericEnvVar } from './util/envvars.js';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { MikroOrmLogger } from './logging/mikroOrmLogger.js';
-import { LOG_LEVEL } from './config.js';
 
 // Import alle entity-bestanden handmatig
 import { User } from './entities/users/user.entity.js';
@@ -50,6 +49,7 @@ function config(testingMode: boolean = false): Options {
             dbName: getEnvVar(EnvVars.DbName),
             subscribers: [new SqliteAutoincrementSubscriber()],
             entities: entities,
+            persistOnCreate: false, // Do not implicitly save entities when they are created via `create`.
             // EntitiesTs: entitiesTs,
 
             // Workaround: vitest: `TypeError: Unknown file extension ".ts"` (ERR_UNKNOWN_FILE_EXTENSION)
@@ -66,10 +66,11 @@ function config(testingMode: boolean = false): Options {
         user: getEnvVar(EnvVars.DbUsername),
         password: getEnvVar(EnvVars.DbPassword),
         entities: entities,
+        persistOnCreate: false, // Do not implicitly save entities when they are created via `create`.
         // EntitiesTs: entitiesTs,
 
         // Logging
-        debug: LOG_LEVEL === 'debug',
+        debug: getEnvVar(EnvVars.LogLevel) === 'debug',
         loggerFactory: (options: LoggerOptions) => new MikroOrmLogger(options),
     };
 }
