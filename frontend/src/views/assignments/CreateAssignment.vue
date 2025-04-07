@@ -16,7 +16,6 @@
     import {useGetAllLearningPaths} from "@/queries/learning-paths.ts";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
-    import type {Language} from "@/data-objects/language.ts";
 
     const router = useRouter();
     const {t, locale} = useI18n();
@@ -36,13 +35,9 @@
 
 
     const language = computed(() => locale.value);
+    const form = ref();
     //Fetch all learning paths
     const learningPathsQueryResults = useGetAllLearningPaths(language);
-
-    watch(language, (newLanguage) => {
-        console.log(newLanguage);
-        learningPathsQueryResults.refetch();
-    });
 
     // Fetch and store all the teacher's classes
     const { data: classes, isLoading, error, refetch } = useTeacherClassesQuery(username, true);
@@ -56,22 +51,18 @@
         return classes.value?.classes || [];
     });
 
+    const selectedClass = ref(null);
 
-    const form = ref();
-
-    const searchQuery = ref('');
 
     const assignmentTitle = ref('');
     const deadline = ref(null);
     const description = ref('');
-    const allLearningPaths = ref([]);
     const selectedLearningPath = ref(null);
-    const selectedClass = ref(null);
     const groups = ref<string[][]>([]);
 
     const availableClass = computed(() => {
         //TODO: replace by real data
-        return /*classes.find(cl => selectedClass.value?.value === cl.id) ||*/ null;
+        return classes.value?.classes.find(cl => selectedClass.value?.value === cl.id) || null;
     });
 
     const allStudents = computed(() => {
@@ -202,10 +193,6 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-}
-
-.title {
-    margin-bottom: 1%;
 }
 
 .form-card {
