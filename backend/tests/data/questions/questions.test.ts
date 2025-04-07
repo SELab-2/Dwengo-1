@@ -1,7 +1,12 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { setupTestApp } from '../../setup-tests';
 import { QuestionRepository } from '../../../src/data/questions/question-repository';
-import { getQuestionRepository, getStudentRepository } from '../../../src/data/repositories';
+import {
+    getAssignmentRepository, getClassRepository,
+    getGroupRepository,
+    getQuestionRepository,
+    getStudentRepository
+} from '../../../src/data/repositories';
 import { StudentRepository } from '../../../src/data/users/student-repository';
 import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
 import { Language } from '@dwengo-1/common/util/language';
@@ -27,8 +32,13 @@ describe('QuestionRepository', () => {
     it('should create new question', async () => {
         const id = new LearningObjectIdentifier('id03', Language.English, 1);
         const student = await studentRepository.findByUsername('Noordkaap');
+
+        const clazz = await getClassRepository().findById("id01");
+        const assignment = await getAssignmentRepository().findByClassAndId(clazz!, 1);
+        const group = await getGroupRepository().findByAssignmentAndGroupNumber(assignment!, 1);
         await questionRepository.createQuestion({
             loId: id,
+            inGroup: group!,
             author: student!,
             content: 'question?',
         });

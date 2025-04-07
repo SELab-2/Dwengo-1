@@ -42,11 +42,21 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
     }
 
     public async findAllSubmissionsForGroup(group: Group): Promise<Submission[]> {
-        return this.find({ onBehalfOf: group });
+        return this.find(
+            { onBehalfOf: group },
+            {
+                populate: ["onBehalfOf.members"]
+            }
+        );
     }
 
     public async findAllSubmissionsForStudent(student: Student): Promise<Submission[]> {
-        return this.find({ submitter: student });
+        return this.find(
+            { submitter: student },
+            {
+                populate: ["onBehalfOf.members"]
+            }
+        );
     }
 
     public async deleteSubmissionByLearningObjectAndSubmissionNumber(loId: LearningObjectIdentifier, submissionNumber: number): Promise<void> {
