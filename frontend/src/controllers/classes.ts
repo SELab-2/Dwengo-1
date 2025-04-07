@@ -42,6 +42,10 @@ export class ClassController extends BaseController {
         return this.delete<ClassResponse>(`/${id}`);
     }
 
+    async updateClass(id: string, data: Partial<ClassDTO>): Promise<ClassResponse> {
+        return this.put<ClassResponse>(`/${id}`, data);
+    }
+
     async getStudents(id: string, full = true): Promise<StudentsResponse> {
         return this.get<StudentsResponse>(`/${id}/students`, { full });
     }
