@@ -29,7 +29,7 @@ const teacher02: Student = {username: "id12", firstName: "John", lastName: "Hiat
 const teacher03: Student = {username: "id13", firstName: "Aaron", lastName: "Lewis", classes: []};
 
 const class01: Class = {
-    id: "34d484a1-295f-4e9f-bfdc-3e7a23d86a89",
+    id: "8764b861-90a6-42e5-9732-c0d9eb2f55f9",
     displayName: "class 01",
     teachers: [teacher01],
     students: [student01, student02],

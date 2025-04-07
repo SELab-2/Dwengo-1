@@ -1,4 +1,3 @@
-
 /**
  * Submits the form data to the backend.
  *
@@ -16,21 +15,21 @@ import type {AssignmentDTO} from "@dwengo-1/common/interfaces/assignment";
 
 export const submitForm = async (
     assignmentTitle: string,
-    selectedLearningPath: any,
+    selectedLearningPath: string,
     selectedClass: string,
-    groups: string[][],
+    groups: string[],
     deadline: string,
     description: string,
     currentLanguage: string
 ) => {
     const formData: AssignmentDTO = {
-        id: 0,
+        id: 4,
         class: selectedClass,
         title: assignmentTitle,
         description: description,
         learningPath: selectedLearningPath,
-        language: currentLanguage,
-        groups: [],
+        language: currentLanguage
+        //groups: [],
         //deadline: deadline,
     };
 

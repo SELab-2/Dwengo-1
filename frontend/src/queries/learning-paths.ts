@@ -1,8 +1,8 @@
-import { type MaybeRefOrGetter, toValue } from "vue";
-import type { Language } from "@/data-objects/language.ts";
-import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
-import { getLearningPathController } from "@/controllers/controllers";
-import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
+import {type MaybeRefOrGetter, toValue} from "vue";
+import type {Language} from "@/data-objects/language.ts";
+import {useQuery, type UseQueryReturnType} from "@tanstack/vue-query";
+import {getLearningPathController} from "@/controllers/controllers";
+import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
 
 const LEARNING_PATH_KEY = "learningPath";
 const learningPathController = getLearningPathController();
@@ -42,5 +42,17 @@ export function useSearchLearningPathQuery(
             return learningPathController.search(queryVal);
         },
         enabled: () => Boolean(toValue(query)),
+    });
+}
+
+export function useGetAllLearningPaths(language: MaybeRefOrGetter<string | undefined>
+): UseQueryReturnType<LearningPath[], Error> {
+    return useQuery({
+        queryKey: [LEARNING_PATH_KEY, "getAllLearningPaths", language],
+        queryFn: async () => {
+            const lang = toValue(language);
+            return learningPathController.getAllLearningPaths(lang);
+        },
+        enabled: () => Boolean(toValue(language))
     });
 }
