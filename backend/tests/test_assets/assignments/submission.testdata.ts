@@ -12,7 +12,7 @@ export function makeTestSubmissions(em: EntityManager, students: Student[], grou
         submissionNumber: 1,
         submitter: students[0],
         submissionTime: new Date(2025, 2, 20),
-        onBehalfOf: groups[0], // group #1 for Assignment #1 in class 'id01'
+        onBehalfOf: groups[0], // Group #1 for Assignment #1 in class 'id01'
         content: 'sub1',
     });
 
@@ -23,7 +23,7 @@ export function makeTestSubmissions(em: EntityManager, students: Student[], grou
         submissionNumber: 2,
         submitter: students[0],
         submissionTime: new Date(2025, 2, 25),
-        onBehalfOf: groups[0], // group #1 for Assignment #1 in class 'id01'
+        onBehalfOf: groups[0], // Group #1 for Assignment #1 in class 'id01'
         content: '',
     });
 
@@ -34,7 +34,7 @@ export function makeTestSubmissions(em: EntityManager, students: Student[], grou
         submissionNumber: 1,
         submitter: students[0],
         submissionTime: new Date(2025, 2, 20),
-        onBehalfOf: groups[0], // group #1 for Assignment #1 in class 'id01'
+        onBehalfOf: groups[0], // Group #1 for Assignment #1 in class 'id01'
         content: '',
     });
 
@@ -45,7 +45,7 @@ export function makeTestSubmissions(em: EntityManager, students: Student[], grou
         submissionNumber: 2,
         submitter: students[0],
         submissionTime: new Date(2025, 2, 25),
-        onBehalfOf: groups[0], // group #1 for Assignment #1 in class 'id01'
+        onBehalfOf: groups[0], // Group #1 for Assignment #1 in class 'id01'
         content: '',
     });
 

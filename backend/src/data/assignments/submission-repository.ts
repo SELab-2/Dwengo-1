@@ -60,7 +60,7 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
         assignment: Assignment,
         forStudentUsername?: string
     ): Promise<Submission[]> {
-        let onBehalfOf = forStudentUsername ? {
+        const onBehalfOf = forStudentUsername ? {
             assignment,
             members: {
                 $some: {

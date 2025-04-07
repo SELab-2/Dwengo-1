@@ -30,9 +30,8 @@ export async function getQuestionsAboutLearningObjectInAssignment(
         .findAllQuestionsAboutLearningObjectInAssignment(loId, assignment!, studentUsername);
 
     if (full)
-        return questions.map(q => mapToQuestionDTO(q));
-    else
-        return questions.map(q => mapToQuestionDTOId(q));
+        {return questions.map(q => mapToQuestionDTO(q));}
+    return questions.map(q => mapToQuestionDTOId(q));
 }
 
 export async function getAllQuestions(id: LearningObjectIdentifier, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {

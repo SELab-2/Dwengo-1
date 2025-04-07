@@ -67,19 +67,19 @@ describe('QuestionRepository', () => {
 
         expect(result).toHaveLength(3);
 
-        // question01: About learning object 'id05', in group #1 for Assignment #1 in class 'id01'
+        // Question01: About learning object 'id05', in group #1 for Assignment #1 in class 'id01'
         expect(result[0].learningObjectHruid).toEqual(loId.hruid);
         expect(result[0].sequenceNumber).toEqual(1);
 
-        // question02: About learning object 'id05', in group #1 for Assignment #1 in class 'id01'
+        // Question02: About learning object 'id05', in group #1 for Assignment #1 in class 'id01'
         expect(result[1].learningObjectHruid).toEqual(loId.hruid);
         expect(result[1].sequenceNumber).toEqual(2);
 
-        // question05: About learning object 'id05', in group #2 for Assignment #1 in class 'id01'
+        // Question05: About learning object 'id05', in group #2 for Assignment #1 in class 'id01'
         expect(result[2].learningObjectHruid).toEqual(loId.hruid);
         expect(result[2].sequenceNumber).toEqual(3);
 
-        // question06: About learning object 'id05', but for Assignment #2 in class 'id01' => not expected.
+        // Question06: About learning object 'id05', but for Assignment #2 in class 'id01' => not expected.
     });
 
     it("should find only the questions for a certain learning object and assignment asked by the user's group", async () => {
@@ -89,13 +89,13 @@ describe('QuestionRepository', () => {
 
         expect(result).toHaveLength(1);
 
-        // question01 and question02 are in group #1 => not displayed.
+        // Question01 and question02 are in group #1 => not displayed.
 
-        // question05: About learning object 'id05', in group #2 for Assignment #1 in class 'id01'
+        // Question05: About learning object 'id05', in group #2 for Assignment #1 in class 'id01'
         expect(result[0].learningObjectHruid).toEqual(loId.hruid);
         expect(result[0].sequenceNumber).toEqual(3);
 
-        // question06: About learning object 'id05', but for Assignment #2 in class 'id01' => not expected.
+        // Question06: About learning object 'id05', but for Assignment #2 in class 'id01' => not expected.
     });
 
     it('should not find removed question', async () => {
@@ -110,8 +110,8 @@ describe('QuestionRepository', () => {
 
 function sortQuestions(questions: Question[]) {
     questions.sort((a, b) => {
-        if (a.learningObjectHruid < b.learningObjectHruid) return -1
-        else if (a.learningObjectHruid > b.learningObjectHruid) return 1
-        else return a.sequenceNumber! - b.sequenceNumber!
+        if (a.learningObjectHruid < b.learningObjectHruid) {return -1}
+        else if (a.learningObjectHruid > b.learningObjectHruid) {return 1}
+        return a.sequenceNumber! - b.sequenceNumber!
     });
 }

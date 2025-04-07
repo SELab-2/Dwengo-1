@@ -97,15 +97,15 @@ describe('SubmissionRepository', () => {
 
         expect(result).toHaveLength(3);
 
-        // submission3 should be found (for learning object 'id02' by group #1 for Assignment #1 in class 'id01')
+        // Submission3 should be found (for learning object 'id02' by group #1 for Assignment #1 in class 'id01')
         expect(result[0].learningObjectHruid).toBe(loId.hruid);
         expect(result[0].submissionNumber).toBe(1);
 
-        // submission4 should be found (for learning object 'id02' by group #1 for Assignment #1 in class 'id01')
+        // Submission4 should be found (for learning object 'id02' by group #1 for Assignment #1 in class 'id01')
         expect(result[1].learningObjectHruid).toBe(loId.hruid);
         expect(result[1].submissionNumber).toBe(2);
 
-        // submission8 should be found (for learning object 'id02' by group #2 for Assignment #1 in class 'id01')
+        // Submission8 should be found (for learning object 'id02' by group #2 for Assignment #1 in class 'id01')
         expect(result[2].learningObjectHruid).toBe(loId.hruid);
         expect(result[2].submissionNumber).toBe(3);
     });
@@ -117,12 +117,12 @@ describe('SubmissionRepository', () => {
 
         expect(result).toHaveLength(1);
 
-        // submission8 should be found (for learning object 'id02' by group #2 for Assignment #1 in class 'id01')
+        // Submission8 should be found (for learning object 'id02' by group #2 for Assignment #1 in class 'id01')
         expect(result[0].learningObjectHruid).toBe(loId.hruid);
         expect(result[0].submissionNumber).toBe(3);
 
         // The other submissions found in the previous test case should not be found anymore as they were made on
-        // behalf of group #1 which Tool is no member of.
+        // Behalf of group #1 which Tool is no member of.
     });
 
     it('should not find a deleted submission', async () => {
@@ -137,8 +137,8 @@ describe('SubmissionRepository', () => {
 
 function sortSubmissions(submissions: Submission[]) {
     submissions.sort((a, b) => {
-        if (a.learningObjectHruid < b.learningObjectHruid) return -1;
-        if (a.learningObjectHruid > b.learningObjectHruid) return 1;
+        if (a.learningObjectHruid < b.learningObjectHruid) {return -1;}
+        if (a.learningObjectHruid > b.learningObjectHruid) {return 1;}
         return a.submissionNumber! - b.submissionNumber!;
     });
 }

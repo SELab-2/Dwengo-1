@@ -12,7 +12,7 @@ export function mapToGroup(groupDto: GroupDTO, clazz: Class): Group {
 
     return getGroupRepository().create({
         groupNumber: groupDto.groupNumber,
-        assignment: mapToAssignment(assignmentDto, clazz!),
+        assignment: mapToAssignment(assignmentDto, clazz),
         members: groupDto.members.map(studentDto => mapToStudent(studentDto as StudentDTO))
     });
 }

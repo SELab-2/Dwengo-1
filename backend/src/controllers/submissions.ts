@@ -30,8 +30,8 @@ export async function getSubmissionsHandler(
     res: Response
 ): Promise<void> {
     const loHruid = req.params.hruid;
-    const lang = languageMap[req.query.language as string] || Language.Dutch;
-    const version = (req.query.version || 1) as number;
+    const lang = languageMap[req.query.language] || Language.Dutch;
+    const version = (req.query.version || 1);
 
     const submissions = await getSubmissionsForLearningObjectAndAssignment(
         loHruid, lang, version, req.query.classId, req.query.assignmentId

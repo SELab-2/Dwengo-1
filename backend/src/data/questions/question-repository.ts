@@ -75,7 +75,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         assignment: Assignment,
         forStudentUsername?: string
     ): Promise<Question[]> {
-        let inGroup = forStudentUsername ? {
+        const inGroup = forStudentUsername ? {
             assignment,
             members: {
                 $some: {
