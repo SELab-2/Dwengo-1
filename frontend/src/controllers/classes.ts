@@ -46,8 +46,24 @@ export class ClassController extends BaseController {
         return this.get<StudentsResponse>(`/${id}/students`, { full });
     }
 
+    async addStudent(id: string, username: string): Promise<ClassResponse> {
+        return this.post<ClassResponse>(`/${id}/students`, { username });
+    }
+
+    async deleteStudent(id: string, username: string): Promise<ClassResponse> {
+        return this.delete<ClassResponse>(`/${id}/students/${ username }`);
+    }
+
     async getTeachers(id: string, full = true): Promise<TeachersResponse> {
         return this.get<TeachersResponse>(`/${id}/teachers`, { full });
+    }
+
+    async addTeacher(id: string, username: string): Promise<ClassResponse> {
+        return this.post<ClassResponse>(`/${id}/teachers`, { username });
+    }
+
+    async deleteTeacher(id: string, username: string): Promise<ClassResponse> {
+        return this.delete<ClassResponse>(`/${id}/teachers/${ username }`);
     }
 
     async getTeacherInvitations(id: string, full = true): Promise<TeacherInvitationsResponse> {
