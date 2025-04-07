@@ -2,7 +2,6 @@ import type { QuestionData, QuestionDTO, QuestionId } from "@dwengo-1/common/int
 import { BaseController } from "@/controllers/base-controller.ts";
 import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
 
-
 export interface QuestionsResponse {
     questions: QuestionDTO[] | QuestionId[];
 }
