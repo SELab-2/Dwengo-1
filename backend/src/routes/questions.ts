@@ -16,6 +16,6 @@ router.delete('/:seq', deleteQuestionHandler);
 // Information about a question with id
 router.get('/:seq', getQuestionHandler);
 
-router.use('/:seq/answer', answerRoutes);
+router.use('/:seq/answers', answerRoutes);
 
 export default router;

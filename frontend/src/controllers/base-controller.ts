@@ -21,20 +21,20 @@ export abstract class BaseController {
         return response.data;
     }
 
-    protected async post<T>(path: string, body: unknown): Promise<T> {
-        const response = await apiClient.post<T>(this.absolutePathFor(path), body);
+    protected async post<T>(path: string, body: unknown, queryParams?: QueryParams): Promise<T> {
+        const response = await apiClient.post<T>(this.absolutePathFor(path), body, { params: queryParams });
         BaseController.assertSuccessResponse(response);
         return response.data;
     }
 
-    protected async delete<T>(path: string): Promise<T> {
-        const response = await apiClient.delete<T>(this.absolutePathFor(path));
+    protected async delete<T>(path: string, queryParams?: QueryParams): Promise<T> {
+        const response = await apiClient.delete<T>(this.absolutePathFor(path), { params: queryParams} );
         BaseController.assertSuccessResponse(response);
         return response.data;
     }
 
-    protected async put<T>(path: string, body: unknown): Promise<T> {
-        const response = await apiClient.put<T>(this.absolutePathFor(path), body);
+    protected async put<T>(path: string, body: unknown, queryParams?: QueryParams): Promise<T> {
+        const response = await apiClient.put<T>(this.absolutePathFor(path), body, { params: queryParams});
         BaseController.assertSuccessResponse(response);
         return response.data;
     }
