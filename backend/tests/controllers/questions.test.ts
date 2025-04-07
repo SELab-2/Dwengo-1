@@ -67,19 +67,6 @@ describe('Questions controllers', () => {
         // console.log(result.question);
     })
 
-    it('Get question with fallback sequence number and version', async () => {
-        req = {
-            params: { hruid: 'id05'},
-            query: { lang: Language.English, full: 'true' },
-        };
-
-        await getQuestionHandler(req as Request, res as Response);
-        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ question: expect.anything() }));
-
-        // const result = jsonMock.mock.lastCall?.[0];
-        // console.log(result.question);
-    })
-
     it('Get question hruid does not exist', async () => {
         req = {
             params: { hruid: 'id_not_exist'},

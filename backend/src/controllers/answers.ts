@@ -5,7 +5,7 @@ import {createAnswer, deleteAnswer, getAnswer, getAnswersByQuestion, updateAnswe
 import {FALLBACK_SEQ_NUM} from "../config";
 import {AnswerData} from "@dwengo-1/common/interfaces/answer";
 
-export async function getAnswersHandler(req: Request, res: Response): Promise<void> {
+export async function getAllAnswersHandler(req: Request, res: Response): Promise<void> {
     const hruid = req.params.hruid;
     const version = req.params.version;
     const language = req.query.lang as string;

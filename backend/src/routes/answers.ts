@@ -3,13 +3,13 @@ import {
     createAnswerHandler,
     deleteAnswerHandler,
     getAnswerHandler,
-    getAnswersHandler,
+    getAllAnswersHandler,
     updateAnswerHandler
 } from "../controllers/answers";
 
 const router = express.Router({ mergeParams: true });
 
-router.get('/', getAnswersHandler);
+router.get('/', getAllAnswersHandler);
 
 router.post('/', createAnswerHandler)
 
