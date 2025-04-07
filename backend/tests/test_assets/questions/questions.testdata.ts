@@ -2,12 +2,14 @@ import { EntityManager } from '@mikro-orm/core';
 import { Question } from '../../../src/entities/questions/question.entity';
 import { Language } from '@dwengo-1/common/util/language';
 import { Student } from '../../../src/entities/users/student.entity';
+import {Group} from "../../../src/entities/assignments/group.entity";
 
-export function makeTestQuestions(em: EntityManager, students: Student[]): Question[] {
+export function makeTestQuestions(em: EntityManager, students: Student[], groups: Group[]): Question[] {
     const question01 = em.create(Question, {
         learningObjectLanguage: Language.English,
         learningObjectVersion: 1,
         learningObjectHruid: 'id05',
+        inGroup: groups[0],
         sequenceNumber: 1,
         author: students[0],
         timestamp: new Date(),
@@ -18,6 +20,7 @@ export function makeTestQuestions(em: EntityManager, students: Student[]): Quest
         learningObjectLanguage: Language.English,
         learningObjectVersion: 1,
         learningObjectHruid: 'id05',
+        inGroup: groups[0],
         sequenceNumber: 2,
         author: students[2],
         timestamp: new Date(),
@@ -30,6 +33,7 @@ export function makeTestQuestions(em: EntityManager, students: Student[]): Quest
         learningObjectHruid: 'id04',
         sequenceNumber: 1,
         author: students[0],
+        inGroup: groups[0],
         timestamp: new Date(),
         content: 'question',
     });
@@ -40,6 +44,7 @@ export function makeTestQuestions(em: EntityManager, students: Student[]): Quest
         learningObjectHruid: 'id01',
         sequenceNumber: 1,
         author: students[1],
+        inGroup: groups[1],
         timestamp: new Date(),
         content: 'question',
     });

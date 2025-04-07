@@ -21,7 +21,7 @@ export class Question {
     @PrimaryKey({ type: 'integer', autoincrement: true })
     sequenceNumber?: number;
 
-    @ManyToOne({ entity: () => Group, primary: true })
+    @ManyToOne({ entity: () => Group })
     inGroup!: Group;
 
     @ManyToOne({

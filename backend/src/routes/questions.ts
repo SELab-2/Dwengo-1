@@ -15,11 +15,11 @@ router.get('/', getAllQuestionsHandler);
 
 router.post('/', createQuestionHandler);
 
-router.delete('/:classId/assignment/:assignmentId/group/:groupId/:seq', deleteQuestionHandler);
+router.delete('/:seq', deleteQuestionHandler);
 
 // Information about a question with id
-router.get('/:classId/assignment/:assignmentId/group/:groupId/:seq', getQuestionHandler);
+router.get('/:seq', getQuestionHandler);
 
-router.get('/:classId/assignment/:assignmentId/group/:groupId/answers/:seq', getQuestionAnswersHandler);
+router.get('/answers/:seq', getQuestionAnswersHandler);
 
 export default router;

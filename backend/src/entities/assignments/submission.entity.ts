@@ -22,8 +22,7 @@ export class Submission {
     submissionNumber?: number;
 
     @ManyToOne({
-        entity: () => Group,
-        primary: true
+        entity: () => Group
     })
     onBehalfOf!: Group;
 

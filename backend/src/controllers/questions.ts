@@ -4,7 +4,6 @@ import { FALLBACK_LANG, FALLBACK_SEQ_NUM } from '../config.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { Language } from '@dwengo-1/common/util/language';
-import {getGroup} from "../services/groups";
 
 function getObjectId(req: Request, res: Response): LearningObjectIdentifier | null {
     const { hruid, version } = req.params;
@@ -22,18 +21,16 @@ function getObjectId(req: Request, res: Response): LearningObjectIdentifier | nu
     };
 }
 
-async function getQuestionId(req: Request, res: Response): Promise<QuestionId | null> {
-    const { seq, classId, assignmentId, groupId } = req.params
+function getQuestionId(req: Request, res: Response): QuestionId | null {
+    const seq = req.params.seq;
     const learningObjectIdentifier = getObjectId(req, res);
-    const groupIdentifier = await getGroup(classId, parseInt(assignmentId), parseInt(groupId), false);
 
-    if (!learningObjectIdentifier || !groupIdentifier) {
+    if (!learningObjectIdentifier) {
         return null;
     }
 
     return {
         learningObjectIdentifier,
-        inGroup: groupIdentifier,
         sequenceNumber: seq ? Number(seq) : FALLBACK_SEQ_NUM,
     };
 }
@@ -56,7 +53,7 @@ export async function getAllQuestionsHandler(req: Request, res: Response): Promi
 }
 
 export async function getQuestionHandler(req: Request, res: Response): Promise<void> {
-    const questionId = await getQuestionId(req, res);
+    const questionId = getQuestionId(req, res);
 
     if (!questionId) {
         return;
@@ -72,7 +69,7 @@ export async function getQuestionHandler(req: Request, res: Response): Promise<v
 }
 
 export async function getQuestionAnswersHandler(req: Request, res: Response): Promise<void> {
-    const questionId = await getQuestionId(req, res);
+    const questionId = getQuestionId(req, res);
     const full = req.query.full === 'true';
 
     if (!questionId) {
@@ -106,7 +103,7 @@ export async function createQuestionHandler(req: Request, res: Response): Promis
 }
 
 export async function deleteQuestionHandler(req: Request, res: Response): Promise<void> {
-    const questionId = await getQuestionId(req, res);
+    const questionId = getQuestionId(req, res);
 
     if (!questionId) {
         return;

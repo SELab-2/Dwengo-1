@@ -38,7 +38,6 @@ export function mapToSubmission(submissionDTO: SubmissionDTO): Submission {
     submission.submitter = mapToStudent(submissionDTO.submitter);
     // Submission.submissionTime = submissionDTO.time;
     // Submission.onBehalfOf =  submissionDTO.group!;
-    // TODO fix group
     submission.content = submissionDTO.content;
 
     return submission;

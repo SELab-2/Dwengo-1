@@ -33,7 +33,6 @@ export function mapToQuestionDTOId(question: Question): QuestionId {
 
     return {
         learningObjectIdentifier,
-        inGroup: mapToGroupDTO(question.inGroup),
         sequenceNumber: question.sequenceNumber!,
     };
 }

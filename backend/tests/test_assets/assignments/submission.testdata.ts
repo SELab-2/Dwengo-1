@@ -34,6 +34,7 @@ export function makeTestSubmissions(em: EntityManager, students: Student[], grou
         submissionNumber: 1,
         submitter: students[0],
         submissionTime: new Date(2025, 2, 20),
+        onBehalfOf: groups[0],
         content: '',
     });
 
@@ -44,6 +45,7 @@ export function makeTestSubmissions(em: EntityManager, students: Student[], grou
         submissionNumber: 2,
         submitter: students[0],
         submissionTime: new Date(2025, 2, 25),
+        onBehalfOf: groups[0],
         content: '',
     });
 
@@ -54,6 +56,7 @@ export function makeTestSubmissions(em: EntityManager, students: Student[], grou
         submissionNumber: 1,
         submitter: students[1],
         submissionTime: new Date(2025, 2, 20),
+        onBehalfOf: groups[1],
         content: '',
     });
 

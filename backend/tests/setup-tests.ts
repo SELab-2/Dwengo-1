@@ -37,7 +37,7 @@ export async function setupTestApp(): Promise<void> {
 
     learningObjects[1].attachments = attachments;
 
-    const questions = makeTestQuestions(em, students);
+    const questions = makeTestQuestions(em, students, groups);
     const answers = makeTestAnswers(em, teachers, questions);
     const submissions = makeTestSubmissions(em, students, groups);
 

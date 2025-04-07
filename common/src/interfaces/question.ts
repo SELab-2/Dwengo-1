@@ -14,5 +14,4 @@ export interface QuestionDTO {
 export interface QuestionId {
     learningObjectIdentifier: LearningObjectIdentifier;
     sequenceNumber: number;
-    inGroup: GroupDTO;
 }
