@@ -63,7 +63,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         });
     }
 
-    public async findByLearningObjectAndSequenceNumber(loId: LearningObjectIdentifier, sequenceNumber: number): Promise<Loaded<Question, never, "*", never> | null> {
+    public async findByLearningObjectAndSequenceNumber(loId: LearningObjectIdentifier, sequenceNumber: number): Promise<Loaded<Question> | null> {
         return this.findOne({
             learningObjectHruid: loId.hruid,
             learningObjectLanguage: loId.language,

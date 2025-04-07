@@ -20,7 +20,7 @@ export class AnswerRepository extends DwengoEntityRepository<Answer> {
             orderBy: { sequenceNumber: 'ASC' },
         });
     }
-    public async findAnswer(question: Question, sequenceNumber: number): Promise<Loaded<Answer, never, "*", never> | null> {
+    public async findAnswer(question: Question, sequenceNumber: number): Promise<Loaded<Answer> | null> {
         return this.findOne({
             toQuestion: question, sequenceNumber
         });

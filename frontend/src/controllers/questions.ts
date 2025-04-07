@@ -28,11 +28,11 @@ export class QuestionController extends BaseController {
         return this.post<QuestionResponse>("/", questionData, {lang: this.loId.lang})
     }
 
-    async remove(sequenceNumber: number) {
+    async remove(sequenceNumber: number): Promise<QuestionResponse> {
         return this.delete<QuestionResponse>(`/${sequenceNumber}`, {lang: this.loId.lang});
     }
 
-    async update(sequenceNumber: number, questionData: QuestionData) {
+    async update(sequenceNumber: number, questionData: QuestionData): Promise<QuestionResponse> {
         return this.put<QuestionResponse>(`/${sequenceNumber}`, questionData, {lang: this.loId.lang});
     }
 }

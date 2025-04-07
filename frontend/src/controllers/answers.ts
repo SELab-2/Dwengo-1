@@ -26,7 +26,7 @@ export class AnswerController extends BaseController {
         return this.get<AnswerResponse>(`/${seq}`, {lang: this.loId.lang});
     }
 
-    async create(answerData: AnswerData) {
+    async create(answerData: AnswerData): Promise<AnswerResponse> {
         return this.post<AnswerResponse>("/", answerData, {lang: this.loId.lang});
     }
 
