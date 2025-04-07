@@ -44,7 +44,6 @@ RUN npm install --silent --only=production
 
 COPY ./docs ./docs
 COPY ./backend/i18n ./backend/i18n
-COPY ./backend/.env ./backend/.env
 
 EXPOSE 3000
 
