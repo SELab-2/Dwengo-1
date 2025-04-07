@@ -10,7 +10,7 @@ class BlockImageProcessor extends InlineImageProcessor {
         super();
     }
 
-    override renderFn(imageUrl: string) {
+    override renderFn(imageUrl: string): string {
         const inlineHtml = super.render(imageUrl);
         return DOMPurify.sanitize(`<div>${inlineHtml}</div>`);
     }

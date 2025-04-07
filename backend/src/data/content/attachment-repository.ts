@@ -1,10 +1,10 @@
 import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { Attachment } from '../../entities/content/attachment.entity.js';
-import { Language } from '../../entities/content/language';
+import { Language } from '@dwengo-1/common/util/language';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier';
 
 export class AttachmentRepository extends DwengoEntityRepository<Attachment> {
-    public findByLearningObjectIdAndName(learningObjectId: LearningObjectIdentifier, name: string): Promise<Attachment | null> {
+    public async findByLearningObjectIdAndName(learningObjectId: LearningObjectIdentifier, name: string): Promise<Attachment | null> {
         return this.findOne({
             learningObject: {
                 hruid: learningObjectId.hruid,
@@ -15,7 +15,11 @@ export class AttachmentRepository extends DwengoEntityRepository<Attachment> {
         });
     }
 
-    public findByMostRecentVersionOfLearningObjectAndName(hruid: string, language: Language, attachmentName: string): Promise<Attachment | null> {
+    public async findByMostRecentVersionOfLearningObjectAndName(
+        hruid: string,
+        language: Language,
+        attachmentName: string
+    ): Promise<Attachment | null> {
         return this.findOne(
             {
                 learningObject: {

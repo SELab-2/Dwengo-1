@@ -6,8 +6,8 @@ export abstract class User {
     username!: string;
 
     @Property()
-    firstName: string = '';
+    firstName = '';
 
     @Property()
-    lastName: string = '';
+    lastName = '';
 }

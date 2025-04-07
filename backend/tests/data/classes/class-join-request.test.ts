@@ -3,9 +3,7 @@ import { setupTestApp } from '../../setup-tests';
 import { ClassJoinRequestRepository } from '../../../src/data/classes/class-join-request-repository';
 import { getClassJoinRequestRepository, getClassRepository, getStudentRepository } from '../../../src/data/repositories';
 import { StudentRepository } from '../../../src/data/users/student-repository';
-import { Class } from '../../../src/entities/classes/class.entity';
 import { ClassRepository } from '../../../src/data/classes/class-repository';
-import { Student } from '../../../src/entities/users/student.entity';
 
 describe('ClassJoinRequestRepository', () => {
     let classJoinRequestRepository: ClassJoinRequestRepository;

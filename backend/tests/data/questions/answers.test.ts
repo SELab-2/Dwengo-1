@@ -4,7 +4,7 @@ import { AnswerRepository } from '../../../src/data/questions/answer-repository'
 import { getAnswerRepository, getQuestionRepository, getTeacherRepository } from '../../../src/data/repositories';
 import { QuestionRepository } from '../../../src/data/questions/question-repository';
 import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
-import { Language } from '../../../src/entities/content/language';
+import { Language } from '@dwengo-1/common/util/language';
 import { TeacherRepository } from '../../../src/data/users/teacher-repository';
 
 describe('AnswerRepository', () => {
@@ -23,9 +23,9 @@ describe('AnswerRepository', () => {
         const id = new LearningObjectIdentifier('id05', Language.English, 1);
         const questions = await questionRepository.findAllQuestionsAboutLearningObject(id);
 
-        const question = questions.filter((it) => it.sequenceNumber == 2)[0];
+        const question = questions.find((it) => it.sequenceNumber === 2);
 
-        const answers = await answerRepository.findAllAnswersToQuestion(question);
+        const answers = await answerRepository.findAllAnswersToQuestion(question!);
 
         expect(answers).toBeTruthy();
         expect(answers).toHaveLength(2);

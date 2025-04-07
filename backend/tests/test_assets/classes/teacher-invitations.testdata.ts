@@ -1,13 +1,9 @@
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { TeacherInvitation } from '../../../src/entities/classes/teacher-invitation.entity';
 import { Teacher } from '../../../src/entities/users/teacher.entity';
 import { Class } from '../../../src/entities/classes/class.entity';
 
-export function makeTestTeacherInvitations(
-    em: EntityManager<IDatabaseDriver<Connection>>,
-    teachers: Array<Teacher>,
-    classes: Array<Class>
-): Array<TeacherInvitation> {
+export function makeTestTeacherInvitations(em: EntityManager, teachers: Teacher[], classes: Class[]): TeacherInvitation[] {
     const teacherInvitation01 = em.create(TeacherInvitation, {
         sender: teachers[1],
         receiver: teachers[0],

@@ -43,6 +43,6 @@ jobs:
               with:
                   auto_fix: true
                   eslint: true
-                  eslint_args: '--config eslint.config.ts'
+                  eslint_args: "--config eslint.config.ts --ignore-pattern '**/prettier.config.js'"
                   prettier: true
                   commit_message: 'style: fix linting issues met ${linter}'

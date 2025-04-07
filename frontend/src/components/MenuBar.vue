@@ -26,20 +26,19 @@
     ]);
 
     // Logic to change the language of the website to the selected language
-    const changeLanguage = (langCode: string) => {
+    function changeLanguage(langCode: string): void {
         locale.value = langCode;
         localStorage.setItem("user-lang", langCode);
-    };
+    }
 
-    // Contains functionality to let the collapsed menu appear and disappear
-    // When the screen size varies
+    // Contains functionality to let the collapsed menu appear and disappear when the screen size varies
     const drawer = ref(false);
 
     // When the user wants to logout, a popup is shown to verify this
     // If verified, the user should be logged out
-    const performLogout = () => {
-        auth.logout();
-    };
+    async function performLogout(): Promise<void> {
+        await auth.logout();
+    }
 </script>
 
 <template>

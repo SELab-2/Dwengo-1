@@ -6,7 +6,11 @@
  * @param regex
  * @param replacementFn
  */
-export async function replaceAsync(str: string, regex: RegExp, replacementFn: (match: string, ...args: string[]) => Promise<string>) {
+export async function replaceAsync(
+    str: string,
+    regex: RegExp,
+    replacementFn: (match: string, ...args: string[]) => Promise<string>
+): Promise<string> {
     const promises: Promise<string>[] = [];
 
     // First run through matches: add all Promises resulting from the replacement function

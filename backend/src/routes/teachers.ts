@@ -3,10 +3,12 @@ import {
     createTeacherHandler,
     deleteTeacherHandler,
     getAllTeachersHandler,
+    getStudentJoinRequestHandler,
     getTeacherClassHandler,
     getTeacherHandler,
     getTeacherQuestionHandler,
     getTeacherStudentHandler,
+    updateStudentJoinRequestHandler,
 } from '../controllers/teachers.js';
 const router = express.Router();
 
@@ -14,8 +16,6 @@ const router = express.Router();
 router.get('/', getAllTeachersHandler);
 
 router.post('/', createTeacherHandler);
-
-router.delete('/', deleteTeacherHandler);
 
 router.get('/:username', getTeacherHandler);
 
@@ -27,8 +27,12 @@ router.get('/:username/students', getTeacherStudentHandler);
 
 router.get('/:username/questions', getTeacherQuestionHandler);
 
+router.get('/:username/joinRequests/:classId', getStudentJoinRequestHandler);
+
+router.put('/:username/joinRequests/:classId/:studentUsername', updateStudentJoinRequestHandler);
+
 // Invitations to other classes a teacher received
-router.get('/:id/invitations', (req, res) => {
+router.get('/:id/invitations', (_req, res) => {
     res.json({
         invitations: ['0'],
     });

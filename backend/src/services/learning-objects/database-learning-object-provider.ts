@@ -1,13 +1,12 @@
 import { LearningObjectProvider } from './learning-object-provider.js';
-import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '../../interfaces/learning-content.js';
 import { getLearningObjectRepository, getLearningPathRepository } from '../../data/repositories.js';
-import { Language } from '../../entities/content/language.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
 import { getUrlStringForLearningObject } from '../../util/links.js';
 import processingService from './processing/processing-service.js';
 import { NotFoundError } from '@mikro-orm/core';
 import learningObjectService from './learning-object-service.js';
 import { getLogger, Logger } from '../../logging/initalize.js';
+import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
 
 const logger: Logger = getLogger();
 
@@ -41,10 +40,10 @@ function convertLearningObject(learningObject: LearningObject | null): FilteredL
     };
 }
 
-function findLearningObjectEntityById(id: LearningObjectIdentifier): Promise<LearningObject | null> {
+async function findLearningObjectEntityById(id: LearningObjectIdentifier): Promise<LearningObject | null> {
     const learningObjectRepo = getLearningObjectRepository();
 
-    return learningObjectRepo.findLatestByHruidAndLanguage(id.hruid, id.language as Language);
+    return learningObjectRepo.findLatestByHruidAndLanguage(id.hruid, id.language);
 }
 
 /**
@@ -65,11 +64,11 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
     async getLearningObjectHTML(id: LearningObjectIdentifier): Promise<string | null> {
         const learningObjectRepo = getLearningObjectRepository();
 
-        const learningObject = await learningObjectRepo.findLatestByHruidAndLanguage(id.hruid, id.language as Language);
+        const learningObject = await learningObjectRepo.findLatestByHruidAndLanguage(id.hruid, id.language);
         if (!learningObject) {
             return null;
         }
-        return await processingService.render(learningObject, (id) => findLearningObjectEntityById(id));
+        return await processingService.render(learningObject, async (id) => findLearningObjectEntityById(id));
     },
 
     /**
@@ -96,7 +95,7 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
             throw new NotFoundError('The learning path with the given ID could not be found.');
         }
         const learningObjects = await Promise.all(
-            learningPath.nodes.map((it) => {
+            learningPath.nodes.map(async (it) => {
                 const learningObject = learningObjectService.getLearningObjectById({
                     hruid: it.learningObjectHruid,
                     language: it.language,
