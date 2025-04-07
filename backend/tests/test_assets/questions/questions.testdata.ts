@@ -9,7 +9,7 @@ export function makeTestQuestions(em: EntityManager, students: Student[], groups
         learningObjectLanguage: Language.English,
         learningObjectVersion: 1,
         learningObjectHruid: 'id05',
-        inGroup: groups[0],
+        inGroup: groups[0], // Group #1 for Assignment #1 in class 'id01'
         sequenceNumber: 1,
         author: students[0],
         timestamp: new Date(),
@@ -20,7 +20,7 @@ export function makeTestQuestions(em: EntityManager, students: Student[], groups
         learningObjectLanguage: Language.English,
         learningObjectVersion: 1,
         learningObjectHruid: 'id05',
-        inGroup: groups[0],
+        inGroup: groups[0], // Group #1 for Assignment #1 in class 'id01'
         sequenceNumber: 2,
         author: students[2],
         timestamp: new Date(),
@@ -33,7 +33,7 @@ export function makeTestQuestions(em: EntityManager, students: Student[], groups
         learningObjectHruid: 'id04',
         sequenceNumber: 1,
         author: students[0],
-        inGroup: groups[0],
+        inGroup: groups[0], // Group #1 for Assignment #1 in class 'id01'
         timestamp: new Date(),
         content: 'question',
     });
@@ -44,10 +44,32 @@ export function makeTestQuestions(em: EntityManager, students: Student[], groups
         learningObjectHruid: 'id01',
         sequenceNumber: 1,
         author: students[1],
-        inGroup: groups[1],
+        inGroup: groups[1], // Group #2 for Assignment #1 in class 'id01'
         timestamp: new Date(),
         content: 'question',
     });
 
-    return [question01, question02, question03, question04];
+    const question05 = em.create(Question, {
+        learningObjectLanguage: Language.English,
+        learningObjectVersion: 1,
+        learningObjectHruid: 'id05',
+        sequenceNumber: 3,
+        author: students[1],
+        inGroup: groups[1], // Group #2 for Assignment #1 in class 'id01'
+        timestamp: new Date(),
+        content: 'question',
+    });
+
+    const question06 = em.create(Question, {
+        learningObjectLanguage: Language.English,
+        learningObjectVersion: 1,
+        learningObjectHruid: 'id05',
+        sequenceNumber: 4,
+        author: students[2],
+        inGroup: groups[3], // Group #4 for Assignment #2 in class 'id02'
+        timestamp: new Date(),
+        content: 'question',
+    });
+
+    return [question01, question02, question03, question04, question05, question06];
 }
