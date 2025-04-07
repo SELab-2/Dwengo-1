@@ -56,7 +56,7 @@ services:
             - 'traefik.http.services.idp.loadbalancer.server.port=7080'
             - "traefik.tcp.routers.idp.tls.passthrough=true"  # Keycloak expects TLS in production mode, so it can't be terminated by the reverse proxy
         volumes:
-            - /etc/keycloak:/opt/keycloak/
+            - /etc/keycloak:/keycloak
         env_file:
             - ./config/idp/.env
         environment:
@@ -64,8 +64,8 @@ services:
             PROXY_ADDRESS_FORWARDING: 'true'
             KC_PROXY_HEADERS: 'xforwarded'
             KC_HTTP_RELATIVE_PATH: '/idp'
-            KC_HTTPS_CERTIFICATE_FILE: '/opt/keycloak/cert.pem'
-            KC_HTTPS_CERTIFICATE_KEY_FILE: '/opt/keycloak/key.pem'
+            KC_HTTPS_CERTIFICATE_FILE: '/keycloak/cert.pem'
+            KC_HTTPS_CERTIFICATE_KEY_FILE: '/keycloak/key.pem'
 
     reverse-proxy:
         image: traefik:v3.3
