@@ -34,7 +34,7 @@ describe('Questions controllers', () => {
 
         const result = jsonMock.mock.lastCall?.[0];
         // Console.log(result.answers);
-        expect(result.questions).to.have.length.greaterThan(1);
+        expect(result.answers).to.have.length.greaterThan(1);
     });
 
     it('Get answer', async () => {
