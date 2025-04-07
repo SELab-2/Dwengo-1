@@ -9,7 +9,7 @@ import CreateDiscussion from "@/views/discussions/CreateDiscussion.vue";
 import CallbackPage from "@/views/CallbackPage.vue";
 import UserDiscussions from "@/views/discussions/UserDiscussions.vue";
 import UserClasses from "@/views/classes/UserClasses.vue";
-import UserAssignments from "@/views/classes/UserAssignments.vue";
+import UserAssignments from "@/views/assignments/UserAssignments.vue";
 import authState from "@/services/auth/auth-service.ts";
 import LearningPathPage from "@/views/learning-paths/LearningPathPage.vue";
 import LearningPathSearchPage from "@/views/learning-paths/LearningPathSearchPage.vue";
@@ -79,10 +79,20 @@ const router = createRouter({
             meta: { requiresAuth: true },
         },
         {
-            path: "/assignment/:id",
-            name: "SingleAssigment",
-            component: SingleAssignment,
-            meta: { requiresAuth: true },
+            path: "/assignment",
+            meta: {requiresAuth: true},
+            children: [
+                {
+                    path: "create",
+                    name: "CreateAssigment",
+                    component: CreateAssignment,
+                },
+                {
+                    path: ":id",
+                    name: "SingleAssigment",
+                    component: SingleAssignment,
+                },
+            ]
         },
         {
             path: "/class/create",

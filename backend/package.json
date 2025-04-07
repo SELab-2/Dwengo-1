@@ -16,6 +16,7 @@
         "test:unit": "vitest --run"
     },
     "dependencies": {
+        "@dwengo-1/common": "^0.1.1",
         "@mikro-orm/core": "6.4.9",
         "@mikro-orm/knex": "6.4.9",
         "@mikro-orm/postgresql": "6.4.9",

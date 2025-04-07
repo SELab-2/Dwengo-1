@@ -5,7 +5,7 @@
     import {classes} from "@/utils/tempData.ts";
     import {
         assignmentTitleRules,
-        classesRules,
+        classRules,
         descriptionRules,
         learningPathRules,
         submitForm
@@ -97,7 +97,7 @@
         const { valid } = await form.value.validate();
         // Don't submit thr form if all rules don't apply
         if (!valid) return;
-        submitForm(assignmentTitle.value, selectedLearningPath.value, selectedClass.value, groups.value, deadline.value, description.value);
+        submitForm(assignmentTitle.value, selectedLearningPath.value?.hruid, selectedClass.value.value, groups.value, deadline.value, description.value, locale.value);
     };
 </script>
 
@@ -109,7 +109,7 @@
             <v-form ref="form" class="form-container" validate-on="submit lazy" @submit.prevent="submitFormHandler">
                 <v-container class="step-container">
                     <v-card-text>
-                        <v-text-field :v-model="assignmentTitle" :label="t('title')" :rules="assignmentTitleRules"
+                        <v-text-field v-model="assignmentTitle" :label="t('title')" :rules="assignmentTitleRules"
                                       density="compact" variant="outlined" clearable required></v-text-field>
                     </v-card-text>
 
@@ -136,7 +136,7 @@
                             v-model="selectedClass"
                             :items="allClasses"
                             :label="t('pick-class')"
-                            :rules="classesRules"
+                            :rules="classRules"
                             variant="outlined"
                             clearable
                             hide-details

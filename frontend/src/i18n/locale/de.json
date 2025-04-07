@@ -51,5 +51,17 @@
     "noLearningPathsFoundDescription": "Es gibt keine Lernpfade, die zu Ihrem Suchbegriff passen.",
     "legendNotCompletedYet": "Noch nicht fertig",
     "legendCompleted": "Fertig",
-    "legendTeacherExclusive": "Information für Lehrkräfte"
+    "legendTeacherExclusive": "Information für Lehrkräfte",
+    "new-assignment": "Neue Aufgabe",
+    "edit-assignment": "Zuordnung bearbeiten",
+    "groups": "Gruppen",
+    "learning-path": "Lernpfad",
+    "choose-lp": "Einen lernpfad auswählen",
+    "choose-classes": "Klassen wählen",
+    "create-groups": "Gruppen erstellen",
+    "title": "Titel",
+    "pick-class": "Wählen Sie eine klasse",
+    "choose-students": "Studenten auswählen",
+    "create-group": "Gruppe erstellen",
+    "class": "klasse"
 }

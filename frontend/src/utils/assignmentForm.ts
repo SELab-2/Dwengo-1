@@ -1,42 +1,46 @@
+
 /**
  * Submits the form data to the backend.
  *
  * @param assignmentTitle - The title of the assignment.
  * @param selectedLearningPath - The selected learning path, containing hruid and title.
- * @param selectedClasses - The selected classes, an array of class objects.
+ * @param selectedClass - The selected classes, an array of class objects.
  * @param groups - An array of groups, each containing student IDs.
  * @param deadline - The deadline of the assignment in ISO format.
- * @param description - The description of the aasignment
+ * @param description - The description of the assignment
  * Sends a POST request to the backend with the form data.
  */
+
+import {AssignmentController} from "@/controllers/assignments.ts";
+import type {AssignmentDTO} from "@dwengo-1/common/interfaces/assignment";
+
 export const submitForm = async (
     assignmentTitle: string,
     selectedLearningPath: any,
-    selectedClasses: any[],
+    selectedClass: string,
     groups: string[][],
     deadline: string,
-    description: string
+    description: string,
+    currentLanguage: string
 ) => {
-    const formData = {
+    const formData: AssignmentDTO = {
+        id: 0,
+        class: selectedClass,
         title: assignmentTitle,
-        hruid: selectedLearningPath?.hruid,
-        classes: selectedClasses.map(cl => cl.value),
-        groups: groups,
-        deadline: deadline,
-        description: description
+        description: description,
+        learningPath: selectedLearningPath,
+        language: currentLanguage,
+        groups: [],
+        //deadline: deadline,
     };
 
-    try {
-        const response = await fetch(/*"http://localhost:3000/api/assignment"*/"", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData)
-        });
-        const data = await response.json();
-        console.log("Form submitted successfully:", data);
-    } catch (error) {
-        console.error("Error submitting form:", error);
-    }
+    console.log(formData);
+
+    const controller: AssignmentController = new AssignmentController(selectedClass);
+
+    const response = await controller.createAssignment(formData);
+    console.log(response);
+
 };
 
 /**
@@ -70,9 +74,9 @@ export const learningPathRules = [
  *
  * Ensures that at least one class is selected.
  */
-export const classesRules = [
-    (value: any[]) => {
-        if (value?.length >= 1) return true;
+export const classRules = [
+    (value: string) => {
+        if (value) return true;
         return 'You must select at least one class.';
     },
 ];
