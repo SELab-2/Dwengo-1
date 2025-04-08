@@ -144,7 +144,7 @@ export async function createQuestionHandler(req: Request, res: Response): Promis
     const questionDTO = req.body as QuestionDTO;
 
     if (!questionDTO.learningObjectIdentifier || !questionDTO.author || !questionDTO.inGroup || !questionDTO.content) {
-        res.status(400).json({ error: 'Missing required fields: identifier and content' });
+        res.status(400).json({ error: 'Missing required fields: identifier, author, inGroup, and content' });
         return;
     }
 
