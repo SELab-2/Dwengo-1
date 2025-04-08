@@ -31,7 +31,7 @@ export function makeTestTeachers(em: EntityManager): Teacher[] {
     const teacher05 = em.create(Teacher, {
         username: 'testleerkracht1',
         firstName: 'Bob',
-        lastName: 'Dylan'
+        lastName: 'Dylan',
     });
 
     return [teacher01, teacher02, teacher03, teacher04, teacher05];
