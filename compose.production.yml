@@ -66,6 +66,7 @@ services:
             KC_HTTP_RELATIVE_PATH: '/idp'
             KC_HTTPS_CERTIFICATE_FILE: '/keycloak/cert.pem'
             KC_HTTPS_CERTIFICATE_KEY_FILE: '/keycloak/key.pem'
+            KC_HTTP_MAX_QUEUED_REQUESTS: 30  # Prevent overload situations by limiting number of requests
 
     reverse-proxy:
         image: traefik:v3.3
