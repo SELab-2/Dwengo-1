@@ -1,19 +1,19 @@
-import { forkEntityManager, initORM } from "./src/orm.js";
+import { forkEntityManager, initORM } from "../src/orm.js";
 import dotenv from 'dotenv';
-import { makeTestAssignemnts } from "./tests/test_assets/assignments/assignments.testdata.js";
-import { makeTestGroups } from "./tests/test_assets/assignments/groups.testdata.js";
-import { makeTestSubmissions } from "./tests/test_assets/assignments/submission.testdata.js";
-import { makeTestClassJoinRequests } from "./tests/test_assets/classes/class-join-requests.testdata.js";
-import { makeTestClasses } from "./tests/test_assets/classes/classes.testdata.js";
-import { makeTestTeacherInvitations } from "./tests/test_assets/classes/teacher-invitations.testdata.js";
-import { makeTestAttachments } from "./tests/test_assets/content/attachments.testdata.js";
-import { makeTestLearningObjects } from "./tests/test_assets/content/learning-objects.testdata.js";
-import { makeTestLearningPaths } from "./tests/test_assets/content/learning-paths.testdata.js";
-import { makeTestAnswers } from "./tests/test_assets/questions/answers.testdata.js";
-import { makeTestQuestions } from "./tests/test_assets/questions/questions.testdata.js";
-import { makeTestStudents } from "./tests/test_assets/users/students.testdata.js";
-import { makeTestTeachers } from "./tests/test_assets/users/teachers.testdata.js";
-import { getLogger, Logger } from './src/logging/initalize.js';
+import { makeTestAssignemnts } from "../tests/test_assets/assignments/assignments.testdata.js";
+import { makeTestGroups } from "../tests/test_assets/assignments/groups.testdata.js";
+import { makeTestSubmissions } from "../tests/test_assets/assignments/submission.testdata.js";
+import { makeTestClassJoinRequests } from "../tests/test_assets/classes/class-join-requests.testdata.js";
+import { makeTestClasses } from "../tests/test_assets/classes/classes.testdata.js";
+import { makeTestTeacherInvitations } from "../tests/test_assets/classes/teacher-invitations.testdata.js";
+import { makeTestAttachments } from "../tests/test_assets/content/attachments.testdata.js";
+import { makeTestLearningObjects } from "../tests/test_assets/content/learning-objects.testdata.js";
+import { makeTestLearningPaths } from "../tests/test_assets/content/learning-paths.testdata.js";
+import { makeTestAnswers } from "../tests/test_assets/questions/answers.testdata.js";
+import { makeTestQuestions } from "../tests/test_assets/questions/questions.testdata.js";
+import { makeTestStudents } from "../tests/test_assets/users/students.testdata.js";
+import { makeTestTeachers } from "../tests/test_assets/users/teachers.testdata.js";
+import { getLogger, Logger } from '../src/logging/initalize.js';
 
 const logger: Logger = getLogger();
 
