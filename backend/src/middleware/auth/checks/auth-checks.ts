@@ -1,0 +1,38 @@
+import {AuthenticationInfo} from "../authentication-info";
+import {AuthenticatedRequest} from "../authenticated-request";
+import * as express from "express";
+import {UnauthorizedException} from "../../../exceptions/unauthorized-exception";
+import {ForbiddenException} from "../../../exceptions/forbidden-exception";
+
+/**
+ * Middleware which rejects unauthenticated users (with HTTP 401) and authenticated users which do not fulfill
+ * the given access condition.
+ * @param accessCondition Predicate over the current AuthenticationInfo. Access is only granted when this evaluates
+ *                        to true.
+ */
+export function authorize(
+    accessCondition: (auth: AuthenticationInfo, req: AuthenticatedRequest) => boolean | Promise<boolean>
+) {
+    return async (req: AuthenticatedRequest, _res: express.Response, next: express.NextFunction): Promise<void> => {
+        if (!req.auth) {
+            throw new UnauthorizedException();
+        } else if (!await accessCondition(req.auth, req)) {
+            throw new ForbiddenException();
+        } else {
+            next();
+        }
+    };
+}
+
+/**
+ * Middleware which rejects all unauthenticated users, but accepts all authenticated users.
+ */
+export const authenticatedOnly = authorize((_) => true);
+/**
+ * Middleware which rejects requests from unauthenticated users or users that aren't students.
+ */
+export const studentsOnly = authorize((auth) => auth.accountType === 'student');
+/**
+ * Middleware which rejects requests from unauthenticated users or users that aren't teachers.
+ */
+export const teachersOnly = authorize((auth) => auth.accountType === 'teacher');

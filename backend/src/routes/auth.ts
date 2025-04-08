@@ -1,6 +1,7 @@
 import express from 'express';
 import { getFrontendAuthConfig } from '../controllers/auth.js';
-import { authenticatedOnly, studentsOnly, teachersOnly } from '../middleware/auth/auth.js';
+import {authenticatedOnly, studentsOnly, teachersOnly} from "../middleware/auth/checks/auth-checks";
+
 const router = express.Router();
 
 // Returns auth configuration for frontend
