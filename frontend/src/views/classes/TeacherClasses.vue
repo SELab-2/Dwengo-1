@@ -49,13 +49,13 @@
 
     // Function to handle a accepted invitation request
     function acceptRequest(): void {
-        //TODO > waiting on updated frontend controllers
+        //TODO
         console.log("request accepted");
     }
 
     // Function to handle a denied invitation request
     function denyRequest(): void {
-        //TODO > waiting on frontend controllers
+        //TODO
         console.log("request denied");
     }
 
@@ -90,7 +90,7 @@
                 dialog.value = true;
                 showSnackbar(t("created"), "success");
 
-                // Reload the table with classes
+                // Reload the table with classes so the new class appears
                 await refetch();
             } catch (_) {
                 showSnackbar(t("wrong"), "error");
