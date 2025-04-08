@@ -1,13 +1,15 @@
 import express from 'express';
-import { getFrontendAuthConfig } from '../controllers/auth.js';
+import {handleGetFrontendAuthConfig, handleHello} from '../controllers/auth.js';
 import {authenticatedOnly, studentsOnly, teachersOnly} from "../middleware/auth/checks/auth-checks";
 
 const router = express.Router();
 
 // Returns auth configuration for frontend
-router.get('/config', (_req, res) => {
-    res.json(getFrontendAuthConfig());
-});
+router.get('/config', handleGetFrontendAuthConfig);
+
+// This endpoint is called by the client when the user has just logged in.
+// It creates or updates the user entity based on the authentication data the endpoint was called with.
+router.post('/hello', authenticatedOnly, handleHello);
 
 router.get('/testAuthenticatedOnly', authenticatedOnly, (_req, res) => {
     /* #swagger.security = [{ "student": [ ] }, { "teacher": [ ] }] */

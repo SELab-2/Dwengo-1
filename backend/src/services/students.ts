@@ -52,11 +52,11 @@ export async function getStudent(username: string): Promise<StudentDTO> {
     return mapToStudentDTO(user);
 }
 
-export async function createStudent(userData: StudentDTO): Promise<StudentDTO> {
+export async function createStudent(userData: StudentDTO, allowUpdate: boolean = false): Promise<StudentDTO> {
     const studentRepository = getStudentRepository();
 
     const newStudent = mapToStudent(userData);
-    await studentRepository.save(newStudent, { preventOverwrite: true });
+    await studentRepository.save(newStudent, { preventOverwrite: !allowUpdate });
     return userData;
 }
 

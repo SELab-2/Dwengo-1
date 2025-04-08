@@ -10,26 +10,29 @@ import {
     getTeacherStudentHandler,
     updateStudentJoinRequestHandler,
 } from '../controllers/teachers.js';
+import {adminOnly} from "../middleware/auth/checks/auth-checks";
+import {onlyAllowUserHimself} from "../middleware/auth/checks/user-auth-checks";
+import {onlyAllowTeacherOfClass} from "../middleware/auth/checks/class-auth-checks";
 const router = express.Router();
 
 // Root endpoint used to search objects
-router.get('/', getAllTeachersHandler);
+router.get('/', adminOnly, getAllTeachersHandler);
 
-router.post('/', createTeacherHandler);
+router.post('/', adminOnly, createTeacherHandler);
 
-router.get('/:username', getTeacherHandler);
+router.get('/:username', onlyAllowUserHimself, getTeacherHandler);
 
-router.delete('/:username', deleteTeacherHandler);
+router.delete('/:username', onlyAllowUserHimself, deleteTeacherHandler);
 
-router.get('/:username/classes', getTeacherClassHandler);
+router.get('/:username/classes', onlyAllowUserHimself, getTeacherClassHandler);
 
-router.get('/:username/students', getTeacherStudentHandler);
+router.get('/:username/students', onlyAllowUserHimself, getTeacherStudentHandler);
 
-router.get('/:username/questions', getTeacherQuestionHandler);
+router.get('/:username/questions', onlyAllowUserHimself, getTeacherQuestionHandler);
 
-router.get('/:username/joinRequests/:classId', getStudentJoinRequestHandler);
+router.get('/:username/joinRequests/:classId', onlyAllowTeacherOfClass, getStudentJoinRequestHandler);
 
-router.put('/:username/joinRequests/:classId/:studentUsername', updateStudentJoinRequestHandler);
+router.put('/:username/joinRequests/:classId/:studentUsername', onlyAllowTeacherOfClass, updateStudentJoinRequestHandler);
 
 // Invitations to other classes a teacher received
 router.get('/:id/invitations', (_req, res) => {

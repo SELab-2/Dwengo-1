@@ -12,13 +12,16 @@ import {
 } from '../controllers/students.js';
 import joinRequestRouter from './student-join-requests.js';
 import {onlyAllowUserHimself} from "../middleware/auth/checks/user-auth-checks";
+import {adminOnly} from "../middleware/auth/checks/auth-checks";
 
 const router = express.Router();
 
 // Root endpoint used to search objects
-router.get('/', getAllStudentsHandler);
+router.get('/', adminOnly, getAllStudentsHandler);
 
-router.post('/', createStudentHandler);
+// Users will be created automatically when some resource is created for them. Therefore, this endpoint
+// can only be used by an administrator.
+router.post('/', adminOnly, createStudentHandler);
 
 router.delete('/:username', onlyAllowUserHimself, deleteStudentHandler);
 

@@ -56,11 +56,11 @@ export async function getTeacher(username: string): Promise<TeacherDTO> {
     return mapToTeacherDTO(user);
 }
 
-export async function createTeacher(userData: TeacherDTO): Promise<TeacherDTO> {
+export async function createTeacher(userData: TeacherDTO, update?: boolean): Promise<TeacherDTO> {
     const teacherRepository: TeacherRepository = getTeacherRepository();
 
     const newTeacher = mapToTeacher(userData);
-    await teacherRepository.save(newTeacher, { preventOverwrite: true });
+    await teacherRepository.save(newTeacher, { preventOverwrite: !update });
     return mapToTeacherDTO(newTeacher);
 }
 

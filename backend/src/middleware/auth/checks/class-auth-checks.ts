@@ -1,7 +1,12 @@
 import {authorize} from "./auth-checks";
 import {AuthenticationInfo} from "../authentication-info";
 import {AuthenticatedRequest} from "../authenticated-request";
-import {getClassesByTeacher} from "../../../services/teachers";
+import {getClass} from "../../../services/classes";
+
+async function teaches(teacherUsername: string, classId: string) {
+    const clazz = await getClass(classId);
+    return clazz != null && teacherUsername in clazz.teachers;
+}
 
 /**
  * To be used on a request with path parameters username and classId.
@@ -13,10 +18,18 @@ export const onlyAllowStudentHimselfAndTeachersOfClass = authorize(
         if (req.params.username === auth.username) {
             return true;
         } else if (auth.accountType === "teacher") {
-            const classes: string[] = (await getClassesByTeacher(auth.username, false)) as string[];
-            return req.params.classId in classes;
+            return teaches(auth.username, req.params.classId);
         } else {
             return false;
         }
     }
+);
+
+/**
+ * Only let the request pass through if its path parameter "username" is the username of the currently logged-in
+ * teacher and the path parameter "classId" refers to a class the teacher teaches.
+ */
+export const onlyAllowTeacherOfClass = authorize(
+    async (auth: AuthenticationInfo, req: AuthenticatedRequest) =>
+        req.params.username === auth.username && teaches(auth.username, req.params.classId),
 );

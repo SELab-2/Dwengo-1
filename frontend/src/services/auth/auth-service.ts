@@ -29,6 +29,10 @@ const authState = reactive<AuthState>({
     activeRole: authStorage.getActiveRole() || null,
 });
 
+async function sendHello(): Promise<void> {
+    return apiClient.post("/auth/hello");
+}
+
 /**
  * Load the information about who is currently logged in from the IDP.
  */
@@ -41,6 +45,8 @@ async function loadUser(): Promise<User | null> {
     authState.user = user;
     authState.accessToken = user?.access_token || null;
     authState.activeRole = activeRole || null;
+
+    await sendHello();
     return user;
 }
 
@@ -72,6 +78,7 @@ async function handleLoginCallback(): Promise<void> {
         throw new Error("Login callback received, but the user is not logging in!");
     }
     authState.user = (await (await getUserManagers())[activeRole].signinCallback()) || null;
+    await sendHello();
 }
 
 /**

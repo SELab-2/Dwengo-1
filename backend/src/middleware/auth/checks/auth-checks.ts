@@ -36,3 +36,8 @@ export const studentsOnly = authorize((auth) => auth.accountType === 'student');
  * Middleware which rejects requests from unauthenticated users or users that aren't teachers.
  */
 export const teachersOnly = authorize((auth) => auth.accountType === 'teacher');
+/**
+ * Middleware which is to be used on requests no normal user should be able to execute.
+ * Since there is no concept of administrator accounts yet, currently, those requests will always be blocked.
+ */
+export const adminOnly = authorize(() => false);
