@@ -3,12 +3,12 @@ import {ref, computed, onMounted} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {useRouter} from 'vue-router';
 import auth from "@/services/auth/auth-service.ts";
-import {assignments} from "@/utils/tempData.ts";
 import {useTeacherClassesQuery} from "@/queries/teachers.ts";
 import {useStudentClassesQuery} from "@/queries/students.ts";
 import {ClassController} from "@/controllers/classes.ts";
 import type {ClassDTO} from "@dwengo-1/common/interfaces/class";
 import {asyncComputed} from "@vueuse/core";
+import {AssignmentController} from "@/controllers/assignments.ts";
 
 const {t} = useI18n();
 const router = useRouter();
@@ -35,7 +35,7 @@ const assignments = asyncComputed(async () => {
     if (!classes) return [];
     const result = await Promise.all(
         (classes as ClassDTO[]).map(async (cls) => {
-            const { assignments } = await classController.getAssignments(cls.id);
+            const {assignments} = await classController.getAssignments(cls.id);
             return assignments.map(a => ({
                 id: a.id,
                 class: cls, // replace by the whole ClassDTO object
@@ -58,15 +58,17 @@ const goToCreateAssignment = async () => {
     await router.push('/assignment/create');
 };
 
-const goToAssignmentDetails = async (id: number, class_id: number) => {
+const goToAssignmentDetails = async (id: number, class_id: string) => {
     await router.push({
         path: `/assignment/${id}`,
-        state: { class_id },
+        state: {class_id},
     });
 };
 
 
-const goToDeleteAssignment = (id: number) => {
+const goToDeleteAssignment = async (id: number, class_id: string) => {
+    const controller = new AssignmentController(class_id);
+    await controller.deleteAssignment(id);
 };
 
 onMounted(async () => {
@@ -97,27 +99,33 @@ onMounted(async () => {
                 >
                     <v-card class="assignment-card">
                         <v-card-text class="card-content">
-                            <div class="left-content">
+                            <div class="top-content">
                                 <div class="assignment-title">{{ assignment.title }}</div>
                                 <div class="assignment-class">
                                     {{ t('class') }}:
                                     <span class="class-name">
-                                        {{ assignment.class.displayName }}
+                                      {{ assignment.class.displayName }}
                                     </span>
                                 </div>
                             </div>
-                            <div class="right-content">
-                                <v-card-actions>
-                                    <v-btn color="primary" @click="goToAssignmentDetails(assignment.id, assignment.class.id)">
-                                        {{ t('view-assignment') }}
-                                    </v-btn>
-                                    <v-btn v-if="isTeacher" color="red" @click="goToDeleteAssignment(assignment.id)">
-                                        {{ t('delete') }}
-                                    </v-btn>
-                                </v-card-actions>
+
+                            <div class="spacer"></div>
+
+                            <div class="button-row">
+                                <v-btn color="primary"
+                                       size="small"
+                                       @click="goToAssignmentDetails(assignment.id, assignment.class.id)">
+                                    {{ t('view-assignment') }}
+                                </v-btn>
+                                <v-btn v-if="isTeacher" color="red"
+                                       size="small"
+                                       @click="goToDeleteAssignment(assignment.id, assignment.class.id)">
+                                    {{ t('delete') }}
+                                </v-btn>
                             </div>
                         </v-card-text>
                     </v-card>
+
                 </v-col>
             </v-row>
         </v-container>
@@ -146,18 +154,25 @@ onMounted(async () => {
 
 .card-content {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
+    flex-direction: column;
+    height: 100%;
+    min-height: 150px;
 }
 
-.left-content {
-    display: flex;
-    flex-direction: column;
+.top-content {
+    margin-bottom: 1rem;
+    word-break: break-word;
+}
+
+.spacer {
     flex: 1;
-    min-width: 200px;
-    max-width: 70%;
+}
+
+.button-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .assignment-title {
@@ -177,19 +192,5 @@ onMounted(async () => {
     color: #333;
 }
 
-.right-content {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-    width: 100%;
-}
-
-@media (min-width: 700px) {
-    .right-content {
-        width: auto;
-    }
-}
 
 </style>

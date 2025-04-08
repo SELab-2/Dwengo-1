@@ -63,5 +63,7 @@
     "pick-class": "Wählen Sie eine klasse",
     "choose-students": "Studenten auswählen",
     "create-group": "Gruppe erstellen",
-    "class": "klasse"
+    "class": "klasse",
+    "delete": "löschen",
+    "view-assignment": "Auftrag anzeigen"
 }

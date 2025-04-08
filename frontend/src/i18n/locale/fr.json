@@ -63,5 +63,7 @@
     "pick-class": "Choisissez une classe",
     "choose-students": "Sélectionnez des élèves",
     "create-group": "Créer un groupe",
-    "class": "classe"
+    "class": "classe",
+    "delete": "supprimer",
+    "view-assignment": "Voir le travail"
 }

@@ -17,11 +17,7 @@ import type {GroupDTO} from "@dwengo-1/common/interfaces/group";
 import {GroupController} from "@/controllers/groups.ts";
 
 /***
- TODO: when clicking the assign button from lp page pass the lp-object like this:
- router.push({
- path: '/assignment/create',
- query: { learningPath: 'learningPathObject' }
- });
+ TODO: when clicking the assign button from lp page pass the lp-object in a state:
  */
 const props = defineProps<{
     learningPath?: LearningPath | null;  // Optional learningPath prop

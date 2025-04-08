@@ -63,5 +63,7 @@
     "pick-class": "Pick a class",
     "choose-students": "Select students",
     "create-group": "Create group",
-    "class": "class"
+    "class": "class",
+    "delete": "delete",
+    "view-assignment": "View assignment"
 }

@@ -12,7 +12,6 @@
     const route = useRoute();
     const assignmentId = ref(Number(route.params.id));
     const classId = window.history.state?.class_id;
-    //const assignment = ref(null);
     const controller = new AssignmentController(classId);
 
     const role = auth.authState.activeRole;
@@ -21,7 +20,6 @@
     const assignment = asyncComputed(async () => {
         return await controller.getByNumber(assignmentId.value)
     }, null);
-
 
 
     /***
@@ -35,9 +33,8 @@
     });
         */
 
-    const deleteAssignment = () => {
-        console.log('Delete assignment:', assignmentId.value);
-        //controller.deleteAssignment(assignmentId);
+    const deleteAssignment = async () => {
+        await controller.deleteAssignment(assignmentId.value);
     };
 
 </script>

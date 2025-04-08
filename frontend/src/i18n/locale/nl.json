@@ -63,5 +63,7 @@
     "pick-class": "Kies een klas",
     "choose-students": "Studenten selecteren",
     "create-group": "Groep aanmaken",
-    "class": "klas"
+    "class": "klas",
+    "delete": "verwijderen",
+    "view-assignment": "Opdracht bekijken"
 }
