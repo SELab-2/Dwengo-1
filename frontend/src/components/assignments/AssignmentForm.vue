@@ -13,6 +13,8 @@ import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts"
 import type {ClassesResponse} from "@/controllers/classes.ts";
 import type {AssignmentDTO} from "@dwengo-1/common/interfaces/assignment";
 import {AssignmentController} from "@/controllers/assignments.ts";
+import type {GroupDTO} from "@dwengo-1/common/interfaces/group";
+import {GroupController} from "@/controllers/groups.ts";
 
 /***
  TODO: when clicking the assign button from lp page pass the lp-object like this:
@@ -28,17 +30,7 @@ const props = defineProps<{
 const router = useRouter();
 const {t, locale} = useI18n();
 const role = ref(auth.authState.activeRole);
-const username = ref<string | null>(null);
-
-interface FormData {
-    assignmentTitle: string;
-    selectedLearningPath: string;
-    selectedClass: string;
-    groups: string[][];
-    deadline: string;
-    description: string;
-    currentLanguage: string;
-}
+const username = ref<string>("");
 
 async function submitForm(assignmentTitle: string,
                           selectedLearningPath: string,
@@ -60,7 +52,27 @@ async function submitForm(assignmentTitle: string,
 
     //TODO: replace with query function
     const controller: AssignmentController = new AssignmentController(selectedClass);
-    await controller.createAssignment(assignmentDTO);
+    const response = await controller.createAssignment(assignmentDTO);
+    // Create groups
+    for (let i = 0; i < groups.length; i++) {
+        const group: GroupDTO = {
+            assignment: response.id,
+            groupNumber: i,
+            members: groups[i]
+        };
+
+        console.log("Posting group:", group);
+
+        const groupController: GroupController = new GroupController(selectedClass, response.id);
+
+        try {
+            await groupController.createGroup(group);
+            console.log("Group successfully posted:", group);
+        } catch (err) {
+            console.error("Group POST failed:", err);
+        }
+    }
+
     await router.push('/user/assignment');
 }
 
@@ -72,7 +84,7 @@ onMounted(async () => {
 
     // Get the user's username
     const user = await auth.loadUser();
-    username.value = user?.profile?.preferred_username ?? null;
+    username.value = user?.profile?.preferred_username ?? "";
 });
 
 

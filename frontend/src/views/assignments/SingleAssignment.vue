@@ -1,26 +1,30 @@
 <script setup lang="ts">
     import { useRoute } from "vue-router";
-    import {ref, onMounted, computed} from "vue";
+    import {ref, computed} from "vue";
     import {useI18n} from "vue-i18n";
-    import {assignments} from "@/utils/tempData.ts";
     import auth from "@/services/auth/auth-service.ts";
+    import {AssignmentController} from "@/controllers/assignments.ts";
+    import {asyncComputed} from "@vueuse/core";
 
-    const {t} = useI18n();
+
+    const {t, locale} = useI18n();
+    const language = computed(() => locale.value);
     const route = useRoute();
-    const assignmentId = ref(route.params.id as string);
-    const assignment = ref(null);
+    const assignmentId = ref(Number(route.params.id));
+    const classId = window.history.state?.class_id;
+    //const assignment = ref(null);
+    const controller = new AssignmentController(classId);
 
     const role = auth.authState.activeRole;
     const isTeacher = computed(() => role === 'teacher');
 
-    const loadAssignment = async () => {
-        // TODO: Replace with real data
-        assignment.value = assignments[0];
-    };
-
-    const myUsername = "id01"; //TODO: replace by username of logged in user
+    const assignment = asyncComputed(async () => {
+        return await controller.getByNumber(assignmentId.value)
+    }, null);
 
 
+
+    /***
     // Display group members
     const myGroup = computed(() => {
         if (!assignment.value || !assignment.value.groups) return null;
@@ -29,12 +33,12 @@
             group.members.some(m => m.username === myUsername)
         );
     });
+        */
 
     const deleteAssignment = () => {
         console.log('Delete assignment:', assignmentId.value);
+        //controller.deleteAssignment(assignmentId);
     };
-
-    onMounted(loadAssignment);
 
 </script>
 
@@ -64,7 +68,7 @@
             <v-card-title class="text-h4">{{ assignment.title }}</v-card-title>
             <v-card-subtitle>
                 <v-btn
-                    :to="`/learningPath/${assignment.learningPathHruid}`"
+                    :to="`/learningPath/${language}/${assignment.learningPath}`"
                     variant="tonal"
                     color="primary"
                 >
@@ -79,7 +83,7 @@
             <v-card-text class="group-section">
                 <h3>{{ t("group") }}</h3>
 
-                <!-- Student view -->
+                <!-- Student view
                 <div v-if="!isTeacher">
                     <div v-if="myGroup">
                         <ul>
@@ -88,10 +92,10 @@
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div>-->
 
-                <!-- Teacher view -->
-                <div v-else>
+                <!-- Teacher view
+                <div v-if="isTeacher">
                     <v-expansion-panels>
                         <v-expansion-panel
                             v-for="(group, index) in assignment.groups"
@@ -109,7 +113,7 @@
                             </v-expansion-panel-text>
                         </v-expansion-panel>
                     </v-expansion-panels>
-                </div>
+                </div>-->
             </v-card-text>
 
         </v-card>

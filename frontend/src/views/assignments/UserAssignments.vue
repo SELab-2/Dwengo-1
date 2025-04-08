@@ -1,36 +1,78 @@
 <script setup lang="ts">
-    import {ref, computed, onMounted} from 'vue';
-    import {useI18n} from 'vue-i18n';
-    import {useRouter} from 'vue-router';
-    import auth from "@/services/auth/auth-service.ts";
-    import {assignments} from "@/utils/tempData.ts";
+import {ref, computed, onMounted} from 'vue';
+import {useI18n} from 'vue-i18n';
+import {useRouter} from 'vue-router';
+import auth from "@/services/auth/auth-service.ts";
+import {assignments} from "@/utils/tempData.ts";
+import {useTeacherClassesQuery} from "@/queries/teachers.ts";
+import {useStudentClassesQuery} from "@/queries/students.ts";
+import {ClassController} from "@/controllers/classes.ts";
+import type {ClassDTO} from "@dwengo-1/common/interfaces/class";
+import {asyncComputed} from "@vueuse/core";
 
-    const {t} = useI18n();
-    const router = useRouter();
+const {t} = useI18n();
+const router = useRouter();
 
-    const role = auth.authState.activeRole;
+const role = ref(auth.authState.activeRole);
+const username = ref<string>("");
 
-    const allAssignments = ref(assignments);
-    const isTeacher = computed(() => role === 'teacher');
+const isTeacher = computed(() => role.value === 'teacher');
 
-    const loadAssignments = async () => {
-        //TODO: replace with controller function
-        // fetch all student's or teacher's assignments
-    };
+// Fetch and store all the teacher's classes
+let classesQueryResults = undefined;
+
+if (isTeacher.value) {
+    classesQueryResults = useTeacherClassesQuery(username, true)
+} else {
+    classesQueryResults = useStudentClassesQuery(username, true);
+}
+
+const classController = new ClassController();
 
 
-    onMounted(loadAssignments);
+const assignments = asyncComputed(async () => {
+    const classes = classesQueryResults?.data?.value?.classes;
+    if (!classes) return [];
+    const result = await Promise.all(
+        (classes as ClassDTO[]).map(async (cls) => {
+            const { assignments } = await classController.getAssignments(cls.id);
+            return assignments.map(a => ({
+                id: a.id,
+                class: cls, // replace by the whole ClassDTO object
+                title: a.title,
+                description: a.description,
+                learningPath: a.learningPath,
+                language: a.language,
+                groups: []
+            }));
+        })
+    );
 
-    const goToCreateAssignment = () => {
-        router.push('/assignment/create');
-    };
+    return result.flat();
+}, []);
 
-    const goToAssignmentDetails = (id: string) => {
-        router.push(`/assignment/${id}`);
-    };
+console.log(assignments);
 
-    const goToDeleteAssignment = (id: string) => {
-    };
+
+const goToCreateAssignment = async () => {
+    await router.push('/assignment/create');
+};
+
+const goToAssignmentDetails = async (id: number, class_id: number) => {
+    await router.push({
+        path: `/assignment/${id}`,
+        state: { class_id },
+    });
+};
+
+
+const goToDeleteAssignment = (id: number) => {
+};
+
+onMounted(async () => {
+    const user = await auth.loadUser();
+    username.value = user?.profile?.preferred_username ?? "";
+});
 </script>
 
 <template>
@@ -49,7 +91,7 @@
         <v-container>
             <v-row>
                 <v-col
-                    v-for="assignment in allAssignments"
+                    v-for="assignment in assignments"
                     :key="assignment.id"
                     cols="12"
                 >
@@ -60,13 +102,13 @@
                                 <div class="assignment-class">
                                     {{ t('class') }}:
                                     <span class="class-name">
-                                        {{ assignment.class }}
+                                        {{ assignment.class.displayName }}
                                     </span>
                                 </div>
                             </div>
                             <div class="right-content">
                                 <v-card-actions>
-                                    <v-btn color="primary" @click="goToAssignmentDetails(assignment.id)">
+                                    <v-btn color="primary" @click="goToAssignmentDetails(assignment.id, assignment.class.id)">
                                         {{ t('view-assignment') }}
                                     </v-btn>
                                     <v-btn v-if="isTeacher" color="red" @click="goToDeleteAssignment(assignment.id)">
