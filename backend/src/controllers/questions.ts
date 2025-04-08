@@ -5,13 +5,13 @@ import {
     getAllQuestions,
     getAnswersByQuestion,
     getQuestion,
-    getQuestionsAboutLearningObjectInAssignment
+    getQuestionsAboutLearningObjectInAssignment,
 } from '../services/questions.js';
 import { FALLBACK_LANG, FALLBACK_SEQ_NUM } from '../config.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { Language } from '@dwengo-1/common/util/language';
-import {AnswerDTO, AnswerId} from "@dwengo-1/common/interfaces/answer";
+import { AnswerDTO, AnswerId } from '@dwengo-1/common/interfaces/answer';
 
 interface QuestionPathParams {
     hruid: string;
@@ -62,10 +62,10 @@ function getQuestionId<ReqBody, ResBody>(
 }
 
 interface GetAllQuestionsQueryParams extends QuestionQueryParams {
-    classId?: string,
-    assignmentId?: number,
-    forStudent?: string,
-    full?: boolean
+    classId?: string;
+    assignmentId?: number;
+    forStudent?: string;
+    full?: boolean;
 }
 
 export async function getAllQuestionsHandler(
@@ -118,10 +118,10 @@ export async function getQuestionHandler(
 }
 
 interface GetQuestionAnswersQueryParams extends QuestionQueryParams {
-    full: boolean
+    full: boolean;
 }
 export async function getQuestionAnswersHandler(
-    req: Request<GetQuestionIdPathParams, {answers: AnswerDTO[] | AnswerId[]}, unknown, GetQuestionAnswersQueryParams>,
+    req: Request<GetQuestionIdPathParams, { answers: AnswerDTO[] | AnswerId[] }, unknown, GetQuestionAnswersQueryParams>,
     res: Response
 ): Promise<void> {
     const questionId = getQuestionId(req, res);

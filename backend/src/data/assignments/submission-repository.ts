@@ -3,7 +3,7 @@ import { Group } from '../../entities/assignments/group.entity.js';
 import { Submission } from '../../entities/assignments/submission.entity.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { Student } from '../../entities/users/student.entity.js';
-import {Assignment} from "../../entities/assignments/assignment.entity";
+import { Assignment } from '../../entities/assignments/assignment.entity';
 
 export class SubmissionRepository extends DwengoEntityRepository<Submission> {
     public async findSubmissionByLearningObjectAndSubmissionNumber(
@@ -46,7 +46,7 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
         return this.find(
             { onBehalfOf: group },
             {
-                populate: ["onBehalfOf.members"]
+                populate: ['onBehalfOf.members'],
             }
         );
     }
@@ -60,24 +60,26 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
         assignment: Assignment,
         forStudentUsername?: string
     ): Promise<Submission[]> {
-        const onBehalfOf = forStudentUsername ? {
-            assignment,
-            members: {
-                $some: {
-                    username: forStudentUsername
-                }
-            }
-        } : {
-            assignment
-        };
+        const onBehalfOf = forStudentUsername
+            ? {
+                  assignment,
+                  members: {
+                      $some: {
+                          username: forStudentUsername,
+                      },
+                  },
+              }
+            : {
+                  assignment,
+              };
 
         return this.findAll({
             where: {
                 learningObjectHruid: loId.hruid,
                 learningObjectLanguage: loId.language,
                 learningObjectVersion: loId.version,
-                onBehalfOf
-            }
+                onBehalfOf,
+            },
         });
     }
 
@@ -85,9 +87,7 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
         const result = await this.find(
             { submitter: student },
             {
-                populate: [
-                    "onBehalfOf.members"
-                ]
+                populate: ['onBehalfOf.members'],
             }
         );
 

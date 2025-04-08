@@ -1,10 +1,5 @@
 import express from 'express';
-import {
-    createSubmissionHandler,
-    deleteSubmissionHandler,
-    getSubmissionHandler,
-    getSubmissionsHandler
-} from '../controllers/submissions.js';
+import { createSubmissionHandler, deleteSubmissionHandler, getSubmissionHandler, getSubmissionsHandler } from '../controllers/submissions.js';
 const router = express.Router({ mergeParams: true });
 
 // Root endpoint used to search objects

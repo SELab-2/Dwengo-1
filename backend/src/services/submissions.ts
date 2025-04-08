@@ -1,4 +1,4 @@
-import {getAssignmentRepository, getSubmissionRepository} from '../data/repositories.js';
+import { getAssignmentRepository, getSubmissionRepository } from '../data/repositories.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { mapToSubmission, mapToSubmissionDTO } from '../interfaces/submission.js';
 import { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
@@ -68,11 +68,9 @@ export async function getSubmissionsForLearningObjectAndAssignment(
     studentUsername?: string
 ): Promise<SubmissionDTO[]> {
     const loId = new LearningObjectIdentifier(learningObjectHruid, language, version);
-    const assignment = await getAssignmentRepository()
-                                                .findByClassIdAndAssignmentId(classId, assignmentId);
+    const assignment = await getAssignmentRepository().findByClassIdAndAssignmentId(classId, assignmentId);
 
-    const submissions = await getSubmissionRepository()
-                    .findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!, studentUsername);
+    const submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!, studentUsername);
 
-    return submissions.map(s => mapToSubmissionDTO(s));
+    return submissions.map((s) => mapToSubmissionDTO(s));
 }

@@ -147,7 +147,6 @@ describe('Student controllers', () => {
 
         const result = jsonMock.mock.lastCall?.[0];
         expect(result.submissions).to.have.length.greaterThan(0);
-
     });
 
     it('Student questions', async () => {

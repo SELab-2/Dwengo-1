@@ -3,11 +3,11 @@ import { Question } from '../../entities/questions/question.entity.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { Student } from '../../entities/users/student.entity.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
-import {Group} from "../../entities/assignments/group.entity";
-import {Assignment} from "../../entities/assignments/assignment.entity";
+import { Group } from '../../entities/assignments/group.entity';
+import { Assignment } from '../../entities/assignments/assignment.entity';
 
 export class QuestionRepository extends DwengoEntityRepository<Question> {
-    public async createQuestion(question: { loId: LearningObjectIdentifier; author: Student; inGroup: Group, content: string }): Promise<Question> {
+    public async createQuestion(question: { loId: LearningObjectIdentifier; author: Student; inGroup: Group; content: string }): Promise<Question> {
         const questionEntity = this.create({
             learningObjectHruid: question.loId.hruid,
             learningObjectLanguage: question.loId.language,
@@ -75,24 +75,26 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         assignment: Assignment,
         forStudentUsername?: string
     ): Promise<Question[]> {
-        const inGroup = forStudentUsername ? {
-            assignment,
-            members: {
-                $some: {
-                    username: forStudentUsername
-                }
-            }
-        } : {
-            assignment
-        };
+        const inGroup = forStudentUsername
+            ? {
+                  assignment,
+                  members: {
+                      $some: {
+                          username: forStudentUsername,
+                      },
+                  },
+              }
+            : {
+                  assignment,
+              };
 
         return this.findAll({
             where: {
                 learningObjectHruid: loId.hruid,
                 learningObjectLanguage: loId.language,
                 learningObjectVersion: loId.version,
-                inGroup
-            }
+                inGroup,
+            },
         });
     }
 }

@@ -2,7 +2,7 @@ import { Question } from '../entities/questions/question.entity.js';
 import { mapToStudentDTO } from './student.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { LearningObjectIdentifier } from '@dwengo-1/common/interfaces/learning-content';
-import { mapToGroupDTOId } from "./group";
+import { mapToGroupDTOId } from './group';
 
 function getLearningObjectIdentifier(question: Question): LearningObjectIdentifier {
     return {

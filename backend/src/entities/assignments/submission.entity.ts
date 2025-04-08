@@ -22,7 +22,7 @@ export class Submission {
     submissionNumber?: number;
 
     @ManyToOne({
-        entity: () => Group
+        entity: () => Group,
     })
     onBehalfOf!: Group;
 
@@ -33,8 +33,6 @@ export class Submission {
 
     @Property({ type: 'datetime' })
     submissionTime!: Date;
-
-
 
     @Property({ type: 'json' })
     content!: string;

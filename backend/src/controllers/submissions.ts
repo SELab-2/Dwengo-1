@@ -1,13 +1,8 @@
 import { Request, Response } from 'express';
-import {
-    createSubmission,
-    deleteSubmission,
-    getSubmission,
-    getSubmissionsForLearningObjectAndAssignment
-} from '../services/submissions.js';
+import { createSubmission, deleteSubmission, getSubmission, getSubmissionsForLearningObjectAndAssignment } from '../services/submissions.js';
 import { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
 import { Language, languageMap } from '@dwengo-1/common/util/language';
-import {Submission} from "../entities/assignments/submission.entity";
+import { Submission } from '../entities/assignments/submission.entity';
 
 interface SubmissionParams {
     hruid: string;
@@ -15,27 +10,22 @@ interface SubmissionParams {
 }
 
 interface SubmissionQuery {
-    language: string,
+    language: string;
     version: number;
 }
 
 interface SubmissionsQuery extends SubmissionQuery {
-    classId: string,
-    assignmentId: number,
-    studentUsername?: string
+    classId: string;
+    assignmentId: number;
+    studentUsername?: string;
 }
 
-export async function getSubmissionsHandler(
-    req: Request<SubmissionParams, Submission[], null, SubmissionsQuery>,
-    res: Response
-): Promise<void> {
+export async function getSubmissionsHandler(req: Request<SubmissionParams, Submission[], null, SubmissionsQuery>, res: Response): Promise<void> {
     const loHruid = req.params.hruid;
     const lang = languageMap[req.query.language] || Language.Dutch;
-    const version = (req.query.version || 1);
+    const version = req.query.version || 1;
 
-    const submissions = await getSubmissionsForLearningObjectAndAssignment(
-        loHruid, lang, version, req.query.classId, req.query.assignmentId
-    );
+    const submissions = await getSubmissionsForLearningObjectAndAssignment(loHruid, lang, version, req.query.classId, req.query.assignmentId);
 
     res.json(submissions);
 }

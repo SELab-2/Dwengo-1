@@ -25,9 +25,9 @@ import { Student } from '../../../src/entities/users/student.entity.js';
 
 import { LearningObjectNode, LearningPathResponse } from '@dwengo-1/common/interfaces/learning-content';
 
-const STUDENT_A_USERNAME = "student_a";
-const STUDENT_B_USERNAME = "student_b";
-const CLASS_NAME = "test_class"
+const STUDENT_A_USERNAME = 'student_a';
+const STUDENT_B_USERNAME = 'student_b';
+const CLASS_NAME = 'test_class';
 
 async function initExampleData(): Promise<{ learningObject: LearningObject; learningPath: LearningPath }> {
     const learningObjectRepo = getLearningObjectRepository();
@@ -44,7 +44,7 @@ async function initPersonalizationTestData(): Promise<{
     studentA: Student;
     studentB: Student;
 }> {
-    const studentRepo = getStudentRepository()
+    const studentRepo = getStudentRepository();
     const classRepo = getClassRepository();
     const assignmentRepo = getAssignmentRepository();
     const groupRepo = getGroupRepository();
@@ -75,31 +75,31 @@ async function initPersonalizationTestData(): Promise<{
     // Create class for students
     const testClass = classRepo.create({
         classId: CLASS_NAME,
-        displayName: "Test class"
+        displayName: 'Test class',
     });
     await classRepo.save(testClass);
 
     // Create assignment for students and assign them to different groups
     const assignment = assignmentRepo.create({
         id: 0,
-        title: "Test assignment",
-        description: "Test description",
+        title: 'Test assignment',
+        description: 'Test description',
         learningPathHruid: learningContent.learningPath.hruid,
         learningPathLanguage: learningContent.learningPath.language,
-        within: testClass
-    })
+        within: testClass,
+    });
 
     const groupA = groupRepo.create({
         groupNumber: 0,
         members: [studentA],
-        assignment
+        assignment,
     });
     await groupRepo.save(groupA);
 
     const groupB = groupRepo.create({
         groupNumber: 1,
         members: [studentB],
-        assignment
+        assignment,
     });
     await groupRepo.save(groupB);
 

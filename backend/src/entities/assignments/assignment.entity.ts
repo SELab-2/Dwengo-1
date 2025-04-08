@@ -1,4 +1,4 @@
-import {Collection, Entity, Enum, ManyToOne, OneToMany, PrimaryKey, Property} from '@mikro-orm/core';
+import { Collection, Entity, Enum, ManyToOne, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Class } from '../classes/class.entity.js';
 import { Group } from './group.entity.js';
 import { Language } from '@dwengo-1/common/util/language';

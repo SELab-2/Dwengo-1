@@ -2,7 +2,7 @@ import { EntityManager } from '@mikro-orm/core';
 import { Question } from '../../../src/entities/questions/question.entity';
 import { Language } from '@dwengo-1/common/util/language';
 import { Student } from '../../../src/entities/users/student.entity';
-import {Group} from "../../../src/entities/assignments/group.entity";
+import { Group } from '../../../src/entities/assignments/group.entity';
 
 export function makeTestQuestions(em: EntityManager, students: Student[], groups: Group[]): Question[] {
     const question01 = em.create(Question, {

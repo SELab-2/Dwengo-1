@@ -15,11 +15,11 @@ export class AssignmentRepository extends DwengoEntityRepository<Assignment> {
                 within: {
                     teachers: {
                         $some: {
-                            username: teacherUsername
-                        }
-                    }
-                }
-            }
+                            username: teacherUsername,
+                        },
+                    },
+                },
+            },
         });
     }
     public async findAllAssignmentsInClass(within: Class): Promise<Assignment[]> {

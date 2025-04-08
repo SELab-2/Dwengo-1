@@ -1,6 +1,6 @@
 import { LearningObjectIdentifier } from './learning-content';
 import { StudentDTO } from './student';
-import {GroupDTO} from "./group";
+import { GroupDTO } from './group';
 
 export interface QuestionDTO {
     learningObjectIdentifier: LearningObjectIdentifier;

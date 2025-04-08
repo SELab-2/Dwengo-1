@@ -2,17 +2,18 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { setupTestApp } from '../../setup-tests';
 import { QuestionRepository } from '../../../src/data/questions/question-repository';
 import {
-    getAssignmentRepository, getClassRepository,
+    getAssignmentRepository,
+    getClassRepository,
     getGroupRepository,
     getQuestionRepository,
-    getStudentRepository
+    getStudentRepository,
 } from '../../../src/data/repositories';
 import { StudentRepository } from '../../../src/data/users/student-repository';
 import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
 import { Language } from '@dwengo-1/common/util/language';
-import {Question} from "../../../src/entities/questions/question.entity";
-import {Class} from "../../../src/entities/classes/class.entity";
-import {Assignment} from "../../../src/entities/assignments/assignment.entity";
+import { Question } from '../../../src/entities/questions/question.entity';
+import { Class } from '../../../src/entities/classes/class.entity';
+import { Assignment } from '../../../src/entities/assignments/assignment.entity';
 
 describe('QuestionRepository', () => {
     let questionRepository: QuestionRepository;
@@ -36,7 +37,7 @@ describe('QuestionRepository', () => {
         const id = new LearningObjectIdentifier('id03', Language.English, 1);
         const student = await studentRepository.findByUsername('Noordkaap');
 
-        const clazz = await getClassRepository().findById("id01");
+        const clazz = await getClassRepository().findById('id01');
         const assignment = await getAssignmentRepository().findByClassAndId(clazz!, 1);
         const group = await getGroupRepository().findByAssignmentAndGroupNumber(assignment!, 1);
         await questionRepository.createQuestion({
@@ -58,9 +59,9 @@ describe('QuestionRepository', () => {
         clazz = await getClassRepository().findById('id01');
         assignment = await getAssignmentRepository().findByClassAndId(clazz!, 1);
         loId = {
-            hruid: "id05",
+            hruid: 'id05',
             language: Language.English,
-            version: 1
+            version: 1,
         };
         const result = await questionRepository.findAllQuestionsAboutLearningObjectInAssignment(loId, assignment!);
         sortQuestions(result);
@@ -83,8 +84,7 @@ describe('QuestionRepository', () => {
     });
 
     it("should find only the questions for a certain learning object and assignment asked by the user's group", async () => {
-        const result =
-            await questionRepository.findAllQuestionsAboutLearningObjectInAssignment(loId, assignment!, "Tool");
+        const result = await questionRepository.findAllQuestionsAboutLearningObjectInAssignment(loId, assignment!, 'Tool');
         // (student Tool is in group #2)
 
         expect(result).toHaveLength(1);
@@ -110,8 +110,11 @@ describe('QuestionRepository', () => {
 
 function sortQuestions(questions: Question[]): void {
     questions.sort((a, b) => {
-        if (a.learningObjectHruid < b.learningObjectHruid) {return -1}
-        else if (a.learningObjectHruid > b.learningObjectHruid) {return 1}
-        return a.sequenceNumber! - b.sequenceNumber!
+        if (a.learningObjectHruid < b.learningObjectHruid) {
+            return -1;
+        } else if (a.learningObjectHruid > b.learningObjectHruid) {
+            return 1;
+        }
+        return a.sequenceNumber! - b.sequenceNumber!;
     });
 }

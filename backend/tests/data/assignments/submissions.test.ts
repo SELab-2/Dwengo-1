@@ -1,6 +1,6 @@
-import {beforeAll, describe, expect, it} from 'vitest';
-import {setupTestApp} from '../../setup-tests';
-import {SubmissionRepository} from '../../../src/data/assignments/submission-repository';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { setupTestApp } from '../../setup-tests';
+import { SubmissionRepository } from '../../../src/data/assignments/submission-repository';
 import {
     getAssignmentRepository,
     getClassRepository,
@@ -8,15 +8,15 @@ import {
     getStudentRepository,
     getSubmissionRepository,
 } from '../../../src/data/repositories';
-import {LearningObjectIdentifier} from '../../../src/entities/content/learning-object-identifier';
-import {Language} from '@dwengo-1/common/util/language';
-import {StudentRepository} from '../../../src/data/users/student-repository';
-import {GroupRepository} from '../../../src/data/assignments/group-repository';
-import {AssignmentRepository} from '../../../src/data/assignments/assignment-repository';
-import {ClassRepository} from '../../../src/data/classes/class-repository';
-import {Submission} from "../../../src/entities/assignments/submission.entity";
-import {Class} from "../../../src/entities/classes/class.entity";
-import {Assignment} from "../../../src/entities/assignments/assignment.entity";
+import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
+import { Language } from '@dwengo-1/common/util/language';
+import { StudentRepository } from '../../../src/data/users/student-repository';
+import { GroupRepository } from '../../../src/data/assignments/group-repository';
+import { AssignmentRepository } from '../../../src/data/assignments/assignment-repository';
+import { ClassRepository } from '../../../src/data/classes/class-repository';
+import { Submission } from '../../../src/entities/assignments/submission.entity';
+import { Class } from '../../../src/entities/classes/class.entity';
+import { Assignment } from '../../../src/entities/assignments/assignment.entity';
 
 describe('SubmissionRepository', () => {
     let submissionRepository: SubmissionRepository;
@@ -69,9 +69,9 @@ describe('SubmissionRepository', () => {
         clazz = await classRepository.findById('id01');
         assignment = await assignmentRepository.findByClassAndId(clazz!, 1);
         loId = {
-            hruid: "id02",
+            hruid: 'id02',
             language: Language.English,
-            version: 1
+            version: 1,
         };
         const result = await submissionRepository.findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!);
         sortSubmissions(result);
@@ -92,8 +92,7 @@ describe('SubmissionRepository', () => {
     });
 
     it("should find only the submissions for a certain learning object and assignment made for the user's group", async () => {
-        const result =
-            await submissionRepository.findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!, "Tool");
+        const result = await submissionRepository.findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!, 'Tool');
         // (student Tool is in group #2)
 
         expect(result).toHaveLength(1);
@@ -118,8 +117,12 @@ describe('SubmissionRepository', () => {
 
 function sortSubmissions(submissions: Submission[]): void {
     submissions.sort((a, b) => {
-        if (a.learningObjectHruid < b.learningObjectHruid) {return -1;}
-        if (a.learningObjectHruid > b.learningObjectHruid) {return 1;}
+        if (a.learningObjectHruid < b.learningObjectHruid) {
+            return -1;
+        }
+        if (a.learningObjectHruid > b.learningObjectHruid) {
+            return 1;
+        }
         return a.submissionNumber! - b.submissionNumber!;
     });
 }
