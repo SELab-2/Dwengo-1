@@ -7,7 +7,7 @@
     import { useCreateJoinRequestMutation, useStudentClassesQuery } from "@/queries/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
     import { StudentController } from "@/controllers/students";
-    import { type TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
+    import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
     import { TeacherController } from "@/controllers/teachers";
 
     const { t } = useI18n();
@@ -78,7 +78,7 @@
     async function openTeacherDialog(c: ClassDTO): Promise<void> {
         selectedClass.value = c;
 
-        // clear previous value
+        // Clear previous value
         getStudents.value = false;
         teachers.value = [];
         dialog.value = true;
@@ -88,7 +88,6 @@
             c.teachers.map(async (uid) => {
                 try {
                     const res = await teacherController.getByUsername(uid);
-                    console.log(res);
                     return res.teacher;
                 } catch (_) {
                     return null;

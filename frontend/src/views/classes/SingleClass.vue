@@ -3,7 +3,6 @@
     import authState from "@/services/auth/auth-service.ts";
     import { onMounted, ref } from "vue";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
-    import type { TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
     import { useRoute } from "vue-router";
     import { ClassController, type ClassResponse } from "@/controllers/classes";
     import type { StudentsResponse } from "@/controllers/students";
@@ -46,21 +45,6 @@
     const dialog = ref(false);
     const selectedStudent = ref<StudentDTO | null>(null);
 
-    // TODO: waiting on frontend controllers
-    const invitations = ref<TeacherInvitationDTO[]>([]);
-
-    // Function to handle a accepted invitation request
-    function acceptRequest(): void {
-        //TODO > waiting on updated frontend controllers
-        console.log("request accepted");
-    }
-
-    // Function to handle a denied invitation request
-    function denyRequest(): void {
-        //TODO > waiting on frontend controllers
-        console.log("request denied");
-    }
-
     function showPopup(s: StudentDTO): void {
         selectedStudent.value = s;
         dialog.value = true;
@@ -68,7 +52,7 @@
 
     // Remove student from class
     function removeStudentFromclass(): void {
-        console.log("student removed");
+        dialog.value = false;
     }
 </script>
 <template>

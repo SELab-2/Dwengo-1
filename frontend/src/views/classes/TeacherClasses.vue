@@ -49,14 +49,14 @@
 
     // Function to handle a accepted invitation request
     function acceptRequest(): void {
-        //TODO
-        console.log("request accepted");
+        //TODO: avoid linting issues when merging by filling the function
+        invitations.value = [];
     }
 
     // Function to handle a denied invitation request
     function denyRequest(): void {
-        //TODO
-        console.log("request denied");
+        //TODO: avoid linting issues when merging by filling the function
+        invitations.value = [];
     }
 
     // Teacher should be able to set a displayname when making a class
