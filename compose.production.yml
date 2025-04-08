@@ -24,7 +24,7 @@ services:
         restart: unless-stopped
         volumes:
             # TODO Replace with environment keys
-            - ./backend/.env:/app/.env
+            - ./backend/.env:/app/dwengo/backend/.env
         depends_on:
             - db
             - logging
