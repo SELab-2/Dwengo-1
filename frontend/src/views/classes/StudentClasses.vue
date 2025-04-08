@@ -7,9 +7,12 @@
     import { useCreateJoinRequestMutation, useStudentClassesQuery } from "@/queries/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
     import { StudentController } from "@/controllers/students";
+    import { type TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
+    import { TeacherController } from "@/controllers/teachers";
 
     const { t } = useI18n();
     const studentController: StudentController = new StudentController();
+    const teacherController: TeacherController = new TeacherController();
 
     // Username of logged in student
     const username = ref<string | undefined>(undefined);
@@ -40,16 +43,19 @@
     // Students of selected class are shown when logged in student presses on the member count
     const selectedClass = ref<ClassDTO | null>(null);
     const students = ref<StudentDTO[]>([]);
+    const teachers = ref<TeacherDTO[]>([]);
+    const getStudents = ref(false);
 
     // Boolean that handles visibility for dialogs
     // Clicking on membercount will show a dialog with all members
     const dialog = ref(false);
 
     // Function to display all members of a class in a dialog
-    async function openDialog(c: ClassDTO): Promise<void> {
+    async function openStudentDialog(c: ClassDTO): Promise<void> {
         selectedClass.value = c;
 
         // Clear previous value
+        getStudents.value = true;
         students.value = [];
         dialog.value = true;
 
@@ -67,6 +73,30 @@
 
         // Only show students that are not fetched ass *null*
         students.value = studentDTOs.filter(Boolean) as StudentDTO[];
+    }
+
+    async function openTeacherDialog(c: ClassDTO): Promise<void> {
+        selectedClass.value = c;
+
+        // clear previous value
+        getStudents.value = false;
+        teachers.value = [];
+        dialog.value = true;
+
+        // Fetch names of teachers
+        const teacherDTOs: (TeacherDTO | null)[] = await Promise.all(
+            c.teachers.map(async (uid) => {
+                try {
+                    const res = await teacherController.getByUsername(uid);
+                    console.log(res);
+                    return res.teacher;
+                } catch (_) {
+                    return null;
+                }
+            }),
+        );
+
+        teachers.value = teacherDTOs.filter(Boolean) as TeacherDTO[];
     }
 
     // Hold the code a student gives in to join a class
@@ -158,6 +188,7 @@
                             <thead>
                                 <tr>
                                     <th class="header">{{ t("classes") }}</th>
+                                    <th class="header">{{ t("teachers") }}</th>
                                     <th class="header">{{ t("members") }}</th>
                                 </tr>
                             </thead>
@@ -169,7 +200,13 @@
                                     <td>{{ c.displayName }}</td>
                                     <td
                                         class="link"
-                                        @click="openDialog(c)"
+                                        @click="openTeacherDialog(c)"
+                                    >
+                                        {{ c.teachers.length }}
+                                    </td>
+                                    <td
+                                        class="link"
+                                        @click="openStudentDialog(c)"
                                     >
                                         {{ c.students.length }}
                                     </td>
@@ -187,12 +224,20 @@
                 <v-card>
                     <v-card-title> {{ selectedClass?.displayName }} </v-card-title>
                     <v-card-text>
-                        <ul>
+                        <ul v-if="getStudents">
                             <li
                                 v-for="student in students"
                                 :key="student.username"
                             >
                                 {{ student.firstName + " " + student.lastName }}
+                            </li>
+                        </ul>
+                        <ul v-else>
+                            <li
+                                v-for="teacher in teachers"
+                                :key="teacher.username"
+                            >
+                                {{ teacher.firstName + " " + teacher.lastName }}
                             </li>
                         </ul>
                     </v-card-text>
