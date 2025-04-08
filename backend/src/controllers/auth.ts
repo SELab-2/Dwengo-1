@@ -41,7 +41,7 @@ export function handleGetFrontendAuthConfig(_req: Request, res: Response): void 
     res.json(getFrontendAuthConfig());
 }
 
-export async function handleHello(req: AuthenticatedRequest) {
+export async function handleHello(req: AuthenticatedRequest): Promise<void> {
     const auth: AuthenticationInfo = req.auth!;
     if (auth.accountType === "teacher") {
         await createTeacher({

@@ -33,3 +33,26 @@ export const onlyAllowTeacherOfClass = authorize(
     async (auth: AuthenticationInfo, req: AuthenticatedRequest) =>
         req.params.username === auth.username && teaches(auth.username, req.params.classId),
 );
+
+/**
+ * Only let the request pass through if the class id in it refers to a class the current user is in (as a student
+ * or teacher)
+ */
+function createOnlyAllowIfInClass(onlyTeacher: boolean) {
+    return authorize(
+        async (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
+            const classId = req.params.classId ?? req.params.classid ?? req.params.id;
+            const clazz = await getClass(classId);
+            if (clazz == null) {
+                return false;
+            } else if (onlyTeacher || auth.accountType === "teacher") {
+                return auth.username in clazz.teachers;
+            } else {
+                return auth.username in clazz.students;
+            }
+        }
+    );
+}
+
+export const onlyAllowIfInClass = createOnlyAllowIfInClass(false);
+export const onlyAllowIfTeacherInClass = createOnlyAllowIfInClass(true);

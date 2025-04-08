@@ -7,20 +7,22 @@ import {
     getTeacherInvitationsHandler,
 } from '../controllers/classes.js';
 import assignmentRouter from './assignments.js';
+import {adminOnly, teachersOnly} from "../middleware/auth/checks/auth-checks";
+import {onlyAllowIfInClass, onlyAllowIfTeacherInClass} from "../middleware/auth/checks/class-auth-checks";
 
 const router = express.Router();
 
 // Root endpoint used to search objects
-router.get('/', getAllClassesHandler);
+router.get('/', adminOnly, getAllClassesHandler);
 
-router.post('/', createClassHandler);
+router.post('/', teachersOnly, createClassHandler);
 
 // Information about an class with id 'id'
-router.get('/:id', getClassHandler);
+router.get('/:id', onlyAllowIfInClass, getClassHandler);
 
-router.get('/:id/teacher-invitations', getTeacherInvitationsHandler);
+router.get('/:id/teacher-invitations', onlyAllowIfTeacherInClass, getTeacherInvitationsHandler);
 
-router.get('/:id/students', getClassStudentsHandler);
+router.get('/:id/students', onlyAllowIfInClass, getClassStudentsHandler);
 
 router.use('/:classid/assignments', assignmentRouter);
 
