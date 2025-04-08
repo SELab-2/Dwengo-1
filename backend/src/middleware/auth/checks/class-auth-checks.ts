@@ -3,9 +3,9 @@ import {AuthenticationInfo} from "../authentication-info";
 import {AuthenticatedRequest} from "../authenticated-request";
 import {getClass} from "../../../services/classes";
 
-async function teaches(teacherUsername: string, classId: string) {
+async function teaches(teacherUsername: string, classId: string): Promise<boolean> {
     const clazz = await getClass(classId);
-    return clazz != null && teacherUsername in clazz.teachers;
+    return clazz !== null && teacherUsername in clazz.teachers;
 }
 
 /**
@@ -19,9 +19,9 @@ export const onlyAllowStudentHimselfAndTeachersOfClass = authorize(
             return true;
         } else if (auth.accountType === "teacher") {
             return teaches(auth.username, req.params.classId);
-        } else {
-            return false;
         }
+            return false;
+
     }
 );
 
@@ -38,21 +38,32 @@ export const onlyAllowTeacherOfClass = authorize(
  * Only let the request pass through if the class id in it refers to a class the current user is in (as a student
  * or teacher)
  */
-function createOnlyAllowIfInClass(onlyTeacher: boolean) {
-    return authorize(
-        async (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
-            const classId = req.params.classId ?? req.params.classid ?? req.params.id;
-            const clazz = await getClass(classId);
-            if (clazz == null) {
-                return false;
-            } else if (onlyTeacher || auth.accountType === "teacher") {
-                return auth.username in clazz.teachers;
-            } else {
-                return auth.username in clazz.students;
-            }
+export const onlyAllowIfInClass = authorize(
+    async (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
+        const classId = req.params.classId ?? req.params.classid ?? req.params.id;
+        const clazz = await getClass(classId);
+        if (clazz === null) {
+            return false;
+        } else if (auth.accountType === "teacher") {
+            return auth.username in clazz.teachers;
         }
-    );
-}
+        return auth.username in clazz.students;
+    }
+);
 
-export const onlyAllowIfInClass = createOnlyAllowIfInClass(false);
-export const onlyAllowIfTeacherInClass = createOnlyAllowIfInClass(true);
+/**
+ * Only allows the request to pass if the 'class' property in its body is a class the current user is a member of.
+ */
+export const onlyAllowOwnClassInBody = authorize(
+    async (auth, req) => {
+        const classId = (req.body as {class: string})?.class;
+        const clazz = await getClass(classId);
+
+        if (clazz === null) {
+            return false;
+        } else if (auth.accountType === "teacher") {
+            return auth.username in clazz.teachers;
+        }
+        return auth.username in clazz.students;
+    }
+);

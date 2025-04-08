@@ -3,7 +3,7 @@ import { createAssignment, getAllAssignments, getAssignment, getAssignmentsSubmi
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 
 // Typescript is annoying with parameter forwarding from class.ts
-interface AssignmentParams {
+export interface AssignmentParams {
     classid: string;
     id: string;
 }

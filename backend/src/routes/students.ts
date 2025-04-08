@@ -20,7 +20,7 @@ const router = express.Router();
 router.get('/', adminOnly, getAllStudentsHandler);
 
 // Users will be created automatically when some resource is created for them. Therefore, this endpoint
-// can only be used by an administrator.
+// Can only be used by an administrator.
 router.post('/', adminOnly, createStudentHandler);
 
 router.delete('/:username', onlyAllowUserHimself, deleteStudentHandler);

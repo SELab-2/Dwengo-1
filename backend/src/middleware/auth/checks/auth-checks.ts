@@ -3,6 +3,7 @@ import {AuthenticatedRequest} from "../authenticated-request";
 import * as express from "express";
 import {UnauthorizedException} from "../../../exceptions/unauthorized-exception";
 import {ForbiddenException} from "../../../exceptions/forbidden-exception";
+import {RequestHandler} from "express";
 
 /**
  * Middleware which rejects unauthenticated users (with HTTP 401) and authenticated users which do not fulfill
@@ -10,10 +11,10 @@ import {ForbiddenException} from "../../../exceptions/forbidden-exception";
  * @param accessCondition Predicate over the current AuthenticationInfo. Access is only granted when this evaluates
  *                        to true.
  */
-export function authorize(
-    accessCondition: (auth: AuthenticationInfo, req: AuthenticatedRequest) => boolean | Promise<boolean>
-) {
-    return async (req: AuthenticatedRequest, _res: express.Response, next: express.NextFunction): Promise<void> => {
+export function authorize<P,ResBody,ReqBody,ReqQuery,Locals extends Record<string, unknown>>(
+    accessCondition: (auth: AuthenticationInfo, req: AuthenticatedRequest<P,ResBody,ReqBody,ReqQuery,Locals>) => boolean | Promise<boolean>
+): RequestHandler<P,ResBody,ReqBody,ReqQuery,Locals> {
+    return async (req: AuthenticatedRequest<P,ResBody,ReqBody,ReqQuery,Locals>, _res: express.Response, next: express.NextFunction): Promise<void> => {
         if (!req.auth) {
             throw new UnauthorizedException();
         } else if (!await accessCondition(req.auth, req)) {

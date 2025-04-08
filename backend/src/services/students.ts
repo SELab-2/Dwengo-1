@@ -52,7 +52,7 @@ export async function getStudent(username: string): Promise<StudentDTO> {
     return mapToStudentDTO(user);
 }
 
-export async function createStudent(userData: StudentDTO, allowUpdate: boolean = false): Promise<StudentDTO> {
+export async function createStudent(userData: StudentDTO, allowUpdate = false): Promise<StudentDTO> {
     const studentRepository = getStudentRepository();
 
     const newStudent = mapToStudent(userData);

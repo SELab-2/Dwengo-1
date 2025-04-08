@@ -6,20 +6,23 @@ import {
     getAssignmentsSubmissionsHandler,
 } from '../controllers/assignments.js';
 import groupRouter from './groups.js';
+import {adminOnly, teachersOnly} from "../middleware/auth/checks/auth-checks";
+import {onlyAllowOwnClassInBody} from "../middleware/auth/checks/class-auth-checks";
+import {onlyAllowIfHasAccessToAssignment} from "../middleware/auth/checks/assignment-auth-checks";
 
 const router = express.Router({ mergeParams: true });
 
 // Root endpoint used to search objects
-router.get('/', getAllAssignmentsHandler);
+router.get('/', adminOnly, getAllAssignmentsHandler);
 
-router.post('/', createAssignmentHandler);
+router.post('/', teachersOnly, onlyAllowOwnClassInBody, createAssignmentHandler);
 
 // Information about an assignment with id 'id'
-router.get('/:id', getAssignmentHandler);
+router.get('/:id', onlyAllowIfHasAccessToAssignment, getAssignmentHandler);
 
-router.get('/:id/submissions', getAssignmentsSubmissionsHandler);
+router.get('/:id/submissions', onlyAllowIfHasAccessToAssignment, getAssignmentsSubmissionsHandler);
 
-router.get('/:id/questions', (_req, res) => {
+router.get('/:id/questions', onlyAllowIfHasAccessToAssignment, (_req, res) => {
     res.json({
         questions: ['0'],
     });

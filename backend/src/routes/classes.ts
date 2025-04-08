@@ -8,7 +8,7 @@ import {
 } from '../controllers/classes.js';
 import assignmentRouter from './assignments.js';
 import {adminOnly, teachersOnly} from "../middleware/auth/checks/auth-checks";
-import {onlyAllowIfInClass, onlyAllowIfTeacherInClass} from "../middleware/auth/checks/class-auth-checks";
+import {onlyAllowIfInClass} from "../middleware/auth/checks/class-auth-checks";
 
 const router = express.Router();
 
@@ -20,7 +20,7 @@ router.post('/', teachersOnly, createClassHandler);
 // Information about an class with id 'id'
 router.get('/:id', onlyAllowIfInClass, getClassHandler);
 
-router.get('/:id/teacher-invitations', onlyAllowIfTeacherInClass, getTeacherInvitationsHandler);
+router.get('/:id/teacher-invitations', teachersOnly, onlyAllowIfInClass, getTeacherInvitationsHandler);
 
 router.get('/:id/students', onlyAllowIfInClass, getClassStudentsHandler);
 
