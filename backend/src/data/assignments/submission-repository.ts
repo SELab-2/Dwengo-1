@@ -3,6 +3,7 @@ import { Group } from '../../entities/assignments/group.entity.js';
 import { Submission } from '../../entities/assignments/submission.entity.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { Student } from '../../entities/users/student.entity.js';
+import { Assignment } from '../../entities/assignments/assignment.entity';
 
 export class SubmissionRepository extends DwengoEntityRepository<Submission> {
     public async findSubmissionByLearningObjectAndSubmissionNumber(
@@ -42,11 +43,58 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
     }
 
     public async findAllSubmissionsForGroup(group: Group): Promise<Submission[]> {
-        return this.find({ onBehalfOf: group });
+        return this.find(
+            { onBehalfOf: group },
+            {
+                populate: ['onBehalfOf.members'],
+            }
+        );
+    }
+
+    /**
+     * Looks up all submissions for the given learning object which were submitted as part of the given assignment.
+     * When forStudentUsername is set, only the submissions of the given user's group are shown.
+     */
+    public async findAllSubmissionsForLearningObjectAndAssignment(
+        loId: LearningObjectIdentifier,
+        assignment: Assignment,
+        forStudentUsername?: string
+    ): Promise<Submission[]> {
+        const onBehalfOf = forStudentUsername
+            ? {
+                  assignment,
+                  members: {
+                      $some: {
+                          username: forStudentUsername,
+                      },
+                  },
+              }
+            : {
+                  assignment,
+              };
+
+        return this.findAll({
+            where: {
+                learningObjectHruid: loId.hruid,
+                learningObjectLanguage: loId.language,
+                learningObjectVersion: loId.version,
+                onBehalfOf,
+            },
+        });
     }
 
     public async findAllSubmissionsForStudent(student: Student): Promise<Submission[]> {
-        return this.find({ submitter: student });
+        const result = await this.find(
+            { submitter: student },
+            {
+                populate: ['onBehalfOf.members'],
+            }
+        );
+
+        // Workaround: For some reason, without this MikroORM generates an UPDATE query with a syntax error in some tests
+        this.em.clear();
+
+        return result;
     }
 
     public async deleteSubmissionByLearningObjectAndSubmissionNumber(loId: LearningObjectIdentifier, submissionNumber: number): Promise<void> {

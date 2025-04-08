@@ -6,7 +6,7 @@ import {
     getSubmissionRepository,
 } from '../data/repositories.js';
 import { Group } from '../entities/assignments/group.entity.js';
-import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
+import { mapToGroupDTO, mapToShallowGroupDTO } from '../interfaces/group.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
 import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
@@ -38,7 +38,7 @@ export async function getGroup(classId: string, assignmentNumber: number, groupN
         return mapToGroupDTO(group);
     }
 
-    return mapToGroupDTOId(group);
+    return mapToShallowGroupDTO(group);
 }
 
 export async function createGroup(groupData: GroupDTO, classid: string, assignmentNumber: number): Promise<Group | null> {
@@ -103,7 +103,7 @@ export async function getAllGroups(classId: string, assignmentNumber: number, fu
         return groups.map(mapToGroupDTO);
     }
 
-    return groups.map(mapToGroupDTOId);
+    return groups.map(mapToShallowGroupDTO);
 }
 
 export async function getGroupSubmissions(

@@ -1,11 +1,31 @@
 import { Request, Response } from 'express';
-import { createQuestion, deleteQuestion, getAllQuestions, getAnswersByQuestion, getQuestion } from '../services/questions.js';
+import {
+    createQuestion,
+    deleteQuestion,
+    getAllQuestions,
+    getAnswersByQuestion,
+    getQuestion,
+    getQuestionsAboutLearningObjectInAssignment,
+} from '../services/questions.js';
 import { FALLBACK_LANG, FALLBACK_SEQ_NUM } from '../config.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { Language } from '@dwengo-1/common/util/language';
+import { AnswerDTO, AnswerId } from '@dwengo-1/common/interfaces/answer';
 
-function getObjectId(req: Request, res: Response): LearningObjectIdentifier | null {
+interface QuestionPathParams {
+    hruid: string;
+    version: string;
+}
+
+interface QuestionQueryParams {
+    lang: string;
+}
+
+function getObjectId<ResBody, ReqBody>(
+    req: Request<QuestionPathParams, ResBody, ReqBody, QuestionQueryParams>,
+    res: Response
+): LearningObjectIdentifier | null {
     const { hruid, version } = req.params;
     const lang = req.query.lang;
 
@@ -21,7 +41,13 @@ function getObjectId(req: Request, res: Response): LearningObjectIdentifier | nu
     };
 }
 
-function getQuestionId(req: Request, res: Response): QuestionId | null {
+interface GetQuestionIdPathParams extends QuestionPathParams {
+    seq: string;
+}
+function getQuestionId<ReqBody, ResBody>(
+    req: Request<GetQuestionIdPathParams, ReqBody, ResBody, QuestionQueryParams>,
+    res: Response
+): QuestionId | null {
     const seq = req.params.seq;
     const learningObjectIdentifier = getObjectId(req, res);
 
@@ -35,15 +61,35 @@ function getQuestionId(req: Request, res: Response): QuestionId | null {
     };
 }
 
-export async function getAllQuestionsHandler(req: Request, res: Response): Promise<void> {
+interface GetAllQuestionsQueryParams extends QuestionQueryParams {
+    classId?: string;
+    assignmentId?: number;
+    forStudent?: string;
+    full?: boolean;
+}
+
+export async function getAllQuestionsHandler(
+    req: Request<QuestionPathParams, QuestionDTO[] | QuestionId[], unknown, GetAllQuestionsQueryParams>,
+    res: Response
+): Promise<void> {
     const objectId = getObjectId(req, res);
-    const full = req.query.full === 'true';
+    const full = req.query.full;
 
     if (!objectId) {
         return;
     }
-
-    const questions = await getAllQuestions(objectId, full);
+    let questions: QuestionDTO[] | QuestionId[];
+    if (req.query.classId && req.query.assignmentId) {
+        questions = await getQuestionsAboutLearningObjectInAssignment(
+            objectId,
+            req.query.classId,
+            req.query.assignmentId,
+            full ?? false,
+            req.query.forStudent
+        );
+    } else {
+        questions = await getAllQuestions(objectId, full ?? false);
+    }
 
     if (!questions) {
         res.status(404).json({ error: `Questions not found.` });
@@ -52,7 +98,10 @@ export async function getAllQuestionsHandler(req: Request, res: Response): Promi
     }
 }
 
-export async function getQuestionHandler(req: Request, res: Response): Promise<void> {
+export async function getQuestionHandler(
+    req: Request<GetQuestionIdPathParams, QuestionDTO[] | QuestionId[], unknown, QuestionQueryParams>,
+    res: Response
+): Promise<void> {
     const questionId = getQuestionId(req, res);
 
     if (!questionId) {
@@ -68,9 +117,15 @@ export async function getQuestionHandler(req: Request, res: Response): Promise<v
     }
 }
 
-export async function getQuestionAnswersHandler(req: Request, res: Response): Promise<void> {
+interface GetQuestionAnswersQueryParams extends QuestionQueryParams {
+    full: boolean;
+}
+export async function getQuestionAnswersHandler(
+    req: Request<GetQuestionIdPathParams, { answers: AnswerDTO[] | AnswerId[] }, unknown, GetQuestionAnswersQueryParams>,
+    res: Response
+): Promise<void> {
     const questionId = getQuestionId(req, res);
-    const full = req.query.full === 'true';
+    const full = req.query.full;
 
     if (!questionId) {
         return;
@@ -88,8 +143,8 @@ export async function getQuestionAnswersHandler(req: Request, res: Response): Pr
 export async function createQuestionHandler(req: Request, res: Response): Promise<void> {
     const questionDTO = req.body as QuestionDTO;
 
-    if (!questionDTO.learningObjectIdentifier || !questionDTO.author || !questionDTO.content) {
-        res.status(400).json({ error: 'Missing required fields: identifier and content' });
+    if (!questionDTO.learningObjectIdentifier || !questionDTO.author || !questionDTO.inGroup || !questionDTO.content) {
+        res.status(400).json({ error: 'Missing required fields: identifier, author, inGroup, and content' });
         return;
     }
 
@@ -102,7 +157,10 @@ export async function createQuestionHandler(req: Request, res: Response): Promis
     }
 }
 
-export async function deleteQuestionHandler(req: Request, res: Response): Promise<void> {
+export async function deleteQuestionHandler(
+    req: Request<GetQuestionIdPathParams, QuestionDTO, unknown, QuestionQueryParams>,
+    res: Response
+): Promise<void> {
     const questionId = getQuestionId(req, res);
 
     if (!questionId) {

@@ -2,6 +2,7 @@ import { Question } from '../entities/questions/question.entity.js';
 import { mapToStudentDTO } from './student.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { LearningObjectIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import { mapToGroupDTOId } from './group';
 
 function getLearningObjectIdentifier(question: Question): LearningObjectIdentifier {
     return {
@@ -21,6 +22,7 @@ export function mapToQuestionDTO(question: Question): QuestionDTO {
         learningObjectIdentifier,
         sequenceNumber: question.sequenceNumber!,
         author: mapToStudentDTO(question.author),
+        inGroup: mapToGroupDTOId(question.inGroup),
         timestamp: question.timestamp.toISOString(),
         content: question.content,
     };

@@ -14,7 +14,7 @@ export function mapToSubmissionDTO(submission: Submission): SubmissionDTO {
         submissionNumber: submission.submissionNumber,
         submitter: mapToStudentDTO(submission.submitter),
         time: submission.submissionTime,
-        group: submission.onBehalfOf ? mapToGroupDTO(submission.onBehalfOf) : undefined,
+        group: mapToGroupDTO(submission.onBehalfOf),
         content: submission.content,
     };
 }
@@ -38,7 +38,6 @@ export function mapToSubmission(submissionDTO: SubmissionDTO): Submission {
     submission.submitter = mapToStudent(submissionDTO.submitter);
     // Submission.submissionTime = submissionDTO.time;
     // Submission.onBehalfOf =  submissionDTO.group!;
-    // TODO fix group
     submission.content = submissionDTO.content;
 
     return submission;

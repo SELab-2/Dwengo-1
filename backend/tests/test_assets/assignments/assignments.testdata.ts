@@ -34,5 +34,15 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         groups: [],
     });
 
-    return [assignment01, assignment02, assignment03];
+    const assignment04 = em.create(Assignment, {
+        within: classes[0],
+        id: 4,
+        title: 'another assignment',
+        description: 'with a description',
+        learningPathHruid: 'id01',
+        learningPathLanguage: Language.English,
+        groups: [],
+    });
+
+    return [assignment01, assignment02, assignment03, assignment04];
 }
