@@ -82,12 +82,19 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
     }
 
     public async findAllSubmissionsForStudent(student: Student): Promise<Submission[]> {
-        return this.find(
+        const result = await this.find(
             { submitter: student },
             {
-                populate: ["onBehalfOf.members"]
+                populate: [
+                    "onBehalfOf.members"
+                ]
             }
         );
+
+        // Workaround: For some reason, without this MikroORM generates an UPDATE query with a syntax error in some tests
+        this.em.clear();
+
+        return result;
     }
 
     public async deleteSubmissionByLearningObjectAndSubmissionNumber(loId: LearningObjectIdentifier, submissionNumber: number): Promise<void> {
