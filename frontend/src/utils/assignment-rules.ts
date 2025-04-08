@@ -1,48 +1,4 @@
 /**
- * Submits the form data to the backend.
- *
- * @param assignmentTitle - The title of the assignment.
- * @param selectedLearningPath - The selected learning path, containing hruid and title.
- * @param selectedClass - The selected classes, an array of class objects.
- * @param groups - An array of groups, each containing student IDs.
- * @param deadline - The deadline of the assignment in ISO format.
- * @param description - The description of the assignment
- * Sends a POST request to the backend with the form data.
- */
-
-import {AssignmentController} from "@/controllers/assignments.ts";
-import type {AssignmentDTO} from "@dwengo-1/common/interfaces/assignment";
-
-export const submitForm = async (
-    assignmentTitle: string,
-    selectedLearningPath: string,
-    selectedClass: string,
-    groups: string[],
-    deadline: string,
-    description: string,
-    currentLanguage: string
-) => {
-    const formData: AssignmentDTO = {
-        id: 4,
-        class: selectedClass,
-        title: assignmentTitle,
-        description: description,
-        learningPath: selectedLearningPath,
-        language: currentLanguage
-        //groups: [],
-        //deadline: deadline,
-    };
-
-    console.log(formData);
-
-    const controller: AssignmentController = new AssignmentController(selectedClass);
-
-    const response = await controller.createAssignment(formData);
-    console.log(response);
-
-};
-
-/**
  * Validation rule for the assignment title.
  *
  * Ensures that the title is not empty.
