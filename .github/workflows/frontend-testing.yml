@@ -57,6 +57,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
+    - run: npm run build
     - run: npm run test:coverage -w frontend
     - name: 'Report Frontend Coverage'
       # Set if: always() to also generate the report if tests are failing
