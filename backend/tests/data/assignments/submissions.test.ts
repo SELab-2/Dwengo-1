@@ -18,25 +18,6 @@ import {Submission} from "../../../src/entities/assignments/submission.entity";
 import {Class} from "../../../src/entities/classes/class.entity";
 import {Assignment} from "../../../src/entities/assignments/assignment.entity";
 
-export function checkSubmissionsForStudentNoordkaap(result: Submission[]) {
-    sortSubmissions(result);
-
-    expect(result[0].learningObjectHruid).toBe("id01");
-    expect(result[0].submissionNumber).toBe(2);
-
-    expect(result[1].learningObjectHruid).toBe("id02");
-    expect(result[1].submissionNumber).toBe(1);
-
-    expect(result[2].learningObjectHruid).toBe("id02");
-    expect(result[2].submissionNumber).toBe(2);
-
-    expect(result[3].learningObjectHruid).toBe("id03");
-    expect(result[3].submissionNumber).toBe(1);
-
-    expect(result[4].learningObjectHruid).toBe("id03");
-    expect(result[4].submissionNumber).toBe(2);
-}
-
 describe('SubmissionRepository', () => {
     let submissionRepository: SubmissionRepository;
     let studentRepository: StudentRepository;
@@ -135,7 +116,7 @@ describe('SubmissionRepository', () => {
     });
 });
 
-function sortSubmissions(submissions: Submission[]) {
+function sortSubmissions(submissions: Submission[]): void {
     submissions.sort((a, b) => {
         if (a.learningObjectHruid < b.learningObjectHruid) {return -1;}
         if (a.learningObjectHruid > b.learningObjectHruid) {return 1;}

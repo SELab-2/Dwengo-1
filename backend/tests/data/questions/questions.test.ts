@@ -108,7 +108,7 @@ describe('QuestionRepository', () => {
     });
 });
 
-function sortQuestions(questions: Question[]) {
+function sortQuestions(questions: Question[]): void {
     questions.sort((a, b) => {
         if (a.learningObjectHruid < b.learningObjectHruid) {return -1}
         else if (a.learningObjectHruid > b.learningObjectHruid) {return 1}

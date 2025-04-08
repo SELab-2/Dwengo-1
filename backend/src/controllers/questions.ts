@@ -22,7 +22,10 @@ interface QuestionQueryParams {
     lang: string;
 }
 
-function getObjectId(req: Request<QuestionPathParams, any, any, QuestionQueryParams>, res: Response): LearningObjectIdentifier | null {
+function getObjectId<ResBody, ReqBody>(
+    req: Request<QuestionPathParams, ResBody, ReqBody, QuestionQueryParams>,
+    res: Response
+): LearningObjectIdentifier | null {
     const { hruid, version } = req.params;
     const lang = req.query.lang;
 
@@ -41,7 +44,10 @@ function getObjectId(req: Request<QuestionPathParams, any, any, QuestionQueryPar
 interface GetQuestionIdPathParams extends QuestionPathParams {
     seq: string;
 }
-function getQuestionId(req: Request<GetQuestionIdPathParams, any, any, QuestionQueryParams>, res: Response): QuestionId | null {
+function getQuestionId<ReqBody, ResBody>(
+    req: Request<GetQuestionIdPathParams, ReqBody, ResBody, QuestionQueryParams>,
+    res: Response
+): QuestionId | null {
     const seq = req.params.seq;
     const learningObjectIdentifier = getObjectId(req, res);
 
