@@ -9,7 +9,7 @@ import { mapToStudent } from '../interfaces/student.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { AnswerDTO, AnswerId } from '@dwengo-1/common/interfaces/answer';
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
-import { mapToAssignment } from '../interfaces/assignment';
+import { mapToAssignment } from '../interfaces/assignment.js';
 
 export async function getQuestionsAboutLearningObjectInAssignment(
     loId: LearningObjectIdentifier,
