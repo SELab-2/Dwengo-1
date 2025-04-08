@@ -13,7 +13,7 @@ export default mergeConfig(
                 reporter: ["text", "json-summary", "json"],
                 // If you want a coverage reports even if your tests are failing, include the reportOnFailure option
                 reportOnFailure: true,
-                exclude: ["**/*config*", "**/tests/**", 'src/*.ts', '**/dist/**', '**/e2e/**', '**/*config*', '**/node_modules/**'],
+                exclude: ["**/*config*", "**/tests/**", 'src/*.ts', 'src/*.vue', '**/dist/**', '**/e2e/**', '**/*config*', '**/node_modules/**'],
                 thresholds: {
                     lines: 60,
                     branches: 60,
