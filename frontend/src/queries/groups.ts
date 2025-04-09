@@ -13,11 +13,11 @@ function groupsQueryKey(classid: string, assignmentNumber: number) {
 function groupQueryKey(classid: string, assignmentNumber: number, groupNumber: number) {
     return [ "group", classid, assignmentNumber, groupNumber ];
 }
-function groupSubmissionsQueryKey(classid: string, assignmentNumber: number, groupNumber: number) {
-    return [ "group-submissions", classid, assignmentNumber, groupNumber ];
+function groupSubmissionsQueryKey(classid: string, assignmentNumber: number, groupNumber: number, full: boolean) {
+    return [ "group-submissions", classid, assignmentNumber, groupNumber, full ];
 }
-function groupQuestionsQueryKey(classid: string, assignmentNumber: number, groupNumber: number) {
-    return [ "group-questions", classid, assignmentNumber, groupNumber ];
+function groupQuestionsQueryKey(classid: string, assignmentNumber: number, groupNumber: number, full: boolean) {
+    return [ "group-questions", classid, assignmentNumber, groupNumber, full ];
 }
 
 export function useGroupsQuery(
@@ -55,7 +55,7 @@ export function useGroupSubmissionsQuery(
     groupController.update(classid, assignmentNumber);
 
     return useQuery({
-        queryKey: computed(() => groupSubmissionsQueryKey(classid, assignmentNumber, toValue(groupNumber)!)),
+        queryKey: computed(() => groupSubmissionsQueryKey(classid, assignmentNumber, toValue(groupNumber)!, toValue(full)!)),
         queryFn: async () => groupController.getSubmissions(toValue(groupNumber)!, toValue(full)!),
         enabled: () => !isNaN(Number(toValue(groupNumber))),
     });
@@ -67,10 +67,10 @@ export function useGroupQuestionsQuery(
     groupNumber: MaybeRefOrGetter<number | undefined>,
     full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<QuestionsResponse, Error> {
-    groupController.update(classid, assignmentNumber);
+    groupController.update(toValue(classid)!, toValue(assignmentNumber));
 
     return useQuery({
-        queryKey: computed(() => groupQuestionsQueryKey(classid, assignmentNumber, toValue(groupNumber)!)),
+        queryKey: computed(() => groupQuestionsQueryKey(classid, assignmentNumber, toValue(groupNumber)!, toValue(full)!)),
         queryFn: async () => groupController.getSubmissions(toValue(groupNumber)!, toValue(full)!),
         enabled: () => !isNaN(Number(toValue(groupNumber))),
     });
