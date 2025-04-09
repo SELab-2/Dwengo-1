@@ -12,39 +12,43 @@ export interface GroupResponse {
 }
 
 export class GroupController extends BaseController {
-    constructor(classid: string, assignmentNumber: number) {
-        super(`class/${classid}/assignments/${assignmentNumber}/groups`);
+    constructor() {
+        super('');
     }
 
     update(classid: string, assignmentNumber: number) {
         this.basePath = `class/${classid}/assignments/${assignmentNumber}/groups`;
     }
 
-    async getAll(full = true): Promise<GroupsResponse> {
-        return this.get<GroupsResponse>(`/`, { full });
+    protected getBasePath(classid: string, assignmentNumber: number) {
+        return `class/${classid}/assignments/${assignmentNumber}/groups`;
     }
 
-    async getByNumber(num: number | string): Promise<GroupResponse> {
-        return this.get<GroupResponse>(`/${num}`);
+    async getAll(classid: string, assignmentNumber: number, full = true): Promise<GroupsResponse> {
+        return this.get<GroupsResponse>(`${this.getBasePath(classid, assignmentNumber)}/`, { full });
     }
 
-    async createGroup(data: GroupDTO): Promise<GroupResponse> {
-        return this.post<GroupResponse>(`/`, data);
+    async getByNumber(classid: string, assignmentNumber: number, num: number | string): Promise<GroupResponse> {
+        return this.get<GroupResponse>(`${this.getBasePath(classid, assignmentNumber)}/${num}`);
     }
 
-    async deleteGroup(num: number): Promise<GroupResponse> {
-        return this.delete<GroupResponse>(`/${num}`);
+    async createGroup(classid: string, assignmentNumber: number, data: GroupDTO): Promise<GroupResponse> {
+        return this.post<GroupResponse>(`${this.getBasePath(classid, assignmentNumber)}/`, data);
     }
 
-    async updateGroup(num: number, data: Partial<GroupDTO>): Promise<GroupResponse> {
-        return this.put<GroupResponse>(`/${num}`, data);
+    async deleteGroup(classid: string, assignmentNumber: number, num: number): Promise<GroupResponse> {
+        return this.delete<GroupResponse>(`${this.getBasePath(classid, assignmentNumber)}/${num}`);
     }
 
-    async getSubmissions(groupNumber: number, full = true): Promise<SubmissionsResponse> {
-        return this.get<SubmissionsResponse>(`/${groupNumber}/submissions`, { full });
+    async updateGroup(classid: string, assignmentNumber: number, num: number, data: Partial<GroupDTO>): Promise<GroupResponse> {
+        return this.put<GroupResponse>(`${this.getBasePath(classid, assignmentNumber)}/${num}`, data);
     }
 
-    async getQuestions(groupNumber: number, full = true): Promise<QuestionsResponse> {
-        return this.get<QuestionsResponse>(`/${groupNumber}/questions`, { full });
+    async getSubmissions(classid: string, assignmentNumber: number, groupNumber: number, full = true): Promise<SubmissionsResponse> {
+        return this.get<SubmissionsResponse>(`${this.getBasePath(classid, assignmentNumber)}/${groupNumber}/submissions`, { full });
+    }
+
+    async getQuestions(classid: string, assignmentNumber: number, groupNumber: number, full = true): Promise<QuestionsResponse> {
+        return this.get<QuestionsResponse>(`${this.getBasePath(classid, assignmentNumber)}/${groupNumber}/questions`, { full });
     }
 }

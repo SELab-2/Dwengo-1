@@ -5,7 +5,7 @@ import type { SubmissionsResponse } from "@/controllers/submissions";
 import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
 
-const groupController = new GroupController('', 0);
+const groupController = new GroupController();
 
 function groupsQueryKey(classid: string, assignmentNumber: number) {
     return [ "groups", classid, assignmentNumber ];
@@ -20,15 +20,31 @@ function groupQuestionsQueryKey(classid: string, assignmentNumber: number, group
     return [ "group-questions", classid, assignmentNumber, groupNumber, full ];
 }
 
+function checkEnabled(
+    classid: string | undefined, 
+    assignmentNumber: number | undefined, 
+    groupNumber: number | undefined,
+): boolean {
+    return  Boolean(classid) && !isNaN(Number(groupNumber)) && !isNaN(Number(assignmentNumber));
+}
+function toValues(
+    classid: MaybeRefOrGetter<string | undefined>, 
+    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+    groupNumber: MaybeRefOrGetter<number | undefined>,
+) {
+    return { cid: toValue(classid), an: toValue(assignmentNumber), gn: toValue(groupNumber) };
+}
+
 export function useGroupsQuery(
-    classid: string, 
-    assignmentNumber: number, 
+    classid: MaybeRefOrGetter<string | undefined>, 
+    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
 ): UseQueryReturnType<GroupsResponse, Error> {
-    groupController.update(classid, assignmentNumber);
+    const { cid, an, gn } = toValues(classid, assignmentNumber, 1);
 
     return useQuery({
-        queryKey: computed(() => (groupsQueryKey(classid, assignmentNumber))),
-        queryFn: async () => groupController.getAll(),
+        queryKey: computed(() => (groupsQueryKey(cid!, an!))),
+        queryFn: async () => groupController.getAll(cid!, an!),
+        enabled: () => checkEnabled(cid, an, 1),
     });
 }
 
@@ -37,12 +53,12 @@ export function useGroupQuery(
     assignmentNumber: number, 
     groupNumber: MaybeRefOrGetter<number | undefined>,
 ): UseQueryReturnType<GroupResponse, Error> {
-    groupController.update(classid, assignmentNumber);
+    const { cid, an, gn } = toValues(classid, assignmentNumber, groupNumber);
 
     return useQuery({
-        queryKey: computed(() => groupQueryKey(classid, assignmentNumber, toValue(groupNumber)!)),
-        queryFn: async () => groupController.getByNumber(toValue(groupNumber)!),
-        enabled: () => !isNaN(Number(toValue(groupNumber))),
+        queryKey: computed(() => groupQueryKey(cid!, an!, gn!)),
+        queryFn: async () => groupController.getByNumber(cid!, an!, gn!),
+        enabled: () => checkEnabled(cid, an, gn),
     });
 }
 
@@ -52,26 +68,26 @@ export function useGroupSubmissionsQuery(
     groupNumber: MaybeRefOrGetter<number | undefined>,
     full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<SubmissionsResponse, Error> {
-    groupController.update(classid, assignmentNumber);
+    const { cid, an, gn } = toValues(classid, assignmentNumber, groupNumber);
 
     return useQuery({
-        queryKey: computed(() => groupSubmissionsQueryKey(classid, assignmentNumber, toValue(groupNumber)!, toValue(full)!)),
-        queryFn: async () => groupController.getSubmissions(toValue(groupNumber)!, toValue(full)!),
-        enabled: () => !isNaN(Number(toValue(groupNumber))),
+        queryKey: computed(() => groupSubmissionsQueryKey(cid!, an!, gn!, toValue(full))),
+        queryFn: async () => groupController.getSubmissions(cid!, an!, gn!, toValue(full)),
+        enabled: () => checkEnabled(cid, an, gn),
     });
 }
 
 export function useGroupQuestionsQuery(
-    classid: string, 
-    assignmentNumber: number, 
+    classid: MaybeRefOrGetter<string | undefined>, 
+    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
     groupNumber: MaybeRefOrGetter<number | undefined>,
     full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<QuestionsResponse, Error> {
-    groupController.update(toValue(classid)!, toValue(assignmentNumber));
+    const { cid, an, gn } = toValues(classid, assignmentNumber, groupNumber);
 
     return useQuery({
-        queryKey: computed(() => groupQuestionsQueryKey(classid, assignmentNumber, toValue(groupNumber)!, toValue(full)!)),
-        queryFn: async () => groupController.getSubmissions(toValue(groupNumber)!, toValue(full)!),
-        enabled: () => !isNaN(Number(toValue(groupNumber))),
+        queryKey: computed(() => groupQuestionsQueryKey(cid!, an!, gn!, toValue(full))),
+        queryFn: async () => groupController.getSubmissions(cid!, an!, gn!, toValue(full)),
+        enabled: () => checkEnabled(cid, an, gn),
     });
 }
