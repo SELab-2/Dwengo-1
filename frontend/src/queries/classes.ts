@@ -20,6 +20,9 @@ function classTeachersKey(classid: string) {
 function classTeacherInvitationsKey(classid: string) {
     return ["class-teacher-invitations", classid];
 }
+function classAssignmentsKey(classid: string) {
+    return ["class-assignments", classid];
+}
 
 export function useClassesQuery(full: MaybeRefOrGetter<boolean> = true): UseQueryReturnType<ClassesResponse, Error> {
     return useQuery({
@@ -67,6 +70,17 @@ export function useClassTeacherInvitationsQuery(
     return useQuery({
         queryKey: computed(() => classTeacherInvitationsKey(toValue(id)!)),
         queryFn: async () => classController.getTeacherInvitations(toValue(id)!, toValue(full)!),
+        enabled: () => Boolean(toValue(id)),
+    });
+}
+
+export function useClassAssignmentsQuery(
+    id: MaybeRefOrGetter<string | undefined>,
+    full: MaybeRefOrGetter<boolean> = true
+): UseQueryReturnType<StudentsResponse, Error> {
+    return useQuery({
+        queryKey: computed(() => classAssignmentsKey(toValue(id)!)),
+        queryFn: async () => classController.getAssignments(toValue(id)!, toValue(full)!),
         enabled: () => Boolean(toValue(id)),
     });
 }
