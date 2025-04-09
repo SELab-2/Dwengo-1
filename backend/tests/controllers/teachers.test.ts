@@ -183,7 +183,7 @@ describe('Teacher controllers', () => {
 
     it('Update join request status', async () => {
         req = {
-            params: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
+            params: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89', studentUsername: 'PinkFloyd' },
             body: { accepted: 'true' },
         };
 

@@ -222,7 +222,7 @@ describe('Student controllers', () => {
     it('Create join request student already in class error', async () => {
         req = {
             params: { username: 'Noordkaap' },
-            body: { classId: 'id02' },
+            body: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
         };
 
         await expect(async () => createStudentRequestHandler(req as Request, res as Response)).rejects.toThrow(ConflictException);
