@@ -1,11 +1,11 @@
-import { getAnswerRepository } from '../data/repositories';
-import { Answer } from '../entities/questions/answer.entity';
-import { mapToAnswerDTO, mapToAnswerDTOId } from '../interfaces/answer';
-import { fetchTeacher } from './teachers';
-import { fetchQuestion } from './questions';
+import { getAnswerRepository } from '../data/repositories.js';
+import { Answer } from '../entities/questions/answer.entity.js';
+import { mapToAnswerDTO, mapToAnswerDTOId } from '../interfaces/answer.js';
+import { fetchTeacher } from './teachers.js';
+import { fetchQuestion } from './questions.js';
 import { QuestionId } from '@dwengo-1/common/interfaces/question';
 import { AnswerData, AnswerDTO, AnswerId } from '@dwengo-1/common/interfaces/answer';
-import { NotFoundException } from '../exceptions/not-found-exception';
+import { NotFoundException } from '../exceptions/not-found-exception.js';
 
 export async function getAnswersByQuestion(questionId: QuestionId, full: boolean): Promise<AnswerDTO[] | AnswerId[]> {
     const answerRepository = getAnswerRepository();

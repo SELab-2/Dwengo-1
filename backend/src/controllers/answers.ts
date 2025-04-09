@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { requireFields } from './error-helper';
-import { getLearningObjectId, getQuestionId } from './questions';
-import { createAnswer, deleteAnswer, getAnswer, getAnswersByQuestion, updateAnswer } from '../services/answers';
-import { FALLBACK_SEQ_NUM } from '../config';
+import { requireFields } from './error-helper.js';
+import { getLearningObjectId, getQuestionId } from './questions.js';
+import { createAnswer, deleteAnswer, getAnswer, getAnswersByQuestion, updateAnswer } from '../services/answers.js';
+import { FALLBACK_SEQ_NUM } from '../config.js';
 import { AnswerData } from '@dwengo-1/common/interfaces/answer';
 
 export async function getAllAnswersHandler(req: Request, res: Response): Promise<void> {

@@ -4,9 +4,9 @@ import { Question } from '../entities/questions/question.entity.js';
 import { QuestionRepository } from '../data/questions/question-repository.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { QuestionData, QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
-import { NotFoundException } from '../exceptions/not-found-exception';
-import { FALLBACK_VERSION_NUM } from '../config';
-import { fetchStudent } from './students';
+import { NotFoundException } from '../exceptions/not-found-exception.js';
+import { FALLBACK_VERSION_NUM } from '../config.js';
+import { fetchStudent } from './students.js';
 
 export async function getAllQuestions(id: LearningObjectIdentifier, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
     const questionRepository: QuestionRepository = getQuestionRepository();

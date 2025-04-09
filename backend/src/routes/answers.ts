@@ -1,5 +1,5 @@
 import express from 'express';
-import { createAnswerHandler, deleteAnswerHandler, getAnswerHandler, getAllAnswersHandler, updateAnswerHandler } from '../controllers/answers';
+import { createAnswerHandler, deleteAnswerHandler, getAnswerHandler, getAllAnswersHandler, updateAnswerHandler } from '../controllers/answers.js';
 
 const router = express.Router({ mergeParams: true });
 

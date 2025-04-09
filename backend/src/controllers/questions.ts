@@ -4,7 +4,7 @@ import { FALLBACK_LANG, FALLBACK_SEQ_NUM, FALLBACK_VERSION_NUM } from '../config
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { QuestionData, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { Language } from '@dwengo-1/common/util/language';
-import { requireFields } from './error-helper';
+import { requireFields } from './error-helper.js';
 
 export function getLearningObjectId(hruid: string, version: string, lang: string): LearningObjectIdentifier {
     return {
