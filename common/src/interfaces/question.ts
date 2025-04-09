@@ -13,6 +13,7 @@ export interface QuestionDTO {
 
 export interface QuestionData {
     author?: string;
+    inGroup: GroupDTO;
     content: string;
 }
 

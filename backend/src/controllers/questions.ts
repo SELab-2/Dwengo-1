@@ -7,11 +7,12 @@ import {
     getQuestion,
     getQuestionsAboutLearningObjectInAssignment, updateQuestion,
 } from '../services/questions.js';
-import { FALLBACK_LANG, FALLBACK_SEQ_NUM } from '../config.js';
+import {FALLBACK_LANG, FALLBACK_SEQ_NUM, FALLBACK_VERSION_NUM} from '../config.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { QuestionData, QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { Language } from '@dwengo-1/common/util/language';
 import {requireFields} from "./error-helper";
+import {BadRequestException} from "../exceptions/bad-request-exception";
 
 export function getLearningObjectId(hruid: string, version: string, lang: string): LearningObjectIdentifier {
     return {
@@ -28,7 +29,7 @@ export function getQuestionId(learningObjectIdentifier: LearningObjectIdentifier
     };
 }
 
-function getQuestionId(req: Request, res: Response): QuestionId | null {
+function getQuestionIdFromRequest(req: Request): QuestionId | null {
     const seq = req.params.seq;
     const hruid = req.params.hruid;
     const version = req.params.version;
@@ -39,10 +40,7 @@ function getQuestionId(req: Request, res: Response): QuestionId | null {
         return null;
     }
 
-    return {
-        learningObjectIdentifier,
-        sequenceNumber: seq ? Number(seq) : FALLBACK_SEQ_NUM,
-    };
+    return getQuestionId(learningObjectIdentifier, seq);
 }
 
 export async function getAllQuestionsHandler(req: Request, res: Response): Promise<void> {
@@ -52,16 +50,22 @@ export async function getAllQuestionsHandler(req: Request, res: Response): Promi
     const full = req.query.full === 'true';
     requireFields({ hruid });
 
+    const assignmentId = parseInt(req.query.assignmentId as string);
+
+    if (isNaN(assignmentId)) {
+        throw new BadRequestException("The assignment ID must be a number.");
+    }
+
     const learningObjectId = getLearningObjectId(hruid, version, language);
 
     let questions: QuestionDTO[] | QuestionId[];
     if (req.query.classId && req.query.assignmentId) {
         questions = await getQuestionsAboutLearningObjectInAssignment(
             learningObjectId,
-            req.query.classId,
-            req.query.assignmentId,
+            req.query.classId as string,
+            parseInt(req.query.assignmentId as string),
             full ?? false,
-            req.query.forStudent
+            req.query.forStudent as string | undefined
         );
     } else {
         questions = await getAllQuestions(learningObjectId, full ?? false);
@@ -70,40 +74,37 @@ export async function getAllQuestionsHandler(req: Request, res: Response): Promi
     res.json({ questions });
 }
 
-    export async function getQuestionHandler(req: Request, res: Response): Promise<void> {
-        const hruid = req.params.hruid;
-        const version = req.params.version;
-        const language = req.query.lang as string;
-        const seq = req.params.seq;
-        requireFields({ hruid });
+export async function getQuestionHandler(req: Request, res: Response): Promise<void> {
+    const hruid = req.params.hruid;
+    const version = req.params.version;
+    const language = req.query.lang as string;
+    const seq = req.params.seq;
+    requireFields({ hruid });
 
-        const learningObjectId = getLearningObjectId(hruid, version, language);
-        const questionId = getQuestionId(learningObjectId, seq);
+    const learningObjectId = getLearningObjectId(hruid, version, language);
+    const questionId = getQuestionId(learningObjectId, seq);
 
-        const question = await getQuestion(questionId);
+    const question = await getQuestion(questionId);
 
-        res.json({ question });
+    res.json({ question });
+}
+
+export async function getQuestionAnswersHandler(req: Request, res: Response): Promise<void> {
+    const questionId = getQuestionIdFromRequest(req);
+    const full = req.query.full;
+
+    if (!questionId) {
+        return;
     }
 
-    export async function getQuestionAnswersHandler(
-        req: Request<GetQuestionIdPathParams, { answers: AnswerDTO[] | AnswerId[] }, unknown, GetQuestionAnswersQueryParams>,
-        res: Response
-    ): Promise<void> {
-        const questionId = getQuestionId(req, res);
-        const full = req.query.full;
+    const answers = await getAnswersByQuestion(questionId, full === "true");
 
-        if (!questionId) {
-            return;
-        }
-
-        const answers = await getAnswersByQuestion(questionId, full);
-
-        if (!answers) {
-            res.status(404).json({ error: `Questions not found` });
-        } else {
-            res.json({ answers: answers });
-        }
+    if (!answers) {
+        res.status(404).json({ error: `Questions not found` });
+    } else {
+        res.json({ answers: answers });
     }
+}
 
 export async function createQuestionHandler(req: Request, res: Response): Promise<void> {
     const hruid = req.params.hruid;

@@ -1,5 +1,6 @@
 import express from 'express';
 import { getLearningPaths } from '../controllers/learning-paths.js';
+import {authenticatedOnly} from "../middleware/auth/checks/auth-checks";
 
 const router = express.Router();
 
@@ -22,6 +23,6 @@ const router = express.Router();
 // Route to fetch learning paths based on a theme
 // Example: http://localhost:3000/learningPath?theme=kiks
 
-router.get('/', getLearningPaths);
+router.get('/', authenticatedOnly, getLearningPaths);
 
 export default router;

@@ -11,11 +11,13 @@ import { mapToAnswerDTO, mapToAnswerDTOId } from '../interfaces/answer.js';
 import { QuestionRepository } from '../data/questions/question-repository.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { mapToStudent } from '../interfaces/student.js';
-import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
+import {QuestionData, QuestionDTO, QuestionId} from '@dwengo-1/common/interfaces/question';
 import { AnswerDTO, AnswerId } from '@dwengo-1/common/interfaces/answer';
 import {fetchStudent} from "./students";
 import {mapToAssignment} from "../interfaces/assignment";
 import { NotFoundException } from '../exceptions/not-found-exception.js';
+import {AssignmentDTO} from "@dwengo-1/common/interfaces/assignment";
+import {FALLBACK_VERSION_NUM} from "../config";
 
 export async function getQuestionsAboutLearningObjectInAssignment(
     loId: LearningObjectIdentifier,
@@ -90,10 +92,9 @@ export async function createQuestion(loId: LearningObjectIdentifier, questionDat
     const author = await fetchStudent(questionData.author!);
     const content = questionData.content;
 
-    const clazz = await getClassRepository().findById((questionDTO.inGroup.assignment as AssignmentDTO).class);
-    let questionDTO;
-    const assignment = mapToAssignment(questionDTO.inGroup.assignment as AssignmentDTO, clazz!);
-    const inGroup = await getGroupRepository().findByAssignmentAndGroupNumber(assignment, questionDTO.inGroup.groupNumber);
+    const clazz = await getClassRepository().findById((questionData.inGroup.assignment as AssignmentDTO).class);
+    const assignment = mapToAssignment(questionData.inGroup.assignment as AssignmentDTO, clazz!);
+    const inGroup = (await getGroupRepository().findByAssignmentAndGroupNumber(assignment, questionData.inGroup.groupNumber))!;
 
     const question = await questionRepository.createQuestion({
         loId,
