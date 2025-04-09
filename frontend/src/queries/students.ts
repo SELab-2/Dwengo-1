@@ -19,7 +19,7 @@ import type { AssignmentsResponse } from "@/controllers/assignments.ts";
 import type { GroupsResponse } from "@/controllers/groups.ts";
 import type { SubmissionsResponse } from "@/controllers/submissions.ts";
 import type { QuestionsResponse } from "@/controllers/questions.ts";
-import type { StudentDTO } from "@dwengo-1/interfaces/student";
+import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
 
 const studentController = new StudentController();
 
@@ -179,7 +179,7 @@ export function useCreateJoinRequestMutation(): UseMutationReturnType<
         mutationFn: async ({ username, classId }) => studentController.createJoinRequest(username, classId),
         onSuccess: async (newJoinRequest) => {
             await queryClient.invalidateQueries({
-                queryKey: studentJoinRequestsQueryKey(newJoinRequest.request.requester),
+                queryKey: studentJoinRequestsQueryKey(newJoinRequest.request.requester.username),
             });
         },
     });
@@ -196,7 +196,7 @@ export function useDeleteJoinRequestMutation(): UseMutationReturnType<
     return useMutation({
         mutationFn: async ({ username, classId }) => studentController.deleteJoinRequest(username, classId),
         onSuccess: async (deletedJoinRequest) => {
-            const username = deletedJoinRequest.request.requester;
+            const username = deletedJoinRequest.request.requester.username;
             const classId = deletedJoinRequest.request.class;
             await queryClient.invalidateQueries({ queryKey: studentJoinRequestsQueryKey(username) });
             await queryClient.invalidateQueries({ queryKey: studentJoinRequestQueryKey(username, classId) });

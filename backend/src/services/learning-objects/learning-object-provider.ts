@@ -1,10 +1,10 @@
-import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import { FilteredLearningObject, LearningObjectIdentifierDTO, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
 
 export interface LearningObjectProvider {
     /**
      * Fetches a single learning object by its HRUID
      */
-    getLearningObjectById(id: LearningObjectIdentifier): Promise<FilteredLearningObject | null>;
+    getLearningObjectById(id: LearningObjectIdentifierDTO): Promise<FilteredLearningObject | null>;
 
     /**
      * Fetch full learning object data (metadata)
@@ -19,5 +19,5 @@ export interface LearningObjectProvider {
     /**
      * Obtain a HTML-rendering of the learning object with the given identifier (as a string).
      */
-    getLearningObjectHTML(id: LearningObjectIdentifier): Promise<string | null>;
+    getLearningObjectHTML(id: LearningObjectIdentifierDTO): Promise<string | null>;
 }

@@ -1,4 +1,4 @@
-import { LearningObjectIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import { LearningObjectIdentifierDTO } from '@dwengo-1/common/interfaces/learning-content';
 
 export function isValidHttpUrl(url: string): boolean {
     try {
@@ -9,7 +9,7 @@ export function isValidHttpUrl(url: string): boolean {
     }
 }
 
-export function getUrlStringForLearningObject(learningObjectId: LearningObjectIdentifier): string {
+export function getUrlStringForLearningObject(learningObjectId: LearningObjectIdentifierDTO): string {
     let url = `/learningObject/${learningObjectId.hruid}/html?language=${learningObjectId.language}`;
     if (learningObjectId.version) {
         url += `&version=${learningObjectId.version}`;
@@ -17,7 +17,7 @@ export function getUrlStringForLearningObject(learningObjectId: LearningObjectId
     return url;
 }
 
-export function getUrlStringForLearningObjectHTML(learningObjectIdentifier: LearningObjectIdentifier): string {
+export function getUrlStringForLearningObjectHTML(learningObjectIdentifier: LearningObjectIdentifierDTO): string {
     let url = `/learningObject/${learningObjectIdentifier.hruid}/html?language=${learningObjectIdentifier.language}`;
     if (learningObjectIdentifier.version) {
         url += `&version=${learningObjectIdentifier.version}`;

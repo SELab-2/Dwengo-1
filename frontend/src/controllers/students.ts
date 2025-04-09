@@ -70,7 +70,7 @@ export class StudentController extends BaseController {
     }
 
     async createJoinRequest(username: string, classId: string): Promise<JoinRequestResponse> {
-        return this.post<JoinRequestResponse>(`/${username}/joinRequests}`, classId);
+        return this.post<JoinRequestResponse>(`/${username}/joinRequests`, { classId });
     }
 
     async deleteJoinRequest(username: string, classId: string): Promise<JoinRequestResponse> {

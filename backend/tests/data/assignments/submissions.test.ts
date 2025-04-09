@@ -50,7 +50,7 @@ describe('SubmissionRepository', () => {
 
     it('should find the most recent submission for a group', async () => {
         const id = new LearningObjectIdentifier('id03', Language.English, 1);
-        const class_ = await classRepository.findById('id01');
+        const class_ = await classRepository.findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
         const assignment = await assignmentRepository.findByClassAndId(class_!, 1);
         const group = await groupRepository.findByAssignmentAndGroupNumber(assignment!, 1);
         const submission = await submissionRepository.findMostRecentSubmissionForGroup(id, group!);

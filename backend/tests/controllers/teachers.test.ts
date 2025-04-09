@@ -105,9 +105,9 @@ describe('Teacher controllers', () => {
         const result = jsonMock.mock.lastCall?.[0];
 
         const teacherUsernames = result.teachers.map((s: TeacherDTO) => s.username);
-        expect(teacherUsernames).toContain('FooFighters');
+        expect(teacherUsernames).toContain('testleerkracht1');
 
-        expect(result.teachers).toHaveLength(4);
+        expect(result.teachers).toHaveLength(5);
     });
 
     it('Deleting non-existent student', async () => {
@@ -118,7 +118,7 @@ describe('Teacher controllers', () => {
 
     it('Get teacher classes', async () => {
         req = {
-            params: { username: 'FooFighters' },
+            params: { username: 'testleerkracht1' },
             query: { full: 'true' },
         };
 
@@ -133,7 +133,7 @@ describe('Teacher controllers', () => {
 
     it('Get teacher students', async () => {
         req = {
-            params: { username: 'FooFighters' },
+            params: { username: 'testleerkracht1' },
             query: { full: 'true' },
         };
 
@@ -169,7 +169,7 @@ describe('Teacher controllers', () => {
 
     it('Get join requests by class', async () => {
         req = {
-            params: { classId: 'id02' },
+            params: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
         };
 
         await getStudentJoinRequestHandler(req as Request, res as Response);
@@ -183,7 +183,7 @@ describe('Teacher controllers', () => {
 
     it('Update join request status', async () => {
         req = {
-            params: { classId: 'id02', studentUsername: 'PinkFloyd' },
+            params: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
             body: { accepted: 'true' },
         };
 
@@ -201,7 +201,7 @@ describe('Teacher controllers', () => {
         expect(status).toBeTruthy();
 
         req = {
-            params: { id: 'id02' },
+            params: { id: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
         };
 
         await getClassHandler(req as Request, res as Response);

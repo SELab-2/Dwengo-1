@@ -27,5 +27,12 @@ export function makeTestTeachers(em: EntityManager): Teacher[] {
         lastName: 'Cappelle',
     });
 
-    return [teacher01, teacher02, teacher03, teacher04];
+    // Makes sure when logged in as testleerkracht1, there exists a corresponding user
+    const teacher05 = em.create(Teacher, {
+        username: 'testleerkracht1',
+        firstName: 'Bob',
+        lastName: 'Dylan',
+    });
+
+    return [teacher01, teacher02, teacher03, teacher04, teacher05];
 }
