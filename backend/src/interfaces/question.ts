@@ -3,12 +3,21 @@ import { mapToStudentDTO } from './student.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { LearningObjectIdentifier } from '@dwengo-1/common/interfaces/learning-content';
 import { mapToGroupDTOId } from './group';
+import { LearningObjectIdentifierDTO } from '@dwengo-1/common/interfaces/learning-content';
 
-function getLearningObjectIdentifier(question: Question): LearningObjectIdentifier {
+function getLearningObjectIdentifier(question: Question): LearningObjectIdentifierDTO {
     return {
         hruid: question.learningObjectHruid,
         language: question.learningObjectLanguage,
         version: question.learningObjectVersion,
+    };
+}
+
+export function mapToLearningObjectID(loID: LearningObjectIdentifierDTO): LearningObjectIdentifier {
+    return {
+        hruid: loID.hruid,
+        language: loID.language,
+        version: loID.version ?? 1,
     };
 }
 

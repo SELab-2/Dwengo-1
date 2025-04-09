@@ -18,16 +18,16 @@ describe('ClassRepository', () => {
     });
 
     it('should return requested class', async () => {
-        const classVar = await classRepository.findById('id01');
+        const classVar = await classRepository.findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
 
         expect(classVar).toBeTruthy();
         expect(classVar?.displayName).toBe('class01');
     });
 
     it('class should be gone after deletion', async () => {
-        await classRepository.deleteById('id04');
+        await classRepository.deleteById('33d03536-83b8-4880-9982-9bbf2f908ddf');
 
-        const classVar = await classRepository.findById('id04');
+        const classVar = await classRepository.findById('33d03536-83b8-4880-9982-9bbf2f908ddf');
 
         expect(classVar).toBeNull();
     });

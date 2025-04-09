@@ -5,6 +5,7 @@ import { Student } from '../../entities/users/student.entity.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
 import { Group } from '../../entities/assignments/group.entity';
 import { Assignment } from '../../entities/assignments/assignment.entity';
+import { Loaded } from '@mikro-orm/core';
 
 export class QuestionRepository extends DwengoEntityRepository<Question> {
     public async createQuestion(question: { loId: LearningObjectIdentifier; author: Student; inGroup: Group; content: string }): Promise<Question> {
@@ -64,6 +65,21 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
             where: { author },
             orderBy: { timestamp: 'DESC' }, // New to old
         });
+    }
+
+    public async findByLearningObjectAndSequenceNumber(loId: LearningObjectIdentifier, sequenceNumber: number): Promise<Loaded<Question> | null> {
+        return this.findOne({
+            learningObjectHruid: loId.hruid,
+            learningObjectLanguage: loId.language,
+            learningObjectVersion: loId.version,
+            sequenceNumber,
+        });
+    }
+
+    public async updateContent(question: Question, newContent: string): Promise<Question> {
+        question.content = newContent;
+        await this.save(question);
+        return question;
     }
 
     /**
