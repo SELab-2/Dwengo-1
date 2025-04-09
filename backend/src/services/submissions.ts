@@ -3,9 +3,8 @@ import { LearningObjectIdentifier } from '../entities/content/learning-object-id
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { mapToSubmission, mapToSubmissionDTO } from '../interfaces/submission.js';
 import { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
-import { Language } from '@dwengo-1/common/util/language';
 import { fetchStudent } from './students.js';
-import { fetchGroup, getExistingGroupFromGroupDTO } from './groups.js';
+import { getExistingGroupFromGroupDTO } from './groups.js';
 import { Submission } from '../entities/assignments/submission.entity.js';
 
 export async function fetchSubmission(loId: LearningObjectIdentifier, submissionNumber: number): Promise<Submission> {

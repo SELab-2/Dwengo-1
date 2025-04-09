@@ -3,11 +3,10 @@ import { createGroup, deleteGroup, getAllGroups, getGroup, getGroupSubmissions, 
 import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 import { requireFields } from './error-helper.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
-import { getLogger } from '../logging/initalize.js';
 import { EntityDTO } from '@mikro-orm/core';
 import { Group } from '../entities/assignments/group.entity.js';
 
-function checkGroupFields(classId: any, assignmentId: any, groupId: any) {
+function checkGroupFields(classId: string, assignmentId: number, groupId: number): void {
     requireFields({ classId, assignmentId, groupId });
 
     if (isNaN(assignmentId)) {

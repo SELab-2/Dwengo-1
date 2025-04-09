@@ -4,7 +4,6 @@ import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { Class } from '../entities/classes/class.entity.js';
 import { getLogger } from '../logging/initalize.js';
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
-import { mapToGroupDTO } from './group.js';
 
 export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTO {
     return {

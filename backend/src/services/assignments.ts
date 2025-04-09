@@ -14,9 +14,7 @@ import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submissi
 import { fetchClass } from './classes.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
-import { getLogger } from '../logging/initalize.js';
-import { EntityData, EntityDTO, FromEntityType } from '@mikro-orm/core';
-import { DwengoEntityRepository } from '../data/dwengo-entity-repository.js';
+import { EntityDTO } from '@mikro-orm/core';
 import { putObject } from './service-helper.js';
 
 export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
@@ -24,7 +22,7 @@ export async function fetchAssignment(classid: string, assignmentNumber: number)
     const cls = await classRepository.findById(classid);
 
     if (!cls) {
-        throw new NotFoundException("Could not find assignment's class");
+        throw new NotFoundException('Could not find assignment\'s class');
     }
 
     const assignmentRepository = getAssignmentRepository();
@@ -88,7 +86,7 @@ export async function deleteAssignment(classid: string, id: number): Promise<Ass
 export async function getAssignmentsSubmissions(
     classid: string,
     assignmentNumber: number,
-    full: boolean
+    full: boolean,
 ): Promise<SubmissionDTO[] | SubmissionDTOId[]> {
     const assignment = await fetchAssignment(classid, assignmentNumber);
 

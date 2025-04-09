@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { createSubmission, deleteSubmission, getAllSubmissions, getSubmission } from '../services/submissions.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
-import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { Language, languageMap } from '@dwengo-1/common/util/language';
 import { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
