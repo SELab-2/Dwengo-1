@@ -31,7 +31,7 @@ export async function putGroup(
     classId: string,
     assignmentNumber: number,
     groupNumber: number,
-    groupData: Partial<EntityDTO<Group>>,
+    groupData: Partial<EntityDTO<Group>>
 ): Promise<GroupDTO> {
     const group = await fetchGroup(classId, assignmentNumber, groupNumber);
 
@@ -63,7 +63,7 @@ export async function createGroup(groupData: GroupDTO, classid: string, assignme
 
     const memberUsernames = (groupData.members as string[]) || [];
     const members = (await Promise.all([...memberUsernames].map(async (id) => studentRepository.findByUsername(id)))).filter(
-        (student) => student !== null,
+        (student) => student !== null
     );
 
     const assignment = await fetchAssignment(classid, assignmentNumber);
@@ -95,7 +95,7 @@ export async function getGroupSubmissions(
     classId: string,
     assignmentNumber: number,
     groupNumber: number,
-    full: boolean,
+    full: boolean
 ): Promise<SubmissionDTO[] | SubmissionDTOId[]> {
     const group = await fetchGroup(classId, assignmentNumber, groupNumber);
 

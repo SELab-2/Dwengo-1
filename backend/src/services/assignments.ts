@@ -22,7 +22,7 @@ export async function fetchAssignment(classid: string, assignmentNumber: number)
     const cls = await classRepository.findById(classid);
 
     if (!cls) {
-        throw new NotFoundException('Could not find assignment\'s class');
+        throw new NotFoundException("Could not find assignment's class");
     }
 
     const assignmentRepository = getAssignmentRepository();
@@ -86,7 +86,7 @@ export async function deleteAssignment(classid: string, id: number): Promise<Ass
 export async function getAssignmentsSubmissions(
     classid: string,
     assignmentNumber: number,
-    full: boolean,
+    full: boolean
 ): Promise<SubmissionDTO[] | SubmissionDTOId[]> {
     const assignment = await fetchAssignment(classid, assignmentNumber);
 
