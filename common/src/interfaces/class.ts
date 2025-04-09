@@ -3,5 +3,4 @@ export interface ClassDTO {
     displayName: string;
     teachers: string[];
     students: string[];
-    joinRequests: string[];
 }

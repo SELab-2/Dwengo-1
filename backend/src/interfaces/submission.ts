@@ -1,7 +1,10 @@
 import { Submission } from '../entities/assignments/submission.entity.js';
 import { mapToGroupDTO } from './group.js';
-import { mapToStudent, mapToStudentDTO } from './student.js';
+import { mapToStudentDTO } from './student.js';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
+import {getSubmissionRepository} from "../data/repositories";
+import {Student} from "../entities/users/student.entity";
+import {Group} from "../entities/assignments/group.entity";
 
 export function mapToSubmissionDTO(submission: Submission): SubmissionDTO {
     return {
@@ -29,16 +32,14 @@ export function mapToSubmissionDTOId(submission: Submission): SubmissionDTOId {
     };
 }
 
-export function mapToSubmission(submissionDTO: SubmissionDTO): Submission {
-    const submission = new Submission();
-    submission.learningObjectHruid = submissionDTO.learningObjectIdentifier.hruid;
-    submission.learningObjectLanguage = submissionDTO.learningObjectIdentifier.language;
-    submission.learningObjectVersion = submissionDTO.learningObjectIdentifier.version!;
-    // Submission.submissionNumber = submissionDTO.submissionNumber;
-    submission.submitter = mapToStudent(submissionDTO.submitter);
-    // Submission.submissionTime = submissionDTO.time;
-    // Submission.onBehalfOf =  submissionDTO.group!;
-    submission.content = submissionDTO.content;
-
-    return submission;
+export function mapToSubmission(submissionDTO: SubmissionDTO, submitter: Student, onBehalfOf: Group | undefined): Submission {
+    return getSubmissionRepository().create({
+        learningObjectHruid: submissionDTO.learningObjectIdentifier.hruid,
+        learningObjectLanguage: submissionDTO.learningObjectIdentifier.language,
+        learningObjectVersion: submissionDTO.learningObjectIdentifier.version || 1,
+        submitter: submitter,
+        submissionTime: new Date(),
+        content: submissionDTO.content,
+        onBehalfOf: onBehalfOf,
+    });
 }

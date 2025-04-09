@@ -1,11 +1,14 @@
 import { Group } from '../entities/assignments/group.entity.js';
-import { mapToAssignment, mapToAssignmentDTO, mapToAssignmentDTOId } from './assignment.js';
-import { mapToStudent, mapToStudentDTO } from './student.js';
+import { mapToAssignment } from './assignment.js';
+import { mapToStudent } from './student.js';
+import { mapToAssignmentDTO } from './assignment.js';
+import { mapToStudentDTO } from './student.js';
 import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 import { getGroupRepository } from '../data/repositories.js';
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 import { Class } from '../entities/classes/class.entity.js';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
+import {mapToClassDTO} from "./class";
 
 export function mapToGroup(groupDto: GroupDTO, clazz: Class): Group {
     const assignmentDto = groupDto.assignment as AssignmentDTO;
@@ -19,7 +22,8 @@ export function mapToGroup(groupDto: GroupDTO, clazz: Class): Group {
 
 export function mapToGroupDTO(group: Group): GroupDTO {
     return {
-        assignment: mapToAssignmentDTO(group.assignment), // ERROR: , group.assignment.within),
+        class: mapToClassDTO(group.assignment.within),
+        assignment: mapToAssignmentDTO(group.assignment),
         groupNumber: group.groupNumber!,
         members: group.members.map(mapToStudentDTO),
     };
@@ -27,7 +31,8 @@ export function mapToGroupDTO(group: Group): GroupDTO {
 
 export function mapToGroupDTOId(group: Group): GroupDTO {
     return {
-        assignment: mapToAssignmentDTOId(group.assignment),
+        class: group.assignment.within.classId!,
+        assignment: group.assignment.id!,
         groupNumber: group.groupNumber!,
     };
 }
@@ -37,6 +42,7 @@ export function mapToGroupDTOId(group: Group): GroupDTO {
  */
 export function mapToShallowGroupDTO(group: Group): GroupDTO {
     return {
+        class: group.assignment.within.classId!,
         assignment: group.assignment.id!,
         groupNumber: group.groupNumber!,
         members: group.members.map((member) => member.username),

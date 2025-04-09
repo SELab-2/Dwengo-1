@@ -11,7 +11,7 @@ export interface Transition {
     };
 }
 
-export interface LearningObjectIdentifier {
+export interface LearningObjectIdentifierDTO {
     hruid: string;
     language: Language;
     version?: number;

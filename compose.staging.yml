@@ -24,7 +24,7 @@ services:
             - '3000:3000/tcp'
         restart: unless-stopped
         volumes:
-            - ./backend/.env.staging:/app/.env
+            - ./backend/.env.staging:/app/dwengo/backend/.env
         depends_on:
             - db
             - logging

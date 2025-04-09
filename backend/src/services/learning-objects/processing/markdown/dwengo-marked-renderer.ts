@@ -12,7 +12,7 @@ import Image = marked.Tokens.Image;
 import Heading = marked.Tokens.Heading;
 import Link = marked.Tokens.Link;
 import RendererObject = marked.RendererObject;
-import { LearningObjectIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import { LearningObjectIdentifierDTO } from '@dwengo-1/common/interfaces/learning-content';
 import { Language } from '@dwengo-1/common/util/language';
 
 const prefixes = {
@@ -25,7 +25,7 @@ const prefixes = {
     blockly: '@blockly',
 };
 
-function extractLearningObjectIdFromHref(href: string): LearningObjectIdentifier {
+function extractLearningObjectIdFromHref(href: string): LearningObjectIdentifierDTO {
     const [hruid, language, version] = href.split(/\/(.+)/, 2)[1].split('/');
     return {
         hruid,

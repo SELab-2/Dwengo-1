@@ -1,21 +1,25 @@
 import express from 'express';
 import {
     createAssignmentHandler,
+    deleteAssignmentHandler,
     getAllAssignmentsHandler,
     getAssignmentHandler,
     getAssignmentsSubmissionsHandler,
+    putAssignmentHandler,
 } from '../controllers/assignments.js';
 import groupRouter from './groups.js';
 
 const router = express.Router({ mergeParams: true });
 
-// Root endpoint used to search objects
 router.get('/', getAllAssignmentsHandler);
 
 router.post('/', createAssignmentHandler);
 
-// Information about an assignment with id 'id'
 router.get('/:id', getAssignmentHandler);
+
+router.put('/:id', putAssignmentHandler);
+
+router.delete('/:id', deleteAssignmentHandler);
 
 router.get('/:id/submissions', getAssignmentsSubmissionsHandler);
 

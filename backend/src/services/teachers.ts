@@ -22,13 +22,14 @@ import { Question } from '../entities/questions/question.entity.js';
 import { ClassJoinRequestRepository } from '../data/classes/class-join-request-repository.js';
 import { Student } from '../entities/users/student.entity.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
-import { getClassStudents } from './classes.js';
+import { addClassStudent, fetchClass, getClassStudentsDTO } from './classes.js';
 import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { ClassDTO } from '@dwengo-1/common/interfaces/class';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
 import { ClassJoinRequestStatus } from '@dwengo-1/common/util/class-join-request';
+import { ConflictException } from '../exceptions/conflict-exception.js';
 
 export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | string[]> {
     const teacherRepository: TeacherRepository = getTeacherRepository();
@@ -99,10 +100,12 @@ export async function getStudentsByTeacher(username: string, full: boolean): Pro
 
     const classIds: string[] = classes.map((cls) => cls.id);
 
-    const students: StudentDTO[] = (await Promise.all(classIds.map(async (id) => getClassStudents(id)))).flat();
+    const students: StudentDTO[] = (await Promise.all(classIds.map(async (username) => await getClassStudentsDTO(username)))).flat();
+
     if (full) {
         return students;
     }
+
     return students.map((student) => student.username);
 }
 
@@ -143,13 +146,12 @@ export async function getJoinRequestsByClass(classId: string): Promise<ClassJoin
 
 export async function updateClassJoinRequestStatus(studentUsername: string, classId: string, accepted = true): Promise<ClassJoinRequestDTO> {
     const requestRepo: ClassJoinRequestRepository = getClassJoinRequestRepository();
-    const classRepo: ClassRepository = getClassRepository();
 
     const student: Student = await fetchStudent(studentUsername);
-    const cls: Class | null = await classRepo.findById(classId);
+    const cls = await fetchClass(classId);
 
-    if (!cls) {
-        throw new NotFoundException('Class not found');
+    if (cls.students.contains(student)) {
+        throw new ConflictException('Student already in this class');
     }
 
     const request: ClassJoinRequest | null = await requestRepo.findByStudentAndClass(student, cls);
@@ -158,8 +160,14 @@ export async function updateClassJoinRequestStatus(studentUsername: string, clas
         throw new NotFoundException('Join request not found');
     }
 
-    request.status = accepted ? ClassJoinRequestStatus.Accepted : ClassJoinRequestStatus.Declined;
+    request.status = ClassJoinRequestStatus.Declined;
+
+    if (accepted) {
+        request.status = ClassJoinRequestStatus.Accepted;
+        await addClassStudent(classId, studentUsername);
+    }
 
     await requestRepo.save(request);
+
     return mapToStudentRequestDTO(request);
 }

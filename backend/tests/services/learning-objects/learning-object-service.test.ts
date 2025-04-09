@@ -7,11 +7,11 @@ import learningObjectService from '../../../src/services/learning-objects/learni
 import { envVars, getEnvVar } from '../../../src/util/envVars';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
 import learningPathExample from '../../test-assets/learning-paths/pn-werking-example';
-import { LearningObjectIdentifier, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import { LearningObjectIdentifierDTO, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
 import { Language } from '@dwengo-1/common/util/language';
 
 const EXPECTED_DWENGO_LEARNING_OBJECT_TITLE = 'Werken met notebooks';
-const DWENGO_TEST_LEARNING_OBJECT_ID: LearningObjectIdentifier = {
+const DWENGO_TEST_LEARNING_OBJECT_ID: LearningObjectIdentifierDTO = {
     hruid: 'pn_werkingnotebooks',
     language: Language.Dutch,
     version: 3,

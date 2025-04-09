@@ -4,8 +4,8 @@ import type { AssignmentsResponse } from "@/controllers/assignments.ts";
 import type { GroupsResponse } from "@/controllers/groups.ts";
 import type { SubmissionsResponse } from "@/controllers/submissions.ts";
 import type { QuestionsResponse } from "@/controllers/questions.ts";
-import type { StudentDTO } from "@dwengo-1/interfaces/student";
-import type { ClassJoinRequestDTO } from "@dwengo-1/interfaces/class-join-request";
+import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
+import type { ClassJoinRequestDTO } from "@dwengo-1/common/interfaces/class-join-request";
 
 export interface StudentsResponse {
     students: StudentDTO[] | string[];
@@ -70,7 +70,7 @@ export class StudentController extends BaseController {
     }
 
     async createJoinRequest(username: string, classId: string): Promise<JoinRequestResponse> {
-        return this.post<JoinRequestResponse>(`/${username}/joinRequests}`, classId);
+        return this.post<JoinRequestResponse>(`/${username}/joinRequests`, { classId });
     }
 
     async deleteJoinRequest(username: string, classId: string): Promise<JoinRequestResponse> {
