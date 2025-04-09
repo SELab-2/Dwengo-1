@@ -8,19 +8,18 @@ import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTO {
     return {
         id: assignment.id!,
-        class: assignment.within.classId!,
+        within: assignment.within.classId!,
         title: assignment.title,
         description: assignment.description,
         learningPath: assignment.learningPathHruid,
         language: assignment.learningPathLanguage,
-        // Groups: assignment.groups.map(group => group.groupNumber),
     };
 }
 
 export function mapToAssignmentDTO(assignment: Assignment): AssignmentDTO {
     return {
         id: assignment.id!,
-        class: assignment.within.classId!,
+        within: assignment.within.classId!,
         title: assignment.title,
         description: assignment.description,
         learningPath: assignment.learningPathHruid,
