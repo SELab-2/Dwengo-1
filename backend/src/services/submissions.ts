@@ -6,7 +6,7 @@ import { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
 import { fetchStudent } from './students.js';
 import { getExistingGroupFromGroupDTO } from './groups.js';
 import { Submission } from '../entities/assignments/submission.entity.js';
-import {Language} from "@dwengo-1/common/util/language";
+import { Language } from '@dwengo-1/common/util/language';
 
 export async function fetchSubmission(loId: LearningObjectIdentifier, submissionNumber: number): Promise<Submission> {
     const submissionRepository = getSubmissionRepository();

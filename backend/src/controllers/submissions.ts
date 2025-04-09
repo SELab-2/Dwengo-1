@@ -4,7 +4,7 @@ import {
     deleteSubmission,
     getAllSubmissions,
     getSubmission,
-    getSubmissionsForLearningObjectAndAssignment
+    getSubmissionsForLearningObjectAndAssignment,
 } from '../services/submissions.js';
 import { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
 import { Language, languageMap } from '@dwengo-1/common/util/language';
@@ -27,7 +27,6 @@ export async function getSubmissionsHandler(req: Request, res: Response): Promis
 
     res.json(submissions);
 }
-
 
 export async function getSubmissionHandler(req: Request, res: Response): Promise<void> {
     const lohruid = req.params.hruid;

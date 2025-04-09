@@ -5,11 +5,11 @@ import {
     getAllQuestions,
     getQuestion,
     getQuestionsAboutLearningObjectInAssignment,
-    updateQuestion
+    updateQuestion,
 } from '../services/questions.js';
 import { FALLBACK_LANG, FALLBACK_SEQ_NUM, FALLBACK_VERSION_NUM } from '../config.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
-import {QuestionData, QuestionDTO, QuestionId} from '@dwengo-1/common/interfaces/question';
+import { QuestionData, QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { Language } from '@dwengo-1/common/util/language';
 import { requireFields } from './error-helper.js';
 
