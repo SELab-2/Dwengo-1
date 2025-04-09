@@ -16,11 +16,15 @@ export class GroupController extends BaseController {
         super(`class/${classid}/assignments/${assignmentNumber}/groups`);
     }
 
+    update(classid: string, assignmentNumber: number) {
+        this.basePath = `class/${classid}/assignments/${assignmentNumber}/groups`;
+    }
+
     async getAll(full = true): Promise<GroupsResponse> {
         return this.get<GroupsResponse>(`/`, { full });
     }
 
-    async getByNumber(num: number): Promise<GroupResponse> {
+    async getByNumber(num: number | string): Promise<GroupResponse> {
         return this.get<GroupResponse>(`/${num}`);
     }
 
