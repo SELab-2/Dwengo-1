@@ -1,10 +1,10 @@
 import { getAttachmentRepository } from '../../data/repositories.js';
 import { Attachment } from '../../entities/content/attachment.entity.js';
 
-import { LearningObjectIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import { LearningObjectIdentifierDTO } from '@dwengo-1/common/interfaces/learning-content';
 
 const attachmentService = {
-    async getAttachment(learningObjectId: LearningObjectIdentifier, attachmentName: string): Promise<Attachment | null> {
+    async getAttachment(learningObjectId: LearningObjectIdentifierDTO, attachmentName: string): Promise<Attachment | null> {
         const attachmentRepo = getAttachmentRepository();
 
         if (learningObjectId.version) {

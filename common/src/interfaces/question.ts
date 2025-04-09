@@ -1,15 +1,20 @@
-import { LearningObjectIdentifier } from './learning-content';
+import { LearningObjectIdentifierDTO } from './learning-content';
 import { StudentDTO } from './student';
 
 export interface QuestionDTO {
-    learningObjectIdentifier: LearningObjectIdentifier;
+    learningObjectIdentifier: LearningObjectIdentifierDTO;
     sequenceNumber?: number;
     author: StudentDTO;
-    timestamp?: string;
+    timestamp: string;
+    content: string;
+}
+
+export interface QuestionData {
+    author?: string;
     content: string;
 }
 
 export interface QuestionId {
-    learningObjectIdentifier: LearningObjectIdentifier;
+    learningObjectIdentifier: LearningObjectIdentifierDTO;
     sequenceNumber: number;
 }
