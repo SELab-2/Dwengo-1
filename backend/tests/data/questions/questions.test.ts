@@ -37,7 +37,7 @@ describe('QuestionRepository', () => {
         const id = new LearningObjectIdentifier('id03', Language.English, 1);
         const student = await studentRepository.findByUsername('Noordkaap');
 
-        const clazz = await getClassRepository().findById('id01');
+        const clazz = await getClassRepository().findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
         const assignment = await getAssignmentRepository().findByClassAndId(clazz!, 1);
         const group = await getGroupRepository().findByAssignmentAndGroupNumber(assignment!, 1);
         await questionRepository.createQuestion({
@@ -56,7 +56,7 @@ describe('QuestionRepository', () => {
     let assignment: Assignment | null;
     let loId: LearningObjectIdentifier;
     it('should find all questions for a certain learning object and assignment', async () => {
-        clazz = await getClassRepository().findById('id01');
+        clazz = await getClassRepository().findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
         assignment = await getAssignmentRepository().findByClassAndId(clazz!, 1);
         loId = {
             hruid: 'id05',

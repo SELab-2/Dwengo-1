@@ -33,7 +33,7 @@ export async function getAllSubmissions(loId: LearningObjectIdentifier): Promise
 
 export async function createSubmission(submissionDTO: SubmissionDTO): Promise<SubmissionDTO> {
     const submitter = await fetchStudent(submissionDTO.submitter.username);
-    const group = submissionDTO.group ? await getExistingGroupFromGroupDTO(submissionDTO.group) : undefined;
+    const group = await getExistingGroupFromGroupDTO(submissionDTO.group!);
 
     const submissionRepository = getSubmissionRepository();
     const submission = mapToSubmission(submissionDTO, submitter, group);

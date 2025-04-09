@@ -15,9 +15,15 @@ import { LearningObjectIdentifier } from '../entities/content/learning-object-id
 export async function getSubmissionsHandler(req: Request, res: Response): Promise<void> {
     const loHruid = req.params.hruid;
     const lang = languageMap[req.query.language as string] || Language.Dutch;
-    const version = req.query.version || 1;
+    const version = parseInt(req.query.version as string) ?? 1;
 
-    const submissions = await getSubmissionsForLearningObjectAndAssignment(loHruid, lang, version, req.query.classId, req.query.assignmentId);
+    const submissions = await getSubmissionsForLearningObjectAndAssignment(
+        loHruid,
+        lang,
+        version,
+        req.query.classId as string,
+        parseInt(req.query.assignmentId as string)
+    );
 
     res.json(submissions);
 }

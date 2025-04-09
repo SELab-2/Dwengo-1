@@ -66,7 +66,7 @@ describe('SubmissionRepository', () => {
     let assignment: Assignment | null;
     let loId: LearningObjectIdentifier;
     it('should find all submissions for a certain learning object and assignment', async () => {
-        clazz = await classRepository.findById('id01');
+        clazz = await classRepository.findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
         assignment = await assignmentRepository.findByClassAndId(clazz!, 1);
         loId = {
             hruid: 'id02',

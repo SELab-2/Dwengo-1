@@ -11,6 +11,12 @@ export interface QuestionDTO {
     content: string;
 }
 
+export interface QuestionData {
+    author?: string;
+    content: string;
+    inGroup: GroupDTO;
+}
+
 export interface QuestionId {
     learningObjectIdentifier: LearningObjectIdentifierDTO;
     sequenceNumber: number;

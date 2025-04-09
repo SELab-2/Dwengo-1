@@ -32,7 +32,7 @@ export function mapToSubmissionDTOId(submission: Submission): SubmissionDTOId {
     };
 }
 
-export function mapToSubmission(submissionDTO: SubmissionDTO, submitter: Student, onBehalfOf: Group | undefined): Submission {
+export function mapToSubmission(submissionDTO: SubmissionDTO, submitter: Student, onBehalfOf: Group): Submission {
     return getSubmissionRepository().create({
         learningObjectHruid: submissionDTO.learningObjectIdentifier.hruid,
         learningObjectLanguage: submissionDTO.learningObjectIdentifier.language,
