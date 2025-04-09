@@ -14,7 +14,7 @@ export class Assignment {
     })
     within!: Class;
 
-    @PrimaryKey({ type: 'number', autoincrement: true })
+    @PrimaryKey({ type: 'integer', autoincrement: true })
     id?: number;
 
     @Property({ type: 'string' })

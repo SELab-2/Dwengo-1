@@ -14,8 +14,10 @@ import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submissi
 import { fetchClass } from './classes.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
-import { EntityDTO } from '@mikro-orm/core';
+import { assign, EntityDTO } from '@mikro-orm/core';
 import { putObject } from './service-helper.js';
+import { getLogger } from '../logging/initalize.js';
+import { languageMap } from '@dwengo-1/common/util/language';
 
 export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
     const classRepository = getClassRepository();
@@ -51,13 +53,26 @@ export async function getAllAssignments(classid: string, full: boolean): Promise
 export async function createAssignment(classid: string, assignmentData: AssignmentDTO): Promise<AssignmentDTO> {
     const cls = await fetchClass(classid);
 
-    const assignment = mapToAssignment(assignmentData, cls);
-
     const assignmentRepository = getAssignmentRepository();
-    const newAssignment = assignmentRepository.create(assignment);
-    await assignmentRepository.save(newAssignment, { preventOverwrite: true });
+    const assignment = assignmentRepository.create({
+        within: cls,
+        title: assignmentData.title,
+        description: assignmentData.description,
+        learningPathHruid: assignmentData.learningPath,
+        learningPathLanguage: languageMap[assignmentData.language],
+        groups: [],
+    })
+    // const assignment = mapToAssignment(assignmentData, cls);
+    Object.entries(assignmentData).forEach(getLogger().info);
 
-    return mapToAssignmentDTO(newAssignment);
+    try {
+        await assignmentRepository.save(assignment, { preventOverwrite: true });
+    } catch(e) {
+        getLogger().error(e);
+    }
+
+    getLogger().info(`Saved assignment ${assignment.id}`);
+    return mapToAssignmentDTO(assignment);
 }
 
 export async function getAssignment(classid: string, id: number): Promise<AssignmentDTO> {

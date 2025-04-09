@@ -7,5 +7,5 @@ export interface AssignmentDTO {
     description: string;
     learningPath: string;
     language: string;
-    groups?: GroupDTO[] | string[]; // TODO
+    groups: GroupDTO[] | string[];
 }

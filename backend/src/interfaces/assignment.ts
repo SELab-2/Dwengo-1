@@ -4,6 +4,9 @@ import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { Class } from '../entities/classes/class.entity.js';
 import { getLogger } from '../logging/initalize.js';
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
+import { mapToGroupDTO, mapToGroupDTOId } from './group.js';
+import { getAssignmentHandler } from '../controllers/assignments.js';
+import { getAssignmentRepository, getClassRepository } from '../data/repositories.js';
 
 export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTO {
     return {
@@ -13,6 +16,7 @@ export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTO {
         description: assignment.description,
         learningPath: assignment.learningPathHruid,
         language: assignment.learningPathLanguage,
+        groups: assignment.groups.map(mapToGroupDTOId),
     };
 }
 
@@ -24,19 +28,17 @@ export function mapToAssignmentDTO(assignment: Assignment): AssignmentDTO {
         description: assignment.description,
         learningPath: assignment.learningPathHruid,
         language: assignment.learningPathLanguage,
-        // Groups: assignment.groups.map(mapToGroupDTO),
+        groups: assignment.groups.map(mapToGroupDTO),
     };
 }
 
 export function mapToAssignment(assignmentData: AssignmentDTO, cls: Class): Assignment {
-    const assignment = new Assignment();
-    assignment.title = assignmentData.title;
-    assignment.description = assignmentData.description;
-    assignment.learningPathHruid = assignmentData.learningPath;
-    assignment.learningPathLanguage = languageMap[assignmentData.language] || FALLBACK_LANG;
-    assignment.within = cls;
-
-    getLogger().debug(assignment);
-
-    return assignment;
+    return getAssignmentRepository().create({
+        within: cls,
+        title: assignmentData.title,
+        description: assignmentData.description,
+        learningPathHruid: assignmentData.learningPath,
+        learningPathLanguage: languageMap[assignmentData.language],
+        groups: [],
+    })
 }
