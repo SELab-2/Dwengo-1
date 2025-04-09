@@ -16,6 +16,10 @@ const doc = {
             description: 'Development server',
         },
         {
+            url: 'http://localhost/',
+            description: 'Staging server',
+        },
+        {
             url: 'https://sel2-1.ugent.be/',
             description: 'Production server',
         },
