@@ -98,11 +98,23 @@ export function useClassStudentsQuery(
     })
 }
 
-export function useCreateClassStudentMutation(): UseMutationReturnType<ClassResponse, Error, {id: string, username: string}, unknown> {
+export function useClassAddStudentMutation(): UseMutationReturnType<ClassResponse, Error, {id: string, username: string}, unknown> {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async ({ id, username }) => classController.addStudent(id, username),
+        onSuccess: async (data) => {
+            await queryClient.invalidateQueries({ queryKey: classQueryKey(data.class.id) });
+            await queryClient.invalidateQueries({ queryKey: classStudentsKey(data.class.id) });
+        },
+    });
+}
+
+export function useClassDeleteStudentMutation(): UseMutationReturnType<ClassResponse, Error, {id: string, username: string}, unknown> {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ id, username }) => classController.deleteStudent(id, username),
         onSuccess: async (data) => {
             await queryClient.invalidateQueries({ queryKey: classQueryKey(data.class.id) });
             await queryClient.invalidateQueries({ queryKey: classStudentsKey(data.class.id) });
@@ -121,11 +133,23 @@ export function useClassTeachersQuery(
     });
 }
 
-export function useCreateClassTeacherMutation(): UseMutationReturnType<ClassResponse, Error, {id: string, username: string}, unknown> {
+export function useClassAddTeacherMutation(): UseMutationReturnType<ClassResponse, Error, {id: string, username: string}, unknown> {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async ({ id, username }) => classController.addTeacher(id, username),
+        onSuccess: async (data) => {
+            await queryClient.invalidateQueries({ queryKey: classQueryKey(data.class.id) });
+            await queryClient.invalidateQueries({ queryKey: classTeachersKey(data.class.id) });
+        },
+    });
+}
+
+export function useClassDeleteTeacherMutation(): UseMutationReturnType<ClassResponse, Error, {id: string, username: string}, unknown> {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ id, username }) => classController.deleteTeacher(id, username),
         onSuccess: async (data) => {
             await queryClient.invalidateQueries({ queryKey: classQueryKey(data.class.id) });
             await queryClient.invalidateQueries({ queryKey: classTeachersKey(data.class.id) });
