@@ -1,10 +1,10 @@
-import { EntityManager, MikroORM } from '@mikro-orm/core';
+import { EntityManager, IDatabaseDriver, MikroORM } from '@mikro-orm/core';
 import config from './mikro-orm.config.js';
 import { envVars, getEnvVar } from './util/envVars.js';
 import { getLogger, Logger } from './logging/initalize.js';
 
 let orm: MikroORM | undefined;
-export async function initORM(testingMode = false): Promise<void> {
+export async function initORM(testingMode = false): Promise<MikroORM<IDatabaseDriver, EntityManager>> {
     const logger: Logger = getLogger();
 
     logger.info('Initializing ORM');
@@ -25,6 +25,8 @@ export async function initORM(testingMode = false): Promise<void> {
             );
         }
     }
+
+    return orm;
 }
 export function forkEntityManager(): EntityManager {
     if (!orm) {

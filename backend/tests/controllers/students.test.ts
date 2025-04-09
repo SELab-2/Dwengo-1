@@ -186,7 +186,7 @@ describe('Student controllers', () => {
 
     it('Get join request by student and class', async () => {
         req = {
-            params: { username: 'PinkFloyd', classId: 'id02' },
+            params: { username: 'PinkFloyd', classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
         };
 
         await getStudentRequestHandler(req as Request, res as Response);
@@ -201,7 +201,7 @@ describe('Student controllers', () => {
     it('Create join request', async () => {
         req = {
             params: { username: 'Noordkaap' },
-            body: { classId: 'id02' },
+            body: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
         };
 
         await createStudentRequestHandler(req as Request, res as Response);
@@ -212,7 +212,7 @@ describe('Student controllers', () => {
     it('Create join request duplicate', async () => {
         req = {
             params: { username: 'Tool' },
-            body: { classId: 'id02' },
+            body: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
         };
 
         await expect(async () => createStudentRequestHandler(req as Request, res as Response)).rejects.toThrow(ConflictException);
@@ -220,7 +220,7 @@ describe('Student controllers', () => {
 
     it('Delete join request', async () => {
         req = {
-            params: { username: 'Noordkaap', classId: 'id02' },
+            params: { username: 'Noordkaap', classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
         };
 
         await deleteClassJoinRequestHandler(req as Request, res as Response);
