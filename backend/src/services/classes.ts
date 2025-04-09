@@ -1,17 +1,16 @@
-import { getClassRepository, getStudentRepository, getTeacherInvitationRepository, getTeacherRepository } from '../data/repositories.js';
+import { getClassRepository, getTeacherInvitationRepository } from '../data/repositories.js';
 import { mapToClassDTO } from '../interfaces/class.js';
 import { mapToStudentDTO } from '../interfaces/student.js';
 import { mapToTeacherInvitationDTO, mapToTeacherInvitationDTOIds } from '../interfaces/teacher-invitation.js';
-import { getLogger } from '../logging/initalize.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { Class } from '../entities/classes/class.entity.js';
 import { ClassDTO } from '@dwengo-1/common/interfaces/class';
 import { TeacherInvitationDTO } from '@dwengo-1/common/interfaces/teacher-invitation';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
-import { fetchTeacher } from './teachers';
-import { fetchStudent, getStudent } from './students';
+import { fetchTeacher } from './teachers.js';
+import { fetchStudent } from './students.js';
 import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
-import { mapToTeacherDTO } from '../interfaces/teacher';
+import { mapToTeacherDTO } from '../interfaces/teacher.js';
 import { EntityDTO } from '@mikro-orm/core';
 import { putObject } from './service-helper.js';
 

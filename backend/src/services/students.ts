@@ -23,8 +23,7 @@ import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
-import { BadRequestException } from '../exceptions/bad-request-exception';
-import { ConflictException } from '../exceptions/conflict-exception';
+import { ConflictException } from '../exceptions/conflict-exception.js';
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();

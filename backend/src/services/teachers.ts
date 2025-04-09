@@ -22,15 +22,14 @@ import { Question } from '../entities/questions/question.entity.js';
 import { ClassJoinRequestRepository } from '../data/classes/class-join-request-repository.js';
 import { Student } from '../entities/users/student.entity.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
-import { addClassStudent, fetchClass, getClassStudents, getClassStudentsDTO } from './classes.js';
+import { addClassStudent, fetchClass, getClassStudentsDTO } from './classes.js';
 import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { ClassDTO } from '@dwengo-1/common/interfaces/class';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
 import { ClassJoinRequestStatus } from '@dwengo-1/common/util/class-join-request';
-import { BadRequestException } from '../exceptions/bad-request-exception';
-import { ConflictException } from '../exceptions/conflict-exception';
+import { ConflictException } from '../exceptions/conflict-exception.js';
 
 export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | string[]> {
     const teacherRepository: TeacherRepository = getTeacherRepository();

@@ -8,9 +8,8 @@ import {
     putAssignment,
 } from '../services/assignments.js';
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
-import { requireFields } from './error-helper';
-import { BadRequestException } from '../exceptions/bad-request-exception';
-import { getLogger } from '../logging/initalize.js';
+import { requireFields } from './error-helper.js';
+import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { EntityDTO } from '@mikro-orm/core';
 

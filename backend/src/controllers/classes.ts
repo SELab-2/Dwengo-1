@@ -14,7 +14,7 @@ import {
     putClass,
 } from '../services/classes.js';
 import { ClassDTO } from '@dwengo-1/common/interfaces/class';
-import { requireFields } from './error-helper';
+import { requireFields } from './error-helper.js';
 import { EntityDTO } from '@mikro-orm/core';
 import { Class } from '../entities/classes/class.entity.js';
 
