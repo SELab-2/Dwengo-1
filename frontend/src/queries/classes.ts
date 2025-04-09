@@ -6,6 +6,7 @@ import { computed, toValue, type MaybeRefOrGetter } from "vue";
 
 const classController = new ClassController();
 
+/* Query cache keys */
 function classesQueryKey() {
     return ["classes"];
 }
@@ -25,6 +26,7 @@ function classAssignmentsKey(classid: string) {
     return ["class-assignments", classid];
 }
 
+/* Function to invalidate all caches with certain class id */
 async function invalidateAll(classid: string, queryClient: QueryClient): Promise<void> {
     await queryClient.invalidateQueries({ queryKey: ["classes"] });
     await queryClient.invalidateQueries({ queryKey: classQueryKey(classid) });
@@ -34,6 +36,7 @@ async function invalidateAll(classid: string, queryClient: QueryClient): Promise
     await queryClient.invalidateQueries({ queryKey: classTeacherInvitationsKey(classid) });
 }
 
+/* Queries */
 export function useClassesQuery(full: MaybeRefOrGetter<boolean> = true): UseQueryReturnType<ClassesResponse, Error> {
     return useQuery({
         queryKey: computed(() => (classesQueryKey())),
@@ -95,6 +98,18 @@ export function useClassStudentsQuery(
     })
 }
 
+export function useCreateClassStudentMutation(): UseMutationReturnType<ClassResponse, Error, {id: string, username: string}, unknown> {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ id, username }) => classController.addStudent(id, username),
+        onSuccess: async (data) => {
+            await queryClient.invalidateQueries({ queryKey: classQueryKey(data.class.id) });
+            await queryClient.invalidateQueries({ queryKey: classStudentsKey(data.class.id) });
+        },
+    });
+}
+
 export function useClassTeachersQuery(
     id: MaybeRefOrGetter<string | undefined>,
     full: MaybeRefOrGetter<boolean> = true
@@ -103,6 +118,18 @@ export function useClassTeachersQuery(
         queryKey: computed(() => classTeachersKey(toValue(id)!)),
         queryFn: async () => classController.getTeachers(toValue(id)!, toValue(full)!),
         enabled: () => Boolean(toValue(id)),
+    });
+}
+
+export function useCreateClassTeacherMutation(): UseMutationReturnType<ClassResponse, Error, {id: string, username: string}, unknown> {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ id, username }) => classController.addTeacher(id, username),
+        onSuccess: async (data) => {
+            await queryClient.invalidateQueries({ queryKey: classQueryKey(data.class.id) });
+            await queryClient.invalidateQueries({ queryKey: classTeachersKey(data.class.id) });
+        },
     });
 }
 
