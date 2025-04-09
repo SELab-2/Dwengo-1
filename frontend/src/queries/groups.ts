@@ -16,6 +16,9 @@ function groupQueryKey(classid: string, assignmentNumber: number, groupNumber: n
 function groupSubmissionsQueryKey(classid: string, assignmentNumber: number, groupNumber: number) {
     return [ "group-submissions", classid, assignmentNumber, groupNumber ];
 }
+function groupQuestionsQueryKey(classid: string, assignmentNumber: number, groupNumber: number) {
+    return [ "group-questions", classid, assignmentNumber, groupNumber ];
+}
 
 export function useGroupsQuery(
     classid: string, 
@@ -67,7 +70,7 @@ export function useGroupQuestionsQuery(
     groupController.update(classid, assignmentNumber);
 
     return useQuery({
-        queryKey: computed(() => groupSubmissionsQueryKey(classid, assignmentNumber, toValue(groupNumber)!)),
+        queryKey: computed(() => groupQuestionsQueryKey(classid, assignmentNumber, toValue(groupNumber)!)),
         queryFn: async () => groupController.getSubmissions(toValue(groupNumber)!, toValue(full)!),
         enabled: () => !isNaN(Number(toValue(groupNumber))),
     });
