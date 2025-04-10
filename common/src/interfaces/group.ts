@@ -6,5 +6,5 @@ export interface GroupDTO {
     class: string | ClassDTO;
     assignment: number | AssignmentDTO;
     groupNumber: number;
-    members: string[] | StudentDTO[];
+    members?: string[] | StudentDTO[];
 }

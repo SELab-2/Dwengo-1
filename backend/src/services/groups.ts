@@ -1,7 +1,7 @@
 import { EntityDTO } from '@mikro-orm/core';
 import { getGroupRepository, getStudentRepository, getSubmissionRepository } from '../data/repositories.js';
 import { Group } from '../entities/assignments/group.entity.js';
-import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
+import { mapToGroupDTO, mapToShallowGroupDTO } from '../interfaces/group.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
 import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
@@ -88,7 +88,7 @@ export async function getAllGroups(classId: string, assignmentNumber: number, fu
         return groups.map(mapToGroupDTO);
     }
 
-    return groups.map(mapToGroupDTOId);
+    return groups.map(mapToShallowGroupDTO);
 }
 
 export async function getGroupSubmissions(

@@ -1,4 +1,4 @@
-import { getSubmissionRepository } from '../data/repositories.js';
+import { getAssignmentRepository, getSubmissionRepository } from '../data/repositories.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { mapToSubmission, mapToSubmissionDTO } from '../interfaces/submission.js';
@@ -6,6 +6,7 @@ import { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
 import { fetchStudent } from './students.js';
 import { getExistingGroupFromGroupDTO } from './groups.js';
 import { Submission } from '../entities/assignments/submission.entity.js';
+import { Language } from '@dwengo-1/common/util/language';
 
 export async function fetchSubmission(loId: LearningObjectIdentifier, submissionNumber: number): Promise<Submission> {
     const submissionRepository = getSubmissionRepository();
@@ -32,7 +33,7 @@ export async function getAllSubmissions(loId: LearningObjectIdentifier): Promise
 
 export async function createSubmission(submissionDTO: SubmissionDTO): Promise<SubmissionDTO> {
     const submitter = await fetchStudent(submissionDTO.submitter.username);
-    const group = submissionDTO.group ? await getExistingGroupFromGroupDTO(submissionDTO.group) : undefined;
+    const group = await getExistingGroupFromGroupDTO(submissionDTO.group);
 
     const submissionRepository = getSubmissionRepository();
     const submission = mapToSubmission(submissionDTO, submitter, group);
@@ -48,4 +49,23 @@ export async function deleteSubmission(loId: LearningObjectIdentifier, submissio
     await submissionRepository.deleteSubmissionByLearningObjectAndSubmissionNumber(loId, submissionNumber);
 
     return mapToSubmissionDTO(submission);
+}
+
+/**
+ * Returns all the submissions made by on behalf of any group the given student is in.
+ */
+export async function getSubmissionsForLearningObjectAndAssignment(
+    learningObjectHruid: string,
+    language: Language,
+    version: number,
+    classId: string,
+    assignmentId: number,
+    studentUsername?: string
+): Promise<SubmissionDTO[]> {
+    const loId = new LearningObjectIdentifier(learningObjectHruid, language, version);
+    const assignment = await getAssignmentRepository().findByClassIdAndAssignmentId(classId, assignmentId);
+
+    const submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!, studentUsername);
+
+    return submissions.map((s) => mapToSubmissionDTO(s));
 }
