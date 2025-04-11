@@ -9,7 +9,7 @@
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
     import { useStudentJoinRequestQuery } from "@/queries/students";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import { useTeacherJoinRequestsQuery } from "@/queries/teachers";
+    import { useTeacherJoinRequestsQuery, useUpdateJoinRequestMutation } from "@/queries/teachers";
     import type { ClassJoinRequestDTO } from "@dwengo-1/common/interfaces/class-join-request";
 
     const { t } = useI18n();
@@ -27,6 +27,7 @@
     const students = ref<StudentDTO[]>([]);
 
     const joinRequestsQuery = useTeacherJoinRequestsQuery(username, classId);
+    const { mutate } = useUpdateJoinRequestMutation();
 
     // Find the username of the logged in user so it can be used to fetch other information
     // When loading the page
@@ -66,12 +67,34 @@
         //TODO when query; reload table so student not longer in table
     }
 
-    function acceptStudent(s: StudentDTO) {
-        //TODO
+    function handleJoinRequest(c: ClassJoinRequestDTO, accepted: boolean) {
+        mutate(
+            {
+                teacherUsername: username.value!,
+                studentUsername: c.requester.username,
+                classId: c.class,
+                accepted: accepted,
+            },
+            {
+                onSuccess: () => {
+                    showSnackbar(t("sent"), "success");
+                },
+                onError: (e) => {
+                    showSnackbar(t("failed") + ": " + e.message, "error");
+                },
+            },
+        );
     }
+    const snackbar = ref({
+        visible: false,
+        message: "",
+        color: "success",
+    });
 
-    function rejectStudent(joinRequest: ClassJoinRequestDTO) {
-        //TODO
+    function showSnackbar(message: string, color: string): void {
+        snackbar.value.message = message;
+        snackbar.value.color = color;
+        snackbar.value.visible = true;
     }
 </script>
 <template>
@@ -132,7 +155,7 @@
                             sm="6"
                             md="6"
                         >
-                            <v-table class="table">
+                            <!-- <v-table class="table">
                                 <thead>
                                     <tr>
                                         <th class="header">{{ t("classJoinRequests") }}</th>
@@ -149,7 +172,7 @@
                                         </td>
                                         <td>
                                             <v-btn
-                                                @click="acceptStudent"
+                                                @click="handleJoinRequest(jr, true)"
                                                 class="mr-2"
                                                 color="green"
                                             >
@@ -157,7 +180,7 @@
                                             >
 
                                             <v-btn
-                                                @click="rejectStudent"
+                                                @click="handleJoinRequest(jr, false)"
                                                 class="mr-2"
                                                 color="red"
                                             >
@@ -166,7 +189,8 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                            </v-table>
+                            </v-table> TODO schrijf nieuwe controller + query-->
+                            <p>{{ joinRequests.data.joinRequests }}</p>
                         </v-col>
                     </using-query-result>
                 </v-row>
@@ -195,6 +219,13 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-snackbar
+            v-model="snackbar.visible"
+            :color="snackbar.color"
+            timeout="3000"
+        >
+            {{ snackbar.message }}
+        </v-snackbar>
     </main>
 </template>
 <style scoped>

@@ -15,7 +15,7 @@ export function makeTestClasses(em: EntityManager, students: Student[], teachers
     });
 
     const studentsClass02: Student[] = students.slice(0, 2).concat(students.slice(3, 4));
-    const teacherClass02: Teacher[] = teachers.slice(1, 2);
+    const teacherClass02: Teacher[] = teachers.slice(1, 2).concat(teachers.slice(4,5));
 
     const class02 = em.create(Class, {
         classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89',
