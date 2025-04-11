@@ -78,6 +78,7 @@
                 showSnackbar(t("created"), "success");
 
                 // Reload the table with classes so the new class appears
+                await classesQuery.refetch();
             } catch (_) {
                 showSnackbar(t("wrong"), "error");
             }
