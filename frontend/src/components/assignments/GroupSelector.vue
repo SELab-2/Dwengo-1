@@ -7,7 +7,7 @@ import type {StudentsResponse} from "@/controllers/students.ts";
 
 const props = defineProps<{
     classId: string | undefined
-    groups: string[][], // All groups
+    groups: string[][],
 }>();
 const emit = defineEmits(['groupCreated']);
 const {t} = useI18n();
@@ -15,7 +15,6 @@ const {t} = useI18n();
 const selectedStudents = ref([]);
 
 const studentQueryResult = useClassStudentsQuery(() => props.classId, true);
-
 
 function filterStudents(data: StudentsResponse): { title: string, value: string }[] {
     const students = data.students;

@@ -1,20 +1,22 @@
 <script setup lang="ts">
-import {useRoute} from "vue-router";
-import {ref, computed} from "vue";
+import {computed, defineProps} from "vue";
 import {useI18n} from "vue-i18n";
 import {AssignmentController, type AssignmentResponse} from "@/controllers/assignments.ts";
 import {useAssignmentQuery} from "@/queries/assignments.ts";
 import UsingQueryResult from "@/components/UsingQueryResult.vue";
+import type {GroupDTO} from "@dwengo-1/common/interfaces/group";
 
+const props = defineProps<{
+    classId: string
+    assignmentId: number
+    groups: GroupDTO[] | undefined
+}>();
 
 const {t, locale} = useI18n();
 const language = computed(() => locale.value);
-const route = useRoute();
-const assignmentId = ref(Number(route.params.id));
-const classId = window.history.state?.class_id;
-const controller = new AssignmentController(classId);
+const controller = new AssignmentController(props.classId);
 
-const assignmentQueryResult = useAssignmentQuery(() => classId, assignmentId);
+const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
 
 /***
  // Display group members
@@ -28,7 +30,7 @@ const assignmentQueryResult = useAssignmentQuery(() => classId, assignmentId);
  */
 
 const deleteAssignment = async () => {
-    await controller.deleteAssignment(assignmentId.value);
+    await controller.deleteAssignment(props.assignmentId.value);
 };
 
 </script>

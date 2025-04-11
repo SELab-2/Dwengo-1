@@ -23,28 +23,12 @@ const {t, locale} = useI18n();
 const role = ref(auth.authState.activeRole);
 const username = ref<string>("");
 
-async function submitForm(assignmentTitle: string,
-                          selectedLearningPath: string,
-                          selectedClass: string,
-                          groups: string[][],
-                          deadline: string,
-                          description: string,
-                          currentLanguage: string): Promise<void> {
-    const assignmentDTO: AssignmentDTO = {
-        id: 0,
-        class: selectedClass,
-        title: assignmentTitle,
-        description: description,
-        learningPath: selectedLearningPath,
-        language: currentLanguage,
-        groups: groups,
-        //deadline: deadline,
-    };
-
+async function submitForm(assignmentDTO: AssignmentDTO): Promise<void> {
     //TODO: replace with query function
-    const controller: AssignmentController = new AssignmentController(selectedClass);
+    const controller: AssignmentController = new AssignmentController(assignmentDTO.class);
     await controller.createAssignment(assignmentDTO);
 
+    // Navigate back to all assignments
     await router.push('/user/assignment');
 }
 
@@ -79,22 +63,30 @@ const description = ref('');
 const groups = ref<string[][]>([]);
 
 // New group is added to the list
-const addGroupToList = (students: string[]) => {
+function addGroupToList(students: string[]): void {
     if (students.length) {
         groups.value = [...groups.value, students];
     }
-};
+}
 
 watch(selectedClass, () => {
     groups.value = [];
 });
 
-const submitFormHandler = async () => {
+async function submitFormHandler(): Promise<void> {
     const {valid} = await form.value.validate();
     // Don't submit the form if all rules don't apply
     if (!valid) return;
-    await submitForm(assignmentTitle.value, selectedLearningPath.value?.hruid, selectedClass.value.id, groups.value, deadline.value, description.value, locale.value);
-};
+    const assignmentDTO: AssignmentDTO = {
+        id: 0,
+        class: selectedClass.value?.id || "",
+        title: assignmentTitle.value,
+        description: description.value,
+        learningPath: selectedLearningPath.value?.hruid || "",
+        language: language.value
+    }
+    await submitForm(assignmentDTO);
+}
 </script>
 
 

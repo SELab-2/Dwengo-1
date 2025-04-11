@@ -30,6 +30,7 @@ if (isTeacher.value) {
 //TODO: replace with query from classes
 const classController = new ClassController();
 
+//TODO: replace by query that fetches all user's assignment
 const assignments = asyncComputed(async () => {
     const classes = classesQueryResults?.data?.value?.classes;
     if (!classes) return [];

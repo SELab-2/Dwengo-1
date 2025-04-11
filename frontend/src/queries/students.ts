@@ -1,8 +1,9 @@
-import { computed, toValue } from "vue";
-import type { MaybeRefOrGetter } from "vue";
+import {computed, type Ref, toValue} from "vue";
+import type {MaybeRefOrGetter} from "vue";
 import {
+    type QueryObserverResult,
     useMutation,
-    type UseMutationReturnType,
+    type UseMutationReturnType, useQueries,
     useQuery,
     useQueryClient,
     type UseQueryReturnType,
@@ -14,12 +15,12 @@ import {
     type StudentResponse,
     type StudentsResponse,
 } from "@/controllers/students.ts";
-import type { ClassesResponse } from "@/controllers/classes.ts";
-import type { AssignmentsResponse } from "@/controllers/assignments.ts";
-import type { GroupsResponse } from "@/controllers/groups.ts";
-import type { SubmissionsResponse } from "@/controllers/submissions.ts";
-import type { QuestionsResponse } from "@/controllers/questions.ts";
-import type { StudentDTO } from "@dwengo-1/interfaces/student";
+import type {ClassesResponse} from "@/controllers/classes.ts";
+import type {AssignmentsResponse} from "@/controllers/assignments.ts";
+import type {GroupsResponse} from "@/controllers/groups.ts";
+import type {SubmissionsResponse} from "@/controllers/submissions.ts";
+import type {QuestionsResponse} from "@/controllers/questions.ts";
+import type {StudentDTO} from "@dwengo-1/interfaces/student";
 
 const studentController = new StudentController();
 
@@ -27,27 +28,35 @@ const studentController = new StudentController();
 function studentsQueryKey(full: boolean): [string, boolean] {
     return ["students", full];
 }
+
 function studentQueryKey(username: string): [string, string] {
     return ["student", username];
 }
+
 function studentClassesQueryKey(username: string, full: boolean): [string, string, boolean] {
     return ["student-classes", username, full];
 }
+
 function studentAssignmentsQueryKey(username: string, full: boolean): [string, string, boolean] {
     return ["student-assignments", username, full];
 }
+
 function studentGroupsQueryKeys(username: string, full: boolean): [string, string, boolean] {
     return ["student-groups", username, full];
 }
+
 function studentSubmissionsQueryKey(username: string): [string, string] {
     return ["student-submissions", username];
 }
+
 function studentQuestionsQueryKey(username: string, full: boolean): [string, string, boolean] {
     return ["student-questions", username, full];
 }
+
 export function studentJoinRequestsQueryKey(username: string): [string, string] {
     return ["student-join-requests", username];
 }
+
 export function studentJoinRequestQueryKey(username: string, classId: string): [string, string, string] {
     return ["student-join-request", username, classId];
 }
@@ -68,6 +77,21 @@ export function useStudentQuery(
         enabled: () => Boolean(toValue(username)),
     });
 }
+
+export function useStudentsByUsernamesQuery(
+    usernames: MaybeRefOrGetter<string[] | undefined>
+): Ref<QueryObserverResult<StudentResponse>[]> {
+    const resolvedUsernames = toValue(usernames) ?? [];
+
+    return useQueries({
+        queries: resolvedUsernames?.map((username) => ({
+            queryKey: computed(() => studentQueryKey(toValue(username))),
+            queryFn: async () => studentController.getByUsername(toValue(username)),
+            enabled: Boolean(toValue(username)),
+        })),
+    });
+}
+
 
 export function useStudentClassesQuery(
     username: MaybeRefOrGetter<string | undefined>,
@@ -150,7 +174,7 @@ export function useCreateStudentMutation(): UseMutationReturnType<StudentRespons
     return useMutation({
         mutationFn: async (data) => studentController.createStudent(data),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ["students"] });
+            await queryClient.invalidateQueries({queryKey: ["students"]});
         },
     });
 }
@@ -161,8 +185,8 @@ export function useDeleteStudentMutation(): UseMutationReturnType<StudentRespons
     return useMutation({
         mutationFn: async (username) => studentController.deleteStudent(username),
         onSuccess: async (deletedUser) => {
-            await queryClient.invalidateQueries({ queryKey: ["students"] });
-            await queryClient.invalidateQueries({ queryKey: studentQueryKey(deletedUser.student.username) });
+            await queryClient.invalidateQueries({queryKey: ["students"]});
+            await queryClient.invalidateQueries({queryKey: studentQueryKey(deletedUser.student.username)});
         },
     });
 }
@@ -176,7 +200,7 @@ export function useCreateJoinRequestMutation(): UseMutationReturnType<
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ username, classId }) => studentController.createJoinRequest(username, classId),
+        mutationFn: async ({username, classId}) => studentController.createJoinRequest(username, classId),
         onSuccess: async (newJoinRequest) => {
             await queryClient.invalidateQueries({
                 queryKey: studentJoinRequestsQueryKey(newJoinRequest.request.requester),
@@ -194,12 +218,12 @@ export function useDeleteJoinRequestMutation(): UseMutationReturnType<
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ username, classId }) => studentController.deleteJoinRequest(username, classId),
+        mutationFn: async ({username, classId}) => studentController.deleteJoinRequest(username, classId),
         onSuccess: async (deletedJoinRequest) => {
             const username = deletedJoinRequest.request.requester;
             const classId = deletedJoinRequest.request.class;
-            await queryClient.invalidateQueries({ queryKey: studentJoinRequestsQueryKey(username) });
-            await queryClient.invalidateQueries({ queryKey: studentJoinRequestQueryKey(username, classId) });
+            await queryClient.invalidateQueries({queryKey: studentJoinRequestsQueryKey(username)});
+            await queryClient.invalidateQueries({queryKey: studentJoinRequestQueryKey(username, classId)});
         },
     });
 }
