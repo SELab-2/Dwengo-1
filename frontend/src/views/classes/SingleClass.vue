@@ -5,8 +5,12 @@
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { useRoute } from "vue-router";
     import { ClassController, type ClassResponse } from "@/controllers/classes";
-    import type { StudentsResponse } from "@/controllers/students";
+    import type { JoinRequestResponse, JoinRequestsResponse, StudentsResponse } from "@/controllers/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
+    import { useStudentJoinRequestQuery } from "@/queries/students";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import { useTeacherJoinRequestsQuery } from "@/queries/teachers";
+    import type { ClassJoinRequestDTO } from "@dwengo-1/common/interfaces/class-join-request";
 
     const { t } = useI18n();
 
@@ -21,6 +25,8 @@
     const isLoading = ref(true);
     const currentClass = ref<ClassDTO | undefined>(undefined);
     const students = ref<StudentDTO[]>([]);
+
+    const joinRequestsQuery = useTeacherJoinRequestsQuery(username, classId);
 
     // Find the username of the logged in user so it can be used to fetch other information
     // When loading the page
@@ -51,8 +57,21 @@
     }
 
     // Remove student from class
-    function removeStudentFromclass(): void {
+    async function removeStudentFromclass(): Promise<void> {
+        // TODO: replace by query
+        if (selectedStudent.value) await classController.deleteStudent(classId, selectedStudent.value.username);
         dialog.value = false;
+
+        selectedStudent.value = null;
+        //TODO when query; reload table so student not longer in table
+    }
+
+    function acceptStudent(s: StudentDTO) {
+        //TODO
+    }
+
+    function rejectStudent(joinRequest: ClassJoinRequestDTO) {
+        //TODO
     }
 </script>
 <template>
@@ -98,12 +117,58 @@
                                         {{ s.firstName + " " + s.lastName }}
                                     </td>
                                     <td>
-                                        <v-btn @click="showPopup"> {{ t("remove") }} </v-btn>
+                                        <v-btn @click="showPopup(s)"> {{ t("remove") }} </v-btn>
                                     </td>
                                 </tr>
                             </tbody>
                         </v-table>
                     </v-col>
+                    <using-query-result
+                        :query-result="joinRequestsQuery"
+                        v-slot="joinRequests: { data: JoinRequestsResponse }"
+                    >
+                        <v-col
+                            cols="12"
+                            sm="6"
+                            md="6"
+                        >
+                            <v-table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="header">{{ t("classJoinRequests") }}</th>
+                                        <th class="header">{{ t("accept") + "/" + t("reject") }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        v-for="jr in joinRequests.data.joinRequests as ClassJoinRequestDTO[]"
+                                        :key="(jr.class, jr.requester, jr.status)"
+                                    >
+                                        <td>
+                                            {{ jr.requester.firstName + " " + jr.requester.lastName }}
+                                        </td>
+                                        <td>
+                                            <v-btn
+                                                @click="acceptStudent"
+                                                class="mr-2"
+                                                color="green"
+                                            >
+                                                {{ t("accept") }}</v-btn
+                                            >
+
+                                            <v-btn
+                                                @click="rejectStudent"
+                                                class="mr-2"
+                                                color="red"
+                                            >
+                                                {{ t("reject") }}
+                                            </v-btn>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </v-table>
+                        </v-col>
+                    </using-query-result>
                 </v-row>
             </v-container>
         </div>
