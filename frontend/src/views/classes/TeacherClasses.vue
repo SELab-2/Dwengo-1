@@ -1,12 +1,13 @@
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
-    import { computed, onMounted, ref, type ComputedRef } from "vue";
+    import { onMounted, ref } from "vue";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import type { TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
     import { useTeacherClassesQuery } from "@/queries/teachers";
-    import { ClassController, type ClassResponse } from "@/controllers/classes";
+    import { ClassController, type ClassesResponse, type ClassResponse } from "@/controllers/classes";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
 
     const { t } = useI18n();
     const classController = new ClassController();
@@ -22,20 +23,7 @@
     });
 
     // Fetch all classes of the logged in teacher
-    const { data: classesResponse, isLoading, error, refetch } = useTeacherClassesQuery(username, true);
-
-    // Empty list when classes are not yet loaded, else the list of classes of the user
-    const classes: ComputedRef<ClassDTO[]> = computed(() => {
-        // The classes are not yet fetched
-        if (!classesResponse.value) {
-            return [];
-        }
-        // The user has no classes
-        if (classesResponse.value.classes.length === 0) {
-            return [];
-        }
-        return classesResponse.value.classes as ClassDTO[];
-    });
+    const classesQuery = useTeacherClassesQuery(username, true);
 
     // Boolean that handles visibility for dialogs
     // Creating a class will generate a popup with the generated code
@@ -82,7 +70,6 @@
                     displayName: className.value,
                     teachers: [username.value!],
                     students: [],
-                    joinRequests: [],
                 };
                 const classResponse: ClassResponse = await classController.createClass(classDto);
                 const createdClass: ClassDTO = classResponse.class;
@@ -91,7 +78,6 @@
                 showSnackbar(t("created"), "success");
 
                 // Reload the table with classes so the new class appears
-                await refetch();
             } catch (_) {
                 showSnackbar(t("wrong"), "error");
             }
@@ -124,143 +110,130 @@
 </script>
 <template>
     <main>
-        <div
-            v-if="isLoading"
-            class="text-center py-10"
-        >
-            <v-progress-circular
-                indeterminate
-                color="primary"
-            />
-            <p>Loading...</p>
-        </div>
-
-        <div
-            v-else-if="error"
-            class="text-center py-10 text-error"
-        >
-            <v-icon large>mdi-alert-circle</v-icon>
-            <p>Error loading: {{ error.message }}</p>
-        </div>
-        <div v-else>
+        <div>
             <h1 class="title">{{ t("classes") }}</h1>
-            <v-container
-                fluid
-                class="ma-4"
+            <using-query-result
+                :query-result="classesQuery"
+                v-slot="classesResponse: { data: ClassesResponse }"
             >
-                <v-row
-                    no-gutters
+                <v-container
                     fluid
+                    class="ma-4"
                 >
-                    <v-col
-                        cols="12"
-                        sm="6"
-                        md="6"
+                    <v-row
+                        no-gutters
+                        fluid
                     >
-                        <v-table class="table">
-                            <thead>
-                                <tr>
-                                    <th class="header">{{ t("classes") }}</th>
-                                    <th class="header">
-                                        {{ t("code") }}
-                                    </th>
-                                    <th class="header">{{ t("members") }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr
-                                    v-for="c in classes"
-                                    :key="c.id"
-                                >
-                                    <td>
-                                        <v-btn
-                                            :to="`/class/${c.id}`"
-                                            variant="text"
-                                        >
-                                            {{ c.displayName }}
-                                            <v-icon end> mdi-menu-right </v-icon>
-                                        </v-btn>
-                                    </td>
-                                    <td>{{ c.id }}</td>
-                                    <td>{{ c.students.length }}</td>
-                                </tr>
-                            </tbody>
-                        </v-table>
-                    </v-col>
-                    <v-col
-                        cols="12"
-                        sm="6"
-                        md="6"
-                    >
-                        <div>
-                            <h2>{{ t("createClass") }}</h2>
-
-                            <v-sheet
-                                class="pa-4 sheet"
-                                max-width="600px"
-                            >
-                                <p>{{ t("createClassInstructions") }}</p>
-                                <v-form @submit.prevent>
-                                    <v-text-field
-                                        class="mt-4"
-                                        :label="`${t('classname')}`"
-                                        v-model="className"
-                                        :placeholder="`${t('EnterNameOfClass')}`"
-                                        :rules="nameRules"
-                                        variant="outlined"
-                                    ></v-text-field>
-                                    <v-btn
-                                        class="mt-4"
-                                        color="#f6faf2"
-                                        type="submit"
-                                        @click="createClass"
-                                        block
-                                        >{{ t("create") }}</v-btn
+                        <v-col
+                            cols="12"
+                            sm="6"
+                            md="6"
+                        >
+                            <v-table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="header">{{ t("classes") }}</th>
+                                        <th class="header">
+                                            {{ t("code") }}
+                                        </th>
+                                        <th class="header">{{ t("members") }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        v-for="c in (classesResponse.data.classes as ClassDTO[])"
+                                        :key="c.id"
                                     >
-                                </v-form>
-                            </v-sheet>
-                            <v-container>
-                                <v-dialog
-                                    v-model="dialog"
-                                    max-width="400px"
-                                >
-                                    <v-card>
-                                        <v-card-title class="headline">code</v-card-title>
-                                        <v-card-text>
-                                            <v-text-field
-                                                v-model="code"
-                                                readonly
-                                                append-inner-icon="mdi-content-copy"
-                                                @click:append-inner="copyToClipboard"
-                                            ></v-text-field>
-                                            <v-slide-y-transition>
-                                                <div
-                                                    v-if="copied"
-                                                    class="text-center mt-2"
-                                                >
-                                                    {{ t("copied") }}
-                                                </div>
-                                            </v-slide-y-transition>
-                                        </v-card-text>
-                                        <v-card-actions>
-                                            <v-spacer></v-spacer>
+                                        <td>
                                             <v-btn
-                                                text
-                                                @click="
-                                                    dialog = false;
-                                                    copied = false;
-                                                "
+                                                :to="`/class/${c.id}`"
+                                                variant="text"
                                             >
-                                                {{ t("close") }}
+                                                {{ c.displayName }}
+                                                <v-icon end> mdi-menu-right </v-icon>
                                             </v-btn>
-                                        </v-card-actions>
-                                    </v-card>
-                                </v-dialog>
-                            </v-container>
-                        </div>
-                    </v-col>
-                </v-row>
-            </v-container>
+                                        </td>
+                                        <td>{{ c.id }}</td>
+                                        <td>{{ c.students.length }}</td>
+                                    </tr>
+                                </tbody>
+                            </v-table>
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            sm="6"
+                            md="6"
+                        >
+                            <div>
+                                <h2>{{ t("createClass") }}</h2>
+
+                                <v-sheet
+                                    class="pa-4 sheet"
+                                    max-width="600px"
+                                >
+                                    <p>{{ t("createClassInstructions") }}</p>
+                                    <v-form @submit.prevent>
+                                        <v-text-field
+                                            class="mt-4"
+                                            :label="`${t('classname')}`"
+                                            v-model="className"
+                                            :placeholder="`${t('EnterNameOfClass')}`"
+                                            :rules="nameRules"
+                                            variant="outlined"
+                                        ></v-text-field>
+                                        <v-btn
+                                            class="mt-4"
+                                            color="#f6faf2"
+                                            type="submit"
+                                            @click="createClass"
+                                            block
+                                            >{{ t("create") }}</v-btn
+                                        >
+                                    </v-form>
+                                </v-sheet>
+                                <v-container>
+                                    <v-dialog
+                                        v-model="dialog"
+                                        max-width="400px"
+                                    >
+                                        <v-card>
+                                            <v-card-title class="headline">code</v-card-title>
+                                            <v-card-text>
+                                                <v-text-field
+                                                    v-model="code"
+                                                    readonly
+                                                    append-inner-icon="mdi-content-copy"
+                                                    @click:append-inner="copyToClipboard"
+                                                ></v-text-field>
+                                                <v-slide-y-transition>
+                                                    <div
+                                                        v-if="copied"
+                                                        class="text-center mt-2"
+                                                    >
+                                                        {{ t("copied") }}
+                                                    </div>
+                                                </v-slide-y-transition>
+                                            </v-card-text>
+                                            <v-card-actions>
+                                                <v-spacer></v-spacer>
+                                                <v-btn
+                                                    text
+                                                    @click="
+                                                        dialog = false;
+                                                        copied = false;
+                                                    "
+                                                >
+                                                    {{ t("close") }}
+                                                </v-btn>
+                                            </v-card-actions>
+                                        </v-card>
+                                    </v-dialog>
+                                </v-container>
+                            </div>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </using-query-result>
 
             <h1 class="title">
                 {{ t("invitations") }}
