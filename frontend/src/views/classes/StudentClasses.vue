@@ -6,9 +6,7 @@
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { useCreateJoinRequestMutation, useStudentClassesQuery } from "@/queries/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
-    import { StudentController, type StudentResponse } from "@/controllers/students";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
-    import { TeacherController } from "@/controllers/teachers";
     import { ClassController, type ClassesResponse } from "@/controllers/classes";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
 
