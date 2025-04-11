@@ -142,7 +142,7 @@
                                 </thead>
                                 <tbody>
                                     <tr
-                                        v-for="c in (classesResponse.data.classes as ClassDTO[])"
+                                        v-for="c in classesResponse.data.classes as ClassDTO[]"
                                         :key="c.id"
                                     >
                                         <td>

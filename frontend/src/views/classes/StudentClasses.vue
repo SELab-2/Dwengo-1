@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
-    import { onMounted, ref, type ComputedRef } from "vue";
+    import { onMounted, ref } from "vue";
     import { validate, version } from "uuid";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { useCreateJoinRequestMutation, useStudentClassesQuery } from "@/queries/students";
@@ -44,7 +44,6 @@
         getStudents.value = true;
         students.value = [];
         dialog.value = true;
-
 
         // TODO: change to use class query
         const studentDTOs: StudentDTO[] = (await classController.getStudents(c.id)).students as StudentDTO[];
@@ -145,7 +144,7 @@
                                 </thead>
                                 <tbody>
                                     <tr
-                                        v-for="c in (classResponse.data.classes as ClassDTO[])"
+                                        v-for="c in classResponse.data.classes as ClassDTO[]"
                                         :key="c.id"
                                     >
                                         <td>{{ c.displayName }}</td>
