@@ -20,6 +20,7 @@ import type { GroupsResponse } from "@/controllers/groups.ts";
 import type { SubmissionsResponse } from "@/controllers/submissions.ts";
 import type { QuestionsResponse } from "@/controllers/questions.ts";
 import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
+import {teacherClassJoinRequests} from "@/queries/teachers.ts";
 
 const studentController = new StudentController();
 
@@ -181,6 +182,7 @@ export function useCreateJoinRequestMutation(): UseMutationReturnType<
             await queryClient.invalidateQueries({
                 queryKey: studentJoinRequestsQueryKey(newJoinRequest.request.requester.username),
             });
+            await queryClient.invalidateQueries({ queryKey: teacherClassJoinRequests(classId) });
         },
     });
 }
@@ -200,6 +202,7 @@ export function useDeleteJoinRequestMutation(): UseMutationReturnType<
             const classId = deletedJoinRequest.request.class;
             await queryClient.invalidateQueries({ queryKey: studentJoinRequestsQueryKey(username) });
             await queryClient.invalidateQueries({ queryKey: studentJoinRequestQueryKey(username, classId) });
+            await queryClient.invalidateQueries({ queryKey: teacherClassJoinRequests(classId) });
         },
     });
 }
