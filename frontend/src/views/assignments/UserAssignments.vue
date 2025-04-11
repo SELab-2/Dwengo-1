@@ -27,14 +27,15 @@ if (isTeacher.value) {
     classesQueryResults = useStudentClassesQuery(username, true);
 }
 
+//TODO: replace with query from classes
 const classController = new ClassController();
-
 
 const assignments = asyncComputed(async () => {
     const classes = classesQueryResults?.data?.value?.classes;
     if (!classes) return [];
     const result = await Promise.all(
         (classes as ClassDTO[]).map(async (cls) => {
+            //TODO: replace by class queries
             const {assignments} = await classController.getAssignments(cls.id);
             return assignments.map(a => ({
                 id: a.id,
@@ -51,8 +52,6 @@ const assignments = asyncComputed(async () => {
     return result.flat();
 }, []);
 
-console.log(assignments);
-
 
 const goToCreateAssignment = async () => {
     await router.push('/assignment/create');
@@ -67,6 +66,7 @@ const goToAssignmentDetails = async (id: number, class_id: string) => {
 
 
 const goToDeleteAssignment = async (id: number, class_id: string) => {
+    //TODO: replace with query
     const controller = new AssignmentController(class_id);
     await controller.deleteAssignment(id);
 };
@@ -98,32 +98,30 @@ onMounted(async () => {
                     cols="12"
                 >
                     <v-card class="assignment-card">
-                        <v-card-text class="card-content">
-                            <div class="top-content">
-                                <div class="assignment-title">{{ assignment.title }}</div>
-                                <div class="assignment-class">
-                                    {{ t('class') }}:
-                                    <span class="class-name">
+                        <div class="top-content">
+                            <div class="assignment-title">{{ assignment.title }}</div>
+                            <div class="assignment-class">
+                                {{ t('class') }}:
+                                <span class="class-name">
                                       {{ assignment.class.displayName }}
                                     </span>
-                                </div>
                             </div>
+                        </div>
 
-                            <div class="spacer"></div>
+                        <div class="spacer"></div>
 
-                            <div class="button-row">
-                                <v-btn color="primary"
-                                       size="small"
-                                       @click="goToAssignmentDetails(assignment.id, assignment.class.id)">
-                                    {{ t('view-assignment') }}
-                                </v-btn>
-                                <v-btn v-if="isTeacher" color="red"
-                                       size="small"
-                                       @click="goToDeleteAssignment(assignment.id, assignment.class.id)">
-                                    {{ t('delete') }}
-                                </v-btn>
-                            </div>
-                        </v-card-text>
+                        <div class="button-row">
+                            <v-btn color="primary"
+                                   variant="text"
+                                   @click="goToAssignmentDetails(assignment.id, assignment.class.id)">
+                                {{ t('view-assignment') }}
+                            </v-btn>
+                            <v-btn v-if="isTeacher" color="red"
+                                   variant="text"
+                                   @click="goToDeleteAssignment(assignment.id, assignment.class.id)">
+                                {{ t('delete') }}
+                            </v-btn>
+                        </div>
                     </v-card>
 
                 </v-col>

@@ -13,15 +13,10 @@ import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts"
 import type {ClassesResponse} from "@/controllers/classes.ts";
 import type {AssignmentDTO} from "@dwengo-1/common/interfaces/assignment";
 import {AssignmentController} from "@/controllers/assignments.ts";
-import type {GroupDTO} from "@dwengo-1/common/interfaces/group";
-import {GroupController} from "@/controllers/groups.ts";
 
 /***
  TODO: when clicking the assign button from lp page pass the lp-object in a state:
  */
-const props = defineProps<{
-    learningPath?: LearningPath | null;  // Optional learningPath prop
-}>();
 
 const router = useRouter();
 const {t, locale} = useI18n();
@@ -48,26 +43,7 @@ async function submitForm(assignmentTitle: string,
 
     //TODO: replace with query function
     const controller: AssignmentController = new AssignmentController(selectedClass);
-    const response = await controller.createAssignment(assignmentDTO);
-    // Create groups
-    for (let i = 0; i < groups.length; i++) {
-        const group: GroupDTO = {
-            assignment: response.id,
-            groupNumber: i,
-            members: groups[i]
-        };
-
-        console.log("Posting group:", group);
-
-        const groupController: GroupController = new GroupController(selectedClass, response.id);
-
-        try {
-            await groupController.createGroup(group);
-            console.log("Group successfully posted:", group);
-        } catch (err) {
-            console.error("Group POST failed:", err);
-        }
-    }
+    await controller.createAssignment(assignmentDTO);
 
     await router.push('/user/assignment');
 }

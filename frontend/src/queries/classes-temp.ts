@@ -1,7 +1,7 @@
-import {useQuery, type UseQueryReturnType} from "@tanstack/vue-query";
-import {computed, type MaybeRefOrGetter, toValue} from "vue";
-import type {StudentsResponse} from "@/controllers/students.ts";
 import {getClassController} from "@/controllers/controllers.ts";
+import {computed, type MaybeRefOrGetter, toValue} from "vue";
+import {useQuery, type UseQueryReturnType} from "@tanstack/vue-query";
+import type {StudentsResponse} from "@/controllers/students.ts";
 
 const classController = getClassController();
 
@@ -9,7 +9,7 @@ function classStudentsQueryKey(classId: string, full: boolean): [string, string,
     return ["class-students", classId, full];
 }
 
-
+//TODO: delete and use the one in classes.ts
 export function useClassStudentsQuery(
     classId: MaybeRefOrGetter<string | undefined>,
     full: MaybeRefOrGetter<boolean> = true,
