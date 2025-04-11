@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
-    import { computed, onMounted, ref, type ComputedRef } from "vue";
+    import { onMounted, ref, type ComputedRef } from "vue";
     import { validate, version } from "uuid";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { useCreateJoinRequestMutation, useStudentClassesQuery } from "@/queries/students";
@@ -9,6 +9,8 @@
     import { StudentController } from "@/controllers/students";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
     import { TeacherController } from "@/controllers/teachers";
+    import type { ClassesResponse } from "@/controllers/classes";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
 
     const { t } = useI18n();
     const studentController: StudentController = new StudentController();
@@ -25,20 +27,7 @@
     });
 
     // Fetch all classes of the logged in student
-    const { data: classesResponse, isLoading, error } = useStudentClassesQuery(username);
-
-    // Empty list when classes are not yet loaded, else the list of classes of the user
-    const classes: ComputedRef<ClassDTO[]> = computed(() => {
-        // The classes are not yet fetched
-        if (!classesResponse.value) {
-            return [];
-        }
-        // The user has no classes
-        if (classesResponse.value.classes.length === 0) {
-            return [];
-        }
-        return classesResponse.value.classes as ClassDTO[];
-    });
+    const classesQuery = useStudentClassesQuery(username);
 
     // Students of selected class are shown when logged in student presses on the member count
     const selectedClass = ref<ClassDTO | null>(null);
@@ -150,71 +139,58 @@
 </script>
 <template>
     <main>
-        <div
-            v-if="isLoading"
-            class="text-center py-10"
-        >
-            <v-progress-circular
-                indeterminate
-                color="primary"
-            />
-            <p>Loading...</p>
-        </div>
-
-        <div
-            v-else-if="error"
-            class="text-center py-10 text-error"
-        >
-            <v-icon large>mdi-alert-circle</v-icon>
-            <p>Error loading: {{ error.message }}</p>
-        </div>
-        <div v-else>
+        <div>
             <h1 class="title">{{ t("classes") }}</h1>
-            <v-container
-                fluid
-                class="ma-4"
+            <using-query-result
+                :query-result="classesQuery"
+                v-slot="classResponse: { data: ClassesResponse }"
             >
-                <v-row
-                    no-gutters
+                <v-container
                     fluid
+                    class="ma-4"
                 >
-                    <v-col
-                        cols="12"
-                        sm="6"
-                        md="6"
+                    <v-row
+                        no-gutters
+                        fluid
                     >
-                        <v-table class="table">
-                            <thead>
-                                <tr>
-                                    <th class="header">{{ t("classes") }}</th>
-                                    <th class="header">{{ t("teachers") }}</th>
-                                    <th class="header">{{ t("members") }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr
-                                    v-for="c in classes"
-                                    :key="c.id"
-                                >
-                                    <td>{{ c.displayName }}</td>
-                                    <td
-                                        class="link"
-                                        @click="openTeacherDialog(c)"
+                        <v-col
+                            cols="12"
+                            sm="6"
+                            md="6"
+                        >
+                            <v-table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="header">{{ t("classes") }}</th>
+                                        <th class="header">{{ t("teachers") }}</th>
+                                        <th class="header">{{ t("members") }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        v-for="c in (classResponse.data.classes as ClassDTO[])"
+                                        :key="c.id"
                                     >
-                                        {{ c.teachers.length }}
-                                    </td>
-                                    <td
-                                        class="link"
-                                        @click="openStudentDialog(c)"
-                                    >
-                                        {{ c.students.length }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </v-table>
-                    </v-col>
-                </v-row>
-            </v-container>
+                                        <td>{{ c.displayName }}</td>
+                                        <td
+                                            class="link"
+                                            @click="openTeacherDialog(c)"
+                                        >
+                                            {{ c.teachers.length }}
+                                        </td>
+                                        <td
+                                            class="link"
+                                            @click="openStudentDialog(c)"
+                                        >
+                                            {{ c.students.length }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </v-table>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </using-query-result>
 
             <v-dialog
                 v-model="dialog"
