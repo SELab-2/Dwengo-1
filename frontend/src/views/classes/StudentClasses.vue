@@ -6,15 +6,14 @@
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { useCreateJoinRequestMutation, useStudentClassesQuery } from "@/queries/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
-    import { StudentController } from "@/controllers/students";
+    import { StudentController, type StudentResponse } from "@/controllers/students";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
     import { TeacherController } from "@/controllers/teachers";
-    import type { ClassesResponse } from "@/controllers/classes";
+    import { ClassController, type ClassesResponse } from "@/controllers/classes";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
 
     const { t } = useI18n();
-    const studentController: StudentController = new StudentController();
-    const teacherController: TeacherController = new TeacherController();
+    const classController: ClassController = new ClassController();
 
     // Username of logged in student
     const username = ref<string | undefined>(undefined);
@@ -48,20 +47,10 @@
         students.value = [];
         dialog.value = true;
 
-        // Fetch students from their usernames to display their full names
-        const studentDTOs: (StudentDTO | null)[] = await Promise.all(
-            c.students.map(async (uid) => {
-                try {
-                    const res = await studentController.getByUsername(uid);
-                    return res.student;
-                } catch (_) {
-                    return null;
-                }
-            }),
-        );
 
-        // Only show students that are not fetched ass *null*
-        students.value = studentDTOs.filter(Boolean) as StudentDTO[];
+        // TODO: change to use class query
+        const studentDTOs: StudentDTO[] = (await classController.getStudents(c.id)).students as StudentDTO[];
+        students.value = studentDTOs;
     }
 
     async function openTeacherDialog(c: ClassDTO): Promise<void> {
@@ -72,19 +61,9 @@
         teachers.value = [];
         dialog.value = true;
 
-        // Fetch names of teachers
-        const teacherDTOs: (TeacherDTO | null)[] = await Promise.all(
-            c.teachers.map(async (uid) => {
-                try {
-                    const res = await teacherController.getByUsername(uid);
-                    return res.teacher;
-                } catch (_) {
-                    return null;
-                }
-            }),
-        );
-
-        teachers.value = teacherDTOs.filter(Boolean) as TeacherDTO[];
+        // TODO: change to use class query
+        const teacherDTOs: TeacherDTO[] = (await classController.getTeachers(c.id)).teachers as TeacherDTO[];
+        teachers.value = teacherDTOs;
     }
 
     // Hold the code a student gives in to join a class
