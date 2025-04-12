@@ -6,8 +6,6 @@ import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
 import { useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
 
-const groupController = new GroupController();
-
 function groupsQueryKey(classid: string, assignmentNumber: number, full: boolean) {
     return [ "groups", classid, assignmentNumber, full ];
 }
@@ -40,12 +38,13 @@ function toValues(
 export function useGroupsQuery(
     classid: MaybeRefOrGetter<string | undefined>, 
     assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+    full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<GroupsResponse, Error> {
-    const { cid, an, f } = toValues(classid, assignmentNumber, 1, true);
+    const { cid, an, f } = toValues(classid, assignmentNumber, 1, full);
 
     return useQuery({
         queryKey: computed(() => (groupsQueryKey(cid!, an!, f))),
-        queryFn: async () => groupController.getAll(cid!, an!),
+        queryFn: async () => new GroupController(cid!, an!).getAll(f),
         enabled: () => checkEnabled(cid, an, 1),
     });
 }
@@ -59,7 +58,7 @@ export function useGroupQuery(
 
     return useQuery({
         queryKey: computed(() => groupQueryKey(cid!, an!, gn!)),
-        queryFn: async () => groupController.getByNumber(cid!, an!, gn!),
+        queryFn: async () => new GroupController(cid!, an!).getByNumber(gn!),
         enabled: () => checkEnabled(cid, an, gn),
     });
 }
@@ -74,7 +73,7 @@ export function useCreateGroupMutation(
     const { cid, an } = toValues(classid, assignmentNumber, 1, true);
 
     return useMutation({
-        mutationFn: async (data) => groupController.createGroup(cid!, an!, data),
+        mutationFn: async (data) => new GroupController(cid!, an!).createGroup(data),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, true) });
             await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, false) });
@@ -90,7 +89,7 @@ export function useDeleteGroupMutation(
     const { cid, an, gn } = toValues(classid, assignmentNumber, 1, true);
 
     return useMutation({
-        mutationFn: async (id) => groupController.deleteGroup(cid!, an!, id),
+        mutationFn: async (id) => new GroupController(cid!, an!).deleteGroup(id),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: groupQueryKey(cid!, an!, gn!) });
 
@@ -114,8 +113,8 @@ export function useUpdateGroupMutation(
     const { cid, an, gn } = toValues(classid, assignmentNumber, 1, true);
 
     return useMutation({
-        mutationFn: async (data) => groupController.updateGroup(cid!, an!, gn!, data),
-        onSuccess: async (data) => {
+        mutationFn: async (data) => new GroupController(cid!, an!).updateGroup(gn!, data),
+        onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: groupQueryKey(cid!, an!, gn!) });
 
             await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, true) });
@@ -134,7 +133,7 @@ export function useGroupSubmissionsQuery(
 
     return useQuery({
         queryKey: computed(() => groupSubmissionsQueryKey(cid!, an!, gn!, f)),
-        queryFn: async () => groupController.getSubmissions(cid!, an!, gn!, f),
+        queryFn: async () => new GroupController(cid!, an!).getSubmissions(gn!, f),
         enabled: () => checkEnabled(cid, an, gn),
     });
 }
@@ -149,7 +148,7 @@ export function useGroupQuestionsQuery(
 
     return useQuery({
         queryKey: computed(() => groupQuestionsQueryKey(cid!, an!, gn!, f)),
-        queryFn: async () => groupController.getSubmissions(cid!, an!, gn!, f),
+        queryFn: async () => new GroupController(cid!, an!).getSubmissions(gn!, f),
         enabled: () => checkEnabled(cid, an, gn),
     });
 }
