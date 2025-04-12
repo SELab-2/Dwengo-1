@@ -75,5 +75,12 @@
     "sent": "verzonden",
     "failed": "mislukt",
     "wrong": "er ging iets verkeerd",
-    "created": "gecreëerd"
+    "created": "gecreëerd",
+    "remove": "verwijder",
+    "students": "studenten",
+    "classJoinRequests": "deelname verzoeken",
+    "reject": "weiger",
+    "areusure": "Bent u zeker?",
+    "yes": "ja",
+    "teachers": "leerkrachten"
 }

@@ -75,5 +75,12 @@
     "sent": "sent",
     "failed": "gescheitert",
     "wrong": "etwas ist schief gelaufen",
-    "created": "erstellt"
+    "created": "erstellt",
+    "remove": "entfernen",
+    "students": "Studenten",
+    "classJoinRequests": "Anfragen verbinden",
+    "reject": "zurückweisen",
+    "areusure": "Sind Sie sicher?",
+    "yes": "ja",
+    "teachers": "Lehrer"
 }

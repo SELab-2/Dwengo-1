@@ -75,5 +75,12 @@
     "sent": "sent",
     "failed": "failed",
     "wrong": "something went wrong",
-    "created": "created"
+    "created": "created",
+    "remove": "remove",
+    "students": "students",
+    "classJoinRequests": "join requests",
+    "reject": "reject",
+    "areusure": "Are you sure?",
+    "yes": "yes",
+    "teachers": "teachers"
 }

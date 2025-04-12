@@ -75,5 +75,12 @@
     "sent": "envoyé",
     "failed": "échoué",
     "wrong": "quelque chose n'a pas fonctionné",
-    "created": "créé"
+    "created": "créé",
+    "remove": "supprimer",
+    "students": "étudiants",
+    "classJoinRequests": "demandes d'adhésion",
+    "reject": "rejeter",
+    "areusure": "Êtes-vous sûr?",
+    "yes": "oui",
+    "teachers": "enseignants"
 }

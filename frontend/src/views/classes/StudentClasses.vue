@@ -196,7 +196,7 @@
                         <v-btn
                             color="primary"
                             @click="dialog = false"
-                            >Close</v-btn
+                            >{{ t("close") }}</v-btn
                         >
                     </v-card-actions>
                 </v-card>
