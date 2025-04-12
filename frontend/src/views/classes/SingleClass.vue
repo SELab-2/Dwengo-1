@@ -80,7 +80,8 @@
                     showSnackbar(t("sent"), "success");
                 },
                 onError: (e) => {
-                    showSnackbar(t("failed") + ": " + e.message, "error");
+                    // showSnackbar(t("failed") + ": " + e.message, "error");
+                    throw e;
                 },
             },
         );
@@ -155,7 +156,7 @@
                             sm="6"
                             md="6"
                         >
-                            <!-- <v-table class="table">
+                            <v-table class="table">
                                 <thead>
                                     <tr>
                                         <th class="header">{{ t("classJoinRequests") }}</th>
@@ -189,8 +190,7 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                            </v-table> TODO schrijf nieuwe controller + query-->
-                            <p>{{ joinRequests.data.joinRequests }}</p>
+                            </v-table>
                         </v-col>
                     </using-query-result>
                 </v-row>
