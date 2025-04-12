@@ -1,5 +1,6 @@
 import { SubmissionController, type SubmissionResponse, type SubmissionsResponse } from "@/controllers/submissions";
-import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
+import type { SubmissionDTO } from "@dwengo-1/common/interfaces/submission";
+import { useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
 
 function submissionsQueryKey(classid: string, assignmentNumber: number, full: boolean) {
@@ -62,5 +63,39 @@ export function useSubmissionQuery(
         queryKey: computed(() => submissionQueryKey(cid!, an!, gn!)),
         queryFn: async () => new SubmissionController(cid!, an!, gn!).getByNumber(sn!),
         enabled: () => checkEnabled(cid, an, gn, sn),
+    });
+}
+
+export function useCreateSubmissionMutation(
+    classid: MaybeRefOrGetter<string | undefined>, 
+    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+    groupNumber: MaybeRefOrGetter<number | undefined>, 
+): UseMutationReturnType<SubmissionResponse, Error, SubmissionDTO, unknown> {
+    const queryClient = useQueryClient();
+    const { cid, an, gn } = toValues(classid, assignmentNumber, groupNumber, 1, true);
+
+    return useMutation({
+        mutationFn: async (data) => new SubmissionController(cid!, an!, gn!).createSubmission(data),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, true) });
+            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, false) });
+        },
+    });
+}
+
+export function useDeleteGroupMutation(
+    classid: MaybeRefOrGetter<string | undefined>, 
+    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+    groupNumber: MaybeRefOrGetter<number | undefined>, 
+): UseMutationReturnType<SubmissionResponse, Error, number, unknown> {
+    const queryClient = useQueryClient();
+    const { cid, an, gn } = toValues(classid, assignmentNumber, groupNumber, 1, true);
+
+    return useMutation({
+        mutationFn: async (id) => new SubmissionController(cid!, an!, gn!).deleteSubmission(id),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, true) });
+            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, false) });
+        },
     });
 }

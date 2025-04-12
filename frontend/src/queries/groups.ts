@@ -66,7 +66,7 @@ export function useGroupQuery(
 
 // TODO: find way to check if cid and an are not undefined.
 // depends on how this function is used.
-export function useCreateClassMutation(
+export function useCreateGroupMutation(
     classid: MaybeRefOrGetter<string | undefined>, 
     assignmentNumber: MaybeRefOrGetter<number | undefined>, 
 ): UseMutationReturnType<GroupResponse, Error, GroupDTO, unknown> {
@@ -82,7 +82,7 @@ export function useCreateClassMutation(
     });
 }
 
-export function useDeleteClassMutation(
+export function useDeleteGroupMutation(
     classid: MaybeRefOrGetter<string | undefined>, 
     assignmentNumber: MaybeRefOrGetter<number | undefined>, 
 ): UseMutationReturnType<GroupResponse, Error, number, unknown> {
@@ -91,7 +91,7 @@ export function useDeleteClassMutation(
 
     return useMutation({
         mutationFn: async (id) => groupController.deleteGroup(cid!, an!, id),
-        onSuccess: async (_) => {
+        onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: groupQueryKey(cid!, an!, gn!) });
 
             await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, true) });
@@ -106,7 +106,7 @@ export function useDeleteClassMutation(
     });
 }
 
-export function useUpdateClassMutation(
+export function useUpdateGroupMutation(
     classid: MaybeRefOrGetter<string | undefined>, 
     assignmentNumber: MaybeRefOrGetter<number | undefined>, 
 ): UseMutationReturnType<GroupResponse, Error, GroupDTO, unknown> {
