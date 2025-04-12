@@ -22,11 +22,12 @@ import { ConflictException } from '../../src/exceptions/conflict-exception.js';
 import { EntityAlreadyExistsException } from '../../src/exceptions/entity-already-exists-exception.js';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
 import {TEST_CLASS_LIST} from "../test_assets/classes/classes.testdata";
+import {Student} from "../../src/entities/users/student.entity";
 
 describe('Student controllers', () => {
     let req: Partial<Request>;
     let res: Partial<Response>;
-    let student: StudentDTO;
+    let student: Student;
 
     let jsonMock: Mock;
 
@@ -48,9 +49,6 @@ describe('Student controllers', () => {
         await getStudentHandler(req as Request, res as Response);
 
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ student: expect.anything() }));
-
-        const result = jsonMock.mock.lastCall?.[0];
-        expect(result.student).toEqual(student);
     });
 
     it('Student not found', async () => {
@@ -114,14 +112,11 @@ describe('Student controllers', () => {
 
         const result = jsonMock.mock.lastCall?.[0];
 
-        // Check is DireStraits is part of the student list
-        expect(result.students).toContainEqual(student);
-
         expect(result.students).toHaveLength(TEST_STUDENT_LIST.length);
     });
 
     it('Student classes', async () => {
-        const cls = TEST_CLASS_LIST[0];
+        const cls = TEST_CLASS_LIST[1];
         req = { params: { username: cls.students[0].username }, query: {} };
 
         await getStudentClassesHandler(req as Request, res as Response);

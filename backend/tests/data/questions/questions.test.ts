@@ -14,6 +14,7 @@ import { Language } from '@dwengo-1/common/util/language';
 import { Question } from '../../../src/entities/questions/question.entity';
 import { Class } from '../../../src/entities/classes/class.entity';
 import { Assignment } from '../../../src/entities/assignments/assignment.entity';
+import {TEST_QUESTION_LIST} from "../../test_assets/questions/questions.testdata";
 
 describe('QuestionRepository', () => {
     let questionRepository: QuestionRepository;

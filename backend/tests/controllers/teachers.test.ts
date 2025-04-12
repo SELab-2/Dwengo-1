@@ -19,11 +19,12 @@ import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { getClassHandler } from '../../src/controllers/classes';
 import {TEST_TEACHER_LIST} from "../test_assets/users/teachers.testdata";
 import {TEST_CLASS_LIST} from "../test_assets/classes/classes.testdata";
+import {Teacher} from "../../src/entities/users/teacher.entity";
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
     let res: Partial<Response>;
-    let teacher: TeacherDTO;
+    let teacher: Teacher;
 
     let jsonMock: Mock;
 

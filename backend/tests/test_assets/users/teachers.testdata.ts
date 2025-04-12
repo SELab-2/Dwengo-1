@@ -1,17 +1,47 @@
-import { Teacher } from '../../../src/entities/users/teacher.entity';
 import { EntityManager } from '@mikro-orm/core';
-import {TeacherDTO} from "@dwengo-1/common/interfaces/teacher";
+import { Teacher } from '../../../src/entities/users/teacher.entity';
 
-export const TEST_TEACHER_LIST: TeacherDTO[] = [
-    { id: 'FooFighters', username: 'FooFighters', firstName: 'Dave', lastName: 'Grohl',},
-    { id: 'LimpBizkit', username: 'LimpBizkit', firstName: 'Fred', lastName: 'Durst',},
-    { id: 'Staind', username: 'Staind', firstName: 'Aaron', lastName: 'Lewis',},
-    // Should not be used, gets deleted in a unit test
-    { id: 'ZesdeMetaal', username: 'ZesdeMetaal', firstName: 'Wannes', lastName: 'Cappelle',},
-    // Makes sure when logged in as testleerkracht1, there exists a corresponding user
-    { id: 'testleerkracht1', username: 'testleerkracht1', firstName: 'Bob', lastName: 'Dylan', }
-];
+let teacher01: Teacher;
+let teacher02: Teacher;
+let teacher03: Teacher;
+let teacher04: Teacher;
+let teacher05: Teacher;
+
+export let TEST_TEACHER_LIST: Teacher[];
 
 export function makeTestTeachers(em: EntityManager): Teacher[] {
-    return TEST_TEACHER_LIST.map((data) => em.create(Teacher, data));
+    teacher01 = em.create(Teacher, {
+        username: 'FooFighters',
+        firstName: 'Dave',
+        lastName: 'Grohl',
+    });
+
+    teacher02 = em.create(Teacher, {
+        username: 'LimpBizkit',
+        firstName: 'Fred',
+        lastName: 'Durst',
+    });
+
+    teacher03 = em.create(Teacher, {
+        username: 'Staind',
+        firstName: 'Aaron',
+        lastName: 'Lewis',
+    });
+
+    // Should not be used, gets deleted in a unit test
+    teacher04 = em.create(Teacher, {
+        username: 'ZesdeMetaal',
+        firstName: 'Wannes',
+        lastName: 'Cappelle',
+    });
+
+    // Makes sure when logged in as testleerkracht1, there exists a corresponding user
+    teacher05 = em.create(Teacher, {
+        username: 'testleerkracht1',
+        firstName: 'Bob',
+        lastName: 'Dylan',
+    });
+
+    TEST_TEACHER_LIST = [teacher01, teacher02, teacher03, teacher04, teacher05];
+    return TEST_TEACHER_LIST;
 }
