@@ -18,6 +18,7 @@ import { getStudentRequestsHandler } from '../../src/controllers/students.js';
 import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { getClassHandler } from '../../src/controllers/classes';
 import {TEST_TEACHER_LIST} from "../test_assets/users/teachers.testdata";
+import {TEST_CLASS_LIST} from "../test_assets/classes/classes.testdata";
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
@@ -122,8 +123,9 @@ describe('Teacher controllers', () => {
     });
 
     it('Get teacher classes', async () => {
+        const cls = TEST_CLASS_LIST[0];
         req = {
-            params: { username: 'testleerkracht1' },
+            params: { username: cls.teachers[0].username },
             query: { full: 'true' },
         };
 

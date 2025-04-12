@@ -21,6 +21,7 @@ import { BadRequestException } from '../../src/exceptions/bad-request-exception.
 import { ConflictException } from '../../src/exceptions/conflict-exception.js';
 import { EntityAlreadyExistsException } from '../../src/exceptions/entity-already-exists-exception.js';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
+import {TEST_CLASS_LIST} from "../test_assets/classes/classes.testdata";
 
 describe('Student controllers', () => {
     let req: Partial<Request>;
@@ -120,7 +121,8 @@ describe('Student controllers', () => {
     });
 
     it('Student classes', async () => {
-        req = { params: { username: 'DireStraits' }, query: {} };
+        const cls = TEST_CLASS_LIST[0];
+        req = { params: { username: cls.students[0].username }, query: {} };
 
         await getStudentClassesHandler(req as Request, res as Response);
 
