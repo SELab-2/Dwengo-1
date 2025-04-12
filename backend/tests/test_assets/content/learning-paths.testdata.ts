@@ -79,7 +79,7 @@ export function makeTestLearningPaths(em: EntityManager): LearningPath[] {
         title: 'repertoire Tool',
         description: 'all about Tool',
         image: null,
-        nodes: [node01, node02],
+        nodes: [], //node1,2
     });
 
     learningPath02 = em.create(LearningPath, {
@@ -89,7 +89,7 @@ export function makeTestLearningPaths(em: EntityManager): LearningPath[] {
         title: 'repertoire Dire Straits',
         description: 'all about Dire Straits',
         image: null,
-        nodes: [node03, node04, node05],
+        nodes: [], // node3,4,5
     });
 
     TEST_LEARNING_PATH_LIST = [learningPath01, learningPath02];
