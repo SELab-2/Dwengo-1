@@ -6,3 +6,9 @@ export interface TeacherInvitationDTO {
     receiver: string | UserDTO;
     class: string | ClassDTO;
 }
+
+export interface TeacherInvitationData {
+    sender: string;
+    receiver: string;
+    class: string;
+}

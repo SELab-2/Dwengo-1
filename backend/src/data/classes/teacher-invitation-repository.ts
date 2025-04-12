@@ -20,4 +20,11 @@ export class TeacherInvitationRepository extends DwengoEntityRepository<TeacherI
             class: clazz,
         });
     }
+    public async findBy(clazz: Class, sender: Teacher, receiver: Teacher): Promise<TeacherInvitation | null> {
+        return this.findOne({
+            sender: sender,
+            receiver: receiver,
+            class: clazz,
+        })
+    }
 }
