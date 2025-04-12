@@ -3,11 +3,11 @@ import type { SubmissionDTO } from "@dwengo-1/common/interfaces/submission";
 import { useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
 
-function submissionsQueryKey(classid: string, assignmentNumber: number, full: boolean) {
-    return [ "submissions", classid, assignmentNumber, full ];
+function submissionsQueryKey(classid: string, assignmentNumber: number, groupNumber: number, full: boolean) {
+    return [ "submissions", classid, assignmentNumber, groupNumber, full ];
 }
-function submissionQueryKey(classid: string, assignmentNumber: number, groupNumber: number) {
-    return [ "submission", classid, assignmentNumber, groupNumber ];
+function submissionQueryKey(classid: string, assignmentNumber: number, groupNumber: number, submissionNumber: number) {
+    return [ "submission", classid, assignmentNumber, groupNumber, submissionNumber ];
 }
 
 function checkEnabled(
@@ -46,7 +46,7 @@ export function useSubmissionsQuery(
     const { cid, an, gn, sn, f } = toValues(classid, assignmentNumber, groupNumber, 1, full);
 
     return useQuery({
-        queryKey: computed(() => (submissionsQueryKey(cid!, an!, f))),
+        queryKey: computed(() => (submissionsQueryKey(cid!, an!, gn!, f))),
         queryFn: async () => new SubmissionController(cid!, an!, gn!).getAll(f),
         enabled: () => checkEnabled(cid, an, gn, sn),
     });
@@ -60,7 +60,7 @@ export function useSubmissionQuery(
     const { cid, an, gn, sn, f } = toValues(classid, assignmentNumber, groupNumber, 1, true);
 
     return useQuery({
-        queryKey: computed(() => submissionQueryKey(cid!, an!, gn!)),
+        queryKey: computed(() => submissionQueryKey(cid!, an!, gn!, sn!)),
         queryFn: async () => new SubmissionController(cid!, an!, gn!).getByNumber(sn!),
         enabled: () => checkEnabled(cid, an, gn, sn),
     });
@@ -79,8 +79,8 @@ export function useCreateSubmissionMutation(
     return useMutation({
         mutationFn: async (data) => new SubmissionController(cid!, an!, gn!).createSubmission(data),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, true) });
-            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, false) });
+            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, gn!, true) });
+            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, gn!, false) });
         },
     });
 }
@@ -96,8 +96,8 @@ export function useDeleteGroupMutation(
     return useMutation({
         mutationFn: async (id) => new SubmissionController(cid!, an!, gn!).deleteSubmission(id),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, true) });
-            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, false) });
+            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, gn!, true) });
+            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, gn!, false) });
         },
     });
 }
