@@ -56,7 +56,7 @@ export class TeacherController extends BaseController {
     ): Promise<JoinRequestResponse> {
         return this.put<JoinRequestResponse>(
             `/${teacherUsername}/joinRequests/${classId}/${studentUsername}`,
-            accepted,
+            {accepted},
         );
     }
 
