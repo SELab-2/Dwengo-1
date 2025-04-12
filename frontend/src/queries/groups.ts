@@ -7,8 +7,8 @@ import { computed, toValue, type MaybeRefOrGetter } from "vue";
 
 const groupController = new GroupController();
 
-function groupsQueryKey(classid: string, assignmentNumber: number) {
-    return [ "groups", classid, assignmentNumber ];
+function groupsQueryKey(classid: string, assignmentNumber: number, full: boolean) {
+    return [ "groups", classid, assignmentNumber, full ];
 }
 function groupQueryKey(classid: string, assignmentNumber: number, groupNumber: number) {
     return [ "group", classid, assignmentNumber, groupNumber ];
@@ -31,18 +31,19 @@ function toValues(
     classid: MaybeRefOrGetter<string | undefined>, 
     assignmentNumber: MaybeRefOrGetter<number | undefined>, 
     groupNumber: MaybeRefOrGetter<number | undefined>,
+    full: MaybeRefOrGetter<boolean>,
 ) {
-    return { cid: toValue(classid), an: toValue(assignmentNumber), gn: toValue(groupNumber) };
+    return { cid: toValue(classid), an: toValue(assignmentNumber), gn: toValue(groupNumber), f: toValue(full) };
 }
 
 export function useGroupsQuery(
     classid: MaybeRefOrGetter<string | undefined>, 
     assignmentNumber: MaybeRefOrGetter<number | undefined>, 
 ): UseQueryReturnType<GroupsResponse, Error> {
-    const { cid, an, gn } = toValues(classid, assignmentNumber, 1);
+    const { cid, an, f } = toValues(classid, assignmentNumber, 1, true);
 
     return useQuery({
-        queryKey: computed(() => (groupsQueryKey(cid!, an!))),
+        queryKey: computed(() => (groupsQueryKey(cid!, an!, f))),
         queryFn: async () => groupController.getAll(cid!, an!),
         enabled: () => checkEnabled(cid, an, 1),
     });
@@ -53,7 +54,7 @@ export function useGroupQuery(
     assignmentNumber: number, 
     groupNumber: MaybeRefOrGetter<number | undefined>,
 ): UseQueryReturnType<GroupResponse, Error> {
-    const { cid, an, gn } = toValues(classid, assignmentNumber, groupNumber);
+    const { cid, an, gn } = toValues(classid, assignmentNumber, groupNumber, true);
 
     return useQuery({
         queryKey: computed(() => groupQueryKey(cid!, an!, gn!)),
@@ -68,11 +69,11 @@ export function useGroupSubmissionsQuery(
     groupNumber: MaybeRefOrGetter<number | undefined>,
     full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<SubmissionsResponse, Error> {
-    const { cid, an, gn } = toValues(classid, assignmentNumber, groupNumber);
+    const { cid, an, gn, f } = toValues(classid, assignmentNumber, groupNumber, full);
 
     return useQuery({
-        queryKey: computed(() => groupSubmissionsQueryKey(cid!, an!, gn!, toValue(full))),
-        queryFn: async () => groupController.getSubmissions(cid!, an!, gn!, toValue(full)),
+        queryKey: computed(() => groupSubmissionsQueryKey(cid!, an!, gn!, f)),
+        queryFn: async () => groupController.getSubmissions(cid!, an!, gn!, f),
         enabled: () => checkEnabled(cid, an, gn),
     });
 }
@@ -83,11 +84,11 @@ export function useGroupQuestionsQuery(
     groupNumber: MaybeRefOrGetter<number | undefined>,
     full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<QuestionsResponse, Error> {
-    const { cid, an, gn } = toValues(classid, assignmentNumber, groupNumber);
+    const { cid, an, gn, f } = toValues(classid, assignmentNumber, groupNumber, full);
 
     return useQuery({
-        queryKey: computed(() => groupQuestionsQueryKey(cid!, an!, gn!, toValue(full))),
-        queryFn: async () => groupController.getSubmissions(cid!, an!, gn!, toValue(full)),
+        queryKey: computed(() => groupQuestionsQueryKey(cid!, an!, gn!, f)),
+        queryFn: async () => groupController.getSubmissions(cid!, an!, gn!, f),
         enabled: () => checkEnabled(cid, an, gn),
     });
 }
