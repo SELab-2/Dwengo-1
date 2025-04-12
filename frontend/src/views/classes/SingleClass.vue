@@ -5,9 +5,8 @@
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { useRoute } from "vue-router";
     import { ClassController, type ClassResponse } from "@/controllers/classes";
-    import type { JoinRequestResponse, JoinRequestsResponse, StudentsResponse } from "@/controllers/students";
+    import type { JoinRequestsResponse, StudentsResponse } from "@/controllers/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
-    import { useStudentJoinRequestQuery } from "@/queries/students";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import { useTeacherJoinRequestsQuery, useUpdateJoinRequestMutation } from "@/queries/teachers";
     import type { ClassJoinRequestDTO } from "@dwengo-1/common/interfaces/class-join-request";
@@ -67,7 +66,8 @@
         //TODO when query; reload table so student not longer in table
     }
 
-    function handleJoinRequest(c: ClassJoinRequestDTO, accepted: boolean) {
+    // TODO: query + relaoding
+    function handleJoinRequest(c: ClassJoinRequestDTO, accepted: boolean) : void {
         mutate(
             {
                 teacherUsername: username.value!,
@@ -80,7 +80,7 @@
                     showSnackbar(t("sent"), "success");
                 },
                 onError: (e) => {
-                    // showSnackbar(t("failed") + ": " + e.message, "error");
+                    // ShowSnackbar(t("failed") + ": " + e.message, "error");
                     throw e;
                 },
             },

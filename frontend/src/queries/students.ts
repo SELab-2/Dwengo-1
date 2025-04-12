@@ -20,7 +20,7 @@ import type { GroupsResponse } from "@/controllers/groups.ts";
 import type { SubmissionsResponse } from "@/controllers/submissions.ts";
 import type { QuestionsResponse } from "@/controllers/questions.ts";
 import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
-import {teacherClassJoinRequests} from "@/queries/teachers.ts";
+import { teacherClassJoinRequests } from "@/queries/teachers.ts";
 
 const studentController = new StudentController();
 
