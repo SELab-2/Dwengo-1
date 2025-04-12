@@ -5,7 +5,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "prebuild": "npm run clean",
+        "prebuild": "npm run clean && npm run swagger --workspace=docs",
         "build": "tsc --build tsconfig.build.json",
         "clean": "tsc --build tsconfig.build.json --clean",
         "watch": "tsc --build tsconfig.build.json --watch",
