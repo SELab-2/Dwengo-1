@@ -4,6 +4,7 @@ import {
     getClassRepository,
     getGroupRepository,
     getQuestionRepository,
+    getStudentRepository,
     getSubmissionRepository,
 } from '../data/repositories.js';
 import { Assignment } from '../entities/assignments/assignment.entity.js';
@@ -18,6 +19,8 @@ import { assign, EntityDTO } from '@mikro-orm/core';
 import { putObject } from './service-helper.js';
 import { getLogger } from '../logging/initalize.js';
 import { languageMap } from '@dwengo-1/common/util/language';
+import { createGroup } from './groups.js';
+import { GroupDTO } from 'dwengo-1-common/interfaces/group';
 
 export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
     const classRepository = getClassRepository();
@@ -54,24 +57,30 @@ export async function createAssignment(classid: string, assignmentData: Assignme
     const cls = await fetchClass(classid);
 
     const assignmentRepository = getAssignmentRepository();
-    const assignment = assignmentRepository.create({
-        within: cls,
-        title: assignmentData.title,
-        description: assignmentData.description,
-        learningPathHruid: assignmentData.learningPath,
-        learningPathLanguage: languageMap[assignmentData.language],
-        groups: [],
-    })
-    // const assignment = mapToAssignment(assignmentData, cls);
-    Object.entries(assignmentData).forEach(getLogger().info);
+    const assignment = mapToAssignment(assignmentData, cls);
+    await assignmentRepository.save(assignment);
 
-    try {
-        await assignmentRepository.save(assignment, { preventOverwrite: true });
-    } catch(e) {
-        getLogger().error(e);
+    /*
+    if (assignmentData.groups) {
+        const groupRepository = getGroupRepository();
+        const studentRepository = getStudentRepository();
+
+        (assignmentData.groups as string[][]).forEach(async (memberUsernames) => {
+            const members = (await Promise.all(memberUsernames.map(async (id) => studentRepository.findByUsername(id)))).filter(
+                (student) => student !== null
+            );
+
+            const newGroup = groupRepository.create({
+                assignment: assignment,
+                members: members,
+            });
+            await groupRepository.save(newGroup);
+            console.log('NEW GROUP');
+            console.log(newGroup);
+        });
     }
+    */
 
-    getLogger().info(`Saved assignment ${assignment.id}`);
     return mapToAssignmentDTO(assignment);
 }
 

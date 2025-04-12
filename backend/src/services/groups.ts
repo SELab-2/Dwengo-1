@@ -66,14 +66,21 @@ export async function createGroup(groupData: GroupDTO, classid: string, assignme
         (student) => student !== null
     );
 
+    console.log(members);
+
     const assignment = await fetchAssignment(classid, assignmentNumber);
+
+    console.log(assignment);
 
     const groupRepository = getGroupRepository();
     const newGroup = groupRepository.create({
         assignment: assignment,
         members: members,
     });
+    console.log(newGroup.assignment);
     await groupRepository.save(newGroup);
+
+    console.log(newGroup.assignment);
 
     return mapToGroupDTO(newGroup);
 }

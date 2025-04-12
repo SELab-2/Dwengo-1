@@ -21,6 +21,8 @@ export async function getAllAssignmentsHandler(req: Request, res: Response): Pro
 
     const assignments = await getAllAssignments(classId, full);
 
+    console.log(JSON.stringify(assignments));
+
     res.json({ assignments });
 }
 
@@ -34,11 +36,7 @@ export async function createAssignmentHandler(req: Request, res: Response): Prom
     requireFields({ description, language, learningPath, title });
 
     const assignmentData = req.body as AssignmentDTO;
-    Object.entries(assignmentData).forEach(getLogger().info);
     const assignment = await createAssignment(classid, assignmentData);
-
-    // should probably use Promise.all
-    //assignmentData.groups.forEach(group => await createGroup({}, classid, assignment.id));
 
     res.json({ assignment });
 }
