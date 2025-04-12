@@ -22,6 +22,24 @@ COPY docs ./docs
 
 RUN npm run build
 
+FROM node:22 AS docs-stage
+
+WORKDIR /app/dwengo
+
+# Install dependencies
+
+COPY package*.json ./
+COPY docs/package.json ./docs/
+
+RUN npm install --silent
+
+# Build the docs
+
+COPY docs ./docs
+COPY backend ./backend
+
+RUN npm run swagger -w docs
+
 FROM node:22 AS production-stage
 
 WORKDIR /app/dwengo
@@ -34,6 +52,7 @@ COPY ./backend/i18n ./i18n
 
 COPY --from=build-stage /app/dwengo/common/dist ./common/dist
 COPY --from=build-stage /app/dwengo/backend/dist ./backend/dist
+COPY --from=docs-stage /app/dwengo/docs/api/swagger.json ./docs/api/swagger.json
 
 COPY package*.json ./
 COPY backend/package.json ./backend/
@@ -42,7 +61,6 @@ COPY common/package.json ./common/
 
 RUN npm install --silent --only=production
 
-COPY ./docs ./docs
 COPY ./backend/i18n ./backend/i18n
 
 EXPOSE 3000
