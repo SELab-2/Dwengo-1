@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { TeacherRepository } from '../../../src/data/users/teacher-repository';
 import { setupTestApp } from '../../setup-tests';
 import { getTeacherRepository } from '../../../src/data/repositories';
+import {TEST_TEACHER_LIST} from "../../test_assets/users/teachers.testdata";
 
 const username = 'testteacher';
 const firstName = 'John';
@@ -21,11 +22,12 @@ describe('TeacherRepository', () => {
     });
 
     it('should return teacher from the datbase', async () => {
-        const teacher = await teacherRepository.findByUsername('FooFighters');
+        const originalTeacher = TEST_TEACHER_LIST[0];
+        const teacher = await teacherRepository.findByUsername(originalTeacher.username);
 
         expect(teacher).toBeTruthy();
-        expect(teacher?.firstName).toBe('Dave');
-        expect(teacher?.lastName).toBe('Grohl');
+        expect(teacher?.firstName).toBe(originalTeacher.firstName);
+        expect(teacher?.lastName).toBe(originalTeacher.lastName);
     });
 
     it('should return the queried teacher after he was added', async () => {

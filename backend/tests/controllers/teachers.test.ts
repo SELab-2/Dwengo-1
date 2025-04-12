@@ -17,15 +17,18 @@ import { EntityAlreadyExistsException } from '../../src/exceptions/entity-alread
 import { getStudentRequestsHandler } from '../../src/controllers/students.js';
 import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { getClassHandler } from '../../src/controllers/classes';
+import {TEST_TEACHER_LIST} from "../test_assets/users/teachers.testdata";
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
     let res: Partial<Response>;
+    let teacher: TeacherDTO;
 
     let jsonMock: Mock;
 
     beforeAll(async () => {
         await setupTestApp();
+        teacher = TEST_TEACHER_LIST[0];
     });
 
     beforeEach(() => {
@@ -36,11 +39,14 @@ describe('Teacher controllers', () => {
     });
 
     it('Get teacher', async () => {
-        req = { params: { username: 'FooFighters' } };
+        req = { params: { username: teacher.username } };
 
         await getTeacherHandler(req as Request, res as Response);
 
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ teacher: expect.anything() }));
+
+        const result = jsonMock.mock.lastCall?.[0];
+        expect(result.teacher).toEqual(teacher);
     });
 
     it('Teacher not found', async () => {
@@ -80,9 +86,9 @@ describe('Teacher controllers', () => {
     it('Create duplicate student', async () => {
         req = {
             body: {
-                username: 'FooFighters',
-                firstName: 'Dave',
-                lastName: 'Grohl',
+                username: teacher.username,
+                firstName: 'dupe',
+                lastName: 'dupe',
             },
         };
 
@@ -104,8 +110,7 @@ describe('Teacher controllers', () => {
 
         const result = jsonMock.mock.lastCall?.[0];
 
-        const teacherUsernames = result.teachers.map((s: TeacherDTO) => s.username);
-        expect(teacherUsernames).toContain('testleerkracht1');
+        expect(result.teachers).toContainEqual(teacher);
 
         expect(result.teachers).toHaveLength(5);
     });
