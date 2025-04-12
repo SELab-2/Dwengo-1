@@ -44,6 +44,7 @@ export function makeTestClasses(em: EntityManager, students: Student[], teachers
     const studentsClass04: Student[] = students.slice(0, 2);
     const teacherClass04: Teacher[] = teachers.slice(2, 3);
 
+    // gets deleted
     class04 = em.create(Class, {
         classId: '33d03536-83b8-4880-9982-9bbf2f908ddf',
         displayName: 'class04',
