@@ -1,4 +1,4 @@
-import { EntityDTO } from '@mikro-orm/core';
+import { Collection, EntityDTO } from '@mikro-orm/core';
 import { getGroupRepository, getStudentRepository, getSubmissionRepository } from '../data/repositories.js';
 import { Group } from '../entities/assignments/group.entity.js';
 import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
@@ -8,6 +8,9 @@ import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/subm
 import { fetchAssignment } from './assignments.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { putObject } from './service-helper.js';
+import { Student } from '../entities/users/student.entity.js';
+import { GroupRepository } from '../data/assignments/group-repository.js';
+import { assert } from 'console';
 
 export async function fetchGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<Group> {
     const assignment = await fetchAssignment(classId, assignmentNumber);
@@ -24,7 +27,7 @@ export async function fetchGroup(classId: string, assignmentNumber: number, grou
 
 export async function getGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<GroupDTO> {
     const group = await fetchGroup(classId, assignmentNumber, groupNumber);
-    return mapToGroupDTO(group);
+    return mapToGroupDTO(group, group.assignment.within);
 }
 
 export async function putGroup(
@@ -37,7 +40,7 @@ export async function putGroup(
 
     await putObject<Group>(group, groupData, getGroupRepository());
 
-    return mapToGroupDTO(group);
+    return mapToGroupDTO(group, group.assignment.within);
 }
 
 export async function deleteGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<GroupDTO> {
@@ -47,7 +50,7 @@ export async function deleteGroup(classId: string, assignmentNumber: number, gro
     const groupRepository = getGroupRepository();
     await groupRepository.deleteByAssignmentAndGroupNumber(assignment, groupNumber);
 
-    return mapToGroupDTO(group);
+    return mapToGroupDTO(group, assignment.within);
 }
 
 export async function getExistingGroupFromGroupDTO(groupData: GroupDTO): Promise<Group> {
@@ -62,27 +65,31 @@ export async function createGroup(groupData: GroupDTO, classid: string, assignme
     const studentRepository = getStudentRepository();
 
     const memberUsernames = (groupData.members as string[]) || [];
-    const members = (await Promise.all([...memberUsernames].map(async (id) => studentRepository.findByUsername(id)))).filter(
-        (student) => student !== null
-    );
-
-    console.log(members);
+    const members = (
+        await Promise.all(
+            memberUsernames.map(async (id) => studentRepository.findByUsername(id))
+        )
+    ).filter((student): student is Student => student !== null);
 
     const assignment = await fetchAssignment(classid, assignmentNumber);
-
-    console.log(assignment);
-
+    
     const groupRepository = getGroupRepository();
     const newGroup = groupRepository.create({
         assignment: assignment,
         members: members,
     });
-    console.log(newGroup.assignment);
-    await groupRepository.save(newGroup);
 
-    console.log(newGroup.assignment);
+    assert(newGroup.groupNumber !== undefined, "NO GROUPNUMBER WAS ASSIGNED");
 
-    return mapToGroupDTO(newGroup);
+    console.log(newGroup);
+
+    try {
+        await groupRepository.save(newGroup);
+    } catch(e) {
+        console.log(e);
+    }
+
+    return mapToGroupDTO(newGroup, newGroup.assignment.within);
 }
 
 export async function getAllGroups(classId: string, assignmentNumber: number, full: boolean): Promise<GroupDTO[]> {
@@ -92,10 +99,10 @@ export async function getAllGroups(classId: string, assignmentNumber: number, fu
     const groups = await groupRepository.findAllGroupsForAssignment(assignment);
 
     if (full) {
-        return groups.map(mapToGroupDTO);
+        return groups.map(group => mapToGroupDTO(group, assignment.within));
     }
 
-    return groups.map(mapToGroupDTOId);
+    return groups.map(group => mapToGroupDTOId(group, assignment.within));
 }
 
 export async function getGroupSubmissions(

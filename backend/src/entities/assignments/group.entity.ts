@@ -19,5 +19,5 @@ export class Group {
     @ManyToMany({
         entity: () => Student,
     })
-    members!: Collection<Student>;
+    members!: Student[];
 }

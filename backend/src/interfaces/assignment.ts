@@ -16,7 +16,7 @@ export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTO {
         description: assignment.description,
         learningPath: assignment.learningPathHruid,
         language: assignment.learningPathLanguage,
-        groups: assignment.groups.map(mapToGroupDTOId),
+        groups: assignment.groups.map(group => mapToGroupDTOId(group, assignment.within)),
     };
 }
 
@@ -28,7 +28,7 @@ export function mapToAssignmentDTO(assignment: Assignment): AssignmentDTO {
         description: assignment.description,
         learningPath: assignment.learningPathHruid,
         language: assignment.learningPathLanguage,
-        groups: assignment.groups.map(mapToGroupDTO),
+        groups: assignment.groups.map(group => mapToGroupDTO(group, assignment.within)),
     };
 }
 
