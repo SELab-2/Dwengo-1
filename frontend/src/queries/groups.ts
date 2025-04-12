@@ -2,7 +2,8 @@ import type { ClassesResponse } from "@/controllers/classes";
 import { GroupController, type GroupResponse, type GroupsResponse } from "@/controllers/groups";
 import type { QuestionsResponse } from "@/controllers/questions";
 import type { SubmissionsResponse } from "@/controllers/submissions";
-import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
+import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
+import { useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
 
 const groupController = new GroupController();
@@ -50,8 +51,8 @@ export function useGroupsQuery(
 }
 
 export function useGroupQuery(
-    classid: string, 
-    assignmentNumber: number, 
+    classid: MaybeRefOrGetter<string | undefined>, 
+    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
     groupNumber: MaybeRefOrGetter<number | undefined>,
 ): UseQueryReturnType<GroupResponse, Error> {
     const { cid, an, gn } = toValues(classid, assignmentNumber, groupNumber, true);
@@ -63,9 +64,69 @@ export function useGroupQuery(
     });
 }
 
+// TODO: find way to check if cid and an are not undefined.
+// depends on how this function is used.
+export function useCreateClassMutation(
+    classid: MaybeRefOrGetter<string | undefined>, 
+    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+): UseMutationReturnType<GroupResponse, Error, GroupDTO, unknown> {
+    const queryClient = useQueryClient();
+    const { cid, an } = toValues(classid, assignmentNumber, 1, true);
+
+    return useMutation({
+        mutationFn: async (data) => groupController.createGroup(cid!, an!, data),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, true) });
+            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, false) });
+        },
+    });
+}
+
+export function useDeleteClassMutation(
+    classid: MaybeRefOrGetter<string | undefined>, 
+    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+): UseMutationReturnType<GroupResponse, Error, number, unknown> {
+    const queryClient = useQueryClient();
+    const { cid, an, gn } = toValues(classid, assignmentNumber, 1, true);
+
+    return useMutation({
+        mutationFn: async (id) => groupController.deleteGroup(cid!, an!, id),
+        onSuccess: async (_) => {
+            await queryClient.invalidateQueries({ queryKey: groupQueryKey(cid!, an!, gn!) });
+
+            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, true) });
+            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, false) });
+
+            await queryClient.invalidateQueries({ queryKey: groupSubmissionsQueryKey(cid!, an!, gn!, true) });
+            await queryClient.invalidateQueries({ queryKey: groupSubmissionsQueryKey(cid!, an!, gn!, false) });
+
+            await queryClient.invalidateQueries({ queryKey: groupQuestionsQueryKey(cid!, an!, gn!, true) });
+            await queryClient.invalidateQueries({ queryKey: groupQuestionsQueryKey(cid!, an!, gn!, false) });
+        },
+    });
+}
+
+export function useUpdateClassMutation(
+    classid: MaybeRefOrGetter<string | undefined>, 
+    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+): UseMutationReturnType<GroupResponse, Error, GroupDTO, unknown> {
+    const queryClient = useQueryClient();
+    const { cid, an, gn } = toValues(classid, assignmentNumber, 1, true);
+
+    return useMutation({
+        mutationFn: async (data) => groupController.updateGroup(cid!, an!, gn!, data),
+        onSuccess: async (data) => {
+            await queryClient.invalidateQueries({ queryKey: groupQueryKey(cid!, an!, gn!) });
+
+            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, true) });
+            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, false) });
+        },
+    });
+}
+
 export function useGroupSubmissionsQuery(
-    classid: string, 
-    assignmentNumber: number, 
+    classid: MaybeRefOrGetter<string | undefined>, 
+    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
     groupNumber: MaybeRefOrGetter<number | undefined>,
     full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<SubmissionsResponse, Error> {
