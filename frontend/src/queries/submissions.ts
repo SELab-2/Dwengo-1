@@ -66,6 +66,8 @@ export function useSubmissionQuery(
     });
 }
 
+// TODO: find way to check if cid and an are not undefined.
+// depends on how this function is used.
 export function useCreateSubmissionMutation(
     classid: MaybeRefOrGetter<string | undefined>, 
     assignmentNumber: MaybeRefOrGetter<number | undefined>, 
