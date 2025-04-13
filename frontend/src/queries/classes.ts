@@ -1,7 +1,14 @@
 import { ClassController, type ClassesResponse, type ClassResponse } from "@/controllers/classes";
 import type { StudentsResponse } from "@/controllers/students";
 import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
-import { QueryClient, useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
+import {
+    QueryClient,
+    useMutation,
+    useQuery,
+    useQueryClient,
+    type UseMutationReturnType,
+    type UseQueryReturnType,
+} from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
 import { invalidateAllAssignmentKeys } from "./assignments";
 import { invalidateAllGroupKeys } from "./groups";
@@ -30,33 +37,25 @@ function classAssignmentsKey(classid: string, full: boolean) {
 }
 
 export async function invalidateAllClassKeys(queryClient: QueryClient, classid?: string) {
-    const keys = [
-        "class",
-        "class-students",
-        "class-teachers",
-        "class-teacher-invitations",
-        "class-assignments",
-    ];
+    const keys = ["class", "class-students", "class-teachers", "class-teacher-invitations", "class-assignments"];
 
-    for (let key of keys) {
-        const queryKey = [key, classid].filter(arg => arg !== undefined);
+    for (const key of keys) {
+        const queryKey = [key, classid].filter((arg) => arg !== undefined);
         await queryClient.invalidateQueries({ queryKey: queryKey });
     }
 
-    await queryClient.invalidateQueries({ queryKey: [ "classes" ] });
+    await queryClient.invalidateQueries({ queryKey: ["classes"] });
 }
 
 /* Queries */
 export function useClassesQuery(full: MaybeRefOrGetter<boolean> = true): UseQueryReturnType<ClassesResponse, Error> {
     return useQuery({
-        queryKey: computed(() => (classesQueryKey(toValue(full)))),
+        queryKey: computed(() => classesQueryKey(toValue(full))),
         queryFn: async () => classController.getAll(toValue(full)),
     });
 }
 
-export function useClassQuery(
-    id: MaybeRefOrGetter<string | undefined>,
-): UseQueryReturnType<ClassResponse, Error> {
+export function useClassQuery(id: MaybeRefOrGetter<string | undefined>): UseQueryReturnType<ClassResponse, Error> {
     return useQuery({
         queryKey: computed(() => classQueryKey(toValue(id)!)),
         queryFn: async () => classController.getById(toValue(id)!),
@@ -70,7 +69,7 @@ export function useCreateClassMutation(): UseMutationReturnType<ClassResponse, E
     return useMutation({
         mutationFn: async (data) => classController.createClass(data),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: [ "classes" ] });
+            await queryClient.invalidateQueries({ queryKey: ["classes"] });
         },
     });
 }
@@ -89,7 +88,12 @@ export function useDeleteClassMutation(): UseMutationReturnType<ClassResponse, E
     });
 }
 
-export function useUpdateClassMutation(): UseMutationReturnType<ClassResponse, Error, {cid: string, data: Partial<ClassDTO>}, unknown> {
+export function useUpdateClassMutation(): UseMutationReturnType<
+    ClassResponse,
+    Error,
+    { cid: string; data: Partial<ClassDTO> },
+    unknown
+> {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -105,16 +109,21 @@ export function useUpdateClassMutation(): UseMutationReturnType<ClassResponse, E
 
 export function useClassStudentsQuery(
     id: MaybeRefOrGetter<string | undefined>,
-    full: MaybeRefOrGetter<boolean> = true
+    full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<StudentsResponse, Error> {
     return useQuery({
         queryKey: computed(() => classStudentsKey(toValue(id)!, toValue(full))),
-        queryFn: async () => classController.getStudents(toValue(id)!, toValue(full)!),
+        queryFn: async () => classController.getStudents(toValue(id)!, toValue(full)),
         enabled: () => Boolean(toValue(id)),
-    })
+    });
 }
 
-export function useClassAddStudentMutation(): UseMutationReturnType<ClassResponse, Error, {id: string, username: string}, unknown> {
+export function useClassAddStudentMutation(): UseMutationReturnType<
+    ClassResponse,
+    Error,
+    { id: string; username: string },
+    unknown
+> {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -127,7 +136,12 @@ export function useClassAddStudentMutation(): UseMutationReturnType<ClassRespons
     });
 }
 
-export function useClassDeleteStudentMutation(): UseMutationReturnType<ClassResponse, Error, {id: string, username: string}, unknown> {
+export function useClassDeleteStudentMutation(): UseMutationReturnType<
+    ClassResponse,
+    Error,
+    { id: string; username: string },
+    unknown
+> {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -142,16 +156,21 @@ export function useClassDeleteStudentMutation(): UseMutationReturnType<ClassResp
 
 export function useClassTeachersQuery(
     id: MaybeRefOrGetter<string | undefined>,
-    full: MaybeRefOrGetter<boolean> = true
+    full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<StudentsResponse, Error> {
     return useQuery({
         queryKey: computed(() => classTeachersKey(toValue(id)!, toValue(full))),
-        queryFn: async () => classController.getTeachers(toValue(id)!, toValue(full)!),
+        queryFn: async () => classController.getTeachers(toValue(id)!, toValue(full)),
         enabled: () => Boolean(toValue(id)),
     });
 }
 
-export function useClassAddTeacherMutation(): UseMutationReturnType<ClassResponse, Error, {id: string, username: string}, unknown> {
+export function useClassAddTeacherMutation(): UseMutationReturnType<
+    ClassResponse,
+    Error,
+    { id: string; username: string },
+    unknown
+> {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -164,7 +183,12 @@ export function useClassAddTeacherMutation(): UseMutationReturnType<ClassRespons
     });
 }
 
-export function useClassDeleteTeacherMutation(): UseMutationReturnType<ClassResponse, Error, {id: string, username: string}, unknown> {
+export function useClassDeleteTeacherMutation(): UseMutationReturnType<
+    ClassResponse,
+    Error,
+    { id: string; username: string },
+    unknown
+> {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -179,22 +203,22 @@ export function useClassDeleteTeacherMutation(): UseMutationReturnType<ClassResp
 
 export function useClassTeacherInvitationsQuery(
     id: MaybeRefOrGetter<string | undefined>,
-    full: MaybeRefOrGetter<boolean> = true
+    full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<StudentsResponse, Error> {
     return useQuery({
         queryKey: computed(() => classTeacherInvitationsKey(toValue(id)!, toValue(full))),
-        queryFn: async () => classController.getTeacherInvitations(toValue(id)!, toValue(full)!),
+        queryFn: async () => classController.getTeacherInvitations(toValue(id)!, toValue(full)),
         enabled: () => Boolean(toValue(id)),
     });
 }
 
 export function useClassAssignmentsQuery(
     id: MaybeRefOrGetter<string | undefined>,
-    full: MaybeRefOrGetter<boolean> = true
+    full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<StudentsResponse, Error> {
     return useQuery({
         queryKey: computed(() => classAssignmentsKey(toValue(id)!, toValue(full))),
-        queryFn: async () => classController.getAssignments(toValue(id)!, toValue(full)!),
+        queryFn: async () => classController.getAssignments(toValue(id)!, toValue(full)),
         enabled: () => Boolean(toValue(id)),
     });
 }
