@@ -27,6 +27,8 @@ test('Teacher can sign in', async ({ page }) => {
     await expect(page.getByText('teacher')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Sign In' })).toBeVisible();
 
+    await expect(page).toHaveURL(/\/realms\/teacher\//);
+
     await page.getByRole('textbox', { name: 'Username or email' }).fill('testleerkracht1');
     await page.getByRole('textbox', { name: 'Password' }).fill('password');
     await page.getByRole('button', { name: 'Sign In' }).click();
@@ -43,6 +45,8 @@ test('Student can sign in', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'student' })).toBeVisible();
     await page.getByRole('button', { name: 'student' }).click();
 
+    await expect(page).toHaveURL(/\/realms\/student\//);
+
     await expect(page.getByText('student')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Sign In' })).toBeVisible();
 
@@ -52,4 +56,27 @@ test('Student can sign in', async ({ page }) => {
 
     await expect(page.getByRole('link', { name: 'Dwengo logo student' })).toBeVisible();
     await expect(page.getByRole('button').nth(1)).toBeVisible();
+});
+
+test('Cannot sign in with invalid credentials', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('link', { name: 'log in' }).click();
+    await page.getByRole('button', { name: 'teacher' }).click();
+    await page.getByRole('textbox', { name: 'Username or email' }).fill('doesnotexist');
+    await page.getByRole('textbox', { name: 'Password' }).fill('wrong');
+    await page.getByRole('button', { name: 'Sign In' }).click();
+    await expect(page.getByText('Invalid username or password.')).toBeVisible();
+
+    await page.goto('/');
+    await page.getByRole('link', { name: 'log in' }).click();
+    await page.getByRole('button', { name: 'student' }).click();
+    await page.getByRole('textbox', { name: 'Username or email' }).fill('doesnotexist');
+    await page.getByRole('textbox', { name: 'Password' }).fill('wrong');
+    await page.getByRole('button', { name: 'Sign In' }).click();
+    await expect(page.getByText('Invalid username or password.')).toBeVisible();
+});
+
+test('Cannot skip login', async ({ page }) => {
+    await page.goto('/user');
+    await expect(page.getByRole('link', { name: 'log in' })).toBeVisible();
 });
