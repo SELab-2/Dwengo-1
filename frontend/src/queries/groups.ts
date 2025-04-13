@@ -33,7 +33,7 @@ export async function invalidateAllGroupKeys(
         "group-questions",
     ];
 
-    for (let key of keys) {
+    for (const key of keys) {
         const queryKey = [key, classid, assignmentNumber, groupNumber].filter(arg => arg !== undefined);
         await queryClient.invalidateQueries({ queryKey: queryKey });
     }

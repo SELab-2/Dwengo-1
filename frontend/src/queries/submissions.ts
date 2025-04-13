@@ -21,7 +21,7 @@ export async function invalidateAllSubmissionKeys(
         "submission",
     ];
 
-    for (let key of keys) {
+    for (const key of keys) {
         const queryKey = [key, classid, assignmentNumber, groupNumber, submissionNumber].filter(arg => arg !== undefined);
         await queryClient.invalidateQueries({ queryKey: queryKey });
     }

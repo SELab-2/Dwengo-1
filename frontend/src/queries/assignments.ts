@@ -29,7 +29,7 @@ export async function invalidateAllAssignmentKeys(queryClient: QueryClient, clas
         "assignment-questions",
     ];
 
-    for (let key of keys) {
+    for (const key of keys) {
         const queryKey = [key, classid, assignmentNumber].filter(arg => arg !== undefined);
         await queryClient.invalidateQueries({ queryKey: queryKey });
     }

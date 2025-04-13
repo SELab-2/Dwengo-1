@@ -38,7 +38,7 @@ export async function invalidateAllClassKeys(queryClient: QueryClient, classid?:
         "class-assignments",
     ];
 
-    for (let key of keys) {
+    for (const key of keys) {
         const queryKey = [key, classid].filter(arg => arg !== undefined);
         await queryClient.invalidateQueries({ queryKey: queryKey });
     }
@@ -109,7 +109,7 @@ export function useClassStudentsQuery(
 ): UseQueryReturnType<StudentsResponse, Error> {
     return useQuery({
         queryKey: computed(() => classStudentsKey(toValue(id)!, toValue(full))),
-        queryFn: async () => classController.getStudents(toValue(id)!, toValue(full)!),
+        queryFn: async () => classController.getStudents(toValue(id)!, toValue(full)),
         enabled: () => Boolean(toValue(id)),
     })
 }
@@ -146,7 +146,7 @@ export function useClassTeachersQuery(
 ): UseQueryReturnType<StudentsResponse, Error> {
     return useQuery({
         queryKey: computed(() => classTeachersKey(toValue(id)!, toValue(full))),
-        queryFn: async () => classController.getTeachers(toValue(id)!, toValue(full)!),
+        queryFn: async () => classController.getTeachers(toValue(id)!, toValue(full)),
         enabled: () => Boolean(toValue(id)),
     });
 }
@@ -183,7 +183,7 @@ export function useClassTeacherInvitationsQuery(
 ): UseQueryReturnType<StudentsResponse, Error> {
     return useQuery({
         queryKey: computed(() => classTeacherInvitationsKey(toValue(id)!, toValue(full))),
-        queryFn: async () => classController.getTeacherInvitations(toValue(id)!, toValue(full)!),
+        queryFn: async () => classController.getTeacherInvitations(toValue(id)!, toValue(full)),
         enabled: () => Boolean(toValue(id)),
     });
 }
@@ -194,7 +194,7 @@ export function useClassAssignmentsQuery(
 ): UseQueryReturnType<StudentsResponse, Error> {
     return useQuery({
         queryKey: computed(() => classAssignmentsKey(toValue(id)!, toValue(full))),
-        queryFn: async () => classController.getAssignments(toValue(id)!, toValue(full)!),
+        queryFn: async () => classController.getAssignments(toValue(id)!, toValue(full)),
         enabled: () => Boolean(toValue(id)),
     });
 }
