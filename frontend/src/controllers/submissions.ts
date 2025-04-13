@@ -14,10 +14,6 @@ export class SubmissionController extends BaseController {
         super(`class/${classid}/assignments/${assignmentNumber}/groups/${groupNumber}/submissions`);
     }
 
-    protected getBasePath(classid: string, assignmentNumber: number, groupNumber: number) {
-        return `class/${classid}/assignments/${assignmentNumber}/groups/${groupNumber}/submissions`;
-    }
-
     async getAll(full = true): Promise<SubmissionsResponse> {
         return this.get<SubmissionsResponse>(`/`, { full });
     }
