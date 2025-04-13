@@ -24,7 +24,7 @@ export default defineConfig({
     /* Fail the build on CI if you accidentally left test.only in the source code. */
     forbidOnly: Boolean(process.env.CI),
     /* Retry on CI only */
-    retries: process.env.CI ? 2 : 0,
+    retries: process.env.CI ? 2 : 1,
     /* Opt out of parallel tests on CI. */
     workers: process.env.CI ? 1 : undefined,
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
@@ -97,14 +97,24 @@ export default defineConfig({
     // OutputDir: 'test-results/',
 
     /* Run your local dev server before starting the tests */
-    webServer: {
-        /**
-         * Use the dev server by default for faster feedback loop.
-         * Use the preview server on CI for more realistic testing.
-         * Playwright will re-use the local server if there is already a dev-server running.
-         */
-        command: process.env.CI ? "npm run preview" : "npm run dev",
-        port: process.env.CI ? 4173 : 5173,
-        reuseExistingServer: !process.env.CI,
-    },
+    webServer: [
+        {
+            command: process.env.CI ? "npm run preview" : "npm run dev",
+            port: process.env.CI ? 4173 : 5173,
+            reuseExistingServer: !process.env.CI,
+        },
+        {
+            command: "cd ../ && docker compose up",
+            reuseExistingServer: false,
+            gracefulShutdown: {
+                signal: "SIGTERM",
+                timeout: 5000,
+            }
+        },
+        {
+            command: process.env.CI ? "cd ../ && npm run dev -w backend" : "cd ../ && npm run start -w backend",
+            port: 3000,
+            reuseExistingServer: !process.env.CI,
+        }
+    ],
 });
