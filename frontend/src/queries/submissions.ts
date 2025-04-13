@@ -1,6 +1,6 @@
 import { SubmissionController, type SubmissionResponse, type SubmissionsResponse } from "@/controllers/submissions";
 import type { SubmissionDTO } from "@dwengo-1/common/interfaces/submission";
-import { useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
+import { QueryClient, useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
 
 function submissionsQueryKey(classid: string, assignmentNumber: number, groupNumber: number, full: boolean) {
@@ -8,6 +8,25 @@ function submissionsQueryKey(classid: string, assignmentNumber: number, groupNum
 }
 function submissionQueryKey(classid: string, assignmentNumber: number, groupNumber: number, submissionNumber: number) {
     return [ "submission", classid, assignmentNumber, groupNumber, submissionNumber ];
+}
+
+export async function invalidateAllSubmissionKeys(
+    queryClient: QueryClient, 
+    classid?: string, 
+    assignmentNumber?: number,
+    groupNumber?: number,
+    submissionNumber?: number,
+) {
+    const keys = [
+        "submission",
+    ];
+
+    for (let key of keys) {
+        const queryKey = [key, classid, assignmentNumber, groupNumber, submissionNumber].filter(arg => arg !== undefined);
+        await queryClient.invalidateQueries({ queryKey: queryKey });
+    }
+
+    await queryClient.invalidateQueries({ queryKey: [ "submissions", classid, assignmentNumber, groupNumber ].filter(arg => arg !== undefined) });
 }
 
 function checkEnabled(

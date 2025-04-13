@@ -3,6 +3,9 @@ import type { StudentsResponse } from "@/controllers/students";
 import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
 import { QueryClient, useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
+import { invalidateAllAssignmentKeys } from "./assignments";
+import { invalidateAllGroupKeys } from "./groups";
+import { invalidateAllSubmissionKeys } from "./submissions";
 
 const classController = new ClassController();
 
@@ -23,19 +26,24 @@ function classTeacherInvitationsKey(classid: string, full: boolean) {
     return ["class-teacher-invitations", classid, full];
 }
 function classAssignmentsKey(classid: string, full: boolean) {
-    return ["class-assignments", classid];
+    return ["class-assignments", classid, full];
 }
 
-/* Function to invalidate all caches with certain class id */
-async function invalidateAll(classid: string, queryClient: QueryClient): Promise<void> {
-    await queryClient.invalidateQueries({ queryKey: ["classes"] });
-    await queryClient.invalidateQueries({ queryKey: classQueryKey(classid) });
-    for (let v of [true, false]) {
-        await queryClient.invalidateQueries({ queryKey: classStudentsKey(classid, v) });
-        await queryClient.invalidateQueries({ queryKey: classTeachersKey(classid, v) });
-        await queryClient.invalidateQueries({ queryKey: classAssignmentsKey(classid, v) });
-        await queryClient.invalidateQueries({ queryKey: classTeacherInvitationsKey(classid, v) });
+export async function invalidateAllClassKeys(queryClient: QueryClient, classid?: string) {
+    const keys = [
+        "class",
+        "class-students",
+        "class-teachers",
+        "class-teacher-invitations",
+        "class-assignments",
+    ];
+
+    for (let key of keys) {
+        const queryKey = [key, classid].filter(arg => arg !== undefined);
+        await queryClient.invalidateQueries({ queryKey: queryKey });
     }
+
+    await queryClient.invalidateQueries({ queryKey: [ "classes" ] });
 }
 
 /* Queries */
@@ -74,7 +82,10 @@ export function useDeleteClassMutation(): UseMutationReturnType<ClassResponse, E
     return useMutation({
         mutationFn: async (id) => classController.deleteClass(id),
         onSuccess: async (data) => {
-            await invalidateAll(data.class.id, queryClient);
+            await invalidateAllClassKeys(queryClient, data.class.id);
+            await invalidateAllAssignmentKeys(queryClient, data.class.id);
+            await invalidateAllGroupKeys(queryClient, data.class.id);
+            await invalidateAllSubmissionKeys(queryClient, data.class.id);
         },
     });
 }
@@ -85,7 +96,10 @@ export function useUpdateClassMutation(): UseMutationReturnType<ClassResponse, E
     return useMutation({
         mutationFn: async (data) => classController.updateClass(data.id, data),
         onSuccess: async (data) => {
-            await invalidateAll(data.class.id, queryClient);
+            await invalidateAllClassKeys(queryClient, data.class.id);
+            await invalidateAllAssignmentKeys(queryClient, data.class.id);
+            await invalidateAllGroupKeys(queryClient, data.class.id);
+            await invalidateAllSubmissionKeys(queryClient, data.class.id);
         },
     });
 }

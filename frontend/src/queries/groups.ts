@@ -3,7 +3,7 @@ import { GroupController, type GroupResponse, type GroupsResponse } from "@/cont
 import type { QuestionsResponse } from "@/controllers/questions";
 import type { SubmissionsResponse } from "@/controllers/submissions";
 import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
-import { useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
+import { QueryClient, useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
 
 export function groupsQueryKey(classid: string, assignmentNumber: number, full: boolean) {
@@ -17,6 +17,26 @@ function groupSubmissionsQueryKey(classid: string, assignmentNumber: number, gro
 }
 function groupQuestionsQueryKey(classid: string, assignmentNumber: number, groupNumber: number, full: boolean) {
     return [ "group-questions", classid, assignmentNumber, groupNumber, full ];
+}
+
+export async function invalidateAllGroupKeys(
+    queryClient: QueryClient, 
+    classid?: string, 
+    assignmentNumber?: number,
+    groupNumber?: number,
+) {
+    const keys = [
+        "group",
+        "group-submissions",
+        "group-questions",
+    ];
+
+    for (let key of keys) {
+        const queryKey = [key, classid, assignmentNumber, groupNumber].filter(arg => arg !== undefined);
+        await queryClient.invalidateQueries({ queryKey: queryKey });
+    }
+
+    await queryClient.invalidateQueries({ queryKey: [ "groups", classid, assignmentNumber ].filter(arg => arg !== undefined) });
 }
 
 function checkEnabled(
