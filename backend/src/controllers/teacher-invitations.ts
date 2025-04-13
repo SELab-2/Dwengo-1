@@ -8,7 +8,7 @@ export async function getAllInvitationsHandler(req: Request, res: Response): Pro
     const by = req.query.by === 'true';
     requireFields({ username });
 
-    const invitations = getAllInvitations(username, by);
+    const invitations = await getAllInvitations(username, by);
 
     res.json({ invitations });
 }
@@ -28,11 +28,11 @@ export async function createInvitationHandler(req: Request, res: Response): Prom
 export async function deleteInvitationForHandler(req: Request, res: Response): Promise<void> {
     const sender = req.params.sender;
     const receiver = req.params.receiver;
-    const classId = req.params.class;
+    const classId = req.params.classId;
     const accepted = req.body.accepted !== 'false';
     requireFields({ sender, receiver, classId });
 
-    const invitation = deleteInvitationFor(sender, receiver, classId, accepted);
+    const invitation = await deleteInvitationFor(sender, receiver, classId, accepted);
 
     res.json({ invitation });
 }
