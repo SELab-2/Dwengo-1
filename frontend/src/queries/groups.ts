@@ -6,7 +6,7 @@ import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
 import { useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
 
-function groupsQueryKey(classid: string, assignmentNumber: number, full: boolean) {
+export function groupsQueryKey(classid: string, assignmentNumber: number, full: boolean) {
     return [ "groups", classid, assignmentNumber, full ];
 }
 function groupQueryKey(classid: string, assignmentNumber: number, groupNumber: number) {

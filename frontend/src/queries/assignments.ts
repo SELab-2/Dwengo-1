@@ -1,12 +1,22 @@
 import { AssignmentController, type AssignmentsResponse } from "@/controllers/assignments";
+import type { QuestionsResponse } from "@/controllers/questions";
+import type { SubmissionsResponse } from "@/controllers/submissions";
 import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
+import { groupsQueryKey } from "./groups";
+import type { GroupsResponse } from "@/controllers/groups";
 
 function assignmentsQueryKey(classid: string, full: boolean) {
     return [ "assignments", classid, full ];
 }
 function assignmentQueryKey(classid: string, assignmentNumber: number) {
     return [ "assignment", classid, assignmentNumber ];
+}
+function assignmentSubmissionsQueryKey(classid: string, assignmentNumber: number, full: boolean) {
+    return [ "assignment-submissions", classid, assignmentNumber, full ];
+}
+function assignmentQuestionsQueryKey(classid: string, assignmentNumber: number, full: boolean) {
+    return [ "assignment-questions", classid, assignmentNumber, full ];
 }
 
 function checkEnabled(
@@ -49,6 +59,51 @@ export function useAssignmentQuery(
     return useQuery({
         queryKey: computed(() => assignmentQueryKey(cid!, an!)),
         queryFn: async () => new AssignmentController(cid!).getByNumber(gn!),
+        enabled: () => checkEnabled(cid, an, gn),
+    });
+}
+
+export function useAssignmentSubmissionsQuery(
+    classid: MaybeRefOrGetter<string | undefined>, 
+    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+    groupNumber: MaybeRefOrGetter<number | undefined>,
+    full: MaybeRefOrGetter<boolean> = true,
+): UseQueryReturnType<SubmissionsResponse, Error> {
+    const { cid, an, gn, f } = toValues(classid, assignmentNumber, groupNumber, full);
+
+    return useQuery({
+        queryKey: computed(() => assignmentSubmissionsQueryKey(cid!, an!, f)),
+        queryFn: async () => new AssignmentController(cid!).getSubmissions(gn!, f),
+        enabled: () => checkEnabled(cid, an, gn),
+    });
+}
+
+export function useAssignmentQuestionsQuery(
+    classid: MaybeRefOrGetter<string | undefined>, 
+    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+    groupNumber: MaybeRefOrGetter<number | undefined>,
+    full: MaybeRefOrGetter<boolean> = true,
+): UseQueryReturnType<QuestionsResponse, Error> {
+    const { cid, an, gn, f } = toValues(classid, assignmentNumber, groupNumber, full);
+
+    return useQuery({
+        queryKey: computed(() => assignmentQuestionsQueryKey(cid!, an!, f)),
+        queryFn: async () => new AssignmentController(cid!).getQuestions(gn!, f),
+        enabled: () => checkEnabled(cid, an, gn),
+    });
+}
+
+export function useAssignmentGroupsQuery(
+    classid: MaybeRefOrGetter<string | undefined>, 
+    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+    groupNumber: MaybeRefOrGetter<number | undefined>,
+    full: MaybeRefOrGetter<boolean> = true,
+): UseQueryReturnType<GroupsResponse, Error> {
+    const { cid, an, gn, f } = toValues(classid, assignmentNumber, groupNumber, full);
+
+    return useQuery({
+        queryKey: computed(() => groupsQueryKey(cid!, an!, f)),
+        queryFn: async () => new AssignmentController(cid!).getQuestions(gn!, f),
         enabled: () => checkEnabled(cid, an, gn),
     });
 }
