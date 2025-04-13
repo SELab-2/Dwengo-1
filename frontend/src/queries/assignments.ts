@@ -1,10 +1,11 @@
-import { AssignmentController, type AssignmentsResponse } from "@/controllers/assignments";
+import { AssignmentController, type AssignmentResponse, type AssignmentsResponse } from "@/controllers/assignments";
 import type { QuestionsResponse } from "@/controllers/questions";
 import type { SubmissionsResponse } from "@/controllers/submissions";
-import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
+import { useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
 import { groupsQueryKey } from "./groups";
 import type { GroupsResponse } from "@/controllers/groups";
+import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
 
 function assignmentsQueryKey(classid: string, full: boolean) {
     return [ "assignments", classid, full ];
@@ -37,29 +38,89 @@ function toValues(
 
 export function useAssignmentsQuery(
     classid: MaybeRefOrGetter<string | undefined>, 
-    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
     full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<AssignmentsResponse, Error> {
-    const { cid, an, f } = toValues(classid, assignmentNumber, 1, full);
+    const { cid, f } = toValues(classid, 1, 1, full);
 
     return useQuery({
         queryKey: computed(() => (assignmentsQueryKey(cid!, f))),
         queryFn: async () => new AssignmentController(cid!).getAll(f),
-        enabled: () => checkEnabled(cid, an, 1),
+        enabled: () => checkEnabled(cid, 1, 1),
     });
 }
 
 export function useAssignmentQuery(
     classid: MaybeRefOrGetter<string | undefined>, 
     assignmentNumber: MaybeRefOrGetter<number | undefined>, 
-    groupNumber: MaybeRefOrGetter<number | undefined>,
 ): UseQueryReturnType<AssignmentsResponse, Error> {
-    const { cid, an, gn } = toValues(classid, assignmentNumber, groupNumber, true);
+    const { cid, an } = toValues(classid, assignmentNumber, 1, true);
 
     return useQuery({
         queryKey: computed(() => assignmentQueryKey(cid!, an!)),
-        queryFn: async () => new AssignmentController(cid!).getByNumber(gn!),
-        enabled: () => checkEnabled(cid, an, gn),
+        queryFn: async () => new AssignmentController(cid!).getByNumber(an!),
+        enabled: () => checkEnabled(cid, an, 1),
+    });
+}
+
+export function useCreateAssignmentMutation(
+    classid: MaybeRefOrGetter<string | undefined>, 
+): UseMutationReturnType<AssignmentResponse, Error, AssignmentDTO, unknown> {
+    const queryClient = useQueryClient();
+    const { cid } = toValues(classid, 1, 1, true);
+
+    return useMutation({
+        mutationFn: async (data) => new AssignmentController(cid!).createAssignment(data),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: assignmentsQueryKey(cid!, true) });
+            await queryClient.invalidateQueries({ queryKey: assignmentsQueryKey(cid!, false) });
+        },
+    });
+}
+
+export function useDeleteAssignmentMutation(
+    classid: MaybeRefOrGetter<string | undefined>, 
+    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+): UseMutationReturnType<AssignmentResponse, Error, number, unknown> {
+    const queryClient = useQueryClient();
+    const { cid, an } = toValues(classid, assignmentNumber, 1, true);
+
+    return useMutation({
+        mutationFn: async (id) => new AssignmentController(cid!).deleteAssignment(id),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: assignmentQueryKey(cid!, an!) });
+
+            await queryClient.invalidateQueries({ queryKey: assignmentsQueryKey(cid!, true) });
+            await queryClient.invalidateQueries({ queryKey: assignmentsQueryKey(cid!, false) });
+
+            await queryClient.invalidateQueries({ queryKey: assignmentSubmissionsQueryKey(cid!, an!, true) });
+            await queryClient.invalidateQueries({ queryKey: assignmentSubmissionsQueryKey(cid!, an!, false) });
+
+            await queryClient.invalidateQueries({ queryKey: assignmentQuestionsQueryKey(cid!, an!, false) });
+            await queryClient.invalidateQueries({ queryKey: assignmentQuestionsQueryKey(cid!, an!, true) });
+            
+            // should probably invalidate all groups related to assignment
+            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, false) });
+            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, true) });
+        },
+    });
+}
+
+export function useUpdateAssignmentMutation(
+    classid: MaybeRefOrGetter<string | undefined>, 
+    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+): UseMutationReturnType<AssignmentResponse, Error, Partial<AssignmentDTO>, unknown> {
+    const queryClient = useQueryClient();
+    const { cid, an } = toValues(classid, assignmentNumber, 1, true);
+
+    return useMutation({
+        mutationFn: async (data) => new AssignmentController(cid!).updateAssignment(an!, data),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, true) });
+            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, false) });
+
+            await queryClient.invalidateQueries({ queryKey: assignmentsQueryKey(cid!, true) });
+            await queryClient.invalidateQueries({ queryKey: assignmentsQueryKey(cid!, false) });
+        },
     });
 }
 
