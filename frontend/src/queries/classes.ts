@@ -70,8 +70,7 @@ export function useCreateClassMutation(): UseMutationReturnType<ClassResponse, E
     return useMutation({
         mutationFn: async (data) => classController.createClass(data),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: classesQueryKey(true) });
-            await queryClient.invalidateQueries({ queryKey: classesQueryKey(false) });
+            await queryClient.invalidateQueries({ queryKey: [ "classes" ] });
         },
     });
 }
@@ -90,11 +89,11 @@ export function useDeleteClassMutation(): UseMutationReturnType<ClassResponse, E
     });
 }
 
-export function useUpdateClassMutation(): UseMutationReturnType<ClassResponse, Error, ClassDTO, unknown> {
+export function useUpdateClassMutation(): UseMutationReturnType<ClassResponse, Error, {cid: string, data: Partial<ClassDTO>}, unknown> {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (data) => classController.updateClass(data.id, data),
+        mutationFn: async ({ cid, data }) => classController.updateClass(cid, data),
         onSuccess: async (data) => {
             await invalidateAllClassKeys(queryClient, data.class.id);
             await invalidateAllAssignmentKeys(queryClient, data.class.id);

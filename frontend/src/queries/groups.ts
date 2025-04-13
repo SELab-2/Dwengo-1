@@ -5,6 +5,8 @@ import type { SubmissionsResponse } from "@/controllers/submissions";
 import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
 import { QueryClient, useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
+import { invalidateAllAssignmentKeys } from "./assignments";
+import { invalidateAllSubmissionKeys } from "./submissions";
 
 export function groupsQueryKey(classid: string, assignmentNumber: number, full: boolean) {
     return [ "groups", classid, assignmentNumber, full ];
@@ -83,62 +85,48 @@ export function useGroupQuery(
     });
 }
 
-// TODO: find way to check if cid and an are not undefined.
-// depends on how this function is used.
-export function useCreateGroupMutation(
-    classid: MaybeRefOrGetter<string | undefined>, 
-    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
-): UseMutationReturnType<GroupResponse, Error, GroupDTO, unknown> {
+export function useCreateGroupMutation(): UseMutationReturnType<GroupResponse, Error, {cid: string, an: number, data: GroupDTO}, unknown> {
     const queryClient = useQueryClient();
-    const { cid, an } = toValues(classid, assignmentNumber, 1, true);
 
     return useMutation({
-        mutationFn: async (data) => new GroupController(cid!, an!).createGroup(data),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, true) });
-            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, false) });
+        mutationFn: async ({ cid, an, data }) => new GroupController(cid, an).createGroup(data),
+        onSuccess: async (response) => {
+            const cid = typeof(response.group.class) === 'string' ? response.group.class : response.group.class.id;
+            const an = typeof(response.group.assignment) === 'number' ? response.group.assignment : response.group.assignment.id;
+
+            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid, an, true) });
+            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid, an, false) });
         },
     });
 }
 
-export function useDeleteGroupMutation(
-    classid: MaybeRefOrGetter<string | undefined>, 
-    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
-): UseMutationReturnType<GroupResponse, Error, number, unknown> {
+export function useDeleteGroupMutation(): UseMutationReturnType<GroupResponse, Error, {cid: string, an: number, gn: number}, unknown> {
     const queryClient = useQueryClient();
-    const { cid, an, gn } = toValues(classid, assignmentNumber, 1, true);
 
     return useMutation({
-        mutationFn: async (id) => new GroupController(cid!, an!).deleteGroup(id),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: groupQueryKey(cid!, an!, gn!) });
+        mutationFn: async ({cid, an, gn}) => new GroupController(cid, an).deleteGroup(gn),
+        onSuccess: async (response) => {
+            const cid = typeof(response.group.class) === 'string' ? response.group.class : response.group.class.id;
+            const an = typeof(response.group.assignment) === 'number' ? response.group.assignment : response.group.assignment.id;
+            const gn = response.group.groupNumber;
 
-            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, true) });
-            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, false) });
-
-            await queryClient.invalidateQueries({ queryKey: groupSubmissionsQueryKey(cid!, an!, gn!, true) });
-            await queryClient.invalidateQueries({ queryKey: groupSubmissionsQueryKey(cid!, an!, gn!, false) });
-
-            await queryClient.invalidateQueries({ queryKey: groupQuestionsQueryKey(cid!, an!, gn!, true) });
-            await queryClient.invalidateQueries({ queryKey: groupQuestionsQueryKey(cid!, an!, gn!, false) });
+            await invalidateAllGroupKeys(queryClient, cid, an, gn);
+            await invalidateAllSubmissionKeys(queryClient, cid, an, gn);
         },
     });
 }
 
-export function useUpdateGroupMutation(
-    classid: MaybeRefOrGetter<string | undefined>, 
-    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
-): UseMutationReturnType<GroupResponse, Error, GroupDTO, unknown> {
+export function useUpdateGroupMutation(): UseMutationReturnType<GroupResponse, Error, {cid: string, an: number, gn: number, data: Partial<GroupDTO>}, unknown> {
     const queryClient = useQueryClient();
-    const { cid, an, gn } = toValues(classid, assignmentNumber, 1, true);
 
     return useMutation({
-        mutationFn: async (data) => new GroupController(cid!, an!).updateGroup(gn!, data),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: groupQueryKey(cid!, an!, gn!) });
+        mutationFn: async ({cid, an, gn, data}) => new GroupController(cid, an).updateGroup(gn, data),
+        onSuccess: async (response) => {
+            const cid = typeof(response.group.class) === 'string' ? response.group.class : response.group.class.id;
+            const an = typeof(response.group.assignment) === 'number' ? response.group.assignment : response.group.assignment.id;
+            const gn = response.group.groupNumber;
 
-            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, true) });
-            await queryClient.invalidateQueries({ queryKey: groupsQueryKey(cid!, an!, false) });
+            await invalidateAllGroupKeys(queryClient, cid, an, gn);
         },
     });
 }
