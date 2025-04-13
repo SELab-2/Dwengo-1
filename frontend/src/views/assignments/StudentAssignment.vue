@@ -8,6 +8,8 @@ import type {AssignmentResponse} from "@/controllers/assignments.ts";
 import type {GroupDTO} from "@dwengo-1/common/interfaces/group";
 import {asyncComputed} from "@vueuse/core";
 import {useStudentsByUsernamesQuery} from "@/queries/students.ts";
+import {AssignmentDTO} from "@dwengo-1/common/dist/interfaces/assignment.ts";
+import {StudentDTO} from "@dwengo-1/common/dist/interfaces/student.ts";
 
 const props = defineProps<{
     classId: string
@@ -35,9 +37,14 @@ const group = computed(() => {
     return props?.groups?.find(group =>
         group.members.some(m => m.username === username.value)
     );
+    /** For testing
+    return {assignment: 1,
+        groupNumber: 1,
+        members: ["testleerling1"]}
+        */
 });
 
-// Assuming group.value.members is a list of usernames
+// Assuming group.value.members is a list of usernames TODO: case when it's StudentDTO's
 const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as string[]);
 
 </script>
@@ -85,7 +92,6 @@ const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as
 
                 <v-card-text class="group-section">
                     <h3>{{ t("group") }}</h3>
-                    <pre>{{ props.groups }}</pre>
                     <div v-if="studentQueries">
                         <ul>
                             <li v-for="student in studentQueries" :key="student.data?.student.id">

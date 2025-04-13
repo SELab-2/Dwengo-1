@@ -18,17 +18,6 @@ const controller = new AssignmentController(props.classId);
 
 const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
 
-/***
- // Display group members
- const myGroup = computed(() => {
- if (!assignment.value || !assignment.value.groups) return null;
- console.log(assignment.value.groups)
- return assignment.value.groups.find(group =>
- group.members.some(m => m.username === myUsername)
- );
- });
- */
-
 const deleteAssignment = async () => {
     await controller.deleteAssignment(props.assignmentId.value);
 };
