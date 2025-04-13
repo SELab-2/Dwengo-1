@@ -115,6 +115,10 @@ export default defineConfig({
             command: process.env.CI ? "cd ../ && npm run dev -w backend" : "cd ../ && npm run start -w backend",
             port: 3000,
             reuseExistingServer: !process.env.CI,
+        },
+        {
+            command: "wait-on http://localhost:7080",
+            timeout: 120000,
         }
     ],
 });
