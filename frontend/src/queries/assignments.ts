@@ -1,7 +1,13 @@
 import { AssignmentController, type AssignmentResponse, type AssignmentsResponse } from "@/controllers/assignments";
 import type { QuestionsResponse } from "@/controllers/questions";
 import type { SubmissionsResponse } from "@/controllers/submissions";
-import { useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
+import {
+    useMutation,
+    useQuery,
+    useQueryClient,
+    type UseMutationReturnType,
+    type UseQueryReturnType,
+} from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
 import { groupsQueryKey, invalidateAllGroupKeys } from "./groups";
 import type { GroupsResponse } from "@/controllers/groups";
@@ -10,43 +16,43 @@ import type { QueryClient } from "@tanstack/react-query";
 import { invalidateAllSubmissionKeys } from "./submissions";
 
 function assignmentsQueryKey(classid: string, full: boolean) {
-    return [ "assignments", classid, full ];
+    return ["assignments", classid, full];
 }
 function assignmentQueryKey(classid: string, assignmentNumber: number) {
-    return [ "assignment", classid, assignmentNumber ];
+    return ["assignment", classid, assignmentNumber];
 }
 function assignmentSubmissionsQueryKey(classid: string, assignmentNumber: number, full: boolean) {
-    return [ "assignment-submissions", classid, assignmentNumber, full ];
+    return ["assignment-submissions", classid, assignmentNumber, full];
 }
 function assignmentQuestionsQueryKey(classid: string, assignmentNumber: number, full: boolean) {
-    return [ "assignment-questions", classid, assignmentNumber, full ];
+    return ["assignment-questions", classid, assignmentNumber, full];
 }
 
-export async function invalidateAllAssignmentKeys(queryClient: QueryClient, classid?: string, assignmentNumber?: number) {
-    const keys = [
-        "assignment",
-        "assignment-submissions",
-        "assignment-questions",
-    ];
+export async function invalidateAllAssignmentKeys(
+    queryClient: QueryClient,
+    classid?: string,
+    assignmentNumber?: number,
+) {
+    const keys = ["assignment", "assignment-submissions", "assignment-questions"];
 
     for (const key of keys) {
-        const queryKey = [key, classid, assignmentNumber].filter(arg => arg !== undefined);
+        const queryKey = [key, classid, assignmentNumber].filter((arg) => arg !== undefined);
         await queryClient.invalidateQueries({ queryKey: queryKey });
     }
 
-    await queryClient.invalidateQueries({ queryKey: [ "assignments", classid ].filter(arg => arg !== undefined) });
+    await queryClient.invalidateQueries({ queryKey: ["assignments", classid].filter((arg) => arg !== undefined) });
 }
 
 function checkEnabled(
-    classid: string | undefined, 
-    assignmentNumber: number | undefined, 
+    classid: string | undefined,
+    assignmentNumber: number | undefined,
     groupNumber: number | undefined,
 ): boolean {
-    return  Boolean(classid) && !isNaN(Number(groupNumber)) && !isNaN(Number(assignmentNumber));
+    return Boolean(classid) && !isNaN(Number(groupNumber)) && !isNaN(Number(assignmentNumber));
 }
 function toValues(
-    classid: MaybeRefOrGetter<string | undefined>, 
-    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+    classid: MaybeRefOrGetter<string | undefined>,
+    assignmentNumber: MaybeRefOrGetter<number | undefined>,
     groupNumber: MaybeRefOrGetter<number | undefined>,
     full: MaybeRefOrGetter<boolean>,
 ) {
@@ -54,21 +60,21 @@ function toValues(
 }
 
 export function useAssignmentsQuery(
-    classid: MaybeRefOrGetter<string | undefined>, 
+    classid: MaybeRefOrGetter<string | undefined>,
     full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<AssignmentsResponse, Error> {
     const { cid, f } = toValues(classid, 1, 1, full);
 
     return useQuery({
-        queryKey: computed(() => (assignmentsQueryKey(cid!, f))),
+        queryKey: computed(() => assignmentsQueryKey(cid!, f)),
         queryFn: async () => new AssignmentController(cid!).getAll(f),
         enabled: () => checkEnabled(cid, 1, 1),
     });
 }
 
 export function useAssignmentQuery(
-    classid: MaybeRefOrGetter<string | undefined>, 
-    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+    classid: MaybeRefOrGetter<string | undefined>,
+    assignmentNumber: MaybeRefOrGetter<number | undefined>,
 ): UseQueryReturnType<AssignmentsResponse, Error> {
     const { cid, an } = toValues(classid, assignmentNumber, 1, true);
 
@@ -79,18 +85,28 @@ export function useAssignmentQuery(
     });
 }
 
-export function useCreateAssignmentMutation(): UseMutationReturnType<AssignmentResponse, Error, {cid: string, data: AssignmentDTO}, unknown> {
+export function useCreateAssignmentMutation(): UseMutationReturnType<
+    AssignmentResponse,
+    Error,
+    { cid: string; data: AssignmentDTO },
+    unknown
+> {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async ({ cid, data }) => new AssignmentController(cid).createAssignment(data),
         onSuccess: async (_) => {
-            await queryClient.invalidateQueries({ queryKey: [ "assignments" ] });
+            await queryClient.invalidateQueries({ queryKey: ["assignments"] });
         },
     });
 }
 
-export function useDeleteAssignmentMutation(): UseMutationReturnType<AssignmentResponse, Error, {cid: string, an: number}, unknown> {
+export function useDeleteAssignmentMutation(): UseMutationReturnType<
+    AssignmentResponse,
+    Error,
+    { cid: string; an: number },
+    unknown
+> {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -106,7 +122,12 @@ export function useDeleteAssignmentMutation(): UseMutationReturnType<AssignmentR
     });
 }
 
-export function useUpdateAssignmentMutation(): UseMutationReturnType<AssignmentResponse, Error, {cid: string, an: number, data: Partial<AssignmentDTO>}, unknown> {
+export function useUpdateAssignmentMutation(): UseMutationReturnType<
+    AssignmentResponse,
+    Error,
+    { cid: string; an: number; data: Partial<AssignmentDTO> },
+    unknown
+> {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -116,14 +137,14 @@ export function useUpdateAssignmentMutation(): UseMutationReturnType<AssignmentR
             const an = response.assignment.id;
 
             await invalidateAllGroupKeys(queryClient, cid, an);
-            await queryClient.invalidateQueries({ queryKey: [ "assignments" ] });
+            await queryClient.invalidateQueries({ queryKey: ["assignments"] });
         },
     });
 }
 
 export function useAssignmentSubmissionsQuery(
-    classid: MaybeRefOrGetter<string | undefined>, 
-    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+    classid: MaybeRefOrGetter<string | undefined>,
+    assignmentNumber: MaybeRefOrGetter<number | undefined>,
     groupNumber: MaybeRefOrGetter<number | undefined>,
     full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<SubmissionsResponse, Error> {
@@ -137,8 +158,8 @@ export function useAssignmentSubmissionsQuery(
 }
 
 export function useAssignmentQuestionsQuery(
-    classid: MaybeRefOrGetter<string | undefined>, 
-    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+    classid: MaybeRefOrGetter<string | undefined>,
+    assignmentNumber: MaybeRefOrGetter<number | undefined>,
     groupNumber: MaybeRefOrGetter<number | undefined>,
     full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<QuestionsResponse, Error> {
@@ -152,8 +173,8 @@ export function useAssignmentQuestionsQuery(
 }
 
 export function useAssignmentGroupsQuery(
-    classid: MaybeRefOrGetter<string | undefined>, 
-    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
+    classid: MaybeRefOrGetter<string | undefined>,
+    assignmentNumber: MaybeRefOrGetter<number | undefined>,
     groupNumber: MaybeRefOrGetter<number | undefined>,
     full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<GroupsResponse, Error> {
