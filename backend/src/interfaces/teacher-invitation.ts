@@ -1,5 +1,4 @@
 import { TeacherInvitation } from '../entities/classes/teacher-invitation.entity.js';
-import { mapToClassDTO } from './class.js';
 import { mapToUserDTO } from './user.js';
 import { TeacherInvitationDTO } from '@dwengo-1/common/interfaces/teacher-invitation';
 import {getTeacherInvitationRepository} from "../data/repositories";

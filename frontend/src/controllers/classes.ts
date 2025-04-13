@@ -2,7 +2,6 @@ import { BaseController } from "./base-controller";
 import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
 import type { StudentsResponse } from "./students";
 import type { AssignmentsResponse } from "./assignments";
-import type { TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
 import type { TeachersResponse } from "@/controllers/teachers.ts";
 import type {TeacherInvitationsResponse} from "@/controllers/teacher-invitations.ts";
 

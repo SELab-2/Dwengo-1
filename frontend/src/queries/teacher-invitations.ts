@@ -17,23 +17,23 @@ import type {TeacherDTO} from "@dwengo-1/common/dist/interfaces/teacher.ts";
 const controller = new TeacherInvitationController();
 
 /**
-    all the invitations the teacher send
+    All the invitations the teacher send
 **/
 export function useTeacherInvitationsByQuery(username: MaybeRefOrGetter<string | undefined>
 ): UseQueryReturnType<TeacherInvitationsResponse, Error> {
     return useQuery({
-        queryFn: computed(() => controller.getAll(toValue(username), true)),
+        queryFn: computed(async () => controller.getAll(toValue(username), true)),
         enabled: () => Boolean(toValue(username)),
     })
 }
 
 /**
-    all the pending invitations send to this teacher
+    All the pending invitations send to this teacher
  */
 export function useTeacherInvitationsForQuery(username: MaybeRefOrGetter<string | undefined>
 ): UseQueryReturnType<TeacherInvitationsResponse, Error> {
     return useQuery({
-        queryFn: computed(() => controller.getAll(toValue(username), false)),
+        queryFn: computed(async () => controller.getAll(toValue(username), false)),
         enabled: () => Boolean(toValue(username)),
     })
 }

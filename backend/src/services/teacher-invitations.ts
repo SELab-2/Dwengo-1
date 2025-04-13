@@ -50,7 +50,7 @@ async function fetchInvitation(sender: Teacher, receiver: Teacher, cls: Class): 
     return invite;
 }
 
-export async function deleteInvitationFor(usernameSender: string, usernameReceiver: string, classId: string, accepted: boolean) {
+export async function deleteInvitationFor(usernameSender: string, usernameReceiver: string, classId: string, accepted: boolean): Promise<TeacherInvitationDTO> {
     const teacherInvitationRepository = getTeacherInvitationRepository();
     const sender = await fetchTeacher(usernameSender);
     const receiver = await fetchTeacher(usernameReceiver);

@@ -42,9 +42,6 @@ export async function setupTestApp(): Promise<void> {
     const answers = makeTestAnswers(em, teachers, questions);
     const submissions = makeTestSubmissions(em, students, groups);
 
-    console.log("classes", classes);
-    console.log("invitations", teacherInvitations);
-
     await em.persistAndFlush([
         ...students,
         ...teachers,
