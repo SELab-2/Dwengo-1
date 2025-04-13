@@ -279,7 +279,8 @@
                         :key="i.classId"
                     >
                         <td>
-                          {{ i.classId }} <!-- TODO fetch display name via classId because db only returns classId field -->
+                            {{ i.classId }}
+                            <!-- TODO fetch display name via classId because db only returns classId field -->
                         </td>
                         <td>{{ (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName }}</td>
                         <td class="text-right">

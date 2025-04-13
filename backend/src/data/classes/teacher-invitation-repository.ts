@@ -25,6 +25,6 @@ export class TeacherInvitationRepository extends DwengoEntityRepository<TeacherI
             sender: sender,
             receiver: receiver,
             class: clazz,
-        })
+        });
     }
 }

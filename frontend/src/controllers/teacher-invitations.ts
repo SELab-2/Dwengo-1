@@ -1,12 +1,12 @@
-import {BaseController} from "@/controllers/base-controller.ts";
-import type {TeacherInvitationData, TeacherInvitationDTO} from "@dwengo-1/common/interfaces/teacher-invitation";
+import { BaseController } from "@/controllers/base-controller.ts";
+import type { TeacherInvitationData, TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
 
 export interface TeacherInvitationsResponse {
-    invitations: TeacherInvitationDTO[]
+    invitations: TeacherInvitationDTO[];
 }
 
 export interface TeacherInvitationResponse {
-    invitation: TeacherInvitationDTO
+    invitation: TeacherInvitationDTO;
 }
 
 export class TeacherInvitationController extends BaseController {

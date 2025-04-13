@@ -3,7 +3,7 @@ import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
 import type { StudentsResponse } from "./students";
 import type { AssignmentsResponse } from "./assignments";
 import type { TeachersResponse } from "@/controllers/teachers.ts";
-import type {TeacherInvitationsResponse} from "@/controllers/teacher-invitations.ts";
+import type { TeacherInvitationsResponse } from "@/controllers/teacher-invitations.ts";
 
 export interface ClassesResponse {
     classes: ClassDTO[] | string[];

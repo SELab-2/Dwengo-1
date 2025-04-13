@@ -13,7 +13,7 @@ import { makeTestAttachments } from './test_assets/content/attachments.testdata.
 import { makeTestQuestions } from './test_assets/questions/questions.testdata.js';
 import { makeTestAnswers } from './test_assets/questions/answers.testdata.js';
 import { makeTestSubmissions } from './test_assets/assignments/submission.testdata.js';
-import {Collection} from "@mikro-orm/core";
+import { Collection } from '@mikro-orm/core';
 
 export async function setupTestApp(): Promise<void> {
     dotenv.config({ path: '.env.test' });
