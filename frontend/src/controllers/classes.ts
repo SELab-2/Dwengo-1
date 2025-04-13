@@ -4,6 +4,7 @@ import type { StudentsResponse } from "./students";
 import type { AssignmentsResponse } from "./assignments";
 import type { TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
 import type { TeachersResponse } from "@/controllers/teachers.ts";
+import type {TeacherInvitationsResponse} from "@/controllers/teacher-invitations.ts";
 
 export interface ClassesResponse {
     classes: ClassDTO[] | string[];
@@ -11,14 +12,6 @@ export interface ClassesResponse {
 
 export interface ClassResponse {
     class: ClassDTO;
-}
-
-export interface TeacherInvitationsResponse {
-    invites: TeacherInvitationDTO[];
-}
-
-export interface TeacherInvitationResponse {
-    invite: TeacherInvitationDTO;
 }
 
 export class ClassController extends BaseController {
