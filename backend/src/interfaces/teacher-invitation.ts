@@ -10,7 +10,7 @@ export function mapToTeacherInvitationDTO(invitation: TeacherInvitation): Teache
     return {
         sender: mapToUserDTO(invitation.sender),
         receiver: mapToUserDTO(invitation.receiver),
-        class: mapToClassDTO(invitation.class),
+        classId: invitation.class.classId!,
     };
 }
 
@@ -18,7 +18,7 @@ export function mapToTeacherInvitationDTOIds(invitation: TeacherInvitation): Tea
     return {
         sender: invitation.sender.username,
         receiver: invitation.receiver.username,
-        class: invitation.class.classId!,
+        classId: invitation.class.classId!,
     };
 }
 

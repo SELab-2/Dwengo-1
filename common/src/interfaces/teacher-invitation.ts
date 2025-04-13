@@ -4,7 +4,7 @@ import { ClassDTO } from './class';
 export interface TeacherInvitationDTO {
     sender: string | UserDTO;
     receiver: string | UserDTO;
-    class: string | ClassDTO;
+    classId: string;
 }
 
 export interface TeacherInvitationData {
