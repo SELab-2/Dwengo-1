@@ -27,6 +27,8 @@ export async function invalidateAllSubmissionKeys(
     }
 
     await queryClient.invalidateQueries({ queryKey: [ "submissions", classid, assignmentNumber, groupNumber ].filter(arg => arg !== undefined) });
+    await queryClient.invalidateQueries({ queryKey: [ "group-submissions", classid, assignmentNumber, groupNumber ].filter(arg => arg !== undefined) });
+    await queryClient.invalidateQueries({ queryKey: [ "assignment-submissions", classid, assignmentNumber ].filter(arg => arg !== undefined) });
 }
 
 function checkEnabled(
@@ -85,38 +87,46 @@ export function useSubmissionQuery(
     });
 }
 
-// TODO: find way to check if cid and an are not undefined.
-// depends on how this function is used.
-export function useCreateSubmissionMutation(
-    classid: MaybeRefOrGetter<string | undefined>, 
-    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
-    groupNumber: MaybeRefOrGetter<number | undefined>, 
-): UseMutationReturnType<SubmissionResponse, Error, SubmissionDTO, unknown> {
+export function useCreateSubmissionMutation(): UseMutationReturnType<SubmissionResponse, Error, {cid: string, an: number, gn: number, data: SubmissionDTO}, unknown> {
     const queryClient = useQueryClient();
-    const { cid, an, gn } = toValues(classid, assignmentNumber, groupNumber, 1, true);
 
     return useMutation({
-        mutationFn: async (data) => new SubmissionController(cid!, an!, gn!).createSubmission(data),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, gn!, true) });
-            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, gn!, false) });
+        mutationFn: async ({cid, an, gn, data}) => new SubmissionController(cid, an, gn).createSubmission(data),
+        onSuccess: async (response) => {
+            if (!response.submission.group) {
+                await invalidateAllSubmissionKeys(queryClient);
+            } else {
+                const cls = response.submission.group.class;
+                const assignment = response.submission.group.assignment;
+                
+                const cid = typeof(cls) === 'string' ? cls : cls.id;
+                const an = typeof(assignment) === 'number' ? assignment : assignment.id;
+                const gn = response.submission.group.groupNumber;
+
+                await invalidateAllSubmissionKeys(queryClient, cid, an, gn);
+            }
         },
     });
 }
 
-export function useDeleteGroupMutation(
-    classid: MaybeRefOrGetter<string | undefined>, 
-    assignmentNumber: MaybeRefOrGetter<number | undefined>, 
-    groupNumber: MaybeRefOrGetter<number | undefined>, 
-): UseMutationReturnType<SubmissionResponse, Error, number, unknown> {
+export function useDeleteSubmissionMutation(): UseMutationReturnType<SubmissionResponse, Error, {cid: string, an: number, gn: number, sn: number}, unknown> {
     const queryClient = useQueryClient();
-    const { cid, an, gn } = toValues(classid, assignmentNumber, groupNumber, 1, true);
 
     return useMutation({
-        mutationFn: async (id) => new SubmissionController(cid!, an!, gn!).deleteSubmission(id),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, gn!, true) });
-            await queryClient.invalidateQueries({ queryKey: submissionsQueryKey(cid!, an!, gn!, false) });
+        mutationFn: async ({cid, an, gn, sn}) => new SubmissionController(cid, an, gn).deleteSubmission(sn),
+        onSuccess: async (response) => {
+            if (!response.submission.group) {
+                await invalidateAllSubmissionKeys(queryClient);
+            } else {
+                const cls = response.submission.group.class;
+                const assignment = response.submission.group.assignment;
+                
+                const cid = typeof(cls) === 'string' ? cls : cls.id;
+                const an = typeof(assignment) === 'number' ? assignment : assignment.id;
+                const gn = response.submission.group.groupNumber;
+
+                await invalidateAllSubmissionKeys(queryClient, cid, an, gn);
+            }
         },
     });
 }
