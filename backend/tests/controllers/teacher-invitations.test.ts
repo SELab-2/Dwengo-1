@@ -97,7 +97,7 @@ describe('Teacher controllers', () => {
 
     /*
 
-    it('Create and accept invitation', async () => {
+    It('Create and accept invitation', async () => {
         const body = {
             sender: 'LimpBizkit',
             receiver: 'testleerkracht1',
