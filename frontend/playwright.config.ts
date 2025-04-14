@@ -66,16 +66,16 @@ export default defineConfig({
 
         /* Test against mobile viewports. */
         {
-          name: 'Mobile Chrome',
-          use: {
-            ...devices['Pixel 5'],
-          },
+            name: "Mobile Chrome",
+            use: {
+                ...devices["Pixel 5"],
+            },
         },
         {
-          name: 'Mobile Safari',
-          use: {
-            ...devices['iPhone 12'],
-          },
+            name: "Mobile Safari",
+            use: {
+                ...devices["iPhone 12"],
+            },
         },
 
         /* Test against branded browsers. */
@@ -109,7 +109,7 @@ export default defineConfig({
             gracefulShutdown: {
                 signal: "SIGTERM",
                 timeout: 5000,
-            }
+            },
         },
         {
             command: process.env.CI ? "cd ../ && npm run dev -w backend" : "cd ../ && npm run start -w backend",
@@ -119,6 +119,6 @@ export default defineConfig({
         {
             command: "wait-on http://localhost:7080",
             timeout: 120000,
-        }
+        },
     ],
 });
