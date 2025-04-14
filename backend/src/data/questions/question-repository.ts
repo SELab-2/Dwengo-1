@@ -5,6 +5,7 @@ import { Student } from '../../entities/users/student.entity.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
 import { Assignment } from '../../entities/assignments/assignment.entity.js';
 import { Loaded } from '@mikro-orm/core';
+import {Group} from "../../entities/assignments/group.entity";
 
 export class QuestionRepository extends DwengoEntityRepository<Question> {
     public async createQuestion(question: { loId: LearningObjectIdentifier; author: Student; content: string }): Promise<Question> {
@@ -59,7 +60,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
 
     public async findAllByAssignment(assignment: Assignment): Promise<Question[]> {
         return this.find({
-            author: assignment.groups.flatMap((group) => group.members),
+            author: assignment.groups.toArray<Group>().flatMap((group) => group.members),
             learningObjectHruid: assignment.learningPathHruid,
             learningObjectLanguage: assignment.learningPathLanguage,
         });
