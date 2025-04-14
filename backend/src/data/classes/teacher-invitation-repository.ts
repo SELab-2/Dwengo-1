@@ -1,8 +1,8 @@
-import {DwengoEntityRepository} from '../dwengo-entity-repository.js';
-import {Class} from '../../entities/classes/class.entity.js';
-import {TeacherInvitation} from '../../entities/classes/teacher-invitation.entity.js';
-import {Teacher} from '../../entities/users/teacher.entity.js';
-import {ClassStatus} from "@dwengo-1/common/util/class-join-request";
+import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
+import { Class } from '../../entities/classes/class.entity.js';
+import { TeacherInvitation } from '../../entities/classes/teacher-invitation.entity.js';
+import { Teacher } from '../../entities/users/teacher.entity.js';
+import { ClassStatus } from '@dwengo-1/common/util/class-join-request';
 
 export class TeacherInvitationRepository extends DwengoEntityRepository<TeacherInvitation> {
     public async findAllInvitationsForClass(clazz: Class): Promise<TeacherInvitation[]> {

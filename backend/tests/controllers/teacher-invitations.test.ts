@@ -5,11 +5,11 @@ import {
     createInvitationHandler,
     deleteInvitationHandler,
     getAllInvitationsHandler,
-    getInvitationHandler
+    getInvitationHandler,
 } from '../../src/controllers/teacher-invitations';
 import { TeacherInvitationData } from '@dwengo-1/common/interfaces/teacher-invitation';
 import { getClassHandler } from '../../src/controllers/classes';
-import {BadRequestException} from "../../src/exceptions/bad-request-exception";
+import { BadRequestException } from '../../src/exceptions/bad-request-exception';
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
@@ -91,8 +91,7 @@ describe('Teacher controllers', () => {
             params: { no: 'no params' },
         };
 
-        await expect( async () => getInvitationHandler(req as Request, res as Response))
-            .rejects.toThrowError(BadRequestException);
+        await expect(async () => getInvitationHandler(req as Request, res as Response)).rejects.toThrowError(BadRequestException);
     });
 
     /*

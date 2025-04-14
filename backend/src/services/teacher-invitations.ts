@@ -1,12 +1,12 @@
-import {fetchTeacher} from './teachers';
-import {getTeacherInvitationRepository} from '../data/repositories';
-import {mapToInvitation, mapToTeacherInvitationDTO} from '../interfaces/teacher-invitation';
-import {addClassTeacher, fetchClass} from './classes';
-import {TeacherInvitationData, TeacherInvitationDTO} from '@dwengo-1/common/interfaces/teacher-invitation';
-import {ConflictException} from '../exceptions/conflict-exception';
-import {NotFoundException} from '../exceptions/not-found-exception';
-import {TeacherInvitation} from '../entities/classes/teacher-invitation.entity';
-import {ClassStatus} from "@dwengo-1/common/util/class-join-request";
+import { fetchTeacher } from './teachers';
+import { getTeacherInvitationRepository } from '../data/repositories';
+import { mapToInvitation, mapToTeacherInvitationDTO } from '../interfaces/teacher-invitation';
+import { addClassTeacher, fetchClass } from './classes';
+import { TeacherInvitationData, TeacherInvitationDTO } from '@dwengo-1/common/interfaces/teacher-invitation';
+import { ConflictException } from '../exceptions/conflict-exception';
+import { NotFoundException } from '../exceptions/not-found-exception';
+import { TeacherInvitation } from '../entities/classes/teacher-invitation.entity';
+import { ClassStatus } from '@dwengo-1/common/util/class-join-request';
 
 export async function getAllInvitations(username: string, sent: boolean): Promise<TeacherInvitationDTO[]> {
     const teacher = await fetchTeacher(username);
