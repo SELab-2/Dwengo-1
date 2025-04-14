@@ -42,7 +42,9 @@ async function acquireAccount(id: number, browser: Browser): Promise<Account> {
         await page.getByRole("link", { name: "Register" }).click();
     }
 
-    while (failed) {
+    const MAX_RETRIES = 5;
+    let retries = 0;
+    while (failed && retries < MAX_RETRIES) {
         // Retry with a different username, based on Unix timestamp.
         account.username = `worker${id}-${Date.now()}`;
 
@@ -57,6 +59,7 @@ async function acquireAccount(id: number, browser: Browser): Promise<Account> {
         await page.waitForURL(/localhost/);
 
         failed = await page.getByText("Username already exists.").isVisible();
+        retries += failed ? 1 : 0;
     }
 
     await page.waitForURL(/localhost/);
