@@ -1,17 +1,42 @@
-import { getAssignmentRepository, getClassRepository, getGroupRepository, getSubmissionRepository } from '../data/repositories.js';
-import { mapToAssignment, mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment.js';
-import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
+import {
+    getAssignmentRepository,
+    getClassRepository,
+    getGroupRepository,
+    getQuestionRepository,
+    getSubmissionRepository,
+} from '../data/repositories.js';
+import { Assignment } from '../entities/assignments/assignment.entity.js';
+import { NotFoundException } from '../exceptions/not-found-exception.js';
+import { mapToAssignment, mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment.js';
+import { mapToQuestionDTO } from '../interfaces/question.js';
+import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
+import { fetchClass } from './classes.js';
+import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
-import { getLogger } from '../logging/initalize.js';
+import { EntityDTO } from '@mikro-orm/core';
+import { putObject } from './service-helper.js';
 
-export async function getAllAssignments(classid: string, full: boolean): Promise<AssignmentDTO[]> {
+export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
     const classRepository = getClassRepository();
     const cls = await classRepository.findById(classid);
 
     if (!cls) {
-        return [];
+        throw new NotFoundException("Could not find assignment's class");
     }
+
+    const assignmentRepository = getAssignmentRepository();
+    const assignment = await assignmentRepository.findByClassAndId(cls, assignmentNumber);
+
+    if (!assignment) {
+        throw new NotFoundException('Could not find assignment');
+    }
+
+    return assignment;
+}
+
+export async function getAllAssignments(classid: string, full: boolean): Promise<AssignmentDTO[]> {
+    const cls = await fetchClass(classid);
 
     const assignmentRepository = getAssignmentRepository();
     const assignments = await assignmentRepository.findAllAssignmentsInClass(cls);
@@ -23,42 +48,37 @@ export async function getAllAssignments(classid: string, full: boolean): Promise
     return assignments.map(mapToAssignmentDTOId);
 }
 
-export async function createAssignment(classid: string, assignmentData: AssignmentDTO): Promise<AssignmentDTO | null> {
-    const classRepository = getClassRepository();
-    const cls = await classRepository.findById(classid);
-
-    if (!cls) {
-        return null;
-    }
+export async function createAssignment(classid: string, assignmentData: AssignmentDTO): Promise<AssignmentDTO> {
+    const cls = await fetchClass(classid);
 
     const assignment = mapToAssignment(assignmentData, cls);
+
     const assignmentRepository = getAssignmentRepository();
+    const newAssignment = assignmentRepository.create(assignment);
+    await assignmentRepository.save(newAssignment, { preventOverwrite: true });
 
-    try {
-        const newAssignment = assignmentRepository.create(assignment);
-        await assignmentRepository.save(newAssignment);
-
-        return mapToAssignmentDTO(newAssignment);
-    } catch (e) {
-        getLogger().error(e);
-        return null;
-    }
+    return mapToAssignmentDTO(newAssignment);
 }
 
-export async function getAssignment(classid: string, id: number): Promise<AssignmentDTO | null> {
-    const classRepository = getClassRepository();
-    const cls = await classRepository.findById(classid);
+export async function getAssignment(classid: string, id: number): Promise<AssignmentDTO> {
+    const assignment = await fetchAssignment(classid, id);
+    return mapToAssignmentDTO(assignment);
+}
 
-    if (!cls) {
-        return null;
-    }
+export async function putAssignment(classid: string, id: number, assignmentData: Partial<EntityDTO<Assignment>>): Promise<AssignmentDTO> {
+    const assignment = await fetchAssignment(classid, id);
+
+    await putObject<Assignment>(assignment, assignmentData, getAssignmentRepository());
+
+    return mapToAssignmentDTO(assignment);
+}
+
+export async function deleteAssignment(classid: string, id: number): Promise<AssignmentDTO> {
+    const assignment = await fetchAssignment(classid, id);
+    const cls = await fetchClass(classid);
 
     const assignmentRepository = getAssignmentRepository();
-    const assignment = await assignmentRepository.findByClassAndId(cls, id);
-
-    if (!assignment) {
-        return null;
-    }
+    await assignmentRepository.deleteByClassAndId(cls, id);
 
     return mapToAssignmentDTO(assignment);
 }
@@ -68,19 +88,7 @@ export async function getAssignmentsSubmissions(
     assignmentNumber: number,
     full: boolean
 ): Promise<SubmissionDTO[] | SubmissionDTOId[]> {
-    const classRepository = getClassRepository();
-    const cls = await classRepository.findById(classid);
-
-    if (!cls) {
-        return [];
-    }
-
-    const assignmentRepository = getAssignmentRepository();
-    const assignment = await assignmentRepository.findByClassAndId(cls, assignmentNumber);
-
-    if (!assignment) {
-        return [];
-    }
+    const assignment = await fetchAssignment(classid, assignmentNumber);
 
     const groupRepository = getGroupRepository();
     const groups = await groupRepository.findAllGroupsForAssignment(assignment);
@@ -93,4 +101,17 @@ export async function getAssignmentsSubmissions(
     }
 
     return submissions.map(mapToSubmissionDTOId);
+}
+
+export async function getAssignmentsQuestions(classid: string, assignmentNumber: number, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
+    const assignment = await fetchAssignment(classid, assignmentNumber);
+
+    const questionRepository = getQuestionRepository();
+    const questions = await questionRepository.findAllByAssignment(assignment);
+
+    if (full) {
+        return questions.map(mapToQuestionDTO);
+    }
+
+    return questions.map(mapToQuestionDTO);
 }

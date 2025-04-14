@@ -1,15 +1,15 @@
 import { GroupDTO } from './group';
-import { LearningObjectIdentifier } from './learning-content';
+import { LearningObjectIdentifierDTO } from './learning-content';
 import { StudentDTO } from './student';
 import { Language } from '../util/language';
 
 export interface SubmissionDTO {
-    learningObjectIdentifier: LearningObjectIdentifier;
+    learningObjectIdentifier: LearningObjectIdentifierDTO;
 
     submissionNumber?: number;
     submitter: StudentDTO;
     time?: Date;
-    group?: GroupDTO;
+    group: GroupDTO;
     content: string;
 }
 

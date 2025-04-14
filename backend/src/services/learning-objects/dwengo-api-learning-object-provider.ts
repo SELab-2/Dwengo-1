@@ -5,7 +5,7 @@ import { LearningObjectProvider } from './learning-object-provider.js';
 import { getLogger, Logger } from '../../logging/initalize.js';
 import {
     FilteredLearningObject,
-    LearningObjectIdentifier,
+    LearningObjectIdentifierDTO,
     LearningObjectMetadata,
     LearningObjectNode,
     LearningPathIdentifier,
@@ -67,7 +67,7 @@ async function fetchLearningObjects(learningPathId: LearningPathIdentifier, full
 
         const objects = await Promise.all(
             nodes.map(async (node) => {
-                const learningObjectId: LearningObjectIdentifier = {
+                const learningObjectId: LearningObjectIdentifierDTO = {
                     hruid: node.learningobject_hruid,
                     language: learningPathId.language,
                 };
@@ -85,7 +85,7 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
     /**
      * Fetches a single learning object by its HRUID
      */
-    async getLearningObjectById(id: LearningObjectIdentifier): Promise<FilteredLearningObject | null> {
+    async getLearningObjectById(id: LearningObjectIdentifierDTO): Promise<FilteredLearningObject | null> {
         const metadataUrl = `${DWENGO_API_BASE}/learningObject/getMetadata`;
         const metadata = await fetchWithLogging<LearningObjectMetadata>(
             metadataUrl,
@@ -121,7 +121,7 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
      * Obtain a HTML-rendering of the learning object with the given identifier (as a string). For learning objects
      * from the Dwengo API, this means passing through the HTML rendering from there.
      */
-    async getLearningObjectHTML(id: LearningObjectIdentifier): Promise<string | null> {
+    async getLearningObjectHTML(id: LearningObjectIdentifierDTO): Promise<string | null> {
         const htmlUrl = `${DWENGO_API_BASE}/learningObject/getRaw`;
         const html = await fetchWithLogging<string>(htmlUrl, `Metadata for Learning Object HRUID "${id.hruid}" (language ${id.language})`, {
             params: { ...id },

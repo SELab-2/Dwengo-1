@@ -1,10 +1,17 @@
 import express from 'express';
 import {
+    addClassStudentHandler,
+    addClassTeacherHandler,
     createClassHandler,
+    deleteClassHandler,
+    deleteClassStudentHandler,
+    deleteClassTeacherHandler,
     getAllClassesHandler,
     getClassHandler,
     getClassStudentsHandler,
+    getClassTeachersHandler,
     getTeacherInvitationsHandler,
+    putClassHandler,
 } from '../controllers/classes.js';
 import assignmentRouter from './assignments.js';
 
@@ -15,12 +22,25 @@ router.get('/', getAllClassesHandler);
 
 router.post('/', createClassHandler);
 
-// Information about an class with id 'id'
 router.get('/:id', getClassHandler);
+
+router.put('/:id', putClassHandler);
+
+router.delete('/:id', deleteClassHandler);
 
 router.get('/:id/teacher-invitations', getTeacherInvitationsHandler);
 
 router.get('/:id/students', getClassStudentsHandler);
+
+router.post('/:id/students', addClassStudentHandler);
+
+router.delete('/:id/students/:username', deleteClassStudentHandler);
+
+router.get('/:id/teachers', getClassTeachersHandler);
+
+router.post('/:id/teachers', addClassTeacherHandler);
+
+router.delete('/:id/teachers/:username', deleteClassTeacherHandler);
 
 router.use('/:classid/assignments', assignmentRouter);
 

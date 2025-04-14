@@ -186,7 +186,7 @@ describe('Student controllers', () => {
 
     it('Get join request by student and class', async () => {
         req = {
-            params: { username: 'PinkFloyd', classId: 'id02' },
+            params: { username: 'PinkFloyd', classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
         };
 
         await getStudentRequestHandler(req as Request, res as Response);
@@ -198,29 +198,18 @@ describe('Student controllers', () => {
         );
     });
 
-    it('Create join request', async () => {
+    it('Create and delete join request', async () => {
         req = {
-            params: { username: 'Noordkaap' },
-            body: { classId: 'id02' },
+            params: { username: 'TheDoors' },
+            body: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
         };
 
         await createStudentRequestHandler(req as Request, res as Response);
 
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ request: expect.anything() }));
-    });
 
-    it('Create join request duplicate', async () => {
         req = {
-            params: { username: 'Tool' },
-            body: { classId: 'id02' },
-        };
-
-        await expect(async () => createStudentRequestHandler(req as Request, res as Response)).rejects.toThrow(ConflictException);
-    });
-
-    it('Delete join request', async () => {
-        req = {
-            params: { username: 'Noordkaap', classId: 'id02' },
+            params: { username: 'TheDoors', classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
         };
 
         await deleteClassJoinRequestHandler(req as Request, res as Response);
@@ -228,5 +217,23 @@ describe('Student controllers', () => {
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ request: expect.anything() }));
 
         await expect(async () => deleteClassJoinRequestHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
+    });
+
+    it('Create join request student already in class error', async () => {
+        req = {
+            params: { username: 'Noordkaap' },
+            body: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
+        };
+
+        await expect(async () => createStudentRequestHandler(req as Request, res as Response)).rejects.toThrow(ConflictException);
+    });
+
+    it('Create join request duplicate', async () => {
+        req = {
+            params: { username: 'Tool' },
+            body: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
+        };
+
+        await expect(async () => createStudentRequestHandler(req as Request, res as Response)).rejects.toThrow(ConflictException);
     });
 });

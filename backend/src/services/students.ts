@@ -7,7 +7,7 @@ import {
     getSubmissionRepository,
 } from '../data/repositories.js';
 import { mapToClassDTO } from '../interfaces/class.js';
-import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
+import { mapToGroupDTO, mapToShallowGroupDTO } from '../interfaces/group.js';
 import { mapToStudent, mapToStudentDTO } from '../interfaces/student.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
@@ -23,6 +23,8 @@ import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
+import { ConflictException } from '../exceptions/conflict-exception.js';
+import { Submission } from '../entities/assignments/submission.entity';
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();
@@ -100,14 +102,15 @@ export async function getStudentGroups(username: string, full: boolean): Promise
         return groups.map(mapToGroupDTO);
     }
 
-    return groups.map(mapToGroupDTOId);
+    return groups.map(mapToShallowGroupDTO);
 }
 
 export async function getStudentSubmissions(username: string, full: boolean): Promise<SubmissionDTO[] | SubmissionDTOId[]> {
     const student = await fetchStudent(username);
 
     const submissionRepository = getSubmissionRepository();
-    const submissions = await submissionRepository.findAllSubmissionsForStudent(student);
+
+    const submissions: Submission[] = await submissionRepository.findAllSubmissionsForStudent(student);
 
     if (full) {
         return submissions.map(mapToSubmissionDTO);
@@ -134,6 +137,10 @@ export async function createClassJoinRequest(username: string, classId: string):
 
     const student = await fetchStudent(username); // Throws error if student not found
     const cls = await fetchClass(classId);
+
+    if (cls.students.contains(student)) {
+        throw new ConflictException('Student already in this class');
+    }
 
     const request = mapToStudentRequest(student, cls);
     await requestRepo.save(request, { preventOverwrite: true });
