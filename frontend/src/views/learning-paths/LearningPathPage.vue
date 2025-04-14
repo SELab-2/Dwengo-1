@@ -168,6 +168,10 @@
                     </template>
                 </using-query-result>
             </div>
+            <v-divider></v-divider>
+            <div v-if="true" class="assignment-indicator">  
+                ASSIGNMENT
+            </div>
         </v-navigation-drawer>
         <div class="control-bar-above-content">
             <v-btn
@@ -226,4 +230,18 @@
         display: flex;
         justify-content: space-between;
     }
+    .assignment-indicator {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      padding: 4px 12px;
+      border: 2px solid #f8bcbc;
+      border-radius: 20px;
+      color: #f36c6c;
+      background-color: rgba(248, 188, 188, 0.1);
+      font-weight: bold;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      text-transform: uppercase;
+      }
 </style>
