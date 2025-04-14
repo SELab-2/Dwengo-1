@@ -12,7 +12,7 @@
         "format": "prettier --write src/",
         "format-check": "prettier --check src/",
         "lint": "eslint . --fix",
-        "pretest:unit": "npm run build && tsx ../docs/api/generate.ts",
+        "pretest:unit": "tsx ../docs/api/generate.ts && npm run build",
         "test:unit": "vitest --run"
     },
     "dependencies": {
