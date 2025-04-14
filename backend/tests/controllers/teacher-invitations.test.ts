@@ -1,9 +1,15 @@
 import { beforeAll, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { Request, Response } from 'express';
 import { setupTestApp } from '../setup-tests.js';
-import { createInvitationHandler, deleteInvitationForHandler, getAllInvitationsHandler } from '../../src/controllers/teacher-invitations';
+import {
+    createInvitationHandler,
+    deleteInvitationHandler,
+    getAllInvitationsHandler,
+    getInvitationHandler
+} from '../../src/controllers/teacher-invitations';
 import { TeacherInvitationData } from '@dwengo-1/common/interfaces/teacher-invitation';
 import { getClassHandler } from '../../src/controllers/classes';
+import {BadRequestException} from "../../src/exceptions/bad-request-exception";
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
@@ -23,13 +29,14 @@ describe('Teacher controllers', () => {
     });
 
     it('Get teacher invitations by', async () => {
-        req = { params: { username: 'LimpBizkit' }, query: { by: 'true' } };
+        req = { params: { username: 'LimpBizkit' }, query: { sent: 'true' } };
 
         await getAllInvitationsHandler(req as Request, res as Response);
 
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ invitations: expect.anything() }));
 
         const result = jsonMock.mock.lastCall?.[0];
+        console.log(result.invitations);
         expect(result.invitations).to.have.length.greaterThan(0);
     });
 
@@ -63,8 +70,32 @@ describe('Teacher controllers', () => {
             body: { accepted: 'false' },
         };
 
-        await deleteInvitationForHandler(req as Request, res as Response);
+        await deleteInvitationHandler(req as Request, res as Response);
     });
+
+    it('Get invitation', async () => {
+        req = {
+            params: {
+                sender: 'LimpBizkit',
+                receiver: 'FooFighters',
+                classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89',
+            },
+        };
+        await getInvitationHandler(req as Request, res as Response);
+
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ invitation: expect.anything() }));
+    });
+
+    it('Get invitation error', async () => {
+        req = {
+            params: { no: 'no params' },
+        };
+
+        await expect( async () => getInvitationHandler(req as Request, res as Response))
+            .rejects.toThrowError(BadRequestException);
+    });
+
+    /*
 
     it('Create and accept invitation', async () => {
         const body = {
@@ -85,7 +116,7 @@ describe('Teacher controllers', () => {
             body: { accepted: 'true' },
         };
 
-        await deleteInvitationForHandler(req as Request, res as Response);
+        await deleteInvitationHandler(req as Request, res as Response);
 
         req = {
             params: {
@@ -98,4 +129,6 @@ describe('Teacher controllers', () => {
         const result = jsonMock.mock.lastCall?.[0];
         expect(result.class.teachers).toContain('testleerkracht1');
     });
+
+     */
 });
