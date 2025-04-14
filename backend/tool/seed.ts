@@ -15,7 +15,7 @@ import { makeTestStudents } from '../tests/test_assets/users/students.testdata.j
 import { makeTestTeachers } from '../tests/test_assets/users/teachers.testdata.js';
 import { getLogger, Logger } from '../src/logging/initalize.js';
 import { Collection } from '@mikro-orm/core';
-import { Group } from '../dist/entities/assignments/group.entity.js';
+import { Group } from '../src/entities/assignments/group.entity';
 
 const logger: Logger = getLogger();
 

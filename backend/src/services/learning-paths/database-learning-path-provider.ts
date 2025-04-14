@@ -4,7 +4,7 @@ import { getLearningPathRepository } from '../../data/repositories.js';
 import learningObjectService from '../learning-objects/learning-object-service.js';
 import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
-import { getLastSubmissionForCustomizationTarget, isTransitionPossible, PersonalizationTarget } from './learning-path-personalization-util.js';
+import { getLastSubmissionForGroup, isTransitionPossible } from './learning-path-personalization-util.js';
 import {
     FilteredLearningObject,
     LearningObjectNode,
@@ -13,6 +13,7 @@ import {
     Transition,
 } from '@dwengo-1/common/interfaces/learning-content';
 import { Language } from '@dwengo-1/common/util/language';
+import {Group} from "../../entities/assignments/group.entity";
 
 /**
  * Fetches the corresponding learning object for each of the nodes and creates a map that maps each node to its
@@ -44,7 +45,7 @@ async function getLearningObjectsForNodes(nodes: LearningPathNode[]): Promise<Ma
 /**
  * Convert the given learning path entity to an object which conforms to the learning path content.
  */
-async function convertLearningPath(learningPath: LearningPathEntity, order: number, personalizedFor?: PersonalizationTarget): Promise<LearningPath> {
+async function convertLearningPath(learningPath: LearningPathEntity, order: number, personalizedFor?: Group): Promise<LearningPath> {
     // Fetch the corresponding learning object for each node since some parts of the expected response contains parts
     // With information which is not available in the LearningPathNodes themselves.
     const nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject> = await getLearningObjectsForNodes(learningPath.nodes);
@@ -89,10 +90,10 @@ async function convertLearningPath(learningPath: LearningPathEntity, order: numb
 async function convertNode(
     node: LearningPathNode,
     learningObject: FilteredLearningObject,
-    personalizedFor: PersonalizationTarget | undefined,
+    personalizedFor: Group | undefined,
     nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>
 ): Promise<LearningObjectNode> {
-    const lastSubmission = personalizedFor ? await getLastSubmissionForCustomizationTarget(node, personalizedFor) : null;
+    const lastSubmission = personalizedFor ? await getLastSubmissionForGroup(node, personalizedFor) : null;
     const transitions = node.transitions
         .filter(
             (trans) =>
@@ -121,7 +122,7 @@ async function convertNode(
  */
 async function convertNodes(
     nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>,
-    personalizedFor?: PersonalizationTarget
+    personalizedFor?: Group
 ): Promise<LearningObjectNode[]> {
     const nodesPromise = Array.from(nodesToLearningObjects.entries()).map(async (entry) =>
         convertNode(entry[0], entry[1], personalizedFor, nodesToLearningObjects)
@@ -181,7 +182,7 @@ const databaseLearningPathProvider: LearningPathProvider = {
         hruids: string[],
         language: Language,
         source: string,
-        personalizedFor?: PersonalizationTarget
+        personalizedFor?: Group
     ): Promise<LearningPathResponse> {
         const learningPathRepo = getLearningPathRepository();
 
@@ -202,7 +203,7 @@ const databaseLearningPathProvider: LearningPathProvider = {
     /**
      * Search learning paths in the database using the given search string.
      */
-    async searchLearningPaths(query: string, language: Language, personalizedFor?: PersonalizationTarget): Promise<LearningPath[]> {
+    async searchLearningPaths(query: string, language: Language, personalizedFor?: Group): Promise<LearningPath[]> {
         const learningPathRepo = getLearningPathRepository();
 
         const searchResults = await learningPathRepo.findByQueryStringAndLanguage(query, language);

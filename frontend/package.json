@@ -10,10 +10,11 @@
         "preview": "vite preview",
         "type-check": "vue-tsc --build",
         "format": "prettier --write src/",
+        "test:e2e": "playwright test",
         "format-check": "prettier --check src/",
         "lint": "eslint . --fix",
-        "test:unit": "vitest --run",
-        "test:e2e": "playwright test"
+        "pretest:unit": "tsx ../docs/api/generate.ts && npm run build",
+        "test:unit": "vitest --run"
     },
     "dependencies": {
         "@tanstack/react-query": "^5.69.0",

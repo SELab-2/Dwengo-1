@@ -3,13 +3,10 @@ import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
 import learningPathService from '../services/learning-paths/learning-path-service.js';
 import { Language } from '@dwengo-1/common/util/language';
-import {
-    PersonalizationTarget,
-    personalizedForGroup,
-    personalizedForStudent,
-} from '../services/learning-paths/learning-path-personalization-util.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
+import {Group} from "../entities/assignments/group.entity";
+import {getGroupRepository} from "../data/repositories";
 
 /**
  * Fetch learning paths based on query parameters.
@@ -20,20 +17,25 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
     const searchQuery = req.query.search as string;
     const language = (req.query.language as string) || FALLBACK_LANG;
 
-    const forStudent = req.query.forStudent as string;
     const forGroupNo = req.query.forGroup as string;
     const assignmentNo = req.query.assignmentNo as string;
     const classId = req.query.classId as string;
 
-    let personalizationTarget: PersonalizationTarget | undefined;
+    let forGroup: Group | undefined;
 
-    if (forStudent) {
-        personalizationTarget = await personalizedForStudent(forStudent);
-    } else if (forGroupNo) {
+    if (forGroupNo) {
         if (!assignmentNo || !classId) {
             throw new BadRequestException('If forGroupNo is specified, assignmentNo and classId must also be specified.');
         }
-        personalizationTarget = await personalizedForGroup(classId, parseInt(assignmentNo), parseInt(forGroupNo));
+        forGroup = await getGroupRepository().findOne({
+            assignment: {
+                id: parseInt(assignmentNo),
+                within: {
+                    classId
+                }
+            },
+            groupNumber: parseInt(forGroupNo)
+        }) ?? undefined;
     }
 
     let hruidList;
@@ -48,7 +50,7 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
             throw new NotFoundException(`Theme "${themeKey}" not found.`);
         }
     } else if (searchQuery) {
-        const searchResults = await learningPathService.searchLearningPaths(searchQuery, language as Language, personalizationTarget);
+        const searchResults = await learningPathService.searchLearningPaths(searchQuery, language as Language, forGroup);
         res.json(searchResults);
         return;
     } else {
@@ -59,7 +61,7 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
         hruidList,
         language as Language,
         `HRUIDs: ${hruidList.join(', ')}`,
-        personalizationTarget
+        forGroup
     );
     res.json(learningPaths.data);
 }
