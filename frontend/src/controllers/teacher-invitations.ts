@@ -19,7 +19,7 @@ export class TeacherInvitationController extends BaseController {
     }
 
     async getBy(data: TeacherInvitationData): Promise<TeacherInvitationResponse> {
-        return this.get<TeacherInvitationResponse>(`/${data.sender}/${data.receiver}/${data.class}`)
+        return this.get<TeacherInvitationResponse>(`/${data.sender}/${data.receiver}/${data.class}`);
     }
 
     async create(data: TeacherInvitationData): Promise<TeacherInvitationResponse> {
