@@ -1,9 +1,9 @@
 import { LearningObjectExample } from '../learning-object-example';
-import { LearningObject } from '../../../../src/entities/content/learning-object.entity';
-import { loadTestAsset } from '../../../test-utils/load-test-asset';
-import { envVars, getEnvVar } from '../../../../src/util/envVars';
-import { DwengoContentType } from '../../../../src/services/learning-objects/processing/content-type';
-import { Language } from '@dwengo-1/common/util/language';
+import { LearningObject } from '../../../../../src/entities/content/learning-object.entity';
+import { loadTestAsset } from '../../../../test-utils/load-test-asset';
+import { envVars, getEnvVar } from '../../../../../src/util/envVars';
+import { DwengoContentType } from '../../../../../src/services/learning-objects/processing/content-type';
+import { Language } from '@dwengo-1/common/dist/util/language';
 
 const example: LearningObjectExample = {
     createLearningObject: () => {

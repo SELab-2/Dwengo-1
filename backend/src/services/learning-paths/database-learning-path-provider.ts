@@ -14,13 +14,14 @@ import {
 } from '@dwengo-1/common/interfaces/learning-content';
 import { Language } from '@dwengo-1/common/util/language';
 import {Group} from "../../entities/assignments/group.entity";
+import {Collection} from "@mikro-orm/core";
 
 /**
  * Fetches the corresponding learning object for each of the nodes and creates a map that maps each node to its
  * corresponding learning object.
  * @param nodes The nodes to find the learning object for.
  */
-async function getLearningObjectsForNodes(nodes: LearningPathNode[]): Promise<Map<LearningPathNode, FilteredLearningObject>> {
+async function getLearningObjectsForNodes(nodes: Collection<LearningPathNode>): Promise<Map<LearningPathNode, FilteredLearningObject>> {
     // Fetching the corresponding learning object for each of the nodes and creating a map that maps each node to
     // Its corresponding learning object.
     const nullableNodesToLearningObjects = new Map<LearningPathNode, FilteredLearningObject | null>(
@@ -208,7 +209,7 @@ const databaseLearningPathProvider: LearningPathProvider = {
 
         const searchResults = await learningPathRepo.findByQueryStringAndLanguage(query, language);
         return await Promise.all(searchResults.map(async (result, index) => convertLearningPath(result, index, personalizedFor)));
-    },
+    }
 };
 
 export default databaseLearningPathProvider;

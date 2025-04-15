@@ -6,5 +6,5 @@ import path from 'node:path';
  * @param relPath Path of the asset relative to the test-assets folder.
  */
 export function loadTestAsset(relPath: string): Buffer {
-    return fs.readFileSync(path.resolve(__dirname, `../test-assets/${relPath}`));
+    return fs.readFileSync(path.resolve(__dirname, `../test_assets/${relPath}`));
 }

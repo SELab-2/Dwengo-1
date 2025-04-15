@@ -1,9 +1,9 @@
 import { LearningObjectExample } from '../learning-object-example';
-import { LearningObject } from '../../../../src/entities/content/learning-object.entity';
-import { Language } from '@dwengo-1/common/util/language';
-import { loadTestAsset } from '../../../test-utils/load-test-asset';
-import { DwengoContentType } from '../../../../src/services/learning-objects/processing/content-type';
-import { envVars, getEnvVar } from '../../../../src/util/envVars';
+import { LearningObject } from '../../../../../src/entities/content/learning-object.entity';
+import { Language } from '@dwengo-1/common/dist/util/language';
+import { loadTestAsset } from '../../../../test-utils/load-test-asset';
+import { DwengoContentType } from '../../../../../src/services/learning-objects/processing/content-type';
+import { envVars, getEnvVar } from '../../../../../src/util/envVars';
 
 /**
  * Create a dummy learning object to be used in tests where multiple learning objects are needed (for example for use
