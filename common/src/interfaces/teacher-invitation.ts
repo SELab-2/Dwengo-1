@@ -1,5 +1,5 @@
 import { UserDTO } from './user';
-import {ClassStatus} from "../util/class-join-request";
+import { ClassStatus } from '../util/class-join-request';
 
 export interface TeacherInvitationDTO {
     sender: string | UserDTO;

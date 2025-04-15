@@ -2,8 +2,9 @@ import express from 'express';
 import {
     createInvitationHandler,
     deleteInvitationHandler,
-    getAllInvitationsHandler, getInvitationHandler,
-    updateInvitationHandler
+    getAllInvitationsHandler,
+    getInvitationHandler,
+    updateInvitationHandler,
 } from '../controllers/teacher-invitations';
 
 const router = express.Router({ mergeParams: true });

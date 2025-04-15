@@ -1,13 +1,7 @@
-import {Request, Response} from 'express';
-import {requireFields} from './error-helper';
-import {
-    createInvitation,
-    deleteInvitation,
-    getAllInvitations,
-    getInvitation,
-    updateInvitation
-} from '../services/teacher-invitations';
-import {TeacherInvitationData} from '@dwengo-1/common/interfaces/teacher-invitation';
+import { Request, Response } from 'express';
+import { requireFields } from './error-helper';
+import { createInvitation, deleteInvitation, getAllInvitations, getInvitation, updateInvitation } from '../services/teacher-invitations';
+import { TeacherInvitationData } from '@dwengo-1/common/interfaces/teacher-invitation';
 
 export async function getAllInvitationsHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
@@ -62,7 +56,9 @@ export async function deleteInvitationHandler(req: Request, res: Response): Prom
     requireFields({ sender, receiver, classId });
 
     const data: TeacherInvitationData = {
-        sender, receiver, class: classId
+        sender,
+        receiver,
+        class: classId,
     };
     const invitation = await deleteInvitation(data);
 
