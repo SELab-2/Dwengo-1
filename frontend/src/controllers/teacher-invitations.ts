@@ -14,15 +14,23 @@ export class TeacherInvitationController extends BaseController {
         super("teachers/invitations");
     }
 
-    async getAll(username: string, by: boolean): Promise<TeacherInvitationsResponse> {
-        return this.get<TeacherInvitationsResponse>(`/${username}`, { by });
+    async getAll(username: string, sent: boolean): Promise<TeacherInvitationsResponse> {
+        return this.get<TeacherInvitationsResponse>(`/${username}`, { sent });
+    }
+
+    async getBy(data: TeacherInvitationData): Promise<TeacherInvitationResponse> {
+        return this.get<TeacherInvitationResponse>(`/${data.sender}/${data.receiver}/${data.class}`)
     }
 
     async create(data: TeacherInvitationData): Promise<TeacherInvitationResponse> {
         return this.post<TeacherInvitationResponse>("/", data);
     }
 
-    async respond(data: TeacherInvitationData, accepted: boolean): Promise<TeacherInvitationResponse> {
-        return this.delete<TeacherInvitationResponse>(`/${data.sender}/${data.receiver}/${data.class}`, { accepted });
+    async remove(data: TeacherInvitationData): Promise<TeacherInvitationResponse> {
+        return this.delete<TeacherInvitationResponse>(`/${data.sender}/${data.receiver}/${data.class}`);
+    }
+
+    async respond(data: TeacherInvitationData) {
+        return this.put<TeacherInvitationResponse>("/", data);
     }
 }

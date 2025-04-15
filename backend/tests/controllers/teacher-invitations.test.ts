@@ -5,11 +5,12 @@ import {
     createInvitationHandler,
     deleteInvitationHandler,
     getAllInvitationsHandler,
-    getInvitationHandler
+    getInvitationHandler, updateInvitationHandler
 } from '../../src/controllers/teacher-invitations';
 import { TeacherInvitationData } from '@dwengo-1/common/interfaces/teacher-invitation';
 import { getClassHandler } from '../../src/controllers/classes';
 import {BadRequestException} from "../../src/exceptions/bad-request-exception";
+import {ClassStatus} from "@dwengo-1/common/util/class-join-request";
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
@@ -95,28 +96,19 @@ describe('Teacher controllers', () => {
             .rejects.toThrowError(BadRequestException);
     });
 
-    /*
 
-    it('Create and accept invitation', async () => {
+    it('Accept invitation', async () => {
         const body = {
             sender: 'LimpBizkit',
-            receiver: 'testleerkracht1',
+            receiver: 'FooFighters',
             class: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89',
         } as TeacherInvitationData;
         req = { body };
 
-        await createInvitationHandler(req as Request, res as Response);
+        await updateInvitationHandler(req as Request, res as Response);
 
-        req = {
-            params: {
-                sender: 'LimpBizkit',
-                receiver: 'testleerkracht1',
-                classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89',
-            },
-            body: { accepted: 'true' },
-        };
-
-        await deleteInvitationHandler(req as Request, res as Response);
+        const result1 = jsonMock.mock.lastCall?.[0];
+        expect(result1.invitation.status).toEqual(ClassStatus.Accepted);
 
         req = {
             params: {
@@ -127,8 +119,8 @@ describe('Teacher controllers', () => {
         await getClassHandler(req as Request, res as Response);
 
         const result = jsonMock.mock.lastCall?.[0];
-        expect(result.class.teachers).toContain('testleerkracht1');
+        expect(result.class.teachers).toContain('FooFighters');
     });
 
-     */
+
 });

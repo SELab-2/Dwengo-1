@@ -6,15 +6,15 @@ import {
     type TeacherInvitationResponse,
     type TeacherInvitationsResponse,
 } from "@/controllers/teacher-invitations.ts";
-import type { TeacherInvitationData } from "@dwengo-1/common/dist/interfaces/teacher-invitation.ts";
-import type { TeacherDTO } from "@dwengo-1/common/dist/interfaces/teacher.ts";
+import type { TeacherInvitationData } from "@dwengo-1/common/interfaces/teacher-invitation";
+import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
 
 const controller = new TeacherInvitationController();
 
 /**
-    All the invitations the teacher send
+    All the invitations the teacher sent
 **/
-export function useTeacherInvitationsByQuery(
+export function useTeacherInvitationsSentQuery(
     username: MaybeRefOrGetter<string | undefined>,
 ): UseQueryReturnType<TeacherInvitationsResponse, Error> {
     return useQuery({
@@ -24,14 +24,23 @@ export function useTeacherInvitationsByQuery(
 }
 
 /**
-    All the pending invitations send to this teacher
+    All the pending invitations sent to this teacher
  */
-export function useTeacherInvitationsForQuery(
+export function useTeacherInvitationsReceivedQuery(
     username: MaybeRefOrGetter<string | undefined>,
 ): UseQueryReturnType<TeacherInvitationsResponse, Error> {
     return useQuery({
         queryFn: computed(async () => controller.getAll(toValue(username), false)),
         enabled: () => Boolean(toValue(username)),
+    });
+}
+
+export function useTeacherInvitationQuery(
+    data: MaybeRefOrGetter<TeacherInvitationData | undefined>,
+): UseQueryReturnType<TeacherInvitationResponse, Error> {
+    return useQuery({
+        queryFn: computed(async () => controller.getBy(toValue(data))),
+        enabled: () => Boolean(toValue(data)),
     });
 }
 
@@ -46,25 +55,14 @@ export function useCreateTeacherInvitationMutation(): UseMutationReturnType<
     });
 }
 
-export function useAcceptTeacherInvitationMutation(): UseMutationReturnType<
+export function useRespondTeacherInvitationMutation(): UseMutationReturnType<
     TeacherInvitationResponse,
     Error,
     TeacherDTO,
     unknown
 > {
     return useMutation({
-        mutationFn: async (data: TeacherInvitationData) => controller.respond(data, true),
-    });
-}
-
-export function useDeclineTeacherInvitationMutation(): UseMutationReturnType<
-    TeacherInvitationResponse,
-    Error,
-    TeacherDTO,
-    unknown
-> {
-    return useMutation({
-        mutationFn: async (data: TeacherInvitationData) => controller.respond(data, false),
+        mutationFn: async (data: TeacherInvitationData) => controller.respond(data),
     });
 }
 
@@ -75,6 +73,6 @@ export function useDeleteTeacherInvitationMutation(): UseMutationReturnType<
     unknown
 > {
     return useMutation({
-        mutationFn: async (data: TeacherInvitationData) => controller.respond(data, false),
+        mutationFn: async (data: TeacherInvitationData) => controller.remove(data),
     });
 }
