@@ -18,6 +18,8 @@ export class Group {
 
     @ManyToMany({
         entity: () => Student,
+        owner: true,
+        inversedBy: "groups"
     })
-    members!: Student[];
+    members: Collection<Student> = new Collection<Student>(this);
 }

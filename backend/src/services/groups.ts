@@ -1,4 +1,4 @@
-import { Collection, EntityDTO } from '@mikro-orm/core';
+import { EntityDTO } from '@mikro-orm/core';
 import { getGroupRepository, getStudentRepository, getSubmissionRepository } from '../data/repositories.js';
 import { Group } from '../entities/assignments/group.entity.js';
 import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
@@ -9,8 +9,6 @@ import { fetchAssignment } from './assignments.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { putObject } from './service-helper.js';
 import { Student } from '../entities/users/student.entity.js';
-import { GroupRepository } from '../data/assignments/group-repository.js';
-import { assert } from 'console';
 
 export async function fetchGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<Group> {
     const assignment = await fetchAssignment(classId, assignmentNumber);
@@ -72,16 +70,12 @@ export async function createGroup(groupData: GroupDTO, classid: string, assignme
     ).filter((student): student is Student => student !== null);
 
     const assignment = await fetchAssignment(classid, assignmentNumber);
-    
+
     const groupRepository = getGroupRepository();
     const newGroup = groupRepository.create({
         assignment: assignment,
-        members: members,
+        members: members
     });
-
-    assert(newGroup.groupNumber !== undefined, "NO GROUPNUMBER WAS ASSIGNED");
-
-    console.log(newGroup);
 
     try {
         await groupRepository.save(newGroup);
