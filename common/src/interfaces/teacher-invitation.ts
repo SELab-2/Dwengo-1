@@ -12,5 +12,5 @@ export interface TeacherInvitationData {
     sender: string;
     receiver: string;
     class: string;
-    accepted?: boolean; // use for put requests, else skip
+    accepted?: boolean; // Use for put requests, else skip
 }

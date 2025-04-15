@@ -30,7 +30,7 @@ export class TeacherInvitationController extends BaseController {
         return this.delete<TeacherInvitationResponse>(`/${data.sender}/${data.receiver}/${data.class}`);
     }
 
-    async respond(data: TeacherInvitationData) {
+    async respond(data: TeacherInvitationData): Promise<TeacherInvitationResponse> {
         return this.put<TeacherInvitationResponse>("/", data);
     }
 }
