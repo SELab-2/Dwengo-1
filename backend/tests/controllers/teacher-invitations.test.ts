@@ -37,7 +37,7 @@ describe('Teacher controllers', () => {
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ invitations: expect.anything() }));
 
         const result = jsonMock.mock.lastCall?.[0];
-        // console.log(result.invitations);
+        // Console.log(result.invitations);
         expect(result.invitations).to.have.length.greaterThan(0);
     });
 
