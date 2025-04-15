@@ -9,3 +9,8 @@ export interface AssignmentDTO {
     language: string;
     groups: GroupDTO[] | string[][];
 }
+
+export interface AssignmentDTOId {
+    id: number;
+    within: string;
+}
