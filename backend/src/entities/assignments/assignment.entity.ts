@@ -35,5 +35,5 @@ export class Assignment {
         entity: () => Group,
         mappedBy: 'assignment',
     })
-    groups!: Collection<Group>;
+    groups: Collection<Group> = new Collection<Group>(this);
 }
