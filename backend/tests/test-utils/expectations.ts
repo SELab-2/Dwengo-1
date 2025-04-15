@@ -141,3 +141,20 @@ export function expectToBeCorrectLearningPath(
         expect(new Set(node.transitions.map((it) => it.next.version))).toEqual(new Set(expectedNode.transitions.map((it) => it.next.version)));
     }
 }
+
+/**
+ * Expect that the given result is a singleton list with exactly the given element.
+ */
+export function expectToHaveFoundPrecisely<T extends object>(expected: T, result: T[]): void {
+    expect(result).toHaveProperty('length');
+    expect(result.length).toBe(1);
+    expectToBeCorrectEntity(result[0], expected);
+}
+
+/**
+ * Expect that the given result is an empty list.
+ */
+export function expectToHaveFoundNothing<T>(result: T[]): void {
+    expect(result).toHaveProperty('length');
+    expect(result.length).toBe(0);
+}
