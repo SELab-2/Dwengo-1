@@ -3,7 +3,7 @@ import { getGroupRepository, getStudentRepository, getSubmissionRepository } fro
 import { Group } from '../entities/assignments/group.entity.js';
 import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
-import { GroupDTO } from '@dwengo-1/common/interfaces/group';
+import { GroupDTO, GroupDTOId } from '@dwengo-1/common/interfaces/group';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
 import { fetchAssignment } from './assignments.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
@@ -77,16 +77,12 @@ export async function createGroup(groupData: GroupDTO, classid: string, assignme
         members: members
     });
 
-    try {
-        await groupRepository.save(newGroup);
-    } catch(e) {
-        console.log(e);
-    }
+    await groupRepository.save(newGroup);
 
     return mapToGroupDTO(newGroup, newGroup.assignment.within);
 }
 
-export async function getAllGroups(classId: string, assignmentNumber: number, full: boolean): Promise<GroupDTO[]> {
+export async function getAllGroups(classId: string, assignmentNumber: number, full: boolean): Promise<GroupDTO[] | GroupDTOId[]> {
     const assignment = await fetchAssignment(classId, assignmentNumber);
 
     const groupRepository = getGroupRepository();

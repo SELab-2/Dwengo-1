@@ -3,22 +3,17 @@ import { FALLBACK_LANG } from '../config.js';
 import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { Class } from '../entities/classes/class.entity.js';
 import { getLogger } from '../logging/initalize.js';
-import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
+import { AssignmentDTO, AssignmentDTOId } from '@dwengo-1/common/interfaces/assignment';
 import { mapToGroupDTO, mapToGroupDTOId } from './group.js';
 import { getAssignmentHandler } from '../controllers/assignments.js';
 import { getAssignmentRepository, getClassRepository } from '../data/repositories.js';
 
-export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTO {
-    return {
-        id: assignment.id!,
-        within: assignment.within.classId!,
-        title: assignment.title,
-        description: assignment.description,
-        learningPath: assignment.learningPathHruid,
-        language: assignment.learningPathLanguage,
-        groups: assignment.groups.map(group => mapToGroupDTOId(group, assignment.within)),
-    };
-}
+export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTOId {
+        return {
+            id: assignment.id!,
+            within: assignment.within.classId!,
+        };
+    }
 
 export function mapToAssignmentDTO(assignment: Assignment): AssignmentDTO {
     return {

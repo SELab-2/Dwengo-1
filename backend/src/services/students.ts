@@ -18,8 +18,8 @@ import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { fetchClass } from './classes.js';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
 import { ClassDTO } from '@dwengo-1/common/interfaces/class';
-import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
-import { GroupDTO } from '@dwengo-1/common/interfaces/group';
+import { AssignmentDTO, AssignmentDTOId } from '@dwengo-1/common/interfaces/assignment';
+import { GroupDTO, GroupDTOId } from '@dwengo-1/common/interfaces/group';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
@@ -82,7 +82,7 @@ export async function getStudentClasses(username: string, full: boolean): Promis
     return classes.map((cls) => cls.classId!);
 }
 
-export async function getStudentAssignments(username: string, full: boolean): Promise<AssignmentDTO[]> {
+export async function getStudentAssignments(username: string, full: boolean): Promise<AssignmentDTO[] | AssignmentDTOId[]> {
     const student = await fetchStudent(username);
 
     const classRepository = getClassRepository();
@@ -91,7 +91,7 @@ export async function getStudentAssignments(username: string, full: boolean): Pr
     return (await Promise.all(classes.map(async (cls) => await getAllAssignments(cls.classId!, full)))).flat();
 }
 
-export async function getStudentGroups(username: string, full: boolean): Promise<GroupDTO[]> {
+export async function getStudentGroups(username: string, full: boolean): Promise<GroupDTO[] | GroupDTOId[]> {
     const student = await fetchStudent(username);
 
     const groupRepository = getGroupRepository();

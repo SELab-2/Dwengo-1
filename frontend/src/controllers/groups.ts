@@ -1,10 +1,10 @@
 import { BaseController } from "./base-controller";
-import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
+import type { GroupDTO, GroupDTOId } from "@dwengo-1/common/interfaces/group";
 import type { SubmissionsResponse } from "./submissions";
 import type { QuestionsResponse } from "./questions";
 
 export interface GroupsResponse {
-    groups: GroupDTO[];
+    groups: GroupDTO[] | GroupDTOId[];
 }
 
 export interface GroupResponse {
