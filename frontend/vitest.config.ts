@@ -9,6 +9,8 @@ export default mergeConfig(
             environment: "jsdom",
             exclude: [...configDefaults.exclude, "e2e/**"],
             root: fileURLToPath(new URL("./", import.meta.url)),
+            // Startup the backend server, because it is needed for some tests
+            globalSetup: [ "./tests/setup-backend.ts" ]
         },
     }),
 );
