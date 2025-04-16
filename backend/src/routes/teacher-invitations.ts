@@ -5,7 +5,7 @@ import {
     getAllInvitationsHandler,
     getInvitationHandler,
     updateInvitationHandler,
-} from '../controllers/teacher-invitations';
+} from '../controllers/teacher-invitations.js';
 
 const router = express.Router({ mergeParams: true });
 
