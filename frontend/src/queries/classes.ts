@@ -13,6 +13,7 @@ import { computed, toValue, type MaybeRefOrGetter } from "vue";
 import { invalidateAllAssignmentKeys } from "./assignments";
 import { invalidateAllGroupKeys } from "./groups";
 import { invalidateAllSubmissionKeys } from "./submissions";
+import type { TeachersResponse } from "@/controllers/teachers";
 
 const classController = new ClassController();
 
@@ -157,7 +158,7 @@ export function useClassDeleteStudentMutation(): UseMutationReturnType<
 export function useClassTeachersQuery(
     id: MaybeRefOrGetter<string | undefined>,
     full: MaybeRefOrGetter<boolean> = true,
-): UseQueryReturnType<StudentsResponse, Error> {
+): UseQueryReturnType<TeachersResponse, Error> {
     return useQuery({
         queryKey: computed(() => classTeachersKey(toValue(id)!, toValue(full))),
         queryFn: async () => classController.getTeachers(toValue(id)!, toValue(full)),
