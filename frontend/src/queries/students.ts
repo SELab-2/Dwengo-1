@@ -175,14 +175,13 @@ export function useCreateJoinRequestMutation(): UseMutationReturnType<
     unknown
 > {
     const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: async ({ username, classId }) => studentController.createJoinRequest(username, classId),
         onSuccess: async (newJoinRequest) => {
             await queryClient.invalidateQueries({
                 queryKey: studentJoinRequestsQueryKey(newJoinRequest.request.requester.username),
             });
-            await queryClient.invalidateQueries({ queryKey: teacherClassJoinRequests(classId) });
+            await queryClient.invalidateQueries({ queryKey: teacherClassJoinRequests(newJoinRequest.request.class) });
         },
     });
 }
