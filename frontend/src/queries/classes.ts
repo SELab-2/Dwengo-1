@@ -14,6 +14,7 @@ import { invalidateAllAssignmentKeys } from "./assignments";
 import { invalidateAllGroupKeys } from "./groups";
 import { invalidateAllSubmissionKeys } from "./submissions";
 import type { TeachersResponse } from "@/controllers/teachers";
+import type { TeacherInvitationsResponse } from "@/controllers/teacher-invitations";
 
 const classController = new ClassController();
 
@@ -205,7 +206,7 @@ export function useClassDeleteTeacherMutation(): UseMutationReturnType<
 export function useClassTeacherInvitationsQuery(
     id: MaybeRefOrGetter<string | undefined>,
     full: MaybeRefOrGetter<boolean> = true,
-): UseQueryReturnType<StudentsResponse, Error> {
+): UseQueryReturnType<TeacherInvitationsResponse, Error> {
     return useQuery({
         queryKey: computed(() => classTeacherInvitationsKey(toValue(id)!, toValue(full))),
         queryFn: async () => classController.getTeacherInvitations(toValue(id)!, toValue(full)),

@@ -8,7 +8,8 @@
     import { useTeacherClassesQuery } from "@/queries/teachers";
     import { type ClassesResponse, type ClassResponse } from "@/controllers/classes";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import { useCreateClassMutation } from "@/queries/classes";
+    import { useClassesQuery, useClassTeacherInvitationsQuery, useCreateClassMutation } from "@/queries/classes";
+    import type { TeacherInvitationsResponse } from "@/controllers/teacher-invitations";
 
     const { t } = useI18n();
 
@@ -24,7 +25,9 @@
 
     // Fetch all classes of the logged in teacher
     const classesQuery = useTeacherClassesQuery(username, true);
+    const allClassesQuery = useClassesQuery();
     const { mutate } = useCreateClassMutation();
+    const getInvitationsQuery = useClassTeacherInvitationsQuery(username);
 
     // Boolean that handles visibility for dialogs
     // Creating a class will generate a popup with the generated code
@@ -33,19 +36,14 @@
     // Code generated when new class was created
     const code = ref<string>("");
 
-    // TODO: waiting on frontend controllers
-    const invitations = ref<TeacherInvitationDTO[]>([]);
-
     // Function to handle a accepted invitation request
     function acceptRequest(): void {
         //TODO: avoid linting issues when merging by filling the function
-        invitations.value = [];
     }
 
     // Function to handle a denied invitation request
     function denyRequest(): void {
         //TODO: avoid linting issues when merging by filling the function
-        invitations.value = [];
     }
 
     // Teacher should be able to set a displayname when making a class
@@ -250,33 +248,39 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr
-                        v-for="i in invitations"
-                        :key="i.classId"
+                    <using-query-result
+                        :query-result="getInvitationsQuery"
+                        v-slot="invitationsResponse: { data: TeacherInvitationsResponse }"
                     >
-                        <td>
-                            {{ i.classId }}
-                            <!-- TODO fetch display name via classId because db only returns classId field -->
-                        </td>
-                        <td>{{ (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName }}</td>
-                        <td class="text-right">
-                            <div>
-                                <v-btn
-                                    color="green"
-                                    @click="acceptRequest"
-                                    class="mr-2"
-                                >
-                                    {{ t("accept") }}
-                                </v-btn>
-                                <v-btn
-                                    color="red"
-                                    @click="denyRequest"
-                                >
-                                    {{ t("deny") }}
-                                </v-btn>
-                            </div>
-                        </td>
-                    </tr>
+                    <using-query-result :query-result="allClassesQuery" v-slot="classesResponse: {data: ClassesResponse}">
+                        <tr
+                            v-for="i in invitationsResponse.data.invitations as TeacherInvitationDTO[]"
+                            :key="i.classId"
+                        >
+                            <td>
+                                {{ (classesResponse.data.classes as ClassDTO[]).filter((c) => c.id == i.classId)[0] }}
+                            </td>
+                            <td>{{ (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName }}</td>
+                            <td class="text-right">
+                                <div>
+                                    <v-btn
+                                        color="green"
+                                        @click="acceptRequest"
+                                        class="mr-2"
+                                    >
+                                        {{ t("accept") }}
+                                    </v-btn>
+                                    <v-btn
+                                        color="red"
+                                        @click="denyRequest"
+                                    >
+                                        {{ t("deny") }}
+                                    </v-btn>
+                                </div>
+                            </td>
+                        </tr>
+                    </using-query-result>
+                    </using-query-result>
                 </tbody>
             </v-table>
         </div>
