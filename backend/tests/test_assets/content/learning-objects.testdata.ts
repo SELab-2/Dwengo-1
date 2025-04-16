@@ -179,7 +179,7 @@ export const testLearningObjectMultipleChoice: RequiredEntityData<LearningObject
     targetAges: [10, 11, 12, 13, 14, 15, 16, 17, 18],
     admins: [],
     contentType: DwengoContentType.GIFT,
-    content: loadTestAsset('content/learning-object-resources/test-multiple-choice/content.txt'),
+    content: loadTestAsset('content/learning-object-resources/test_multiple_choice/content.txt'),
     returnValue: {
         callbackUrl: `%SUBMISSION%`,
         callbackSchema: '["antwoord vraag 1"]',
@@ -205,7 +205,7 @@ export const testLearningObjectEssayQuestion: RequiredEntityData<LearningObject>
     targetAges: [10, 11, 12, 13, 14, 15, 16, 17, 18],
     admins: [],
     contentType: DwengoContentType.GIFT,
-    content: loadTestAsset('content/learning-object-resources/test-essay/content.txt'),
+    content: loadTestAsset('content/learning-object-resources/test_essay_question/content.txt'),
     returnValue: {
         callbackUrl: `%SUBMISSION%`,
         callbackSchema: '["antwoord vraag 1"]',

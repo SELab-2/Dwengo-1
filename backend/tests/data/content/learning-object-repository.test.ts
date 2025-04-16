@@ -9,6 +9,7 @@ import {
     testLearningObject02,
     testLearningObject03
 } from "../../test_assets/content/learning-objects.testdata";
+import {v4} from "uuid";
 
 describe('LearningObjectRepository', () => {
     let learningObjectRepository: LearningObjectRepository;
@@ -43,6 +44,7 @@ describe('LearningObjectRepository', () => {
         let testLearningObject01Newer = structuredClone(testLearningObject01);
         testLearningObject01Newer.version = 10;
         testLearningObject01Newer.title += " (nieuw)";
+        testLearningObject01Newer.uuid = v4();
         testLearningObject01Newer.content = Buffer.from("This is the new content.");
         newerExample = learningObjectRepository.create(testLearningObject01Newer);
         await learningObjectRepository.save(newerExample);
