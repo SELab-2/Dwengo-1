@@ -12,7 +12,6 @@ import { computed, toValue, type MaybeRefOrGetter } from "vue";
 import {LEARNING_PATH_KEY} from "@/queries/learning-paths.ts";
 import {LEARNING_OBJECT_KEY} from "@/queries/learning-objects.ts";
 import type {Language} from "@dwengo-1/common/util/language";
-import {getEnvVar} from "@dwengo-1/backend/dist/util/envVars.ts";
 
 function submissionsQueryKey(
     hruid: string,

@@ -135,7 +135,8 @@
             class="learning-object-container"
             v-html="learningPathHtml.data.body.innerHTML"
         ></div>
-        {{ currentAnswer }}
+        <p>Last submissions: {{ existingSubmissions?.submissions?.map(it => it.content) }}</p>
+        <p>Your answer: {{ currentAnswer }}</p>
         <v-btn v-if="isStudent && props.group"
                prepend-icon="mdi-check"
                variant="elevated"
