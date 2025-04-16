@@ -29,10 +29,11 @@ export function mapToLearningPath(
         admins,
         image: dto.image ? Buffer.from(base64ToArrayBuffer(dto.image)) : null
     });
-    const nodes = dto.nodes.map((nodeDto: LearningObjectNode) =>
+    const nodes = dto.nodes.map((nodeDto: LearningObjectNode, i: number) =>
         repo.createNode({
             learningPath: path,
             learningObjectHruid: nodeDto.learningobject_hruid,
+            nodeNumber: i,
             language: nodeDto.language,
             version: nodeDto.version,
             startNode: nodeDto.start_node ?? false,

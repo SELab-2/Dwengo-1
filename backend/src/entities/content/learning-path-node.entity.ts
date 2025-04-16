@@ -5,11 +5,11 @@ import { Language } from '@dwengo-1/common/util/language';
 
 @Entity()
 export class LearningPathNode {
-    @ManyToOne({ entity: () => LearningPath, primary: true })
-    learningPath!: Rel<LearningPath>;
-
     @PrimaryKey({ type: 'integer', autoincrement: true })
     nodeNumber?: number;
+
+    @ManyToOne({ entity: () => LearningPath, primary: true })
+    learningPath!: Rel<LearningPath>;
 
     @Property({ type: 'string' })
     learningObjectHruid!: string;
@@ -27,7 +27,7 @@ export class LearningPathNode {
     startNode!: boolean;
 
     @OneToMany({ entity: () => LearningPathTransition, mappedBy: 'node' })
-    transitions: Collection<LearningPathTransition> = new Collection<LearningPathTransition>(this);
+    transitions!: Collection<LearningPathTransition>;
 
     @Property({ length: 3 })
     createdAt: Date = new Date();

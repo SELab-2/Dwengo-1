@@ -49,12 +49,24 @@ export async function seedDatabase(): Promise<void> {
     const answers = makeTestAnswers(em, teachers, questions);
     const submissions = makeTestSubmissions(em, students, groups);
 
+
     // Persist all entities
-    await em.persistAndFlush([
+    /*await em.persistAndFlush([
         ...students,
         ...teachers,
         ...learningObjects,
-        ...learningPaths,
+    ]);*/
+
+    try {
+        await em.persistAndFlush(learningPaths[0]);
+    } catch (e) {
+        "hey";
+    }
+    /*await em.persistAndFlush(learningPaths[1]);
+    await em.persistAndFlush(learningPaths[2]);
+    await em.persistAndFlush(learningPaths[3]);
+
+    await em.persistAndFlush([
         ...classes,
         ...assignments,
         ...groups,
@@ -64,7 +76,7 @@ export async function seedDatabase(): Promise<void> {
         ...questions,
         ...answers,
         ...submissions,
-    ]);
+    ])*/
 
     logger.info('Development database seeded successfully!');
 
