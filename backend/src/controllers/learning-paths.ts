@@ -6,7 +6,7 @@ import { Language } from '@dwengo-1/common/util/language';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import {Group} from "../entities/assignments/group.entity";
-import {getGroupRepository} from "../data/repositories";
+import {getAssignmentRepository, getGroupRepository} from "../data/repositories";
 
 /**
  * Fetch learning paths based on query parameters.
@@ -27,15 +27,14 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
         if (!assignmentNo || !classId) {
             throw new BadRequestException('If forGroupNo is specified, assignmentNo and classId must also be specified.');
         }
-        forGroup = await getGroupRepository().findOne({
-            assignment: {
-                id: parseInt(assignmentNo),
-                within: {
-                    classId
-                }
-            },
-            groupNumber: parseInt(forGroupNo)
-        }) ?? undefined;
+        const assignment = await getAssignmentRepository().findByClassIdAndAssignmentId(
+            classId, parseInt(assignmentNo)
+        );
+        if (assignment) {
+            forGroup = await getGroupRepository().findByAssignmentAndGroupNumber(
+                assignment, parseInt(forGroupNo)
+            ) ?? undefined;
+        }
     }
 
     let hruidList;

@@ -3,10 +3,24 @@
     import type { UseQueryReturnType } from "@tanstack/vue-query";
     import { useLearningObjectHTMLQuery } from "@/queries/learning-objects.ts";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import {nextTick, onMounted, reactive, watch} from "vue";
+    import {computed, nextTick, onMounted, reactive, watch} from "vue";
     import {getGiftAdapterForType} from "@/views/learning-paths/gift-adapters/gift-adapters.ts";
+    import authService from "@/services/auth/auth-service.ts";
+    import {useCreateSubmissionMutation, useSubmissionsQuery} from "@/queries/submissions.ts";
+    import type {SubmissionDTO} from "@dwengo-1/common/dist/interfaces/submission.d.ts";
+    import type {GroupDTO} from "@dwengo-1/common/interfaces/group";
+    import type {StudentDTO} from "@dwengo-1/common/interfaces/student";
+    import type {LearningObjectIdentifierDTO} from "@dwengo-1/common/interfaces/learning-content";
+    import type {User, UserProfile} from "oidc-client-ts";
 
-    const props = defineProps<{ hruid: string; language: Language; version: number }>();
+    const isStudent = computed(() => authService.authState.activeRole === "student");
+
+    const props = defineProps<{
+        hruid: string;
+        language: Language;
+        version: number,
+        group?: {forGroup: number, assignmentNo: number, classId: string}
+    }>();
 
     const learningObjectHtmlQueryResult: UseQueryReturnType<Document, Error> = useLearningObjectHTMLQuery(
         () => props.hruid,
@@ -14,7 +28,61 @@
         () => props.version,
     );
 
-    const currentAnswer = reactive([]);
+    const currentAnswer = reactive(<(string | number | object)[]>[]);
+
+    const {
+        isPending: submissionIsPending,
+        isError: submissionFailed,
+        error: submissionError,
+        isSuccess: submissionSuccess,
+        mutate: submitSolution
+    } = useCreateSubmissionMutation();
+
+    const {
+        isPending: existingSubmissionsIsPending,
+        isError: existingSubmissionsFailed,
+        error: existingSubmissionsError,
+        isSuccess: existingSubmissionsSuccess,
+        data: existingSubmissions
+    } = useSubmissionsQuery(
+        props.hruid,
+        props.language,
+        props.version,
+        props.group?.classId,
+        props.group?.assignmentNo,
+        props.group?.forGroup,
+        true
+    );
+
+
+
+    function submitCurrentAnswer(): void {
+        const { forGroup, assignmentNo, classId } = props.group!;
+        const currentUser: UserProfile = authService.authState.user!.profile;
+        const learningObjectIdentifier: LearningObjectIdentifierDTO = {
+            hruid: props.hruid,
+            language: props.language as Language,
+            version: props.version
+        };
+        const submitter: StudentDTO = {
+            id: currentUser.preferred_username!,
+            username: currentUser.preferred_username!,
+            firstName: currentUser.given_name!,
+            lastName: currentUser.family_name!
+        };
+        const group: GroupDTO = {
+            class: classId,
+            assignment: assignmentNo,
+            groupNumber: forGroup
+        }
+        const submission: SubmissionDTO = {
+            learningObjectIdentifier,
+            submitter,
+            group,
+            content: JSON.stringify(currentAnswer)
+        }
+        submitSolution({ data: submission });
+    }
 
     function forEachQuestion(
         doAction: (questionIndex: number, questionName: string, questionType: string, questionElement: Element) => void
@@ -22,9 +90,9 @@
         const questions = document.querySelectorAll(".gift-question");
         questions.forEach(question => {
             const name = question.id.match(/gift-q(\d+)/)?.[1]
-            const questionType = question.classList.values()
+            const questionType = question.className.split(" ")
                 .find(it => it.startsWith("gift-question-type"))
-                .match(/gift-question-type-([^ ]*)/)?.[1];
+                ?.match(/gift-question-type-([^ ]*)/)?.[1];
 
             if (!name || isNaN(parseInt(name)) || !questionType) return;
 
@@ -46,7 +114,7 @@
         forEachQuestion((index, name, type, element) => {
             getGiftAdapterForType(type)?.setAnswer(element, answers[index]);
         });
-        currentAnswer.fill(answers);
+        currentAnswer.splice(0, currentAnswer.length, ...answers);
     }
 
     onMounted(() => nextTick(() => attachQuestionListeners()));
@@ -68,6 +136,14 @@
             v-html="learningPathHtml.data.body.innerHTML"
         ></div>
         {{ currentAnswer }}
+        <v-btn v-if="isStudent && props.group"
+               prepend-icon="mdi-check"
+               variant="elevated"
+               :loading="submissionIsPending"
+               @click="submitCurrentAnswer()"
+        >
+            Submit
+        </v-btn>
     </using-query-result>
 </template>
 

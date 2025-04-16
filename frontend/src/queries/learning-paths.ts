@@ -4,19 +4,21 @@ import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
 import { getLearningPathController } from "@/controllers/controllers";
 import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
 
-const LEARNING_PATH_KEY = "learningPath";
+export const LEARNING_PATH_KEY = "learningPath";
 const learningPathController = getLearningPathController();
 
 export function useGetLearningPathQuery(
     hruid: MaybeRefOrGetter<string>,
     language: MaybeRefOrGetter<Language>,
-    options?: MaybeRefOrGetter<{ forGroup?: string; forStudent?: string }>,
+    forGroup?: MaybeRefOrGetter<{forGroup: number, assignmentNo: number, classId: string}>,
 ): UseQueryReturnType<LearningPath, Error> {
     return useQuery({
-        queryKey: [LEARNING_PATH_KEY, "get", hruid, language, options],
+        queryKey: [LEARNING_PATH_KEY, "get", toValue(hruid), toValue(language), toValue(forGroup)],
         queryFn: async () => {
-            const [hruidVal, languageVal, optionsVal] = [toValue(hruid), toValue(language), toValue(options)];
-            return learningPathController.getBy(hruidVal, languageVal, optionsVal);
+            console.log("queryKey");
+            console.log([LEARNING_PATH_KEY, "get", toValue(hruid), toValue(language), toValue(forGroup)]);
+            const [hruidVal, languageVal, forGroupVal] = [toValue(hruid), toValue(language), toValue(forGroup)];
+            return learningPathController.getBy(hruidVal, languageVal, forGroupVal);
         },
         enabled: () => Boolean(toValue(hruid)) && Boolean(toValue(language)),
     });

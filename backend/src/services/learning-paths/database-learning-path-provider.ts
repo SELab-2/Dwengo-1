@@ -111,6 +111,7 @@ async function convertNode(
         updatedAt: node.updatedAt.toISOString(),
         learningobject_hruid: node.learningObjectHruid,
         version: learningObject.version,
+        done: personalizedFor ? lastSubmission !== null : undefined,
         transitions,
     };
 }

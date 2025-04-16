@@ -276,10 +276,11 @@
                 <tbody>
                     <tr
                         v-for="i in invitations"
-                        :key="(i.class as ClassDTO).id"
+                        :key="i.classId"
                     >
                         <td>
-                            {{ (i.class as ClassDTO).displayName }}
+                            {{ i.classId }}
+                            <!-- TODO fetch display name via classId because db only returns classId field -->
                         </td>
                         <td>{{ (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName }}</td>
                         <td class="text-right">

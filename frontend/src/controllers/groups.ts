@@ -36,11 +36,11 @@ export class GroupController extends BaseController {
         return this.put<GroupResponse>(`/${num}`, data);
     }
 
-    async getSubmissions(groupNumber: number, full = true): Promise<SubmissionsResponse> {
-        return this.get<SubmissionsResponse>(`/${groupNumber}/submissions`, { full });
+    async getSubmissions(num: number, full = true): Promise<SubmissionsResponse> {
+        return this.get<SubmissionsResponse>(`/${num}/submissions`, { full });
     }
 
-    async getQuestions(groupNumber: number, full = true): Promise<QuestionsResponse> {
-        return this.get<QuestionsResponse>(`/${groupNumber}/questions`, { full });
+    async getQuestions(num: number, full = true): Promise<QuestionsResponse> {
+        return this.get<QuestionsResponse>(`/${num}/questions`, { full });
     }
 }

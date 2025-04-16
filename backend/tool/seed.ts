@@ -49,7 +49,6 @@ export async function seedDatabase(): Promise<void> {
     const answers = makeTestAnswers(em, teachers, questions);
     const submissions = makeTestSubmissions(em, students, groups);
 
-
     // Persist all entities
     await em.persistAndFlush([
         ...students,

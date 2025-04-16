@@ -16,26 +16,31 @@
     const route = useRoute();
     const { t } = useI18n();
 
-    const props = defineProps<{ hruid: string; language: Language; learningObjectHruid?: string }>();
+    const props = defineProps<{
+        hruid: string;
+        language: Language;
+        learningObjectHruid?: string,
+    }>();
 
-    interface Personalization {
-        forStudent?: string;
+    interface LearningPathPageQuery {
         forGroup?: string;
+        assignmentNo?: string;
+        classId?: string;
     }
 
-    const personalization = computed(() => {
-        if (route.query.forStudent || route.query.forGroup) {
+    const query = computed(() => route.query as LearningPathPageQuery);
+
+    const forGroup = computed(() => {
+        if (query.value.forGroup && query.value.assignmentNo && query.value.classId) {
             return {
-                forStudent: route.query.forStudent,
-                forGroup: route.query.forGroup,
-            } as Personalization;
+                forGroup: parseInt(query.value.forGroup),
+                assignmentNo: parseInt(query.value.assignmentNo),
+                classId: query.value.classId
+            };
         }
-        return {
-            forStudent: authService.authState.user?.profile?.preferred_username,
-        } as Personalization;
     });
 
-    const learningPathQueryResult = useGetLearningPathQuery(props.hruid, props.language, personalization);
+    const learningPathQueryResult = useGetLearningPathQuery(props.hruid, props.language, forGroup);
 
     const learningObjectListQueryResult = useLearningObjectListForPathQuery(learningPathQueryResult.data);
 
@@ -184,6 +189,7 @@
             :hruid="currentNode.learningobjectHruid"
             :language="currentNode.language"
             :version="currentNode.version"
+            :group="forGroup"
             v-if="currentNode"
         ></learning-object-view>
         <div class="navigation-buttons-container">

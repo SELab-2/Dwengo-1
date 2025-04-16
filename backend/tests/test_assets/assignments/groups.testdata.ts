@@ -2,6 +2,8 @@ import {EntityManager} from '@mikro-orm/core';
 import { Group } from '../../../src/entities/assignments/group.entity';
 import { Assignment } from '../../../src/entities/assignments/assignment.entity';
 import { Student } from '../../../src/entities/users/student.entity';
+import {getConditionalPathAssignment} from "./assignments.testdata";
+import {getTestleerling1} from "../users/students.testdata";
 
 export function makeTestGroups(em: EntityManager, students: Student[], assignments: Assignment[]): Group[] {
     /*
@@ -54,7 +56,16 @@ export function makeTestGroups(em: EntityManager, students: Student[], assignmen
         members: students.slice(0, 2),
     });
 
-    return [group01, group02, group03, group04, group05];
+    /**
+     * Group 1 for the assignment of the testing learning path with conditions.
+     */
+    group1ConditionalLearningPath = em.create(Group, {
+        assignment: getConditionalPathAssignment(),
+        groupNumber: 1,
+        members: [getTestleerling1()]
+    })
+
+    return [group01, group02, group03, group04, group05, group1ConditionalLearningPath];
 }
 
 let group01: Group;
@@ -62,6 +73,7 @@ let group02: Group;
 let group03: Group;
 let group04: Group;
 let group05: Group;
+let group1ConditionalLearningPath: Group;
 
 export function getTestGroup01() {
     return group01;
@@ -83,3 +95,6 @@ export function getTestGroup05() {
     return group05;
 }
 
+export function getGroup1ConditionalLearningPath() {
+    return group1ConditionalLearningPath;
+}
