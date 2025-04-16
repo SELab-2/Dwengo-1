@@ -15,6 +15,7 @@ import { makeTestAnswers } from './test_assets/questions/answers.testdata.js';
 import { makeTestSubmissions } from './test_assets/assignments/submission.testdata.js';
 import {Collection} from "@mikro-orm/core";
 import {Group} from "../src/entities/assignments/group.entity";
+import {LearningObject} from "../src/entities/content/learning-object.entity";
 
 export async function setupTestApp(): Promise<void> {
     dotenv.config({ path: '.env.test' });
@@ -58,4 +59,6 @@ export async function setupTestApp(): Promise<void> {
         ...answers,
         ...submissions,
     ]);
+
+    console.log(await em.findAll(LearningObject));
 }

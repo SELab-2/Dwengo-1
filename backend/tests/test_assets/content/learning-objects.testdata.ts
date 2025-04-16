@@ -37,7 +37,7 @@ export function createReturnValue(): ReturnValue {
 }
 
 export const testLearningObject01: RequiredEntityData<LearningObject> = {
-    hruid: 'id01',
+    hruid: `${getEnvVar(envVars.UserContentPrefix)}id01`,
     language: Language.English,
     version: 1,
     admins: [],
@@ -61,7 +61,7 @@ export const testLearningObject01: RequiredEntityData<LearningObject> = {
 };
 
 export const testLearningObject02: RequiredEntityData<LearningObject> = {
-    hruid: 'id02',
+    hruid: `${getEnvVar(envVars.UserContentPrefix)}id02`,
     language: Language.English,
     version: 1,
     admins: [],
@@ -85,7 +85,7 @@ export const testLearningObject02: RequiredEntityData<LearningObject> = {
 };
 
 export const testLearningObject03: RequiredEntityData<LearningObject> = {
-    hruid: 'id03',
+    hruid: `${getEnvVar(envVars.UserContentPrefix)}id03`,
     language: Language.English,
     version: 1,
     admins: [],
@@ -112,7 +112,7 @@ export const testLearningObject03: RequiredEntityData<LearningObject> = {
 };
 
 export const testLearningObject04: RequiredEntityData<LearningObject> = {
-    hruid: 'id04',
+    hruid: `${getEnvVar(envVars.UserContentPrefix)}id04`,
     language: Language.English,
     version: 1,
     admins: [],
@@ -139,7 +139,7 @@ export const testLearningObject04: RequiredEntityData<LearningObject> = {
 };
 
 export const testLearningObject05: RequiredEntityData<LearningObject> = {
-    hruid: 'id05',
+    hruid: `${getEnvVar(envVars.UserContentPrefix)}id05`,
     language: Language.English,
     version: 1,
     admins: [],

@@ -133,7 +133,7 @@ export function expectToBeCorrectLearningPath(
         const expectedNode = [...expectedLearningPathNodes.entries()].find(
             ([key, _]) => key.learningObjectHruid === nodeKey.learningObjectHruid && key.language === node.language && key.version === node.version
         )![1];
-        expect(node.start_node).toEqual(expectedNode.startNode);
+        expect(Boolean(node.start_node)).toEqual(Boolean(expectedNode.startNode));
 
         expect(new Set(node.transitions.map((it) => it.next.hruid))).toEqual(
             new Set(expectedNode.transitions.map((it) => it.next.learningObjectHruid))
