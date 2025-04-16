@@ -10,6 +10,8 @@ import {
     getTeacherStudentHandler,
     updateStudentJoinRequestHandler,
 } from '../controllers/teachers.js';
+import invitationRouter from './teacher-invitations.js';
+
 const router = express.Router();
 
 // Root endpoint used to search objects
@@ -32,10 +34,6 @@ router.get('/:username/joinRequests/:classId', getStudentJoinRequestHandler);
 router.put('/:username/joinRequests/:classId/:studentUsername', updateStudentJoinRequestHandler);
 
 // Invitations to other classes a teacher received
-router.get('/:id/invitations', (_req, res) => {
-    res.json({
-        invitations: ['0'],
-    });
-});
+router.get('/invitations', invitationRouter);
 
 export default router;

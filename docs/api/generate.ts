@@ -16,6 +16,10 @@ const doc = {
             description: 'Development server',
         },
         {
+            url: 'http://localhost/',
+            description: 'Staging server',
+        },
+        {
             url: 'https://sel2-1.ugent.be/',
             description: 'Production server',
         },
@@ -55,4 +59,4 @@ const doc = {
 const outputFile = './swagger.json';
 const routes = ['../../backend/src/app.ts'];
 
-await swaggerAutogen({ openapi: '3.1.0' })(outputFile, routes, doc);
+void swaggerAutogen({ openapi: '3.1.0' })(outputFile, routes, doc);
