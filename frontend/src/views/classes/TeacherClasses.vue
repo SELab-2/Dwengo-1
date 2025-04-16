@@ -6,11 +6,11 @@
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import type { TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
     import { useTeacherClassesQuery } from "@/queries/teachers";
-    import { ClassController, type ClassesResponse, type ClassResponse } from "@/controllers/classes";
+    import { type ClassesResponse, type ClassResponse } from "@/controllers/classes";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import { useCreateClassMutation } from "@/queries/classes";
 
     const { t } = useI18n();
-    const classController = new ClassController();
 
     // Username of logged in teacher
     const username = ref<string | undefined>(undefined);
@@ -24,6 +24,7 @@
 
     // Fetch all classes of the logged in teacher
     const classesQuery = useTeacherClassesQuery(username, true);
+    const { mutate } = useCreateClassMutation();
 
     // Boolean that handles visibility for dialogs
     // Creating a class will generate a popup with the generated code
@@ -64,24 +65,25 @@
     async function createClass(): Promise<void> {
         // Check if the class name is valid
         if (className.value && className.value.length > 0 && /^[a-zA-Z0-9_-]+$/.test(className.value)) {
-            try {
-                const classDto: ClassDTO = {
-                    id: "",
-                    displayName: className.value,
-                    teachers: [username.value!],
-                    students: [],
-                };
-                const classResponse: ClassResponse = await classController.createClass(classDto);
-                const createdClass: ClassDTO = classResponse.class;
-                code.value = createdClass.id;
-                dialog.value = true;
-                showSnackbar(t("created"), "success");
+            const classDto: ClassDTO = {
+                id: "",
+                displayName: className.value,
+                teachers: [username.value!],
+                students: [],
+            };
 
-                // Reload the table with classes so the new class appears
-                await classesQuery.refetch();
-            } catch (_) {
-                showSnackbar(t("wrong"), "error");
-            }
+            mutate(classDto, {
+                onSuccess: async (classResponse) => {
+                    showSnackbar(t("classCreated"), "success");
+                    const createdClass: ClassDTO = classResponse.class;
+                    code.value = createdClass.id;
+                    await classesQuery.refetch();
+                },
+                onError: (err) => {
+                    showSnackbar(t("creationFailed") + ": " + err.message, "error");
+                },
+            });
+            dialog.value = true;
         }
         if (!className.value || className.value === "") {
             showSnackbar(t("name is mandatory"), "error");
