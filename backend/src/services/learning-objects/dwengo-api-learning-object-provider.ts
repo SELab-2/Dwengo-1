@@ -11,6 +11,7 @@ import {
     LearningPathIdentifier,
     LearningPathResponse,
 } from '@dwengo-1/common/interfaces/learning-content';
+import {v4} from "uuid";
 
 const logger: Logger = getLogger();
 
@@ -23,7 +24,7 @@ function filterData(data: LearningObjectMetadata): FilteredLearningObject {
     return {
         key: data.hruid, // Hruid learningObject (not path)
         _id: data._id,
-        uuid: data.uuid,
+        uuid: data.uuid ?? v4(),
         version: data.version,
         title: data.title,
         htmlUrl: `/learningObject/${data.hruid}/html?language=${data.language}&version=${data.version}`, // Url to fetch html content

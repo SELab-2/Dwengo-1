@@ -15,6 +15,7 @@ import {
 import { Language } from '@dwengo-1/common/util/language';
 import {Group} from "../../entities/assignments/group.entity";
 import {Collection} from "@mikro-orm/core";
+import {v4} from "uuid";
 
 /**
  * Fetches the corresponding learning object for each of the nodes and creates a map that maps each node to its
@@ -163,7 +164,7 @@ function convertTransition(
             _id: String(index), // Retained for backwards compatibility. The index uniquely identifies the transition within the learning path.
             default: false, // We don't work with default transitions but retain this for backwards compatibility.
             next: {
-                _id: nextNode._id + index, // Construct a unique ID for the transition for backwards compatibility.
+                _id: nextNode._id ? (nextNode._id + index) : v4(), // Construct a unique ID for the transition for backwards compatibility.
                 hruid: transition.next.learningObjectHruid,
                 language: nextNode.language,
                 version: nextNode.version,

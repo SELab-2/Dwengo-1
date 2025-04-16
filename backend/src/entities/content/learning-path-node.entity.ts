@@ -9,7 +9,7 @@ export class LearningPathNode {
     learningPath!: Rel<LearningPath>;
 
     @PrimaryKey({ type: 'integer', autoincrement: true })
-    nodeNumber!: number;
+    nodeNumber?: number;
 
     @Property({ type: 'string' })
     learningObjectHruid!: string;

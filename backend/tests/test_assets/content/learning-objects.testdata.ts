@@ -5,6 +5,7 @@ import {DwengoContentType} from '../../../src/services/learning-objects/processi
 import {ReturnValue} from '../../../src/entities/content/return-value.entity';
 import {envVars, getEnvVar} from "../../../src/util/envVars";
 import {loadTestAsset} from "../../test-utils/load-test-asset";
+import {v4} from "uuid";
 
 export function makeTestLearningObjects(em: EntityManager): LearningObject[] {
     const returnValue: ReturnValue = new ReturnValue();
@@ -30,8 +31,8 @@ export function makeTestLearningObjects(em: EntityManager): LearningObject[] {
 
 export function createReturnValue(): ReturnValue {
     const returnValue: ReturnValue = new ReturnValue();
-    returnValue.callbackSchema = '';
-    returnValue.callbackUrl = '';
+    returnValue.callbackSchema = '[]';
+    returnValue.callbackUrl = '%SUBMISSION%';
     return returnValue;
 }
 
@@ -44,6 +45,8 @@ export const testLearningObject01: RequiredEntityData<LearningObject> = {
     description: 'debute',
     contentType: DwengoContentType.TEXT_MARKDOWN,
     keywords: [],
+    uuid: v4(),
+    targetAges: [16, 17, 18],
     teacherExclusive: false,
     skosConcepts: [],
     educationalGoals: [],
@@ -235,16 +238,16 @@ export const testLearningObjectPnNotebooks: RequiredEntityData<LearningObject> =
         {
             name: "dwengo.png",
             mimeType: "image/png",
-            content: loadTestAsset("/content/learning-object-resources/pn-werkingnotebooks/dwengo.png")
+            content: loadTestAsset("/content/learning-object-resources/pn_werkingnotebooks/dwengo.png")
         },
         {
             name: "Knop.png",
             mimeType: "image/png",
-            content: loadTestAsset("/content/learning-object-resources/pn-werkingnotebooks/Knop.png")
+            content: loadTestAsset("/content/learning-object-resources/pn_werkingnotebooks/Knop.png")
         }
     ],
     available: false,
-    content: loadTestAsset("/content/learning-object-resources/pn-werkingnotebooks/content.md"),
+    content: loadTestAsset("/content/learning-object-resources/pn_werkingnotebooks/content.md"),
     returnValue: {
         callbackUrl: "%SUBMISSION%",
         callbackSchema: "[]"

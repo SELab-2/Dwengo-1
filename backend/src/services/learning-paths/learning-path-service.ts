@@ -29,14 +29,13 @@ export function mapToLearningPath(
         admins,
         image: dto.image ? Buffer.from(base64ToArrayBuffer(dto.image)) : null
     });
-    const nodes = dto.nodes.map((nodeDto: LearningObjectNode, i: number) =>
+    const nodes = dto.nodes.map((nodeDto: LearningObjectNode) =>
         repo.createNode({
             learningPath: path,
             learningObjectHruid: nodeDto.learningobject_hruid,
             language: nodeDto.language,
             version: nodeDto.version,
             startNode: nodeDto.start_node ?? false,
-            nodeNumber: i,
             createdAt: new Date(),
             updatedAt: new Date()
         })
@@ -66,10 +65,10 @@ export function mapToLearningPath(
             }
         }).filter(it => it).map(it => it!);
 
-        fromNode.transitions = new Collection<LearningPathTransition>(transitions);
+        fromNode.transitions = new Collection<LearningPathTransition>(fromNode, transitions);
     });
 
-    path.nodes = new Collection<LearningPathNode>(nodes);
+    path.nodes = new Collection<LearningPathNode>(path, nodes);
 
     return path;
 }

@@ -32,7 +32,8 @@ function convertLearningObject(learningObject: LearningObject | null): FilteredL
         educationalGoals: learningObject.educationalGoals,
         returnValue: {
             callback_url: learningObject.returnValue.callbackUrl,
-            callback_schema: JSON.parse(learningObject.returnValue.callbackSchema),
+            callback_schema: learningObject.returnValue.callbackSchema === "" ? ""
+                                : JSON.parse(learningObject.returnValue.callbackSchema),
         },
         skosConcepts: learningObject.skosConcepts,
         targetAges: learningObject.targetAges || [],

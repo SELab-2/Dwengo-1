@@ -1,10 +1,10 @@
 import { Language } from '../util/language';
 
 export interface Transition {
-    default: boolean;
-    _id: string;
+    default?: boolean;
+    _id?: string;
     next: {
-        _id: string;
+        _id?: string;
         hruid: string;
         version: number;
         language: string;

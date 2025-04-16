@@ -3,6 +3,7 @@ import { LearningObject } from '../../src/entities/content/learning-object.entit
 import { LearningPath as LearningPathEntity } from '../../src/entities/content/learning-path.entity';
 import { expect } from 'vitest';
 import { FilteredLearningObject, LearningPath } from '@dwengo-1/common/interfaces/learning-content';
+import {RequiredEntityData} from "@mikro-orm/core";
 
 // Ignored properties because they belang for example to the class, not to the entity itself.
 const IGNORE_PROPERTIES = ['parent'];
@@ -60,9 +61,9 @@ export function expectToBeCorrectEntity<T extends object>(
 /**
  * Checks that filtered is the correct representation of original as FilteredLearningObject.
  * @param filtered the representation as FilteredLearningObject
- * @param original the original entity added to the database
+ * @param original the data of the entity in the database that was filtered.
  */
-export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearningObject, original: LearningObject): void {
+export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearningObject, original: RequiredEntityData<LearningObject>): void {
     expect(filtered.uuid).toEqual(original.uuid);
     expect(filtered.version).toEqual(original.version);
     expect(filtered.language).toEqual(original.language);
