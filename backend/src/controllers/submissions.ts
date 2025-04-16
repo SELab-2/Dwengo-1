@@ -37,7 +37,7 @@ export async function getSubmissionsHandler(req: Request, res: Response): Promis
         )
     }
 
-    res.json(submissions);
+    res.json({ submissions });
 }
 
 export async function getSubmissionHandler(req: Request, res: Response): Promise<void> {

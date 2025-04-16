@@ -11,7 +11,7 @@
     import type {GroupDTO} from "@dwengo-1/common/interfaces/group";
     import type {StudentDTO} from "@dwengo-1/common/interfaces/student";
     import type {LearningObjectIdentifierDTO} from "@dwengo-1/common/interfaces/learning-content";
-    import type {User, UserProfile} from "oidc-client-ts";
+    import type {UserProfile} from "oidc-client-ts";
 
     const isStudent = computed(() => authService.authState.activeRole === "student");
 
@@ -135,7 +135,7 @@
             class="learning-object-container"
             v-html="learningPathHtml.data.body.innerHTML"
         ></div>
-        <p>Last submissions: {{ existingSubmissions?.submissions?.map(it => it.content) }}</p>
+        <p>Last submissions: {{ existingSubmissions }}</p>
         <p>Your answer: {{ currentAnswer }}</p>
         <v-btn v-if="isStudent && props.group"
                prepend-icon="mdi-check"
