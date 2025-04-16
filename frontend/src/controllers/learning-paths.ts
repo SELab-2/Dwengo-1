@@ -8,8 +8,8 @@ export class LearningPathController extends BaseController {
     constructor() {
         super("learningPath");
     }
-    async search(query: string): Promise<LearningPath[]> {
-        const dtos = await this.get<LearningPathDTO[]>("/", { search: query });
+    async search(query: string, language: string): Promise<LearningPath[]> {
+        const dtos = await this.get<LearningPathDTO[]>("/", { search: query, language });
         return dtos.map((dto) => LearningPath.fromDTO(dto));
     }
     async getBy(

@@ -1,4 +1,4 @@
-::MC basic::
+::Self-evaluation::
 Are you following along well?  {
 	~No, it's very difficult to follow along.
     =Yes, no problem!

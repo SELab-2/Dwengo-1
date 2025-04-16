@@ -14,7 +14,7 @@ export class MultipleChoiceQuestionRenderer extends GIFTQuestionRenderer<Multipl
         for (const choice of question.choices) {
             renderedHtml += `<div class="gift-choice-div">\n`;
             renderedHtml += `    <input type='radio' id='gift-q${questionNumber}-choice-${i}' name='gift-q${questionNumber}-choices' value="${i}"/>\n`;
-            renderedHtml += `    <label for='gift-q${questionNumber}-choice-${i}'>${choice.text}</label>\n`;
+            renderedHtml += `    <label for='gift-q${questionNumber}-choice-${i}'>${choice.text.text}</label>\n`;
             renderedHtml += `</div>\n`;
             i++;
         }

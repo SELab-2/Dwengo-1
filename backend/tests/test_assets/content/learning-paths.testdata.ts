@@ -31,7 +31,7 @@ const nowString = new Date().toString();
 export const testLearningPath01: LearningPathDTO = {
     keywords: "test",
     target_ages: [16, 17, 18],
-    hruid: "id01",
+    hruid: `${getEnvVar(envVars.UserContentPrefix)}id01`,
     language: Language.English,
     title: "repertoire Tool",
     description: "all about Tool",
@@ -67,7 +67,7 @@ export const testLearningPath01: LearningPathDTO = {
 export const testLearningPath02: LearningPathDTO = {
     keywords: "test",
     target_ages: [16, 17, 18],
-    hruid: "id02",
+    hruid: `${getEnvVar(envVars.UserContentPrefix)}id02`,
     language: Language.English,
     title: "repertoire Dire Straits",
     description: "all about Dire Straits",
