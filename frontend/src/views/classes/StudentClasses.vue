@@ -1,20 +1,26 @@
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
-    import { onMounted, ref } from "vue";
+    import { computed, onMounted, ref } from "vue";
     import { validate, version } from "uuid";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { useCreateJoinRequestMutation, useStudentClassesQuery } from "@/queries/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
-    import { ClassController, type ClassesResponse } from "@/controllers/classes";
+    import { type ClassesResponse } from "@/controllers/classes";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import { useClassStudentsQuery, useClassTeachersQuery } from "@/queries/classes";
+    import type { StudentsResponse } from "@/controllers/students";
+    import type { TeachersResponse } from "@/controllers/teachers";
 
     const { t } = useI18n();
-    const classController: ClassController = new ClassController();
 
     // Username of logged in student
     const username = ref<string | undefined>(undefined);
+
+    // Students of selected class are shown when logged in student presses on the member count
+    const selectedClass = ref<ClassDTO | null>(null);
+    const getStudents = ref(false);
 
     // Find the username of the logged in user so it can be used to fetch other information
     // When loading the page
@@ -25,12 +31,10 @@
 
     // Fetch all classes of the logged in student
     const classesQuery = useStudentClassesQuery(username);
-
-    // Students of selected class are shown when logged in student presses on the member count
-    const selectedClass = ref<ClassDTO | null>(null);
-    const students = ref<StudentDTO[]>([]);
-    const teachers = ref<TeacherDTO[]>([]);
-    const getStudents = ref(false);
+    // Fetch all students of the class
+    const getStudentsQuery = useClassStudentsQuery(computed(() => selectedClass.value?.id));
+    // Fetch all teachers of the class
+    const getTeachersQuery = useClassTeachersQuery(computed(() => selectedClass.value?.id));
 
     // Boolean that handles visibility for dialogs
     // Clicking on membercount will show a dialog with all members
@@ -40,27 +44,19 @@
     async function openStudentDialog(c: ClassDTO): Promise<void> {
         selectedClass.value = c;
 
-        // Clear previous value
+        // let the component know it should show the students in a class
         getStudents.value = true;
-        students.value = [];
+        await getStudentsQuery.refetch();
         dialog.value = true;
-
-        // TODO: change to use class query
-        const studentDTOs: StudentDTO[] = (await classController.getStudents(c.id)).students as StudentDTO[];
-        students.value = studentDTOs;
     }
 
     async function openTeacherDialog(c: ClassDTO): Promise<void> {
         selectedClass.value = c;
 
-        // Clear previous value
+        // let the component know it should show teachers of a class
         getStudents.value = false;
-        teachers.value = [];
+        await getTeachersQuery.refetch();
         dialog.value = true;
-
-        // TODO: change to use class query
-        const teacherDTOs: TeacherDTO[] = (await classController.getTeachers(c.id)).teachers as TeacherDTO[];
-        teachers.value = teacherDTOs;
     }
 
     // Hold the code a student gives in to join a class
@@ -169,27 +165,38 @@
             </using-query-result>
 
             <v-dialog
+                v-if="selectedClass"
                 v-model="dialog"
                 width="400"
             >
                 <v-card>
-                    <v-card-title> {{ selectedClass?.displayName }} </v-card-title>
+                    <v-card-title> {{ selectedClass!.displayName }} </v-card-title>
                     <v-card-text>
                         <ul v-if="getStudents">
-                            <li
-                                v-for="student in students"
-                                :key="student.username"
+                            <using-query-result
+                                :query-result="getStudentsQuery"
+                                v-slot="studentsResponse: { data: StudentsResponse }"
                             >
-                                {{ student.firstName + " " + student.lastName }}
-                            </li>
+                                <li
+                                    v-for="student in studentsResponse.data.students as StudentDTO[]"
+                                    :key="student.username"
+                                >
+                                    {{ student.firstName + " " + student.lastName }}
+                                </li>
+                            </using-query-result>
                         </ul>
                         <ul v-else>
-                            <li
-                                v-for="teacher in teachers"
-                                :key="teacher.username"
+                            <using-query-result
+                                :query-result="getTeachersQuery"
+                                v-slot="teachersResponse: { data: TeachersResponse }"
                             >
-                                {{ teacher.firstName + " " + teacher.lastName }}
-                            </li>
+                                <li
+                                    v-for="teacher in teachersResponse.data.teachers as TeacherDTO[]"
+                                    :key="teacher.username"
+                                >
+                                    {{ teacher.firstName + " " + teacher.lastName }}
+                                </li>
+                            </using-query-result>
                         </ul>
                     </v-card-text>
                     <v-card-actions>
