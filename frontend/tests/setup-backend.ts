@@ -18,12 +18,12 @@ export async function setup(): Promise<void> {
     // Spin up the database
     spawn("docker", ["compose", "up", "db", "--detach"], {
         cwd: "..",
-        stdio: "pipe",
+        stdio: "inherit",
     });
 
     backendProcess = spawn("npm", ["run", "dev"], {
         cwd: "../backend",
-        stdio: "pipe",
+        stdio: "inherit",
     });
 
     // Wait until you can curl the backend
@@ -37,6 +37,6 @@ export async function teardown(): Promise<void> {
 
     spawn("docker", ["compose", "down"], {
         cwd: "..",
-        stdio: "pipe",
+        stdio: "inherit"
     });
 }
