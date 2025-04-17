@@ -1,14 +1,12 @@
 import { Group } from '../entities/assignments/group.entity.js';
 import { mapToAssignment } from './assignment.js';
 import { mapToStudent } from './student.js';
-import { mapToAssignmentDTO } from './assignment.js';
 import { mapToStudentDTO } from './student.js';
 import { GroupDTO, GroupDTOId } from '@dwengo-1/common/interfaces/group';
 import { getGroupRepository } from '../data/repositories.js';
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 import { Class } from '../entities/classes/class.entity.js';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
-import { mapToClassDTO } from './class.js';
 
 export function mapToGroup(groupDto: GroupDTO, clazz: Class): Group {
     const assignmentDto = groupDto.assignment as AssignmentDTO;

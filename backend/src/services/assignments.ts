@@ -4,7 +4,6 @@ import {
     getClassRepository,
     getGroupRepository,
     getQuestionRepository,
-    getStudentRepository,
     getSubmissionRepository,
 } from '../data/repositories.js';
 import { Assignment } from '../entities/assignments/assignment.entity.js';

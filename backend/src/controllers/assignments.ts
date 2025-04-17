@@ -12,16 +12,12 @@ import { requireFields } from './error-helper.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { EntityDTO } from '@mikro-orm/core';
-import { createGroup } from '../services/groups.js';
-import { getLogger } from '../logging/initalize.js';
 
 export async function getAllAssignmentsHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.classid;
     const full = req.query.full === 'true';
 
     const assignments = await getAllAssignments(classId, full);
-
-    console.log(JSON.stringify(assignments));
 
     res.json({ assignments });
 }

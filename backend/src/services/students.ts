@@ -7,7 +7,7 @@ import {
     getSubmissionRepository,
 } from '../data/repositories.js';
 import { mapToClassDTO } from '../interfaces/class.js';
-import { mapToGroupDTO, mapToGroupDTOId, mapToShallowGroupDTO } from '../interfaces/group.js';
+import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToStudent, mapToStudentDTO } from '../interfaces/student.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';

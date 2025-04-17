@@ -1,7 +1,7 @@
 import { EntityDTO } from '@mikro-orm/core';
 import { getGroupRepository, getSubmissionRepository } from '../data/repositories.js';
 import { Group } from '../entities/assignments/group.entity.js';
-import { mapToGroupDTO, mapToGroupDTOId, mapToShallowGroupDTO } from '../interfaces/group.js';
+import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
 import { GroupDTO, GroupDTOId } from '@dwengo-1/common/interfaces/group';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
