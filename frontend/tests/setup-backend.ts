@@ -3,6 +3,17 @@ import { ChildProcess } from 'node:child_process';
 
 let backendProcess: ChildProcess;
 
+async function waitForEndpoint(url: string, delay = 1000): Promise<void> {
+    try {
+        await fetch(url);
+    } catch {
+        // Endpoint is not ready yet
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        // Retry
+        await waitForEndpoint(url, delay);
+    }
+}
+
 export async function setup(): Promise<void> {
     // Spin up the database
     spawn('docker', ['compose', 'up', 'db', '--detach'], {
@@ -16,15 +27,7 @@ export async function setup(): Promise<void> {
     });
 
     // Wait until you can curl the backend
-    let backendReady = false;
-    while (!backendReady) {
-        try {
-            await fetch('http://localhost:3000/api')
-            backendReady = true;
-        } catch (_) {
-            // Ignore the error
-        }
-    }
+    await waitForEndpoint('http://localhost:3000/api');
 }
 
 export async function teardown(): Promise<void> {
