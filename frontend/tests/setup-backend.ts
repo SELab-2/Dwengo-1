@@ -1,5 +1,5 @@
-import { spawn } from 'child_process';
-import { ChildProcess } from 'node:child_process';
+import { spawn } from "child_process";
+import { ChildProcess } from "node:child_process";
 
 let backendProcess: ChildProcess;
 
@@ -16,18 +16,18 @@ async function waitForEndpoint(url: string, delay = 1000): Promise<void> {
 
 export async function setup(): Promise<void> {
     // Spin up the database
-    spawn('docker', ['compose', 'up', 'db', '--detach'], {
-        cwd: '..',
+    spawn("docker", ["compose", "up", "db", "--detach"], {
+        cwd: "..",
         stdio: "pipe",
     });
 
-    backendProcess = spawn('npm', ['run', 'dev'], {
-        cwd: '../backend',
+    backendProcess = spawn("npm", ["run", "dev"], {
+        cwd: "../backend",
         stdio: "pipe",
     });
 
     // Wait until you can curl the backend
-    await waitForEndpoint('http://localhost:3000/api');
+    await waitForEndpoint("http://localhost:3000/api");
 }
 
 export async function teardown(): Promise<void> {
@@ -35,8 +35,8 @@ export async function teardown(): Promise<void> {
         backendProcess.kill();
     }
 
-    spawn('docker', ['compose', 'down'], {
-        cwd: '..',
-        stdio: "pipe"
+    spawn("docker", ["compose", "down"], {
+        cwd: "..",
+        stdio: "pipe",
     });
 }
