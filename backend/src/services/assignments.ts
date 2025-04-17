@@ -77,7 +77,7 @@ export async function createAssignment(classid: string, assignmentData: Assignme
             const members = await fetchStudents(memberUsernames);
 
             const newGroup = groupRepository.create({
-                assignment: assignmentCopy!,
+                assignment: assignmentCopy,
                 members: members,
             });
             await groupRepository.save(newGroup);
