@@ -15,16 +15,27 @@ import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
 import type { QueryClient } from "@tanstack/react-query";
 import { invalidateAllSubmissionKeys } from "./submissions";
 
-function assignmentsQueryKey(classid: string, full: boolean) {
+type AssignmentsQueryKey = ["assignments", string, boolean];
+
+function assignmentsQueryKey(classid: string, full: boolean): AssignmentsQueryKey {
     return ["assignments", classid, full];
 }
-function assignmentQueryKey(classid: string, assignmentNumber: number) {
+
+type AssignmentQueryKey = ["assignment", string, number];
+
+function assignmentQueryKey(classid: string, assignmentNumber: number): AssignmentQueryKey {
     return ["assignment", classid, assignmentNumber];
 }
-function assignmentSubmissionsQueryKey(classid: string, assignmentNumber: number, full: boolean) {
+
+type AssignmentSubmissionsQueryKey = ["assignment-submissions", string, number, boolean];
+
+function assignmentSubmissionsQueryKey(classid: string, assignmentNumber: number, full: boolean): AssignmentSubmissionsQueryKey {
     return ["assignment-submissions", classid, assignmentNumber, full];
 }
-function assignmentQuestionsQueryKey(classid: string, assignmentNumber: number, full: boolean) {
+
+type AssignmentQuestionsQueryKey = ["assignment-questions", string, number, boolean];
+
+function assignmentQuestionsQueryKey(classid: string, assignmentNumber: number, full: boolean): AssignmentQuestionsQueryKey {
     return ["assignment-questions", classid, assignmentNumber, full];
 }
 
@@ -32,13 +43,15 @@ export async function invalidateAllAssignmentKeys(
     queryClient: QueryClient,
     classid?: string,
     assignmentNumber?: number,
-) {
+): Promise<void> {
     const keys = ["assignment", "assignment-submissions", "assignment-questions"];
 
-    for (const key of keys) {
-        const queryKey = [key, classid, assignmentNumber].filter((arg) => arg !== undefined);
-        await queryClient.invalidateQueries({ queryKey: queryKey });
-    }
+    await Promise.all(
+        keys.map(async (key) => {
+            const queryKey = [key, classid, assignmentNumber].filter((arg) => arg !== undefined);
+            return queryClient.invalidateQueries({ queryKey: queryKey });
+        })
+    );
 
     await queryClient.invalidateQueries({ queryKey: ["assignments", classid].filter((arg) => arg !== undefined) });
 }
@@ -50,12 +63,20 @@ function checkEnabled(
 ): boolean {
     return Boolean(classid) && !isNaN(Number(groupNumber)) && !isNaN(Number(assignmentNumber));
 }
+
+interface Values {
+    cid: string | undefined;
+    an: number | undefined;
+    gn: number | undefined;
+    f: boolean;
+}
+
 function toValues(
     classid: MaybeRefOrGetter<string | undefined>,
     assignmentNumber: MaybeRefOrGetter<number | undefined>,
     groupNumber: MaybeRefOrGetter<number | undefined>,
     full: MaybeRefOrGetter<boolean>,
-) {
+): Values {
     return { cid: toValue(classid), an: toValue(assignmentNumber), gn: toValue(groupNumber), f: toValue(full) };
 }
 

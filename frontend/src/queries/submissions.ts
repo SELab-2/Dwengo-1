@@ -1,5 +1,5 @@
-import { SubmissionController, type SubmissionResponse, type SubmissionsResponse } from "@/controllers/submissions";
-import type { SubmissionDTO } from "@dwengo-1/common/interfaces/submission";
+import { SubmissionController, type SubmissionResponse, type SubmissionsResponse } from '@/controllers/submissions';
+import type { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
 import {
     QueryClient,
     useMutation,
@@ -7,14 +7,19 @@ import {
     useQueryClient,
     type UseMutationReturnType,
     type UseQueryReturnType,
-} from "@tanstack/vue-query";
-import { computed, toValue, type MaybeRefOrGetter } from "vue";
+} from '@tanstack/vue-query';
+import { computed, toValue, type MaybeRefOrGetter } from 'vue';
 
-function submissionsQueryKey(classid: string, assignmentNumber: number, groupNumber: number, full: boolean) {
-    return ["submissions", classid, assignmentNumber, groupNumber, full];
+type SubmissionsQueryKey = ['submissions', string, number, number, boolean];
+
+function submissionsQueryKey(classid: string, assignmentNumber: number, groupNumber: number, full: boolean): SubmissionsQueryKey {
+    return ['submissions', classid, assignmentNumber, groupNumber, full];
 }
-function submissionQueryKey(classid: string, assignmentNumber: number, groupNumber: number, submissionNumber: number) {
-    return ["submission", classid, assignmentNumber, groupNumber, submissionNumber];
+
+type SubmissionQueryKey = ['submission', string, number, number, number];
+
+function submissionQueryKey(classid: string, assignmentNumber: number, groupNumber: number, submissionNumber: number): SubmissionQueryKey {
+    return ['submission', classid, assignmentNumber, groupNumber, submissionNumber];
 }
 
 export async function invalidateAllSubmissionKeys(
@@ -23,24 +28,26 @@ export async function invalidateAllSubmissionKeys(
     assignmentNumber?: number,
     groupNumber?: number,
     submissionNumber?: number,
-) {
-    const keys = ["submission"];
+): Promise<void> {
+    const keys = ['submission'];
 
-    for (const key of keys) {
-        const queryKey = [key, classid, assignmentNumber, groupNumber, submissionNumber].filter(
-            (arg) => arg !== undefined,
-        );
-        await queryClient.invalidateQueries({ queryKey: queryKey });
-    }
+    await Promise.all(
+        keys.map(async (key) => {
+            const queryKey = [key, classid, assignmentNumber, groupNumber, submissionNumber].filter(
+                (arg) => arg !== undefined,
+            );
+            return queryClient.invalidateQueries({ queryKey: queryKey });
+        })
+    );
 
     await queryClient.invalidateQueries({
-        queryKey: ["submissions", classid, assignmentNumber, groupNumber].filter((arg) => arg !== undefined),
+        queryKey: ['submissions', classid, assignmentNumber, groupNumber].filter((arg) => arg !== undefined),
     });
     await queryClient.invalidateQueries({
-        queryKey: ["group-submissions", classid, assignmentNumber, groupNumber].filter((arg) => arg !== undefined),
+        queryKey: ['group-submissions', classid, assignmentNumber, groupNumber].filter((arg) => arg !== undefined),
     });
     await queryClient.invalidateQueries({
-        queryKey: ["assignment-submissions", classid, assignmentNumber].filter((arg) => arg !== undefined),
+        queryKey: ['assignment-submissions', classid, assignmentNumber].filter((arg) => arg !== undefined),
     });
 }
 
@@ -57,13 +64,22 @@ function checkEnabled(
         !isNaN(Number(submissionNumber))
     );
 }
+
+interface Values {
+    cid: string | undefined;
+    an: number | undefined;
+    gn: number | undefined;
+    sn: number | undefined;
+    f: boolean;
+}
+
 function toValues(
     classid: MaybeRefOrGetter<string | undefined>,
     assignmentNumber: MaybeRefOrGetter<number | undefined>,
     groupNumber: MaybeRefOrGetter<number | undefined>,
     submissionNumber: MaybeRefOrGetter<number | undefined>,
     full: MaybeRefOrGetter<boolean>,
-) {
+): Values {
     return {
         cid: toValue(classid),
         an: toValue(assignmentNumber),
@@ -93,7 +109,7 @@ export function useSubmissionQuery(
     assignmentNumber: MaybeRefOrGetter<number | undefined>,
     groupNumber: MaybeRefOrGetter<number | undefined>,
 ): UseQueryReturnType<SubmissionResponse, Error> {
-    const { cid, an, gn, sn, f } = toValues(classid, assignmentNumber, groupNumber, 1, true);
+    const { cid, an, gn, sn } = toValues(classid, assignmentNumber, groupNumber, 1, true);
 
     return useQuery({
         queryKey: computed(() => submissionQueryKey(cid!, an!, gn!, sn!)),
@@ -119,8 +135,8 @@ export function useCreateSubmissionMutation(): UseMutationReturnType<
                 const cls = response.submission.group.class;
                 const assignment = response.submission.group.assignment;
 
-                const cid = typeof cls === "string" ? cls : cls.id;
-                const an = typeof assignment === "number" ? assignment : assignment.id;
+                const cid = typeof cls === 'string' ? cls : cls.id;
+                const an = typeof assignment === 'number' ? assignment : assignment.id;
                 const gn = response.submission.group.groupNumber;
 
                 await invalidateAllSubmissionKeys(queryClient, cid, an, gn);
@@ -146,8 +162,8 @@ export function useDeleteSubmissionMutation(): UseMutationReturnType<
                 const cls = response.submission.group.class;
                 const assignment = response.submission.group.assignment;
 
-                const cid = typeof cls === "string" ? cls : cls.id;
-                const an = typeof assignment === "number" ? assignment : assignment.id;
+                const cid = typeof cls === 'string' ? cls : cls.id;
+                const an = typeof assignment === 'number' ? assignment : assignment.id;
                 const gn = response.submission.group.groupNumber;
 
                 await invalidateAllSubmissionKeys(queryClient, cid, an, gn);
