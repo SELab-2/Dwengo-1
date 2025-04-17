@@ -1,9 +1,9 @@
 import { TeacherInvitation } from '../entities/classes/teacher-invitation.entity.js';
 import { mapToUserDTO } from './user.js';
 import { TeacherInvitationDTO } from '@dwengo-1/common/interfaces/teacher-invitation';
-import { getTeacherInvitationRepository } from '../data/repositories';
-import { Teacher } from '../entities/users/teacher.entity';
-import { Class } from '../entities/classes/class.entity';
+import { getTeacherInvitationRepository } from '../data/repositories.js';
+import { Teacher } from '../entities/users/teacher.entity.js';
+import { Class } from '../entities/classes/class.entity.js';
 import { ClassStatus } from '@dwengo-1/common/util/class-join-request';
 
 export function mapToTeacherInvitationDTO(invitation: TeacherInvitation): TeacherInvitationDTO {

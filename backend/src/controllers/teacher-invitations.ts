@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { requireFields } from './error-helper';
-import { createInvitation, deleteInvitation, getAllInvitations, getInvitation, updateInvitation } from '../services/teacher-invitations';
+import { requireFields } from './error-helper.js';
+import { createInvitation, deleteInvitation, getAllInvitations, getInvitation, updateInvitation } from '../services/teacher-invitations.js';
 import { TeacherInvitationData } from '@dwengo-1/common/interfaces/teacher-invitation';
 
 export async function getAllInvitationsHandler(req: Request, res: Response): Promise<void> {
