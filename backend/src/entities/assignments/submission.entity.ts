@@ -18,7 +18,7 @@ export class Submission {
     })
     learningObjectLanguage!: Language;
 
-    @PrimaryKey({ type: 'numeric' })
+    @PrimaryKey({ type: 'numeric', autoincrement: false })
     learningObjectVersion = 1;
 
     @ManyToOne({

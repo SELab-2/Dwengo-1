@@ -1,4 +1,4 @@
-import {getAssignmentRepository, getGroupRepository, getSubmissionRepository} from '../data/repositories.js';
+import {getAssignmentRepository, getSubmissionRepository} from '../data/repositories.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { mapToSubmission, mapToSubmissionDTO } from '../interfaces/submission.js';
@@ -37,7 +37,11 @@ export async function createSubmission(submissionDTO: SubmissionDTO): Promise<Su
 
     const submissionRepository = getSubmissionRepository();
     const submission = mapToSubmission(submissionDTO, submitter, group);
-    await submissionRepository.save(submission);
+    try {
+        await submissionRepository.save(submission);
+    } catch (e) {
+        "test"
+    }
 
     return mapToSubmissionDTO(submission);
 }
@@ -60,33 +64,12 @@ export async function getSubmissionsForLearningObjectAndAssignment(
     version: number,
     classId: string,
     assignmentId: number,
-    studentUsername?: string
+    groupId?: number
 ): Promise<SubmissionDTO[]> {
     const loId = new LearningObjectIdentifier(learningObjectHruid, language, version);
     const assignment = await getAssignmentRepository().findByClassIdAndAssignmentId(classId, assignmentId);
 
-    const submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!, studentUsername);
+    const submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!, groupId);
 
-    return submissions.map((s) => mapToSubmissionDTO(s));
-}
-
-export async function getSubmissionsForLearningObjectAndGroup(
-    learningObjectHruid: string,
-    language: Language,
-    version: number,
-    classId: string,
-    assignmentNo: number,
-    groupNumber: number
-): Promise<SubmissionDTO[]> {
-    const loId = new LearningObjectIdentifier(learningObjectHruid, language, version);
-    const assignment = await getAssignmentRepository().findByClassIdAndAssignmentId(classId, assignmentNo);
-    if (!assignment) {
-        throw new NotFoundException("Assignment not found!");
-    }
-    const group = await getGroupRepository().findByAssignmentAndGroupNumber(assignment, groupNumber);
-    if (!group) {
-        throw new NotFoundException("Group not found!");
-    }
-    const submissions = await getSubmissionRepository().findAllSubmissionsForGroup(group);
     return submissions.map((s) => mapToSubmissionDTO(s));
 }

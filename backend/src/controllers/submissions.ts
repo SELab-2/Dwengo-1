@@ -4,7 +4,7 @@ import {
     deleteSubmission,
     getAllSubmissions,
     getSubmission,
-    getSubmissionsForLearningObjectAndAssignment, getSubmissionsForLearningObjectAndGroup,
+    getSubmissionsForLearningObjectAndAssignment,
 } from '../services/submissions.js';
 import { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
 import { Language, languageMap } from '@dwengo-1/common/util/language';
@@ -17,25 +17,17 @@ export async function getSubmissionsHandler(req: Request, res: Response): Promis
     const lang = languageMap[req.query.language as string] || Language.Dutch;
     const version = parseInt(req.query.version as string) ?? 1;
 
+    const forGroup = req.query.forGroup as string | undefined;
+
     let submissions: SubmissionDTO[]
-    if (req.query.groupId) {
-        submissions = await getSubmissionsForLearningObjectAndGroup(
-            loHruid,
-            lang,
-            version,
-            req.query.classId as string,
-            parseInt(req.query.assignmentId as string),
-            parseInt(req.query.groupId as string)
-        );
-    } else {
-        submissions = await getSubmissionsForLearningObjectAndAssignment(
-            loHruid,
-            lang,
-            version,
-            req.query.classId as string,
-            parseInt(req.query.assignmentId as string)
-        )
-    }
+    submissions = await getSubmissionsForLearningObjectAndAssignment(
+        loHruid,
+        lang,
+        version,
+        req.query.classId as string,
+        parseInt(req.query.assignmentId as string),
+        forGroup ? parseInt(forGroup) : undefined
+    );
 
     res.json({ submissions });
 }
