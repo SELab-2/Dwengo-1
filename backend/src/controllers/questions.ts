@@ -1,8 +1,15 @@
 import { Request, Response } from 'express';
-import { createQuestion, deleteQuestion, getAllQuestions, getQuestion, updateQuestion } from '../services/questions.js';
+import {
+    createQuestion,
+    deleteQuestion,
+    getAllQuestions,
+    getQuestion,
+    getQuestionsAboutLearningObjectInAssignment,
+    updateQuestion,
+} from '../services/questions.js';
 import { FALLBACK_LANG, FALLBACK_SEQ_NUM, FALLBACK_VERSION_NUM } from '../config.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
-import { QuestionData, QuestionId } from '@dwengo-1/common/interfaces/question';
+import { QuestionData, QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { Language } from '@dwengo-1/common/util/language';
 import { requireFields } from './error-helper.js';
 
@@ -30,7 +37,18 @@ export async function getAllQuestionsHandler(req: Request, res: Response): Promi
 
     const learningObjectId = getLearningObjectId(hruid, version, language);
 
-    const questions = await getAllQuestions(learningObjectId, full);
+    let questions: QuestionDTO[] | QuestionId[];
+    if (req.query.classId && req.query.assignmentId) {
+        questions = await getQuestionsAboutLearningObjectInAssignment(
+            learningObjectId,
+            req.query.classId as string,
+            parseInt(req.query.assignmentId as string),
+            full ?? false,
+            req.query.forStudent as string | undefined
+        );
+    } else {
+        questions = await getAllQuestions(learningObjectId, full ?? false);
+    }
 
     res.json({ questions });
 }
@@ -60,7 +78,8 @@ export async function createQuestionHandler(req: Request, res: Response): Promis
 
     const author = req.body.author as string;
     const content = req.body.content as string;
-    requireFields({ author, content });
+    const inGroup = req.body.inGroup;
+    requireFields({ author, content, inGroup });
 
     const questionData = req.body as QuestionData;
 

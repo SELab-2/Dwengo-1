@@ -3,6 +3,9 @@ import { LearningObject } from '../../../src/entities/content/learning-object.en
 import { setupTestApp } from '../../setup-tests.js';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity.js';
 import {
+    getAssignmentRepository,
+    getClassRepository,
+    getGroupRepository,
     getLearningObjectRepository,
     getLearningPathRepository,
     getStudentRepository,
@@ -22,6 +25,10 @@ import { Student } from '../../../src/entities/users/student.entity.js';
 
 import { LearningObjectNode, LearningPathResponse } from '@dwengo-1/common/interfaces/learning-content';
 
+const STUDENT_A_USERNAME = 'student_a';
+const STUDENT_B_USERNAME = 'student_b';
+const CLASS_NAME = 'test_class';
+
 async function initExampleData(): Promise<{ learningObject: LearningObject; learningPath: LearningPath }> {
     const learningObjectRepo = getLearningObjectRepository();
     const learningPathRepo = getLearningPathRepository();
@@ -38,6 +45,9 @@ async function initPersonalizationTestData(): Promise<{
     studentB: Student;
 }> {
     const studentRepo = getStudentRepository();
+    const classRepo = getClassRepository();
+    const assignmentRepo = getAssignmentRepository();
+    const groupRepo = getGroupRepository();
     const submissionRepo = getSubmissionRepository();
     const learningPathRepo = getLearningPathRepository();
     const learningObjectRepo = getLearningObjectRepository();
@@ -47,32 +57,69 @@ async function initPersonalizationTestData(): Promise<{
     await learningObjectRepo.save(learningContent.extraExerciseObject);
     await learningPathRepo.save(learningContent.learningPath);
 
+    // Create students
     const studentA = studentRepo.create({
-        username: 'student_a',
+        username: STUDENT_A_USERNAME,
         firstName: 'Aron',
         lastName: 'Student',
     });
     await studentRepo.save(studentA);
+
+    const studentB = studentRepo.create({
+        username: STUDENT_B_USERNAME,
+        firstName: 'Bill',
+        lastName: 'Student',
+    });
+    await studentRepo.save(studentB);
+
+    // Create class for students
+    const testClass = classRepo.create({
+        classId: CLASS_NAME,
+        displayName: 'Test class',
+    });
+    await classRepo.save(testClass);
+
+    // Create assignment for students and assign them to different groups
+    const assignment = assignmentRepo.create({
+        id: 0,
+        title: 'Test assignment',
+        description: 'Test description',
+        learningPathHruid: learningContent.learningPath.hruid,
+        learningPathLanguage: learningContent.learningPath.language,
+        within: testClass,
+    });
+
+    const groupA = groupRepo.create({
+        groupNumber: 0,
+        members: [studentA],
+        assignment,
+    });
+    await groupRepo.save(groupA);
+
+    const groupB = groupRepo.create({
+        groupNumber: 1,
+        members: [studentB],
+        assignment,
+    });
+    await groupRepo.save(groupB);
+
+    // Let each of the students make a submission in his own group.
     const submissionA = submissionRepo.create({
         learningObjectHruid: learningContent.branchingObject.hruid,
         learningObjectLanguage: learningContent.branchingObject.language,
         learningObjectVersion: learningContent.branchingObject.version,
+        onBehalfOf: groupA,
         submitter: studentA,
         submissionTime: new Date(),
         content: '[0]',
     });
     await submissionRepo.save(submissionA);
 
-    const studentB = studentRepo.create({
-        username: 'student_b',
-        firstName: 'Bill',
-        lastName: 'Student',
-    });
-    await studentRepo.save(studentB);
     const submissionB = submissionRepo.create({
         learningObjectHruid: learningContent.branchingObject.hruid,
         learningObjectLanguage: learningContent.branchingObject.language,
         learningObjectVersion: learningContent.branchingObject.version,
+        onBehalfOf: groupA,
         submitter: studentB,
         submissionTime: new Date(),
         content: '[1]',

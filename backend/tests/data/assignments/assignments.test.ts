@@ -31,6 +31,13 @@ describe('AssignmentRepository', () => {
         expect(assignments[0].title).toBe('tool');
     });
 
+    it('should find all by username of the responsible teacher', async () => {
+        const result = await assignmentRepository.findAllByResponsibleTeacher('testleerkracht1');
+        const resultIds = result.map((it) => it.id).sort((a, b) => (a ?? 0) - (b ?? 0));
+
+        expect(resultIds).toEqual([1, 3, 4]);
+    });
+
     it('should not find removed assignment', async () => {
         const class_ = await classRepository.findById('id01');
         await assignmentRepository.deleteByClassAndId(class_!, 3);

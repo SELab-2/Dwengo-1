@@ -5,15 +5,16 @@ import { Student } from '../../entities/users/student.entity.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
 import { Assignment } from '../../entities/assignments/assignment.entity.js';
 import { Loaded } from '@mikro-orm/core';
-import {Group} from "../../entities/assignments/group.entity";
+import { Group } from '../../entities/assignments/group.entity';
 
 export class QuestionRepository extends DwengoEntityRepository<Question> {
-    public async createQuestion(question: { loId: LearningObjectIdentifier; author: Student; content: string }): Promise<Question> {
+    public async createQuestion(question: { loId: LearningObjectIdentifier; author: Student; inGroup: Group; content: string }): Promise<Question> {
         const questionEntity = this.create({
             learningObjectHruid: question.loId.hruid,
             learningObjectLanguage: question.loId.language,
             learningObjectVersion: question.loId.version,
             author: question.author,
+            inGroup: question.inGroup,
             content: question.content,
             timestamp: new Date(),
         });
@@ -21,6 +22,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         questionEntity.learningObjectLanguage = question.loId.language;
         questionEntity.learningObjectVersion = question.loId.version;
         questionEntity.author = question.author;
+        questionEntity.inGroup = question.inGroup;
         questionEntity.content = question.content;
         return this.insert(questionEntity);
     }
@@ -60,7 +62,9 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
 
     public async findAllByAssignment(assignment: Assignment): Promise<Question[]> {
         return this.find({
-            author: assignment.groups.toArray<Group>().flatMap((group) => group.members),
+            inGroup: {
+                $contained: assignment.groups,
+            },
             learningObjectHruid: assignment.learningPathHruid,
             learningObjectLanguage: assignment.learningPathLanguage,
         });
@@ -70,6 +74,38 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         return this.findAll({
             where: { author },
             orderBy: { timestamp: 'DESC' }, // New to old
+        });
+    }
+
+    /**
+     * Looks up all questions for the given learning object which were asked as part of the given assignment.
+     * When forStudentUsername is set, only the questions within the given user's group are shown.
+     */
+    public async findAllQuestionsAboutLearningObjectInAssignment(
+        loId: LearningObjectIdentifier,
+        assignment: Assignment,
+        forStudentUsername?: string
+    ): Promise<Question[]> {
+        const inGroup = forStudentUsername
+            ? {
+                  assignment,
+                  members: {
+                      $some: {
+                          username: forStudentUsername,
+                      },
+                  },
+              }
+            : {
+                  assignment,
+              };
+
+        return this.findAll({
+            where: {
+                learningObjectHruid: loId.hruid,
+                learningObjectLanguage: loId.language,
+                learningObjectVersion: loId.version,
+                inGroup,
+            },
         });
     }
 

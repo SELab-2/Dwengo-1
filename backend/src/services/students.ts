@@ -7,7 +7,7 @@ import {
     getSubmissionRepository,
 } from '../data/repositories.js';
 import { mapToClassDTO } from '../interfaces/class.js';
-import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
+import { mapToGroupDTO, mapToGroupDTOId, mapToShallowGroupDTO } from '../interfaces/group.js';
 import { mapToStudent, mapToStudentDTO } from '../interfaces/student.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
@@ -24,6 +24,7 @@ import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/subm
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
 import { ConflictException } from '../exceptions/conflict-exception.js';
+import { Submission } from '../entities/assignments/submission.entity';
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();
@@ -113,7 +114,8 @@ export async function getStudentSubmissions(username: string, full: boolean): Pr
     const student = await fetchStudent(username);
 
     const submissionRepository = getSubmissionRepository();
-    const submissions = await submissionRepository.findAllSubmissionsForStudent(student);
+
+    const submissions: Submission[] = await submissionRepository.findAllSubmissionsForStudent(student);
 
     if (full) {
         return submissions.map(mapToSubmissionDTO);

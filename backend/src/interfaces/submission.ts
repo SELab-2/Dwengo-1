@@ -1,10 +1,10 @@
-import { getSubmissionRepository } from '../data/repositories.js';
-import { Group } from '../entities/assignments/group.entity.js';
 import { Submission } from '../entities/assignments/submission.entity.js';
-import { Student } from '../entities/users/student.entity.js';
 import { mapToGroupDTO } from './group.js';
 import { mapToStudentDTO } from './student.js';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
+import { getSubmissionRepository } from '../data/repositories.js';
+import { Student } from '../entities/users/student.entity.js';
+import { Group } from '../entities/assignments/group.entity.js';
 
 export function mapToSubmissionDTO(submission: Submission): SubmissionDTO {
     return {
@@ -32,7 +32,7 @@ export function mapToSubmissionDTOId(submission: Submission): SubmissionDTOId {
     };
 }
 
-export function mapToSubmission(submissionDTO: SubmissionDTO, submitter: Student, onBehalfOf: Group | undefined): Submission {
+export function mapToSubmission(submissionDTO: SubmissionDTO, submitter: Student, onBehalfOf: Group): Submission {
     return getSubmissionRepository().create({
         learningObjectHruid: submissionDTO.learningObjectIdentifier.hruid,
         learningObjectLanguage: submissionDTO.learningObjectIdentifier.language,

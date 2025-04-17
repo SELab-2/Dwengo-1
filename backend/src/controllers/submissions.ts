@@ -1,10 +1,32 @@
 import { Request, Response } from 'express';
-import { createSubmission, deleteSubmission, getAllSubmissions, getSubmission } from '../services/submissions.js';
-import { BadRequestException } from '../exceptions/bad-request-exception.js';
-import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
-import { Language, languageMap } from '@dwengo-1/common/util/language';
+import {
+    createSubmission,
+    deleteSubmission,
+    getAllSubmissions,
+    getSubmission,
+    getSubmissionsForLearningObjectAndAssignment,
+} from '../services/submissions.js';
 import { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
+import { Language, languageMap } from '@dwengo-1/common/util/language';
+import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { requireFields } from './error-helper.js';
+import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
+
+export async function getSubmissionsHandler(req: Request, res: Response): Promise<void> {
+    const loHruid = req.params.hruid;
+    const lang = languageMap[req.query.language as string] || Language.Dutch;
+    const version = parseInt(req.query.version as string) ?? 1;
+
+    const submissions = await getSubmissionsForLearningObjectAndAssignment(
+        loHruid,
+        lang,
+        version,
+        req.query.classId as string,
+        parseInt(req.query.assignmentId as string)
+    );
+
+    res.json(submissions);
+}
 
 export async function getSubmissionHandler(req: Request, res: Response): Promise<void> {
     const lohruid = req.params.hruid;
