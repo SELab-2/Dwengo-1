@@ -10,7 +10,8 @@
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import { useTeacherJoinRequestsQuery, useUpdateJoinRequestMutation } from "@/queries/teachers";
     import type { ClassJoinRequestDTO } from "@dwengo-1/common/interfaces/class-join-request";
-    import { useClassQuery, useClassStudentsQuery } from "@/queries/classes";
+    import { useClassDeleteStudentMutation, useClassQuery, useClassStudentsQuery } from "@/queries/classes";
+import { RefSymbol } from "@vue/reactivity";
 
     const { t } = useI18n();
 
@@ -21,13 +22,11 @@
     const route = useRoute();
     const classId: string = route.params.id as string;
 
-    const currentClass = ref<ClassDTO | undefined>(undefined);
-    const students = ref<StudentDTO[]>([]);
-
     const getClass = useClassQuery(classId);
     const getStudents = useClassStudentsQuery(classId);
     const joinRequestsQuery = useTeacherJoinRequestsQuery(username, classId);
     const { mutate } = useUpdateJoinRequestMutation();
+    const { mutate: deleteStudentMutation } = useClassDeleteStudentMutation();
 
     // Find the username of the logged in user so it can be used to fetch other information
     // When loading the page
@@ -36,7 +35,6 @@
         username.value = userObject?.profile?.preferred_username ?? undefined;
     });
 
-    // TODO: Boolean that handles visibility for dialogs
     // Popup to verify removing student
     const dialog = ref(false);
     const selectedStudent = ref<StudentDTO | null>(null);
@@ -48,10 +46,19 @@
 
     // Remove student from class
     async function removeStudentFromclass(): Promise<void> {
-        // TODO: replace by query
+        deleteStudentMutation({id: classId, username: selectedStudent.value!.username}, {
+                onSuccess: async () => {
+                    dialog.value = false;
+                    await getStudents.refetch();
+                    showSnackbar(t("success"), "success");
+                },
+                onError: (e) => {
+                    dialog.value = false;
+                    showSnackbar(t("failed") + ": " + e.message, "error");
+                },
+            },)
     }
 
-    // TODO: query + relaoding
     function handleJoinRequest(c: ClassJoinRequestDTO, accepted: boolean): void {
         mutate(
             {
