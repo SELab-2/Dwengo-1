@@ -1,7 +1,5 @@
 import { Group } from '../entities/assignments/group.entity.js';
 import { Class } from '../entities/classes/class.entity.js';
-import {mapToAssignmentDTOId} from './assignment.js';
-import { mapToClassDTO } from './class.js';
 import { mapToStudentDTO } from './student.js';
 import { GroupDTO, GroupDTOId } from '@dwengo-1/common/interfaces/group';
 

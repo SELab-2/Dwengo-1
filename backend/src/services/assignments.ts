@@ -15,14 +15,9 @@ import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submissi
 import { fetchClass } from './classes.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
-import { assign, EntityDTO } from '@mikro-orm/core';
+import { EntityDTO } from '@mikro-orm/core';
 import { putObject } from './service-helper.js';
-import { getLogger } from '../logging/initalize.js';
-import { languageMap } from '@dwengo-1/common/util/language';
-import { createGroup } from './groups.js';
-import { GroupDTO } from 'dwengo-1-common/interfaces/group';
-import { fetchStudent } from './students.js';
-import { assert } from 'console';
+import { fetchStudents } from './students.js';
 import { ServerErrorException } from '../exceptions/server-error-exception.js';
 
 export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
@@ -69,8 +64,9 @@ export async function createAssignment(classid: string, assignmentData: Assignme
         For some reason when trying to add groups, it does not work when using the original assignment variable. 
         The assignment needs to be refetched in order for it to work.
         */
+        
         const assignmentCopy = await assignmentRepository.findByClassAndId(cls, assignment.id!);
-
+    
         if (assignmentCopy === null) {
             throw new ServerErrorException("Something has gone horribly wrong. Could not find newly added assignment which is needed to add groups.");
         }
@@ -78,9 +74,7 @@ export async function createAssignment(classid: string, assignmentData: Assignme
         const groupRepository = getGroupRepository();
 
         (assignmentData.groups as string[][]).forEach(async (memberUsernames) => {
-            const members = (await Promise.all(memberUsernames.map(async (id) => fetchStudent(id)))).filter(
-                (student) => student !== null
-            );
+            const members = await fetchStudents(memberUsernames);
 
             const newGroup = groupRepository.create({
                 assignment: assignmentCopy!,
@@ -90,7 +84,10 @@ export async function createAssignment(classid: string, assignmentData: Assignme
         });
     }
 
-    return mapToAssignmentDTO(assignment);
+    /* Need to refetch the assignment here again such that the groups are added. */
+    const assignmentWithGroups = await fetchAssignment(classid, assignment.id!);
+
+    return mapToAssignmentDTO(assignmentWithGroups);
 }
 
 export async function getAssignment(classid: string, id: number): Promise<AssignmentDTO> {

@@ -1,5 +1,5 @@
 import { EntityDTO } from '@mikro-orm/core';
-import { getGroupRepository, getStudentRepository, getSubmissionRepository } from '../data/repositories.js';
+import { getGroupRepository, getSubmissionRepository } from '../data/repositories.js';
 import { Group } from '../entities/assignments/group.entity.js';
 import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
@@ -8,7 +8,7 @@ import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/subm
 import { fetchAssignment } from './assignments.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { putObject } from './service-helper.js';
-import { Student } from '../entities/users/student.entity.js';
+import { fetchStudents } from './students.js';
 
 export async function fetchGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<Group> {
     const assignment = await fetchAssignment(classId, assignmentNumber);
@@ -60,14 +60,8 @@ export async function getExistingGroupFromGroupDTO(groupData: GroupDTO): Promise
 }
 
 export async function createGroup(groupData: GroupDTO, classid: string, assignmentNumber: number): Promise<GroupDTO> {
-    const studentRepository = getStudentRepository();
-
     const memberUsernames = (groupData.members as string[]) || [];
-    const members = (
-        await Promise.all(
-            memberUsernames.map(async (id) => studentRepository.findByUsername(id))
-        )
-    ).filter((student): student is Student => student !== null);
+    const members = await fetchStudents(memberUsernames);
 
     const assignment = await fetchAssignment(classid, assignmentNumber);
 

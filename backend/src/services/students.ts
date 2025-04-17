@@ -47,6 +47,11 @@ export async function fetchStudent(username: string): Promise<Student> {
     return user;
 }
 
+export async function fetchStudents(usernames: string[]): Promise<Student[]> {
+    const members = await Promise.all(usernames.map(async (username) => await fetchStudent(username)));
+    return members;
+}
+
 export async function getStudent(username: string): Promise<StudentDTO> {
     const user = await fetchStudent(username);
     return mapToStudentDTO(user);
