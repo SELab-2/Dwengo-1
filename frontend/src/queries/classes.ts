@@ -60,7 +60,7 @@ export async function invalidateAllClassKeys(queryClient: QueryClient, classid?:
         keys.map(async (key) => {
             const queryKey = [key, classid].filter((arg) => arg !== undefined);
             return queryClient.invalidateQueries({ queryKey: queryKey });
-        })
+        }),
     );
 
     await queryClient.invalidateQueries({ queryKey: ["classes"] });

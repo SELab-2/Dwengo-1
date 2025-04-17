@@ -29,13 +29,21 @@ function assignmentQueryKey(classid: string, assignmentNumber: number): Assignme
 
 type AssignmentSubmissionsQueryKey = ["assignment-submissions", string, number, boolean];
 
-function assignmentSubmissionsQueryKey(classid: string, assignmentNumber: number, full: boolean): AssignmentSubmissionsQueryKey {
+function assignmentSubmissionsQueryKey(
+    classid: string,
+    assignmentNumber: number,
+    full: boolean,
+): AssignmentSubmissionsQueryKey {
     return ["assignment-submissions", classid, assignmentNumber, full];
 }
 
 type AssignmentQuestionsQueryKey = ["assignment-questions", string, number, boolean];
 
-function assignmentQuestionsQueryKey(classid: string, assignmentNumber: number, full: boolean): AssignmentQuestionsQueryKey {
+function assignmentQuestionsQueryKey(
+    classid: string,
+    assignmentNumber: number,
+    full: boolean,
+): AssignmentQuestionsQueryKey {
     return ["assignment-questions", classid, assignmentNumber, full];
 }
 
@@ -50,7 +58,7 @@ export async function invalidateAllAssignmentKeys(
         keys.map(async (key) => {
             const queryKey = [key, classid, assignmentNumber].filter((arg) => arg !== undefined);
             return queryClient.invalidateQueries({ queryKey: queryKey });
-        })
+        }),
     );
 
     await queryClient.invalidateQueries({ queryKey: ["assignments", classid].filter((arg) => arg !== undefined) });

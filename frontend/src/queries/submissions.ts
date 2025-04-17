@@ -1,5 +1,5 @@
-import { SubmissionController, type SubmissionResponse, type SubmissionsResponse } from '@/controllers/submissions';
-import type { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
+import { SubmissionController, type SubmissionResponse, type SubmissionsResponse } from "@/controllers/submissions";
+import type { SubmissionDTO } from "@dwengo-1/common/interfaces/submission";
 import {
     QueryClient,
     useMutation,
@@ -7,19 +7,29 @@ import {
     useQueryClient,
     type UseMutationReturnType,
     type UseQueryReturnType,
-} from '@tanstack/vue-query';
-import { computed, toValue, type MaybeRefOrGetter } from 'vue';
+} from "@tanstack/vue-query";
+import { computed, toValue, type MaybeRefOrGetter } from "vue";
 
-type SubmissionsQueryKey = ['submissions', string, number, number, boolean];
+type SubmissionsQueryKey = ["submissions", string, number, number, boolean];
 
-function submissionsQueryKey(classid: string, assignmentNumber: number, groupNumber: number, full: boolean): SubmissionsQueryKey {
-    return ['submissions', classid, assignmentNumber, groupNumber, full];
+function submissionsQueryKey(
+    classid: string,
+    assignmentNumber: number,
+    groupNumber: number,
+    full: boolean,
+): SubmissionsQueryKey {
+    return ["submissions", classid, assignmentNumber, groupNumber, full];
 }
 
-type SubmissionQueryKey = ['submission', string, number, number, number];
+type SubmissionQueryKey = ["submission", string, number, number, number];
 
-function submissionQueryKey(classid: string, assignmentNumber: number, groupNumber: number, submissionNumber: number): SubmissionQueryKey {
-    return ['submission', classid, assignmentNumber, groupNumber, submissionNumber];
+function submissionQueryKey(
+    classid: string,
+    assignmentNumber: number,
+    groupNumber: number,
+    submissionNumber: number,
+): SubmissionQueryKey {
+    return ["submission", classid, assignmentNumber, groupNumber, submissionNumber];
 }
 
 export async function invalidateAllSubmissionKeys(
@@ -29,7 +39,7 @@ export async function invalidateAllSubmissionKeys(
     groupNumber?: number,
     submissionNumber?: number,
 ): Promise<void> {
-    const keys = ['submission'];
+    const keys = ["submission"];
 
     await Promise.all(
         keys.map(async (key) => {
@@ -37,17 +47,17 @@ export async function invalidateAllSubmissionKeys(
                 (arg) => arg !== undefined,
             );
             return queryClient.invalidateQueries({ queryKey: queryKey });
-        })
+        }),
     );
 
     await queryClient.invalidateQueries({
-        queryKey: ['submissions', classid, assignmentNumber, groupNumber].filter((arg) => arg !== undefined),
+        queryKey: ["submissions", classid, assignmentNumber, groupNumber].filter((arg) => arg !== undefined),
     });
     await queryClient.invalidateQueries({
-        queryKey: ['group-submissions', classid, assignmentNumber, groupNumber].filter((arg) => arg !== undefined),
+        queryKey: ["group-submissions", classid, assignmentNumber, groupNumber].filter((arg) => arg !== undefined),
     });
     await queryClient.invalidateQueries({
-        queryKey: ['assignment-submissions', classid, assignmentNumber].filter((arg) => arg !== undefined),
+        queryKey: ["assignment-submissions", classid, assignmentNumber].filter((arg) => arg !== undefined),
     });
 }
 
@@ -135,8 +145,8 @@ export function useCreateSubmissionMutation(): UseMutationReturnType<
                 const cls = response.submission.group.class;
                 const assignment = response.submission.group.assignment;
 
-                const cid = typeof cls === 'string' ? cls : cls.id;
-                const an = typeof assignment === 'number' ? assignment : assignment.id;
+                const cid = typeof cls === "string" ? cls : cls.id;
+                const an = typeof assignment === "number" ? assignment : assignment.id;
                 const gn = response.submission.group.groupNumber;
 
                 await invalidateAllSubmissionKeys(queryClient, cid, an, gn);
@@ -162,8 +172,8 @@ export function useDeleteSubmissionMutation(): UseMutationReturnType<
                 const cls = response.submission.group.class;
                 const assignment = response.submission.group.assignment;
 
-                const cid = typeof cls === 'string' ? cls : cls.id;
-                const an = typeof assignment === 'number' ? assignment : assignment.id;
+                const cid = typeof cls === "string" ? cls : cls.id;
+                const an = typeof assignment === "number" ? assignment : assignment.id;
                 const gn = response.submission.group.groupNumber;
 
                 await invalidateAllSubmissionKeys(queryClient, cid, an, gn);

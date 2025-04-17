@@ -1,7 +1,7 @@
-import { GroupController, type GroupResponse, type GroupsResponse } from '@/controllers/groups';
-import type { QuestionsResponse } from '@/controllers/questions';
-import type { SubmissionsResponse } from '@/controllers/submissions';
-import type { GroupDTO } from '@dwengo-1/common/interfaces/group';
+import { GroupController, type GroupResponse, type GroupsResponse } from "@/controllers/groups";
+import type { QuestionsResponse } from "@/controllers/questions";
+import type { SubmissionsResponse } from "@/controllers/submissions";
+import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
 import {
     QueryClient,
     useMutation,
@@ -9,32 +9,42 @@ import {
     useQuery,
     useQueryClient,
     type UseQueryReturnType,
-} from '@tanstack/vue-query';
-import { computed, type MaybeRefOrGetter, toValue } from 'vue';
-import { invalidateAllSubmissionKeys } from './submissions';
+} from "@tanstack/vue-query";
+import { computed, type MaybeRefOrGetter, toValue } from "vue";
+import { invalidateAllSubmissionKeys } from "./submissions";
 
-type GroupsQueryKey = ['groups', string, number, boolean];
+type GroupsQueryKey = ["groups", string, number, boolean];
 
 export function groupsQueryKey(classid: string, assignmentNumber: number, full: boolean): GroupsQueryKey {
-    return ['groups', classid, assignmentNumber, full];
+    return ["groups", classid, assignmentNumber, full];
 }
 
-type GroupQueryKey = ['group', string, number, number];
+type GroupQueryKey = ["group", string, number, number];
 
 function groupQueryKey(classid: string, assignmentNumber: number, groupNumber: number): GroupQueryKey {
-    return ['group', classid, assignmentNumber, groupNumber];
+    return ["group", classid, assignmentNumber, groupNumber];
 }
 
-type GroupSubmissionsQueryKey = ['group-submissions', string, number, number, boolean];
+type GroupSubmissionsQueryKey = ["group-submissions", string, number, number, boolean];
 
-function groupSubmissionsQueryKey(classid: string, assignmentNumber: number, groupNumber: number, full: boolean): GroupSubmissionsQueryKey {
-    return ['group-submissions', classid, assignmentNumber, groupNumber, full];
+function groupSubmissionsQueryKey(
+    classid: string,
+    assignmentNumber: number,
+    groupNumber: number,
+    full: boolean,
+): GroupSubmissionsQueryKey {
+    return ["group-submissions", classid, assignmentNumber, groupNumber, full];
 }
 
-type GroupQuestionsQueryKey = ['group-questions', string, number, number, boolean];
+type GroupQuestionsQueryKey = ["group-questions", string, number, number, boolean];
 
-function groupQuestionsQueryKey(classid: string, assignmentNumber: number, groupNumber: number, full: boolean): GroupQuestionsQueryKey {
-    return ['group-questions', classid, assignmentNumber, groupNumber, full];
+function groupQuestionsQueryKey(
+    classid: string,
+    assignmentNumber: number,
+    groupNumber: number,
+    full: boolean,
+): GroupQuestionsQueryKey {
+    return ["group-questions", classid, assignmentNumber, groupNumber, full];
 }
 
 export async function invalidateAllGroupKeys(
@@ -43,7 +53,7 @@ export async function invalidateAllGroupKeys(
     assignmentNumber?: number,
     groupNumber?: number,
 ): Promise<void> {
-    const keys = ['group', 'group-submissions', 'group-questions'];
+    const keys = ["group", "group-submissions", "group-questions"];
     await Promise.all(
         keys.map(async (key) => {
             const queryKey = [key, classid, assignmentNumber, groupNumber].filter((arg) => arg !== undefined);
@@ -52,7 +62,7 @@ export async function invalidateAllGroupKeys(
     );
 
     await queryClient.invalidateQueries({
-        queryKey: ['groups', classid, assignmentNumber].filter((arg) => arg !== undefined),
+        queryKey: ["groups", classid, assignmentNumber].filter((arg) => arg !== undefined),
     });
 }
 
@@ -119,9 +129,9 @@ export function useCreateGroupMutation(): UseMutationReturnType<
     return useMutation({
         mutationFn: async ({ cid, an, data }) => new GroupController(cid, an).createGroup(data),
         onSuccess: async (response) => {
-            const cid = typeof response.group.class === 'string' ? response.group.class : response.group.class.id;
+            const cid = typeof response.group.class === "string" ? response.group.class : response.group.class.id;
             const an =
-                typeof response.group.assignment === 'number'
+                typeof response.group.assignment === "number"
                     ? response.group.assignment
                     : response.group.assignment.id;
 
@@ -142,9 +152,9 @@ export function useDeleteGroupMutation(): UseMutationReturnType<
     return useMutation({
         mutationFn: async ({ cid, an, gn }) => new GroupController(cid, an).deleteGroup(gn),
         onSuccess: async (response) => {
-            const cid = typeof response.group.class === 'string' ? response.group.class : response.group.class.id;
+            const cid = typeof response.group.class === "string" ? response.group.class : response.group.class.id;
             const an =
-                typeof response.group.assignment === 'number'
+                typeof response.group.assignment === "number"
                     ? response.group.assignment
                     : response.group.assignment.id;
             const gn = response.group.groupNumber;
@@ -166,9 +176,9 @@ export function useUpdateGroupMutation(): UseMutationReturnType<
     return useMutation({
         mutationFn: async ({ cid, an, gn, data }) => new GroupController(cid, an).updateGroup(gn, data),
         onSuccess: async (response) => {
-            const cid = typeof response.group.class === 'string' ? response.group.class : response.group.class.id;
+            const cid = typeof response.group.class === "string" ? response.group.class : response.group.class.id;
             const an =
-                typeof response.group.assignment === 'number'
+                typeof response.group.assignment === "number"
                     ? response.group.assignment
                     : response.group.assignment.id;
             const gn = response.group.groupNumber;
