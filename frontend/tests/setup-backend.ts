@@ -37,6 +37,6 @@ export async function teardown(): Promise<void> {
 
     spawn("docker", ["compose", "down"], {
         cwd: "..",
-        stdio: "inherit"
+        stdio: "inherit",
     });
 }
