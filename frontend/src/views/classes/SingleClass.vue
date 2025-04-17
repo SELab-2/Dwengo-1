@@ -16,6 +16,9 @@
     const route = useRoute();
     const classId: string = route.params.id as string;
     const username = ref<string | undefined>(undefined);
+    const isLoading = ref(false);
+    const isError = ref(false);
+    const errorMessage = ref<string>("");
 
     // Queries used to access the backend and catch loading or errors
 
@@ -32,8 +35,16 @@
 
     // Load current user before rendering the page
     onMounted(async () => {
-        const userObject = await authState.loadUser();
-        username.value = userObject?.profile?.preferred_username ?? undefined;
+        isLoading.value = true;
+        try {
+            const userObject = await authState.loadUser();
+            username.value = userObject!.profile!.preferred_username;
+        } catch (error) {
+            isError.value = true;
+            errorMessage.value = error instanceof Error ? error.message : String(error);
+        } finally {
+            isLoading.value = false;
+        }
     });
 
     // Used to set the visibility of the dialog
@@ -109,6 +120,19 @@
 </script>
 <template>
     <main>
+        <div
+            class="loading-div"
+            v-if="isLoading"
+        >
+            <v-progress-circular indeterminate></v-progress-circular>
+        </div>
+        <div v-if="isError">
+            <v-empty-state
+                icon="mdi-alert-circle-outline"
+                :text="errorMessage"
+                :title="t('error_title')"
+            ></v-empty-state>
+        </div>
         <using-query-result
             :query-result="getClass"
             v-slot="classResponse: { data: ClassResponse }"

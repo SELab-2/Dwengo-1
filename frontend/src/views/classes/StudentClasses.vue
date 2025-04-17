@@ -17,16 +17,26 @@
 
     // Username of logged in student
     const username = ref<string | undefined>(undefined);
+    const isLoading = ref(false);
+    const isError = ref(false);
+    const errorMessage = ref<string>("");
 
     // Students of selected class are shown when logged in student presses on the member count
     const selectedClass = ref<ClassDTO | null>(null);
     const getStudents = ref(false);
 
-    // Find the username of the logged in user so it can be used to fetch other information
-    // When loading the page
+    // Load current user before rendering the page
     onMounted(async () => {
-        const userObject = await authState.loadUser();
-        username.value = userObject?.profile?.preferred_username ?? undefined;
+        isLoading.value = true;
+        try {
+            const userObject = await authState.loadUser();
+            username.value = userObject!.profile!.preferred_username;
+        } catch (error) {
+            isError.value = true;
+            errorMessage.value = error instanceof Error ? error.message : String(error);
+        } finally {
+            isLoading.value = false;
+        }
     });
 
     // Fetch all classes of the logged in student
@@ -111,7 +121,20 @@
 </script>
 <template>
     <main>
-        <div>
+        <div
+            class="loading-div"
+            v-if="isLoading"
+        >
+            <v-progress-circular indeterminate></v-progress-circular>
+        </div>
+        <div v-if="isError">
+            <v-empty-state
+                icon="mdi-alert-circle-outline"
+                :text="errorMessage"
+                :title="t('error_title')"
+            ></v-empty-state>
+        </div>
+        <div v-else>
             <h1 class="title">{{ t("classes") }}</h1>
             <using-query-result
                 :query-result="classesQuery"
