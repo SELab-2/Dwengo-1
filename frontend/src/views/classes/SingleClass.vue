@@ -2,7 +2,6 @@
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
     import { onMounted, ref } from "vue";
-    import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { useRoute } from "vue-router";
     import { type ClassResponse } from "@/controllers/classes";
     import type { JoinRequestsResponse, StudentsResponse } from "@/controllers/students";
@@ -11,41 +10,46 @@
     import { useTeacherJoinRequestsQuery, useUpdateJoinRequestMutation } from "@/queries/teachers";
     import type { ClassJoinRequestDTO } from "@dwengo-1/common/interfaces/class-join-request";
     import { useClassDeleteStudentMutation, useClassQuery, useClassStudentsQuery } from "@/queries/classes";
-import { RefSymbol } from "@vue/reactivity";
 
     const { t } = useI18n();
 
-    // Username of logged in teacher
-    const username = ref<string | undefined>(undefined);
-
-    // Find class id from route
     const route = useRoute();
     const classId: string = route.params.id as string;
+    const username = ref<string | undefined>(undefined);
 
+    // queries used to access the backend and catch loading or errors
+
+    // gets the class a teacher wants to manage
     const getClass = useClassQuery(classId);
+    // get all students part of the class
     const getStudents = useClassStudentsQuery(classId);
+    // get all join requests for this class
     const joinRequestsQuery = useTeacherJoinRequestsQuery(username, classId);
+    // handle accepting or rejecting join requests
     const { mutate } = useUpdateJoinRequestMutation();
+    // handle deletion of a student from the class
     const { mutate: deleteStudentMutation } = useClassDeleteStudentMutation();
 
-    // Find the username of the logged in user so it can be used to fetch other information
-    // When loading the page
+    // load current user before rendering the page
     onMounted(async () => {
         const userObject = await authState.loadUser();
         username.value = userObject?.profile?.preferred_username ?? undefined;
     });
 
-    // Popup to verify removing student
+    // used to set the visibility of the dialog
     const dialog = ref(false);
+    // student selected for deletion
     const selectedStudent = ref<StudentDTO | null>(null);
 
+    // let the teacher verify deletion of a student
     function showPopup(s: StudentDTO): void {
         selectedStudent.value = s;
         dialog.value = true;
     }
 
-    // Remove student from class
+
     async function removeStudentFromclass(): Promise<void> {
+        // delete student from class
         deleteStudentMutation({id: classId, username: selectedStudent.value!.username}, {
                 onSuccess: async () => {
                     dialog.value = false;
@@ -60,6 +64,7 @@ import { RefSymbol } from "@vue/reactivity";
     }
 
     function handleJoinRequest(c: ClassJoinRequestDTO, accepted: boolean): void {
+        // handle acception or rejection of a join request
         mutate(
             {
                 teacherUsername: username.value!,
@@ -85,12 +90,15 @@ import { RefSymbol } from "@vue/reactivity";
             },
         );
     }
+
+    // default of snackbar values
     const snackbar = ref({
         visible: false,
         message: "",
         color: "success",
     });
 
+    // function to show snackbar on success or failure
     function showSnackbar(message: string, color: string): void {
         snackbar.value.message = message;
         snackbar.value.color = color;
