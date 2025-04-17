@@ -3,14 +3,14 @@ import { ChildProcess } from "node:child_process";
 
 let backendProcess: ChildProcess;
 
-async function waitForEndpoint(url: string, delay = 1000): Promise<void> {
+async function waitForEndpoint(url: string, delay = 1000, retries = 60): Promise<void> {
     try {
         await fetch(url);
     } catch {
         // Endpoint is not ready yet
         await new Promise((resolve) => setTimeout(resolve, delay));
         // Retry
-        await waitForEndpoint(url, delay);
+        await waitForEndpoint(url, delay, retries - 1);
     }
 }
 
