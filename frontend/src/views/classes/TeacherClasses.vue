@@ -27,7 +27,7 @@
     const classesQuery = useTeacherClassesQuery(username, true);
     const allClassesQuery = useClassesQuery();
     const { mutate } = useCreateClassMutation();
-    const getInvitationsQuery = useClassTeacherInvitationsQuery(username);
+    const getInvitationsQuery = useClassTeacherInvitationsQuery(username); // TODO: use useTeacherInvitationsReceivedQuery
 
     // Boolean that handles visibility for dialogs
     // Creating a class will generate a popup with the generated code

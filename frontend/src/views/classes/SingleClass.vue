@@ -4,27 +4,28 @@
     import { onMounted, ref } from "vue";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { useRoute } from "vue-router";
-    import { ClassController, type ClassResponse } from "@/controllers/classes";
+    import { type ClassResponse } from "@/controllers/classes";
     import type { JoinRequestsResponse, StudentsResponse } from "@/controllers/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import { useTeacherJoinRequestsQuery, useUpdateJoinRequestMutation } from "@/queries/teachers";
     import type { ClassJoinRequestDTO } from "@dwengo-1/common/interfaces/class-join-request";
+    import { useClassQuery, useClassStudentsQuery } from "@/queries/classes";
 
     const { t } = useI18n();
 
     // Username of logged in teacher
     const username = ref<string | undefined>(undefined);
-    const classController: ClassController = new ClassController();
 
     // Find class id from route
     const route = useRoute();
     const classId: string = route.params.id as string;
 
-    const isLoading = ref(true);
     const currentClass = ref<ClassDTO | undefined>(undefined);
     const students = ref<StudentDTO[]>([]);
 
+    const getClass = useClassQuery(classId);
+    const getStudents = useClassStudentsQuery(classId);
     const joinRequestsQuery = useTeacherJoinRequestsQuery(username, classId);
     const { mutate } = useUpdateJoinRequestMutation();
 
@@ -33,17 +34,6 @@
     onMounted(async () => {
         const userObject = await authState.loadUser();
         username.value = userObject?.profile?.preferred_username ?? undefined;
-
-        // Get class of which information should be shown
-        const classResponse: ClassResponse = await classController.getById(classId);
-        if (classResponse && classResponse.class) {
-            currentClass.value = classResponse.class;
-            isLoading.value = false;
-        }
-
-        // Fetch all students of the class
-        const studentsResponse: StudentsResponse = await classController.getStudents(classId);
-        if (studentsResponse && studentsResponse.students) students.value = studentsResponse.students as StudentDTO[];
     });
 
     // TODO: Boolean that handles visibility for dialogs
@@ -59,15 +49,10 @@
     // Remove student from class
     async function removeStudentFromclass(): Promise<void> {
         // TODO: replace by query
-        if (selectedStudent.value) await classController.deleteStudent(classId, selectedStudent.value.username);
-        dialog.value = false;
-
-        selectedStudent.value = null;
-        //TODO when query; reload table so student not longer in table
     }
 
     // TODO: query + relaoding
-    function handleJoinRequest(c: ClassJoinRequestDTO, accepted: boolean) : void {
+    function handleJoinRequest(c: ClassJoinRequestDTO, accepted: boolean): void {
         mutate(
             {
                 teacherUsername: username.value!,
@@ -80,8 +65,7 @@
                     showSnackbar(t("sent"), "success");
                 },
                 onError: (e) => {
-                    // ShowSnackbar(t("failed") + ": " + e.message, "error");
-                    throw e;
+                    showSnackbar(t("failed") + ": " + e.message, "error");
                 },
             },
         );
@@ -100,132 +84,132 @@
 </script>
 <template>
     <main>
-        <div
-            v-if="isLoading"
-            class="text-center py-10"
+        <using-query-result
+            :query-result="getClass"
+            v-slot="classResponse: { data: ClassResponse }"
         >
-            <v-progress-circular
-                indeterminate
-                color="primary"
-            />
-            <p>Loading...</p>
-        </div>
-        <div v-else>
-            <h1 class="title">{{ currentClass!.displayName }}</h1>
-            <v-container
-                fluid
-                class="ma-4"
-            >
-                <v-row
-                    no-gutters
-                    fluid
+            <div>
+                <h1 class="title">{{ classResponse.data.class.displayName }}</h1>
+                <using-query-result
+                    :query-result="getStudents"
+                    v-slot="studentsResponse: { data: StudentsResponse }"
                 >
-                    <v-col
-                        cols="12"
-                        sm="6"
-                        md="6"
+                    <v-container
+                        fluid
+                        class="ma-4"
                     >
-                        <v-table class="table">
-                            <thead>
-                                <tr>
-                                    <th class="header">{{ t("students") }}</th>
-                                    <th class="header"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr
-                                    v-for="s in students"
-                                    :key="s.id"
-                                >
-                                    <td>
-                                        {{ s.firstName + " " + s.lastName }}
-                                    </td>
-                                    <td>
-                                        <v-btn @click="showPopup(s)"> {{ t("remove") }} </v-btn>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </v-table>
-                    </v-col>
-                    <using-query-result
-                        :query-result="joinRequestsQuery"
-                        v-slot="joinRequests: { data: JoinRequestsResponse }"
-                    >
-                        <v-col
-                            cols="12"
-                            sm="6"
-                            md="6"
+                        <v-row
+                            no-gutters
+                            fluid
                         >
-                            <v-table class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="header">{{ t("classJoinRequests") }}</th>
-                                        <th class="header">{{ t("accept") + "/" + t("reject") }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        v-for="jr in joinRequests.data.joinRequests as ClassJoinRequestDTO[]"
-                                        :key="(jr.class, jr.requester, jr.status)"
-                                    >
-                                        <td>
-                                            {{ jr.requester.firstName + " " + jr.requester.lastName }}
-                                        </td>
-                                        <td>
-                                            <v-btn
-                                                @click="handleJoinRequest(jr, true)"
-                                                class="mr-2"
-                                                color="green"
+                            <v-col
+                                cols="12"
+                                sm="6"
+                                md="6"
+                            >
+                                <v-table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="header">{{ t("students") }}</th>
+                                            <th class="header"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            v-for="s in studentsResponse.data.students as StudentDTO[]"
+                                            :key="s.id"
+                                        >
+                                            <td>
+                                                {{ s.firstName + " " + s.lastName }}
+                                            </td>
+                                            <td>
+                                                <v-btn @click="showPopup(s)"> {{ t("remove") }} </v-btn>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </v-table>
+                            </v-col>
+                            <using-query-result
+                                :query-result="joinRequestsQuery"
+                                v-slot="joinRequests: { data: JoinRequestsResponse }"
+                            >
+                                <v-col
+                                    cols="12"
+                                    sm="6"
+                                    md="6"
+                                >
+                                    <v-table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="header">{{ t("classJoinRequests") }}</th>
+                                                <th class="header">{{ t("accept") + "/" + t("reject") }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                v-for="jr in joinRequests.data.joinRequests as ClassJoinRequestDTO[]"
+                                                :key="(jr.class, jr.requester, jr.status)"
                                             >
-                                                {{ t("accept") }}</v-btn
-                                            >
+                                                <td>
+                                                    {{ jr.requester.firstName + " " + jr.requester.lastName }}
+                                                </td>
+                                                <td>
+                                                    <v-btn
+                                                        @click="handleJoinRequest(jr, true)"
+                                                        class="mr-2"
+                                                        color="green"
+                                                    >
+                                                        {{ t("accept") }}</v-btn
+                                                    >
 
-                                            <v-btn
-                                                @click="handleJoinRequest(jr, false)"
-                                                class="mr-2"
-                                                color="red"
-                                            >
-                                                {{ t("reject") }}
-                                            </v-btn>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </v-table>
-                        </v-col>
-                    </using-query-result>
-                </v-row>
-            </v-container>
-        </div>
-        <v-dialog
-            v-model="dialog"
-            max-width="400px"
-        >
-            <v-card>
-                <v-card-title class="headline">{{ t("areusure") }}</v-card-title>
+                                                    <v-btn
+                                                        @click="handleJoinRequest(jr, false)"
+                                                        class="mr-2"
+                                                        color="red"
+                                                    >
+                                                        {{ t("reject") }}
+                                                    </v-btn>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </v-table>
+                                </v-col>
+                            </using-query-result>
+                        </v-row>
+                    </v-container>
+                </using-query-result>
+            </div>
+            <v-dialog
+                v-model="dialog"
+                max-width="400px"
+            >
+                <v-card>
+                    <v-card-title class="headline">{{ t("areusure") }}</v-card-title>
 
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        text
-                        @click="dialog = false"
-                    >
-                        {{ t("cancel") }}
-                    </v-btn>
-                    <v-btn
-                        text
-                        @click="removeStudentFromclass"
-                        >{{ t("yes") }}</v-btn
-                    >
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-        <v-snackbar
-            v-model="snackbar.visible"
-            :color="snackbar.color"
-            timeout="3000"
-        >
-            {{ snackbar.message }}
-        </v-snackbar>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            text
+                            @click="dialog = false"
+                        >
+                            {{ t("cancel") }}
+                        </v-btn>
+                        <v-btn
+                            text
+                            @click="removeStudentFromclass"
+                            >{{ t("yes") }}</v-btn
+                        >
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <v-snackbar
+                v-model="snackbar.visible"
+                :color="snackbar.color"
+                timeout="3000"
+            >
+                {{ snackbar.message }}
+            </v-snackbar>
+        </using-query-result>
     </main>
 </template>
 <style scoped>
