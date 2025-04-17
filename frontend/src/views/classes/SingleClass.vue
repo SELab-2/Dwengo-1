@@ -3,7 +3,7 @@
     import authState from "@/services/auth/auth-service.ts";
     import { onMounted, ref } from "vue";
     import { useRoute } from "vue-router";
-    import { type ClassResponse } from "@/controllers/classes";
+    import type { ClassResponse } from "@/controllers/classes";
     import type { JoinRequestsResponse, StudentsResponse } from "@/controllers/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
@@ -17,40 +17,41 @@
     const classId: string = route.params.id as string;
     const username = ref<string | undefined>(undefined);
 
-    // queries used to access the backend and catch loading or errors
+    // Queries used to access the backend and catch loading or errors
 
-    // gets the class a teacher wants to manage
+    // Gets the class a teacher wants to manage
     const getClass = useClassQuery(classId);
-    // get all students part of the class
+    // Get all students part of the class
     const getStudents = useClassStudentsQuery(classId);
-    // get all join requests for this class
+    // Get all join requests for this class
     const joinRequestsQuery = useTeacherJoinRequestsQuery(username, classId);
-    // handle accepting or rejecting join requests
+    // Handle accepting or rejecting join requests
     const { mutate } = useUpdateJoinRequestMutation();
-    // handle deletion of a student from the class
+    // Handle deletion of a student from the class
     const { mutate: deleteStudentMutation } = useClassDeleteStudentMutation();
 
-    // load current user before rendering the page
+    // Load current user before rendering the page
     onMounted(async () => {
         const userObject = await authState.loadUser();
         username.value = userObject?.profile?.preferred_username ?? undefined;
     });
 
-    // used to set the visibility of the dialog
+    // Used to set the visibility of the dialog
     const dialog = ref(false);
-    // student selected for deletion
+    // Student selected for deletion
     const selectedStudent = ref<StudentDTO | null>(null);
 
-    // let the teacher verify deletion of a student
+    // Let the teacher verify deletion of a student
     function showPopup(s: StudentDTO): void {
         selectedStudent.value = s;
         dialog.value = true;
     }
 
-
     async function removeStudentFromclass(): Promise<void> {
-        // delete student from class
-        deleteStudentMutation({id: classId, username: selectedStudent.value!.username}, {
+        // Delete student from class
+        deleteStudentMutation(
+            { id: classId, username: selectedStudent.value!.username },
+            {
                 onSuccess: async () => {
                     dialog.value = false;
                     await getStudents.refetch();
@@ -60,11 +61,12 @@
                     dialog.value = false;
                     showSnackbar(t("failed") + ": " + e.message, "error");
                 },
-            },)
+            },
+        );
     }
 
     function handleJoinRequest(c: ClassJoinRequestDTO, accepted: boolean): void {
-        // handle acception or rejection of a join request
+        // Handle acception or rejection of a join request
         mutate(
             {
                 teacherUsername: username.value!,
@@ -74,7 +76,7 @@
             },
             {
                 onSuccess: async () => {
-                    if (accepted){
+                    if (accepted) {
                         await joinRequestsQuery.refetch();
                         await getStudents.refetch();
 
@@ -91,14 +93,14 @@
         );
     }
 
-    // default of snackbar values
+    // Default of snackbar values
     const snackbar = ref({
         visible: false,
         message: "",
         color: "success",
     });
 
-    // function to show snackbar on success or failure
+    // Function to show snackbar on success or failure
     function showSnackbar(message: string, color: string): void {
         snackbar.value.message = message;
         snackbar.value.color = color;

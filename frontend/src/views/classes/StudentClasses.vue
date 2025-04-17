@@ -7,7 +7,7 @@
     import { useCreateJoinRequestMutation, useStudentClassesQuery } from "@/queries/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
-    import { type ClassesResponse } from "@/controllers/classes";
+    import type { ClassesResponse } from "@/controllers/classes";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import { useClassStudentsQuery, useClassTeachersQuery } from "@/queries/classes";
     import type { StudentsResponse } from "@/controllers/students";
@@ -44,7 +44,7 @@
     async function openStudentDialog(c: ClassDTO): Promise<void> {
         selectedClass.value = c;
 
-        // let the component know it should show the students in a class
+        // Let the component know it should show the students in a class
         getStudents.value = true;
         await getStudentsQuery.refetch();
         dialog.value = true;
@@ -53,7 +53,7 @@
     async function openTeacherDialog(c: ClassDTO): Promise<void> {
         selectedClass.value = c;
 
-        // let the component know it should show teachers of a class
+        // Let the component know it should show teachers of a class
         getStudents.value = false;
         await getTeachersQuery.refetch();
         dialog.value = true;
