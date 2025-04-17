@@ -61,8 +61,16 @@
                 accepted: accepted,
             },
             {
-                onSuccess: () => {
-                    showSnackbar(t("sent"), "success");
+                onSuccess: async () => {
+                    if (accepted){
+                        await joinRequestsQuery.refetch();
+                        await getStudents.refetch();
+
+                        showSnackbar(t("accepted"), "success");
+                    } else {
+                        await joinRequestsQuery.refetch();
+                        showSnackbar(t("rejected"), "success");
+                    }
                 },
                 onError: (e) => {
                     showSnackbar(t("failed") + ": " + e.message, "error");

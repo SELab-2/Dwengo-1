@@ -82,5 +82,7 @@
     "reject": "rejeter",
     "areusure": "Êtes-vous sûr?",
     "yes": "oui",
-    "teachers": "enseignants"
+    "teachers": "enseignants",
+    "accepted": "acceptée",
+    "rejected": "rejetée"
 }

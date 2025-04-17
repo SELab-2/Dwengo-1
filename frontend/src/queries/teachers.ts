@@ -137,7 +137,7 @@ export function useUpdateJoinRequestMutation(): UseMutationReturnType<
         mutationFn: async ({ teacherUsername, classId, studentUsername, accepted }) =>
             teacherController.updateStudentJoinRequest(teacherUsername, classId, studentUsername, accepted),
         onSuccess: async (deletedJoinRequest) => {
-            const username = deletedJoinRequest.request.requester;
+            const username = deletedJoinRequest.request.requester.username;
             const classId = deletedJoinRequest.request.class;
             await queryClient.invalidateQueries({ queryKey: studentJoinRequestsQueryKey(username) });
             await queryClient.invalidateQueries({ queryKey: studentJoinRequestQueryKey(username, classId) });
