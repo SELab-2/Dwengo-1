@@ -10,7 +10,7 @@ export interface GroupDTO {
 }
 
 export interface GroupDTOId {
-    class: string,
-    assignment: number,
-    groupNumber: number,
+    class: string;
+    assignment: number;
+    groupNumber: number;
 }

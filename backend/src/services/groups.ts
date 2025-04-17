@@ -68,7 +68,7 @@ export async function createGroup(groupData: GroupDTO, classid: string, assignme
     const groupRepository = getGroupRepository();
     const newGroup = groupRepository.create({
         assignment: assignment,
-        members: members
+        members: members,
     });
 
     await groupRepository.save(newGroup);
@@ -83,10 +83,10 @@ export async function getAllGroups(classId: string, assignmentNumber: number, fu
     const groups = await groupRepository.findAllGroupsForAssignment(assignment);
 
     if (full) {
-        return groups.map(group => mapToGroupDTO(group, assignment.within));
+        return groups.map((group) => mapToGroupDTO(group, assignment.within));
     }
 
-    return groups.map(group => mapToGroupDTOId(group, assignment.within));
+    return groups.map((group) => mapToGroupDTOId(group, assignment.within));
 }
 
 export async function getGroupSubmissions(

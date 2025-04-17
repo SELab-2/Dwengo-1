@@ -9,11 +9,11 @@ import { getAssignmentHandler } from '../controllers/assignments.js';
 import { getAssignmentRepository, getClassRepository } from '../data/repositories.js';
 
 export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTOId {
-        return {
-            id: assignment.id!,
-            within: assignment.within.classId!,
-        };
-    }
+    return {
+        id: assignment.id!,
+        within: assignment.within.classId!,
+    };
+}
 
 export function mapToAssignmentDTO(assignment: Assignment): AssignmentDTO {
     return {
@@ -23,7 +23,7 @@ export function mapToAssignmentDTO(assignment: Assignment): AssignmentDTO {
         description: assignment.description,
         learningPath: assignment.learningPathHruid,
         language: assignment.learningPathLanguage,
-        groups: assignment.groups.map(group => mapToGroupDTO(group, assignment.within)),
+        groups: assignment.groups.map((group) => mapToGroupDTO(group, assignment.within)),
     };
 }
 
@@ -35,5 +35,5 @@ export function mapToAssignment(assignmentData: AssignmentDTO, cls: Class): Assi
         learningPathHruid: assignmentData.learningPath,
         learningPathLanguage: languageMap[assignmentData.language],
         groups: [],
-    })
+    });
 }

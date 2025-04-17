@@ -16,14 +16,14 @@ export class Group {
 
     @ManyToOne({
         entity: () => Assignment,
-        primary: true
+        primary: true,
     })
     assignment!: Assignment;
 
     @ManyToMany({
         entity: () => Student,
         owner: true,
-        inversedBy: "groups"
+        inversedBy: 'groups',
     })
     members: Collection<Student> = new Collection<Student>(this);
 }

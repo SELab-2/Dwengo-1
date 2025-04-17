@@ -104,10 +104,10 @@ export async function getStudentGroups(username: string, full: boolean): Promise
     const groups = await groupRepository.findAllGroupsWithStudent(student);
 
     if (full) {
-        return groups.map(group => mapToGroupDTO(group, group.assignment.within));
+        return groups.map((group) => mapToGroupDTO(group, group.assignment.within));
     }
 
-    return groups.map(group => mapToGroupDTOId(group, group.assignment.within));
+    return groups.map((group) => mapToGroupDTOId(group, group.assignment.within));
 }
 
 export async function getStudentSubmissions(username: string, full: boolean): Promise<SubmissionDTO[] | SubmissionDTOId[]> {

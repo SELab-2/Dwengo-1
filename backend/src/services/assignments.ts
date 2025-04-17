@@ -58,17 +58,16 @@ export async function createAssignment(classid: string, assignmentData: Assignme
     const assignment = mapToAssignment(assignmentData, cls);
     await assignmentRepository.save(assignment);
 
-    
     if (assignmentData.groups) {
         /*
         For some reason when trying to add groups, it does not work when using the original assignment variable. 
         The assignment needs to be refetched in order for it to work.
         */
-        
+
         const assignmentCopy = await assignmentRepository.findByClassAndId(cls, assignment.id!);
-    
+
         if (assignmentCopy === null) {
-            throw new ServerErrorException("Something has gone horribly wrong. Could not find newly added assignment which is needed to add groups.");
+            throw new ServerErrorException('Something has gone horribly wrong. Could not find newly added assignment which is needed to add groups.');
         }
 
         const groupRepository = getGroupRepository();

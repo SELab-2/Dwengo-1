@@ -1,4 +1,4 @@
-import { ExceptionWithHttpState } from "./exception-with-http-state";
+import { ExceptionWithHttpState } from './exception-with-http-state';
 
 /**
  * Exception for HTTP 500 Internal Server Error

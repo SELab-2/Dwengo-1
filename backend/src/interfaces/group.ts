@@ -25,8 +25,7 @@ export function mapToGroupDTO(group: Group, cls: Class): GroupDTO {
         class: cls.classId!,
         assignment: group.assignment.id!,
         groupNumber: group.groupNumber!,
-        members: group.members.map(mapToStudentDTO)
-
+        members: group.members.map(mapToStudentDTO),
     };
 }
 
