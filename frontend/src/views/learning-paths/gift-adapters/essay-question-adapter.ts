@@ -3,7 +3,7 @@ export const essayQuestionAdapter: GiftAdapter = {
 
     installListener(questionElement: Element, answerUpdateCallback: (newAnswer: string | number | object) => void): void {
         const textArea = questionElement.querySelector('textarea')!;
-        textArea.addEventListener('input', () => answerUpdateCallback(textArea.value));
+        textArea.addEventListener('input', () => { answerUpdateCallback(textArea.value); });
     },
 
     setAnswer(questionElement: Element, answer: string | number | object): void {

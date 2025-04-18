@@ -63,7 +63,7 @@ export async function invalidateAllSubmissionKeys(
 }
 
 function checkEnabled(properties: MaybeRefOrGetter<unknown>[]): boolean {
-    return properties.every(prop => !!toValue(prop));
+    return properties.every(prop => Boolean(toValue(prop)));
 }
 
 export function useSubmissionsQuery(
@@ -87,7 +87,7 @@ export function useSubmissionsQuery(
             const fullVal = toValue(full);
 
             const response = await new SubmissionController(hruidVal!).getAll(
-                languageVal!, versionVal!, classIdVal!, assignmentNumberVal!, groupNumberVal, fullVal
+                languageVal, versionVal!, classIdVal!, assignmentNumberVal!, groupNumberVal, fullVal
             );
             return response ? response.submissions as SubmissionDTO[] : undefined;
         },
@@ -114,12 +114,12 @@ export function useSubmissionQuery(
 
     return useQuery({
         queryKey: computed(() => submissionQueryKey(
-            hruidVal!, languageVal!, versionVal!, classIdVal!, assignmentNumberVal!, groupNumberVal!, submissionNumberVal!
+            hruidVal!, languageVal, versionVal!, classIdVal!, assignmentNumberVal!, groupNumberVal!, submissionNumberVal!
         )),
         queryFn: async () => new SubmissionController(hruidVal!).getByNumber(
-            languageVal!, versionVal!, classIdVal!, assignmentNumberVal!, groupNumberVal!, submissionNumberVal!
+            languageVal, versionVal!, classIdVal!, assignmentNumberVal!, groupNumberVal!, submissionNumberVal!
         ),
-        enabled: () => !!hruidVal && !!languageVal && !!versionVal && !!classIdVal && !!assignmentNumberVal && !!submissionNumber,
+        enabled: () => Boolean(hruidVal) && Boolean(languageVal) && Boolean(versionVal) && Boolean(classIdVal) && Boolean(assignmentNumberVal) && Boolean(submissionNumber),
     });
 }
 
