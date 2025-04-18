@@ -14,12 +14,12 @@ export function questionsQueryKey(
     loId: LearningObjectIdentifierDTO,
     full: boolean,
 ): [string, string, number, string, boolean] {
-    return ["questions", loId.hruid, loId.version, loId.language, full];
+    return ["questions", loId.hruid, loId.version!, loId.language, full];
 }
 
 export function questionQueryKey(questionId: QuestionId): [string, string, number, string, number] {
     const loId = questionId.learningObjectIdentifier;
-    return ["question", loId.hruid, loId.version, loId.language, questionId.sequenceNumber];
+    return ["question", loId.hruid, loId.version!, loId.language, questionId.sequenceNumber];
 }
 
 export function useQuestionsQuery(
@@ -39,7 +39,7 @@ export function useQuestionQuery(
     const loId = toValue(questionId).learningObjectIdentifier;
     const sequenceNumber = toValue(questionId).sequenceNumber;
     return useQuery({
-        queryKey: computed(() => questionQueryKey(loId, sequenceNumber)),
+        queryKey: computed(() => questionQueryKey(toValue(questionId))),
         queryFn: async () => new QuestionController(loId).getBy(sequenceNumber),
         enabled: () => Boolean(toValue(questionId)),
     });
@@ -55,6 +55,7 @@ export function useCreateQuestionMutation(
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: questionsQueryKey(toValue(loId), true) });
             await queryClient.invalidateQueries({ queryKey: questionsQueryKey(toValue(loId), false) });
+            await queryClient.invalidateQueries({ queryKey: ["answers"] });
         },
     });
 }
@@ -88,6 +89,8 @@ export function useDeleteQuestionMutation(
             await queryClient.invalidateQueries({ queryKey: questionsQueryKey(toValue(loId), true) });
             await queryClient.invalidateQueries({ queryKey: questionsQueryKey(toValue(loId), false) });
             await queryClient.invalidateQueries({ queryKey: questionQueryKey(toValue(questionId)) });
+            await queryClient.invalidateQueries({ queryKey: ["answers"] });
+            await queryClient.invalidateQueries({ queryKey: ["answer"] });
         },
     });
 }
