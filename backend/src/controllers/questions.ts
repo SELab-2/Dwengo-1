@@ -3,16 +3,15 @@ import {
     createQuestion,
     deleteQuestion,
     getAllQuestions,
-    getAnswersByQuestion,
     getQuestion,
-    getQuestionsAboutLearningObjectInAssignment, updateQuestion,
+    getQuestionsAboutLearningObjectInAssignment,
+    updateQuestion,
 } from '../services/questions.js';
-import {FALLBACK_LANG, FALLBACK_SEQ_NUM, FALLBACK_VERSION_NUM} from '../config.js';
+import { FALLBACK_LANG, FALLBACK_SEQ_NUM, FALLBACK_VERSION_NUM } from '../config.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { QuestionData, QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { Language } from '@dwengo-1/common/util/language';
-import {requireFields} from "./error-helper";
-import {BadRequestException} from "../exceptions/bad-request-exception";
+import { requireFields } from './error-helper.js';
 
 export function getLearningObjectId(hruid: string, version: string, lang: string): LearningObjectIdentifier {
     return {
@@ -29,32 +28,12 @@ export function getQuestionId(learningObjectIdentifier: LearningObjectIdentifier
     };
 }
 
-function getQuestionIdFromRequest(req: Request): QuestionId | null {
-    const seq = req.params.seq;
-    const hruid = req.params.hruid;
-    const version = req.params.version;
-    const language = req.query.lang as string;
-    const learningObjectIdentifier = getLearningObjectId(hruid, version, language);
-
-    if (!learningObjectIdentifier) {
-        return null;
-    }
-
-    return getQuestionId(learningObjectIdentifier, seq);
-}
-
 export async function getAllQuestionsHandler(req: Request, res: Response): Promise<void> {
     const hruid = req.params.hruid;
     const version = req.params.version;
     const language = req.query.lang as string;
     const full = req.query.full === 'true';
     requireFields({ hruid });
-
-    const assignmentId = parseInt(req.query.assignmentId as string);
-
-    if (isNaN(assignmentId)) {
-        throw new BadRequestException("The assignment ID must be a number.");
-    }
 
     const learningObjectId = getLearningObjectId(hruid, version, language);
 
@@ -89,23 +68,6 @@ export async function getQuestionHandler(req: Request, res: Response): Promise<v
     res.json({ question });
 }
 
-export async function getQuestionAnswersHandler(req: Request, res: Response): Promise<void> {
-    const questionId = getQuestionIdFromRequest(req);
-    const full = req.query.full;
-
-    if (!questionId) {
-        return;
-    }
-
-    const answers = await getAnswersByQuestion(questionId, full === "true");
-
-    if (!answers) {
-        res.status(404).json({ error: `Questions not found` });
-    } else {
-        res.json({ answers: answers });
-    }
-}
-
 export async function createQuestionHandler(req: Request, res: Response): Promise<void> {
     const hruid = req.params.hruid;
     const version = req.params.version;
@@ -116,7 +78,7 @@ export async function createQuestionHandler(req: Request, res: Response): Promis
 
     const author = req.body.author as string;
     const content = req.body.content as string;
-    const inGroup = req.body.inGroup as string;
+    const inGroup = req.body.inGroup;
     requireFields({ author, content, inGroup });
 
     const questionData = req.body as QuestionData;

@@ -23,6 +23,7 @@ import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
+import { ConflictException } from '../exceptions/conflict-exception.js';
 import { Submission } from '../entities/assignments/submission.entity';
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
@@ -136,6 +137,10 @@ export async function createClassJoinRequest(username: string, classId: string):
 
     const student = await fetchStudent(username); // Throws error if student not found
     const cls = await fetchClass(classId);
+
+    if (cls.students.contains(student)) {
+        throw new ConflictException('Student already in this class');
+    }
 
     const request = mapToStudentRequest(student, cls);
     await requestRepo.save(request, { preventOverwrite: true });

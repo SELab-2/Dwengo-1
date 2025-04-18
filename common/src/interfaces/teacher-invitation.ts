@@ -1,8 +1,16 @@
 import { UserDTO } from './user';
-import { ClassDTO } from './class';
+import { ClassStatus } from '../util/class-join-request';
 
 export interface TeacherInvitationDTO {
     sender: string | UserDTO;
     receiver: string | UserDTO;
-    class: string | ClassDTO;
+    classId: string;
+    status: ClassStatus;
+}
+
+export interface TeacherInvitationData {
+    sender: string;
+    receiver: string;
+    class: string;
+    accepted?: boolean; // Use for put requests, else skip
 }

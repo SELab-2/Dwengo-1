@@ -16,6 +16,7 @@ import { BadRequestException } from '../../src/exceptions/bad-request-exception.
 import { EntityAlreadyExistsException } from '../../src/exceptions/entity-already-exists-exception.js';
 import { getStudentRequestsHandler } from '../../src/controllers/students.js';
 import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
+import { getClassHandler } from '../../src/controllers/classes';
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
@@ -168,7 +169,6 @@ describe('Teacher controllers', () => {
 
     it('Get join requests by class', async () => {
         req = {
-            query: { username: 'LimpBizkit' },
             params: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
         };
 
@@ -183,8 +183,7 @@ describe('Teacher controllers', () => {
 
     it('Update join request status', async () => {
         req = {
-            query: { username: 'LimpBizkit', studentUsername: 'PinkFloyd' },
-            params: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
+            params: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89', studentUsername: 'PinkFloyd' },
             body: { accepted: 'true' },
         };
 
@@ -200,5 +199,13 @@ describe('Teacher controllers', () => {
 
         const status: boolean = jsonMock.mock.lastCall?.[0].requests[0].status;
         expect(status).toBeTruthy();
+
+        req = {
+            params: { id: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
+        };
+
+        await getClassHandler(req as Request, res as Response);
+        const students: string[] = jsonMock.mock.lastCall?.[0].class.students;
+        expect(students).contains('PinkFloyd');
     });
 });

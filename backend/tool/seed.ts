@@ -14,6 +14,8 @@ import { makeTestQuestions } from '../tests/test_assets/questions/questions.test
 import { makeTestStudents } from '../tests/test_assets/users/students.testdata.js';
 import { makeTestTeachers } from '../tests/test_assets/users/teachers.testdata.js';
 import { getLogger, Logger } from '../src/logging/initalize.js';
+import { Collection } from '@mikro-orm/core';
+import { Group } from '../dist/entities/assignments/group.entity.js';
 
 const logger: Logger = getLogger();
 
@@ -34,8 +36,8 @@ export async function seedDatabase(): Promise<void> {
     const assignments = makeTestAssignemnts(em, classes);
     const groups = makeTestGroups(em, students, assignments);
 
-    assignments[0].groups = groups.slice(0, 3);
-    assignments[1].groups = groups.slice(3, 4);
+    assignments[0].groups = new Collection<Group>(groups.slice(0, 3));
+    assignments[1].groups = new Collection<Group>(groups.slice(3, 4));
 
     const teacherInvitations = makeTestTeacherInvitations(em, teachers, classes);
     const classJoinRequests = makeTestClassJoinRequests(em, students, classes);
@@ -43,7 +45,7 @@ export async function seedDatabase(): Promise<void> {
 
     learningObjects[1].attachments = attachments;
 
-    const questions = makeTestQuestions(em, students);
+    const questions = makeTestQuestions(em, students, groups);
     const answers = makeTestAnswers(em, teachers, questions);
     const submissions = makeTestSubmissions(em, students, groups);
 
