@@ -85,5 +85,6 @@
     "timestamp": "Tijdstip",
     "loadSubmission": "Inladen",
     "noSubmissionsYet": "Nog geen indieningen.",
-    "viewAsGroup": "Vooruitgang bekijken van groep..."
+    "viewAsGroup": "Vooruitgang bekijken van groep...",
+    "assignLearningPath": "Als opdracht geven"
 }

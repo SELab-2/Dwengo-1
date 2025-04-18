@@ -85,5 +85,6 @@
     "timestamp": "Timestamp",
     "loadSubmission": "Load",
     "noSubmissionsYet": "No submissions yet.",
-    "viewAsGroup": "View progress of group..."
+    "viewAsGroup": "View progress of group...",
+    "assignLearningPath": "assign"
 }

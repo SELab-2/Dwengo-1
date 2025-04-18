@@ -85,5 +85,6 @@
     "timestamp": "Zeitpunkt",
     "loadSubmission": "Einladen",
     "noSubmissionsYet": "Noch keine Lösungen eingereicht.",
-    "viewAsGroup": "Fortschritt ansehen von Gruppe..."
+    "viewAsGroup": "Fortschritt ansehen von Gruppe...",
+    "assignLearningPath": "Als Aufgabe geben"
 }

@@ -114,6 +114,16 @@
             router.push({ query });
         }
     });
+
+    function assign() {
+        router.push({
+            path: "/assignment/create",
+            query: {
+                hruid: props.hruid,
+                language: props.language
+            }
+        });
+    }
 </script>
 
 <template>
@@ -125,6 +135,7 @@
             v-model="navigationDrawerShown"
             :width="350"
         >
+            <div class="d-flex flex-column h-100">
             <v-list-item>
                 <template v-slot:title>
                     <div class="learning-path-title">{{ learningPath.data.title }}</div>
@@ -193,6 +204,13 @@
                     </template>
                 </using-query-result>
             </div>
+            <v-spacer></v-spacer>
+            <v-list-item v-if="authService.authState.activeRole === 'teacher'">
+                <template v-slot:default>
+                    <v-btn class="button-in-nav" @click="assign()">{{ t("assignLearningPath") }}</v-btn>
+                </template>
+            </v-list-item>
+            </div>
         </v-navigation-drawer>
         <div class="control-bar-above-content">
             <v-btn
@@ -258,5 +276,9 @@
         padding: 20px;
         display: flex;
         justify-content: space-between;
+    }
+    .button-in-nav {
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
 </style>
