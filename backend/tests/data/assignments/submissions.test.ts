@@ -14,6 +14,9 @@ import { StudentRepository } from '../../../src/data/users/student-repository';
 import { GroupRepository } from '../../../src/data/assignments/group-repository';
 import { AssignmentRepository } from '../../../src/data/assignments/assignment-repository';
 import { ClassRepository } from '../../../src/data/classes/class-repository';
+import { Submission } from '../../../src/entities/assignments/submission.entity';
+import { Class } from '../../../src/entities/classes/class.entity';
+import { Assignment } from '../../../src/entities/assignments/assignment.entity';
 
 describe('SubmissionRepository', () => {
     let submissionRepository: SubmissionRepository;
@@ -50,13 +53,56 @@ describe('SubmissionRepository', () => {
 
     it('should find the most recent submission for a group', async () => {
         const id = new LearningObjectIdentifier('id03', Language.English, 1);
-        const class_ = await classRepository.findById('id01');
+        const class_ = await classRepository.findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
         const assignment = await assignmentRepository.findByClassAndId(class_!, 1);
         const group = await groupRepository.findByAssignmentAndGroupNumber(assignment!, 1);
         const submission = await submissionRepository.findMostRecentSubmissionForGroup(id, group!);
 
         expect(submission).toBeTruthy();
         expect(submission?.submissionTime.getDate()).toBe(25);
+    });
+
+    let clazz: Class | null;
+    let assignment: Assignment | null;
+    let loId: LearningObjectIdentifier;
+    it('should find all submissions for a certain learning object and assignment', async () => {
+        clazz = await classRepository.findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
+        assignment = await assignmentRepository.findByClassAndId(clazz!, 1);
+        loId = {
+            hruid: 'id02',
+            language: Language.English,
+            version: 1,
+        };
+        const result = await submissionRepository.findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!);
+        sortSubmissions(result);
+
+        expect(result).toHaveLength(3);
+
+        // Submission3 should be found (for learning object 'id02' by group #1 for Assignment #1 in class 'id01')
+        expect(result[0].learningObjectHruid).toBe(loId.hruid);
+        expect(result[0].submissionNumber).toBe(1);
+
+        // Submission4 should be found (for learning object 'id02' by group #1 for Assignment #1 in class 'id01')
+        expect(result[1].learningObjectHruid).toBe(loId.hruid);
+        expect(result[1].submissionNumber).toBe(2);
+
+        // Submission8 should be found (for learning object 'id02' by group #2 for Assignment #1 in class 'id01')
+        expect(result[2].learningObjectHruid).toBe(loId.hruid);
+        expect(result[2].submissionNumber).toBe(3);
+    });
+
+    it("should find only the submissions for a certain learning object and assignment made for the user's group", async () => {
+        const result = await submissionRepository.findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!, 'Tool');
+        // (student Tool is in group #2)
+
+        expect(result).toHaveLength(1);
+
+        // Submission8 should be found (for learning object 'id02' by group #2 for Assignment #1 in class 'id01')
+        expect(result[0].learningObjectHruid).toBe(loId.hruid);
+        expect(result[0].submissionNumber).toBe(3);
+
+        // The other submissions found in the previous test case should not be found anymore as they were made on
+        // Behalf of group #1 which Tool is no member of.
     });
 
     it('should not find a deleted submission', async () => {
@@ -68,3 +114,15 @@ describe('SubmissionRepository', () => {
         expect(submission).toBeNull();
     });
 });
+
+function sortSubmissions(submissions: Submission[]): void {
+    submissions.sort((a, b) => {
+        if (a.learningObjectHruid < b.learningObjectHruid) {
+            return -1;
+        }
+        if (a.learningObjectHruid > b.learningObjectHruid) {
+            return 1;
+        }
+        return a.submissionNumber! - b.submissionNumber!;
+    });
+}

@@ -2,9 +2,9 @@ import dwengoApiLearningObjectProvider from './dwengo-api-learning-object-provid
 import { LearningObjectProvider } from './learning-object-provider.js';
 import { envVars, getEnvVar } from '../../util/envVars.js';
 import databaseLearningObjectProvider from './database-learning-object-provider.js';
-import { FilteredLearningObject, LearningObjectIdentifier, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import { FilteredLearningObject, LearningObjectIdentifierDTO, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
 
-function getProvider(id: LearningObjectIdentifier): LearningObjectProvider {
+function getProvider(id: LearningObjectIdentifierDTO): LearningObjectProvider {
     if (id.hruid.startsWith(getEnvVar(envVars.UserContentPrefix))) {
         return databaseLearningObjectProvider;
     }
@@ -18,7 +18,7 @@ const learningObjectService = {
     /**
      * Fetches a single learning object by its HRUID
      */
-    async getLearningObjectById(id: LearningObjectIdentifier): Promise<FilteredLearningObject | null> {
+    async getLearningObjectById(id: LearningObjectIdentifierDTO): Promise<FilteredLearningObject | null> {
         return getProvider(id).getLearningObjectById(id);
     },
 
@@ -39,7 +39,7 @@ const learningObjectService = {
     /**
      * Obtain a HTML-rendering of the learning object with the given identifier (as a string).
      */
-    async getLearningObjectHTML(id: LearningObjectIdentifier): Promise<string | null> {
+    async getLearningObjectHTML(id: LearningObjectIdentifierDTO): Promise<string | null> {
         return getProvider(id).getLearningObjectHTML(id);
     },
 };

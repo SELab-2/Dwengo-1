@@ -33,6 +33,10 @@ export class AssignmentController extends BaseController {
         return this.delete<AssignmentResponse>(`/${num}`);
     }
 
+    async updateAssignment(num: number, data: Partial<AssignmentDTO>): Promise<AssignmentResponse> {
+        return this.put<AssignmentResponse>(`/${num}`, data);
+    }
+
     async getSubmissions(assignmentNumber: number, full = true): Promise<SubmissionsResponse> {
         return this.get<SubmissionsResponse>(`/${assignmentNumber}/submissions`, { full });
     }

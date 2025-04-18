@@ -7,7 +7,6 @@ import CreateClass from "@/views/classes/CreateClass.vue";
 import CreateAssignment from "@/views/assignments/CreateAssignment.vue";
 import CreateDiscussion from "@/views/discussions/CreateDiscussion.vue";
 import CallbackPage from "@/views/CallbackPage.vue";
-import UserDiscussions from "@/views/discussions/UserDiscussions.vue";
 import UserClasses from "@/views/classes/UserClasses.vue";
 import UserAssignments from "@/views/assignments/UserAssignments.vue";
 import authState from "@/services/auth/auth-service.ts";
@@ -57,11 +56,12 @@ const router = createRouter({
                     name: "UserClasses",
                     component: UserClasses,
                 },
-                {
-                    path: "discussion",
-                    name: "UserDiscussions",
-                    component: UserDiscussions,
-                },
+                // TODO Re-enable this route when the discussion page is ready
+                // {
+                //     Path: "discussion",
+                //     Name: "UserDiscussions",
+                //     Component: UserDiscussions,
+                // },
             ],
         },
 

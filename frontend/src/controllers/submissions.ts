@@ -11,7 +11,7 @@ export interface SubmissionResponse {
 
 export class SubmissionController extends BaseController {
     constructor(classid: string, assignmentNumber: number, groupNumber: number) {
-        super(`class/${classid}/assignments/${assignmentNumber}/groups/${groupNumber}`);
+        super(`class/${classid}/assignments/${assignmentNumber}/groups/${groupNumber}/submissions`);
     }
 
     async getAll(full = true): Promise<SubmissionsResponse> {
@@ -22,7 +22,7 @@ export class SubmissionController extends BaseController {
         return this.get<SubmissionResponse>(`/${submissionNumber}`);
     }
 
-    async createSubmission(data: unknown): Promise<SubmissionResponse> {
+    async createSubmission(data: SubmissionDTO): Promise<SubmissionResponse> {
         return this.post<SubmissionResponse>(`/`, data);
     }
 

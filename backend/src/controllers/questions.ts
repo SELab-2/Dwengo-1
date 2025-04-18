@@ -1,34 +1,27 @@
 import { Request, Response } from 'express';
-import { createQuestion, deleteQuestion, getAllQuestions, getAnswersByQuestion, getQuestion } from '../services/questions.js';
-import { FALLBACK_LANG, FALLBACK_SEQ_NUM } from '../config.js';
+import {
+    createQuestion,
+    deleteQuestion,
+    getAllQuestions,
+    getQuestion,
+    getQuestionsAboutLearningObjectInAssignment,
+    updateQuestion,
+} from '../services/questions.js';
+import { FALLBACK_LANG, FALLBACK_SEQ_NUM, FALLBACK_VERSION_NUM } from '../config.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
-import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
+import { QuestionData, QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { Language } from '@dwengo-1/common/util/language';
+import { requireFields } from './error-helper.js';
 
-function getObjectId(req: Request, res: Response): LearningObjectIdentifier | null {
-    const { hruid, version } = req.params;
-    const lang = req.query.lang;
-
-    if (!hruid || !version) {
-        res.status(400).json({ error: 'Missing required parameters.' });
-        return null;
-    }
-
+export function getLearningObjectId(hruid: string, version: string, lang: string): LearningObjectIdentifier {
     return {
         hruid,
-        language: (lang as Language) || FALLBACK_LANG,
-        version: Number(version),
+        language: (lang || FALLBACK_LANG) as Language,
+        version: Number(version) || FALLBACK_VERSION_NUM,
     };
 }
 
-function getQuestionId(req: Request, res: Response): QuestionId | null {
-    const seq = req.params.seq;
-    const learningObjectIdentifier = getObjectId(req, res);
-
-    if (!learningObjectIdentifier) {
-        return null;
-    }
-
+export function getQuestionId(learningObjectIdentifier: LearningObjectIdentifier, seq: string): QuestionId {
     return {
         learningObjectIdentifier,
         sequenceNumber: seq ? Number(seq) : FALLBACK_SEQ_NUM,
@@ -36,84 +29,96 @@ function getQuestionId(req: Request, res: Response): QuestionId | null {
 }
 
 export async function getAllQuestionsHandler(req: Request, res: Response): Promise<void> {
-    const objectId = getObjectId(req, res);
+    const hruid = req.params.hruid;
+    const version = req.params.version;
+    const language = req.query.lang as string;
     const full = req.query.full === 'true';
+    requireFields({ hruid });
 
-    if (!objectId) {
-        return;
-    }
+    const learningObjectId = getLearningObjectId(hruid, version, language);
 
-    const questions = await getAllQuestions(objectId, full);
-
-    if (!questions) {
-        res.status(404).json({ error: `Questions not found.` });
+    let questions: QuestionDTO[] | QuestionId[];
+    if (req.query.classId && req.query.assignmentId) {
+        questions = await getQuestionsAboutLearningObjectInAssignment(
+            learningObjectId,
+            req.query.classId as string,
+            parseInt(req.query.assignmentId as string),
+            full ?? false,
+            req.query.forStudent as string | undefined
+        );
     } else {
-        res.json({ questions: questions });
+        questions = await getAllQuestions(learningObjectId, full ?? false);
     }
+
+    res.json({ questions });
 }
 
 export async function getQuestionHandler(req: Request, res: Response): Promise<void> {
-    const questionId = getQuestionId(req, res);
+    const hruid = req.params.hruid;
+    const version = req.params.version;
+    const language = req.query.lang as string;
+    const seq = req.params.seq;
+    requireFields({ hruid });
 
-    if (!questionId) {
-        return;
-    }
+    const learningObjectId = getLearningObjectId(hruid, version, language);
+    const questionId = getQuestionId(learningObjectId, seq);
 
     const question = await getQuestion(questionId);
 
-    if (!question) {
-        res.status(404).json({ error: `Question not found.` });
-    } else {
-        res.json(question);
-    }
-}
-
-export async function getQuestionAnswersHandler(req: Request, res: Response): Promise<void> {
-    const questionId = getQuestionId(req, res);
-    const full = req.query.full === 'true';
-
-    if (!questionId) {
-        return;
-    }
-
-    const answers = await getAnswersByQuestion(questionId, full);
-
-    if (!answers) {
-        res.status(404).json({ error: `Questions not found` });
-    } else {
-        res.json({ answers: answers });
-    }
+    res.json({ question });
 }
 
 export async function createQuestionHandler(req: Request, res: Response): Promise<void> {
-    const questionDTO = req.body as QuestionDTO;
+    const hruid = req.params.hruid;
+    const version = req.params.version;
+    const language = req.query.lang as string;
+    requireFields({ hruid });
 
-    if (!questionDTO.learningObjectIdentifier || !questionDTO.author || !questionDTO.content) {
-        res.status(400).json({ error: 'Missing required fields: identifier and content' });
-        return;
-    }
+    const loId = getLearningObjectId(hruid, version, language);
 
-    const question = await createQuestion(questionDTO);
+    const author = req.body.author as string;
+    const content = req.body.content as string;
+    const inGroup = req.body.inGroup;
+    requireFields({ author, content, inGroup });
 
-    if (!question) {
-        res.status(400).json({ error: 'Could not create question' });
-    } else {
-        res.json(question);
-    }
+    const questionData = req.body as QuestionData;
+
+    const question = await createQuestion(loId, questionData);
+
+    res.json({ question });
 }
 
 export async function deleteQuestionHandler(req: Request, res: Response): Promise<void> {
-    const questionId = getQuestionId(req, res);
+    const hruid = req.params.hruid;
+    const version = req.params.version;
+    const language = req.query.lang as string;
+    const seq = req.params.seq;
+    requireFields({ hruid });
 
-    if (!questionId) {
-        return;
-    }
+    const learningObjectId = getLearningObjectId(hruid, version, language);
+    const questionId = getQuestionId(learningObjectId, seq);
 
     const question = await deleteQuestion(questionId);
 
-    if (!question) {
-        res.status(400).json({ error: 'Could not find nor delete question' });
-    } else {
-        res.json(question);
-    }
+    res.json({ question });
+}
+
+export async function updateQuestionHandler(req: Request, res: Response): Promise<void> {
+    const hruid = req.params.hruid;
+    const version = req.params.version;
+    const language = req.query.lang as string;
+    const seq = req.params.seq;
+    requireFields({ hruid });
+
+    const learningObjectId = getLearningObjectId(hruid, version, language);
+    const questionId = getQuestionId(learningObjectId, seq);
+
+    const content = req.body.content as string;
+    requireFields({ content });
+
+    const questionData = req.body as QuestionData;
+
+    const question = await updateQuestion(questionId, questionData);
+
+    res.json({ question });
 }

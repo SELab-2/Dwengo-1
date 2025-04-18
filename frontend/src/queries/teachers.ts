@@ -1,11 +1,17 @@
 import { computed, toValue } from "vue";
 import type { MaybeRefOrGetter } from "vue";
-import { useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
+import {
+    useMutation,
+    useQuery,
+    useQueryClient,
+    type UseMutationReturnType,
+    type UseQueryReturnType,
+} from "@tanstack/vue-query";
 import { TeacherController, type TeacherResponse, type TeachersResponse } from "@/controllers/teachers.ts";
 import type { ClassesResponse } from "@/controllers/classes.ts";
 import type { JoinRequestResponse, JoinRequestsResponse, StudentsResponse } from "@/controllers/students.ts";
 import type { QuestionsResponse } from "@/controllers/questions.ts";
-import type { TeacherDTO } from "@dwengo-1/interfaces/teacher";
+import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
 import { studentJoinRequestQueryKey, studentJoinRequestsQueryKey } from "@/queries/students.ts";
 
 const teacherController = new TeacherController();

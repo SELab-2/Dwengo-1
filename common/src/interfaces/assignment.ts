@@ -2,7 +2,7 @@ import { GroupDTO } from './group';
 
 export interface AssignmentDTO {
     id: number;
-    class: string; // Id of class 'within'
+    within: string;
     title: string;
     description: string;
     learningPath: string;

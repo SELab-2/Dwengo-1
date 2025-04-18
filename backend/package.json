@@ -7,12 +7,12 @@
     "main": "dist/app.js",
     "scripts": {
         "build": "cross-env NODE_ENV=production tsc --build",
-        "dev": "cross-env NODE_ENV=development tsx watch --env-file=.env.development.local src/app.ts",
+        "dev": "cross-env NODE_ENV=development tsx tool/seed.ts; tsx watch --env-file=.env.development.local src/app.ts",
         "start": "cross-env NODE_ENV=production node --env-file=.env dist/app.js",
         "format": "prettier --write src/",
         "format-check": "prettier --check src/",
         "lint": "eslint . --fix",
-        "pretest:unit": "npm run build",
+        "pretest:unit": "tsx ../docs/api/generate.ts && npm run build",
         "test:unit": "vitest --run"
     },
     "dependencies": {

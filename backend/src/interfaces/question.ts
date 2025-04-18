@@ -1,13 +1,23 @@
 import { Question } from '../entities/questions/question.entity.js';
 import { mapToStudentDTO } from './student.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
-import { LearningObjectIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import { LearningObjectIdentifierDTO } from '@dwengo-1/common/interfaces/learning-content';
+import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
+import { mapToGroupDTOId } from './group.js';
 
-function getLearningObjectIdentifier(question: Question): LearningObjectIdentifier {
+function getLearningObjectIdentifier(question: Question): LearningObjectIdentifierDTO {
     return {
         hruid: question.learningObjectHruid,
         language: question.learningObjectLanguage,
         version: question.learningObjectVersion,
+    };
+}
+
+export function mapToLearningObjectID(loID: LearningObjectIdentifierDTO): LearningObjectIdentifier {
+    return {
+        hruid: loID.hruid,
+        language: loID.language,
+        version: loID.version ?? 1,
     };
 }
 
@@ -21,6 +31,7 @@ export function mapToQuestionDTO(question: Question): QuestionDTO {
         learningObjectIdentifier,
         sequenceNumber: question.sequenceNumber!,
         author: mapToStudentDTO(question.author),
+        inGroup: mapToGroupDTOId(question.inGroup),
         timestamp: question.timestamp.toISOString(),
         content: question.content,
     };
