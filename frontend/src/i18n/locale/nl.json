@@ -84,5 +84,6 @@
     "submittedBy": "Ingediend door",
     "timestamp": "Tijdstip",
     "loadSubmission": "Inladen",
-    "noSubmissionsYet": "Nog geen indieningen."
+    "noSubmissionsYet": "Nog geen indieningen.",
+    "viewAsGroup": "Vooruitgang bekijken van groep..."
 }

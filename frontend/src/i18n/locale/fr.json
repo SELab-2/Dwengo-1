@@ -84,5 +84,6 @@
     "submittedBy": "Soumis par",
     "timestamp": "Horodatage",
     "loadSubmission": "Charger",
-    "noSubmissionsYet": "Pas encore de soumissions."
+    "noSubmissionsYet": "Pas encore de soumissions.",
+    "viewAsGroup": "Voir la progression du groupe..."
 }

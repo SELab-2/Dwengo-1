@@ -84,5 +84,6 @@
     "submittedBy": "Eingereicht von",
     "timestamp": "Zeitpunkt",
     "loadSubmission": "Einladen",
-    "noSubmissionsYet": "Noch keine Lösungen eingereicht."
+    "noSubmissionsYet": "Noch keine Lösungen eingereicht.",
+    "viewAsGroup": "Fortschritt ansehen von Gruppe..."
 }
