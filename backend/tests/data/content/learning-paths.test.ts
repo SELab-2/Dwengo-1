@@ -3,7 +3,7 @@ import { getLearningPathRepository } from '../../../src/data/repositories';
 import { LearningPathRepository } from '../../../src/data/content/learning-path-repository';
 import { setupTestApp } from '../../setup-tests';
 import { Language } from '@dwengo-1/common/util/language';
-import {testLearningPath01} from "../../test_assets/content/learning-paths.testdata";
+import { testLearningPath01 } from '../../test_assets/content/learning-paths.testdata';
 
 describe('LearningPathRepository', () => {
     let learningPathRepository: LearningPathRepository;
@@ -20,9 +20,7 @@ describe('LearningPathRepository', () => {
     });
 
     it('should return requested learning path', async () => {
-        const learningPath = await learningPathRepository.findByHruidAndLanguage(
-            testLearningPath01.hruid, testLearningPath01.language as Language
-        );
+        const learningPath = await learningPathRepository.findByHruidAndLanguage(testLearningPath01.hruid, testLearningPath01.language as Language);
 
         expect(learningPath).toBeTruthy();
         expect(learningPath?.title).toBe(testLearningPath01.title);

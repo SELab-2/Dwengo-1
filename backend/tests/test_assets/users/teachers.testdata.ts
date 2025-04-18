@@ -62,4 +62,3 @@ export function getTeacher04(): Teacher {
 export function getTestleerkracht1(): Teacher {
     return testleerkracht1;
 }
-

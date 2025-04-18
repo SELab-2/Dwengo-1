@@ -27,10 +27,7 @@ export class SqliteAutoincrementSubscriber implements EventSubscriber {
 
         for (const prop of Object.values(args.meta.properties)) {
             const property = prop as EntityProperty<T>;
-            if (
-                property.primary && property.autoincrement
-                && (args.entity as Record<string, unknown>)[property.name] === undefined
-            ) {
+            if (property.primary && property.autoincrement && (args.entity as Record<string, unknown>)[property.name] === undefined) {
                 // Obtain and increment sequence number of this entity.
                 const propertyKey = args.meta.class.name + '.' + property.name;
                 const nextSeqNumber = this.sequenceNumbersForEntityType.get(propertyKey) || 0;

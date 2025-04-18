@@ -1,4 +1,4 @@
-import {getAssignmentRepository, getGroupRepository, getSubmissionRepository} from '../data/repositories.js';
+import { getAssignmentRepository, getGroupRepository, getSubmissionRepository } from '../data/repositories.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { mapToSubmission, mapToSubmissionDTO } from '../interfaces/submission.js';

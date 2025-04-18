@@ -62,18 +62,15 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
     /**
      * Looks up all submissions for the given learning object which were submitted as part of the given assignment.
      */
-    public async findAllSubmissionsForLearningObjectAndAssignment(
-        loId: LearningObjectIdentifier,
-        assignment: Assignment,
-    ): Promise<Submission[]> {
+    public async findAllSubmissionsForLearningObjectAndAssignment(loId: LearningObjectIdentifier, assignment: Assignment): Promise<Submission[]> {
         return this.findAll({
             where: {
                 learningObjectHruid: loId.hruid,
                 learningObjectLanguage: loId.language,
                 learningObjectVersion: loId.version,
                 onBehalfOf: {
-                    assignment
-                }
+                    assignment,
+                },
             },
         });
     }
@@ -81,16 +78,13 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
     /**
      * Looks up all submissions for the given learning object which were submitted by the given group
      */
-    public async findAllSubmissionsForLearningObjectAndGroup(
-        loId: LearningObjectIdentifier,
-        group: Group,
-    ): Promise<Submission[]> {
+    public async findAllSubmissionsForLearningObjectAndGroup(loId: LearningObjectIdentifier, group: Group): Promise<Submission[]> {
         return this.findAll({
             where: {
                 learningObjectHruid: loId.hruid,
                 learningObjectLanguage: loId.language,
                 learningObjectVersion: loId.version,
-                onBehalfOf: group
+                onBehalfOf: group,
             },
         });
     }

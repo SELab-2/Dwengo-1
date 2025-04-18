@@ -1,9 +1,9 @@
-import {EntityManager} from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { Group } from '../../../src/entities/assignments/group.entity';
 import { Assignment } from '../../../src/entities/assignments/assignment.entity';
 import { Student } from '../../../src/entities/users/student.entity';
-import {getConditionalPathAssignment} from "./assignments.testdata";
-import {getTestleerling1} from "../users/students.testdata";
+import { getConditionalPathAssignment } from './assignments.testdata';
+import { getTestleerling1 } from '../users/students.testdata';
 
 export function makeTestGroups(em: EntityManager, students: Student[], assignments: Assignment[]): Group[] {
     /*
@@ -62,8 +62,8 @@ export function makeTestGroups(em: EntityManager, students: Student[], assignmen
     group1ConditionalLearningPath = em.create(Group, {
         assignment: getConditionalPathAssignment(),
         groupNumber: 1,
-        members: [getTestleerling1()]
-    })
+        members: [getTestleerling1()],
+    });
 
     return [group01, group02, group03, group04, group05, group1ConditionalLearningPath];
 }

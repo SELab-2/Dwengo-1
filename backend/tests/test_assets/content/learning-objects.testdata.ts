@@ -1,11 +1,11 @@
-import {EntityManager, RequiredEntityData} from '@mikro-orm/core';
-import {LearningObject} from '../../../src/entities/content/learning-object.entity';
-import {Language} from '@dwengo-1/common/util/language';
-import {DwengoContentType} from '../../../src/services/learning-objects/processing/content-type';
-import {ReturnValue} from '../../../src/entities/content/return-value.entity';
-import {envVars, getEnvVar} from "../../../src/util/envVars";
-import {loadTestAsset} from "../../test-utils/load-test-asset";
-import {v4} from "uuid";
+import { EntityManager, RequiredEntityData } from '@mikro-orm/core';
+import { LearningObject } from '../../../src/entities/content/learning-object.entity';
+import { Language } from '@dwengo-1/common/util/language';
+import { DwengoContentType } from '../../../src/services/learning-objects/processing/content-type';
+import { ReturnValue } from '../../../src/entities/content/return-value.entity';
+import { envVars, getEnvVar } from '../../../src/util/envVars';
+import { loadTestAsset } from '../../test-utils/load-test-asset';
+import { v4 } from 'uuid';
 
 export function makeTestLearningObjects(em: EntityManager): LearningObject[] {
     const returnValue: ReturnValue = new ReturnValue();
@@ -19,13 +19,19 @@ export function makeTestLearningObjects(em: EntityManager): LearningObject[] {
     const learningObject05 = em.create(LearningObject, testLearningObject05);
 
     const learningObjectMultipleChoice = em.create(LearningObject, testLearningObjectMultipleChoice);
-    const learningObjectEssayQuestion= em.create(LearningObject, testLearningObjectEssayQuestion);
+    const learningObjectEssayQuestion = em.create(LearningObject, testLearningObjectEssayQuestion);
 
     const learningObjectPnNotebooks = em.create(LearningObject, testLearningObjectPnNotebooks);
 
     return [
-        learningObject01, learningObject02, learningObject03, learningObject04, learningObject05,
-        learningObjectMultipleChoice, learningObjectEssayQuestion, learningObjectPnNotebooks
+        learningObject01,
+        learningObject02,
+        learningObject03,
+        learningObject04,
+        learningObject05,
+        learningObjectMultipleChoice,
+        learningObjectEssayQuestion,
+        learningObjectPnNotebooks,
     ];
 }
 
@@ -164,14 +170,14 @@ export const testLearningObjectMultipleChoice: RequiredEntityData<LearningObject
     hruid: `${getEnvVar(envVars.UserContentPrefix)}test_multiple_choice`,
     language: Language.English,
     version: 1,
-    title: "Self-evaluation",
+    title: 'Self-evaluation',
     description: "Time to evaluate how well you understand what you've learned so far.",
-    keywords: ["test"],
+    keywords: ['test'],
     teacherExclusive: false,
     skosConcepts: [],
     educationalGoals: [],
-    copyright: "Groep 1 SEL-2 2025",
-    license: "CC0",
+    copyright: 'Groep 1 SEL-2 2025',
+    license: 'CC0',
     difficulty: 1,
     estimatedTime: 1,
     attachments: [],
@@ -183,21 +189,21 @@ export const testLearningObjectMultipleChoice: RequiredEntityData<LearningObject
     returnValue: {
         callbackUrl: `%SUBMISSION%`,
         callbackSchema: '["antwoord vraag 1"]',
-    }
+    },
 };
 
 export const testLearningObjectEssayQuestion: RequiredEntityData<LearningObject> = {
     hruid: `${getEnvVar(envVars.UserContentPrefix)}test_essay_question`,
     language: Language.English,
     version: 1,
-    title: "Reflection",
-    description: "Reflect on your learning progress.",
-    keywords: ["test"],
+    title: 'Reflection',
+    description: 'Reflect on your learning progress.',
+    keywords: ['test'],
     teacherExclusive: false,
     skosConcepts: [],
     educationalGoals: [],
-    copyright: "Groep 1 SEL-2 2025",
-    license: "CC0",
+    copyright: 'Groep 1 SEL-2 2025',
+    license: 'CC0',
     difficulty: 1,
     estimatedTime: 1,
     attachments: [],
@@ -209,47 +215,47 @@ export const testLearningObjectEssayQuestion: RequiredEntityData<LearningObject>
     returnValue: {
         callbackUrl: `%SUBMISSION%`,
         callbackSchema: '["antwoord vraag 1"]',
-    }
+    },
 };
 
 export const testLearningObjectPnNotebooks: RequiredEntityData<LearningObject> = {
     hruid: `${getEnvVar(envVars.UserContentPrefix)}pn_werkingnotebooks`,
     version: 3,
     language: Language.Dutch,
-    title: "Werken met notebooks",
-    description: "Leren werken met notebooks",
-    keywords: ["Python", "KIKS", "Wiskunde", "STEM", "AI"],
+    title: 'Werken met notebooks',
+    description: 'Leren werken met notebooks',
+    keywords: ['Python', 'KIKS', 'Wiskunde', 'STEM', 'AI'],
     targetAges: [14, 15, 16, 17, 18],
     admins: [],
-    copyright: "dwengo",
+    copyright: 'dwengo',
     educationalGoals: [],
-    license: "dwengo",
+    license: 'dwengo',
     contentType: DwengoContentType.TEXT_MARKDOWN,
     difficulty: 3,
     estimatedTime: 10,
-    uuid: "2adf9929-b424-4650-bf60-186f730d38ab",
+    uuid: '2adf9929-b424-4650-bf60-186f730d38ab',
     teacherExclusive: false,
     skosConcepts: [
-        "http://ilearn.ilabt.imec.be/vocab/curr1/s-vaktaal",
-        "http://ilearn.ilabt.imec.be/vocab/curr1/s-digitale-media-en-toepassingen",
-        "http://ilearn.ilabt.imec.be/vocab/curr1/s-computers-en-systemen",
+        'http://ilearn.ilabt.imec.be/vocab/curr1/s-vaktaal',
+        'http://ilearn.ilabt.imec.be/vocab/curr1/s-digitale-media-en-toepassingen',
+        'http://ilearn.ilabt.imec.be/vocab/curr1/s-computers-en-systemen',
     ],
     attachments: [
         {
-            name: "dwengo.png",
-            mimeType: "image/png",
-            content: loadTestAsset("/content/learning-object-resources/pn_werkingnotebooks/dwengo.png")
+            name: 'dwengo.png',
+            mimeType: 'image/png',
+            content: loadTestAsset('/content/learning-object-resources/pn_werkingnotebooks/dwengo.png'),
         },
         {
-            name: "Knop.png",
-            mimeType: "image/png",
-            content: loadTestAsset("/content/learning-object-resources/pn_werkingnotebooks/Knop.png")
-        }
+            name: 'Knop.png',
+            mimeType: 'image/png',
+            content: loadTestAsset('/content/learning-object-resources/pn_werkingnotebooks/Knop.png'),
+        },
     ],
     available: false,
-    content: loadTestAsset("/content/learning-object-resources/pn_werkingnotebooks/content.md"),
+    content: loadTestAsset('/content/learning-object-resources/pn_werkingnotebooks/content.md'),
     returnValue: {
-        callbackUrl: "%SUBMISSION%",
-        callbackSchema: "[]"
-    }
-}
+        callbackUrl: '%SUBMISSION%',
+        callbackSchema: '[]',
+    },
+};

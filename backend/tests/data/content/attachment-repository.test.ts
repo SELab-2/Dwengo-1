@@ -5,8 +5,8 @@ import { AttachmentRepository } from '../../../src/data/content/attachment-repos
 import { LearningObject } from '../../../src/entities/content/learning-object.entity.js';
 import { Attachment } from '../../../src/entities/content/attachment.entity.js';
 import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier.js';
-import {testLearningObjectPnNotebooks} from "../../test_assets/content/learning-objects.testdata";
-import {v4 as uuidV4} from "uuid";
+import { testLearningObjectPnNotebooks } from '../../test_assets/content/learning-objects.testdata';
+import { v4 as uuidV4 } from 'uuid';
 
 describe('AttachmentRepository', () => {
     let attachmentRepo: AttachmentRepository;
@@ -26,7 +26,7 @@ describe('AttachmentRepository', () => {
         newLearningObjectData.version = 101;
         newLearningObjectData.attachments = [];
         newLearningObjectData.uuid = uuidV4();
-        newLearningObjectData.content = Buffer.from("Content of the newer example");
+        newLearningObjectData.content = Buffer.from('Content of the newer example');
 
         newLearningObject = learningObjectRepo.create(newLearningObjectData);
         await learningObjectRepo.save(newLearningObject);
@@ -36,7 +36,7 @@ describe('AttachmentRepository', () => {
     it('allows us to add attachments with the same name to a different learning object without throwing an error', async () => {
         attachmentOnlyNewer = structuredClone(attachmentsOlderLearningObject[0]);
         attachmentOnlyNewer.learningObject = newLearningObject;
-        attachmentOnlyNewer.content = Buffer.from("New attachment content");
+        attachmentOnlyNewer.content = Buffer.from('New attachment content');
 
         await attachmentRepo.save(attachmentRepo.create(attachmentOnlyNewer));
     });
@@ -49,10 +49,7 @@ describe('AttachmentRepository', () => {
             version: testLearningObjectPnNotebooks.version,
         };
 
-        const result = await attachmentRepo.findByLearningObjectIdAndName(
-            olderLearningObjectId,
-            attachmentsOlderLearningObject[0].name
-        );
+        const result = await attachmentRepo.findByLearningObjectIdAndName(olderLearningObjectId, attachmentsOlderLearningObject[0].name);
         expect(result).not.toBeNull();
         expect(result!.name).toEqual(attachmentsOlderLearningObject[0].name);
         expect(result!.content).toEqual(attachmentsOlderLearningObject[0].content);

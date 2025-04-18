@@ -2,8 +2,8 @@ import { EntityManager } from '@mikro-orm/core';
 import { Class } from '../../../src/entities/classes/class.entity';
 import { Student } from '../../../src/entities/users/student.entity';
 import { Teacher } from '../../../src/entities/users/teacher.entity';
-import {getTestleerkracht1} from "../users/teachers.testdata";
-import {getTestleerling1} from "../users/students.testdata";
+import { getTestleerkracht1 } from '../users/teachers.testdata';
+import { getTestleerling1 } from '../users/students.testdata';
 
 export function makeTestClasses(em: EntityManager, students: Student[], teachers: Teacher[]): Class[] {
     const studentsClass01 = students.slice(0, 8);
@@ -47,10 +47,10 @@ export function makeTestClasses(em: EntityManager, students: Student[], teachers
     });
 
     classWithTestleerlingAndTestleerkracht = em.create(Class, {
-        classId: "a75298b5-18aa-471d-8eeb-5d77eb989393",
+        classId: 'a75298b5-18aa-471d-8eeb-5d77eb989393',
         displayName: 'Testklasse',
         teachers: [getTestleerkracht1()],
-        students: [getTestleerling1()]
+        students: [getTestleerling1()],
     });
 
     return [class01, class02, class03, class04, classWithTestleerlingAndTestleerkracht];

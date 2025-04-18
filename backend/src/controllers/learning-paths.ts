@@ -5,8 +5,8 @@ import learningPathService from '../services/learning-paths/learning-path-servic
 import { Language } from '@dwengo-1/common/util/language';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
-import {Group} from "../entities/assignments/group.entity";
-import {getAssignmentRepository, getGroupRepository} from "../data/repositories";
+import { Group } from '../entities/assignments/group.entity';
+import { getAssignmentRepository, getGroupRepository } from '../data/repositories';
 
 /**
  * Fetch learning paths based on query parameters.
@@ -27,13 +27,9 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
         if (!assignmentNo || !classId) {
             throw new BadRequestException('If forGroupNo is specified, assignmentNo and classId must also be specified.');
         }
-        const assignment = await getAssignmentRepository().findByClassIdAndAssignmentId(
-            classId, parseInt(assignmentNo)
-        );
+        const assignment = await getAssignmentRepository().findByClassIdAndAssignmentId(classId, parseInt(assignmentNo));
         if (assignment) {
-            forGroup = await getGroupRepository().findByAssignmentAndGroupNumber(
-                assignment, parseInt(forGroupNo)
-            ) ?? undefined;
+            forGroup = (await getGroupRepository().findByAssignmentAndGroupNumber(assignment, parseInt(forGroupNo))) ?? undefined;
         }
     }
 
@@ -56,11 +52,6 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
         hruidList = themes.flatMap((theme) => theme.hruids);
     }
 
-    const learningPaths = await learningPathService.fetchLearningPaths(
-        hruidList,
-        language as Language,
-        `HRUIDs: ${hruidList.join(', ')}`,
-        forGroup
-    );
+    const learningPaths = await learningPathService.fetchLearningPaths(hruidList, language as Language, `HRUIDs: ${hruidList.join(', ')}`, forGroup);
     res.json(learningPaths.data);
 }

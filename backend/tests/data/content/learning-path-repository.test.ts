@@ -3,14 +3,10 @@ import { setupTestApp } from '../../setup-tests.js';
 import { getLearningPathRepository } from '../../../src/data/repositories.js';
 import { LearningPathRepository } from '../../../src/data/content/learning-path-repository.js';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity.js';
-import {
-    expectToBeCorrectEntity,
-    expectToHaveFoundNothing,
-    expectToHaveFoundPrecisely
-} from '../../test-utils/expectations.js';
+import { expectToBeCorrectEntity, expectToHaveFoundNothing, expectToHaveFoundPrecisely } from '../../test-utils/expectations.js';
 import { Language } from '@dwengo-1/common/util/language';
-import {testLearningPath01} from "../../test_assets/content/learning-paths.testdata";
-import {mapToLearningPath} from "../../../src/services/learning-paths/learning-path-service";
+import { testLearningPath01 } from '../../test_assets/content/learning-paths.testdata';
+import { mapToLearningPath } from '../../../src/services/learning-paths/learning-path-service';
 
 describe('LearningPathRepository', () => {
     let learningPathRepo: LearningPathRepository;
@@ -24,10 +20,7 @@ describe('LearningPathRepository', () => {
     });
 
     it('should return a learning path when it is queried by hruid and language', async () => {
-        const result = await learningPathRepo.findByHruidAndLanguage(
-            testLearningPath01.hruid,
-            testLearningPath01.language as Language
-        );
+        const result = await learningPathRepo.findByHruidAndLanguage(testLearningPath01.hruid, testLearningPath01.language as Language);
         expect(result).toBeInstanceOf(LearningPath);
         expectToBeCorrectEntity(result!, examplePath);
     });

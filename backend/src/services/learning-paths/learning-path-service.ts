@@ -1,25 +1,23 @@
 import dwengoApiLearningPathProvider from './dwengo-api-learning-path-provider.js';
 import databaseLearningPathProvider from './database-learning-path-provider.js';
 import { envVars, getEnvVar } from '../../util/envVars.js';
-import {LearningObjectNode, LearningPath, LearningPathResponse} from '@dwengo-1/common/interfaces/learning-content';
+import { LearningObjectNode, LearningPath, LearningPathResponse } from '@dwengo-1/common/interfaces/learning-content';
 import { Language } from '@dwengo-1/common/util/language';
-import {Group} from "../../entities/assignments/group.entity";
-import {LearningPath as LearningPathEntity} from "../../entities/content/learning-path.entity";
-import {getLearningPathRepository} from "../../data/repositories";
-import {LearningPathNode} from "../../entities/content/learning-path-node.entity";
-import {LearningPathTransition} from "../../entities/content/learning-path-transition.entity";
-import {base64ToArrayBuffer} from "../../util/base64-buffer-conversion";
-import {TeacherDTO} from "@dwengo-1/common/interfaces/teacher";
-import {mapToTeacher} from "../../interfaces/teacher";
-import {Collection} from "@mikro-orm/core";
+import { Group } from '../../entities/assignments/group.entity';
+import { LearningPath as LearningPathEntity } from '../../entities/content/learning-path.entity';
+import { getLearningPathRepository } from '../../data/repositories';
+import { LearningPathNode } from '../../entities/content/learning-path-node.entity';
+import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity';
+import { base64ToArrayBuffer } from '../../util/base64-buffer-conversion';
+import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
+import { mapToTeacher } from '../../interfaces/teacher';
+import { Collection } from '@mikro-orm/core';
 
 const userContentPrefix = getEnvVar(envVars.UserContentPrefix);
 const allProviders = [dwengoApiLearningPathProvider, databaseLearningPathProvider];
 
-export function mapToLearningPath(
-    dto: LearningPath, adminsDto: TeacherDTO[]
-): LearningPathEntity {
-    const admins = adminsDto.map(admin => mapToTeacher(admin));
+export function mapToLearningPath(dto: LearningPath, adminsDto: TeacherDTO[]): LearningPathEntity {
+    const admins = adminsDto.map((admin) => mapToTeacher(admin));
     const repo = getLearningPathRepository();
     const path = repo.create({
         hruid: dto.hruid,
@@ -27,7 +25,7 @@ export function mapToLearningPath(
         description: dto.description,
         title: dto.title,
         admins,
-        image: dto.image ? Buffer.from(base64ToArrayBuffer(dto.image)) : null
+        image: dto.image ? Buffer.from(base64ToArrayBuffer(dto.image)) : null,
     });
     const nodes = dto.nodes.map((nodeDto: LearningObjectNode, i: number) =>
         repo.createNode({
@@ -38,33 +36,34 @@ export function mapToLearningPath(
             version: nodeDto.version,
             startNode: nodeDto.start_node ?? false,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
         })
     );
-    dto.nodes.forEach(nodeDto => {
-        const fromNode = nodes.find(it =>
-            it.learningObjectHruid === nodeDto.learningobject_hruid
-            && it.language === nodeDto.language
-            && it.version === nodeDto.version
+    dto.nodes.forEach((nodeDto) => {
+        const fromNode = nodes.find(
+            (it) => it.learningObjectHruid === nodeDto.learningobject_hruid && it.language === nodeDto.language && it.version === nodeDto.version
         )!;
-        const transitions = nodeDto.transitions.map((transDto, i) => {
-            const toNode = nodes.find(it =>
-                it.learningObjectHruid === transDto.next.hruid
-                && it.language === transDto.next.language
-                && it.version === transDto.next.version
-            );
+        const transitions = nodeDto.transitions
+            .map((transDto, i) => {
+                const toNode = nodes.find(
+                    (it) =>
+                        it.learningObjectHruid === transDto.next.hruid &&
+                        it.language === transDto.next.language &&
+                        it.version === transDto.next.version
+                );
 
-            if (toNode) {
-                return repo.createTransition({
-                    transitionNumber: i,
-                    node: fromNode,
-                    next: toNode,
-                    condition: transDto.condition ?? "true"
-                });
-            } 
+                if (toNode) {
+                    return repo.createTransition({
+                        transitionNumber: i,
+                        node: fromNode,
+                        next: toNode,
+                        condition: transDto.condition ?? 'true',
+                    });
+                }
                 return undefined;
-            
-        }).filter(it => it).map(it => it!);
+            })
+            .filter((it) => it)
+            .map((it) => it!);
 
         fromNode.transitions = new Collection<LearningPathTransition>(fromNode, transitions);
     });
@@ -85,12 +84,7 @@ const learningPathService = {
      * @param source
      * @param personalizedFor If this is set, a learning path personalized for the given group or student will be returned.
      */
-    async fetchLearningPaths(
-        hruids: string[],
-        language: Language,
-        source: string,
-        personalizedFor?: Group
-    ): Promise<LearningPathResponse> {
+    async fetchLearningPaths(hruids: string[], language: Language, source: string, personalizedFor?: Group): Promise<LearningPathResponse> {
         const userContentHruids = hruids.filter((hruid) => hruid.startsWith(userContentPrefix));
         const nonUserContentHruids = hruids.filter((hruid) => !hruid.startsWith(userContentPrefix));
 
@@ -129,8 +123,8 @@ const learningPathService = {
     async createNewLearningPath(dto: LearningPath, admins: TeacherDTO[]): Promise<void> {
         const repo = getLearningPathRepository();
         const path = mapToLearningPath(dto, admins);
-        await repo.save(path, {preventOverwrite: true})
-    }
+        await repo.save(path, { preventOverwrite: true });
+    },
 };
 
 export default learningPathService;

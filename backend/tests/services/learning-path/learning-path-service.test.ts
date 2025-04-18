@@ -2,10 +2,8 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { setupTestApp } from '../../setup-tests';
 import learningPathService from '../../../src/services/learning-paths/learning-path-service';
 import { Language } from '@dwengo-1/common/util/language';
-import {
-    testPartiallyDatabaseAndPartiallyDwengoApiLearningPath
-} from "../../test_assets/content/learning-paths.testdata";
-import {LearningPath as LearningPathDTO} from "@dwengo-1/common/interfaces/learning-content";
+import { testPartiallyDatabaseAndPartiallyDwengoApiLearningPath } from '../../test_assets/content/learning-paths.testdata';
+import { LearningPath as LearningPathDTO } from '@dwengo-1/common/interfaces/learning-content';
 
 const TEST_DWENGO_LEARNING_PATH_HRUID = 'pn_werking';
 const TEST_DWENGO_LEARNING_PATH_TITLE = 'Werken met notebooks';
@@ -16,7 +14,7 @@ describe('LearningPathService', () => {
     let testLearningPath: LearningPathDTO;
     beforeAll(async () => {
         await setupTestApp();
-        testLearningPath = testPartiallyDatabaseAndPartiallyDwengoApiLearningPath
+        testLearningPath = testPartiallyDatabaseAndPartiallyDwengoApiLearningPath;
     });
     describe('fetchLearningPaths', () => {
         it('should return learning paths both from the database and from the Dwengo API', async () => {

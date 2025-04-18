@@ -24,5 +24,5 @@ export function makeTestStudents(em: EntityManager): Student[] {
 }
 
 export function getTestleerling1(): Student {
-    return testStudents.find(it => it.username === "testleerling1");
+    return testStudents.find((it) => it.username === 'testleerling1');
 }

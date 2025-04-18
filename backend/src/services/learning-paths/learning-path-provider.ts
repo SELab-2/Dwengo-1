@@ -1,6 +1,6 @@
 import { LearningPath, LearningPathResponse } from '@dwengo-1/common/interfaces/learning-content';
 import { Language } from '@dwengo-1/common/util/language';
-import { Group } from "../../entities/assignments/group.entity";
+import { Group } from '../../entities/assignments/group.entity';
 
 /**
  * Generic interface for a service which provides access to learning paths from a data source.

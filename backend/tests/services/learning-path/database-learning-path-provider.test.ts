@@ -8,26 +8,20 @@ import databaseLearningPathProvider from '../../../src/services/learning-paths/d
 import { expectToBeCorrectLearningPath } from '../../test-utils/expectations.js';
 import { Language } from '@dwengo-1/common/util/language';
 
+import { LearningObjectNode, LearningPathResponse } from '@dwengo-1/common/interfaces/learning-content';
 import {
-    LearningObjectNode,
-    LearningPathResponse
-} from '@dwengo-1/common/interfaces/learning-content';
-import {
-    testLearningObject01, testLearningObjectEssayQuestion,
-    testLearningObjectMultipleChoice
-} from "../../test_assets/content/learning-objects.testdata";
-import {testLearningPathWithConditions} from "../../test_assets/content/learning-paths.testdata";
-import {mapToLearningPath} from "../../../src/services/learning-paths/learning-path-service";
-import {getTestGroup01, getTestGroup02} from "../../test_assets/assignments/groups.testdata";
+    testLearningObject01,
+    testLearningObjectEssayQuestion,
+    testLearningObjectMultipleChoice,
+} from '../../test_assets/content/learning-objects.testdata';
+import { testLearningPathWithConditions } from '../../test_assets/content/learning-paths.testdata';
+import { mapToLearningPath } from '../../../src/services/learning-paths/learning-path-service';
+import { getTestGroup01, getTestGroup02 } from '../../test_assets/assignments/groups.testdata';
 import { Group } from '../../../src/entities/assignments/group.entity.js';
-import {RequiredEntityData} from "@mikro-orm/core";
+import { RequiredEntityData } from '@mikro-orm/core';
 
-function expectBranchingObjectNode(
-    result: LearningPathResponse
-): LearningObjectNode {
-    const branchingObjectMatches = result.data![0].nodes.filter(
-        (it) => it.learningobject_hruid === testLearningObjectMultipleChoice.hruid
-    );
+function expectBranchingObjectNode(result: LearningPathResponse): LearningObjectNode {
+    const branchingObjectMatches = result.data![0].nodes.filter((it) => it.learningobject_hruid === testLearningObjectMultipleChoice.hruid);
     expect(branchingObjectMatches.length).toBe(1);
     return branchingObjectMatches[0];
 }
@@ -36,7 +30,7 @@ describe('DatabaseLearningPathProvider', () => {
     let testLearningPath: LearningPath;
     let branchingLearningObject: RequiredEntityData<LearningObject>;
     let extraExerciseLearningObject: RequiredEntityData<LearningObject>;
-    let finalLearningObject:  RequiredEntityData<LearningObject>;
+    let finalLearningObject: RequiredEntityData<LearningObject>;
     let groupA: Group;
     let groupB: Group;
 
@@ -55,10 +49,10 @@ describe('DatabaseLearningPathProvider', () => {
             learningObjectHruid: branchingLearningObject.hruid,
             learningObjectLanguage: branchingLearningObject.language,
             learningObjectVersion: branchingLearningObject.version,
-            content: "[0]",
+            content: '[0]',
             onBehalfOf: groupA,
             submissionTime: new Date(),
-            submitter: groupA.members[0]
+            submitter: groupA.members[0],
         });
         await submissionRepo.save(submissionA);
 
@@ -66,21 +60,17 @@ describe('DatabaseLearningPathProvider', () => {
             learningObjectHruid: branchingLearningObject.hruid,
             learningObjectLanguage: branchingLearningObject.language,
             learningObjectVersion: branchingLearningObject.version,
-            content: "[1]",
+            content: '[1]',
             onBehalfOf: groupB,
             submissionTime: new Date(),
-            submitter: groupB.members[0]
+            submitter: groupB.members[0],
         });
         await submissionRepo.save(submissionB);
     });
 
     describe('fetchLearningPaths', () => {
         it('returns the learning path correctly', async () => {
-            const result = await databaseLearningPathProvider.fetchLearningPaths(
-                [testLearningPath.hruid],
-                testLearningPath.language,
-                'the source'
-            );
+            const result = await databaseLearningPathProvider.fetchLearningPaths([testLearningPath.hruid], testLearningPath.language, 'the source');
             expect(result.success).toBe(true);
             expect(result.data?.length).toBe(1);
 
@@ -100,24 +90,11 @@ describe('DatabaseLearningPathProvider', () => {
             // There should be exactly one branching object
             let branchingObject = expectBranchingObjectNode(result);
 
-            expect(
-                branchingObject.transitions.filter(
-                    it => it.next.hruid === finalLearningObject.hruid
-                ).length
-            ).toBe(0); // StudentA picked the first option, therefore, there should be no direct path to the final object.
-            expect(
-                branchingObject.transitions.filter(
-                    it => it.next.hruid === extraExerciseLearningObject.hruid
-                ).length
-            ).toBe(1); // There should however be a path to the extra exercise object.
+            expect(branchingObject.transitions.filter((it) => it.next.hruid === finalLearningObject.hruid).length).toBe(0); // StudentA picked the first option, therefore, there should be no direct path to the final object.
+            expect(branchingObject.transitions.filter((it) => it.next.hruid === extraExerciseLearningObject.hruid).length).toBe(1); // There should however be a path to the extra exercise object.
 
             // For student B:
-            result = await databaseLearningPathProvider.fetchLearningPaths(
-                [testLearningPath.hruid],
-                testLearningPath.language,
-                'the source',
-                groupB
-            );
+            result = await databaseLearningPathProvider.fetchLearningPaths([testLearningPath.hruid], testLearningPath.language, 'the source', groupB);
             expect(result.success).toBeTruthy();
             expect(result.data?.length).toBe(1);
 
@@ -125,16 +102,8 @@ describe('DatabaseLearningPathProvider', () => {
             branchingObject = expectBranchingObjectNode(result);
 
             // However, now the student picks the other option.
-            expect(
-                branchingObject.transitions.filter(
-                    (it) => it.next.hruid === finalLearningObject.hruid
-                ).length
-            ).toBe(1); // StudentB picked the second option, therefore, there should be a direct path to the final object.
-            expect(
-                branchingObject.transitions.filter(
-                    (it) => it.next.hruid === extraExerciseLearningObject.hruid
-                ).length
-            ).toBe(0); // There should not be a path anymore to the extra exercise object.
+            expect(branchingObject.transitions.filter((it) => it.next.hruid === finalLearningObject.hruid).length).toBe(1); // StudentB picked the second option, therefore, there should be a direct path to the final object.
+            expect(branchingObject.transitions.filter((it) => it.next.hruid === extraExerciseLearningObject.hruid).length).toBe(0); // There should not be a path anymore to the extra exercise object.
         });
         it('returns a non-successful response if a non-existing learning path is queried', async () => {
             const result = await databaseLearningPathProvider.fetchLearningPaths(
@@ -149,10 +118,7 @@ describe('DatabaseLearningPathProvider', () => {
 
     describe('searchLearningPaths', () => {
         it('returns the correct learning path when queried with a substring of its title', async () => {
-            const result = await databaseLearningPathProvider.searchLearningPaths(
-                testLearningPath.title.substring(2, 6),
-                testLearningPath.language
-            );
+            const result = await databaseLearningPathProvider.searchLearningPaths(testLearningPath.title.substring(2, 6), testLearningPath.language);
             expect(result.length).toBe(1);
             expect(result[0].title).toBe(testLearningPath.title);
             expect(result[0].description).toBe(testLearningPath.description);

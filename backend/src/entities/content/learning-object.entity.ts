@@ -1,4 +1,4 @@
-import {ArrayType, Embedded, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property} from '@mikro-orm/core';
+import { ArrayType, Embedded, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
 import { DwengoContentType } from '../../services/learning-objects/processing/content-type.js';
@@ -42,7 +42,7 @@ export class LearningObject {
     @Property({ type: 'array' })
     keywords: string[] = [];
 
-    @Property({ type: new ArrayType(i => Number(i)), nullable: true })
+    @Property({ type: new ArrayType((i) => Number(i)), nullable: true })
     targetAges?: number[] = [];
 
     @Property({ type: 'bool' })

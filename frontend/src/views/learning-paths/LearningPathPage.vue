@@ -3,7 +3,7 @@
     import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
     import { computed, type ComputedRef, ref } from "vue";
     import type { LearningObject } from "@/data-objects/learning-objects/learning-object.ts";
-    import {useRoute, useRouter} from "vue-router";
+    import { useRoute, useRouter } from "vue-router";
     import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
     import { useI18n } from "vue-i18n";
     import LearningPathSearchField from "@/components/LearningPathSearchField.vue";
@@ -21,7 +21,7 @@
     const props = defineProps<{
         hruid: string;
         language: Language;
-        learningObjectHruid?: string,
+        learningObjectHruid?: string;
     }>();
 
     interface LearningPathPageQuery {
@@ -37,7 +37,7 @@
             return {
                 forGroup: parseInt(query.value.forGroup),
                 assignmentNo: parseInt(query.value.assignmentNo),
-                classId: query.value.classId
+                classId: query.value.classId,
             };
         }
     });
@@ -112,7 +112,7 @@
             let query = structuredClone(route.query);
             query.forGroup = value;
             router.push({ query });
-        }
+        },
     });
 
     function assign() {
@@ -120,8 +120,8 @@
             path: "/assignment/create",
             query: {
                 hruid: props.hruid,
-                language: props.language
-            }
+                language: props.language,
+            },
         });
     }
 </script>
@@ -136,80 +136,86 @@
             :width="350"
         >
             <div class="d-flex flex-column h-100">
-            <v-list-item>
-                <template v-slot:title>
-                    <div class="learning-path-title">{{ learningPath.data.title }}</div>
-                </template>
-                <template v-slot:subtitle>
-                    <div>{{ learningPath.data.description }}</div>
-                </template>
-            </v-list-item>
-            <v-list-item>
-                <template v-slot:subtitle>
-                    <p>
-                        <v-icon
-                            :color="COLORS.notCompleted"
-                            :icon="ICONS.notCompleted"
-                        ></v-icon>
-                        {{ t("legendNotCompletedYet") }}
-                    </p>
-                    <p>
-                        <v-icon
-                            :color="COLORS.completed"
-                            :icon="ICONS.completed"
-                        ></v-icon>
-                        {{ t("legendCompleted") }}
-                    </p>
-                    <p>
-                        <v-icon
-                            :color="COLORS.teacherExclusive"
-                            :icon="ICONS.teacherExclusive"
-                        ></v-icon>
-                        {{ t("legendTeacherExclusive") }}
-                    </p>
-                </template>
-            </v-list-item>
-            <v-list-item v-if="query.classId && query.assignmentNo && authService.authState.activeRole === 'teacher'">
-                <template v-slot:default>
-                    <learning-path-group-selector
-                        :class-id="query.classId"
-                        :assignment-number="parseInt(query.assignmentNo)"
-                        v-model="forGroupQueryParam"
-                    />
-                </template>
-            </v-list-item>
-            <v-divider></v-divider>
-            <div v-if="props.learningObjectHruid">
-                <using-query-result
-                    :query-result="learningObjectListQueryResult"
-                    v-slot="learningObjects: { data: LearningObject[] }"
-                >
-                    <template v-for="node in learningObjects.data">
-                        <v-list-item
-                            link
-                            :to="{ path: node.key, query: route.query }"
-                            :title="node.title"
-                            :active="node.key === props.learningObjectHruid"
-                            :key="node.key"
-                            v-if="!node.teacherExclusive || authService.authState.activeRole === 'teacher'"
-                        >
-                            <template v-slot:prepend>
-                                <v-icon
-                                    :color="COLORS[getNavItemState(node)]"
-                                    :icon="ICONS[getNavItemState(node)]"
-                                ></v-icon>
-                            </template>
-                            <template v-slot:append> {{ node.estimatedTime }}' </template>
-                        </v-list-item>
+                <v-list-item>
+                    <template v-slot:title>
+                        <div class="learning-path-title">{{ learningPath.data.title }}</div>
                     </template>
-                </using-query-result>
-            </div>
-            <v-spacer></v-spacer>
-            <v-list-item v-if="authService.authState.activeRole === 'teacher'">
-                <template v-slot:default>
-                    <v-btn class="button-in-nav" @click="assign()">{{ t("assignLearningPath") }}</v-btn>
-                </template>
-            </v-list-item>
+                    <template v-slot:subtitle>
+                        <div>{{ learningPath.data.description }}</div>
+                    </template>
+                </v-list-item>
+                <v-list-item>
+                    <template v-slot:subtitle>
+                        <p>
+                            <v-icon
+                                :color="COLORS.notCompleted"
+                                :icon="ICONS.notCompleted"
+                            ></v-icon>
+                            {{ t("legendNotCompletedYet") }}
+                        </p>
+                        <p>
+                            <v-icon
+                                :color="COLORS.completed"
+                                :icon="ICONS.completed"
+                            ></v-icon>
+                            {{ t("legendCompleted") }}
+                        </p>
+                        <p>
+                            <v-icon
+                                :color="COLORS.teacherExclusive"
+                                :icon="ICONS.teacherExclusive"
+                            ></v-icon>
+                            {{ t("legendTeacherExclusive") }}
+                        </p>
+                    </template>
+                </v-list-item>
+                <v-list-item
+                    v-if="query.classId && query.assignmentNo && authService.authState.activeRole === 'teacher'"
+                >
+                    <template v-slot:default>
+                        <learning-path-group-selector
+                            :class-id="query.classId"
+                            :assignment-number="parseInt(query.assignmentNo)"
+                            v-model="forGroupQueryParam"
+                        />
+                    </template>
+                </v-list-item>
+                <v-divider></v-divider>
+                <div v-if="props.learningObjectHruid">
+                    <using-query-result
+                        :query-result="learningObjectListQueryResult"
+                        v-slot="learningObjects: { data: LearningObject[] }"
+                    >
+                        <template v-for="node in learningObjects.data">
+                            <v-list-item
+                                link
+                                :to="{ path: node.key, query: route.query }"
+                                :title="node.title"
+                                :active="node.key === props.learningObjectHruid"
+                                :key="node.key"
+                                v-if="!node.teacherExclusive || authService.authState.activeRole === 'teacher'"
+                            >
+                                <template v-slot:prepend>
+                                    <v-icon
+                                        :color="COLORS[getNavItemState(node)]"
+                                        :icon="ICONS[getNavItemState(node)]"
+                                    ></v-icon>
+                                </template>
+                                <template v-slot:append> {{ node.estimatedTime }}' </template>
+                            </v-list-item>
+                        </template>
+                    </using-query-result>
+                </div>
+                <v-spacer></v-spacer>
+                <v-list-item v-if="authService.authState.activeRole === 'teacher'">
+                    <template v-slot:default>
+                        <v-btn
+                            class="button-in-nav"
+                            @click="assign()"
+                            >{{ t("assignLearningPath") }}</v-btn
+                        >
+                    </template>
+                </v-list-item>
             </div>
         </v-navigation-drawer>
         <div class="control-bar-above-content">

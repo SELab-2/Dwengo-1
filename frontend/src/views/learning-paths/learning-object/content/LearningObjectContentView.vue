@@ -1,32 +1,32 @@
 <script setup lang="ts">
-
-    import type {SubmissionData} from "@/views/learning-paths/learning-object/submission-data";
-    import {getGiftAdapterForType} from "@/views/learning-paths/gift-adapters/gift-adapters.ts";
-    import {computed, nextTick, onMounted, watch} from "vue";
-    import {copyArrayWith} from "@/utils/array-utils.ts";
+    import type { SubmissionData } from "@/views/learning-paths/learning-object/submission-data";
+    import { getGiftAdapterForType } from "@/views/learning-paths/gift-adapters/gift-adapters.ts";
+    import { computed, nextTick, onMounted, watch } from "vue";
+    import { copyArrayWith } from "@/utils/array-utils.ts";
 
     const props = defineProps<{
-        learningObjectContent: Document
-        submissionData?: SubmissionData
+        learningObjectContent: Document;
+        submissionData?: SubmissionData;
     }>();
 
     const emit = defineEmits<{
-        (e: "update:submissionData", value: SubmissionData): void
+        (e: "update:submissionData", value: SubmissionData): void;
     }>();
 
     const submissionData = computed<SubmissionData | undefined>({
         get: () => props.submissionData,
-        set: (v?: SubmissionData) => v ? emit('update:submissionData', v) : undefined,
+        set: (v?: SubmissionData) => (v ? emit("update:submissionData", v) : undefined),
     });
 
     function forEachQuestion(
-        doAction: (questionIndex: number, questionName: string, questionType: string, questionElement: Element) => void
+        doAction: (questionIndex: number, questionName: string, questionType: string, questionElement: Element) => void,
     ) {
         const questions = document.querySelectorAll(".gift-question");
-        questions.forEach(question => {
-            const name = question.id.match(/gift-q(\d+)/)?.[1]
-            const questionType = question.className.split(" ")
-                .find(it => it.startsWith("gift-question-type"))
+        questions.forEach((question) => {
+            const name = question.id.match(/gift-q(\d+)/)?.[1];
+            const questionType = question.className
+                .split(" ")
+                .find((it) => it.startsWith("gift-question-type"))
                 ?.match(/gift-question-type-([^ ]*)/)?.[1];
 
             if (!name || isNaN(parseInt(name)) || !questionType) return;
@@ -39,12 +39,9 @@
 
     function attachQuestionListeners(): void {
         forEachQuestion((index, _name, type, element) => {
-            getGiftAdapterForType(type)?.installListener(
-                element,
-                (newAnswer) => {
-                    submissionData.value = copyArrayWith(index, newAnswer, submissionData.value ?? [])
-                }
-            );
+            getGiftAdapterForType(type)?.installListener(element, (newAnswer) => {
+                submissionData.value = copyArrayWith(index, newAnswer, submissionData.value ?? []);
+            });
         });
     }
 
@@ -62,19 +59,25 @@
 
     onMounted(() =>
         nextTick(() => {
-            attachQuestionListeners()
+            attachQuestionListeners();
             setAnswers(props.submissionData ?? []);
-        })
+        }),
     );
 
-    watch(() => props.learningObjectContent, async () => {
-        await nextTick();
-        attachQuestionListeners();
-    });
-    watch(() => props.submissionData, async () => {
-        await nextTick();
-        setAnswers(props.submissionData ?? []);
-    });
+    watch(
+        () => props.learningObjectContent,
+        async () => {
+            await nextTick();
+            attachQuestionListeners();
+        },
+    );
+    watch(
+        () => props.submissionData,
+        async () => {
+            await nextTick();
+            setAnswers(props.submissionData ?? []);
+        },
+    );
 </script>
 
 <template>
@@ -84,5 +87,4 @@
     ></div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

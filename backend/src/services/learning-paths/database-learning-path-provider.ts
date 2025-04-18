@@ -13,9 +13,9 @@ import {
     Transition,
 } from '@dwengo-1/common/interfaces/learning-content';
 import { Language } from '@dwengo-1/common/util/language';
-import {Group} from "../../entities/assignments/group.entity";
-import {Collection} from "@mikro-orm/core";
-import {v4} from "uuid";
+import { Group } from '../../entities/assignments/group.entity';
+import { Collection } from '@mikro-orm/core';
+import { v4 } from 'uuid';
 
 /**
  * Fetches the corresponding learning object for each of the nodes and creates a map that maps each node to its
@@ -165,7 +165,7 @@ function convertTransition(
             _id: String(index), // Retained for backwards compatibility. The index uniquely identifies the transition within the learning path.
             default: false, // We don't work with default transitions but retain this for backwards compatibility.
             next: {
-                _id: nextNode._id ? (nextNode._id + index) : v4(), // Construct a unique ID for the transition for backwards compatibility.
+                _id: nextNode._id ? nextNode._id + index : v4(), // Construct a unique ID for the transition for backwards compatibility.
                 hruid: transition.next.learningObjectHruid,
                 language: nextNode.language,
                 version: nextNode.version,
@@ -181,12 +181,7 @@ const databaseLearningPathProvider: LearningPathProvider = {
     /**
      * Fetch the learning paths with the given hruids from the database.
      */
-    async fetchLearningPaths(
-        hruids: string[],
-        language: Language,
-        source: string,
-        personalizedFor?: Group
-    ): Promise<LearningPathResponse> {
+    async fetchLearningPaths(hruids: string[], language: Language, source: string, personalizedFor?: Group): Promise<LearningPathResponse> {
         const learningPathRepo = getLearningPathRepository();
 
         const learningPaths = (await Promise.all(hruids.map(async (hruid) => learningPathRepo.findByHruidAndLanguage(hruid, language)))).filter(
@@ -211,7 +206,7 @@ const databaseLearningPathProvider: LearningPathProvider = {
 
         const searchResults = await learningPathRepo.findByQueryStringAndLanguage(query, language);
         return await Promise.all(searchResults.map(async (result, index) => convertLearningPath(result, index, personalizedFor)));
-    }
+    },
 };
 
 export default databaseLearningPathProvider;

@@ -9,7 +9,7 @@ export function errorHandler(err: unknown, _req: Request, res: Response, _: Next
         logger.warn(`An error occurred while handling a request: ${err} (-> HTTP ${err.status})`);
         res.status(err.status).json(err);
     } else {
-        logger.error(`Unexpected error occurred while handing a request: ${(err as {stack: string})?.stack ?? JSON.stringify(err)}`);
+        logger.error(`Unexpected error occurred while handing a request: ${(err as { stack: string })?.stack ?? JSON.stringify(err)}`);
         res.status(500).json(err);
     }
 }

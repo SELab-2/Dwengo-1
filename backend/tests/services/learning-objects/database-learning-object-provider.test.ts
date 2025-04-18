@@ -4,18 +4,12 @@ import { LearningObject } from '../../../src/entities/content/learning-object.en
 import databaseLearningObjectProvider from '../../../src/services/learning-objects/database-learning-object-provider';
 import { expectToBeCorrectFilteredLearningObject } from '../../test-utils/expectations';
 import { Language } from '@dwengo-1/common/util/language';
-import {
-    FilteredLearningObject,
-    LearningObjectNode,
-    LearningPathIdentifier
-} from '@dwengo-1/common/interfaces/learning-content';
-import {
-    testPartiallyDatabaseAndPartiallyDwengoApiLearningPath
-} from "../../test_assets/content/learning-paths.testdata";
-import {testLearningObjectPnNotebooks} from "../../test_assets/content/learning-objects.testdata";
+import { FilteredLearningObject, LearningObjectNode, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import { testPartiallyDatabaseAndPartiallyDwengoApiLearningPath } from '../../test_assets/content/learning-paths.testdata';
+import { testLearningObjectPnNotebooks } from '../../test_assets/content/learning-objects.testdata';
 import { LearningPath } from '@dwengo-1/common/dist/interfaces/learning-content';
-import {RequiredEntityData} from "@mikro-orm/core";
-import {getHtmlRenderingForTestLearningObject} from "../../test-utils/get-html-rendering";
+import { RequiredEntityData } from '@mikro-orm/core';
+import { getHtmlRenderingForTestLearningObject } from '../../test-utils/get-html-rendering';
 
 const EXPECTED_TITLE_FROM_DWENGO_LEARNING_OBJECT = 'Notebook opslaan';
 
@@ -31,7 +25,7 @@ describe('DatabaseLearningObjectProvider', () => {
 
         exampleLearningPathId = {
             hruid: exampleLearningPath.hruid,
-            language: exampleLearningPath.language as Language
+            language: exampleLearningPath.language as Language,
         };
     });
     describe('getLearningObjectById', () => {
@@ -75,9 +69,7 @@ describe('DatabaseLearningObjectProvider', () => {
     describe('getLearningObjectIdsFromPath', () => {
         it('should return all learning object IDs from a path', async () => {
             const result = await databaseLearningObjectProvider.getLearningObjectIdsFromPath(exampleLearningPathId);
-            expect(new Set(result)).toEqual(
-                new Set(exampleLearningPath.nodes.map((it: LearningObjectNode) => it.learningobject_hruid))
-            );
+            expect(new Set(result)).toEqual(new Set(exampleLearningPath.nodes.map((it: LearningObjectNode) => it.learningobject_hruid)));
         });
         it('should throw an error if queried with a path identifier for which there is no learning path', async () => {
             await expect(

@@ -10,7 +10,7 @@ const learningPathController = getLearningPathController();
 export function useGetLearningPathQuery(
     hruid: MaybeRefOrGetter<string>,
     language: MaybeRefOrGetter<Language>,
-    forGroup?: MaybeRefOrGetter<{forGroup: number, assignmentNo: number, classId: string} | undefined>,
+    forGroup?: MaybeRefOrGetter<{ forGroup: number; assignmentNo: number; classId: string } | undefined>,
 ): UseQueryReturnType<LearningPath, Error> {
     return useQuery({
         queryKey: [LEARNING_PATH_KEY, "get", hruid, language, forGroup],
@@ -34,7 +34,7 @@ export function useGetAllLearningPathsByThemeQuery(
 
 export function useSearchLearningPathQuery(
     query: MaybeRefOrGetter<string | undefined>,
-    language: MaybeRefOrGetter<string | undefined>
+    language: MaybeRefOrGetter<string | undefined>,
 ): UseQueryReturnType<LearningPath[], Error> {
     return useQuery({
         queryKey: [LEARNING_PATH_KEY, "search", query, language],

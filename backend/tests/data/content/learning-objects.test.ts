@@ -4,7 +4,7 @@ import { getLearningObjectRepository } from '../../../src/data/repositories';
 import { setupTestApp } from '../../setup-tests';
 import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
 import { Language } from '@dwengo-1/common/util/language';
-import {testLearningObject01} from "../../test_assets/content/learning-objects.testdata";
+import { testLearningObject01 } from '../../test_assets/content/learning-objects.testdata';
 
 describe('LearningObjectRepository', () => {
     let learningObjectRepository: LearningObjectRepository;

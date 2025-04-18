@@ -33,8 +33,7 @@ describe('AssignmentRepository', () => {
 
     it('should find all by username of the responsible teacher', async () => {
         const result = await assignmentRepository.findAllByResponsibleTeacher('testleerkracht1');
-        const resultIds = result.map((it) => it.id)
-            .sort((a, b) => (a ?? 0) - (b ?? 0));
+        const resultIds = result.map((it) => it.id).sort((a, b) => (a ?? 0) - (b ?? 0));
 
         expect(resultIds).toEqual([1, 1, 3, 4]);
     });

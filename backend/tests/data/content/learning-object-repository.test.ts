@@ -4,12 +4,8 @@ import { setupTestApp } from '../../setup-tests.js';
 import { getLearningObjectRepository } from '../../../src/data/repositories.js';
 import { LearningObject } from '../../../src/entities/content/learning-object.entity.js';
 import { expectToBeCorrectEntity } from '../../test-utils/expectations.js';
-import {
-    testLearningObject01,
-    testLearningObject02,
-    testLearningObject03
-} from "../../test_assets/content/learning-objects.testdata";
-import {v4} from "uuid";
+import { testLearningObject01, testLearningObject02, testLearningObject03 } from '../../test_assets/content/learning-objects.testdata';
+import { v4 } from 'uuid';
 
 describe('LearningObjectRepository', () => {
     let learningObjectRepository: LearningObjectRepository;
@@ -43,26 +39,22 @@ describe('LearningObjectRepository', () => {
     it('should allow a learning object with the same id except a different version to be added', async () => {
         const testLearningObject01Newer = structuredClone(testLearningObject01);
         testLearningObject01Newer.version = 10;
-        testLearningObject01Newer.title += " (nieuw)";
+        testLearningObject01Newer.title += ' (nieuw)';
         testLearningObject01Newer.uuid = v4();
-        testLearningObject01Newer.content = Buffer.from("This is the new content.");
+        testLearningObject01Newer.content = Buffer.from('This is the new content.');
         newerExample = learningObjectRepository.create(testLearningObject01Newer);
         await learningObjectRepository.save(newerExample);
     });
 
     it('should return the newest version of the learning object when queried by only hruid and language', async () => {
-        const result = await learningObjectRepository.findLatestByHruidAndLanguage(
-            newerExample.hruid, newerExample.language
-        );
+        const result = await learningObjectRepository.findLatestByHruidAndLanguage(newerExample.hruid, newerExample.language);
         expect(result).toBeInstanceOf(LearningObject);
         expect(result?.version).toBe(10);
         expect(result?.title).toContain('(nieuw)');
     });
 
     it('should return null when queried by non-existing hruid or language', async () => {
-        const result = await learningObjectRepository.findLatestByHruidAndLanguage(
-            'something_that_does_not_exist', testLearningObject01.language
-        );
+        const result = await learningObjectRepository.findLatestByHruidAndLanguage('something_that_does_not_exist', testLearningObject01.language);
         expect(result).toBe(null);
     });
 });

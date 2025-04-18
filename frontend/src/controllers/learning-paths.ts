@@ -15,14 +15,14 @@ export class LearningPathController extends BaseController {
     async getBy(
         hruid: string,
         language: Language,
-        forGroup?: { forGroup: number, assignmentNo: number, classId: string },
+        forGroup?: { forGroup: number; assignmentNo: number; classId: string },
     ): Promise<LearningPath> {
         const dtos = await this.get<LearningPathDTO[]>("/", {
             hruid,
             language,
             forGroup: forGroup?.forGroup,
             assignmentNo: forGroup?.assignmentNo,
-            classId: forGroup?.classId
+            classId: forGroup?.classId,
         });
         return LearningPath.fromDTO(single(dtos));
     }

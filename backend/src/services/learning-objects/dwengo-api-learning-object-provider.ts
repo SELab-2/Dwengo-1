@@ -11,7 +11,7 @@ import {
     LearningPathIdentifier,
     LearningPathResponse,
 } from '@dwengo-1/common/interfaces/learning-content';
-import {v4} from "uuid";
+import { v4 } from 'uuid';
 
 const logger: Logger = getLogger();
 

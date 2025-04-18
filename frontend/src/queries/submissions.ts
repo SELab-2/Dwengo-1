@@ -9,9 +9,9 @@ import {
     type UseQueryReturnType,
 } from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
-import {LEARNING_PATH_KEY} from "@/queries/learning-paths.ts";
-import {LEARNING_OBJECT_KEY} from "@/queries/learning-objects.ts";
-import type {Language} from "@dwengo-1/common/util/language";
+import { LEARNING_PATH_KEY } from "@/queries/learning-paths.ts";
+import { LEARNING_OBJECT_KEY } from "@/queries/learning-objects.ts";
+import type { Language } from "@dwengo-1/common/util/language";
 
 export const SUBMISSION_KEY = "submissions";
 
@@ -22,7 +22,7 @@ function submissionQueryKey(
     classid: string,
     assignmentNumber: number,
     groupNumber: number,
-    submissionNumber: number
+    submissionNumber: number,
 ) {
     return ["submission", hruid, language, version, classid, assignmentNumber, groupNumber, submissionNumber];
 }
@@ -41,29 +41,37 @@ export async function invalidateAllSubmissionKeys(
 
     for (const key of keys) {
         const queryKey = [
-            key, hruid, language, version, classid, assignmentNumber, groupNumber, submissionNumber
-        ].filter(
-            (arg) => arg !== undefined,
-        );
+            key,
+            hruid,
+            language,
+            version,
+            classid,
+            assignmentNumber,
+            groupNumber,
+            submissionNumber,
+        ].filter((arg) => arg !== undefined);
         await queryClient.invalidateQueries({ queryKey: queryKey });
     }
 
     await queryClient.invalidateQueries({
-        queryKey: ["submissions", hruid, language, version, classid, assignmentNumber, groupNumber]
-            .filter((arg) => arg !== undefined),
+        queryKey: ["submissions", hruid, language, version, classid, assignmentNumber, groupNumber].filter(
+            (arg) => arg !== undefined,
+        ),
     });
     await queryClient.invalidateQueries({
-        queryKey: ["group-submissions", hruid, language, version, classid, assignmentNumber, groupNumber]
-            .filter((arg) => arg !== undefined),
+        queryKey: ["group-submissions", hruid, language, version, classid, assignmentNumber, groupNumber].filter(
+            (arg) => arg !== undefined,
+        ),
     });
     await queryClient.invalidateQueries({
-        queryKey: ["assignment-submissions", hruid, language, version,classid, assignmentNumber]
-            .filter((arg) => arg !== undefined),
+        queryKey: ["assignment-submissions", hruid, language, version, classid, assignmentNumber].filter(
+            (arg) => arg !== undefined,
+        ),
     });
 }
 
 function checkEnabled(properties: MaybeRefOrGetter<unknown>[]): boolean {
-    return properties.every(prop => Boolean(toValue(prop)));
+    return properties.every((prop) => Boolean(toValue(prop)));
 }
 
 export function useSubmissionsQuery(
@@ -87,9 +95,14 @@ export function useSubmissionsQuery(
             const fullVal = toValue(full);
 
             const response = await new SubmissionController(hruidVal!).getAll(
-                languageVal, versionVal!, classIdVal!, assignmentNumberVal!, groupNumberVal, fullVal
+                languageVal,
+                versionVal!,
+                classIdVal!,
+                assignmentNumberVal!,
+                groupNumberVal,
+                fullVal,
             );
-            return response ? response.submissions as SubmissionDTO[] : undefined;
+            return response ? (response.submissions as SubmissionDTO[]) : undefined;
         },
         enabled: () => checkEnabled([hruid, language, version, classid, assignmentNumber]),
     });
@@ -113,13 +126,33 @@ export function useSubmissionQuery(
     const submissionNumberVal = toValue(submissionNumber);
 
     return useQuery({
-        queryKey: computed(() => submissionQueryKey(
-            hruidVal!, languageVal, versionVal!, classIdVal!, assignmentNumberVal!, groupNumberVal!, submissionNumberVal!
-        )),
-        queryFn: async () => new SubmissionController(hruidVal!).getByNumber(
-            languageVal, versionVal!, classIdVal!, assignmentNumberVal!, groupNumberVal!, submissionNumberVal!
+        queryKey: computed(() =>
+            submissionQueryKey(
+                hruidVal!,
+                languageVal,
+                versionVal!,
+                classIdVal!,
+                assignmentNumberVal!,
+                groupNumberVal!,
+                submissionNumberVal!,
+            ),
         ),
-        enabled: () => Boolean(hruidVal) && Boolean(languageVal) && Boolean(versionVal) && Boolean(classIdVal) && Boolean(assignmentNumberVal) && Boolean(submissionNumber),
+        queryFn: async () =>
+            new SubmissionController(hruidVal!).getByNumber(
+                languageVal,
+                versionVal!,
+                classIdVal!,
+                assignmentNumberVal!,
+                groupNumberVal!,
+                submissionNumberVal!,
+            ),
+        enabled: () =>
+            Boolean(hruidVal) &&
+            Boolean(languageVal) &&
+            Boolean(versionVal) &&
+            Boolean(classIdVal) &&
+            Boolean(assignmentNumberVal) &&
+            Boolean(submissionNumber),
     });
 }
 
@@ -132,7 +165,8 @@ export function useCreateSubmissionMutation(): UseMutationReturnType<
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ data }) => new SubmissionController(data.learningObjectIdentifier.hruid).createSubmission(data),
+        mutationFn: async ({ data }) =>
+            new SubmissionController(data.learningObjectIdentifier.hruid).createSubmission(data),
         onSuccess: async (response) => {
             if (!response.submission.group) {
                 await invalidateAllSubmissionKeys(queryClient);
@@ -144,13 +178,13 @@ export function useCreateSubmissionMutation(): UseMutationReturnType<
                 const an = typeof assignment === "number" ? assignment : assignment.id;
                 const gn = response.submission.group.groupNumber;
 
-                const {hruid, language, version} = response.submission.learningObjectIdentifier;
+                const { hruid, language, version } = response.submission.learningObjectIdentifier;
                 await invalidateAllSubmissionKeys(queryClient, hruid, language, version, cid, an, gn);
 
-                await queryClient.invalidateQueries({queryKey: [LEARNING_PATH_KEY, "get"]});
+                await queryClient.invalidateQueries({ queryKey: [LEARNING_PATH_KEY, "get"] });
 
                 await queryClient.invalidateQueries({
-                    queryKey: [LEARNING_OBJECT_KEY, "metadata", hruid, language, version]
+                    queryKey: [LEARNING_OBJECT_KEY, "metadata", hruid, language, version],
                 });
             }
         },
@@ -178,15 +212,9 @@ export function useDeleteSubmissionMutation(): UseMutationReturnType<
                 const an = typeof assignment === "number" ? assignment : assignment.id;
                 const gn = response.submission.group.groupNumber;
 
-                const {hruid, language, version} = response.submission.learningObjectIdentifier;
+                const { hruid, language, version } = response.submission.learningObjectIdentifier;
 
-                await invalidateAllSubmissionKeys(
-                    queryClient,
-                    hruid,
-                    language,
-                    version,
-                    cid, an, gn
-                );
+                await invalidateAllSubmissionKeys(queryClient, hruid, language, version, cid, an, gn);
             }
         },
     });

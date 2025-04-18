@@ -2,7 +2,7 @@ import { AssertionError } from 'node:assert';
 import { LearningObject } from '../../src/entities/content/learning-object.entity';
 import { expect } from 'vitest';
 import { FilteredLearningObject, LearningPath } from '@dwengo-1/common/interfaces/learning-content';
-import {RequiredEntityData} from "@mikro-orm/core";
+import { RequiredEntityData } from '@mikro-orm/core';
 
 // Ignored properties because they belang for example to the class, not to the entity itself.
 const IGNORE_PROPERTIES = ['parent'];
@@ -13,11 +13,7 @@ const IGNORE_PROPERTIES = ['parent'];
  * @param expected The (previously added) entity we would expect to retrieve
  * @param propertyPrefix Prefix to append to property in error messages.
  */
-export function expectToBeCorrectEntity<T extends object>(
-    actual: T,
-    expected: T,
-    propertyPrefix = ""
-): void {
+export function expectToBeCorrectEntity<T extends object>(actual: T, expected: T, propertyPrefix = ''): void {
     for (const property in expected) {
         if (Object.prototype.hasOwnProperty.call(expected, property)) {
             const prefixedProperty = propertyPrefix + property;
@@ -41,16 +37,16 @@ export function expectToBeCorrectEntity<T extends object>(
                     }
                 } else if (typeof expected[property] !== typeof actual[property]) {
                     throw new AssertionError({
-                        message: `${prefixedProperty} was expected to have type ${typeof expected[property]},`
-                            + `but had type ${typeof actual[property]}.`,
+                        message:
+                            `${prefixedProperty} was expected to have type ${typeof expected[property]},` +
+                            `but had type ${typeof actual[property]}.`,
                     });
                 } else if (typeof expected[property] === 'object') {
                     expectToBeCorrectEntity(actual[property] as object, expected[property] as object, property);
                 } else {
                     if (expected[property] !== actual[property]) {
                         throw new AssertionError({
-                            message: `${prefixedProperty} was expected to be ${expected[property]}, `
-                                + `but was ${actual[property]}.`,
+                            message: `${prefixedProperty} was expected to be ${expected[property]}, ` + `but was ${actual[property]}.`,
                         });
                     }
                 }
@@ -94,10 +90,7 @@ export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearni
  * @param learningPath The learning path returned by the retriever, service or endpoint
  * @param expected The learning path that should have been returned.
  */
-export function expectToBeCorrectLearningPath(
-    learningPath: LearningPath,
-    expected: LearningPath
-): void {
+export function expectToBeCorrectLearningPath(learningPath: LearningPath, expected: LearningPath): void {
     expect(learningPath.hruid).toEqual(expected.hruid);
     expect(learningPath.language).toEqual(expected.language);
     expect(learningPath.description).toEqual(expected.description);
@@ -113,17 +106,18 @@ export function expectToBeCorrectLearningPath(
     expect(learningPath.image ?? null).toEqual(expected.image ?? null);
 
     for (const node of expected.nodes) {
-        const correspondingNode = learningPath.nodes.find(it =>
-            node.learningobject_hruid === it.learningobject_hruid && node.language === it.language
-            && node.version === it.version
+        const correspondingNode = learningPath.nodes.find(
+            (it) => node.learningobject_hruid === it.learningobject_hruid && node.language === it.language && node.version === it.version
         );
         expect(correspondingNode).toBeTruthy();
         expect(Boolean(correspondingNode!.start_node)).toEqual(Boolean(node.start_node));
 
         for (const transition of node.transitions) {
-            const correspondingTransition = correspondingNode!.transitions.find(it =>
-                it.next.hruid === transition.next.hruid && it.next.language === transition.next.language
-                && it.next.version === transition.next.version
+            const correspondingTransition = correspondingNode!.transitions.find(
+                (it) =>
+                    it.next.hruid === transition.next.hruid &&
+                    it.next.language === transition.next.language &&
+                    it.next.version === transition.next.version
             );
             expect(correspondingTransition).toBeTruthy();
         }
