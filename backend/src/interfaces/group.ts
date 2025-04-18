@@ -8,7 +8,7 @@ import { getGroupRepository } from '../data/repositories.js';
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 import { Class } from '../entities/classes/class.entity.js';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
-import { mapToClassDTO } from './class';
+import { mapToClassDTO } from './class.js';
 
 export function mapToGroup(groupDto: GroupDTO, clazz: Class): Group {
     const assignmentDto = groupDto.assignment as AssignmentDTO;

@@ -36,7 +36,7 @@ export async function invalidateAllSubmissionKeys(
     assignmentNumber?: number,
     groupNumber?: number,
     submissionNumber?: number,
-) {
+): Promise<void> {
     const keys = ["submission"];
 
     for (const key of keys) {
