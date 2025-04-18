@@ -6,7 +6,6 @@ import { getSubmissionRepository } from '../../../src/data/repositories.js';
 
 import databaseLearningPathProvider from '../../../src/services/learning-paths/database-learning-path-provider.js';
 import { expectToBeCorrectLearningPath } from '../../test-utils/expectations.js';
-import learningObjectService from '../../../src/services/learning-objects/learning-object-service.js';
 import { Language } from '@dwengo-1/common/util/language';
 
 import {
@@ -79,29 +78,13 @@ describe('DatabaseLearningPathProvider', () => {
         it('returns the learning path correctly', async () => {
             const result = await databaseLearningPathProvider.fetchLearningPaths(
                 [testLearningPath.hruid],
-                testLearningPath.language as Language,
+                testLearningPath.language,
                 'the source'
             );
             expect(result.success).toBe(true);
             expect(result.data?.length).toBe(1);
 
-            const learningObjectsOnPath = (
-                await Promise.all(
-                    testLearningPath.nodes.map(async (node) =>
-                        learningObjectService.getLearningObjectById({
-                            hruid: node.learningObjectHruid,
-                            version: node.version,
-                            language: node.language,
-                        })
-                    )
-                )
-            ).filter((it) => it !== null);
-
-            expectToBeCorrectLearningPath(
-                result.data![0],
-                mapToLearningPath(testLearningPathWithConditions, []),
-                learningObjectsOnPath
-            );
+            expectToBeCorrectLearningPath(result.data![0], testLearningPathWithConditions);
         });
         it('returns the correct personalized learning path', async () => {
             // For student A:

@@ -42,7 +42,7 @@ export class LearningObject {
     @Property({ type: 'array' })
     keywords: string[] = [];
 
-    @Property({ type: new ArrayType(i => +i), nullable: true })
+    @Property({ type: new ArrayType(i => Number(i)), nullable: true })
     targetAges?: number[] = [];
 
     @Property({ type: 'bool' })

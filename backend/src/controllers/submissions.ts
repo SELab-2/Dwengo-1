@@ -19,8 +19,7 @@ export async function getSubmissionsHandler(req: Request, res: Response): Promis
 
     const forGroup = req.query.forGroup as string | undefined;
 
-    let submissions: SubmissionDTO[]
-    submissions = await getSubmissionsForLearningObjectAndAssignment(
+    const submissions: SubmissionDTO[] = await getSubmissionsForLearningObjectAndAssignment(
         loHruid,
         lang,
         version,

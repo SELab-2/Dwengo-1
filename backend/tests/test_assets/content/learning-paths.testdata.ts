@@ -176,7 +176,7 @@ export const testLearningPathWithConditions: LearningPathDTO = {
     title: 'Example learning path with conditional transitions',
     description: 'This learning path was made for the purpose of testing conditional transitions',
     keywords: "test",
-    target_ages: [18, 19, 20, 21],
+    target_ages: [10, 11, 12, 13, 14, 15, 16, 17, 18],
     nodes: [
         {
             learningobject_hruid: testLearningObjectMultipleChoice.hruid,

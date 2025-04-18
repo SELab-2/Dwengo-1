@@ -1,5 +1,5 @@
 <div class="learning-object-gift">
-    <div id="gift-q1" class="gift-question">
+    <div id="gift-q1" class="gift-question gift-question-type-MC">
         <h2 id="gift-q1-title" class="gift-title">Self-evaluation</h2>
         <p id="gift-q1-stem" class="gift-stem">Are you following along well?</p>
         <div class="gift-choice-div">

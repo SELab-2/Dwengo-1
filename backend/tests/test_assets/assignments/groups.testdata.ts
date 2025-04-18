@@ -75,26 +75,26 @@ let group04: Group;
 let group05: Group;
 let group1ConditionalLearningPath: Group;
 
-export function getTestGroup01() {
+export function getTestGroup01(): Group {
     return group01;
 }
 
-export function getTestGroup02() {
+export function getTestGroup02(): Group {
     return group02;
 }
 
-export function getTestGroup03() {
+export function getTestGroup03(): Group {
     return group03;
 }
 
-export function getTestGroup04() {
+export function getTestGroup04(): Group {
     return group04;
 }
 
-export function getTestGroup05() {
+export function getTestGroup05(): Group {
     return group05;
 }
 
-export function getGroup1ConditionalLearningPath() {
+export function getGroup1ConditionalLearningPath(): Group {
     return group1ConditionalLearningPath;
 }

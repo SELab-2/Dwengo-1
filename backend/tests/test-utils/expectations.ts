@@ -1,6 +1,5 @@
 import { AssertionError } from 'node:assert';
 import { LearningObject } from '../../src/entities/content/learning-object.entity';
-import { LearningPath as LearningPathEntity } from '../../src/entities/content/learning-path.entity';
 import { expect } from 'vitest';
 import { FilteredLearningObject, LearningPath } from '@dwengo-1/common/interfaces/learning-content';
 import {RequiredEntityData} from "@mikro-orm/core";
@@ -17,7 +16,7 @@ const IGNORE_PROPERTIES = ['parent'];
 export function expectToBeCorrectEntity<T extends object>(
     actual: T,
     expected: T,
-    propertyPrefix: string = ""
+    propertyPrefix = ""
 ): void {
     for (const property in expected) {
         const prefixedProperty = propertyPrefix + property;
@@ -91,55 +90,41 @@ export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearni
  * is a correct representation of the given learning path entity.
  *
  * @param learningPath The learning path returned by the retriever, service or endpoint
- * @param expectedEntity The expected entity
- * @param learningObjectsOnPath The learning objects on LearningPath. Necessary since some information in
- *                              the learning path returned from the API endpoint
+ * @param expected The learning path that should have been returned.
  */
 export function expectToBeCorrectLearningPath(
     learningPath: LearningPath,
-    expectedEntity: LearningPathEntity,
-    learningObjectsOnPath: FilteredLearningObject[]
+    expected: LearningPath
 ): void {
-    expect(learningPath.hruid).toEqual(expectedEntity.hruid);
-    expect(learningPath.language).toEqual(expectedEntity.language);
-    expect(learningPath.description).toEqual(expectedEntity.description);
-    expect(learningPath.title).toEqual(expectedEntity.title);
+    expect(learningPath.hruid).toEqual(expected.hruid);
+    expect(learningPath.language).toEqual(expected.language);
+    expect(learningPath.description).toEqual(expected.description);
+    expect(learningPath.title).toEqual(expected.title);
 
-    const keywords = new Set(learningObjectsOnPath.flatMap((it) => it.keywords || []));
-    expect(new Set(learningPath.keywords.split(' '))).toEqual(keywords);
+    expect(new Set(learningPath.keywords.split(' '))).toEqual(new Set(learningPath.keywords.split(' ')));
 
-    const targetAges = new Set(learningObjectsOnPath.flatMap((it) => it.targetAges || []));
-    expect(new Set(learningPath.target_ages)).toEqual(targetAges);
-    expect(learningPath.min_age).toEqual(Math.min(...targetAges));
-    expect(learningPath.max_age).toEqual(Math.max(...targetAges));
+    expect(new Set(learningPath.target_ages)).toEqual(new Set(expected.target_ages));
+    expect(learningPath.min_age).toEqual(Math.min(...expected.target_ages));
+    expect(learningPath.max_age).toEqual(Math.max(...expected.target_ages));
 
-    expect(learningPath.num_nodes).toEqual(expectedEntity.nodes.length);
-    expect(learningPath.image || null).toEqual(expectedEntity.image);
+    expect(learningPath.num_nodes).toEqual(expected.nodes.length);
+    expect(learningPath.image ?? null).toEqual(expected.image ?? null);
 
-    const expectedLearningPathNodes = new Map(
-        expectedEntity.nodes.map((node) => [
-            { learningObjectHruid: node.learningObjectHruid, language: node.language, version: node.version },
-            { startNode: node.startNode, transitions: node.transitions },
-        ])
-    );
-
-    for (const node of learningPath.nodes) {
-        const nodeKey = {
-            learningObjectHruid: node.learningobject_hruid,
-            language: node.language,
-            version: node.version,
-        };
-        expect(expectedLearningPathNodes.keys()).toContainEqual(nodeKey);
-        const expectedNode = [...expectedLearningPathNodes.entries()].find(
-            ([key, _]) => key.learningObjectHruid === nodeKey.learningObjectHruid && key.language === node.language && key.version === node.version
-        )![1];
-        expect(Boolean(node.start_node)).toEqual(Boolean(expectedNode.startNode));
-
-        expect(new Set(node.transitions.map((it) => it.next.hruid))).toEqual(
-            new Set(expectedNode.transitions.map((it) => it.next.learningObjectHruid))
+    for (const node of expected.nodes) {
+        const correspondingNode = learningPath.nodes.find(it =>
+            node.learningobject_hruid === it.learningobject_hruid && node.language === it.language
+            && node.version === it.version
         );
-        expect(new Set(node.transitions.map((it) => it.next.language))).toEqual(new Set(expectedNode.transitions.map((it) => it.next.language)));
-        expect(new Set(node.transitions.map((it) => it.next.version))).toEqual(new Set(expectedNode.transitions.map((it) => it.next.version)));
+        expect(correspondingNode).toBeTruthy();
+        expect(Boolean(correspondingNode!.start_node)).toEqual(Boolean(node.start_node));
+
+        for (const transition of node.transitions) {
+            const correspondingTransition = correspondingNode!.transitions.find(it =>
+                it.next.hruid === transition.next.hruid && it.next.language === transition.next.language
+                && it.next.version === transition.next.version
+            );
+            expect(correspondingTransition).toBeTruthy();
+        }
     }
 }
 

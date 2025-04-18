@@ -1,5 +1,5 @@
 <div class="learning-object-gift">
-    <div id="gift-q1" class="gift-question">
+    <div id="gift-q1" class="gift-question gift-question-type-Essay">
         <h2 id="gift-q1-title" class="gift-title">Reflection</h2>
         <p id="gift-q1-stem" class="gift-stem">Reflect on this learning path. What have you learned today?</p>
         <textarea id="gift-q1-answer" class="gift-essay-answer"></textarea>

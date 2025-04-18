@@ -61,9 +61,9 @@ export function mapToLearningPath(
                     next: toNode,
                     condition: transDto.condition ?? "true"
                 });
-            } else {
+            } 
                 return undefined;
-            }
+            
         }).filter(it => it).map(it => it!);
 
         fromNode.transitions = new Collection<LearningPathTransition>(fromNode, transitions);

@@ -29,13 +29,13 @@ export class LearningPathRepository extends DwengoEntityRepository<LearningPath>
     }
 
     public createNode(
-        nodeData: RequiredEntityData<LearningPathNode, never, false>
+        nodeData: RequiredEntityData<LearningPathNode>
     ): LearningPathNode {
         return this.em.create(LearningPathNode, nodeData);
     }
 
     public createTransition(
-        transitionData: RequiredEntityData<LearningPathTransition, never, false>
+        transitionData: RequiredEntityData<LearningPathTransition>
     ): LearningPathTransition {
         return this.em.create(LearningPathTransition, transitionData)
     }
@@ -53,7 +53,7 @@ export class LearningPathRepository extends DwengoEntityRepository<LearningPath>
         }
         const em = this.getEntityManager();
         await em.persistAndFlush(path);
-        await Promise.all(nodes.map(it => em.persistAndFlush(it)));
-        await Promise.all(transitions.map(it => em.persistAndFlush(it)));
+        await Promise.all(nodes.map(async it => em.persistAndFlush(it)));
+        await Promise.all(transitions.map(async it => em.persistAndFlush(it)));
     }
 }
