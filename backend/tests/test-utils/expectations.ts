@@ -19,38 +19,40 @@ export function expectToBeCorrectEntity<T extends object>(
     propertyPrefix = ""
 ): void {
     for (const property in expected) {
-        const prefixedProperty = propertyPrefix + property;
-        if (
-            property in IGNORE_PROPERTIES &&
-            expected[property] !== undefined && // If we don't expect a certain value for a property, we assume it can be filled in by the database however it wants.
-            typeof expected[property] !== 'function' // Functions obviously are not persisted via the database
-        ) {
-            if (!Object.prototype.hasOwnProperty.call(actual, property)) {
-                throw new AssertionError({
-                    message: `Expected property ${prefixedProperty}, but it is missing.`,
-                });
-            }
-            if (typeof expected[property] === 'boolean') {
-                // Sometimes, booleans get represented by numbers 0 and 1 in the objects actual from the database.
-                if (Boolean(expected[property]) !== Boolean(actual[property])) {
+        if (Object.prototype.hasOwnProperty.call(expected, property)) {
+            const prefixedProperty = propertyPrefix + property;
+            if (
+                property in IGNORE_PROPERTIES &&
+                expected[property] !== undefined && // If we don't expect a certain value for a property, we assume it can be filled in by the database however it wants.
+                typeof expected[property] !== 'function' // Functions obviously are not persisted via the database
+            ) {
+                if (!Object.prototype.hasOwnProperty.call(actual, property)) {
                     throw new AssertionError({
-                        message: `Expected ${prefixedProperty} to be ${expected[property]},
-                        but was ${actual[property]} (${Boolean(expected[property])}).`,
+                        message: `Expected property ${prefixedProperty}, but it is missing.`,
                     });
                 }
-            } else if (typeof expected[property] !== typeof actual[property]) {
-                throw new AssertionError({
-                    message: `${prefixedProperty} was expected to have type ${typeof expected[property]},`
-                                + `but had type ${typeof actual[property]}.`,
-                });
-            } else if (typeof expected[property] === 'object') {
-                expectToBeCorrectEntity(actual[property] as object, expected[property] as object, property);
-            } else {
-                if (expected[property] !== actual[property]) {
+                if (typeof expected[property] === 'boolean') {
+                    // Sometimes, booleans get represented by numbers 0 and 1 in the objects actual from the database.
+                    if (Boolean(expected[property]) !== Boolean(actual[property])) {
+                        throw new AssertionError({
+                            message: `Expected ${prefixedProperty} to be ${expected[property]},
+                        but was ${actual[property]} (${Boolean(expected[property])}).`,
+                        });
+                    }
+                } else if (typeof expected[property] !== typeof actual[property]) {
                     throw new AssertionError({
-                        message: `${prefixedProperty} was expected to be ${expected[property]}, `
-                                    + `but was ${actual[property]}.`,
+                        message: `${prefixedProperty} was expected to have type ${typeof expected[property]},`
+                            + `but had type ${typeof actual[property]}.`,
                     });
+                } else if (typeof expected[property] === 'object') {
+                    expectToBeCorrectEntity(actual[property] as object, expected[property] as object, property);
+                } else {
+                    if (expected[property] !== actual[property]) {
+                        throw new AssertionError({
+                            message: `${prefixedProperty} was expected to be ${expected[property]}, `
+                                + `but was ${actual[property]}.`,
+                        });
+                    }
                 }
             }
         }
