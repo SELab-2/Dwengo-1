@@ -38,7 +38,7 @@ export async function seedDatabase(): Promise<void> {
     /* Wegens een probleem met het aanmaken van groups werd deze code even in commentaar gezet */
 
     /*
-    const groups = makeTestGroups(em, students, assignments);
+    Const groups = makeTestGroups(em, students, assignments);
 
     assignments[0].groups = new Collection<Group>(groups.slice(0, 3));
     assignments[1].groups = new Collection<Group>(groups.slice(3, 4));
