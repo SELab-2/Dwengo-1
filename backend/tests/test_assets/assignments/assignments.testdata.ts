@@ -5,6 +5,7 @@ import { Language } from '@dwengo-1/common/util/language';
 
 export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assignment[] {
     const assignment01 = em.create(Assignment, {
+        id: 21000,
         within: classes[0],
         title: 'dire straits',
         description: 'reading',
@@ -14,6 +15,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
     });
 
     const assignment02 = em.create(Assignment, {
+        id: 21001,
         within: classes[1],
         title: 'tool',
         description: 'reading',
@@ -23,6 +25,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
     });
 
     const assignment03 = em.create(Assignment, {
+        id: 21002,
         within: classes[0],
         title: 'delete',
         description: 'will be deleted',
@@ -32,6 +35,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
     });
 
     const assignment04 = em.create(Assignment, {
+        id: 21003,
         within: classes[0],
         title: 'another assignment',
         description: 'with a description',

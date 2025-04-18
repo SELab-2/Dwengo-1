@@ -10,7 +10,7 @@ export function makeTestGroups(em: EntityManager, students: Student[], assignmen
      */
     const group01 = em.create(Group, {
         assignment: assignments[0],
-        groupNumber: 1,
+        groupNumber: 21001,
         members: students.slice(0, 2),
     });
 
@@ -20,7 +20,7 @@ export function makeTestGroups(em: EntityManager, students: Student[], assignmen
      */
     const group02 = em.create(Group, {
         assignment: assignments[0],
-        groupNumber: 2,
+        groupNumber: 21002,
         members: students.slice(2, 4),
     });
 
@@ -30,7 +30,7 @@ export function makeTestGroups(em: EntityManager, students: Student[], assignmen
      */
     const group03 = em.create(Group, {
         assignment: assignments[0],
-        groupNumber: 3,
+        groupNumber: 21003,
         members: students.slice(4, 6),
     });
 
@@ -40,7 +40,7 @@ export function makeTestGroups(em: EntityManager, students: Student[], assignmen
      */
     const group04 = em.create(Group, {
         assignment: assignments[1],
-        groupNumber: 4,
+        groupNumber: 21004,
         members: students.slice(3, 4),
     });
 
@@ -50,7 +50,7 @@ export function makeTestGroups(em: EntityManager, students: Student[], assignmen
      */
     const group05 = em.create(Group, {
         assignment: assignments[3],
-        groupNumber: 1,
+        groupNumber: 21001,
         members: students.slice(0, 2),
     });
 
