@@ -1,16 +1,19 @@
 import express from 'express';
 import { createAnswerHandler, deleteAnswerHandler, getAnswerHandler, getAllAnswersHandler, updateAnswerHandler } from '../controllers/answers.js';
+import {adminOnly, authenticatedOnly, teachersOnly} from "../middleware/auth/checks/auth-checks";
+import {onlyAllowAuthor, onlyAllowAuthorRequestAnswer} from "../middleware/auth/checks/question-checks";
+
 
 const router = express.Router({ mergeParams: true });
 
-router.get('/', getAllAnswersHandler);
+router.get('/', adminOnly, getAllAnswersHandler);
 
-router.post('/', createAnswerHandler);
+router.post('/', teachersOnly, onlyAllowAuthor, createAnswerHandler);
 
-router.get('/:seqAnswer', getAnswerHandler);
+router.get('/:seqAnswer', authenticatedOnly, getAnswerHandler);
 
-router.delete('/:seqAnswer', deleteAnswerHandler);
+router.delete('/:seqAnswer', teachersOnly, onlyAllowAuthorRequestAnswer, deleteAnswerHandler);
 
-router.put('/:seqAnswer', updateAnswerHandler);
+router.put('/:seqAnswer', teachersOnly, onlyAllowAuthorRequestAnswer, updateAnswerHandler);
 
 export default router;
