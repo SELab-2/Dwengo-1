@@ -79,4 +79,3 @@ export async function seedDatabase(): Promise<void> {
 }
 
 seedDatabase().catch(logger.error);
-
