@@ -18,9 +18,7 @@ export const multipleChoiceQuestionAdapter: GiftAdapter = {
     setAnswer(questionElement: Element, answer: string | number | object): void {
         questionElement.querySelectorAll('input[type=radio]').forEach(element => {
             const input = element as HTMLInputElement;
-            console.log(`input: ${input.value}, answer: ${answer}`);
             input.checked = String(answer) === String(input.value);
-            console.log(input.checked);
         });
     }
 }

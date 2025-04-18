@@ -4,7 +4,7 @@
     import { computed, type ComputedRef, ref } from "vue";
     import type { LearningObject } from "@/data-objects/learning-objects/learning-object.ts";
     import { useRoute } from "vue-router";
-    import LearningObjectView from "@/views/learning-paths/LearningObjectView.vue";
+    import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
     import { useI18n } from "vue-i18n";
     import LearningPathSearchField from "@/components/LearningPathSearchField.vue";
     import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
@@ -185,13 +185,15 @@
                 <learning-path-search-field></learning-path-search-field>
             </div>
         </div>
-        <learning-object-view
-            :hruid="currentNode.learningobjectHruid"
-            :language="currentNode.language"
-            :version="currentNode.version"
-            :group="forGroup"
-            v-if="currentNode"
-        ></learning-object-view>
+        <div class="learning-object-view-container">
+            <learning-object-view
+                :hruid="currentNode.learningobjectHruid"
+                :language="currentNode.language"
+                :version="currentNode.version"
+                :group="forGroup"
+                v-if="currentNode"
+            ></learning-object-view>
+        </div>
         <div class="navigation-buttons-container">
             <v-btn
                 prepend-icon="mdi-chevron-left"
@@ -226,6 +228,11 @@
         margin-bottom: -30px;
         display: flex;
         justify-content: space-between;
+    }
+    .learning-object-view-container {
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 20px;
     }
     .navigation-buttons-container {
         padding: 20px;

@@ -75,5 +75,7 @@
     "sent": "verzonden",
     "failed": "mislukt",
     "wrong": "er ging iets verkeerd",
-    "created": "gecreëerd"
+    "created": "gecreëerd",
+    "submit": "Indienen",
+    "markAsDone": "Markeren als afgewerkt"
 }

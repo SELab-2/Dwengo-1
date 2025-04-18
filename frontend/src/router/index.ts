@@ -15,7 +15,7 @@ import LearningPathPage from "@/views/learning-paths/LearningPathPage.vue";
 import LearningPathSearchPage from "@/views/learning-paths/LearningPathSearchPage.vue";
 import UserHomePage from "@/views/homepage/UserHomePage.vue";
 import SingleTheme from "@/views/SingleTheme.vue";
-import LearningObjectView from "@/views/learning-paths/LearningObjectView.vue";
+import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),

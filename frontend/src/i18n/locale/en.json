@@ -75,5 +75,7 @@
     "sent": "sent",
     "failed": "failed",
     "wrong": "something went wrong",
-    "created": "created"
+    "created": "created",
+    "submit": "Submit",
+    "markAsDone": "Mark as done"
 }
