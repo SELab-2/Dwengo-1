@@ -83,5 +83,6 @@
     "taskCompleted": "Tâche terminée.",
     "submittedBy": "Soumis par",
     "timestamp": "Horodatage",
-    "loadSubmission": "Charger"
+    "loadSubmission": "Charger",
+    "noSubmissionsYet": "Pas encore de soumissions."
 }

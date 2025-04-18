@@ -83,5 +83,6 @@
     "taskCompleted": "Task completed.",
     "submittedBy": "Submitted by",
     "timestamp": "Timestamp",
-    "loadSubmission": "Load"
+    "loadSubmission": "Load",
+    "noSubmissionsYet": "No submissions yet."
 }

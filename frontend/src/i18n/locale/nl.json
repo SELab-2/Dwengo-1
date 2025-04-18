@@ -83,5 +83,6 @@
     "taskCompleted": "Taak afgewerkt.",
     "submittedBy": "Ingediend door",
     "timestamp": "Tijdstip",
-    "loadSubmission": "Inladen"
+    "loadSubmission": "Inladen",
+    "noSubmissionsYet": "Nog geen indieningen."
 }

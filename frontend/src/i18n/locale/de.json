@@ -83,5 +83,6 @@
     "taskCompleted": "Aufgabe erledigt.",
     "submittedBy": "Eingereicht von",
     "timestamp": "Zeitpunkt",
-    "loadSubmission": "Einladen"
+    "loadSubmission": "Einladen",
+    "noSubmissionsYet": "Noch keine Lösungen eingereicht."
 }

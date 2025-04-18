@@ -19,12 +19,15 @@
         { title: "", key: "action", width: "70px", sortable: false },
     ]);
 
-    const data = computed(() => props.allSubmissions.map(submission => ({
-        submissionNo: submission.submissionNumber,
-        submittedBy: `${submission.submitter.firstName} ${submission.submitter.lastName}`,
-        timestamp: submission.time ? new Date(submission.time).toLocaleString(): "-",
-        dto: submission
-    })));
+    const data = computed(() => [...props.allSubmissions]
+        .sort((a, b) => (a.submissionNumber ?? 0) - (b.submissionNumber ?? 0))
+        .map((submission, index) => ({
+            submissionNo: index + 1,
+            submittedBy: `${submission.submitter.firstName} ${submission.submitter.lastName}`,
+            timestamp: submission.time ? new Date(submission.time).toLocaleString(): "-",
+            dto: submission
+        })
+    ));
 
     function selectSubmission(submission: SubmissionDTO) {
         emit('submission-selected', submission);
@@ -39,6 +42,7 @@
                           :items="data"
                           density="compact"
                           hide-default-footer
+                          :no-data-text="t('noSubmissionsYet')"
             >
                 <template v-slot:item.action="{ item }">
                     <v-btn density="compact" variant="plain" @click="selectSubmission(item.dto)">
