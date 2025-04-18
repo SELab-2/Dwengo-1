@@ -34,6 +34,10 @@ export async function seedDatabase(): Promise<void> {
     const learningPaths = makeTestLearningPaths(em);
     const classes = makeTestClasses(em, students, teachers);
     const assignments = makeTestAssignemnts(em, classes);
+
+    /* Wegens een probleem met het aanmaken van groups werd deze code even in commentaar gezet */
+
+    /*
     const groups = makeTestGroups(em, students, assignments);
 
     assignments[0].groups = new Collection<Group>(groups.slice(0, 3));
@@ -48,6 +52,7 @@ export async function seedDatabase(): Promise<void> {
     const questions = makeTestQuestions(em, students, groups);
     const answers = makeTestAnswers(em, teachers, questions);
     const submissions = makeTestSubmissions(em, students, groups);
+    */
 
     // Persist all entities
     await em.persistAndFlush([
@@ -57,6 +62,7 @@ export async function seedDatabase(): Promise<void> {
         ...learningPaths,
         ...classes,
         ...assignments,
+        /*
         ...groups,
         ...teacherInvitations,
         ...classJoinRequests,
@@ -64,6 +70,7 @@ export async function seedDatabase(): Promise<void> {
         ...questions,
         ...answers,
         ...submissions,
+        */
     ]);
 
     logger.info('Development database seeded successfully!');
@@ -72,3 +79,4 @@ export async function seedDatabase(): Promise<void> {
 }
 
 seedDatabase().catch(logger.error);
+

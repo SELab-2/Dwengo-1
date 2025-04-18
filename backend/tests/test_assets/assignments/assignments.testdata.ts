@@ -6,7 +6,6 @@ import { Language } from '@dwengo-1/common/util/language';
 export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assignment[] {
     const assignment01 = em.create(Assignment, {
         within: classes[0],
-        id: 1,
         title: 'dire straits',
         description: 'reading',
         learningPathHruid: 'id02',
@@ -16,7 +15,6 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
 
     const assignment02 = em.create(Assignment, {
         within: classes[1],
-        id: 2,
         title: 'tool',
         description: 'reading',
         learningPathHruid: 'id01',
@@ -26,7 +24,6 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
 
     const assignment03 = em.create(Assignment, {
         within: classes[0],
-        id: 3,
         title: 'delete',
         description: 'will be deleted',
         learningPathHruid: 'id02',
@@ -36,7 +33,6 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
 
     const assignment04 = em.create(Assignment, {
         within: classes[0],
-        id: 4,
         title: 'another assignment',
         description: 'with a description',
         learningPathHruid: 'id01',
