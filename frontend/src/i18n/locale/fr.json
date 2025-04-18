@@ -75,5 +75,13 @@
     "sent": "envoyé",
     "failed": "échoué",
     "wrong": "quelque chose n'a pas fonctionné",
-    "created": "créé"
+    "created": "créé",
+    "submitSolution": "Soumettre la solution",
+    "submitNewSolution": "Soumettre une nouvelle solution",
+    "markAsDone": "Marquer comme terminé",
+    "groupSubmissions": "Soumissions de ce groupe",
+    "taskCompleted": "Tâche terminée.",
+    "submittedBy": "Soumis par",
+    "timestamp": "Horodatage",
+    "loadSubmission": "Charger"
 }

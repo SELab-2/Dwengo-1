@@ -76,6 +76,12 @@
     "failed": "failed",
     "wrong": "something went wrong",
     "created": "created",
-    "submit": "Submit",
-    "markAsDone": "Mark as done"
+    "submitSolution": "Submit solution",
+    "submitNewSolution": "Submit new solution",
+    "markAsDone": "Mark as completed",
+    "groupSubmissions": "This group's submissions",
+    "taskCompleted": "Task completed.",
+    "submittedBy": "Submitted by",
+    "timestamp": "Timestamp",
+    "loadSubmission": "Load"
 }

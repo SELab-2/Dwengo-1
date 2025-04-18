@@ -1,29 +1,29 @@
 <script setup lang="ts">
-import { Language } from "@/data-objects/language.ts";
-import type { UseQueryReturnType } from "@tanstack/vue-query";
-import { useLearningObjectHTMLQuery } from "@/queries/learning-objects.ts";
-import UsingQueryResult from "@/components/UsingQueryResult.vue";
-import {computed, ref} from "vue";
-import authService from "@/services/auth/auth-service.ts";
-import type {SubmissionData} from "@/views/learning-paths/learning-object/submission-data";
-import LearningObjectContentView from "@/views/learning-paths/learning-object/content/LearningObjectContentView.vue";
-import LearningObjectSubmissionsView from "@/views/learning-paths/learning-object/submissions/LearningObjectSubmissionsView.vue";
+    import { Language } from "@/data-objects/language.ts";
+    import type { UseQueryReturnType } from "@tanstack/vue-query";
+    import { useLearningObjectHTMLQuery } from "@/queries/learning-objects.ts";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import {computed, ref} from "vue";
+    import authService from "@/services/auth/auth-service.ts";
+    import type {SubmissionData} from "@/views/learning-paths/learning-object/submission-data";
+    import LearningObjectContentView from "@/views/learning-paths/learning-object/content/LearningObjectContentView.vue";
+    import LearningObjectSubmissionsView from "@/views/learning-paths/learning-object/submissions/LearningObjectSubmissionsView.vue";
 
-const isStudent = computed(() => authService.authState.activeRole === "student");
+    const isStudent = computed(() => authService.authState.activeRole === "student");
 
-const props = defineProps<{
-    hruid: string;
-    language: Language;
-    version: number,
-    group?: {forGroup: number, assignmentNo: number, classId: string}
-}>();
+    const props = defineProps<{
+        hruid: string;
+        language: Language;
+        version: number,
+        group?: {forGroup: number, assignmentNo: number, classId: string}
+    }>();
 
-const learningObjectHtmlQueryResult: UseQueryReturnType<Document, Error> = useLearningObjectHTMLQuery(
-    () => props.hruid,
-    () => props.language,
-    () => props.version,
-);
-const currentSubmission = ref<SubmissionData>([]);
+    const learningObjectHtmlQueryResult: UseQueryReturnType<Document, Error> = useLearningObjectHTMLQuery(
+        () => props.hruid,
+        () => props.language,
+        () => props.version,
+    );
+    const currentSubmission = ref<SubmissionData>([]);
 </script>
 
 <template>

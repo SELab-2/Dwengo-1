@@ -76,6 +76,12 @@
     "failed": "mislukt",
     "wrong": "er ging iets verkeerd",
     "created": "gecreëerd",
-    "submit": "Indienen",
-    "markAsDone": "Markeren als afgewerkt"
+    "submitSolution": "Oplossing indienen",
+    "submitNewSolution": "Nieuwe oplossing indienen",
+    "markAsDone": "Markeren als afgewerkt",
+    "groupSubmissions": "Indieningen van deze groep",
+    "taskCompleted": "Taak afgewerkt.",
+    "submittedBy": "Ingediend door",
+    "timestamp": "Tijdstip",
+    "loadSubmission": "Inladen"
 }

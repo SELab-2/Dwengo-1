@@ -81,12 +81,12 @@
         if (props.submissionData && props.submissionData.length === 0) {
             return t("markAsDone");
         }
-        return t("submit");
+        return t(props.submissions.length > 0 ? "submitNewSolution" : "submitSolution");
     });
 </script>
 
 <template>
-    <v-btn v-if="isStudent"
+    <v-btn v-if="isStudent && !isSubmitDisabled"
            prepend-icon="mdi-check"
            variant="elevated"
            :loading="submissionIsPending"

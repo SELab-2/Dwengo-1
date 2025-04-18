@@ -38,7 +38,6 @@
     }
 
     function attachQuestionListeners(): void {
-        let counter = 0;
         forEachQuestion((index, _name, type, element) => {
             getGiftAdapterForType(type)?.installListener(
                 element,
@@ -46,7 +45,6 @@
                     submissionData.value = copyArrayWith(index, newAnswer, submissionData.value ?? [])
                 }
             );
-            counter++;
         });
     }
 
@@ -62,7 +60,12 @@
         submissionData.value = answers;
     }
 
-    onMounted(() => nextTick(() => attachQuestionListeners()));
+    onMounted(() =>
+        nextTick(() => {
+            attachQuestionListeners()
+            setAnswers(props.submissionData ?? []);
+        })
+    );
 
     watch(() => props.learningObjectContent, async () => {
         await nextTick();

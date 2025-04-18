@@ -76,6 +76,12 @@
     "failed": "fehlgeschlagen",
     "wrong": "etwas ist schief gelaufen",
     "created": "erstellt",
-    "submit": "Einreichen",
-    "markAsDone": "Als fertig markieren"
+    "submitSolution": "Lösung einreichen",
+    "submitNewSolution": "Neue Lösung einreichen",
+    "markAsDone": "Als fertig markieren",
+    "groupSubmissions": "Einreichungen dieser Gruppe",
+    "taskCompleted": "Aufgabe erledigt.",
+    "submittedBy": "Eingereicht von",
+    "timestamp": "Zeitpunkt",
+    "loadSubmission": "Einladen"
 }
