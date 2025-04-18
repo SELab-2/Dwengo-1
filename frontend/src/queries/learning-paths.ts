@@ -13,7 +13,7 @@ export function useGetLearningPathQuery(
     forGroup?: MaybeRefOrGetter<{forGroup: number, assignmentNo: number, classId: string} | undefined>,
 ): UseQueryReturnType<LearningPath, Error> {
     return useQuery({
-        queryKey: [LEARNING_PATH_KEY, "get", toValue(hruid), toValue(language), toValue(forGroup)],
+        queryKey: [LEARNING_PATH_KEY, "get", hruid, language, forGroup],
         queryFn: async () => {
             const [hruidVal, languageVal, forGroupVal] = [toValue(hruid), toValue(language), toValue(forGroup)];
             return learningPathController.getBy(hruidVal, languageVal, forGroupVal);

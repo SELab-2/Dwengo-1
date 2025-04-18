@@ -3,7 +3,7 @@
     import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
     import { computed, type ComputedRef, ref } from "vue";
     import type { LearningObject } from "@/data-objects/learning-objects/learning-object.ts";
-    import { useRoute } from "vue-router";
+    import {useRoute, useRouter} from "vue-router";
     import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
     import { useI18n } from "vue-i18n";
     import LearningPathSearchField from "@/components/LearningPathSearchField.vue";
@@ -12,7 +12,9 @@
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import authService from "@/services/auth/auth-service.ts";
     import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
+    import LearningPathGroupSelector from "@/views/learning-paths/LearningPathGroupSelector.vue";
 
+    const router = useRouter();
     const route = useRoute();
     const { t } = useI18n();
 
@@ -103,6 +105,15 @@
         }
         return "notCompleted";
     }
+
+    const forGroupQueryParam = computed<number | undefined>({
+        get: () => route.query.forGroup,
+        set: (value: number | undefined) => {
+            let query = structuredClone(route.query);
+            query.forGroup = value;
+            router.push({ query });
+        }
+    });
 </script>
 
 <template>
@@ -145,6 +156,15 @@
                         ></v-icon>
                         {{ t("legendTeacherExclusive") }}
                     </p>
+                </template>
+            </v-list-item>
+            <v-list-item v-if="query.classId && query.assignmentNo && authService.authState.activeRole === 'teacher'">
+                <template v-slot:default>
+                    <learning-path-group-selector
+                        :class-id="query.classId"
+                        :assignment-number="parseInt(query.assignmentNo)"
+                        v-model="forGroupQueryParam"
+                    />
                 </template>
             </v-list-item>
             <v-divider></v-divider>

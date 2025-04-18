@@ -1,4 +1,3 @@
-import type { ClassesResponse } from "@/controllers/classes";
 import { GroupController, type GroupResponse, type GroupsResponse } from "@/controllers/groups";
 import type { QuestionsResponse } from "@/controllers/questions";
 import type { SubmissionsResponse } from "@/controllers/submissions";
@@ -12,7 +11,6 @@ import {
     type UseQueryReturnType,
 } from "@tanstack/vue-query";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
-import { invalidateAllAssignmentKeys } from "./assignments";
 import { invalidateAllSubmissionKeys } from "./submissions";
 
 export function groupsQueryKey(classid: string, assignmentNumber: number, full: boolean) {
@@ -132,7 +130,7 @@ export function useDeleteGroupMutation(): UseMutationReturnType<
             const gn = response.group.groupNumber;
 
             await invalidateAllGroupKeys(queryClient, cid, an, gn);
-            await invalidateAllSubmissionKeys(queryClient, cid, an, gn);
+            await invalidateAllSubmissionKeys(queryClient, undefined, undefined, undefined, cid, an, gn);
         },
     });
 }
