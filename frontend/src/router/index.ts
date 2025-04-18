@@ -88,7 +88,7 @@ const router = createRouter({
                     component: CreateAssignment,
                 },
                 {
-                    path: ":id",
+                    path: ":classId/:id",
                     name: "SingleAssigment",
                     component: SingleAssignment,
                 },

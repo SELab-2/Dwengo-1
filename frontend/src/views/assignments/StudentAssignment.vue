@@ -5,16 +5,13 @@ import {useI18n} from "vue-i18n";
 import {useAssignmentQuery} from "@/queries/assignments.ts";
 import UsingQueryResult from "@/components/UsingQueryResult.vue";
 import type {AssignmentResponse} from "@/controllers/assignments.ts";
-import type {GroupDTO} from "@dwengo-1/common/interfaces/group";
 import {asyncComputed} from "@vueuse/core";
 import {useStudentsByUsernamesQuery} from "@/queries/students.ts";
-import {AssignmentDTO} from "@dwengo-1/common/dist/interfaces/assignment.ts";
-import {StudentDTO} from "@dwengo-1/common/dist/interfaces/student.ts";
+import {useGroupsQuery} from "@/queries/groups.ts";
 
 const props = defineProps<{
     classId: string
     assignmentId: number
-    groups: GroupDTO[] | undefined
 }>();
 
 const {t, locale} = useI18n();
@@ -26,23 +23,19 @@ const username = asyncComputed(async () => {
 });
 
 const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
+const submitted = ref(false);//TODO: update by fetching submissions and check if group submitted
 
-const submitted = ref(true);//TODO: update by fetching submissions and check group
-
-const submitAssignment = async () => {
-    //TODO
-};
-
-const group = computed(() => {
-    return props?.groups?.find(group =>
-        group.members.some(m => m.username === username.value)
-    );
+const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
+const group = computed(() =>
+        groupsQueryResult?.data.value?.groups.find(group =>
+            group.members?.some(m => m.username === username.value)
+        )
     /** For testing
-    return {assignment: 1,
-        groupNumber: 1,
-        members: ["testleerling1"]}
-        */
-});
+     return {assignment: 1,
+     groupNumber: 1,
+     members: ["testleerling1"]}
+     */
+);
 
 // Assuming group.value.members is a list of usernames TODO: case when it's StudentDTO's
 const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as string[]);
@@ -75,10 +68,10 @@ const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as
                         {{ t("submitted") }}
                     </v-chip>
                 </div>
-                <v-card-title class="text-h4">{{ data.title }}</v-card-title>
+                <v-card-title class="text-h4">{{ data.assignment.title }}</v-card-title>
                 <v-card-subtitle class="subtitle-section">
                     <v-btn
-                        :to="`/learningPath/${language}/${data.learningPath}`"
+                        :to="`/learningPath/${language}/${data.assignment.learningPath}`"
                         variant="tonal"
                         color="primary"
                     >
@@ -87,30 +80,20 @@ const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as
                 </v-card-subtitle>
 
                 <v-card-text class="description">
-                    {{ data.description }}
+                    {{ data.assignment.description }}
                 </v-card-text>
 
                 <v-card-text class="group-section">
                     <h3>{{ t("group") }}</h3>
                     <div v-if="studentQueries">
                         <ul>
-                            <li v-for="student in studentQueries" :key="student.data?.student.id">
-                                {{ student.data?.student.firstName + ' ' + student.data?.student.lastName }}
+                            <li v-for="student in group?.members" :key="student.username">
+                                {{ student.firstName + ' ' + student.lastName }}
                             </li>
                         </ul>
                     </div>
 
                 </v-card-text>
-                <v-card-actions class="justify-end">
-                    <v-btn
-                        size="large"
-                        color="success"
-                        variant="flat"
-                        @click="submitAssignment"
-                    >
-                        {{ t("submit") }}
-                    </v-btn>
-                </v-card-actions>
 
             </v-card>
         </using-query-result>

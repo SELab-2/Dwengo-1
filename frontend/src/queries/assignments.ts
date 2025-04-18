@@ -104,7 +104,7 @@ export function useAssignmentsQuery(
 export function useAssignmentQuery(
     classid: MaybeRefOrGetter<string | undefined>,
     assignmentNumber: MaybeRefOrGetter<number | undefined>,
-): UseQueryReturnType<AssignmentsResponse, Error> {
+): UseQueryReturnType<AssignmentResponse, Error> {
     const { cid, an } = toValues(classid, assignmentNumber, 1, true);
 
     return useQuery({

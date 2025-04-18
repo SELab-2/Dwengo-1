@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, defineEmits } from "vue";
+import {ref, computed, defineEmits} from "vue";
 import {deadlineRules} from "@/utils/assignment-rules.ts";
 
 const date = ref("");
@@ -11,7 +11,7 @@ const formattedDeadline = computed(() => {
     return `${date.value} ${time.value}`;
 });
 
-const updateDeadline = () => {
+function updateDeadline(): void {
     if (date.value && time.value) {
         emit("update:deadline", formattedDeadline.value);
     }

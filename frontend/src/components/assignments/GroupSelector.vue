@@ -29,7 +29,7 @@ function filterStudents(data: StudentsResponse): { title: string, value: string 
 }
 
 
-const createGroup = () => {
+function createGroup(): void {
     if (selectedStudents.value.length) {
         // Extract only usernames (student.value)
         const usernames = selectedStudents.value.map(student => student.value);

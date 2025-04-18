@@ -27,8 +27,9 @@ if (isTeacher.value) {
     classesQueryResults = useStudentClassesQuery(username, true);
 }
 
-//TODO: replace with query from classes
+//TODO: remove later
 const classController = new ClassController();
+
 
 //TODO: replace by query that fetches all user's assignment
 const assignments = asyncComputed(async () => {
@@ -36,16 +37,15 @@ const assignments = asyncComputed(async () => {
     if (!classes) return [];
     const result = await Promise.all(
         (classes as ClassDTO[]).map(async (cls) => {
-            //TODO: replace by class queries
             const {assignments} = await classController.getAssignments(cls.id);
             return assignments.map(a => ({
                 id: a.id,
-                class: cls, // replace by the whole ClassDTO object
+                class: cls,
                 title: a.title,
                 description: a.description,
                 learningPath: a.learningPath,
                 language: a.language,
-                groups: []
+                groups: a.groups
             }));
         })
     );
@@ -54,23 +54,20 @@ const assignments = asyncComputed(async () => {
 }, []);
 
 
-const goToCreateAssignment = async () => {
+async function goToCreateAssignment(): Promise<void> {
     await router.push('/assignment/create');
-};
+}
 
-const goToAssignmentDetails = async (id: number, class_id: string) => {
-    await router.push({
-        path: `/assignment/${id}`,
-        state: {class_id},
-    });
-};
+async function goToAssignmentDetails(id: number, clsId: string): Promise<void> {
+    await router.push(`/assignment/${clsId}/${id}`);
+}
 
 
-const goToDeleteAssignment = async (id: number, class_id: string) => {
+async function goToDeleteAssignment(id: number, clsId: string): Promise<void> {
     //TODO: replace with query
-    const controller = new AssignmentController(class_id);
+    const controller = new AssignmentController(clsId);
     await controller.deleteAssignment(id);
-};
+}
 
 onMounted(async () => {
     const user = await auth.loadUser();
