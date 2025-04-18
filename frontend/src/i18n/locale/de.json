@@ -82,5 +82,7 @@
     "reject": "zurückweisen",
     "areusure": "Sind Sie sicher?",
     "yes": "ja",
-    "teachers": "Lehrer"
+    "teachers": "Lehrer",
+    "rejected": "abgelehnt",
+    "accepted": "akzeptiert"
 }

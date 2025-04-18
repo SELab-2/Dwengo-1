@@ -6,7 +6,7 @@
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import type { TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
     import { useTeacherClassesQuery } from "@/queries/teachers";
-    import { type ClassesResponse, type ClassResponse } from "@/controllers/classes";
+    import type { ClassesResponse } from "@/controllers/classes";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import { useClassesQuery, useClassTeacherInvitationsQuery, useCreateClassMutation } from "@/queries/classes";
     import type { TeacherInvitationsResponse } from "@/controllers/teacher-invitations";
@@ -15,19 +15,29 @@
 
     // Username of logged in teacher
     const username = ref<string | undefined>(undefined);
+    const isLoading = ref(false);
+    const isError = ref(false);
+    const errorMessage = ref<string>("");
 
-    // Find the username of the logged in user so it can be used to fetch other information
-    // When loading the page
+    // Load current user before rendering the page
     onMounted(async () => {
-        const userObject = await authState.loadUser();
-        username.value = userObject?.profile?.preferred_username ?? undefined;
+        isLoading.value = true;
+        try {
+            const userObject = await authState.loadUser();
+            username.value = userObject!.profile!.preferred_username;
+        } catch (error) {
+            isError.value = true;
+            errorMessage.value = error instanceof Error ? error.message : String(error);
+        } finally {
+            isLoading.value = false;
+        }
     });
 
     // Fetch all classes of the logged in teacher
     const classesQuery = useTeacherClassesQuery(username, true);
     const allClassesQuery = useClassesQuery();
     const { mutate } = useCreateClassMutation();
-    const getInvitationsQuery = useClassTeacherInvitationsQuery(username);
+    const getInvitationsQuery = useClassTeacherInvitationsQuery(username); // TODO: use useTeacherInvitationsReceivedQuery
 
     // Boolean that handles visibility for dialogs
     // Creating a class will generate a popup with the generated code
@@ -111,6 +121,19 @@
 </script>
 <template>
     <main>
+        <div
+        class="loading-div"
+        v-if="isLoading"
+    >
+        <v-progress-circular indeterminate></v-progress-circular>
+    </div>
+    <div v-if="isError">
+        <v-empty-state
+            icon="mdi-alert-circle-outline"
+            :text="errorMessage"
+            :title="t('error_title')"
+        ></v-empty-state>
+    </div v-else>
         <div>
             <h1 class="title">{{ t("classes") }}</h1>
             <using-query-result
@@ -252,34 +275,41 @@
                         :query-result="getInvitationsQuery"
                         v-slot="invitationsResponse: { data: TeacherInvitationsResponse }"
                     >
-                    <using-query-result :query-result="allClassesQuery" v-slot="classesResponse: {data: ClassesResponse}">
-                        <tr
-                            v-for="i in invitationsResponse.data.invitations as TeacherInvitationDTO[]"
-                            :key="i.classId"
+                        <using-query-result
+                            :query-result="allClassesQuery"
+                            v-slot="classesResponse: { data: ClassesResponse }"
                         >
-                            <td>
-                                {{ (classesResponse.data.classes as ClassDTO[]).filter((c) => c.id == i.classId)[0] }}
-                            </td>
-                            <td>{{ (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName }}</td>
-                            <td class="text-right">
-                                <div>
-                                    <v-btn
-                                        color="green"
-                                        @click="acceptRequest"
-                                        class="mr-2"
-                                    >
-                                        {{ t("accept") }}
-                                    </v-btn>
-                                    <v-btn
-                                        color="red"
-                                        @click="denyRequest"
-                                    >
-                                        {{ t("deny") }}
-                                    </v-btn>
-                                </div>
-                            </td>
-                        </tr>
-                    </using-query-result>
+                            <tr
+                                v-for="i in invitationsResponse.data.invitations as TeacherInvitationDTO[]"
+                                :key="i.classId"
+                            >
+                                <td>
+                                    {{
+                                        (classesResponse.data.classes as ClassDTO[]).filter((c) => c.id == i.classId)[0]
+                                    }}
+                                </td>
+                                <td>
+                                    {{ (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName }}
+                                </td>
+                                <td class="text-right">
+                                    <div>
+                                        <v-btn
+                                            color="green"
+                                            @click="acceptRequest"
+                                            class="mr-2"
+                                        >
+                                            {{ t("accept") }}
+                                        </v-btn>
+                                        <v-btn
+                                            color="red"
+                                            @click="denyRequest"
+                                        >
+                                            {{ t("deny") }}
+                                        </v-btn>
+                                    </div>
+                                </td>
+                            </tr>
+                        </using-query-result>
                     </using-query-result>
                 </tbody>
             </v-table>
