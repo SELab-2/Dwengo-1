@@ -66,21 +66,6 @@ function checkEnabled(properties: MaybeRefOrGetter<unknown>[]): boolean {
     return properties.every(prop => !!toValue(prop));
 }
 
-function toValues(
-    classid: MaybeRefOrGetter<string | undefined>,
-    assignmentNumber: MaybeRefOrGetter<number | undefined>,
-    groupNumber: MaybeRefOrGetter<number | undefined>,
-    submissionNumber: MaybeRefOrGetter<number | undefined>,
-    full: MaybeRefOrGetter<boolean>,
-) {
-    return {
-        cid: toValue(classid),
-        an: toValue(assignmentNumber),
-        gn: toValue(groupNumber),
-        sn: toValue(submissionNumber),
-        f: toValue(full),
-    };
-}
 export function useSubmissionsQuery(
     hruid: MaybeRefOrGetter<string | undefined>,
     language: MaybeRefOrGetter<Language | undefined>,
