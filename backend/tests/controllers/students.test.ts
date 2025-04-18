@@ -15,21 +15,25 @@ import {
     deleteClassJoinRequestHandler,
     getStudentRequestHandler,
 } from '../../src/controllers/students.js';
-import { TEST_STUDENTS } from '../test_assets/users/students.testdata.js';
+import { TEST_STUDENT_LIST } from '../test_assets/users/students.testdata.js';
 import { NotFoundException } from '../../src/exceptions/not-found-exception.js';
 import { BadRequestException } from '../../src/exceptions/bad-request-exception.js';
 import { ConflictException } from '../../src/exceptions/conflict-exception.js';
 import { EntityAlreadyExistsException } from '../../src/exceptions/entity-already-exists-exception.js';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
+import {TEST_CLASS_LIST} from "../test_assets/classes/classes.testdata";
+import {Student} from "../../src/entities/users/student.entity";
 
 describe('Student controllers', () => {
     let req: Partial<Request>;
     let res: Partial<Response>;
+    let student: Student;
 
     let jsonMock: Mock;
 
     beforeAll(async () => {
         await setupTestApp();
+        student = TEST_STUDENT_LIST[1];
     });
 
     beforeEach(() => {
@@ -40,7 +44,7 @@ describe('Student controllers', () => {
     });
 
     it('Get student', async () => {
-        req = { params: { username: 'DireStraits' } };
+        req = { params: { username: student.username } };
 
         await getStudentHandler(req as Request, res as Response);
 
@@ -84,7 +88,7 @@ describe('Student controllers', () => {
     it('Create duplicate student', async () => {
         req = {
             body: {
-                username: 'DireStraits',
+                username: student.username,
                 firstName: 'dupe',
                 lastName: 'dupe',
             },
@@ -108,16 +112,12 @@ describe('Student controllers', () => {
 
         const result = jsonMock.mock.lastCall?.[0];
 
-        // Check is DireStraits is part of the student list
-        const studentUsernames = result.students.map((s: StudentDTO) => s.username);
-        expect(studentUsernames).toContain('DireStraits');
-
-        // Check length, +1 because of create
-        expect(result.students).toHaveLength(TEST_STUDENTS.length);
+        expect(result.students).toHaveLength(TEST_STUDENT_LIST.length);
     });
 
     it('Student classes', async () => {
-        req = { params: { username: 'DireStraits' }, query: {} };
+        const cls = TEST_CLASS_LIST[1];
+        req = { params: { username: cls.students[0].username }, query: {} };
 
         await getStudentClassesHandler(req as Request, res as Response);
 

@@ -17,15 +17,20 @@ import { EntityAlreadyExistsException } from '../../src/exceptions/entity-alread
 import { getStudentRequestsHandler } from '../../src/controllers/students.js';
 import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { getClassHandler } from '../../src/controllers/classes';
+import {TEST_TEACHER_LIST} from "../test_assets/users/teachers.testdata";
+import {TEST_CLASS_LIST} from "../test_assets/classes/classes.testdata";
+import {Teacher} from "../../src/entities/users/teacher.entity";
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
     let res: Partial<Response>;
+    let teacher: Teacher;
 
     let jsonMock: Mock;
 
     beforeAll(async () => {
         await setupTestApp();
+        teacher = TEST_TEACHER_LIST[0];
     });
 
     beforeEach(() => {
@@ -36,11 +41,14 @@ describe('Teacher controllers', () => {
     });
 
     it('Get teacher', async () => {
-        req = { params: { username: 'FooFighters' } };
+        req = { params: { username: teacher.username } };
 
         await getTeacherHandler(req as Request, res as Response);
 
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ teacher: expect.anything() }));
+
+        const result = jsonMock.mock.lastCall?.[0];
+        expect(result.teacher).toEqual(teacher);
     });
 
     it('Teacher not found', async () => {
@@ -80,9 +88,9 @@ describe('Teacher controllers', () => {
     it('Create duplicate student', async () => {
         req = {
             body: {
-                username: 'FooFighters',
-                firstName: 'Dave',
-                lastName: 'Grohl',
+                username: teacher.username,
+                firstName: 'dupe',
+                lastName: 'dupe',
             },
         };
 
@@ -104,8 +112,7 @@ describe('Teacher controllers', () => {
 
         const result = jsonMock.mock.lastCall?.[0];
 
-        const teacherUsernames = result.teachers.map((s: TeacherDTO) => s.username);
-        expect(teacherUsernames).toContain('testleerkracht1');
+        expect(result.teachers).toContainEqual(teacher);
 
         expect(result.teachers).toHaveLength(5);
     });
@@ -117,8 +124,9 @@ describe('Teacher controllers', () => {
     });
 
     it('Get teacher classes', async () => {
+        const cls = TEST_CLASS_LIST[0];
         req = {
-            params: { username: 'testleerkracht1' },
+            params: { username: cls.teachers[0].username },
             query: { full: 'true' },
         };
 

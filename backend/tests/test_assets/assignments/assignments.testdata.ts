@@ -3,8 +3,15 @@ import { Assignment } from '../../../src/entities/assignments/assignment.entity'
 import { Class } from '../../../src/entities/classes/class.entity';
 import { Language } from '@dwengo-1/common/util/language';
 
-export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assignment[] {
-    const assignment01 = em.create(Assignment, {
+let assignment01: Assignment;
+let assignment02: Assignment;
+let assignment03: Assignment;
+let assignment04: Assignment;
+
+export let TEST_ASSIGNMENT_LIST: Assignment[];
+
+export function makeTestAssignments(em: EntityManager, classes: Class[]): Assignment[] {
+    assignment01 = em.create(Assignment, {
         within: classes[0],
         id: 1,
         title: 'dire straits',
@@ -14,7 +21,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         groups: [],
     });
 
-    const assignment02 = em.create(Assignment, {
+    assignment02 = em.create(Assignment, {
         within: classes[1],
         id: 2,
         title: 'tool',
@@ -24,7 +31,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         groups: [],
     });
 
-    const assignment03 = em.create(Assignment, {
+    assignment03 = em.create(Assignment, {
         within: classes[0],
         id: 3,
         title: 'delete',
@@ -34,7 +41,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         groups: [],
     });
 
-    const assignment04 = em.create(Assignment, {
+    assignment04 = em.create(Assignment, {
         within: classes[0],
         id: 4,
         title: 'another assignment',
@@ -44,5 +51,6 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         groups: [],
     });
 
-    return [assignment01, assignment02, assignment03, assignment04];
+    TEST_ASSIGNMENT_LIST = [assignment01, assignment02, assignment03, assignment04];
+    return TEST_ASSIGNMENT_LIST;
 }
