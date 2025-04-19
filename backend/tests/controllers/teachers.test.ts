@@ -96,7 +96,7 @@ describe('Teacher controllers', () => {
     });
 
     it('Teacher list', async () => {
-        req = { query: { full: 'true' } };
+        req = { query: { full: 'false' } };
 
         await getAllTeachersHandler(req as Request, res as Response);
 
@@ -104,8 +104,7 @@ describe('Teacher controllers', () => {
 
         const result = jsonMock.mock.lastCall?.[0];
 
-        const teacherUsernames = result.teachers.map((s: TeacherDTO) => s.username);
-        expect(teacherUsernames).toContain('testleerkracht1');
+        expect(result.teachers).toContain('testleerkracht1');
 
         expect(result.teachers).toHaveLength(5);
     });

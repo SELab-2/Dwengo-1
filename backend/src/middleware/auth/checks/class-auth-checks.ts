@@ -1,11 +1,12 @@
 import {authorize} from "./auth-checks";
 import {AuthenticationInfo} from "../authentication-info";
 import {AuthenticatedRequest} from "../authenticated-request";
-import {getClass} from "../../../services/classes";
+import {fetchClass, getClass} from "../../../services/classes";
+import {mapToUsername} from "../../../interfaces/user";
 
 async function teaches(teacherUsername: string, classId: string): Promise<boolean> {
-    const clazz = await getClass(classId);
-    return clazz !== null && teacherUsername in clazz.teachers;
+    const clazz = await fetchClass(classId);
+    return clazz.teachers.map(mapToUsername).includes(teacherUsername);
 }
 
 /**
@@ -20,7 +21,7 @@ export const onlyAllowStudentHimselfAndTeachersOfClass = authorize(
         } else if (auth.accountType === "teacher") {
             return teaches(auth.username, req.params.classId);
         }
-            return false;
+        return false;
 
     }
 );
@@ -41,13 +42,11 @@ export const onlyAllowTeacherOfClass = authorize(
 export const onlyAllowIfInClass = authorize(
     async (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
         const classId = req.params.classId ?? req.params.classid ?? req.params.id;
-        const clazz = await getClass(classId);
-        if (clazz === null) {
-            return false;
-        } else if (auth.accountType === "teacher") {
-            return auth.username in clazz.teachers;
+        const clazz = await fetchClass(classId);
+        if (auth.accountType === "teacher") {
+            return clazz.teachers.map(mapToUsername).includes(auth.username);
         }
-        return auth.username in clazz.students;
+        return clazz.students.map(mapToUsername).includes(auth.username);
     }
 );
 
@@ -57,13 +56,11 @@ export const onlyAllowIfInClass = authorize(
 export const onlyAllowOwnClassInBody = authorize(
     async (auth, req) => {
         const classId = (req.body as {class: string})?.class;
-        const clazz = await getClass(classId);
+        const clazz = await fetchClass(classId);
 
-        if (clazz === null) {
-            return false;
-        } else if (auth.accountType === "teacher") {
-            return auth.username in clazz.teachers;
+        if (auth.accountType === "teacher") {
+            return clazz.teachers.map(mapToUsername).includes(auth.username);
         }
-        return auth.username in clazz.students;
+        return clazz.students.map(mapToUsername).includes(auth.username);
     }
 );

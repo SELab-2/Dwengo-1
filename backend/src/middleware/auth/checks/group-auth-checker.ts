@@ -1,6 +1,7 @@
 import {authorize} from "./auth-checks";
-import {getClass} from "../../../services/classes";
-import {getGroup} from "../../../services/groups";
+import {fetchClass, getClass} from "../../../services/classes";
+import {fetchGroup, getGroup} from "../../../services/groups";
+import {mapToUsername} from "../../../interfaces/user";
 
 /**
  * Expects the path to contain the path parameters 'classid', 'assignmentid' and 'groupid'.
@@ -14,11 +15,11 @@ export const onlyAllowIfHasAccessToGroup = authorize(
             req.params as { classid: string, assignmentid: number, groupid: number };
 
         if (auth.accountType === "teacher") {
-            const clazz = await getClass(classId);
-            return auth.username in clazz!.teachers;
+            const clazz = await fetchClass(classId);
+            return clazz.teachers.map(mapToUsername).includes(auth.username);
         } else { // user is student
-            const group = await getGroup(classId, assignmentId, groupId, false);
-            return group === null ? false : auth.username in (group.members as string[]);
+            const group = await fetchGroup(classId, assignmentId, groupId, false);
+            return clazz.students.map(mapToUsername).includes(auth.username);
         }
     }
 );

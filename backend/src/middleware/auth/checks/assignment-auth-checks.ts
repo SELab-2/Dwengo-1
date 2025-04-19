@@ -1,7 +1,8 @@
 import {authorize} from "./auth-checks";
-import {getAssignment} from "../../../services/assignments";
-import {getClass} from "../../../services/classes";
+import {fetchAssignment, getAssignment} from "../../../services/assignments";
+import {fetchClass, getClass} from "../../../services/classes";
 import {getAllGroups} from "../../../services/groups";
+import {mapToUsername} from "../../../interfaces/user";
 
 /**
  * Expects the path to contain the path parameters 'classId' and 'id' (meaning the ID of the assignment).
@@ -12,15 +13,13 @@ import {getAllGroups} from "../../../services/groups";
 export const onlyAllowIfHasAccessToAssignment = authorize(
     async (auth, req) => {
         const { classid: classId, id: assignmentId } = req.params as { classid: string, id: number };
-        const assignment = await getAssignment(classId, assignmentId);
-        if (assignment === null) {
-            return false;
-        } else if (auth.accountType === "teacher") {
-            const clazz = await getClass(assignment.class);
-            return auth.username in clazz!.teachers;
+        const assignment = await fetchAssignment(classId, assignmentId);
+        if (auth.accountType === "teacher") {
+            const clazz = await fetchClass(assignment.class);
+            return clazz.teachers.map(mapToUsername).includes(auth.username);
         } else {
             const groups = await getAllGroups(classId, assignmentId, false);
-            return groups.some(group => auth.username in (group.members as string[]));
+            return groups.some(group => group.members.map(mapToUsername).includes(auth.username) );
         }
     }
 );
