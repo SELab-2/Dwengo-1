@@ -61,10 +61,6 @@ function clearAuthState(): void {
 function setUserAuthInfo(newUser: User | null): void {
     authState.user = newUser;
     authState.accessToken = newUser?.access_token ?? null;
-
-    if (newUser === null) {
-        authStorage.deleteActiveRole();
-    }
 }
 
 /**
@@ -121,10 +117,14 @@ async function renewToken(): Promise<User | null> {
  * End the session of the current user.
  */
 async function logout(): Promise<void> {
+    console.log("LOGOUT");
     const activeRole = authStorage.getActiveRole();
     if (activeRole) {
         await (await getUserManagers())[activeRole].signoutRedirect();
         authStorage.deleteActiveRole();
+        clearAuthState();
+    } else {
+        console.log("No active role!!");
     }
 }
 
