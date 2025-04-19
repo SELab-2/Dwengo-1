@@ -1,5 +1,5 @@
-import { SubmissionController, type SubmissionResponse } from '@/controllers/submissions';
-import type { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
+import { SubmissionController, type SubmissionResponse } from "@/controllers/submissions";
+import type { SubmissionDTO } from "@dwengo-1/common/interfaces/submission";
 import {
     QueryClient,
     useMutation,
@@ -7,11 +7,11 @@ import {
     useQuery,
     useQueryClient,
     type UseQueryReturnType,
-} from '@tanstack/vue-query';
-import { computed, type MaybeRefOrGetter, toValue } from 'vue';
-import { LEARNING_PATH_KEY } from '@/queries/learning-paths.ts';
-import { LEARNING_OBJECT_KEY } from '@/queries/learning-objects.ts';
-import { Language } from '@dwengo-1/common/util/language';
+} from "@tanstack/vue-query";
+import { computed, type MaybeRefOrGetter, toValue } from "vue";
+import { LEARNING_PATH_KEY } from "@/queries/learning-paths.ts";
+import { LEARNING_OBJECT_KEY } from "@/queries/learning-objects.ts";
+import { Language } from "@dwengo-1/common/util/language";
 
 export const SUBMISSION_KEY = "submissions";
 
@@ -54,8 +54,8 @@ export async function invalidateAllSubmissionKeys(
                 submissionNumber,
             ].filter((arg) => arg !== undefined);
             return queryClient.invalidateQueries({ queryKey: queryKey });
-        })
-    )
+        }),
+    );
 
     await queryClient.invalidateQueries({
         queryKey: ["submissions", hruid, language, version, classid, assignmentNumber, groupNumber].filter(

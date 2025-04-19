@@ -14,8 +14,7 @@
     const submissionData = computed<SubmissionData | undefined>({
         get: () => props.submissionData,
         set: (v?: SubmissionData): void => {
-          if (v)
-            emit("update:submissionData", v)
+            if (v) emit("update:submissionData", v);
         },
     });
 
