@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
-    import { onMounted, ref } from "vue";
+    import { onMounted, ref, watchEffect } from "vue";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import type { TeacherInvitationData, TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
@@ -14,6 +14,8 @@
         useRespondTeacherInvitationMutation,
         useTeacherInvitationsReceivedQuery,
     } from "@/queries/teacher-invitations";
+    import { useDisplay } from "vuetify";
+    import { createVuetify } from "vuetify";
 
     const { t } = useI18n();
 
@@ -135,6 +137,34 @@
         await navigator.clipboard.writeText(code.value);
         copied.value = true;
     }
+
+    // Custom breakpoints
+    const customBreakpoints = {
+        xs: 0,
+        sm: 500,
+        md: 1370,
+        lg: 1400,
+        xl: 1600,
+    };
+
+    // logic for small screens
+    const display = useDisplay();
+
+    // Reactive variables to hold custom logic based on breakpoints
+    const isMdAndDown = ref(false);
+
+    watchEffect(() => {
+        // Custom breakpoint logic
+        isMdAndDown.value = display.width.value < customBreakpoints.md;
+    });
+
+    // Code display dialog logic
+    const viewCodeDialog = ref(false);
+    const selectedCode = ref("");
+    function openCodeDialog(codeToView: string) {
+        selectedCode.value = codeToView;
+        viewCodeDialog.value = true;
+    }
 </script>
 <template>
     <main>
@@ -163,12 +193,13 @@
                 >
                     <v-row
                         no-gutters
-                        fluid
+                        class="custom-breakpoint"
                     >
                         <v-col
                             cols="12"
                             sm="6"
                             md="6"
+                            class="responsive-col"
                         >
                             <v-table class="table">
                                 <thead>
@@ -194,7 +225,16 @@
                                                 <v-icon end> mdi-menu-right </v-icon>
                                             </v-btn>
                                         </td>
-                                        <td>{{ c.id }}</td>
+                                        <td>
+                                            <span v-if="!isMdAndDown">{{ c.id }}</span>
+                                            <span
+                                                v-else
+                                                style="cursor: pointer"
+                                                @click="openCodeDialog(c.id)"
+                                                ><v-icon icon="mdi-eye"></v-icon
+                                            ></span>
+                                        </td>
+
                                         <td>{{ c.students.length }}</td>
                                     </tr>
                                 </tbody>
@@ -204,6 +244,7 @@
                             cols="12"
                             sm="6"
                             md="6"
+                            class="responsive-col"
                         >
                             <div>
                                 <h2>{{ t("createClass") }}</h2>
@@ -279,6 +320,7 @@
             <h1 class="title">
                 {{ t("invitations") }}
             </h1>
+            <v-container fluid class="ma-4">
             <v-table class="table">
                 <thead>
                     <tr>
@@ -331,6 +373,7 @@
                     </using-query-result>
                 </tbody>
             </v-table>
+        </v-container>
         </div>
         <v-snackbar
             v-model="snackbar.visible"
@@ -339,6 +382,42 @@
         >
             {{ snackbar.message }}
         </v-snackbar>
+        <v-dialog
+            v-model="viewCodeDialog"
+            max-width="400px"
+        >
+            <v-card>
+                <v-card-title class="headline">{{ t("code") }}</v-card-title>
+                <v-card-text>
+                    <v-text-field
+                        v-model="selectedCode"
+                        readonly
+                        append-inner-icon="mdi-content-copy"
+                        @click:append-inner="copyToClipboard"
+                    ></v-text-field>
+                    <v-slide-y-transition>
+                        <div
+                            v-if="copied"
+                            class="text-center mt-2"
+                        >
+                            {{ t("copied") }}
+                        </div>
+                    </v-slide-y-transition>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        text
+                        @click="
+                            viewCodeDialog = false;
+                            copied = false;
+                        "
+                    >
+                        {{ t("close") }}
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </main>
 </template>
 <style scoped>
@@ -406,7 +485,7 @@
         margin-left: 30px;
     }
 
-    @media screen and (max-width: 800px) {
+    @media screen and (max-width: 850px) {
         h1 {
             text-align: center;
             padding-left: 0;
@@ -428,6 +507,19 @@
             align-items: center;
             justify-content: center;
             margin: 5px;
+        }
+
+        .custom-breakpoint {
+            flex-direction: column !important;
+        }
+
+        .table {
+            width: 100%;
+        }
+
+        .responsive-col {
+            max-width: 100% !important;
+            flex-basis: 100% !important;
         }
     }
 </style>
