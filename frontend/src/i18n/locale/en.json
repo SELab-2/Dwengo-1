@@ -77,5 +77,16 @@
     "wrong": "something went wrong",
     "created": "created",
     "callbackLoading": "You are being logged in...",
-    "loginUnexpectedError": "Login failed"
+    "loginUnexpectedError": "Login failed",
+    "submitSolution": "Submit solution",
+    "submitNewSolution": "Submit new solution",
+    "markAsDone": "Mark as completed",
+    "groupSubmissions": "This group's submissions",
+    "taskCompleted": "Task completed.",
+    "submittedBy": "Submitted by",
+    "timestamp": "Timestamp",
+    "loadSubmission": "Load",
+    "noSubmissionsYet": "No submissions yet.",
+    "viewAsGroup": "View progress of group...",
+    "assignLearningPath": "assign"
 }

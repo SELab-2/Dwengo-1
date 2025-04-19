@@ -5,7 +5,7 @@ import { getLearningObjectController } from "@/controllers/controllers.ts";
 import type { LearningObject } from "@/data-objects/learning-objects/learning-object.ts";
 import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
 
-const LEARNING_OBJECT_KEY = "learningObject";
+export const LEARNING_OBJECT_KEY = "learningObject";
 const learningObjectController = getLearningObjectController();
 
 export function useLearningObjectMetadataQuery(

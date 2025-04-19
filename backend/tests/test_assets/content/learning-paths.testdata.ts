@@ -1,100 +1,236 @@
 import { EntityManager } from '@mikro-orm/core';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity';
 import { Language } from '@dwengo-1/common/util/language';
-import { LearningPathTransition } from '../../../src/entities/content/learning-path-transition.entity';
-import { LearningPathNode } from '../../../src/entities/content/learning-path-node.entity';
+import { mapToLearningPath } from '../../../src/services/learning-paths/learning-path-service';
+import { envVars, getEnvVar } from '../../../src/util/envVars';
+import { LearningPath as LearningPathDTO } from '@dwengo-1/common/interfaces/learning-content';
+import {
+    testLearningObject01,
+    testLearningObject02,
+    testLearningObject03,
+    testLearningObject04,
+    testLearningObject05,
+    testLearningObjectEssayQuestion,
+    testLearningObjectMultipleChoice,
+    testLearningObjectPnNotebooks,
+} from './learning-objects.testdata';
 
-export function makeTestLearningPaths(em: EntityManager): LearningPath[] {
-    const learningPathNode01: LearningPathNode = new LearningPathNode();
-    const learningPathNode02: LearningPathNode = new LearningPathNode();
-    const learningPathNode03: LearningPathNode = new LearningPathNode();
-    const learningPathNode04: LearningPathNode = new LearningPathNode();
-    const learningPathNode05: LearningPathNode = new LearningPathNode();
+export function makeTestLearningPaths(_em: EntityManager): LearningPath[] {
+    const learningPath01 = mapToLearningPath(testLearningPath01, []);
+    const learningPath02 = mapToLearningPath(testLearningPath02, []);
 
-    const transitions01: LearningPathTransition = new LearningPathTransition();
-    const transitions02: LearningPathTransition = new LearningPathTransition();
-    const transitions03: LearningPathTransition = new LearningPathTransition();
-    const transitions04: LearningPathTransition = new LearningPathTransition();
-    const transitions05: LearningPathTransition = new LearningPathTransition();
+    const partiallyDatabasePartiallyDwengoApiLearningPath = mapToLearningPath(testPartiallyDatabaseAndPartiallyDwengoApiLearningPath, []);
+    const learningPathWithConditions = mapToLearningPath(testLearningPathWithConditions, []);
 
-    transitions01.condition = 'true';
-    transitions01.next = learningPathNode02;
-
-    transitions02.condition = 'true';
-    transitions02.next = learningPathNode02;
-
-    transitions03.condition = 'true';
-    transitions03.next = learningPathNode04;
-
-    transitions04.condition = 'true';
-    transitions04.next = learningPathNode05;
-
-    transitions05.condition = 'true';
-    transitions05.next = learningPathNode05;
-
-    learningPathNode01.instruction = '';
-    learningPathNode01.language = Language.English;
-    learningPathNode01.learningObjectHruid = 'id01';
-    learningPathNode01.startNode = true;
-    learningPathNode01.transitions = [transitions01];
-    learningPathNode01.version = 1;
-
-    learningPathNode02.instruction = '';
-    learningPathNode02.language = Language.English;
-    learningPathNode02.learningObjectHruid = 'id02';
-    learningPathNode02.startNode = false;
-    learningPathNode02.transitions = [transitions02];
-    learningPathNode02.version = 1;
-
-    learningPathNode03.instruction = '';
-    learningPathNode03.language = Language.English;
-    learningPathNode03.learningObjectHruid = 'id03';
-    learningPathNode03.startNode = true;
-    learningPathNode03.transitions = [transitions03];
-    learningPathNode03.version = 1;
-
-    learningPathNode04.instruction = '';
-    learningPathNode04.language = Language.English;
-    learningPathNode04.learningObjectHruid = 'id04';
-    learningPathNode04.startNode = false;
-    learningPathNode04.transitions = [transitions04];
-    learningPathNode04.version = 1;
-
-    learningPathNode05.instruction = '';
-    learningPathNode05.language = Language.English;
-    learningPathNode05.learningObjectHruid = 'id05';
-    learningPathNode05.startNode = false;
-    learningPathNode05.transitions = [transitions05];
-    learningPathNode05.version = 1;
-
-    const nodes01: LearningPathNode[] = [
-        // LearningPathNode01,
-        // LearningPathNode02,
-    ];
-    const learningPath01 = em.create(LearningPath, {
-        hruid: 'id01',
-        language: Language.English,
-        admins: [],
-        title: 'repertoire Tool',
-        description: 'all about Tool',
-        image: null,
-        nodes: nodes01,
-    });
-
-    const nodes02: LearningPathNode[] = [
-        // LearningPathNode03,
-        // LearningPathNode04,
-        // LearningPathNode05,
-    ];
-    const learningPath02 = em.create(LearningPath, {
-        hruid: 'id02',
-        language: Language.English,
-        admins: [],
-        title: 'repertoire Dire Straits',
-        description: 'all about Dire Straits',
-        image: null,
-        nodes: nodes02,
-    });
-
-    return [learningPath01, learningPath02];
+    return [learningPath01, learningPath02, partiallyDatabasePartiallyDwengoApiLearningPath, learningPathWithConditions];
 }
+
+const nowString = new Date().toString();
+
+export const testLearningPath01: LearningPathDTO = {
+    keywords: 'test',
+    target_ages: [16, 17, 18],
+    hruid: `${getEnvVar(envVars.UserContentPrefix)}id01`,
+    language: Language.English,
+    title: 'repertoire Tool',
+    description: 'all about Tool',
+    nodes: [
+        {
+            learningobject_hruid: testLearningObject01.hruid,
+            language: testLearningObject01.language,
+            version: testLearningObject01.version,
+            start_node: true,
+            created_at: nowString,
+            updatedAt: nowString,
+            transitions: [
+                {
+                    next: {
+                        hruid: testLearningObject02.hruid,
+                        language: testLearningObject02.language,
+                        version: testLearningObject02.version,
+                    },
+                },
+            ],
+        },
+        {
+            learningobject_hruid: testLearningObject02.hruid,
+            language: testLearningObject02.language,
+            version: testLearningObject02.version,
+            created_at: nowString,
+            updatedAt: nowString,
+            transitions: [],
+        },
+    ],
+};
+
+export const testLearningPath02: LearningPathDTO = {
+    keywords: 'test',
+    target_ages: [16, 17, 18],
+    hruid: `${getEnvVar(envVars.UserContentPrefix)}id02`,
+    language: Language.English,
+    title: 'repertoire Dire Straits',
+    description: 'all about Dire Straits',
+    nodes: [
+        {
+            learningobject_hruid: testLearningObject03.hruid,
+            language: testLearningObject03.language,
+            version: testLearningObject03.version,
+            start_node: true,
+            created_at: nowString,
+            updatedAt: nowString,
+            transitions: [
+                {
+                    next: {
+                        hruid: testLearningObject04.hruid,
+                        language: testLearningObject04.language,
+                        version: testLearningObject04.version,
+                    },
+                },
+            ],
+        },
+        {
+            learningobject_hruid: testLearningObject04.hruid,
+            language: testLearningObject04.language,
+            version: testLearningObject04.version,
+            created_at: nowString,
+            updatedAt: nowString,
+            transitions: [
+                {
+                    next: {
+                        hruid: testLearningObject05.hruid,
+                        language: testLearningObject05.language,
+                        version: testLearningObject05.version,
+                    },
+                },
+            ],
+        },
+        {
+            learningobject_hruid: testLearningObject05.hruid,
+            language: testLearningObject05.language,
+            version: testLearningObject05.version,
+            created_at: nowString,
+            updatedAt: nowString,
+            transitions: [],
+        },
+    ],
+};
+
+export const testPartiallyDatabaseAndPartiallyDwengoApiLearningPath: LearningPathDTO = {
+    hruid: `${getEnvVar(envVars.UserContentPrefix)}pn_werking`,
+    title: 'Werken met notebooks',
+    language: Language.Dutch,
+    description: 'Een korte inleiding tot Python notebooks. Hoe ga je gemakkelijk en efficiënt met de notebooks aan de slag?',
+    keywords: 'Python KIKS Wiskunde STEM AI',
+    target_ages: [14, 15, 16, 17, 18],
+    nodes: [
+        {
+            learningobject_hruid: testLearningObjectPnNotebooks.hruid,
+            language: testLearningObjectPnNotebooks.language,
+            version: testLearningObjectPnNotebooks.version,
+            start_node: true,
+            created_at: nowString,
+            updatedAt: nowString,
+            transitions: [
+                {
+                    default: true,
+                    next: {
+                        hruid: 'pn_werkingnotebooks2',
+                        language: Language.Dutch,
+                        version: 3,
+                    },
+                },
+            ],
+        },
+        {
+            learningobject_hruid: 'pn_werkingnotebooks2',
+            language: Language.Dutch,
+            version: 3,
+            created_at: nowString,
+            updatedAt: nowString,
+            transitions: [
+                {
+                    default: true,
+                    next: {
+                        hruid: 'pn_werkingnotebooks3',
+                        language: Language.Dutch,
+                        version: 3,
+                    },
+                },
+            ],
+        },
+        {
+            learningobject_hruid: 'pn_werkingnotebooks3',
+            language: Language.Dutch,
+            version: 3,
+            created_at: nowString,
+            updatedAt: nowString,
+            transitions: [],
+        },
+    ],
+};
+
+export const testLearningPathWithConditions: LearningPathDTO = {
+    hruid: `${getEnvVar(envVars.UserContentPrefix)}test_conditions`,
+    language: Language.English,
+    title: 'Example learning path with conditional transitions',
+    description: 'This learning path was made for the purpose of testing conditional transitions',
+    keywords: 'test',
+    target_ages: [10, 11, 12, 13, 14, 15, 16, 17, 18],
+    nodes: [
+        {
+            learningobject_hruid: testLearningObjectMultipleChoice.hruid,
+            language: testLearningObjectMultipleChoice.language,
+            version: testLearningObjectMultipleChoice.version,
+            start_node: true,
+            created_at: nowString,
+            updatedAt: nowString,
+            transitions: [
+                {
+                    // If the answer to the first question was the first one (It's difficult to follow along):
+                    condition: '$[?(@[0] == 0)]',
+                    next: {
+                        //... we let the student do an extra exercise.
+                        hruid: testLearningObject01.hruid,
+                        language: testLearningObject01.language,
+                        version: testLearningObject01.version,
+                    },
+                },
+                {
+                    // If the answer to the first question was the second one (I can follow along):
+                    condition: '$[?(@[0] == 1)]',
+                    next: {
+                        //... we let the student right through to the final question.
+                        hruid: testLearningObjectEssayQuestion.hruid,
+                        language: testLearningObjectEssayQuestion.language,
+                        version: testLearningObjectEssayQuestion.version,
+                    },
+                },
+            ],
+        },
+        {
+            learningobject_hruid: testLearningObject01.hruid,
+            language: testLearningObject01.language,
+            version: testLearningObject01.version,
+            created_at: nowString,
+            updatedAt: nowString,
+            transitions: [
+                {
+                    default: true,
+                    next: {
+                        hruid: testLearningObjectEssayQuestion.hruid,
+                        language: testLearningObjectEssayQuestion.language,
+                        version: testLearningObjectEssayQuestion.version,
+                    },
+                },
+            ],
+        },
+        {
+            learningobject_hruid: testLearningObjectEssayQuestion.hruid,
+            language: testLearningObjectEssayQuestion.language,
+            version: testLearningObjectEssayQuestion.version,
+            created_at: nowString,
+            updatedAt: nowString,
+            transitions: [],
+        },
+    ],
+};

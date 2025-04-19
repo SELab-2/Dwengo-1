@@ -77,5 +77,16 @@
     "wrong": "quelque chose n'a pas fonctionné",
     "created": "créé",
     "callbackLoading": "Vous serez connecté...",
-    "loginUnexpectedError": "La connexion a échoué"
+    "loginUnexpectedError": "La connexion a échoué",
+    "submitSolution": "Soumettre la solution",
+    "submitNewSolution": "Soumettre une nouvelle solution",
+    "markAsDone": "Marquer comme terminé",
+    "groupSubmissions": "Soumissions de ce groupe",
+    "taskCompleted": "Tâche terminée.",
+    "submittedBy": "Soumis par",
+    "timestamp": "Horodatage",
+    "loadSubmission": "Charger",
+    "noSubmissionsYet": "Pas encore de soumissions.",
+    "viewAsGroup": "Voir la progression du groupe...",
+    "assignLearningPath": "donner comme tâche"
 }

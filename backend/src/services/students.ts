@@ -7,7 +7,7 @@ import {
     getSubmissionRepository,
 } from '../data/repositories.js';
 import { mapToClassDTO } from '../interfaces/class.js';
-import { mapToGroupDTO, mapToShallowGroupDTO } from '../interfaces/group.js';
+import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToStudent, mapToStudentDTO } from '../interfaces/student.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
 import { getAllAssignments } from './assignments.js';
@@ -18,8 +18,8 @@ import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { fetchClass } from './classes.js';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
 import { ClassDTO } from '@dwengo-1/common/interfaces/class';
-import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
-import { GroupDTO } from '@dwengo-1/common/interfaces/group';
+import { AssignmentDTO, AssignmentDTOId } from '@dwengo-1/common/interfaces/assignment';
+import { GroupDTO, GroupDTOId } from '@dwengo-1/common/interfaces/group';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
@@ -46,6 +46,11 @@ export async function fetchStudent(username: string): Promise<Student> {
     }
 
     return user;
+}
+
+export async function fetchStudents(usernames: string[]): Promise<Student[]> {
+    const members = await Promise.all(usernames.map(async (username) => await fetchStudent(username)));
+    return members;
 }
 
 export async function getStudent(username: string): Promise<StudentDTO> {
@@ -93,7 +98,7 @@ export async function getStudentClasses(username: string, full: boolean): Promis
     return classes.map((cls) => cls.classId!);
 }
 
-export async function getStudentAssignments(username: string, full: boolean): Promise<AssignmentDTO[]> {
+export async function getStudentAssignments(username: string, full: boolean): Promise<AssignmentDTO[] | AssignmentDTOId[]> {
     const student = await fetchStudent(username);
 
     const classRepository = getClassRepository();
@@ -102,17 +107,17 @@ export async function getStudentAssignments(username: string, full: boolean): Pr
     return (await Promise.all(classes.map(async (cls) => await getAllAssignments(cls.classId!, full)))).flat();
 }
 
-export async function getStudentGroups(username: string, full: boolean): Promise<GroupDTO[]> {
+export async function getStudentGroups(username: string, full: boolean): Promise<GroupDTO[] | GroupDTOId[]> {
     const student = await fetchStudent(username);
 
     const groupRepository = getGroupRepository();
     const groups = await groupRepository.findAllGroupsWithStudent(student);
 
     if (full) {
-        return groups.map(mapToGroupDTO);
+        return groups.map((group) => mapToGroupDTO(group, group.assignment.within));
     }
 
-    return groups.map(mapToShallowGroupDTO);
+    return groups.map((group) => mapToGroupDTOId(group, group.assignment.within));
 }
 
 export async function getStudentSubmissions(username: string, full: boolean): Promise<SubmissionDTO[] | SubmissionDTOId[]> {

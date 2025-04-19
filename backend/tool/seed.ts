@@ -15,7 +15,7 @@ import { makeTestStudents } from '../tests/test_assets/users/students.testdata.j
 import { makeTestTeachers } from '../tests/test_assets/users/teachers.testdata.js';
 import { getLogger, Logger } from '../src/logging/initalize.js';
 import { Collection } from '@mikro-orm/core';
-import { Group } from '../dist/entities/assignments/group.entity.js';
+import { Group } from '../src/entities/assignments/group.entity';
 
 const logger: Logger = getLogger();
 
@@ -34,6 +34,7 @@ export async function seedDatabase(): Promise<void> {
     const learningPaths = makeTestLearningPaths(em);
     const classes = makeTestClasses(em, students, teachers);
     const assignments = makeTestAssignemnts(em, classes);
+
     const groups = makeTestGroups(em, students, assignments);
 
     assignments[0].groups = new Collection<Group>(groups.slice(0, 3));

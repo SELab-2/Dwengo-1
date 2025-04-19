@@ -6,6 +6,9 @@ import { Language } from '@dwengo-1/common/util/language';
 
 @Entity({ repository: () => SubmissionRepository })
 export class Submission {
+    @PrimaryKey({ type: 'integer', autoincrement: true })
+    submissionNumber?: number;
+
     @PrimaryKey({ type: 'string' })
     learningObjectHruid!: string;
 
@@ -15,11 +18,8 @@ export class Submission {
     })
     learningObjectLanguage!: Language;
 
-    @PrimaryKey({ type: 'numeric' })
+    @PrimaryKey({ type: 'numeric', autoincrement: false })
     learningObjectVersion = 1;
-
-    @PrimaryKey({ type: 'integer', autoincrement: true })
-    submissionNumber?: number;
 
     @ManyToOne({
         entity: () => Group,

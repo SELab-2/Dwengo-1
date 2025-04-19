@@ -1,14 +1,14 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { setupTestApp } from '../../setup-tests';
 import { LearningObject } from '../../../src/entities/content/learning-object.entity';
-import { getLearningObjectRepository, getLearningPathRepository } from '../../../src/data/repositories';
-import learningObjectExample from '../../test-assets/learning-objects/pn-werkingnotebooks/pn-werkingnotebooks-example';
 import learningObjectService from '../../../src/services/learning-objects/learning-object-service';
 import { envVars, getEnvVar } from '../../../src/util/envVars';
-import { LearningPath } from '../../../src/entities/content/learning-path.entity';
-import learningPathExample from '../../test-assets/learning-paths/pn-werking-example';
-import { LearningObjectIdentifierDTO, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import { LearningObjectIdentifierDTO, LearningPath as LearningPathDTO, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
 import { Language } from '@dwengo-1/common/util/language';
+import { testLearningObjectPnNotebooks } from '../../test_assets/content/learning-objects.testdata';
+import { testPartiallyDatabaseAndPartiallyDwengoApiLearningPath } from '../../test_assets/content/learning-paths.testdata';
+import { RequiredEntityData } from '@mikro-orm/core';
+import { getHtmlRenderingForTestLearningObject } from '../../test-utils/get-html-rendering';
 
 const EXPECTED_DWENGO_LEARNING_OBJECT_TITLE = 'Werken met notebooks';
 const DWENGO_TEST_LEARNING_OBJECT_ID: LearningObjectIdentifierDTO = {
@@ -23,25 +23,20 @@ const DWENGO_TEST_LEARNING_PATH_ID: LearningPathIdentifier = {
 };
 const DWENGO_TEST_LEARNING_PATH_HRUIDS = new Set(['pn_werkingnotebooks', 'pn_werkingnotebooks2', 'pn_werkingnotebooks3']);
 
-async function initExampleData(): Promise<{ learningObject: LearningObject; learningPath: LearningPath }> {
-    const learningObjectRepo = getLearningObjectRepository();
-    const learningPathRepo = getLearningPathRepository();
-    const learningObject = learningObjectExample.createLearningObject();
-    const learningPath = learningPathExample.createLearningPath();
-    await learningObjectRepo.save(learningObject);
-    await learningPathRepo.save(learningPath);
-    return { learningObject, learningPath };
-}
-
 describe('LearningObjectService', () => {
-    let exampleLearningObject: LearningObject;
-    let exampleLearningPath: LearningPath;
+    let exampleLearningObject: RequiredEntityData<LearningObject>;
+    let exampleLearningPath: LearningPathDTO;
+    let exampleLearningPathId: LearningPathIdentifier;
 
     beforeAll(async () => {
         await setupTestApp();
-        const exampleData = await initExampleData();
-        exampleLearningObject = exampleData.learningObject;
-        exampleLearningPath = exampleData.learningPath;
+        exampleLearningObject = testLearningObjectPnNotebooks;
+        exampleLearningPath = testPartiallyDatabaseAndPartiallyDwengoApiLearningPath;
+
+        exampleLearningPathId = {
+            hruid: exampleLearningPath.hruid,
+            language: exampleLearningPath.language as Language,
+        };
     });
 
     describe('getLearningObjectById', () => {
@@ -69,7 +64,7 @@ describe('LearningObjectService', () => {
             const result = await learningObjectService.getLearningObjectHTML(exampleLearningObject);
             expect(result).not.toBeNull();
             // Set newlines so your tests are platform-independent.
-            expect(result).toEqual(learningObjectExample.getHTMLRendering().replace(/\r\n/g, '\n'));
+            expect(result).toEqual(getHtmlRenderingForTestLearningObject(exampleLearningObject).replace(/\r\n/g, '\n'));
         });
         it(
             'returns the same HTML as the Dwengo API when queried with the identifier of a learning object that does ' +
@@ -97,8 +92,8 @@ describe('LearningObjectService', () => {
 
     describe('getLearningObjectsFromPath', () => {
         it('returns all learning objects when a learning path in the database is queried', async () => {
-            const result = await learningObjectService.getLearningObjectsFromPath(exampleLearningPath);
-            expect(result.map((it) => it.key)).toEqual(exampleLearningPath.nodes.map((it) => it.learningObjectHruid));
+            const result = await learningObjectService.getLearningObjectsFromPath(exampleLearningPathId);
+            expect(result.map((it) => it.key)).toEqual(exampleLearningPath.nodes.map((it) => it.learningobject_hruid));
         });
         it('also returns all learning objects when a learning path from the Dwengo API is queried', async () => {
             const result = await learningObjectService.getLearningObjectsFromPath(DWENGO_TEST_LEARNING_PATH_ID);
@@ -115,8 +110,8 @@ describe('LearningObjectService', () => {
 
     describe('getLearningObjectIdsFromPath', () => {
         it('returns all learning objects when a learning path in the database is queried', async () => {
-            const result = await learningObjectService.getLearningObjectIdsFromPath(exampleLearningPath);
-            expect(result).toEqual(exampleLearningPath.nodes.map((it) => it.learningObjectHruid));
+            const result = await learningObjectService.getLearningObjectIdsFromPath(exampleLearningPathId);
+            expect(result).toEqual(exampleLearningPath.nodes.map((it) => it.learningobject_hruid));
         });
         it('also returns all learning object hruids when a learning path from the Dwengo API is queried', async () => {
             const result = await learningObjectService.getLearningObjectIdsFromPath(DWENGO_TEST_LEARNING_PATH_ID);

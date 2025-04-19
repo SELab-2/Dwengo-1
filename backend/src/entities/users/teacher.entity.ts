@@ -5,6 +5,6 @@ import { TeacherRepository } from '../../data/users/teacher-repository.js';
 
 @Entity({ repository: () => TeacherRepository })
 export class Teacher extends User {
-    @ManyToMany(() => Class)
+    @ManyToMany({ entity: () => Class, mappedBy: 'teachers' })
     classes!: Collection<Class>;
 }

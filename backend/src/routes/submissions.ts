@@ -5,7 +5,7 @@ const router = express.Router({ mergeParams: true });
 // Root endpoint used to search objects
 router.get('/', getSubmissionsHandler);
 
-router.post('/:id', createSubmissionHandler);
+router.post('/', createSubmissionHandler);
 
 // Information about an submission with id 'id'
 router.get('/:id', getSubmissionHandler);
