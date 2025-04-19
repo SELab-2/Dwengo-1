@@ -84,5 +84,8 @@
     "yes": "oui",
     "teachers": "enseignants",
     "accepted": "acceptée",
-    "rejected": "rejetée"
+    "rejected": "rejetée",
+    "enterUsername": "entrez le nom d'utilisateur de l'enseignant que vous souhaitez inviter",
+    "username": "Nom d'utilisateur",
+    "invite": "inviter"
 }

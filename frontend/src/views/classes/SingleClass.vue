@@ -10,8 +10,8 @@
     import { useTeacherJoinRequestsQuery, useUpdateJoinRequestMutation } from "@/queries/teachers";
     import type { ClassJoinRequestDTO } from "@dwengo-1/common/interfaces/class-join-request";
     import { useClassDeleteStudentMutation, useClassQuery, useClassStudentsQuery } from "@/queries/classes";
-import { useCreateTeacherInvitationMutation } from "@/queries/teacher-invitations";
-import type { TeacherInvitationData } from "@dwengo-1/common/interfaces/teacher-invitation";
+    import { useCreateTeacherInvitationMutation } from "@/queries/teacher-invitations";
+    import type { TeacherInvitationData } from "@dwengo-1/common/interfaces/teacher-invitation";
 
     const { t } = useI18n();
 
@@ -21,7 +21,7 @@ import type { TeacherInvitationData } from "@dwengo-1/common/interfaces/teacher-
     const isLoading = ref(false);
     const isError = ref(false);
     const errorMessage = ref<string>("");
-    const usernameTeacher = ref<string|undefined>(undefined);
+    const usernameTeacher = ref<string | undefined>(undefined);
 
     // Queries used to access the backend and catch loading or errors
 
@@ -109,19 +109,23 @@ import type { TeacherInvitationData } from "@dwengo-1/common/interfaces/teacher-
         );
     }
 
-    function sentInvite(): void{
+    function sentInvite(): void {
         if (!usernameTeacher.value) {
             showSnackbar(t("please enter a valid username"), "error");
             return;
         }
-        const data : TeacherInvitationData = {sender: username.value!, receiver: usernameTeacher.value, class: classId};
+        const data: TeacherInvitationData = {
+            sender: username.value!,
+            receiver: usernameTeacher.value,
+            class: classId,
+        };
         sentInviteMutation(data, {
             onSuccess: () => {
                 usernameTeacher.value = "";
             },
             onError: (e) => {
-                showSnackbar(t("failed: " + e.message), "error");
-            }
+                showSnackbar(t("failed") + ": " + e.message, "error");
+            },
         });
     }
 
@@ -251,8 +255,8 @@ import type { TeacherInvitationData } from "@dwengo-1/common/interfaces/teacher-
             </div>
             <div>
                 <div class="join">
-                    <h2>{{ t("inviteTeacher") }}</h2>
-                    <p>{{ t("enter the username of the teacher you would like to invite") }}</p>
+                    <h2>{{ t("invitations") }}</h2>
+                    <p>{{ t("enterUsername") }}</p>
 
                     <v-sheet
                         class="pa-4 sheet"
@@ -262,7 +266,7 @@ import type { TeacherInvitationData } from "@dwengo-1/common/interfaces/teacher-
                             <v-text-field
                                 :label="`${t('username')}`"
                                 v-model="usernameTeacher"
-                                :placeholder="`${t('enter username')}`"
+                                :placeholder="`${t('username')}`"
                                 variant="outlined"
                             ></v-text-field>
                             <v-btn
