@@ -70,7 +70,7 @@ export async function createOrUpdateTeacher(userData: TeacherDTO): Promise<Teach
     await getTeacherRepository().upsert({
         username: userData.username,
         firstName: userData.firstName,
-        lastName: userData.lastName
+        lastName: userData.lastName,
     });
     return userData;
 }

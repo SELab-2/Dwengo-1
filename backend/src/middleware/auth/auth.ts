@@ -48,7 +48,7 @@ const idpConfigs = {
 const verifyJwtToken = expressjwt({
     secret: async (_: express.Request, token: jwt.Jwt | undefined) => {
         if (!token?.payload || !(token.payload as JwtPayload).iss) {
-            throw new UnauthorizedException("Invalid token.")
+            throw new UnauthorizedException('Invalid token.');
         }
 
         const issuer = (token.payload as JwtPayload).iss;

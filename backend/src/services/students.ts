@@ -71,7 +71,7 @@ export async function createOrUpdateStudent(userData: StudentDTO): Promise<Stude
     await getStudentRepository().upsert({
         username: userData.username,
         firstName: userData.firstName,
-        lastName: userData.lastName
+        lastName: userData.lastName,
     });
     return userData;
 }

@@ -141,7 +141,7 @@ apiClient.interceptors.request.use(
 // Registering interceptor to refresh the token when a request failed because it was expired.
 apiClient.interceptors.response.use(
     (response) => response,
-    async (error: AxiosError<{ message?: string, inner?: {message?: string} }>) => {
+    async (error: AxiosError<{ message?: string; inner?: { message?: string } }>) => {
         if (error.response?.status === 401) {
             // If the user should already be logged in, his token is probably just expired.
             if (isLoggedIn.value) {
