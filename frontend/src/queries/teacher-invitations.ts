@@ -59,8 +59,8 @@ export function useTeacherInvitationQuery(
     data: MaybeRefOrGetter<TeacherInvitationData | undefined>,
 ): UseQueryReturnType<TeacherInvitationResponse, Error> {
     return useQuery({
-        queryKey: teacherInvitationQueryKey(toValue(data)!),
-        queryFn: async () => controller.getBy(toValue(data)!),
+        queryKey: teacherInvitationQueryKey(toValue(data)),
+        queryFn: async () => controller.getBy(toValue(data)),
         enabled: () => Boolean(toValue(data)),
     });
 }
