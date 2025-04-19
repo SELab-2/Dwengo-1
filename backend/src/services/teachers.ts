@@ -57,12 +57,16 @@ export async function getTeacher(username: string): Promise<TeacherDTO> {
     return mapToTeacherDTO(user);
 }
 
-export async function createTeacher(userData: TeacherDTO): Promise<TeacherDTO> {
+export async function createOrUpdateTeacher(userData: TeacherDTO, options?: { preventOverwrite?: boolean }): Promise<TeacherDTO> {
     const teacherRepository: TeacherRepository = getTeacherRepository();
 
     const newTeacher = mapToTeacher(userData);
-    await teacherRepository.save(newTeacher, { preventOverwrite: true });
+    await teacherRepository.save(newTeacher, { preventOverwrite: options?.preventOverwrite ?? true });
     return mapToTeacherDTO(newTeacher);
+}
+
+export async function createTeacher(userData: TeacherDTO): Promise<TeacherDTO> {
+    return await createOrUpdateTeacher(userData, { preventOverwrite: true });
 }
 
 export async function deleteTeacher(username: string): Promise<TeacherDTO> {

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import {
     createClassJoinRequest,
-    createStudent,
+    createOrUpdateStudent,
     deleteClassJoinRequest,
     deleteStudent,
     getAllStudents,
@@ -42,7 +42,7 @@ export async function createStudentHandler(req: Request, res: Response): Promise
 
     const userData = req.body as StudentDTO;
 
-    const student = await createStudent(userData);
+    const student = await createOrUpdateStudent(userData);
     res.json({ student });
 }
 

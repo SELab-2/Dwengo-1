@@ -53,12 +53,16 @@ export async function getStudent(username: string): Promise<StudentDTO> {
     return mapToStudentDTO(user);
 }
 
-export async function createStudent(userData: StudentDTO): Promise<StudentDTO> {
+export async function createOrUpdateStudent(userData: StudentDTO, options?: { preventOverwrite: boolean}): Promise<StudentDTO> {
     const studentRepository = getStudentRepository();
 
     const newStudent = mapToStudent(userData);
-    await studentRepository.save(newStudent, { preventOverwrite: true });
+    await studentRepository.save(newStudent, { preventOverwrite: options?.preventOverwrite ?? true });
     return userData;
+}
+
+export async function createStudent(userData: StudentDTO): Promise<StudentDTO> {
+    return createOrUpdateStudent(userData, { preventOverwrite: true });
 }
 
 export async function deleteStudent(username: string): Promise<StudentDTO> {
