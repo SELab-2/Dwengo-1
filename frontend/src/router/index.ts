@@ -73,12 +73,6 @@ const router = createRouter({
             meta: { requiresAuth: true },
         },
         {
-            path: "/assignment/create",
-            name: "CreateAssigment",
-            component: CreateAssignment,
-            meta: { requiresAuth: true },
-        },
-        {
             path: "/assignment",
             meta: {requiresAuth: true},
             children: [
