@@ -15,16 +15,6 @@ import type {AssignmentDTO} from "@dwengo-1/common/interfaces/assignment";
 import {useCreateAssignmentMutation} from "@/queries/assignments.ts";
 import {useRoute} from "vue-router";
 
-/***
- TODO: when clicking the assign button from lp page pass the lp-hruid in a query like this:
- router.push({
- path: "/assignment/create,
- query: {
- ...route.query,
- lp: hruid,
- },
- });
- */
 
 const route = useRoute();
 const router = useRouter();
@@ -56,10 +46,10 @@ const classesQueryResults = useTeacherClassesQuery(username, true);
 const selectedClass = ref(undefined);
 
 const assignmentTitle = ref('');
-const selectedLearningPath = ref(route.query.lp || undefined);
+const selectedLearningPath = ref(route.query.hruid || undefined);
 
 // Disable combobox when learningPath prop is passed
-const lpIsSelected = route.query.lp !== undefined;
+const lpIsSelected = route.query.hruid !== undefined;
 const deadline = ref(null);
 const description = ref('');
 const groups = ref<string[][]>([]);
@@ -75,7 +65,7 @@ watch(selectedClass, () => {
     groups.value = [];
 });
 
-const {mutate, isSuccess} = useCreateAssignmentMutation();
+const {mutate, data, isSuccess} = useCreateAssignmentMutation();
 
 async function submitFormHandler(): Promise<void> {
     const {valid} = await form.value.validate();
@@ -92,7 +82,7 @@ async function submitFormHandler(): Promise<void> {
     };
 
     mutate({cid: assignmentDTO.within, data: assignmentDTO});
-    if (isSuccess) await router.push("/user/assignment");
+    if (isSuccess) await router.push(`/assignment/class/${data.value?.assignment.within}/${data.value?.assignment.id}`);
 }
 </script>
 

@@ -21,8 +21,8 @@ function useGroupsWithProgress(
     groups: Ref<GroupDTO[]>,
     hruid: Ref<string>,
     language: Ref<string>
-): { groupProgressMap: Record<string, number> } {
-    const groupProgressMap: Record<string, number> = reactive({});
+): { groupProgressMap: Record<number, number> } {
+    const groupProgressMap: Record<number, number> = reactive({});
 
     watchEffect(() => {
         // Clear existing entries to avoid stale data
@@ -30,14 +30,17 @@ function useGroupsWithProgress(
             delete groupProgressMap[key];
         }
 
-        const lang = language.value as Language;
+        const lang = ref(language.value as Language);
 
         groups.value.forEach((group) => {
-            const groupKey = group.groupNumber.toString();
-
-            const query = useGetLearningPathQuery(hruid.value, lang, {
+            const groupKey = group.groupNumber;
+            const forGroup = ref({
                 forGroup: groupKey,
+                assignmentNo: assignmentId,
+                classId: classId,
             });
+
+            const query = useGetLearningPathQuery(hruid.value, lang, forGroup);
 
             const data = query.data.value;
 
