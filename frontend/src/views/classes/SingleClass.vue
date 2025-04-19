@@ -10,6 +10,8 @@
     import { useTeacherJoinRequestsQuery, useUpdateJoinRequestMutation } from "@/queries/teachers";
     import type { ClassJoinRequestDTO } from "@dwengo-1/common/interfaces/class-join-request";
     import { useClassDeleteStudentMutation, useClassQuery, useClassStudentsQuery } from "@/queries/classes";
+import { useCreateTeacherInvitationMutation } from "@/queries/teacher-invitations";
+import type { TeacherInvitationData } from "@dwengo-1/common/interfaces/teacher-invitation";
 
     const { t } = useI18n();
 
@@ -19,6 +21,7 @@
     const isLoading = ref(false);
     const isError = ref(false);
     const errorMessage = ref<string>("");
+    const usernameTeacher = ref<string|undefined>(undefined);
 
     // Queries used to access the backend and catch loading or errors
 
@@ -32,6 +35,8 @@
     const { mutate } = useUpdateJoinRequestMutation();
     // Handle deletion of a student from the class
     const { mutate: deleteStudentMutation } = useClassDeleteStudentMutation();
+    // Handle creation of teacher invites
+    const { mutate: sentInviteMutation } = useCreateTeacherInvitationMutation();
 
     // Load current user before rendering the page
     onMounted(async () => {
@@ -102,6 +107,22 @@
                 },
             },
         );
+    }
+
+    function sentInvite(): void{
+        if (!usernameTeacher.value) {
+            showSnackbar(t("please enter a valid username"), "error");
+            return;
+        }
+        const data : TeacherInvitationData = {sender: username.value!, receiver: usernameTeacher.value, class: classId};
+        sentInviteMutation(data, {
+            onSuccess: () => {
+                usernameTeacher.value = "";
+            },
+            onError: (e) => {
+                showSnackbar(t("failed: " + e.message), "error");
+            }
+        });
     }
 
     // Default of snackbar values
@@ -227,6 +248,34 @@
                         </v-row>
                     </v-container>
                 </using-query-result>
+            </div>
+            <div>
+                <div class="join">
+                    <h2>{{ t("inviteTeacher") }}</h2>
+                    <p>{{ t("enter the username of the teacher you would like to invite") }}</p>
+
+                    <v-sheet
+                        class="pa-4 sheet"
+                        max-width="400"
+                    >
+                        <v-form @submit.prevent>
+                            <v-text-field
+                                :label="`${t('username')}`"
+                                v-model="usernameTeacher"
+                                :placeholder="`${t('enter username')}`"
+                                variant="outlined"
+                            ></v-text-field>
+                            <v-btn
+                                class="mt-4"
+                                color="#f6faf2"
+                                type="submit"
+                                @click="sentInvite"
+                                block
+                                >{{ t("invite") }}</v-btn
+                            >
+                        </v-form>
+                    </v-sheet>
+                </div>
             </div>
             <v-dialog
                 v-model="dialog"
