@@ -75,5 +75,7 @@
     "sent": "envoyé",
     "failed": "échoué",
     "wrong": "quelque chose n'a pas fonctionné",
-    "created": "créé"
+    "created": "créé",
+    "callbackLoading": "Vous serez connecté...",
+    "loginUnexpectedError": "La connexion a échoué"
 }

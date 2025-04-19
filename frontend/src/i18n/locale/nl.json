@@ -75,5 +75,7 @@
     "sent": "verzonden",
     "failed": "mislukt",
     "wrong": "er ging iets verkeerd",
-    "created": "gecreëerd"
+    "created": "gecreëerd",
+    "callbackLoading": "Je wordt ingelogd...",
+    "loginUnexpectedError": "Inloggen mislukt"
 }

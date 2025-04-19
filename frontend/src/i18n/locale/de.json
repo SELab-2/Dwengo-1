@@ -75,5 +75,7 @@
     "sent": "sent",
     "failed": "gescheitert",
     "wrong": "etwas ist schief gelaufen",
-    "created": "erstellt"
+    "created": "erstellt",
+    "callbackLoading": "Sie werden angemeldet...",
+    "loginUnexpectedError": "Anmeldung fehlgeschlagen"
 }
