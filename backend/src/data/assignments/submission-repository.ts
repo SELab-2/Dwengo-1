@@ -61,32 +61,30 @@ export class SubmissionRepository extends DwengoEntityRepository<Submission> {
 
     /**
      * Looks up all submissions for the given learning object which were submitted as part of the given assignment.
-     * When forStudentUsername is set, only the submissions of the given user's group are shown.
      */
-    public async findAllSubmissionsForLearningObjectAndAssignment(
-        loId: LearningObjectIdentifier,
-        assignment: Assignment,
-        forStudentUsername?: string
-    ): Promise<Submission[]> {
-        const onBehalfOf = forStudentUsername
-            ? {
-                  assignment,
-                  members: {
-                      $some: {
-                          username: forStudentUsername,
-                      },
-                  },
-              }
-            : {
-                  assignment,
-              };
-
+    public async findAllSubmissionsForLearningObjectAndAssignment(loId: LearningObjectIdentifier, assignment: Assignment): Promise<Submission[]> {
         return this.findAll({
             where: {
                 learningObjectHruid: loId.hruid,
                 learningObjectLanguage: loId.language,
                 learningObjectVersion: loId.version,
-                onBehalfOf,
+                onBehalfOf: {
+                    assignment,
+                },
+            },
+        });
+    }
+
+    /**
+     * Looks up all submissions for the given learning object which were submitted by the given group
+     */
+    public async findAllSubmissionsForLearningObjectAndGroup(loId: LearningObjectIdentifier, group: Group): Promise<Submission[]> {
+        return this.findAll({
+            where: {
+                learningObjectHruid: loId.hruid,
+                learningObjectLanguage: loId.language,
+                learningObjectVersion: loId.version,
+                onBehalfOf: group,
             },
         });
     }
