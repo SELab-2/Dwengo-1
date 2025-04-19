@@ -117,14 +117,11 @@ async function renewToken(): Promise<User | null> {
  * End the session of the current user.
  */
 async function logout(): Promise<void> {
-    console.log("LOGOUT");
     const activeRole = authStorage.getActiveRole();
     if (activeRole) {
         await (await getUserManagers())[activeRole].signoutRedirect();
         authStorage.deleteActiveRole();
         clearAuthState();
-    } else {
-        console.log("No active role!!");
     }
 }
 
