@@ -1,10 +1,10 @@
 import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { LearningPath } from '../../entities/content/learning-path.entity.js';
 import { Language } from '@dwengo-1/common/util/language';
-import { LearningPathNode } from '../../entities/content/learning-path-node.entity';
+import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
 import { RequiredEntityData } from '@mikro-orm/core';
-import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity';
-import { EntityAlreadyExistsException } from '../../exceptions/entity-already-exists-exception';
+import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
+import { EntityAlreadyExistsException } from '../../exceptions/entity-already-exists-exception.js';
 
 export class LearningPathRepository extends DwengoEntityRepository<LearningPath> {
     public async findByHruidAndLanguage(hruid: string, language: Language): Promise<LearningPath | null> {

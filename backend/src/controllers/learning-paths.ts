@@ -5,8 +5,8 @@ import learningPathService from '../services/learning-paths/learning-path-servic
 import { Language } from '@dwengo-1/common/util/language';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
-import { Group } from '../entities/assignments/group.entity';
-import { getAssignmentRepository, getGroupRepository } from '../data/repositories';
+import { Group } from '../entities/assignments/group.entity.js';
+import { getAssignmentRepository, getGroupRepository } from '../data/repositories.js';
 
 /**
  * Fetch learning paths based on query parameters.
