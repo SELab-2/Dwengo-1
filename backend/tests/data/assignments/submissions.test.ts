@@ -92,7 +92,7 @@ describe('SubmissionRepository', () => {
     });
 
     it('should find only the submissions for a certain learning object and assignment made for the given group', async () => {
-        const group = await groupRepository.findByAssignmentAndGroupNumber(assignment!, 2);
+        const group = await groupRepository.findByAssignmentAndGroupNumber(assignment!, 21002);
         const result = await submissionRepository.findAllSubmissionsForLearningObjectAndGroup(loId, group!);
 
         expect(result).toHaveLength(1);

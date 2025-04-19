@@ -35,7 +35,7 @@ describe('AssignmentRepository', () => {
         const result = await assignmentRepository.findAllByResponsibleTeacher('testleerkracht1');
         const resultIds = result.map((it) => it.id).sort((a, b) => (a ?? 0) - (b ?? 0));
 
-        expect(resultIds).toEqual([21000, 21002, 21003]);
+        expect(resultIds).toEqual([21000, 21002, 21003, 21004]);
     });
 
     it('should not find removed assignment', async () => {

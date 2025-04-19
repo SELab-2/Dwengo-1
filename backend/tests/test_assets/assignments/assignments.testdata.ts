@@ -48,7 +48,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
 
     conditionalPathAssignment = em.create(Assignment, {
         within: getClassWithTestleerlingAndTestleerkracht(),
-        id: 1,
+        id: 21004,
         title: 'Assignment: Conditional Learning Path',
         description: 'You have to do the testing learning path with a condition.',
         learningPathHruid: testLearningPathWithConditions.hruid,
