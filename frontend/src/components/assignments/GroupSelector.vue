@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {ref, defineProps, defineEmits} from 'vue';
 import {useI18n} from 'vue-i18n';
-import {useClassStudentsQuery} from "@/queries/classes-temp.ts";
 import UsingQueryResult from "@/components/UsingQueryResult.vue";
 import type {StudentsResponse} from "@/controllers/students.ts";
+import {useClassStudentsQuery} from "@/queries/classes.ts";
 
 const props = defineProps<{
     classId: string | undefined
