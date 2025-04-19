@@ -1,8 +1,0 @@
-import { LearningObject } from '../../../src/entities/content/learning-object.entity';
-import { Attachment } from '../../../src/entities/content/attachment.entity';
-
-interface LearningObjectExample {
-    createLearningObject: () => LearningObject;
-    createAttachment: Record<string, (owner: LearningObject) => Attachment>;
-    getHTMLRendering: () => string;
-}

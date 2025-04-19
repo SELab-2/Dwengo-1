@@ -71,7 +71,7 @@ export default [
             'init-declarations': 'off',
             '@typescript-eslint/init-declarations': 'off',
             'max-params': 'off',
-            '@typescript-eslint/max-params': ['error', { max: 6 }],
+            '@typescript-eslint/max-params': 'off',
             '@typescript-eslint/member-ordering': 'error',
             '@typescript-eslint/method-signature-style': 'off', // Don't care about TypeScript strict mode.
             '@typescript-eslint/naming-convention': [
@@ -87,6 +87,7 @@ export default [
                     modifiers: ['const'],
                     format: ['camelCase', 'UPPER_CASE'],
                     trailingUnderscore: 'allow',
+                    leadingUnderscore: 'allow',
                 },
                 {
                     // Enforce that private members are prefixed with an underscore

@@ -1,5 +1,5 @@
 import { Submission } from '../entities/assignments/submission.entity.js';
-import { mapToGroupDTO } from './group.js';
+import { mapToGroupDTOId } from './group.js';
 import { mapToStudentDTO } from './student.js';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
 import { getSubmissionRepository } from '../data/repositories.js';
@@ -13,11 +13,10 @@ export function mapToSubmissionDTO(submission: Submission): SubmissionDTO {
             language: submission.learningObjectLanguage,
             version: submission.learningObjectVersion,
         },
-
         submissionNumber: submission.submissionNumber,
         submitter: mapToStudentDTO(submission.submitter),
         time: submission.submissionTime,
-        group: submission.onBehalfOf ? mapToGroupDTO(submission.onBehalfOf, submission.onBehalfOf.assignment.within) : undefined,
+        group: submission.onBehalfOf ? mapToGroupDTOId(submission.onBehalfOf, submission.onBehalfOf.assignment.within) : undefined,
         content: submission.content,
     };
 }
