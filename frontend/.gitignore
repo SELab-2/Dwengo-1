@@ -31,3 +31,7 @@ coverage
 
 test-results/
 playwright-report/
+
+backend/dwengo
+dwengo
+idp_data/*
