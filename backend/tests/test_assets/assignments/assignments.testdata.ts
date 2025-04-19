@@ -7,8 +7,8 @@ import { getClassWithTestleerlingAndTestleerkracht } from '../classes/classes.te
 
 export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assignment[] {
     assignment01 = em.create(Assignment, {
+        id: 21000,
         within: classes[0],
-        id: 1,
         title: 'dire straits',
         description: 'reading',
         learningPathHruid: 'id02',
@@ -17,8 +17,8 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
     });
 
     assignment02 = em.create(Assignment, {
+        id: 21001,
         within: classes[1],
-        id: 2,
         title: 'tool',
         description: 'reading',
         learningPathHruid: 'id01',
@@ -27,8 +27,8 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
     });
 
     assignment03 = em.create(Assignment, {
+        id: 21002,
         within: classes[0],
-        id: 3,
         title: 'delete',
         description: 'will be deleted',
         learningPathHruid: 'id02',
@@ -37,8 +37,8 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
     });
 
     assignment04 = em.create(Assignment, {
+        id: 21003,
         within: classes[0],
-        id: 4,
         title: 'another assignment',
         description: 'with a description',
         learningPathHruid: 'id01',
@@ -48,7 +48,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
 
     conditionalPathAssignment = em.create(Assignment, {
         within: getClassWithTestleerlingAndTestleerkracht(),
-        id: 1,
+        id: 21004,
         title: 'Assignment: Conditional Learning Path',
         description: 'You have to do the testing learning path with a condition.',
         learningPathHruid: testLearningPathWithConditions.hruid,

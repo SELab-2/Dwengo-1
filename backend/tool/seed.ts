@@ -34,6 +34,7 @@ export async function seedDatabase(): Promise<void> {
     const learningPaths = makeTestLearningPaths(em);
     const classes = makeTestClasses(em, students, teachers);
     const assignments = makeTestAssignemnts(em, classes);
+
     const groups = makeTestGroups(em, students, assignments);
 
     assignments[0].groups = new Collection<Group>(groups.slice(0, 3));
