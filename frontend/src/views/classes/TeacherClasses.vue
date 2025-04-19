@@ -15,7 +15,6 @@
         useTeacherInvitationsReceivedQuery,
     } from "@/queries/teacher-invitations";
     import { useDisplay } from "vuetify";
-    import { createVuetify } from "vuetify";
 
     const { t } = useI18n();
 
@@ -147,7 +146,7 @@
         xl: 1600,
     };
 
-    // logic for small screens
+    // Logic for small screens
     const display = useDisplay();
 
     // Reactive variables to hold custom logic based on breakpoints
@@ -163,7 +162,7 @@
     // Code display dialog logic
     const viewCodeDialog = ref(false);
     const selectedCode = ref("");
-    function openCodeDialog(codeToView: string) {
+    function openCodeDialog(codeToView: string): void {
         selectedCode.value = codeToView;
         viewCodeDialog.value = true;
     }

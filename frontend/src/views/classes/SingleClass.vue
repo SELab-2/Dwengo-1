@@ -12,7 +12,7 @@
     import { useClassDeleteStudentMutation, useClassQuery, useClassStudentsQuery } from "@/queries/classes";
     import { useCreateTeacherInvitationMutation } from "@/queries/teacher-invitations";
     import type { TeacherInvitationData } from "@dwengo-1/common/interfaces/teacher-invitation";
-import { useDisplay } from "vuetify";
+    import { useDisplay } from "vuetify";
 
     const { t } = useI18n();
 
@@ -153,7 +153,7 @@ import { useDisplay } from "vuetify";
         xl: 1600,
     };
 
-    // logic for small screens
+    // Logic for small screens
     const display = useDisplay();
 
     // Reactive variables to hold custom logic based on breakpoints
@@ -252,27 +252,38 @@ import { useDisplay } from "vuetify";
                                                 </td>
                                                 <td>
                                                     <span v-if="!isSmAndDown && !isMdAndDown">
-                                                    <v-btn
-                                                        @click="handleJoinRequest(jr, true)"
-                                                        class="mr-2"
-                                                        color="green"
-                                                    >
-                                                        {{ t("accept") }}</v-btn
-                                                    >
+                                                        <v-btn
+                                                            @click="handleJoinRequest(jr, true)"
+                                                            class="mr-2"
+                                                            color="green"
+                                                        >
+                                                            {{ t("accept") }}</v-btn
+                                                        >
 
-                                                    <v-btn
-                                                        @click="handleJoinRequest(jr, false)"
-                                                        class="mr-2"
-                                                        color="red"
-                                                    >
-                                                        {{ t("reject") }}
-                                                    </v-btn>
+                                                        <v-btn
+                                                            @click="handleJoinRequest(jr, false)"
+                                                            class="mr-2"
+                                                            color="red"
+                                                        >
+                                                            {{ t("reject") }}
+                                                        </v-btn>
                                                     </span>
                                                     <span v-else>
-                                                        <v-btn @click="handleJoinRequest(jr, true)" icon="mdi-check-circle" class="mr-2" color="green" variant="text"></v-btn>
-                                                        <v-btn @click="handleJoinRequest(jr, false)" icon="mdi-close-circle" class="mr-2" color="red" variant="text"></v-btn>
+                                                        <v-btn
+                                                            @click="handleJoinRequest(jr, true)"
+                                                            icon="mdi-check-circle"
+                                                            class="mr-2"
+                                                            color="green"
+                                                            variant="text"
+                                                        ></v-btn>
+                                                        <v-btn
+                                                            @click="handleJoinRequest(jr, false)"
+                                                            icon="mdi-close-circle"
+                                                            class="mr-2"
+                                                            color="red"
+                                                            variant="text"
+                                                        ></v-btn>
                                                     </span>
-                                                    
                                                 </td>
                                             </tr>
                                         </tbody>
