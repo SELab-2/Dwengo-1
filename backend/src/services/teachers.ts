@@ -61,7 +61,7 @@ export async function createTeacher(userData: TeacherDTO): Promise<TeacherDTO> {
     const teacherRepository: TeacherRepository = getTeacherRepository();
 
     const newTeacher = mapToTeacher(userData);
-    await teacherRepository.save(newTeacher);
+    await teacherRepository.save(newTeacher, { preventOverwrite: true });
 
     return mapToTeacherDTO(newTeacher);
 }
