@@ -152,10 +152,12 @@
 
     // Reactive variables to hold custom logic based on breakpoints
     const isMdAndDown = ref(false);
+    const isSmAndDown = ref(false);
 
     watchEffect(() => {
         // Custom breakpoint logic
         isMdAndDown.value = display.width.value < customBreakpoints.md;
+        isSmAndDown.value = display.width.value < customBreakpoints.sm;
     });
 
     // Code display dialog logic
@@ -320,60 +322,87 @@
             <h1 class="title">
                 {{ t("invitations") }}
             </h1>
-            <v-container fluid class="ma-4">
-            <v-table class="table">
-                <thead>
-                    <tr>
-                        <th class="header">{{ t("class") }}</th>
-                        <th class="header">{{ t("sender") }}</th>
-                        <th class="header"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <using-query-result
-                        :query-result="getInvitationsQuery"
-                        v-slot="invitationsResponse: { data: TeacherInvitationsResponse }"
-                    >
+            <v-container
+                fluid
+                class="ma-4"
+            >
+                <v-table class="table">
+                    <thead>
+                        <tr>
+                            <th class="header">{{ t("class") }}</th>
+                            <th class="header">{{ t("sender") }}</th>
+                            <th class="header">{{ t("accept") + "/" + t("reject") }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         <using-query-result
-                            :query-result="allClassesQuery"
-                            v-slot="classesResponse: { data: ClassesResponse }"
+                            :query-result="getInvitationsQuery"
+                            v-slot="invitationsResponse: { data: TeacherInvitationsResponse }"
                         >
-                            <tr
-                                v-for="i in invitationsResponse.data.invitations as TeacherInvitationDTO[]"
-                                :key="i.classId"
+                            <using-query-result
+                                :query-result="allClassesQuery"
+                                v-slot="classesResponse: { data: ClassesResponse }"
                             >
-                                <td>
-                                    {{
-                                        (classesResponse.data.classes as ClassDTO[]).filter((c) => c.id == i.classId)[0]
-                                            .displayName
-                                    }}
-                                </td>
-                                <td>
-                                    {{ (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName }}
-                                </td>
-                                <td class="text-right">
-                                    <div>
-                                        <v-btn
-                                            color="green"
-                                            @click="handleInvitation(i, true)"
-                                            class="mr-2"
-                                        >
-                                            {{ t("accept") }}
-                                        </v-btn>
-                                        <v-btn
-                                            color="red"
-                                            @click="handleInvitation(i, false)"
-                                        >
-                                            {{ t("deny") }}
-                                        </v-btn>
-                                    </div>
-                                </td>
-                            </tr>
+                                <tr
+                                    v-for="i in invitationsResponse.data.invitations as TeacherInvitationDTO[]"
+                                    :key="i.classId"
+                                >
+                                    <td>
+                                        {{
+                                            (classesResponse.data.classes as ClassDTO[]).filter(
+                                                (c) => c.id == i.classId,
+                                            )[0].displayName
+                                        }}
+                                    </td>
+                                    <td>
+                                        {{
+                                            (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName
+                                        }}
+                                    </td>
+                                    <td class="text-right">
+                                        <span v-if="!isSmAndDown">
+                                            <div>
+                                                <v-btn
+                                                    color="green"
+                                                    @click="handleInvitation(i, true)"
+                                                    class="mr-2"
+                                                >
+                                                    {{ t("accept") }}
+                                                </v-btn>
+                                                <v-btn
+                                                    color="red"
+                                                    @click="handleInvitation(i, false)"
+                                                >
+                                                    {{ t("deny") }}
+                                                </v-btn>
+                                            </div>
+                                        </span>
+                                        <span v-else>
+                                            <div>
+                                                <v-btn
+                                                    @click="handleInvitation(i, true)"
+                                                    class="mr-2"
+                                                    icon="mdi-check-circle"
+                                                    color="green"
+                                                    variant="text"
+                                                >
+                                                </v-btn>
+                                                <v-btn
+                                                    @click="handleInvitation(i, false)"
+                                                    class="mr-2"
+                                                    icon="mdi-close-circle"
+                                                    color="red"
+                                                    variant="text"
+                                                >
+                                                </v-btn></div
+                                        ></span>
+                                    </td>
+                                </tr>
+                            </using-query-result>
                         </using-query-result>
-                    </using-query-result>
-                </tbody>
-            </v-table>
-        </v-container>
+                    </tbody>
+                </v-table>
+            </v-container>
         </div>
         <v-snackbar
             v-model="snackbar.visible"

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
-    import { onMounted, ref } from "vue";
+    import { onMounted, ref, watchEffect } from "vue";
     import { useRoute } from "vue-router";
     import type { ClassResponse } from "@/controllers/classes";
     import type { JoinRequestsResponse, StudentsResponse } from "@/controllers/students";
@@ -12,6 +12,7 @@
     import { useClassDeleteStudentMutation, useClassQuery, useClassStudentsQuery } from "@/queries/classes";
     import { useCreateTeacherInvitationMutation } from "@/queries/teacher-invitations";
     import type { TeacherInvitationData } from "@dwengo-1/common/interfaces/teacher-invitation";
+import { useDisplay } from "vuetify";
 
     const { t } = useI18n();
 
@@ -142,6 +143,28 @@
         snackbar.value.color = color;
         snackbar.value.visible = true;
     }
+
+    // Custom breakpoints
+    const customBreakpoints = {
+        xs: 0,
+        sm: 500,
+        md: 1370,
+        lg: 1400,
+        xl: 1600,
+    };
+
+    // logic for small screens
+    const display = useDisplay();
+
+    // Reactive variables to hold custom logic based on breakpoints
+    const isSmAndDown = ref(false);
+    const isMdAndDown = ref(false);
+
+    watchEffect(() => {
+        // Custom breakpoint logic
+        isSmAndDown.value = display.width.value < customBreakpoints.sm;
+        isMdAndDown.value = display.width.value < customBreakpoints.md;
+    });
 </script>
 <template>
     <main>
@@ -228,6 +251,7 @@
                                                     {{ jr.requester.firstName + " " + jr.requester.lastName }}
                                                 </td>
                                                 <td>
+                                                    <span v-if="!isSmAndDown && !isMdAndDown">
                                                     <v-btn
                                                         @click="handleJoinRequest(jr, true)"
                                                         class="mr-2"
@@ -243,6 +267,12 @@
                                                     >
                                                         {{ t("reject") }}
                                                     </v-btn>
+                                                    </span>
+                                                    <span v-else>
+                                                        <v-btn @click="handleJoinRequest(jr, true)" icon="mdi-check-circle" class="mr-2" color="green" variant="text"></v-btn>
+                                                        <v-btn @click="handleJoinRequest(jr, false)" icon="mdi-close-circle" class="mr-2" color="red" variant="text"></v-btn>
+                                                    </span>
+                                                    
                                                 </td>
                                             </tr>
                                         </tbody>
