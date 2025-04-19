@@ -1,4 +1,4 @@
-import { HasStatusCode } from "./has-status-code";
+import { HasStatusCode } from './has-status-code';
 
 /**
  * Exceptions which are associated with a HTTP error code.

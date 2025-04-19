@@ -15,18 +15,26 @@
             await auth.handleLoginCallback();
             await router.replace("/user"); // Redirect to theme page
         } catch (error) {
-            errorMessage.value = `${ t('loginUnexpectedError') }: ${error}`;
+            errorMessage.value = `${t("loginUnexpectedError")}: ${error}`;
         }
     });
 </script>
 
 <template>
     <div class="callback">
-        <div class="callback-loading" v-if="!errorMessage">
+        <div
+            class="callback-loading"
+            v-if="!errorMessage"
+        >
             <v-progress-circular indeterminate></v-progress-circular>
             <p>{{ t("callbackLoading") }}</p>
         </div>
-        <v-alert icon="mdi-alert-circle" type="error" variant="elevated" v-if="errorMessage">
+        <v-alert
+            icon="mdi-alert-circle"
+            type="error"
+            variant="elevated"
+            v-if="errorMessage"
+        >
             {{ errorMessage }}
         </v-alert>
     </div>

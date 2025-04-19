@@ -4,7 +4,7 @@ import { AuthenticatedRequest } from '../middleware/auth/authenticated-request.j
 import { createOrUpdateStudent } from '../services/students.js';
 import { createOrUpdateTeacher } from '../services/teachers.js';
 import { envVars, getEnvVar } from '../util/envVars.js';
-import { Response } from "express";
+import { Response } from 'express';
 
 interface FrontendIdpConfig {
     authority: string;
@@ -43,20 +43,20 @@ export function getFrontendAuthConfig(): FrontendAuthConfig {
 export async function postHelloHandler(req: AuthenticatedRequest, res: Response): Promise<void> {
     const auth = req.auth;
     if (!auth) {
-        throw new UnauthorizedException("Cannot say hello when not authenticated.");
+        throw new UnauthorizedException('Cannot say hello when not authenticated.');
     }
     const userData = {
         id: auth.username,
         username: auth.username,
         firstName: auth.firstName ?? '',
-        lastName: auth.lastName ?? ''
+        lastName: auth.lastName ?? '',
     };
-    if (auth.accountType === "student") {
+    if (auth.accountType === 'student') {
         await createOrUpdateStudent(userData);
         logger.debug(`Synchronized student ${userData.username} with IDP`);
     } else {
         await createOrUpdateTeacher(userData);
         logger.debug(`Synchronized teacher ${userData.username} with IDP`);
     }
-    res.status(200).send({ message: "Welcome!" });
+    res.status(200).send({ message: 'Welcome!' });
 }
