@@ -25,9 +25,9 @@
 
     const {
         isPending: submissionIsPending,
-        isError: submissionFailed,
-        error: submissionError,
-        isSuccess: submissionSuccess,
+        // - isError: submissionFailed,
+        // - error: submissionError,
+        // - isSuccess: submissionSuccess,
         mutate: submitSolution,
     } = useCreateSubmissionMutation();
 
@@ -47,11 +47,11 @@
     });
 
     function submitCurrentAnswer(): void {
-        const { forGroup, assignmentNo, classId } = props.group!;
+        const { forGroup, assignmentNo, classId } = props.group;
         const currentUser: UserProfile = authService.authState.user!.profile;
         const learningObjectIdentifier: LearningObjectIdentifierDTO = {
             hruid: props.hruid,
-            language: props.language as Language,
+            language: props.language,
             version: props.version,
         };
         const submitter: StudentDTO = {

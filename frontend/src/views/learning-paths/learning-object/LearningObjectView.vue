@@ -9,7 +9,7 @@
     import LearningObjectContentView from "@/views/learning-paths/learning-object/content/LearningObjectContentView.vue";
     import LearningObjectSubmissionsView from "@/views/learning-paths/learning-object/submissions/LearningObjectSubmissionsView.vue";
 
-    const isStudent = computed(() => authService.authState.activeRole === "student");
+    const _isStudent = computed(() => authService.authState.activeRole === "student");
 
     const props = defineProps<{
         hruid: string;

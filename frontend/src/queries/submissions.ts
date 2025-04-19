@@ -1,19 +1,21 @@
-import { SubmissionController, type SubmissionResponse } from "@/controllers/submissions";
-import type { SubmissionDTO } from "@dwengo-1/common/interfaces/submission";
+import { SubmissionController, type SubmissionResponse } from '@/controllers/submissions';
+import type { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
 import {
     QueryClient,
     useMutation,
+    type UseMutationReturnType,
     useQuery,
     useQueryClient,
-    type UseMutationReturnType,
     type UseQueryReturnType,
-} from "@tanstack/vue-query";
-import { computed, toValue, type MaybeRefOrGetter } from "vue";
-import { LEARNING_PATH_KEY } from "@/queries/learning-paths.ts";
-import { LEARNING_OBJECT_KEY } from "@/queries/learning-objects.ts";
-import type { Language } from "@dwengo-1/common/util/language";
+} from '@tanstack/vue-query';
+import { computed, type MaybeRefOrGetter, toValue } from 'vue';
+import { LEARNING_PATH_KEY } from '@/queries/learning-paths.ts';
+import { LEARNING_OBJECT_KEY } from '@/queries/learning-objects.ts';
+import { Language } from '@dwengo-1/common/util/language';
 
 export const SUBMISSION_KEY = "submissions";
+
+type SubmissionQueryKey = ["submission", string, Language | undefined, number, string, number, number, number];
 
 function submissionQueryKey(
     hruid: string,
@@ -23,7 +25,7 @@ function submissionQueryKey(
     assignmentNumber: number,
     groupNumber: number,
     submissionNumber: number,
-) {
+): SubmissionQueryKey {
     return ["submission", hruid, language, version, classid, assignmentNumber, groupNumber, submissionNumber];
 }
 
@@ -39,19 +41,21 @@ export async function invalidateAllSubmissionKeys(
 ): Promise<void> {
     const keys = ["submission"];
 
-    for (const key of keys) {
-        const queryKey = [
-            key,
-            hruid,
-            language,
-            version,
-            classid,
-            assignmentNumber,
-            groupNumber,
-            submissionNumber,
-        ].filter((arg) => arg !== undefined);
-        await queryClient.invalidateQueries({ queryKey: queryKey });
-    }
+    await Promise.all(
+        keys.map(async (key) => {
+            const queryKey = [
+                key,
+                hruid,
+                language,
+                version,
+                classid,
+                assignmentNumber,
+                groupNumber,
+                submissionNumber,
+            ].filter((arg) => arg !== undefined);
+            return queryClient.invalidateQueries({ queryKey: queryKey });
+        })
+    )
 
     await queryClient.invalidateQueries({
         queryKey: ["submissions", hruid, language, version, classid, assignmentNumber, groupNumber].filter(

@@ -18,9 +18,7 @@
         version: number;
         group: { forGroup: number; assignmentNo: number; classId: string };
     }>();
-    const emit = defineEmits<{
-        (e: "update:submissionData", value: SubmissionData): void;
-    }>();
+    const emit = defineEmits<(e: "update:submissionData", value: SubmissionData) => void>();
 
     const submissionQuery = useSubmissionsQuery(
         () => props.hruid,
@@ -32,11 +30,11 @@
         () => true,
     );
 
-    function emitSubmissionData(submissionData: SubmissionData) {
+    function emitSubmissionData(submissionData: SubmissionData): void {
         emit("update:submissionData", submissionData);
     }
 
-    function emitSubmission(submission: SubmissionDTO) {
+    function emitSubmission(submission: SubmissionDTO): void {
         emitSubmissionData(JSON.parse(submission.content));
     }
 

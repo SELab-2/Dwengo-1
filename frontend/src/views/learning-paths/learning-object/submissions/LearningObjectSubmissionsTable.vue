@@ -8,9 +8,7 @@
     const props = defineProps<{
         allSubmissions: SubmissionDTO[];
     }>();
-    const emit = defineEmits<{
-        (e: "submission-selected", submission: SubmissionDTO): void;
-    }>();
+    const emit = defineEmits<(e: "submission-selected", submission: SubmissionDTO) => void>();
 
     const headers = computed(() => [
         { title: "#", value: "submissionNo", width: "50px" },
@@ -30,7 +28,7 @@
             })),
     );
 
-    function selectSubmission(submission: SubmissionDTO) {
+    function selectSubmission(submission: SubmissionDTO): void {
         emit("submission-selected", submission);
     }
 </script>
@@ -46,7 +44,7 @@
                 hide-default-footer
                 :no-data-text="t('noSubmissionsYet')"
             >
-                <template v-slot:item.action="{ item }">
+                <template v-slot:[`item.action`]="{ item }">
                     <v-btn
                         density="compact"
                         variant="plain"

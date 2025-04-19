@@ -1,20 +1,20 @@
 <script setup lang="ts">
-    import { Language } from "@/data-objects/language.ts";
-    import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
-    import { computed, type ComputedRef, ref } from "vue";
-    import type { LearningObject } from "@/data-objects/learning-objects/learning-object.ts";
-    import { useRoute, useRouter } from "vue-router";
-    import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
-    import { useI18n } from "vue-i18n";
-    import LearningPathSearchField from "@/components/LearningPathSearchField.vue";
-    import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
-    import { useLearningObjectListForPathQuery } from "@/queries/learning-objects.ts";
-    import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import authService from "@/services/auth/auth-service.ts";
-    import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
-    import LearningPathGroupSelector from "@/views/learning-paths/LearningPathGroupSelector.vue";
+import { Language } from '@/data-objects/language.ts';
+import type { LearningPath } from '@/data-objects/learning-paths/learning-path.ts';
+import { computed, type ComputedRef, ref } from 'vue';
+import type { LearningObject } from '@/data-objects/learning-objects/learning-object.ts';
+import { useRoute, useRouter } from 'vue-router';
+import LearningObjectView from '@/views/learning-paths/learning-object/LearningObjectView.vue';
+import { useI18n } from 'vue-i18n';
+import LearningPathSearchField from '@/components/LearningPathSearchField.vue';
+import { useGetLearningPathQuery } from '@/queries/learning-paths.ts';
+import { useLearningObjectListForPathQuery } from '@/queries/learning-objects.ts';
+import UsingQueryResult from '@/components/UsingQueryResult.vue';
+import authService from '@/services/auth/auth-service.ts';
+import { LearningPathNode } from '@/data-objects/learning-paths/learning-path-node.ts';
+import LearningPathGroupSelector from '@/views/learning-paths/LearningPathGroupSelector.vue';
 
-    const router = useRouter();
+const router = useRouter();
     const route = useRoute();
     const { t } = useI18n();
 
@@ -40,6 +40,7 @@
                 classId: query.value.classId,
             };
         }
+        return undefined
     });
 
     const learningPathQueryResult = useGetLearningPathQuery(props.hruid, props.language, forGroup);
@@ -108,15 +109,15 @@
 
     const forGroupQueryParam = computed<number | undefined>({
         get: () => route.query.forGroup,
-        set: (value: number | undefined) => {
-            let query = structuredClone(route.query);
+        set: async (value: number | undefined) => {
+            const query = structuredClone(route.query);
             query.forGroup = value;
-            router.push({ query });
+            await router.push({ query });
         },
     });
 
-    function assign() {
-        router.push({
+    async function assign(): Promise<void> {
+        await router.push({
             path: "/assignment/create",
             query: {
                 hruid: props.hruid,

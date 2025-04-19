@@ -9,18 +9,19 @@
         submissionData?: SubmissionData;
     }>();
 
-    const emit = defineEmits<{
-        (e: "update:submissionData", value: SubmissionData): void;
-    }>();
+    const emit = defineEmits<(e: "update:submissionData", value: SubmissionData) => void>();
 
     const submissionData = computed<SubmissionData | undefined>({
         get: () => props.submissionData,
-        set: (v?: SubmissionData) => (v ? emit("update:submissionData", v) : undefined),
+        set: (v?: SubmissionData): void => {
+          if (v)
+            emit("update:submissionData", v)
+        },
     });
 
     function forEachQuestion(
         doAction: (questionIndex: number, questionName: string, questionType: string, questionElement: Element) => void,
-    ) {
+    ): void {
         const questions = document.querySelectorAll(".gift-question");
         questions.forEach((question) => {
             const name = question.id.match(/gift-q(\d+)/)?.[1];
@@ -45,8 +46,8 @@
         });
     }
 
-    function setAnswers(answers: SubmissionData) {
-        forEachQuestion((index, name, type, element) => {
+    function setAnswers(answers: SubmissionData): void {
+        forEachQuestion((index, _name, type, element) => {
             const answer = answers[index];
             if (answer !== null && answer !== undefined) {
                 getGiftAdapterForType(type)?.setAnswer(element, answer);
@@ -57,7 +58,7 @@
         submissionData.value = answers;
     }
 
-    onMounted(() =>
+    onMounted(async () =>
         nextTick(() => {
             attachQuestionListeners();
             setAnswers(props.submissionData ?? []);
