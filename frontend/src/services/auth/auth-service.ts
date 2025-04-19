@@ -92,6 +92,7 @@ async function handleLoginCallback(): Promise<void> {
         throw new Error("Login callback received, but the user is not logging in!");
     }
     authState.user = (await (await getUserManagers())[activeRole].signinCallback()) || null;
+    await apiClient.post("/auth/hello");
 }
 
 /**
