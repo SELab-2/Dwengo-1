@@ -80,13 +80,14 @@
             >
                 {{ t("classes") }}
             </v-btn>
-            <v-btn
-                class="menu_item"
-                variant="text"
-                to="/user/discussion"
-            >
-                {{ t("discussions") }}
-            </v-btn>
+            <!-- TODO Re-enable this button when the discussion page is ready -->
+            <!--            <v-btn-->
+            <!--                class="menu_item"-->
+            <!--                variant="text"-->
+            <!--                to="/user/discussion"-->
+            <!--            >-->
+            <!--                {{ t("discussions") }}-->
+            <!--            </v-btn>-->
             <v-menu open-on-hover>
                 <template v-slot:activator="{ props }">
                     <v-btn

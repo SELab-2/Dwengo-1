@@ -21,7 +21,14 @@ const vueConfig = defineConfigWithVueTs(
 
     {
         name: "app/files-to-ignore",
-        ignores: ["**/dist/**", "**/dist-ssr/**", "**/coverage/**", "prettier.config.js"],
+        ignores: [
+            "**/dist/**",
+            "**/dist-ssr/**",
+            "**/coverage/**",
+            "prettier.config.js",
+            "**/test-results/**",
+            "**/playwright-report/**",
+        ],
     },
 
     pluginVue.configs["flat/essential"],
