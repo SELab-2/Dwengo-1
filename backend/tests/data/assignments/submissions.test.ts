@@ -54,8 +54,8 @@ describe('SubmissionRepository', () => {
     it('should find the most recent submission for a group', async () => {
         const id = new LearningObjectIdentifier('id03', Language.English, 1);
         const class_ = await classRepository.findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
-        const assignment = await assignmentRepository.findByClassAndId(class_!, 1);
-        const group = await groupRepository.findByAssignmentAndGroupNumber(assignment!, 1);
+        const assignment = await assignmentRepository.findByClassAndId(class_!, 21000);
+        const group = await groupRepository.findByAssignmentAndGroupNumber(assignment!, 21001);
         const submission = await submissionRepository.findMostRecentSubmissionForGroup(id, group!);
 
         expect(submission).toBeTruthy();
@@ -67,7 +67,7 @@ describe('SubmissionRepository', () => {
     let loId: LearningObjectIdentifier;
     it('should find all submissions for a certain learning object and assignment', async () => {
         clazz = await classRepository.findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
-        assignment = await assignmentRepository.findByClassAndId(clazz!, 1);
+        assignment = await assignmentRepository.findByClassAndId(clazz!, 21000);
         loId = {
             hruid: 'id02',
             language: Language.English,
@@ -92,7 +92,7 @@ describe('SubmissionRepository', () => {
     });
 
     it('should find only the submissions for a certain learning object and assignment made for the given group', async () => {
-        const group = await groupRepository.findByAssignmentAndGroupNumber(assignment!, 2);
+        const group = await groupRepository.findByAssignmentAndGroupNumber(assignment!, 21002);
         const result = await submissionRepository.findAllSubmissionsForLearningObjectAndGroup(loId, group!);
 
         expect(result).toHaveLength(1);

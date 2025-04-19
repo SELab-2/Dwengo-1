@@ -16,7 +16,7 @@ describe('AssignmentRepository', () => {
 
     it('should return the requested assignment', async () => {
         const class_ = await classRepository.findById('34d484a1-295f-4e9f-bfdc-3e7a23d86a89');
-        const assignment = await assignmentRepository.findByClassAndId(class_!, 2);
+        const assignment = await assignmentRepository.findByClassAndId(class_!, 21001);
 
         expect(assignment).toBeTruthy();
         expect(assignment!.title).toBe('tool');
@@ -35,7 +35,7 @@ describe('AssignmentRepository', () => {
         const result = await assignmentRepository.findAllByResponsibleTeacher('testleerkracht1');
         const resultIds = result.map((it) => it.id).sort((a, b) => (a ?? 0) - (b ?? 0));
 
-        expect(resultIds).toEqual([1, 1, 3, 4]);
+        expect(resultIds).toEqual([21000, 21002, 21003, 21004]);
     });
 
     it('should not find removed assignment', async () => {

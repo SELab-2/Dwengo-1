@@ -1,4 +1,4 @@
-import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
+import { AssignmentDTO, AssignmentDTOId } from '@dwengo-1/common/interfaces/assignment';
 import {
     getAssignmentRepository,
     getClassRepository,
@@ -16,6 +16,8 @@ import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
 import { EntityDTO } from '@mikro-orm/core';
 import { putObject } from './service-helper.js';
+import { fetchStudents } from './students.js';
+import { ServerErrorException } from '../exceptions/server-error-exception.js';
 
 export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
     const classRepository = getClassRepository();
@@ -35,7 +37,7 @@ export async function fetchAssignment(classid: string, assignmentNumber: number)
     return assignment;
 }
 
-export async function getAllAssignments(classid: string, full: boolean): Promise<AssignmentDTO[]> {
+export async function getAllAssignments(classid: string, full: boolean): Promise<AssignmentDTO[] | AssignmentDTOId[]> {
     const cls = await fetchClass(classid);
 
     const assignmentRepository = getAssignmentRepository();
@@ -51,13 +53,39 @@ export async function getAllAssignments(classid: string, full: boolean): Promise
 export async function createAssignment(classid: string, assignmentData: AssignmentDTO): Promise<AssignmentDTO> {
     const cls = await fetchClass(classid);
 
-    const assignment = mapToAssignment(assignmentData, cls);
-
     const assignmentRepository = getAssignmentRepository();
-    const newAssignment = assignmentRepository.create(assignment);
-    await assignmentRepository.save(newAssignment, { preventOverwrite: true });
+    const assignment = mapToAssignment(assignmentData, cls);
+    await assignmentRepository.save(assignment);
 
-    return mapToAssignmentDTO(newAssignment);
+    if (assignmentData.groups) {
+        /*
+        For some reason when trying to add groups, it does not work when using the original assignment variable. 
+        The assignment needs to be refetched in order for it to work.
+        */
+
+        const assignmentCopy = await assignmentRepository.findByClassAndId(cls, assignment.id!);
+
+        if (assignmentCopy === null) {
+            throw new ServerErrorException('Something has gone horribly wrong. Could not find newly added assignment which is needed to add groups.');
+        }
+
+        const groupRepository = getGroupRepository();
+
+        (assignmentData.groups as string[][]).forEach(async (memberUsernames) => {
+            const members = await fetchStudents(memberUsernames);
+
+            const newGroup = groupRepository.create({
+                assignment: assignmentCopy,
+                members: members,
+            });
+            await groupRepository.save(newGroup);
+        });
+    }
+
+    /* Need to refetch the assignment here again such that the groups are added. */
+    const assignmentWithGroups = await fetchAssignment(classid, assignment.id!);
+
+    return mapToAssignmentDTO(assignmentWithGroups);
 }
 
 export async function getAssignment(classid: string, id: number): Promise<AssignmentDTO> {
