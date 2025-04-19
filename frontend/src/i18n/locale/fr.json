@@ -71,9 +71,7 @@
     "class": "classe",
     "delete": "supprimer",
     "view-assignment": "Voir le travail",
-    "read-more": "En savoir plus",
     "code": "code",
-    "class": "classe",
     "invitations": "invitations",
     "createClass": "créer une classe",
     "createClassInstructions": "Entrez un nom pour votre classe et cliquez sur créer. Une fenêtre apparaît avec un code que vous pouvez copier. Donnez ce code à vos élèves et ils pourront rejoindre votre classe.",
@@ -90,5 +88,10 @@
     "sent": "envoyé",
     "failed": "échoué",
     "wrong": "quelque chose n'a pas fonctionné",
-    "created": "créé"
+    "created": "créé",
+    "group": "Groupe",
+    "description": "Description",
+    "no-submission": "aucune soumission",
+    "submission": "soumission",
+    "progress": "Progrès"
 }

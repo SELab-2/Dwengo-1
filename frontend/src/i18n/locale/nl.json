@@ -2,8 +2,8 @@
     "welcome": "Welkom",
     "student": "leerling",
     "teacher": "leerkracht",
-    "assignments": "opdrachten",
-    "classes": "klassen",
+    "assignments": "Opdrachten",
+    "classes": "Klassen",
     "discussions": "discussies",
     "logout": "log uit",
     "error_title": "Fout",
@@ -71,9 +71,7 @@
     "class": "klas",
     "delete": "verwijderen",
     "view-assignment": "Opdracht bekijken",
-    "read-more": "Lees meer",
     "code": "code",
-    "class": "klas",
     "invitations": "uitnodigingen",
     "createClass": "klas aanmaken",
     "createClassInstructions": "Voer een naam in voor je klas en klik op create. Er verschijnt een venster met een code die je kunt kopiëren. Geef deze code aan je leerlingen en ze kunnen deelnemen aan je klas.",
@@ -90,5 +88,10 @@
     "sent": "verzonden",
     "failed": "mislukt",
     "wrong": "er ging iets verkeerd",
-    "created": "gecreëerd"
+    "created": "gecreëerd",
+    "group": "Groep",
+    "description": "Beschrijving",
+    "no-submission": "geen indiening",
+    "submission": "indiening",
+    "progress": "Vooruitgang"
 }

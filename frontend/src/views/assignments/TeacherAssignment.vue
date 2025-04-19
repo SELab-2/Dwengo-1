@@ -1,62 +1,29 @@
 <script setup lang="ts">
-import {computed, defineProps, reactive, type Ref, ref, watchEffect} from "vue";
+import {computed, defineProps, type Ref, ref} from "vue";
 import {useI18n} from "vue-i18n";
 import {useAssignmentQuery, useDeleteAssignmentMutation} from "@/queries/assignments.ts";
 import UsingQueryResult from "@/components/UsingQueryResult.vue";
 import {useGroupsQuery} from "@/queries/groups.ts";
 import {useGetLearningPathQuery} from "@/queries/learning-paths.ts";
 import type {Language} from "@/data-objects/language.ts";
-import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
-import type {GroupDTO} from "@dwengo-1/common/interfaces/group";
 import router from "@/router";
 import type {AssignmentResponse} from "@/controllers/assignments.ts";
+import type {GroupDTO} from "@dwengo-1/common/interfaces/group";
 
 const props = defineProps<{
     classId: string
-    assignmentId: number
+    assignmentId: number,
+    useGroupsWithProgress: (
+        groups: Ref<GroupDTO[]>,
+        hruid: Ref<string>,
+        language: Ref<Language>
+    ) => { groupProgressMap: Record<string, number> };
 }>();
 
 const {t, locale} = useI18n();
 const language = computed(() => locale.value);
 const groups = ref();
 const learningPath = ref();
-
-function useGroupsWithProgress(
-    groups: Ref<GroupDTO[]>,
-    hruid: Ref<string>,
-    language: Ref<string>
-): { groupProgressMap: Record<string, number> } {
-    const groupProgressMap: Record<string, number> = reactive({});
-
-    watchEffect(() => {
-        // Clear existing entries to avoid stale data
-        for (const key in groupProgressMap) {
-            delete groupProgressMap[key];
-        }
-
-        const lang = language.value as Language;
-
-        groups.value.forEach((group) => {
-            const groupKey = group.groupNumber.toString();
-
-            const query = useGetLearningPathQuery(hruid.value, lang, {
-                forGroup: groupKey,
-            });
-
-            const data = query.data.value;
-
-            groupProgressMap[groupKey] = data ? calculateProgress(data) : 0;
-        });
-    });
-
-    return {
-        groupProgressMap,
-    };
-}
-
-function calculateProgress(lp: LearningPath): number {
-    return ((lp.amountOfNodes - lp.amountOfNodesLeft) / lp.amountOfNodes) * 100;
-}
 
 const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
 learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
@@ -70,8 +37,8 @@ const lpQueryResult = useGetLearningPathQuery(
 const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
 groups.value = groupsQueryResult.data.value?.groups;
 
-/* Crashes right now cause api data has inexistent hruid TODO: uncomment later
-Const {groupProgressMap} = useGroupsWithProgress(
+/* Crashes right now cause api data has inexistent hruid TODO: uncomment later and use it in progress bar
+Const {groupProgressMap} = props.useGroupsWithProgress(
     groups,
     learningPath,
     language
@@ -200,7 +167,7 @@ async function deleteAssignment(num: number, clsId: string): Promise<void> {
                                     variant="text"
                                     class="text-capitalize"
                                 >
-                                    {{ item.submitted ? t('see-submission') : t('not-submitted') }}
+                                    {{ item.submitted ? t('see-submission') : t('no-submission') }}
                                 </v-btn>
                             </template>
 

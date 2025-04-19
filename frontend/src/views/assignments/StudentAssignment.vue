@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, computed, defineProps} from "vue";
+import {ref, computed, defineProps, type Ref} from "vue";
 import auth from "@/services/auth/auth-service.ts";
 import {useI18n} from "vue-i18n";
 import {useAssignmentQuery} from "@/queries/assignments.ts";
@@ -10,14 +10,21 @@ import {useStudentsByUsernamesQuery} from "@/queries/students.ts";
 import {useGroupsQuery} from "@/queries/groups.ts";
 import {useGetLearningPathQuery} from "@/queries/learning-paths.ts";
 import type {Language} from "@/data-objects/language.ts";
+import type {GroupDTO} from "@dwengo-1/common/interfaces/group";
 
 const props = defineProps<{
     classId: string
-    assignmentId: number
+    assignmentId: number,
+    useGroupsWithProgress: (
+        groups: Ref<GroupDTO[]>,
+        hruid: Ref<string>,
+        language: Ref<Language>
+    ) => { groupProgressMap: Record<string, number> };
 }>();
 
 const {t, locale} = useI18n();
-const language = computed(() => locale.value);
+const language = ref<Language>(locale.value as Language);
+const learningPath = ref();
 // Get the user's username/id
 const username = asyncComputed(async () => {
     const user = await auth.loadUser();
@@ -25,12 +32,15 @@ const username = asyncComputed(async () => {
 });
 
 const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
+learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
+
 const submitted = ref(false);//TODO: update by fetching submissions and check if group submitted
 
 const lpQueryResult = useGetLearningPathQuery(
     computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
-    computed(() => language.value as Language)
+    computed(() => language.value)
 );
+
 
 const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
 const group = computed(() =>
@@ -38,6 +48,18 @@ const group = computed(() =>
         group.members?.some(m => m.username === username.value)
     )
 );
+
+
+const groupArray = computed(() => (group.value ? [group.value] : []));
+const progressValue = ref(0);
+/* Crashes right now cause api data has inexistent hruid TODO: uncomment later and use it in progress bar
+Const {groupProgressMap} = props.useGroupsWithProgress(
+    groupArray,
+    learningPath,
+    language
+);
+*/
+
 
 // Assuming group.value.members is a list of usernames TODO: case when it's StudentDTO's
 const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as string[]);
@@ -71,6 +93,7 @@ const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as
                     </v-chip>
                 </div>
                 <v-card-title class="text-h4">{{ data.assignment.title }}</v-card-title>
+
                 <v-card-subtitle class="subtitle-section">
                     <using-query-result
                         :query-result="lpQueryResult"
@@ -89,6 +112,25 @@ const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as
                 <v-card-text class="description">
                     {{ data.assignment.description }}
                 </v-card-text>
+                <v-card-text>
+                    <v-row align="center" no-gutters>
+                        <v-col cols="auto">
+                            <span class="progress-label">{{ t("progress") + ": " }}</span>
+                        </v-col>
+                        <v-col>
+                            <v-progress-linear
+                                :model-value="progressValue"
+                                color="primary"
+                                height="20"
+                                class="progress-bar"
+                            >
+                                <template v-slot:default="{ value }">
+                                    <strong>{{ Math.ceil(value) }}%</strong>
+                                </template>
+                            </v-progress-linear>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
 
                 <v-card-text class="group-section">
                     <h3>{{ t("group") }}</h3>
@@ -101,7 +143,6 @@ const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as
                     </div>
 
                 </v-card-text>
-
             </v-card>
         </using-query-result>
     </div>
@@ -109,6 +150,15 @@ const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as
 
 <style scoped>
 @import "@/assets/assignment.css";
+
+.progress-label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.progress-bar {
+    width: 40%;
+}
 
 </style>
 

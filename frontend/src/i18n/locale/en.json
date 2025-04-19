@@ -2,8 +2,8 @@
     "welcome": "Welcome",
     "student": "student",
     "teacher": "teacher",
-    "assignments": "assignments",
-    "classes": "classes",
+    "assignments": "Assignments",
+    "classes": "Classes",
     "discussions": "discussions",
     "logout": "log out",
     "error_title": "Error",
@@ -88,5 +88,10 @@
     "sent": "sent",
     "failed": "failed",
     "wrong": "something went wrong",
-    "created": "created"
+    "created": "created",
+    "group": "Group",
+    "description": "Description",
+    "no-submission": "no submission",
+    "submission": "submission",
+    "progress": "Progress"
 }
