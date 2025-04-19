@@ -12,13 +12,21 @@ import UsingQueryResult from "@/components/UsingQueryResult.vue";
 import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
 import type {ClassesResponse} from "@/controllers/classes.ts";
 import type {AssignmentDTO} from "@dwengo-1/common/interfaces/assignment";
-import {AssignmentController} from "@/controllers/assignments.ts";
 import {useCreateAssignmentMutation} from "@/queries/assignments.ts";
+import {useRoute} from "vue-router";
 
 /***
- TODO: when clicking the assign button from lp page pass the lp-object in a state:
+ TODO: when clicking the assign button from lp page pass the lp-hruid in a query like this:
+ router.push({
+     path: "/assignment/create,
+         query: {
+         ...route.query,
+         lp: hruid,
+        },
+     });
  */
 
+const route = useRoute();
 const router = useRouter();
 const {t, locale} = useI18n();
 const role = ref(auth.authState.activeRole);
@@ -48,10 +56,10 @@ const classesQueryResults = useTeacherClassesQuery(username, true);
 const selectedClass = ref(undefined);
 
 const assignmentTitle = ref('');
-const selectedLearningPath = ref<LearningPath | null>(window.history.state?.learningPath ?? null);
+const selectedLearningPath = ref(route.query.lp || undefined);
 
 // Disable combobox when learningPath prop is passed
-const lpIsSelected = window.history.state?.learningPath !== undefined;
+const lpIsSelected = route.query.lp !== undefined;
 const deadline = ref(null);
 const description = ref('');
 const groups = ref<string[][]>([]);

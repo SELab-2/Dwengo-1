@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import {computed, defineProps, ref} from "vue";
+import {computed, defineProps, reactive, type Ref, ref, watchEffect} from "vue";
 import {useI18n} from "vue-i18n";
-import {AssignmentController, type AssignmentResponse} from "@/controllers/assignments.ts";
-import {useAssignmentQuery} from "@/queries/assignments.ts";
+import {useAssignmentQuery, useDeleteAssignmentMutation} from "@/queries/assignments.ts";
 import UsingQueryResult from "@/components/UsingQueryResult.vue";
 import {useGroupsQuery} from "@/queries/groups.ts";
 import {useGetLearningPathQuery} from "@/queries/learning-paths.ts";
 import type {Language} from "@/data-objects/language.ts";
 import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
+import type {GroupDTO} from "@dwengo-1/common/interfaces/group";
+import router from "@/router";
+import type {AssignmentResponse} from "@/controllers/assignments.ts";
 
 const props = defineProps<{
     classId: string
@@ -16,15 +18,66 @@ const props = defineProps<{
 
 const {t, locale} = useI18n();
 const language = computed(() => locale.value);
-const controller = new AssignmentController(props.classId);
+const groups = ref();
+const learningPath = ref();
+
+function useGroupsWithProgress(
+    groups: Ref<GroupDTO[]>,
+    hruid: Ref<string>,
+    language: Ref<string>
+): { groupProgressMap: Record<string, number> } {
+    const groupProgressMap: Record<string, number> = reactive({});
+
+    watchEffect(() => {
+        // Clear existing entries to avoid stale data
+        for (const key in groupProgressMap) {
+            delete groupProgressMap[key];
+        }
+
+        const lang = language.value as Language;
+
+        groups.value.forEach((group) => {
+            const groupKey = group.groupNumber.toString();
+
+            const query = useGetLearningPathQuery(hruid.value, lang, {
+                forGroup: groupKey,
+            });
+
+            const data = query.data.value;
+
+            groupProgressMap[groupKey] = data ? calculateProgress(data) : 0;
+        });
+    });
+
+    return {
+        groupProgressMap,
+    };
+}
+
+function calculateProgress(lp: LearningPath): number {
+    return ((lp.amountOfNodes - lp.amountOfNodesLeft) / lp.amountOfNodes) * 100;
+}
 
 const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
-const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
-
+learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
+// Get learning path object
 const lpQueryResult = useGetLearningPathQuery(
     computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
     computed(() => language.value as Language)
 );
+
+// Get all the groups withing the assignment
+const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
+groups.value = groupsQueryResult.data.value?.groups;
+
+/* Crashes right now cause api data has inexistent hruid TODO: uncomment later
+Const {groupProgressMap} = useGroupsWithProgress(
+    groups,
+    learningPath,
+    language
+);
+*/
+
 
 const allGroups = computed(() => {
     const groups = groupsQueryResult.data.value?.groups;
@@ -32,7 +85,7 @@ const allGroups = computed(() => {
 
     return groups.map(group => ({
         name: `${t('group')} ${group.groupNumber}`,
-        progress: 0,
+        progress: 0,//GroupProgressMap[group.groupNumber],
         members: group.members,
         submitted: false,//TODO: fetch from submission
     }));
@@ -53,8 +106,15 @@ const headers = ref([
 ]);
 
 
-async function deleteAssignment(): Promise<void> {
-    await controller.deleteAssignment(props.assignmentId);
+const {mutate, isSuccess} = useDeleteAssignmentMutation();
+
+async function deleteAssignment(num: number, clsId: string): Promise<void> {
+    mutate({
+        cid: clsId,
+        an: num
+    });
+
+    if (isSuccess) await router.push("/user/assignments");
 }
 
 </script>
@@ -80,7 +140,7 @@ async function deleteAssignment(): Promise<void> {
                         icon
                         variant="text"
                         class="top-right-btn"
-                        @click="deleteAssignment"
+                        @click="deleteAssignment(data.assignment.id, data.assignment.within)"
                     >
                         <v-icon>mdi-delete</v-icon>
                     </v-btn>
@@ -92,7 +152,7 @@ async function deleteAssignment(): Promise<void> {
                         v-slot="{ data: lpData }"
                     >
                         <v-btn v-if="lpData"
-                               :to="`/learningPath/${language}/${lpData.hruid}/${lpData.startNode.learningobjectHruid}`"
+                               :to="`/learningPath/${lpData.hruid}/${language}/${lpData.startNode.learningobjectHruid}`"
                                variant="tonal"
                                color="primary"
                         >

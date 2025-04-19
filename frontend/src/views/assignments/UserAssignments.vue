@@ -8,7 +8,7 @@ import {useStudentClassesQuery} from "@/queries/students.ts";
 import {ClassController} from "@/controllers/classes.ts";
 import type {ClassDTO} from "@dwengo-1/common/interfaces/class";
 import {asyncComputed} from "@vueuse/core";
-import {AssignmentController} from "@/controllers/assignments.ts";
+import {useDeleteAssignmentMutation} from "@/queries/assignments.ts";
 
 const {t} = useI18n();
 const router = useRouter();
@@ -62,11 +62,15 @@ async function goToAssignmentDetails(id: number, clsId: string): Promise<void> {
     await router.push(`/assignment/${clsId}/${id}`);
 }
 
+const {mutate, isSuccess} = useDeleteAssignmentMutation();
 
-async function goToDeleteAssignment(id: number, clsId: string): Promise<void> {
-    //TODO: replace with query
-    const controller = new AssignmentController(clsId);
-    await controller.deleteAssignment(id);
+async function goToDeleteAssignment(num: number, clsId: string): Promise<void> {
+    mutate({
+        cid: clsId,
+        an: num
+    });
+
+    if (isSuccess) await router.push("/user/assignment");
 }
 
 onMounted(async () => {

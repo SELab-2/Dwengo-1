@@ -8,6 +8,8 @@ import type {AssignmentResponse} from "@/controllers/assignments.ts";
 import {asyncComputed} from "@vueuse/core";
 import {useStudentsByUsernamesQuery} from "@/queries/students.ts";
 import {useGroupsQuery} from "@/queries/groups.ts";
+import {useGetLearningPathQuery} from "@/queries/learning-paths.ts";
+import type {Language} from "@/data-objects/language.ts";
 
 const props = defineProps<{
     classId: string
@@ -25,16 +27,16 @@ const username = asyncComputed(async () => {
 const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
 const submitted = ref(false);//TODO: update by fetching submissions and check if group submitted
 
+const lpQueryResult = useGetLearningPathQuery(
+    computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
+    computed(() => language.value as Language)
+);
+
 const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
 const group = computed(() =>
-        groupsQueryResult?.data.value?.groups.find(group =>
-            group.members?.some(m => m.username === username.value)
-        )
-    /** For testing
-     return {assignment: 1,
-     groupNumber: 1,
-     members: ["testleerling1"]}
-     */
+    groupsQueryResult?.data.value?.groups.find(group =>
+        group.members?.some(m => m.username === username.value)
+    )
 );
 
 // Assuming group.value.members is a list of usernames TODO: case when it's StudentDTO's
@@ -70,13 +72,18 @@ const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as
                 </div>
                 <v-card-title class="text-h4">{{ data.assignment.title }}</v-card-title>
                 <v-card-subtitle class="subtitle-section">
-                    <v-btn
-                        :to="`/learningPath/${language}/${data.assignment.learningPath}`"
-                        variant="tonal"
-                        color="primary"
+                    <using-query-result
+                        :query-result="lpQueryResult"
+                        v-slot="{ data: lpData }"
                     >
-                        {{ t("learning-path") }}
-                    </v-btn>
+                        <v-btn v-if="lpData"
+                               :to="`/learningPath/${lpData.hruid}/${language}/${lpData.startNode.learningobjectHruid}`"
+                               variant="tonal"
+                               color="primary"
+                        >
+                            {{ t("learning-path") }}
+                        </v-btn>
+                    </using-query-result>
                 </v-card-subtitle>
 
                 <v-card-text class="description">
