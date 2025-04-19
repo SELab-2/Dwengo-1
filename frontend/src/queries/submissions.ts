@@ -1,5 +1,5 @@
-import { SubmissionController, type SubmissionResponse } from '@/controllers/submissions';
-import type { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
+import { SubmissionController, type SubmissionResponse } from "@/controllers/submissions";
+import type { SubmissionDTO } from "@dwengo-1/common/interfaces/submission";
 import {
     QueryClient,
     useMutation,
@@ -54,8 +54,8 @@ export async function invalidateAllSubmissionKeys(
                 submissionNumber,
             ].filter((arg) => arg !== undefined);
             return queryClient.invalidateQueries({ queryKey: queryKey });
-        })
-    )
+        }),
+    );
 
     await queryClient.invalidateQueries({
         queryKey: ["submissions", hruid, language, version, classid, assignmentNumber, groupNumber].filter(
