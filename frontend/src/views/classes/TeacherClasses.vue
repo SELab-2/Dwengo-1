@@ -10,7 +10,11 @@
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import { useClassesQuery, useClassTeacherInvitationsQuery, useCreateClassMutation } from "@/queries/classes";
     import type { TeacherInvitationsResponse } from "@/controllers/teacher-invitations";
-import { useRespondTeacherInvitationMutation, useTeacherInvitationsReceivedQuery, useTeacherInvitationsSentQuery } from "@/queries/teacher-invitations";
+    import {
+        useRespondTeacherInvitationMutation,
+        useTeacherInvitationsReceivedQuery,
+        useTeacherInvitationsSentQuery,
+    } from "@/queries/teacher-invitations";
 
     const { t } = useI18n();
 
@@ -50,18 +54,23 @@ import { useRespondTeacherInvitationMutation, useTeacherInvitationsReceivedQuery
 
     // Function to handle an invitation request
     function handleInvitation(ti: TeacherInvitationDTO, accepted: boolean): void {
-        const data: TeacherInvitationData = {sender: (ti.sender as TeacherDTO).id, receiver: (ti.receiver as TeacherDTO).id, class: ti.classId, accepted: accepted};
+        const data: TeacherInvitationData = {
+            sender: (ti.sender as TeacherDTO).id,
+            receiver: (ti.receiver as TeacherDTO).id,
+            class: ti.classId,
+            accepted: accepted,
+        };
         respondToInvitation(data, {
             onSuccess: async () => {
-                if (accepted){
+                if (accepted) {
                     await classesQuery.refetch();
                 }
-                
+
                 await getInvitationsQuery.refetch();
             },
             onError: (e) => {
                 showSnackbar(t("failed") + ": " + e.message, "error");
-            }
+            },
         });
     }
 
@@ -131,19 +140,19 @@ import { useRespondTeacherInvitationMutation, useTeacherInvitationsReceivedQuery
 <template>
     <main>
         <div
-        class="loading-div"
-        v-if="isLoading"
-    >
-        <v-progress-circular indeterminate></v-progress-circular>
-    </div>
-    <div v-if="isError">
-        <v-empty-state
-            icon="mdi-alert-circle-outline"
-            :text="errorMessage"
-            :title="t('error_title')"
-        ></v-empty-state>
-    </div v-else>
-        <div>
+            class="loading-div"
+            v-if="isLoading"
+        >
+            <v-progress-circular indeterminate></v-progress-circular>
+        </div>
+        <div v-if="isError">
+            <v-empty-state
+                icon="mdi-alert-circle-outline"
+                :text="errorMessage"
+                :title="t('error_title')"
+            ></v-empty-state>
+        </div>
+        <div v-else>
             <h1 class="title">{{ t("classes") }}</h1>
             <using-query-result
                 :query-result="classesQuery"
@@ -294,7 +303,8 @@ import { useRespondTeacherInvitationMutation, useTeacherInvitationsReceivedQuery
                             >
                                 <td>
                                     {{
-                                        (classesResponse.data.classes as ClassDTO[]).filter((c) => c.id == i.classId)[0].displayName
+                                        (classesResponse.data.classes as ClassDTO[]).filter((c) => c.id == i.classId)[0]
+                                            .displayName
                                     }}
                                 </td>
                                 <td>
