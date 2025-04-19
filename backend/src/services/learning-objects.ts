@@ -8,12 +8,13 @@ import {
     LearningPathResponse,
 } from '@dwengo-1/common/interfaces/learning-content';
 import { getLogger } from '../logging/initalize.js';
+import { v4 } from 'uuid';
 
 function filterData(data: LearningObjectMetadata, htmlUrl: string): FilteredLearningObject {
     return {
         key: data.hruid, // Hruid learningObject (not path)
         _id: data._id,
-        uuid: data.uuid,
+        uuid: data.uuid || v4(),
         version: data.version,
         title: data.title,
         htmlUrl, // Url to fetch html content

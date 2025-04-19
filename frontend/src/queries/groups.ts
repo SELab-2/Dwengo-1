@@ -10,7 +10,7 @@ import {
     useQueryClient,
     type UseQueryReturnType,
 } from "@tanstack/vue-query";
-import { computed, type MaybeRefOrGetter, toValue } from "vue";
+import { computed, toValue, type MaybeRefOrGetter } from "vue";
 import { invalidateAllSubmissionKeys } from "./submissions";
 
 type GroupsQueryKey = ["groups", string, number, boolean];
@@ -160,7 +160,7 @@ export function useDeleteGroupMutation(): UseMutationReturnType<
             const gn = response.group.groupNumber;
 
             await invalidateAllGroupKeys(queryClient, cid, an, gn);
-            await invalidateAllSubmissionKeys(queryClient, cid, an, gn);
+            await invalidateAllSubmissionKeys(queryClient, undefined, undefined, undefined, cid, an, gn);
         },
     });
 }
