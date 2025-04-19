@@ -30,7 +30,7 @@
         isLoading.value = true;
         try {
             const userObject = await authState.loadUser();
-            username.value = userObject!.profile!.preferred_username;
+            username.value = userObject!.profile.preferred_username;
         } catch (error) {
             isError.value = true;
             errorMessage.value = error instanceof Error ? error.message : String(error);

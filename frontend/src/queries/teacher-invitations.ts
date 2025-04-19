@@ -22,7 +22,7 @@ export function teacherInvitationsSentQueryKey(username: string): [string, strin
 }
 
 export function teacherInvitationsReceivedQueryKey(username: string): [string, string, string] {
-    return ["teacher-invitations", "received", username ];
+    return ["teacher-invitations", "received", username];
 }
 
 export function teacherInvitationQueryKey(data: TeacherInvitationData): [string, string, string, string] {

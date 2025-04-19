@@ -8,12 +8,11 @@
     import { useTeacherClassesQuery } from "@/queries/teachers";
     import type { ClassesResponse } from "@/controllers/classes";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import { useClassesQuery, useClassTeacherInvitationsQuery, useCreateClassMutation } from "@/queries/classes";
+    import { useClassesQuery, useCreateClassMutation } from "@/queries/classes";
     import type { TeacherInvitationsResponse } from "@/controllers/teacher-invitations";
     import {
         useRespondTeacherInvitationMutation,
         useTeacherInvitationsReceivedQuery,
-        useTeacherInvitationsSentQuery,
     } from "@/queries/teacher-invitations";
 
     const { t } = useI18n();
@@ -29,7 +28,7 @@
         isLoading.value = true;
         try {
             const userObject = await authState.loadUser();
-            username.value = userObject!.profile!.preferred_username;
+            username.value = userObject!.profile.preferred_username;
         } catch (error) {
             isError.value = true;
             errorMessage.value = error instanceof Error ? error.message : String(error);

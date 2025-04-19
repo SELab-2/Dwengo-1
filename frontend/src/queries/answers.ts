@@ -1,4 +1,4 @@
-import {computed, type MaybeRefOrGetter, toValue} from "vue";
+import { computed, type MaybeRefOrGetter, toValue } from "vue";
 import {
     useMutation,
     type UseMutationReturnType,
@@ -6,20 +6,22 @@ import {
     type UseQueryReturnType,
     useQueryClient,
 } from "@tanstack/vue-query";
-import {
-    AnswerController,
-    type AnswerResponse,
-    type AnswersResponse,
-} from "@/controllers/answers.ts";
+import { AnswerController, type AnswerResponse, type AnswersResponse } from "@/controllers/answers.ts";
 import type { AnswerData } from "@dwengo-1/common/interfaces/answer";
-import type {QuestionId} from "@dwengo-1/common/interfaces/question";
+import type { QuestionId } from "@dwengo-1/common/interfaces/question";
 
 /** 🔑 Query keys */
-export function answersQueryKey(questionId: QuestionId, full: boolean): [string, string, number, string, number, boolean] {
+export function answersQueryKey(
+    questionId: QuestionId,
+    full: boolean,
+): [string, string, number, string, number, boolean] {
     const loId = questionId.learningObjectIdentifier;
     return ["answers", loId.hruid, loId.version!, loId.language, questionId.sequenceNumber, full];
 }
-export function answerQueryKey(questionId: QuestionId, sequenceNumber: number): [string, string, number, string, number, number] {
+export function answerQueryKey(
+    questionId: QuestionId,
+    sequenceNumber: number,
+): [string, string, number, string, number, number] {
     const loId = questionId.learningObjectIdentifier;
     return ["answer", loId.hruid, loId.version!, loId.language, questionId.sequenceNumber, sequenceNumber];
 }
@@ -88,8 +90,7 @@ export function useUpdateAnswerMutation(
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ answerData, seq }) =>
-            new AnswerController(toValue(questionId)).update(seq, answerData),
+        mutationFn: async ({ answerData, seq }) => new AnswerController(toValue(questionId)).update(seq, answerData),
         onSuccess: async (_, { seq }) => {
             await queryClient.invalidateQueries({
                 queryKey: answerQueryKey(toValue(questionId), seq),
