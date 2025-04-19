@@ -4,12 +4,13 @@
     import { onMounted, ref } from "vue";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
-    import type { TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
+    import type { TeacherInvitationData, TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
     import { useTeacherClassesQuery } from "@/queries/teachers";
     import type { ClassesResponse } from "@/controllers/classes";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import { useClassesQuery, useClassTeacherInvitationsQuery, useCreateClassMutation } from "@/queries/classes";
     import type { TeacherInvitationsResponse } from "@/controllers/teacher-invitations";
+import { useRespondTeacherInvitationMutation, useTeacherInvitationsReceivedQuery, useTeacherInvitationsSentQuery } from "@/queries/teacher-invitations";
 
     const { t } = useI18n();
 
@@ -37,7 +38,8 @@
     const classesQuery = useTeacherClassesQuery(username, true);
     const allClassesQuery = useClassesQuery();
     const { mutate } = useCreateClassMutation();
-    const getInvitationsQuery = useClassTeacherInvitationsQuery(username); // TODO: use useTeacherInvitationsReceivedQuery
+    const getInvitationsQuery = useTeacherInvitationsReceivedQuery(username);
+    const { mutate: respondToInvitation } = useRespondTeacherInvitationMutation();
 
     // Boolean that handles visibility for dialogs
     // Creating a class will generate a popup with the generated code
@@ -46,14 +48,21 @@
     // Code generated when new class was created
     const code = ref<string>("");
 
-    // Function to handle a accepted invitation request
-    function acceptRequest(): void {
-        //TODO: avoid linting issues when merging by filling the function
-    }
-
-    // Function to handle a denied invitation request
-    function denyRequest(): void {
-        //TODO: avoid linting issues when merging by filling the function
+    // Function to handle an invitation request
+    function handleInvitation(ti: TeacherInvitationDTO, accepted: boolean): void {
+        const data: TeacherInvitationData = {sender: (ti.sender as TeacherDTO).id, receiver: (ti.receiver as TeacherDTO).id, class: ti.classId, accepted: accepted};
+        respondToInvitation(data, {
+            onSuccess: async () => {
+                if (accepted){
+                    await classesQuery.refetch();
+                }
+                
+                await getInvitationsQuery.refetch();
+            },
+            onError: (e) => {
+                showSnackbar(t("failed") + ": " + e.message, "error");
+            }
+        });
     }
 
     // Teacher should be able to set a displayname when making a class
@@ -285,7 +294,7 @@
                             >
                                 <td>
                                     {{
-                                        (classesResponse.data.classes as ClassDTO[]).filter((c) => c.id == i.classId)[0]
+                                        (classesResponse.data.classes as ClassDTO[]).filter((c) => c.id == i.classId)[0].displayName
                                     }}
                                 </td>
                                 <td>
@@ -295,14 +304,14 @@
                                     <div>
                                         <v-btn
                                             color="green"
-                                            @click="acceptRequest"
+                                            @click="handleInvitation(i, true)"
                                             class="mr-2"
                                         >
                                             {{ t("accept") }}
                                         </v-btn>
                                         <v-btn
                                             color="red"
-                                            @click="denyRequest"
+                                            @click="handleInvitation(i, false)"
                                         >
                                             {{ t("deny") }}
                                         </v-btn>
