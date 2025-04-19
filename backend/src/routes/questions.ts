@@ -3,7 +3,11 @@ import { createQuestionHandler, deleteQuestionHandler, getAllQuestionsHandler, g
 import answerRoutes from './answers.js';
 import {adminOnly, authenticatedOnly, studentsOnly} from "../middleware/auth/checks/auth-checks";
 import {updateAnswerHandler} from "../controllers/answers";
-import {onlyAllowAuthor, onlyAllowAuthorRequest} from "../middleware/auth/checks/question-checks";
+import {
+    onlyAllowAuthor,
+    onlyAllowAuthorRequest,
+    onlyAllowIfHasAccessToQuestion
+} from "../middleware/auth/checks/question-checks";
 
 const router = express.Router({ mergeParams: true });
 
@@ -15,7 +19,7 @@ router.get('/', adminOnly, getAllQuestionsHandler);
 router.post('/', studentsOnly, onlyAllowAuthor, createQuestionHandler);
 
 // Information about a question with id
-router.get('/:seq', authenticatedOnly, getQuestionHandler); // TODO every body in group + teachers?
+router.get('/:seq', onlyAllowIfHasAccessToQuestion, getQuestionHandler);
 
 router.delete('/:seq', studentsOnly, onlyAllowAuthorRequest, deleteQuestionHandler);
 

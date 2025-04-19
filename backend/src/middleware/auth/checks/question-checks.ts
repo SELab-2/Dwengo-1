@@ -6,6 +6,7 @@ import {getLearningObjectId, getQuestionId} from "../../../controllers/questions
 import {fetchQuestion} from "../../../services/questions";
 import {FALLBACK_SEQ_NUM} from "../../../config";
 import {fetchAnswer} from "../../../services/answers";
+import {mapToUsername} from "../../../interfaces/user";
 
 export const onlyAllowAuthor = authorize(
     (auth: AuthenticationInfo, req: AuthenticatedRequest) => req.body.author === auth.username
@@ -44,5 +45,28 @@ export const onlyAllowAuthorRequestAnswer = authorize(
         const answer = await fetchAnswer(questionId, sequenceNumber);
 
         return answer.author.username == auth.username;
+    }
+);
+
+export const onlyAllowIfHasAccessToQuestion = authorize(
+    async (auth, req) => {
+        const hruid = req.params.hruid;
+        const version = req.params.version;
+        const language = req.query.lang as string;
+        const seq = req.params.seq;
+        requireFields({ hruid });
+
+        const learningObjectId = getLearningObjectId(hruid, version, language);
+        const questionId = getQuestionId(learningObjectId, seq);
+
+        const question = await fetchQuestion(questionId);
+        const group = question.inGroup;
+
+        if (auth.accountType === "teacher") {
+            const cls = group.assignment.within; // TODO check if contains full objects
+            return cls.teachers.map(mapToUsername).includes(auth.username);
+        } else { // user is student
+            return group.members.map(mapToUsername).includes(auth.username);
+        }
     }
 );
