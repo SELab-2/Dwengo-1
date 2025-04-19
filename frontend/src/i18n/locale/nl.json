@@ -33,7 +33,7 @@
     "JoinClassExplanation": "Voer de code in die je van de docent hebt gekregen om lid te worden van de klas.",
     "invalidFormat": "Ongeldig formaat.",
     "submitCode": "verzenden",
-    "members": "leden",
+    "members": "Leden",
     "themes": "Lesthema's",
     "choose-theme": "Kies een thema",
     "choose-age": "Kies een leeftijd",
@@ -92,6 +92,6 @@
     "group": "Groep",
     "description": "Beschrijving",
     "no-submission": "geen indiening",
-    "submission": "indiening",
+    "submission": "Indiening",
     "progress": "Vooruitgang"
 }

@@ -33,7 +33,7 @@
     "JoinClassExplanation": "Enter the code the teacher has given you to join the class.",
     "invalidFormat": "Invalid format.",
     "submitCode": "submit",
-    "members": "members",
+    "members": "Members",
     "themes": "Themes",
     "choose-theme": "Select a theme",
     "choose-age": "Select age",
@@ -92,6 +92,6 @@
     "group": "Group",
     "description": "Description",
     "no-submission": "no submission",
-    "submission": "submission",
+    "submission": "Submission",
     "progress": "Progress"
 }

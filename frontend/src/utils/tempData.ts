@@ -1,24 +1,24 @@
 // TODO : temp data until frontend controllers are ready
-type Teacher = {
+interface Teacher {
     username: string;
     firstName: string;
     lastName: string;
-    classes: Array<Class>;
-};
+    classes: Class[];
+}
 
-type Student = {
+interface Student {
     username: string;
     firstName: string;
     lastName: string;
-    classes: Array<Class>;
-};
+    classes: Class[];
+}
 
-type Class = {
+interface Class {
     id: string;
     displayName: string;
-    teachers: Array<Teacher>;
-    students: Array<Student>;
-};
+    teachers: Teacher[];
+    students: Student[];
+}
 
 const student01: Student = {username: "id01", firstName: "Mark", lastName: "Knopfler", classes: []};
 const student02: Student = {username: "id02", firstName: "John", lastName: "Hiat", classes: []};
@@ -55,11 +55,11 @@ teacher01.classes = [class01];
 teacher02.classes = [class02];
 teacher03.classes = [class03];
 
-type Assignment = {
+interface Assignment {
     id: string;
     title: string;
     description: string;
-};
+}
 
 
 export const assignments: Assignment[] = Array.from({length: 4}, (_, i) => ({
@@ -100,4 +100,4 @@ export const assignments: Assignment[] = Array.from({length: 4}, (_, i) => ({
 }));
 
 
-export const classes: Array<Class> = [class01, class02, class03];
+export const classes: Class[] = [class01, class02, class03];

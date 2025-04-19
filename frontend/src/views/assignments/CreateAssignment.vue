@@ -18,12 +18,12 @@ import {useRoute} from "vue-router";
 /***
  TODO: when clicking the assign button from lp page pass the lp-hruid in a query like this:
  router.push({
-     path: "/assignment/create,
-         query: {
-         ...route.query,
-         lp: hruid,
-        },
-     });
+ path: "/assignment/create,
+ query: {
+ ...route.query,
+ lp: hruid,
+ },
+ });
  */
 
 const route = useRoute();
@@ -176,7 +176,12 @@ async function submitFormHandler(): Promise<void> {
                             :rules="descriptionRules"
                         ></v-textarea>
                     </v-card-text>
-                    <v-btn class="mt-2" color="secondary" type="submit" block>Submit</v-btn>
+                    <v-card-text>
+                        <v-btn class="mt-2" color="secondary" type="submit" block>{{ t("submit") }}</v-btn>
+                        <v-btn to="/user/assignment" color="grey" block>{{ t("cancel") }}</v-btn>
+                    </v-card-text>
+
+
                 </v-container>
             </v-form>
         </v-card>

@@ -4,7 +4,7 @@
  * Ensures that the title is not empty.
  */
 export const assignmentTitleRules = [
-    (value: string) => {
+    (value: string): string | boolean => {
         if (value?.length >= 1) return true;  // Title must not be empty
         return 'Title cannot be empty.';
     },
@@ -16,7 +16,7 @@ export const assignmentTitleRules = [
  * Ensures that a valid learning path is selected.
  */
 export const learningPathRules = [
-    (value: { hruid: string; title: string }) => {
+    (value: { hruid: string; title: string }): string | boolean => {
         if (value && value.hruid) {
             return true;  // Valid if hruid is present
         }
@@ -30,7 +30,7 @@ export const learningPathRules = [
  * Ensures that at least one class is selected.
  */
 export const classRules = [
-    (value: string) => {
+    (value: string): string | boolean => {
         if (value) return true;
         return 'You must select at least one class.';
     },
@@ -42,7 +42,7 @@ export const classRules = [
  * Ensures that a valid deadline is selected and is in the future.
  */
 export const deadlineRules = [
-    (value: string) => {
+    (value: string): string | boolean => {
         if (!value) return "You must set a deadline.";
 
         const selectedDateTime = new Date(value);
@@ -57,7 +57,7 @@ export const deadlineRules = [
 ];
 
 export const descriptionRules = [
-    (value: string) => {
+    (value: string): string | boolean => {
         if (!value || value.trim() === "") return "Description cannot be empty.";
         return true;
     },

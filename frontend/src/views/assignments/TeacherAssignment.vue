@@ -66,11 +66,12 @@ function openGroupDetails(group): void {
     dialog.value = true;
 }
 
-const headers = ref([
-    {title: t('group'), align: 'start', key: 'name'},
-    {title: t('progress'), align: 'center', key: 'progress'},
-    {title: t('submission'), align: 'center', key: 'submission'}
+const headers = computed(() => [
+    { title: t('group'), align: 'start', key: 'name' },
+    { title: t('progress'), align: 'center', key: 'progress' },
+    { title: t('submission'), align: 'center', key: 'submission' }
 ]);
+
 
 
 const {mutate, isSuccess} = useDeleteAssignmentMutation();
@@ -177,7 +178,7 @@ async function deleteAssignment(num: number, clsId: string): Promise<void> {
 
                 <v-dialog v-model="dialog" max-width="50%">
                     <v-card>
-                        <v-card-title class="headline">Group Members</v-card-title>
+                        <v-card-title class="headline">{{t("members")}}</v-card-title>
                         <v-card-text>
                             <v-list>
                                 <v-list-item
