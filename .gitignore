@@ -738,3 +738,5 @@ flycheck_*.el
 /network-security.data
 
 docs/.venv
+idp_data/h2/keycloakdb.mv.db
+idp_data/h2/keycloakdb.trace.db

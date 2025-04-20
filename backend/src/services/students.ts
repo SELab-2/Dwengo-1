@@ -63,6 +63,16 @@ export async function createStudent(userData: StudentDTO): Promise<StudentDTO> {
 
     const newStudent = mapToStudent(userData);
     await studentRepository.save(newStudent, { preventOverwrite: true });
+
+    return userData;
+}
+
+export async function createOrUpdateStudent(userData: StudentDTO): Promise<StudentDTO> {
+    await getStudentRepository().upsert({
+        username: userData.username,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+    });
     return userData;
 }
 

@@ -76,6 +76,8 @@
     "failed": "échoué",
     "wrong": "quelque chose n'a pas fonctionné",
     "created": "créé",
+    "callbackLoading": "Vous serez connecté...",
+    "loginUnexpectedError": "La connexion a échoué",
     "submitSolution": "Soumettre la solution",
     "submitNewSolution": "Soumettre une nouvelle solution",
     "markAsDone": "Marquer comme terminé",
