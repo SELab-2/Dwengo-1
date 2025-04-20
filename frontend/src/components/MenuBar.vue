@@ -11,8 +11,8 @@
 
     const role = auth.authState.activeRole;
 
-    const name = "";//Auth.authState.user!.profile.name!;
-    const initials: string = name
+    const name = ref(auth.authState.user!.profile.name!);
+    const initials: string = name.value
         .split(" ")
         .map((n) => n[0])
         .join("");
