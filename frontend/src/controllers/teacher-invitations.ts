@@ -11,10 +11,11 @@ export interface TeacherInvitationResponse {
 
 export class TeacherInvitationController extends BaseController {
     constructor() {
-        super("teachers/invitations");
+        super("teacher/invitations");
     }
 
-    async getAll(username: string, sent: boolean): Promise<TeacherInvitationsResponse> {
+    async getAll(username: string, s: boolean): Promise<TeacherInvitationsResponse> {
+        const sent = s.toString();
         return this.get<TeacherInvitationsResponse>(`/${username}`, { sent });
     }
 

@@ -88,5 +88,17 @@
     "loadSubmission": "Charger",
     "noSubmissionsYet": "Pas encore de soumissions.",
     "viewAsGroup": "Voir la progression du groupe...",
-    "assignLearningPath": "donner comme tâche"
+    "assignLearningPath": "donner comme tâche",
+    "remove": "supprimer",
+    "students": "étudiants",
+    "classJoinRequests": "demandes d'adhésion",
+    "reject": "rejeter",
+    "areusure": "Êtes-vous sûr?",
+    "yes": "oui",
+    "teachers": "enseignants",
+    "accepted": "acceptée",
+    "rejected": "rejetée",
+    "enterUsername": "entrez le nom d'utilisateur de l'enseignant que vous souhaitez inviter",
+    "username": "Nom d'utilisateur",
+    "invite": "inviter"
 }

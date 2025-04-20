@@ -88,5 +88,17 @@
     "loadSubmission": "Load",
     "noSubmissionsYet": "No submissions yet.",
     "viewAsGroup": "View progress of group...",
-    "assignLearningPath": "assign"
+    "assignLearningPath": "assign",
+    "remove": "remove",
+    "students": "students",
+    "classJoinRequests": "join requests",
+    "reject": "reject",
+    "areusure": "Are you sure?",
+    "yes": "yes",
+    "teachers": "teachers",
+    "accepted": "accepted",
+    "rejected": "rejected",
+    "enterUsername": "enter the username of the teacher you would like to invite",
+    "username": "username",
+    "invite": "invite"
 }

@@ -88,5 +88,17 @@
     "loadSubmission": "Einladen",
     "noSubmissionsYet": "Noch keine Lösungen eingereicht.",
     "viewAsGroup": "Fortschritt ansehen von Gruppe...",
-    "assignLearningPath": "Als Aufgabe geben"
+    "assignLearningPath": "Als Aufgabe geben",
+    "remove": "entfernen",
+    "students": "Studenten",
+    "classJoinRequests": "Beitrittsanfragen",
+    "reject": "ablehnen",
+    "areusure": "Sind Sie sicher?",
+    "yes": "ja",
+    "teachers": "Lehrer",
+    "rejected": "abgelehnt",
+    "accepted": "akzeptiert",
+    "enterUsername": "Geben Sie den Benutzernamen der Lehrkraft ein, die Sie einladen möchten",
+    "username": "Nutzername",
+    "invite": "einladen"
 }
