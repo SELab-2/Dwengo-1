@@ -7,7 +7,7 @@
     "main": "dist/app.js",
     "scripts": {
         "build": "cross-env NODE_ENV=production tsc --build",
-        "predev": "cross-env cd .. && npm run build && cd backend",
+        "predev": "tsc --build ../common/tsconfig.json",
         "dev": "cross-env NODE_ENV=development tsx tool/seed.ts && tsx watch --env-file=.env.development.local src/app.ts",
         "start": "cross-env NODE_ENV=production node --env-file=.env dist/app.js",
         "format": "prettier --write src/",

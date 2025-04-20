@@ -1,6 +1,7 @@
 import { spawn } from "child_process";
-import { ChildProcess } from "node:child_process";
+import { ChildProcess, execSync } from 'node:child_process';
 
+let wasRunningBefore: boolean;
 let backendProcess: ChildProcess;
 
 async function waitForEndpoint(url: string, delay = 1000, retries = 60): Promise<void> {
@@ -15,12 +16,14 @@ async function waitForEndpoint(url: string, delay = 1000, retries = 60): Promise
 }
 
 export async function setup(): Promise<void> {
-    // Spin up the database
-    spawn("docker", ["compose", "up", "db", "--detach"], {
-        cwd: "..",
-        stdio: "inherit",
-    });
+    // Check if the database container is already running
+    const containerCheck = execSync("docker ps --filter 'name=db' --format '{{.Names}}'");
+    wasRunningBefore = !(containerCheck.toString().includes("db"));
 
+    // Spin up the database
+    execSync("docker compose up db --detach");
+
+    // Spin up the backend
     backendProcess = spawn("npm", ["run", "dev"], {
         cwd: "../backend",
         stdio: "inherit",
@@ -35,8 +38,10 @@ export async function teardown(): Promise<void> {
         backendProcess.kill();
     }
 
-    spawn("docker", ["compose", "down"], {
-        cwd: "..",
-        stdio: "inherit",
-    });
+    if (wasRunningBefore) {
+        spawn("docker", ["compose", "down"], {
+            cwd: "..",
+            stdio: "inherit",
+        });
+    }
 }
