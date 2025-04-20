@@ -22,7 +22,7 @@ export async function setup(): Promise<void> {
     });
 
     // Spin up the backend
-    backendProcess = spawn("tsx", ["--env-file=.env.development.example", "tool/startTestApp.ts"], {
+    backendProcess = spawn("tsx", ["--env-file=.env.test", "tool/startTestApp.ts"], {
         cwd: "../backend",
         stdio: "inherit",
         env: {

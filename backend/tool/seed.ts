@@ -14,14 +14,12 @@ import { makeTestQuestions } from '../tests/test_assets/questions/questions.test
 import { makeTestStudents } from '../tests/test_assets/users/students.testdata.js';
 import { makeTestTeachers } from '../tests/test_assets/users/teachers.testdata.js';
 import { getLogger, Logger } from '../src/logging/initalize.js';
-import { Collection } from '@mikro-orm/core';
+import { Collection, MikroORM } from '@mikro-orm/core';
 import { Group } from '../src/entities/assignments/group.entity.js';
 
 const logger: Logger = getLogger();
 
-export async function seedDatabase(envFile = '.env.development.local', testMode = false): Promise<void> {
-    dotenv.config({ path: envFile });
-    const orm = await initORM(testMode);
+export async function seedORM(orm: MikroORM): Promise<void> {
     await orm.schema.clearDatabase();
 
     const em = forkEntityManager();
@@ -67,6 +65,13 @@ export async function seedDatabase(envFile = '.env.development.local', testMode 
     ]);
 
     logger.info('Development database seeded successfully!');
+}
+
+export async function seedDatabase(envFile = '.env.development.local', testMode = false): Promise<void> {
+    dotenv.config({ path: envFile });
+    const orm = await initORM(testMode);
+
+    await seedORM(orm);
 
     await orm.close();
 }

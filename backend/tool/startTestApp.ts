@@ -5,10 +5,9 @@ import { errorHandler } from '../src/middleware/error-handling/error-handler.js'
 import dotenv from 'dotenv';
 import cors from '../src/middleware/cors';
 import { authenticateUser } from '../src/middleware/auth/auth';
-import { seedDatabase } from './seed';
+import { seedORM } from './seed';
 
 const envFile = '../.env.test';
-console.log(`Using env file: ${envFile}`);
 
 dotenv.config({ path: envFile });
 
@@ -22,12 +21,9 @@ app.use('/api', apiRouter);
 app.use(errorHandler);
 
 async function startServer(): Promise<void> {
-    await seedDatabase(envFile, true);
-    await initORM(true);
+    await seedORM(await initORM(true));
 
-    app.listen(9876, () => {
-        console.log('Server is running on http://localhost:9876/api');
-    });
+    app.listen(9876);
 }
 
 await startServer();
