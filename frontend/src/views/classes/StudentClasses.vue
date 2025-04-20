@@ -1,50 +1,50 @@
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
-    import { computed, onMounted, ref, type ComputedRef } from "vue";
+    import { computed, onMounted, ref } from "vue";
     import { validate, version } from "uuid";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { useCreateJoinRequestMutation, useStudentClassesQuery } from "@/queries/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
-    import { StudentController } from "@/controllers/students";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
-    import { TeacherController } from "@/controllers/teachers";
+    import type { ClassesResponse } from "@/controllers/classes";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import { useClassStudentsQuery, useClassTeachersQuery } from "@/queries/classes";
+    import type { StudentsResponse } from "@/controllers/students";
+    import type { TeachersResponse } from "@/controllers/teachers";
 
     const { t } = useI18n();
-    const studentController: StudentController = new StudentController();
-    const teacherController: TeacherController = new TeacherController();
 
     // Username of logged in student
     const username = ref<string | undefined>(undefined);
-
-    // Find the username of the logged in user so it can be used to fetch other information
-    // When loading the page
-    onMounted(async () => {
-        const userObject = await authState.loadUser();
-        username.value = userObject?.profile?.preferred_username ?? undefined;
-    });
-
-    // Fetch all classes of the logged in student
-    const { data: classesResponse, isLoading, error } = useStudentClassesQuery(username);
-
-    // Empty list when classes are not yet loaded, else the list of classes of the user
-    const classes: ComputedRef<ClassDTO[]> = computed(() => {
-        // The classes are not yet fetched
-        if (!classesResponse.value) {
-            return [];
-        }
-        // The user has no classes
-        if (classesResponse.value.classes.length === 0) {
-            return [];
-        }
-        return classesResponse.value.classes as ClassDTO[];
-    });
+    const isLoading = ref(false);
+    const isError = ref(false);
+    const errorMessage = ref<string>("");
 
     // Students of selected class are shown when logged in student presses on the member count
     const selectedClass = ref<ClassDTO | null>(null);
-    const students = ref<StudentDTO[]>([]);
-    const teachers = ref<TeacherDTO[]>([]);
     const getStudents = ref(false);
+
+    // Load current user before rendering the page
+    onMounted(async () => {
+        isLoading.value = true;
+        try {
+            const userObject = await authState.loadUser();
+            username.value = userObject!.profile.preferred_username;
+        } catch (error) {
+            isError.value = true;
+            errorMessage.value = error instanceof Error ? error.message : String(error);
+        } finally {
+            isLoading.value = false;
+        }
+    });
+
+    // Fetch all classes of the logged in student
+    const classesQuery = useStudentClassesQuery(username);
+    // Fetch all students of the class
+    const getStudentsQuery = useClassStudentsQuery(computed(() => selectedClass.value?.id));
+    // Fetch all teachers of the class
+    const getTeachersQuery = useClassTeachersQuery(computed(() => selectedClass.value?.id));
 
     // Boolean that handles visibility for dialogs
     // Clicking on membercount will show a dialog with all members
@@ -54,48 +54,19 @@
     async function openStudentDialog(c: ClassDTO): Promise<void> {
         selectedClass.value = c;
 
-        // Clear previous value
+        // Let the component know it should show the students in a class
         getStudents.value = true;
-        students.value = [];
+        await getStudentsQuery.refetch();
         dialog.value = true;
-
-        // Fetch students from their usernames to display their full names
-        const studentDTOs: (StudentDTO | null)[] = await Promise.all(
-            c.students.map(async (uid) => {
-                try {
-                    const res = await studentController.getByUsername(uid);
-                    return res.student;
-                } catch (_) {
-                    return null;
-                }
-            }),
-        );
-
-        // Only show students that are not fetched ass *null*
-        students.value = studentDTOs.filter(Boolean) as StudentDTO[];
     }
 
     async function openTeacherDialog(c: ClassDTO): Promise<void> {
         selectedClass.value = c;
 
-        // Clear previous value
+        // Let the component know it should show teachers of a class
         getStudents.value = false;
-        teachers.value = [];
+        await getTeachersQuery.refetch();
         dialog.value = true;
-
-        // Fetch names of teachers
-        const teacherDTOs: (TeacherDTO | null)[] = await Promise.all(
-            c.teachers.map(async (uid) => {
-                try {
-                    const res = await teacherController.getByUsername(uid);
-                    return res.teacher;
-                } catch (_) {
-                    return null;
-                }
-            }),
-        );
-
-        teachers.value = teacherDTOs.filter(Boolean) as TeacherDTO[];
     }
 
     // Hold the code a student gives in to join a class
@@ -151,100 +122,111 @@
 <template>
     <main>
         <div
+            class="loading-div"
             v-if="isLoading"
-            class="text-center py-10"
         >
-            <v-progress-circular
-                indeterminate
-                color="primary"
-            />
-            <p>Loading...</p>
+            <v-progress-circular indeterminate></v-progress-circular>
         </div>
-
-        <div
-            v-else-if="error"
-            class="text-center py-10 text-error"
-        >
-            <v-icon large>mdi-alert-circle</v-icon>
-            <p>Error loading: {{ error.message }}</p>
+        <div v-if="isError">
+            <v-empty-state
+                icon="mdi-alert-circle-outline"
+                :text="errorMessage"
+                :title="t('error_title')"
+            ></v-empty-state>
         </div>
         <div v-else>
             <h1 class="title">{{ t("classes") }}</h1>
-            <v-container
-                fluid
-                class="ma-4"
+            <using-query-result
+                :query-result="classesQuery"
+                v-slot="classResponse: { data: ClassesResponse }"
             >
-                <v-row
-                    no-gutters
+                <v-container
                     fluid
+                    class="ma-4"
                 >
-                    <v-col
-                        cols="12"
-                        sm="6"
-                        md="6"
+                    <v-row
+                        no-gutters
+                        fluid
                     >
-                        <v-table class="table">
-                            <thead>
-                                <tr>
-                                    <th class="header">{{ t("classes") }}</th>
-                                    <th class="header">{{ t("teachers") }}</th>
-                                    <th class="header">{{ t("members") }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr
-                                    v-for="c in classes"
-                                    :key="c.id"
-                                >
-                                    <td>{{ c.displayName }}</td>
-                                    <td
-                                        class="link"
-                                        @click="openTeacherDialog(c)"
+                        <v-col
+                            cols="12"
+                            sm="6"
+                            md="6"
+                        >
+                            <v-table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="header">{{ t("classes") }}</th>
+                                        <th class="header">{{ t("teachers") }}</th>
+                                        <th class="header">{{ t("members") }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        v-for="c in classResponse.data.classes as ClassDTO[]"
+                                        :key="c.id"
                                     >
-                                        {{ c.teachers.length }}
-                                    </td>
-                                    <td
-                                        class="link"
-                                        @click="openStudentDialog(c)"
-                                    >
-                                        {{ c.students.length }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </v-table>
-                    </v-col>
-                </v-row>
-            </v-container>
+                                        <td>{{ c.displayName }}</td>
+                                        <td
+                                            class="link"
+                                            @click="openTeacherDialog(c)"
+                                        >
+                                            {{ c.teachers.length }}
+                                        </td>
+                                        <td
+                                            class="link"
+                                            @click="openStudentDialog(c)"
+                                        >
+                                            {{ c.students.length }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </v-table>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </using-query-result>
 
             <v-dialog
+                v-if="selectedClass"
                 v-model="dialog"
                 width="400"
             >
                 <v-card>
-                    <v-card-title> {{ selectedClass?.displayName }} </v-card-title>
+                    <v-card-title> {{ selectedClass!.displayName }} </v-card-title>
                     <v-card-text>
                         <ul v-if="getStudents">
-                            <li
-                                v-for="student in students"
-                                :key="student.username"
+                            <using-query-result
+                                :query-result="getStudentsQuery"
+                                v-slot="studentsResponse: { data: StudentsResponse }"
                             >
-                                {{ student.firstName + " " + student.lastName }}
-                            </li>
+                                <li
+                                    v-for="student in studentsResponse.data.students as StudentDTO[]"
+                                    :key="student.username"
+                                >
+                                    {{ student.firstName + " " + student.lastName }}
+                                </li>
+                            </using-query-result>
                         </ul>
                         <ul v-else>
-                            <li
-                                v-for="teacher in teachers"
-                                :key="teacher.username"
+                            <using-query-result
+                                :query-result="getTeachersQuery"
+                                v-slot="teachersResponse: { data: TeachersResponse }"
                             >
-                                {{ teacher.firstName + " " + teacher.lastName }}
-                            </li>
+                                <li
+                                    v-for="teacher in teachersResponse.data.teachers as TeacherDTO[]"
+                                    :key="teacher.username"
+                                >
+                                    {{ teacher.firstName + " " + teacher.lastName }}
+                                </li>
+                            </using-query-result>
                         </ul>
                     </v-card-text>
                     <v-card-actions>
                         <v-btn
                             color="primary"
                             @click="dialog = false"
-                            >Close</v-btn
+                            >{{ t("close") }}</v-btn
                         >
                     </v-card-actions>
                 </v-card>

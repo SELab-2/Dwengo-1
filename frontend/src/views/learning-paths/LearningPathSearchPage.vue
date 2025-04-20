@@ -9,11 +9,11 @@
     import LearningPathsGrid from "@/components/LearningPathsGrid.vue";
 
     const route = useRoute();
-    const { t } = useI18n();
+    const { t, locale } = useI18n();
 
     const query = computed(() => route.query.query as string | undefined);
 
-    const searchQueryResults = useSearchLearningPathQuery(query);
+    const searchQueryResults = useSearchLearningPathQuery(query, locale);
 </script>
 
 <template>

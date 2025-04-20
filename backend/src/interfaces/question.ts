@@ -31,7 +31,7 @@ export function mapToQuestionDTO(question: Question): QuestionDTO {
         learningObjectIdentifier,
         sequenceNumber: question.sequenceNumber!,
         author: mapToStudentDTO(question.author),
-        inGroup: mapToGroupDTOId(question.inGroup),
+        inGroup: mapToGroupDTOId(question.inGroup, question.inGroup.assignment?.within),
         timestamp: question.timestamp.toISOString(),
         content: question.content,
     };

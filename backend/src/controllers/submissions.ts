@@ -17,15 +17,18 @@ export async function getSubmissionsHandler(req: Request, res: Response): Promis
     const lang = languageMap[req.query.language as string] || Language.Dutch;
     const version = parseInt(req.query.version as string) ?? 1;
 
-    const submissions = await getSubmissionsForLearningObjectAndAssignment(
+    const forGroup = req.query.forGroup as string | undefined;
+
+    const submissions: SubmissionDTO[] = await getSubmissionsForLearningObjectAndAssignment(
         loHruid,
         lang,
         version,
         req.query.classId as string,
-        parseInt(req.query.assignmentId as string)
+        parseInt(req.query.assignmentId as string),
+        forGroup ? parseInt(forGroup) : undefined
     );
 
-    res.json(submissions);
+    res.json({ submissions });
 }
 
 export async function getSubmissionHandler(req: Request, res: Response): Promise<void> {

@@ -14,7 +14,7 @@ export interface StudentResponse {
     student: StudentDTO;
 }
 export interface JoinRequestsResponse {
-    requests: ClassJoinRequestDTO[];
+    joinRequests: ClassJoinRequestDTO[];
 }
 export interface JoinRequestResponse {
     request: ClassJoinRequestDTO;

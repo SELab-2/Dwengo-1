@@ -12,6 +12,7 @@
         "format": "prettier --write src/",
         "format-check": "prettier --check src/",
         "lint": "eslint . --fix",
+        "pretest:unit": "tsx ../docs/api/generate.ts && npm run build",
         "test:unit": "VITE_API_BASE_URL='http://localhost:9876/api' vitest --run",
         "test:e2e": "playwright test"
     },

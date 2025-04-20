@@ -48,14 +48,14 @@ const idpConfigs = {
 const verifyJwtToken = expressjwt({
     secret: async (_: express.Request, token: jwt.Jwt | undefined) => {
         if (!token?.payload || !(token.payload as JwtPayload).iss) {
-            throw new Error('Invalid token');
+            throw new UnauthorizedException('Invalid token.');
         }
 
         const issuer = (token.payload as JwtPayload).iss;
 
         const idpConfig = Object.values(idpConfigs).find((config) => config.issuer === issuer);
         if (!idpConfig) {
-            throw new Error('Issuer not accepted.');
+            throw new UnauthorizedException('Issuer not accepted.');
         }
 
         const signingKey = await idpConfig.jwksClient.getSigningKey(token.header.kid);

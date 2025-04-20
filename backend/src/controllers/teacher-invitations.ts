@@ -40,7 +40,7 @@ export async function updateInvitationHandler(req: Request, res: Response): Prom
     const sender = req.body.sender;
     const receiver = req.body.receiver;
     const classId = req.body.class;
-    req.body.accepted = req.body.accepted !== 'false';
+    req.body.accepted = req.body.accepted !== false;
     requireFields({ sender, receiver, classId });
 
     const data = req.body as TeacherInvitationData;
