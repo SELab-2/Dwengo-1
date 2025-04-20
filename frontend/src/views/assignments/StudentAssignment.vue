@@ -19,7 +19,7 @@ const props = defineProps<{
         groups: Ref<GroupDTO[]>,
         hruid: Ref<string>,
         language: Ref<Language>
-    ) => { groupProgressMap: Record<string, number> };
+    ) => { groupProgressMap: Map<number, number> };
 }>();
 
 const {t, locale} = useI18n();
@@ -50,7 +50,7 @@ const group = computed(() =>
 );
 
 
-const groupArray = computed(() => (group.value ? [group.value] : []));
+const _groupArray = computed(() => (group.value ? [group.value] : []));
 const progressValue = ref(0);
 /* Crashes right now cause api data has inexistent hruid TODO: uncomment later and use it in progress bar
 Const {groupProgressMap} = props.useGroupsWithProgress(

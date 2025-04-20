@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import auth from "@/services/auth/auth-service.ts";
-import {computed, reactive, type Ref, ref, watchEffect} from "vue";
+import {computed, type Ref, ref, watchEffect} from "vue";
 import StudentAssignment from "@/views/assignments/StudentAssignment.vue";
 import TeacherAssignment from "@/views/assignments/TeacherAssignment.vue";
 import {useRoute} from "vue-router";
@@ -21,14 +21,12 @@ function useGroupsWithProgress(
     groups: Ref<GroupDTO[]>,
     hruid: Ref<string>,
     language: Ref<string>
-): { groupProgressMap: Record<number, number> } {
-    const groupProgressMap: Record<number, number> = reactive({});
+): { groupProgressMap: Map<number, number> } {
+    const groupProgressMap: Map<number, number> = new Map<number, number>();
 
     watchEffect(() => {
         // Clear existing entries to avoid stale data
-        for (const key in groupProgressMap) {
-            delete groupProgressMap[key];
-        }
+        groupProgressMap.clear();
 
         const lang = ref(language.value as Language);
 
@@ -44,7 +42,7 @@ function useGroupsWithProgress(
 
             const data = query.data.value;
 
-            groupProgressMap[groupKey] = data ? calculateProgress(data) : 0;
+            groupProgressMap.set(groupKey, data ? calculateProgress(data) : 0);
         });
     });
 

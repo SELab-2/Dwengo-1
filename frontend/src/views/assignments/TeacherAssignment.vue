@@ -17,7 +17,7 @@ const props = defineProps<{
         groups: Ref<GroupDTO[]>,
         hruid: Ref<string>,
         language: Ref<Language>
-    ) => { groupProgressMap: Record<string, number> };
+    ) => { groupProgressMap: Map<number, number> };
 }>();
 
 const {t, locale} = useI18n();
@@ -143,13 +143,13 @@ async function deleteAssignment(num: number, clsId: string): Promise<void> {
                             item-key="id"
                             class="elevation-1"
                         >
-                            <template v-slot:item.name="{ item }">
+                            <template #[`item.name`]="{ item }">
                                 <v-btn @click="openGroupDetails(item)" variant="text" color="primary">
                                     {{ item.name }}
                                 </v-btn>
                             </template>
 
-                            <template v-slot:item.progress="{ item }">
+                            <template #[`item.progress`]="{ item }">
                                 <v-progress-linear
                                     :model-value="item.progress"
                                     color="blue-grey"
@@ -161,7 +161,7 @@ async function deleteAssignment(num: number, clsId: string): Promise<void> {
                                 </v-progress-linear>
                             </template>
 
-                            <template v-slot:item.submission="{ item }">
+                            <template #[`item.submission`]="{ item }">
                                 <v-btn
                                     :to="item.submitted ? `${props.assignmentId}/submissions/` : undefined"
                                     :color="item.submitted ? 'green' : 'red'"
