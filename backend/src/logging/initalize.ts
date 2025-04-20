@@ -26,7 +26,7 @@ function initializeLogger(): Logger {
 
     const consoleTransport = new transports.Console({
         level: getEnvVar(envVars.LogLevel),
-        format: format.combine(format.cli(), format.simple())
+        format: format.combine(format.cli(), format.simple()),
     });
 
     if (getEnvVar(envVars.RunMode) === 'dev') {

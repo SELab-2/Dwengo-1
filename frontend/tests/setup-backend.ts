@@ -1,5 +1,5 @@
 import { spawn } from "child_process";
-import { ChildProcess, spawnSync } from 'node:child_process';
+import { ChildProcess, spawnSync } from "node:child_process";
 
 let backendProcess: ChildProcess;
 
@@ -27,8 +27,8 @@ export async function setup(): Promise<void> {
         stdio: "inherit",
         env: {
             ...process.env,
-            NODE_ENV: 'test',
-        }
+            NODE_ENV: "test",
+        },
     });
 
     // Wait until you can curl the backend

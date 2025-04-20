@@ -1,7 +1,7 @@
 import apiClient from "@/services/api-client/api-client.ts";
 import type { AxiosResponse, ResponseType } from "axios";
 import { HttpErrorResponseException } from "@/exception/http-error-response-exception.ts";
-import { apiConfig } from '@/config.ts';
+import { apiConfig } from "@/config.ts";
 
 export abstract class BaseController {
     protected basePath: string;
@@ -25,7 +25,9 @@ export abstract class BaseController {
             if (error instanceof HttpErrorResponseException) {
                 throw error;
             }
-            throw new Error(`An unexpected error occurred while fetching data from ${apiConfig.baseUrl}${this.absolutePathFor(path)}: ${error}`);
+            throw new Error(
+                `An unexpected error occurred while fetching data from ${apiConfig.baseUrl}${this.absolutePathFor(path)}: ${error}`,
+            );
         }
     }
 

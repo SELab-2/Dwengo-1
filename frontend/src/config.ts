@@ -4,7 +4,10 @@ export const apiConfig = {
             return import.meta.env.VITE_API_BASE_URL;
         }
 
-        if (window.location.hostname === "localhost" && !(window.location.port === "80" || window.location.port === "")) {
+        if (
+            window.location.hostname === "localhost" &&
+            !(window.location.port === "80" || window.location.port === "")
+        ) {
             return "http://localhost:3000/api";
         }
 
