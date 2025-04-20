@@ -75,7 +75,6 @@
     "sent": "sent",
     "failed": "failed",
     "wrong": "something went wrong",
-    "created": "created",
     "submitSolution": "Submit solution",
     "submitNewSolution": "Submit new solution",
     "markAsDone": "Mark as completed",
@@ -86,5 +85,18 @@
     "loadSubmission": "Load",
     "noSubmissionsYet": "No submissions yet.",
     "viewAsGroup": "View progress of group...",
-    "assignLearningPath": "assign"
+    "assignLearningPath": "assign",
+    "created": "created",
+    "remove": "remove",
+    "students": "students",
+    "classJoinRequests": "join requests",
+    "reject": "reject",
+    "areusure": "Are you sure?",
+    "yes": "yes",
+    "teachers": "teachers",
+    "accepted": "accepted",
+    "rejected": "rejected",
+    "enterUsername": "enter the username of the teacher you would like to invite",
+    "username": "username",
+    "invite": "invite"
 }

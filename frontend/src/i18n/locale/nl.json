@@ -86,5 +86,17 @@
     "loadSubmission": "Inladen",
     "noSubmissionsYet": "Nog geen indieningen.",
     "viewAsGroup": "Vooruitgang bekijken van groep...",
-    "assignLearningPath": "Als opdracht geven"
+    "assignLearningPath": "Als opdracht geven",
+    "remove": "verwijder",
+    "students": "studenten",
+    "classJoinRequests": "deelname verzoeken",
+    "reject": "weiger",
+    "areusure": "Bent u zeker?",
+    "yes": "ja",
+    "teachers": "leerkrachten",
+    "accepted": "geaccepteerd",
+    "rejected": "geweigerd",
+    "enterUsername": "vul de gebruikersnaam van de leerkracht die je wilt uitnodigen in",
+    "username": "gebruikersnaam",
+    "invite": "uitnodigen"
 }
