@@ -15,13 +15,13 @@ import { makeTestStudents } from '../tests/test_assets/users/students.testdata.j
 import { makeTestTeachers } from '../tests/test_assets/users/teachers.testdata.js';
 import { getLogger, Logger } from '../src/logging/initalize.js';
 import { Collection } from '@mikro-orm/core';
-import { Group } from '../dist/entities/assignments/group.entity.js';
+import { Group } from '../src/entities/assignments/group.entity.js';
 
 const logger: Logger = getLogger();
 
-export async function seedDatabase(): Promise<void> {
-    dotenv.config({ path: '.env.development.local' });
-    const orm = await initORM();
+export async function seedDatabase(envFile = '.env.development.local', testMode = false): Promise<void> {
+    dotenv.config({ path: envFile });
+    const orm = await initORM(testMode);
     await orm.schema.clearDatabase();
 
     const em = forkEntityManager();

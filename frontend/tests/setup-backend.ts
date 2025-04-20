@@ -1,7 +1,6 @@
 import { spawn } from "child_process";
-import { ChildProcess, execSync } from 'node:child_process';
+import { ChildProcess, spawnSync } from 'node:child_process';
 
-let wasRunningBefore: boolean;
 let backendProcess: ChildProcess;
 
 async function waitForEndpoint(url: string, delay = 1000, retries = 60): Promise<void> {
@@ -16,32 +15,28 @@ async function waitForEndpoint(url: string, delay = 1000, retries = 60): Promise
 }
 
 export async function setup(): Promise<void> {
-    // Check if the database container is already running
-    const containerCheck = execSync("docker ps --filter 'name=db' --format '{{.Names}}'");
-    wasRunningBefore = !(containerCheck.toString().includes("db"));
-
-    // Spin up the database
-    execSync("docker compose up db --detach");
-
-    // Spin up the backend
-    backendProcess = spawn("npm", ["run", "dev"], {
+    // Precompile needed packages
+    spawnSync("npm", ["run", "predev"], {
         cwd: "../backend",
         stdio: "inherit",
     });
 
+    // Spin up the backend
+    backendProcess = spawn("tsx", ["--env-file=.env.development.example", "tool/startTestApp.ts"], {
+        cwd: "../backend",
+        stdio: "inherit",
+        env: {
+            ...process.env,
+            NODE_ENV: 'test',
+        }
+    });
+
     // Wait until you can curl the backend
-    await waitForEndpoint("http://localhost:3000/api");
+    await waitForEndpoint("http://localhost:9876/api");
 }
 
 export async function teardown(): Promise<void> {
     if (backendProcess) {
         backendProcess.kill();
-    }
-
-    if (wasRunningBefore) {
-        spawn("docker", ["compose", "down"], {
-            cwd: "..",
-            stdio: "inherit",
-        });
     }
 }
