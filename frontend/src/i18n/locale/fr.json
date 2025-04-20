@@ -105,4 +105,16 @@
     "no-submission": "aucune soumission",
     "submission": "Soumission",
     "progress": "Progrès"
+    "remove": "supprimer",
+    "students": "étudiants",
+    "classJoinRequests": "demandes d'adhésion",
+    "reject": "rejeter",
+    "areusure": "Êtes-vous sûr?",
+    "yes": "oui",
+    "teachers": "enseignants",
+    "accepted": "acceptée",
+    "rejected": "rejetée",
+    "enterUsername": "entrez le nom d'utilisateur de l'enseignant que vous souhaitez inviter",
+    "username": "Nom d'utilisateur",
+    "invite": "inviter"
 }

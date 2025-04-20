@@ -34,6 +34,6 @@ router.get('/:username/joinRequests/:classId', getStudentJoinRequestHandler);
 router.put('/:username/joinRequests/:classId/:studentUsername', updateStudentJoinRequestHandler);
 
 // Invitations to other classes a teacher received
-router.get('/invitations', invitationRouter);
+router.use('/invitations', invitationRouter);
 
 export default router;

@@ -3,7 +3,6 @@ import SingleAssignment from "@/views/assignments/SingleAssignment.vue";
 import SingleClass from "@/views/classes/SingleClass.vue";
 import SingleDiscussion from "@/views/discussions/SingleDiscussion.vue";
 import NotFound from "@/components/errors/NotFound.vue";
-import CreateClass from "@/views/classes/CreateClass.vue";
 import CreateAssignment from "@/views/assignments/CreateAssignment.vue";
 import CreateDiscussion from "@/views/discussions/CreateDiscussion.vue";
 import CallbackPage from "@/views/CallbackPage.vue";
@@ -87,12 +86,6 @@ const router = createRouter({
                     component: SingleAssignment,
                 },
             ]
-        },
-        {
-            path: "/class/create",
-            name: "CreateClass",
-            component: CreateClass,
-            meta: { requiresAuth: true },
         },
         {
             path: "/class/:id",
