@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref, computed, defineEmits } from "vue";
+    import { ref, computed } from "vue";
     import { deadlineRules } from "@/utils/assignment-rules.ts";
 
     const date = ref("");

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref, computed, defineProps, type Ref } from "vue";
+    import { ref, computed, type Ref } from "vue";
     import auth from "@/services/auth/auth-service.ts";
     import { useI18n } from "vue-i18n";
     import { useAssignmentQuery } from "@/queries/assignments.ts";
