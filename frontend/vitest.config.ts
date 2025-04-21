@@ -9,8 +9,13 @@ export default mergeConfig(
             environment: "jsdom",
             exclude: [...configDefaults.exclude, "e2e/**"],
             root: fileURLToPath(new URL("./", import.meta.url)),
-            // Startup the backend server, because it is needed for some tests
-            globalSetup: ["./tests/setup-backend.ts"],
+
+            /*
+             * The test-backend server can be started for each test-file individually using `beforeAll(() => setup())`,
+             * or for all tests once using:
+             globalSetup: ["./tests/setup-backend.ts"],
+             * In this project, the backend server is started for each test-file individually.
+             */
         },
     }),
 );
