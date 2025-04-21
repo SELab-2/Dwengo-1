@@ -5,7 +5,7 @@
  */
 export const assignmentTitleRules = [
     (value: string): string | boolean => {
-        if (value?.length >= 1) return true;  // Title must not be empty
+        if (value?.length >= 1) {return true;}  // Title must not be empty
         return 'Title cannot be empty.';
     },
 ];
@@ -31,7 +31,7 @@ export const learningPathRules = [
  */
 export const classRules = [
     (value: string): string | boolean => {
-        if (value) return true;
+        if (value) {return true;}
         return 'You must select at least one class.';
     },
 ];
@@ -43,14 +43,14 @@ export const classRules = [
  */
 export const deadlineRules = [
     (value: string): string | boolean => {
-        if (!value) return "You must set a deadline.";
+        if (!value) {return "You must set a deadline.";}
 
         const selectedDateTime = new Date(value);
         const now = new Date();
 
-        if (isNaN(selectedDateTime.getTime())) return "Invalid date or time.";
+        if (isNaN(selectedDateTime.getTime())) {return "Invalid date or time.";}
 
-        if (selectedDateTime <= now) return "The deadline must be in the future.";
+        if (selectedDateTime <= now) {return "The deadline must be in the future.";}
 
         return true;
     },
@@ -58,7 +58,7 @@ export const deadlineRules = [
 
 export const descriptionRules = [
     (value: string): string | boolean => {
-        if (!value || value.trim() === "") return "Description cannot be empty.";
+        if (!value || value.trim() === "") {return "Description cannot be empty.";}
         return true;
     },
 ];
