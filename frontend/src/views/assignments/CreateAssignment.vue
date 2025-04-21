@@ -71,7 +71,6 @@
         }
     });
 
-
     async function submitFormHandler(): Promise<void> {
         const { valid } = await form.value.validate();
         if (!valid) return;
