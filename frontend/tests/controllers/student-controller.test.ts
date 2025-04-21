@@ -1,8 +1,8 @@
 import { StudentController } from "../../src/controllers/students";
-import { expect, it, describe, afterAll, beforeAll } from 'vitest';
-import { setup, teardown } from '../setup-backend.js';
+import { expect, it, describe, afterAll, beforeAll } from "vitest";
+import { setup, teardown } from "../setup-backend.js";
 
-describe('Test controller students', () => {
+describe("Test controller students", () => {
     beforeAll(async () => {
         await setup();
     });
