@@ -107,7 +107,6 @@
     "no-submission": "keine vorlage",
     "submission": "Einreichung",
     "progress": "Fortschritte",
-    "created": "erstellt",
     "remove": "entfernen",
     "students": "Studenten",
     "classJoinRequests": "Beitrittsanfragen",
@@ -120,3 +119,4 @@
     "enterUsername": "Geben Sie den Benutzernamen der Lehrkraft ein, die Sie einladen möchten",
     "username": "Nutzername",
     "invite": "einladen"
+}

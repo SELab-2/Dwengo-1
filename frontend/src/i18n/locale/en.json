@@ -88,7 +88,6 @@
     "sent": "sent",
     "failed": "failed",
     "wrong": "something went wrong",
-    "created": "created",
     "callbackLoading": "You are being logged in...",
     "loginUnexpectedError": "Login failed",
     "submitSolution": "Submit solution",
