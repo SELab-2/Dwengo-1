@@ -13,6 +13,11 @@
     import authService from "@/services/auth/auth-service.ts";
     import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
     import LearningPathGroupSelector from "@/views/learning-paths/LearningPathGroupSelector.vue";
+    import { useQuestionsQuery } from "@/queries/questions";
+    import type { QuestionsResponse } from "@/controllers/questions";
+    import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
+    import QandA from "@/components/QandA.vue";
+import type { QuestionDTO } from "@dwengo-1/common/interfaces/question";
 
     const router = useRouter();
     const route = useRoute();
@@ -67,6 +72,17 @@
         const currentIndex = nodesList.value?.indexOf(currentNode.value);
         return currentIndex < nodesList.value?.length ? nodesList.value?.[currentIndex - 1] : undefined;
     });
+
+    const getQuestionsQuery = useQuestionsQuery(
+        computed(
+            () =>
+                ({
+                    language: currentNode.value?.language,
+                    hruid: currentNode.value?.learningobjectHruid,
+                    version: currentNode.value?.version,
+                }) as LearningObjectIdentifierDTO,
+        ),
+    );
 
     const navigationDrawerShown = ref(true);
 
@@ -257,6 +273,12 @@
                 {{ t("next") }}
             </v-btn>
         </div>
+        <using-query-result
+            :query-result="getQuestionsQuery"
+            v-slot="questionsResponse: { data: QuestionsResponse }"
+        >
+            <QandA :questions="questionsResponse.data.questions as QuestionDTO[] ?? []" />
+        </using-query-result>
     </using-query-result>
 </template>
 
