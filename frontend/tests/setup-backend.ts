@@ -16,14 +16,14 @@ async function waitForEndpoint(url: string, delay = 1000, retries = 60): Promise
 
 export async function setup(): Promise<void> {
     // Precompile needed packages
-    spawnSync("npm", ["run", "predev"], {
-        cwd: "../backend",
+    spawnSync("npx", ["tsc", "--build", "tsconfig.json"], {
+        cwd: `../common`,
         stdio: "inherit",
     });
 
     // Spin up the backend
-    backendProcess = spawn("tsx", ["--env-file=.env.test", "tool/startTestApp.ts"], {
-        cwd: "../backend",
+    backendProcess = spawn("npx", ["tsx", "--env-file=.env.test", "tool/startTestApp.ts"], {
+        cwd: `../backend`,
         stdio: "inherit",
         env: {
             ...process.env,

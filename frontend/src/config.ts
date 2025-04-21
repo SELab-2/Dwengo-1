@@ -1,5 +1,10 @@
 export const apiConfig = {
     baseUrl: ((): string => {
+        if (import.meta.env.MODE === "test") {
+            // TODO Remove hardcoding
+            return "http://localhost:9876/api";
+        }
+
         if (import.meta.env.VITE_API_BASE_URL) {
             return import.meta.env.VITE_API_BASE_URL;
         }
