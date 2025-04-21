@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref, computed, onMounted } from "vue";
+import {ref, computed, onMounted, watch} from "vue";
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
     import auth from "@/services/auth/auth-service.ts";
@@ -61,6 +61,11 @@
     }
 
     const { mutate, isSuccess } = useDeleteAssignmentMutation();
+    watch(isSuccess, async (success) => {
+        if (success) {
+            await router.push("/user/assignment");
+        }
+    });
 
     async function goToDeleteAssignment(num: number, clsId: string): Promise<void> {
         mutate({
@@ -68,7 +73,6 @@
             an: num,
         });
 
-        if (isSuccess) await router.push("/user/assignment");
     }
 
     onMounted(async () => {

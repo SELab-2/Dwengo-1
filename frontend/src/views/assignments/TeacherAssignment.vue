@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, type Ref, ref } from "vue";
+import {computed, type Ref, ref, watch} from "vue";
     import { useI18n } from "vue-i18n";
     import { useAssignmentQuery, useDeleteAssignmentMutation } from "@/queries/assignments.ts";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
@@ -72,14 +72,17 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
     ]);
 
     const { mutate, isSuccess } = useDeleteAssignmentMutation();
+    watch(isSuccess, async (success) => {
+        if (success) {
+            await router.push("/user/assignment");
+        }
+    });
 
     async function deleteAssignment(num: number, clsId: string): Promise<void> {
         mutate({
             cid: clsId,
             an: num,
         });
-
-        if (isSuccess) await router.push("/user/assignments");
     }
 </script>
 

@@ -65,6 +65,13 @@
 
     const { mutate, data, isSuccess } = useCreateAssignmentMutation();
 
+    watch([isSuccess, data], async ([success, newData]) => {
+        if (success && newData?.assignment) {
+            await router.push(`/assignment/${newData.assignment.within}/${newData.assignment.id}`);
+        }
+    });
+
+
     async function submitFormHandler(): Promise<void> {
         const { valid } = await form.value.validate();
         if (!valid) return;
@@ -80,8 +87,6 @@
         };
 
         mutate({ cid: assignmentDTO.within, data: assignmentDTO });
-        if (isSuccess)
-            await router.push(`/assignment/class/${data.value?.assignment.within}/${data.value?.assignment.id}`);
     }
 </script>
 
