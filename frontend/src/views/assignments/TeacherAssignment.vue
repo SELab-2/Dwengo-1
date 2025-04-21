@@ -115,7 +115,7 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
                         <v-icon>mdi-delete</v-icon>
                     </v-btn>
                 </div>
-                <v-card-title class="text-h4">{{ data.assignment.title }}</v-card-title>
+                <v-card-title class="text-h4 assignmentTopTitle">{{ data.assignment.title }}</v-card-title>
                 <v-card-subtitle class="subtitle-section">
                     <using-query-result
                         :query-result="lpQueryResult"
