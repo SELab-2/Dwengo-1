@@ -81,6 +81,6 @@ test("Cannot sign in with invalid credentials", async ({ page }) => {
 test("Cannot skip login", async ({ page }) => {
     await page.goto("/user");
     // Should redirect to login
-    await expect(page.getByText('login')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'teacher' })).toBeVisible();
+    await expect(page.getByText("login")).toBeVisible();
+    await expect(page.getByRole("button", { name: "teacher" })).toBeVisible();
 });

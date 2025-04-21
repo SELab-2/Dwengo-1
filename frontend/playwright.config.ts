@@ -116,6 +116,6 @@ export default defineConfig({
             `,
             port: 9876,
             reuseExistingServer: !process.env.CI,
-        }
+        },
     ],
 });
