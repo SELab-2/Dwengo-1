@@ -8,12 +8,12 @@ import CreateDiscussion from "@/views/discussions/CreateDiscussion.vue";
 import CallbackPage from "@/views/CallbackPage.vue";
 import UserClasses from "@/views/classes/UserClasses.vue";
 import UserAssignments from "@/views/assignments/UserAssignments.vue";
-import authState from "@/services/auth/auth-service.ts";
 import LearningPathPage from "@/views/learning-paths/LearningPathPage.vue";
 import LearningPathSearchPage from "@/views/learning-paths/LearningPathSearchPage.vue";
 import UserHomePage from "@/views/homepage/UserHomePage.vue";
 import SingleTheme from "@/views/SingleTheme.vue";
 import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
+import authService from "@/services/auth/auth-service";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
