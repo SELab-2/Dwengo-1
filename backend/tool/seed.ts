@@ -77,4 +77,6 @@ export async function seedDatabase(envFile = '.env.development.local', testMode 
     await orm.close();
 }
 
-seedDatabase().catch(logger.error);
+seedDatabase().catch((err) => {
+    logger.error(err);
+});
