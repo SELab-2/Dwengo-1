@@ -1,14 +1,15 @@
 import { Language } from '../util/language';
 
 export interface Transition {
-    default: boolean;
-    _id: string;
+    default?: boolean;
+    _id?: string;
     next: {
-        _id: string;
+        _id?: string;
         hruid: string;
         version: number;
         language: string;
     };
+    condition?: string;
 }
 
 export interface LearningObjectIdentifierDTO {
@@ -18,7 +19,7 @@ export interface LearningObjectIdentifierDTO {
 }
 
 export interface LearningObjectNode {
-    _id: string;
+    _id?: string;
     learningobject_hruid: string;
     version: number;
     language: Language;
@@ -30,20 +31,20 @@ export interface LearningObjectNode {
 }
 
 export interface LearningPath {
-    _id: string;
+    _id?: string;
     language: string;
     hruid: string;
     title: string;
     description: string;
     image?: string; // Image might be missing, so it's optional
-    num_nodes: number;
-    num_nodes_left: number;
+    num_nodes?: number;
+    num_nodes_left?: number;
     nodes: LearningObjectNode[];
     keywords: string;
     target_ages: number[];
-    min_age: number;
-    max_age: number;
-    __order: number;
+    min_age?: number;
+    max_age?: number;
+    __order?: number;
 }
 
 export interface LearningPathIdentifier {
@@ -62,8 +63,8 @@ export interface ReturnValue {
 }
 
 export interface LearningObjectMetadata {
-    _id: string;
-    uuid: string;
+    _id?: string;
+    uuid?: string;
     hruid: string;
     version: number;
     language: Language;
@@ -84,7 +85,7 @@ export interface LearningObjectMetadata {
 
 export interface FilteredLearningObject {
     key: string;
-    _id: string;
+    _id?: string;
     uuid: string;
     version: number;
     title: string;

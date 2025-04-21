@@ -11,7 +11,7 @@ export class MikroOrmLogger extends DefaultLogger {
         };
 
         let message: string;
-        if (context?.label) {
+        if (context !== undefined && context.labels !== undefined) {
             message = `[${namespace}] (${context.label}) ${messageArg}`;
         } else {
             message = `[${namespace}] ${messageArg}`;
