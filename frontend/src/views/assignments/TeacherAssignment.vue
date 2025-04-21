@@ -123,7 +123,7 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
                     >
                         <v-btn
                             v-if="lpData"
-                            :to="`/learningPath/${lpData.hruid}/${language}/${lpData.startNode.learningobjectHruid}`"
+                            :to="`/learningPath/${lpData.hruid}/${language}/${lpData.startNode.learningobjectHruid}?assignmentNo=${assignmentId}&classId=${classId}`"
                             variant="tonal"
                             color="primary"
                         >

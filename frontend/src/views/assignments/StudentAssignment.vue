@@ -1,65 +1,65 @@
 <script setup lang="ts">
-    import { ref, computed, type Ref } from "vue";
-    import auth from "@/services/auth/auth-service.ts";
-    import { useI18n } from "vue-i18n";
-    import { useAssignmentQuery } from "@/queries/assignments.ts";
-    import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import type { AssignmentResponse } from "@/controllers/assignments.ts";
-    import { asyncComputed } from "@vueuse/core";
-    import { useStudentsByUsernamesQuery } from "@/queries/students.ts";
-    import { useGroupsQuery } from "@/queries/groups.ts";
-    import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
-    import type { Language } from "@/data-objects/language.ts";
-    import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
+import {ref, computed, type Ref} from "vue";
+import auth from "@/services/auth/auth-service.ts";
+import {useI18n} from "vue-i18n";
+import {useAssignmentQuery} from "@/queries/assignments.ts";
+import UsingQueryResult from "@/components/UsingQueryResult.vue";
+import type {AssignmentResponse} from "@/controllers/assignments.ts";
+import {asyncComputed} from "@vueuse/core";
+import {useStudentsByUsernamesQuery} from "@/queries/students.ts";
+import {useGroupsQuery} from "@/queries/groups.ts";
+import {useGetLearningPathQuery} from "@/queries/learning-paths.ts";
+import type {Language} from "@/data-objects/language.ts";
+import type {GroupDTO} from "@dwengo-1/common/interfaces/group";
 
-    const props = defineProps<{
-        classId: string;
-        assignmentId: number;
-        useGroupsWithProgress: (
-            groups: Ref<GroupDTO[]>,
-            hruid: Ref<string>,
-            language: Ref<Language>,
-        ) => { groupProgressMap: Map<number, number> };
-    }>();
+const props = defineProps<{
+    classId: string;
+    assignmentId: number;
+    useGroupsWithProgress: (
+        groups: Ref<GroupDTO[]>,
+        hruid: Ref<string>,
+        language: Ref<Language>,
+    ) => { groupProgressMap: Map<number, number> };
+}>();
 
-    const { t, locale } = useI18n();
-    const language = ref<Language>(locale.value as Language);
-    const learningPath = ref();
-    // Get the user's username/id
-    const username = asyncComputed(async () => {
-        const user = await auth.loadUser();
-        return user?.profile?.preferred_username ?? undefined;
-    });
+const {t, locale} = useI18n();
+const language = ref<Language>(locale.value as Language);
+const learningPath = ref();
+// Get the user's username/id
+const username = asyncComputed(async () => {
+    const user = await auth.loadUser();
+    return user?.profile?.preferred_username ?? undefined;
+});
 
-    const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
-    learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
+const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
+learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
 
-    const submitted = ref(false); //TODO: update by fetching submissions and check if group submitted
+const submitted = ref(false); //TODO: update by fetching submissions and check if group submitted
 
-    const lpQueryResult = useGetLearningPathQuery(
-        computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
-        computed(() => language.value),
-    );
+const lpQueryResult = useGetLearningPathQuery(
+    computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
+    computed(() => language.value),
+);
 
-    const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
-    const group = computed(() =>
-        groupsQueryResult?.data.value?.groups.find((group) =>
-            group.members?.some((m) => m.username === username.value),
-        ),
-    );
+const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
+const group = computed(() =>
+    groupsQueryResult?.data.value?.groups.find((group) =>
+        group.members?.some((m) => m.username === username.value),
+    ),
+);
 
-    const _groupArray = computed(() => (group.value ? [group.value] : []));
-    const progressValue = ref(0);
-    /* Crashes right now cause api data has inexistent hruid TODO: uncomment later and use it in progress bar
+const _groupArray = computed(() => (group.value ? [group.value] : []));
+const progressValue = ref(0);
+/* Crashes right now cause api data has inexistent hruid TODO: uncomment later and use it in progress bar
 Const {groupProgressMap} = props.useGroupsWithProgress(
-    groupArray,
-    learningPath,
-    language
+groupArray,
+learningPath,
+language
 );
 */
 
-    // Assuming group.value.members is a list of usernames TODO: case when it's StudentDTO's
-    const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as string[]);
+// Assuming group.value.members is a list of usernames TODO: case when it's StudentDTO's
+const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as string[]);
 </script>
 
 <template>
@@ -100,7 +100,7 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
                     >
                         <v-btn
                             v-if="lpData"
-                            :to="`/learningPath/${lpData.hruid}/${language}/${lpData.startNode.learningobjectHruid}`"
+                            :to="`/learningPath/${lpData.hruid}/${language}/${lpData.startNode.learningobjectHruid}?forGroup=${group?.groupNumber}&assignmentNo=${assignmentId}&classId=${classId}`"
                             variant="tonal"
                             color="primary"
                         >
@@ -154,14 +154,14 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
 </template>
 
 <style scoped>
-    @import "@/assets/assignment.css";
+@import "@/assets/assignment.css";
 
-    .progress-label {
-        font-weight: bold;
-        margin-right: 5px;
-    }
+.progress-label {
+    font-weight: bold;
+    margin-right: 5px;
+}
 
-    .progress-bar {
-        width: 40%;
-    }
+.progress-bar {
+    width: 40%;
+}
 </style>
