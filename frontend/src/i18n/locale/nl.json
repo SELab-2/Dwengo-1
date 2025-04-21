@@ -89,6 +89,8 @@
     "failed": "mislukt",
     "wrong": "er ging iets verkeerd",
     "created": "gecreëerd",
+    "callbackLoading": "Je wordt ingelogd...",
+    "loginUnexpectedError": "Inloggen mislukt",
     "submitSolution": "Oplossing indienen",
     "submitNewSolution": "Nieuwe oplossing indienen",
     "markAsDone": "Markeren als afgewerkt",

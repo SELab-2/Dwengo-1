@@ -10,10 +10,6 @@
     }
 
     const showMenuBar = computed(() => (route.meta as RouteMeta).requiresAuth && auth.authState.user);
-
-    auth.loadUser().catch((_error) => {
-        // TODO Could not load user!
-    });
 </script>
 
 <template>
