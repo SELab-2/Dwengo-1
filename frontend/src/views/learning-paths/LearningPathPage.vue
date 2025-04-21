@@ -12,6 +12,9 @@
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import authService from "@/services/auth/auth-service.ts";
     import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
+import { useStudentAssignmentsQuery } from "@/queries/students";
+import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
+import { watch } from "vue";
 
     const route = useRoute();
     const { t } = useI18n();
@@ -98,6 +101,43 @@
         }
         return "notCompleted";
     }
+
+    //TODO: berekenen of het een assignment is voor de student werkt nog niet zoals het hoort...
+
+    const studentAssignmentsQuery = useStudentAssignmentsQuery(authService.authState.user?.profile?.preferred_username);
+
+    watch(
+        () => authService.authState.user?.profile?.preferred_username,
+        (newUsername) => {
+            if (newUsername) {
+                studentAssignmentsQuery.refetch();
+            }
+        }
+    );
+
+    const isAssignmentForStudent = computed(() => {
+        // Check if the user is a student
+        const isStudent = authService.authState.activeRole === "student";
+
+        if (isStudent && studentAssignmentsQuery.isSuccess) {
+            // Use the query to fetch assignments for the current student
+            console.log("Query Result:", studentAssignmentsQuery.data?.value);
+
+            // Check if the query is successful and contains the current learning path
+            const isAssignment = (studentAssignmentsQuery.data?.value?.assignments as AssignmentDTO[]).some(
+                (assignment: AssignmentDTO) => {
+                    console.log(assignment.learningPath)
+                    return assignment.learningPath === props.hruid
+                }
+            );
+
+            // Return true only if the user is a student and the learning path is an assignment
+            return isAssignment;
+        }
+
+        return false;
+    });
+
 </script>
 
 <template>
@@ -169,7 +209,7 @@
                 </using-query-result>
             </div>
             <v-divider></v-divider>
-            <div v-if="true" class="assignment-indicator">  
+            <div v-if="isAssignmentForStudent" class="assignment-indicator">  
                 ASSIGNMENT
             </div>
         </v-navigation-drawer>
