@@ -98,27 +98,24 @@ export default defineConfig({
 
     /* Run your local dev server before starting the tests */
     webServer: [
+        // Assuming the idp is already running (because it is slow)
         {
-            command: process.env.CI ? "npm run preview" : "npm run dev",
+            /* Frontend */
+            command: `VITE_API_BASE_URL='http://localhost:9876/api' ${process.env.CI ? "npm run preview" : "npm run dev"}`,
             port: process.env.CI ? 4173 : 5173,
+            timeout: 120 * 1000,
             reuseExistingServer: !process.env.CI,
         },
         {
-            command: "cd ../ && docker compose up",
-            reuseExistingServer: false,
-            gracefulShutdown: {
-                signal: "SIGTERM",
-                timeout: 5000,
-            },
-        },
-        {
-            command: process.env.CI ? "cd ../ && npm run dev -w backend" : "cd ../ && npm run start -w backend",
-            port: 3000,
+            /* Backend */
+            command: `
+            cd .. \
+            && npx tsc --build common/tsconfig.json \
+            && cd backend \
+            && npx tsx --env-file=./.env.test ./tool/startTestApp.ts
+            `,
+            port: 9876,
             reuseExistingServer: !process.env.CI,
-        },
-        {
-            command: "wait-on http://localhost:7080",
-            timeout: 120000,
-        },
+        }
     ],
 });
