@@ -156,13 +156,6 @@ import {ref, computed, onMounted, watch} from "vue";
         padding: 1rem;
     }
 
-    .card-content {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        min-height: 150px;
-    }
-
     .top-content {
         margin-bottom: 1rem;
         word-break: break-word;
