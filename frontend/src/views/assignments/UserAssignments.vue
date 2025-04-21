@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, computed, onMounted, watch} from "vue";
+    import { ref, computed, onMounted, watch } from "vue";
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
     import auth from "@/services/auth/auth-service.ts";
@@ -72,7 +72,6 @@ import {ref, computed, onMounted, watch} from "vue";
             cid: clsId,
             an: num,
         });
-
     }
 
     onMounted(async () => {
