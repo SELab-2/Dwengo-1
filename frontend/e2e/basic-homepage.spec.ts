@@ -9,6 +9,8 @@ test("User can pick their language", async ({ page }) => {
     await expect(page.locator("h1")).toContainText("Onze sterke punten");
     await expect(page.getByRole("heading", { name: "Innovatief" })).toBeVisible();
 
+    await page.getByRole("heading", { name: "Innovatief" }).click();
+
     await expect(page.getByRole("button", { name: "vertalen" })).toBeVisible();
     await page.getByRole("button", { name: "vertalen" }).click();
     await page.getByText("English").click();
@@ -78,5 +80,7 @@ test("Cannot sign in with invalid credentials", async ({ page }) => {
 
 test("Cannot skip login", async ({ page }) => {
     await page.goto("/user");
-    await expect(page.getByRole("link", { name: "log in" })).toBeVisible();
+    // Should redirect to login
+    await expect(page.getByText('login')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'teacher' })).toBeVisible();
 });
