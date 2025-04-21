@@ -18,13 +18,11 @@ export async function setup(): Promise<void> {
     // Precompile needed packages
     spawnSync("npx", ["tsc", "--build", "tsconfig.json"], {
         cwd: `../common`,
-        stdio: "inherit",
     });
 
     // Spin up the backend
     backendProcess = spawn("npx", ["tsx", "--env-file=.env.test", "tool/startTestApp.ts"], {
         cwd: `../backend`,
-        stdio: "inherit",
         env: {
             ...process.env,
             NODE_ENV: "test",
