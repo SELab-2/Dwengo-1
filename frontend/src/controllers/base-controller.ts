@@ -1,6 +1,7 @@
 import apiClient from "@/services/api-client/api-client.ts";
 import type { AxiosResponse, ResponseType } from "axios";
 import { HttpErrorResponseException } from "@/exception/http-error-response-exception.ts";
+import { apiConfig } from "@/config.ts";
 
 export abstract class BaseController {
     protected basePath: string;
@@ -16,9 +17,18 @@ export abstract class BaseController {
     }
 
     protected async get<T>(path: string, queryParams?: QueryParams, responseType?: ResponseType): Promise<T> {
-        const response = await apiClient.get<T>(this.absolutePathFor(path), { params: queryParams, responseType });
-        BaseController.assertSuccessResponse(response);
-        return response.data;
+        try {
+            const response = await apiClient.get<T>(this.absolutePathFor(path), { params: queryParams, responseType });
+            BaseController.assertSuccessResponse(response);
+            return response.data;
+        } catch (error) {
+            if (error instanceof HttpErrorResponseException) {
+                throw error;
+            }
+            throw new Error(
+                `An unexpected error occurred while fetching data from ${apiConfig.baseUrl}${this.absolutePathFor(path)}: ${error}`,
+            );
+        }
     }
 
     protected async post<T>(path: string, body: unknown, queryParams?: QueryParams): Promise<T> {
