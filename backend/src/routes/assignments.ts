@@ -23,12 +23,6 @@ router.delete('/:id', deleteAssignmentHandler);
 
 router.get('/:id/submissions', getAssignmentsSubmissionsHandler);
 
-router.get('/:id/questions', (_req, res) => {
-    res.json({
-        questions: ['0'],
-    });
-});
-
 router.use('/:assignmentid/groups', groupRouter);
 
 export default router;
