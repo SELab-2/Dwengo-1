@@ -3,6 +3,9 @@ import { Question } from '../../../src/entities/questions/question.entity';
 import { Language } from '@dwengo-1/common/util/language';
 import { Student } from '../../../src/entities/users/student.entity';
 import { Group } from '../../../src/entities/assignments/group.entity';
+import { getTestleerling1 } from '../users/students.testdata';
+import { testLearningObjectMultipleChoice } from '../content/learning-objects.testdata';
+import { getGroup1ConditionalLearningPath } from '../assignments/groups.testdata';
 
 export function makeTestQuestions(em: EntityManager, students: Student[], groups: Group[]): Question[] {
     const question01 = em.create(Question, {
@@ -66,10 +69,43 @@ export function makeTestQuestions(em: EntityManager, students: Student[], groups
         learningObjectHruid: 'id05',
         sequenceNumber: 4,
         author: students[2],
-        inGroup: groups[3], // Group #4 for Assignment #2 in class 'id02'
+        inGroup: groups[5], // Group #4 for Assignment #2 in class 'id02'
         timestamp: new Date(),
         content: 'question',
     });
+    
+    question07 = em.create(Question, {
+        learningObjectLanguage: Language.English,
+        learningObjectVersion: 1,
+        learningObjectHruid: testLearningObjectMultipleChoice.hruid,
+        sequenceNumber: 1,
+        author: getTestleerling1(),
+        inGroup: getGroup1ConditionalLearningPath(),
+        timestamp: new Date(),
+        content: 'this is a test question',
+    });
 
-    return [question01, question02, question03, question04, question05, question06];
+    question08 = em.create(Question, {
+        learningObjectLanguage: Language.English,
+        learningObjectVersion: 1,
+        learningObjectHruid: testLearningObjectMultipleChoice.hruid,
+        sequenceNumber: 2,
+        author: getTestleerling1(),
+        inGroup: getGroup1ConditionalLearningPath(),
+        timestamp: new Date(),
+        content: 'this is a second test question'
+    });
+
+    return [question01, question02, question03, question04, question05, question06, question07, question08];
+}
+
+let question08: Question;
+let question07: Question;
+
+export function getQuestion07(): Question {
+    return question07;
+}
+
+export function getQuestion08(): Question {
+    return question08;
 }
