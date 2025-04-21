@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import {ref, computed, defineEmits} from "vue";
-import {deadlineRules} from "@/utils/assignment-rules.ts";
+    import { ref, computed, defineEmits } from "vue";
+    import { deadlineRules } from "@/utils/assignment-rules.ts";
 
-const date = ref("");
-const time = ref("23:59");
-const emit = defineEmits(["update:deadline"]);
+    const date = ref("");
+    const time = ref("23:59");
+    const emit = defineEmits(["update:deadline"]);
 
-const formattedDeadline = computed(() => {
-    if (!date.value || !time.value) return "";
-    return `${date.value} ${time.value}`;
-});
+    const formattedDeadline = computed(() => {
+        if (!date.value || !time.value) return "";
+        return `${date.value} ${time.value}`;
+    });
 
-function updateDeadline(): void {
-    if (date.value && time.value) {
-        emit("update:deadline", formattedDeadline.value);
+    function updateDeadline(): void {
+        if (date.value && time.value) {
+            emit("update:deadline", formattedDeadline.value);
+        }
     }
-};
 </script>
 
 <template>
@@ -46,6 +46,4 @@ function updateDeadline(): void {
     </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -73,7 +73,7 @@ const router = createRouter({
         },
         {
             path: "/assignment",
-            meta: {requiresAuth: true},
+            meta: { requiresAuth: true },
             children: [
                 {
                     path: "create",
@@ -85,7 +85,7 @@ const router = createRouter({
                     name: "SingleAssigment",
                     component: SingleAssignment,
                 },
-            ]
+            ],
         },
         {
             path: "/class/:id",

@@ -1,43 +1,43 @@
 <script setup lang="ts">
-import {computed, defineProps, type Ref, ref} from "vue";
-import {useI18n} from "vue-i18n";
-import {useAssignmentQuery, useDeleteAssignmentMutation} from "@/queries/assignments.ts";
-import UsingQueryResult from "@/components/UsingQueryResult.vue";
-import {useGroupsQuery} from "@/queries/groups.ts";
-import {useGetLearningPathQuery} from "@/queries/learning-paths.ts";
-import type {Language} from "@/data-objects/language.ts";
-import router from "@/router";
-import type {AssignmentResponse} from "@/controllers/assignments.ts";
-import type {GroupDTO} from "@dwengo-1/common/interfaces/group";
+    import { computed, defineProps, type Ref, ref } from "vue";
+    import { useI18n } from "vue-i18n";
+    import { useAssignmentQuery, useDeleteAssignmentMutation } from "@/queries/assignments.ts";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import { useGroupsQuery } from "@/queries/groups.ts";
+    import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
+    import type { Language } from "@/data-objects/language.ts";
+    import router from "@/router";
+    import type { AssignmentResponse } from "@/controllers/assignments.ts";
+    import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
 
-const props = defineProps<{
-    classId: string
-    assignmentId: number,
-    useGroupsWithProgress: (
-        groups: Ref<GroupDTO[]>,
-        hruid: Ref<string>,
-        language: Ref<Language>
-    ) => { groupProgressMap: Map<number, number> };
-}>();
+    const props = defineProps<{
+        classId: string;
+        assignmentId: number;
+        useGroupsWithProgress: (
+            groups: Ref<GroupDTO[]>,
+            hruid: Ref<string>,
+            language: Ref<Language>,
+        ) => { groupProgressMap: Map<number, number> };
+    }>();
 
-const {t, locale} = useI18n();
-const language = computed(() => locale.value);
-const groups = ref();
-const learningPath = ref();
+    const { t, locale } = useI18n();
+    const language = computed(() => locale.value);
+    const groups = ref();
+    const learningPath = ref();
 
-const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
-learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
-// Get learning path object
-const lpQueryResult = useGetLearningPathQuery(
-    computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
-    computed(() => language.value as Language)
-);
+    const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
+    learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
+    // Get learning path object
+    const lpQueryResult = useGetLearningPathQuery(
+        computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
+        computed(() => language.value as Language),
+    );
 
-// Get all the groups withing the assignment
-const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
-groups.value = groupsQueryResult.data.value?.groups;
+    // Get all the groups withing the assignment
+    const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
+    groups.value = groupsQueryResult.data.value?.groups;
 
-/* Crashes right now cause api data has inexistent hruid TODO: uncomment later and use it in progress bar
+    /* Crashes right now cause api data has inexistent hruid TODO: uncomment later and use it in progress bar
 Const {groupProgressMap} = props.useGroupsWithProgress(
     groups,
     learningPath,
@@ -45,55 +45,54 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
 );
 */
 
+    const allGroups = computed(() => {
+        const groups = groupsQueryResult.data.value?.groups;
+        if (!groups) return [];
 
-const allGroups = computed(() => {
-    const groups = groupsQueryResult.data.value?.groups;
-    if (!groups) return [];
-
-    return groups.map(group => ({
-        name: `${t('group')} ${group.groupNumber}`,
-        progress: 0,//GroupProgressMap[group.groupNumber],
-        members: group.members,
-        submitted: false,//TODO: fetch from submission
-    }));
-});
-
-const dialog = ref(false);
-const selectedGroup = ref({});
-
-function openGroupDetails(group): void {
-    selectedGroup.value = group;
-    dialog.value = true;
-}
-
-const headers = computed(() => [
-    { title: t('group'), align: 'start', key: 'name' },
-    { title: t('progress'), align: 'center', key: 'progress' },
-    { title: t('submission'), align: 'center', key: 'submission' }
-]);
-
-
-
-const {mutate, isSuccess} = useDeleteAssignmentMutation();
-
-async function deleteAssignment(num: number, clsId: string): Promise<void> {
-    mutate({
-        cid: clsId,
-        an: num
+        return groups.map((group) => ({
+            name: `${t("group")} ${group.groupNumber}`,
+            progress: 0, //GroupProgressMap[group.groupNumber],
+            members: group.members,
+            submitted: false, //TODO: fetch from submission
+        }));
     });
 
-    if (isSuccess) await router.push("/user/assignments");
-}
+    const dialog = ref(false);
+    const selectedGroup = ref({});
 
+    function openGroupDetails(group): void {
+        selectedGroup.value = group;
+        dialog.value = true;
+    }
+
+    const headers = computed(() => [
+        { title: t("group"), align: "start", key: "name" },
+        { title: t("progress"), align: "center", key: "progress" },
+        { title: t("submission"), align: "center", key: "submission" },
+    ]);
+
+    const { mutate, isSuccess } = useDeleteAssignmentMutation();
+
+    async function deleteAssignment(num: number, clsId: string): Promise<void> {
+        mutate({
+            cid: clsId,
+            an: num,
+        });
+
+        if (isSuccess) await router.push("/user/assignments");
+    }
 </script>
 
 <template>
     <div class="container">
         <using-query-result
             :query-result="assignmentQueryResult"
-            v-slot="{ data }: {data: AssignmentResponse}"
+            v-slot="{ data }: { data: AssignmentResponse }"
         >
-            <v-card v-if="data" class="assignment-card">
+            <v-card
+                v-if="data"
+                class="assignment-card"
+            >
                 <div class="top-buttons">
                     <v-btn
                         icon
@@ -119,15 +118,15 @@ async function deleteAssignment(num: number, clsId: string): Promise<void> {
                         :query-result="lpQueryResult"
                         v-slot="{ data: lpData }"
                     >
-                        <v-btn v-if="lpData"
-                               :to="`/learningPath/${lpData.hruid}/${language}/${lpData.startNode.learningobjectHruid}`"
-                               variant="tonal"
-                               color="primary"
+                        <v-btn
+                            v-if="lpData"
+                            :to="`/learningPath/${lpData.hruid}/${language}/${lpData.startNode.learningobjectHruid}`"
+                            variant="tonal"
+                            color="primary"
                         >
                             {{ t("learning-path") }}
                         </v-btn>
                     </using-query-result>
-
                 </v-card-subtitle>
 
                 <v-card-text class="description">
@@ -144,7 +143,11 @@ async function deleteAssignment(num: number, clsId: string): Promise<void> {
                             class="elevation-1"
                         >
                             <template #[`item.name`]="{ item }">
-                                <v-btn @click="openGroupDetails(item)" variant="text" color="primary">
+                                <v-btn
+                                    @click="openGroupDetails(item)"
+                                    variant="text"
+                                    color="primary"
+                                >
                                     {{ item.name }}
                                 </v-btn>
                             </template>
@@ -168,17 +171,19 @@ async function deleteAssignment(num: number, clsId: string): Promise<void> {
                                     variant="text"
                                     class="text-capitalize"
                                 >
-                                    {{ item.submitted ? t('see-submission') : t('no-submission') }}
+                                    {{ item.submitted ? t("see-submission") : t("no-submission") }}
                                 </v-btn>
                             </template>
-
                         </v-data-table>
                     </div>
                 </v-card-text>
 
-                <v-dialog v-model="dialog" max-width="50%">
+                <v-dialog
+                    v-model="dialog"
+                    max-width="50%"
+                >
                     <v-card>
-                        <v-card-title class="headline">{{t("members")}}</v-card-title>
+                        <v-card-title class="headline">{{ t("members") }}</v-card-title>
                         <v-card-text>
                             <v-list>
                                 <v-list-item
@@ -186,16 +191,19 @@ async function deleteAssignment(num: number, clsId: string): Promise<void> {
                                     :key="index"
                                 >
                                     <v-list-item-content>
-                                        <v-list-item-title>{{
-                                                member.firstName + ' ' + member.lastName
-                                            }}
+                                        <v-list-item-title
+                                            >{{ member.firstName + " " + member.lastName }}
                                         </v-list-item-title>
                                     </v-list-item-content>
                                 </v-list-item>
                             </v-list>
                         </v-card-text>
                         <v-card-actions>
-                            <v-btn color="primary" @click="dialog = false">Close</v-btn>
+                            <v-btn
+                                color="primary"
+                                @click="dialog = false"
+                                >Close</v-btn
+                            >
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
@@ -216,11 +224,10 @@ async function deleteAssignment(num: number, clsId: string): Promise<void> {
 </template>
 
 <style scoped>
-@import "@/assets/assignment.css";
+    @import "@/assets/assignment.css";
 
-.table-scroll {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
+    .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 </style>
-
