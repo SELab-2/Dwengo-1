@@ -73,9 +73,8 @@ export async function deleteAssignmentHandler(req: Request, res: Response): Prom
 
     const assignment = await deleteAssignment(classid, assignmentNumber);
 
-    res.json({ assignment });   
+    res.json({ assignment });
 }
-
 
 export async function getAssignmentsSubmissionsHandler(req: Request, res: Response): Promise<void> {
     const { classid, assignmentNumber, full } = getAssignmentParams(req);

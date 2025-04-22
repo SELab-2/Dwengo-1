@@ -79,7 +79,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         return this.findAll({
             where: { inGroup },
             orderBy: { timestamp: 'DESC' },
-        })
+        });
     }
 
     /**
