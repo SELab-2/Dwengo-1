@@ -14,8 +14,8 @@ import { Student } from '../entities/users/student.entity.js';
 import { Class } from '../entities/classes/class.entity.js';
 
 async function assertMembersInClass(members: Student[], cls: Class): Promise<void> {
-    if (!members.every(student => cls.students.contains(student))) {
-        throw new BadRequestException("Student does not belong to class");
+    if (!members.every((student) => cls.students.contains(student))) {
+        throw new BadRequestException('Student does not belong to class');
     }
 }
 
@@ -37,12 +37,7 @@ export async function getGroup(classId: string, assignmentNumber: number, groupN
     return mapToGroupDTO(group, group.assignment.within);
 }
 
-export async function putGroup(
-    classId: string,
-    assignmentNumber: number,
-    groupNumber: number,
-    groupData: Partial<GroupDTO>,
-): Promise<GroupDTO> {
+export async function putGroup(classId: string, assignmentNumber: number, groupNumber: number, groupData: Partial<GroupDTO>): Promise<GroupDTO> {
     const group = await fetchGroup(classId, assignmentNumber, groupNumber);
 
     const memberUsernames = groupData.members as string[];
@@ -81,7 +76,7 @@ export async function createGroup(groupData: GroupDTO, classid: string, assignme
     const members = await fetchStudents(memberUsernames);
 
     const cls = await fetchClass(classid);
-    await assertMembersInClass(members, cls)
+    await assertMembersInClass(members, cls);
 
     const assignment = await fetchAssignment(classid, assignmentNumber);
 
