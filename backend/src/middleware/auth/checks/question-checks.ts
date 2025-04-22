@@ -25,7 +25,7 @@ export const onlyAllowAuthorRequest = authorize(
 
         const question = await fetchQuestion(questionId);
 
-        return question.author.username == auth.username;
+        return question.author.username === auth.username;
     }
 );
 
@@ -44,7 +44,7 @@ export const onlyAllowAuthorRequestAnswer = authorize(
         const sequenceNumber = Number(seqAnswer) || FALLBACK_SEQ_NUM;
         const answer = await fetchAnswer(questionId, sequenceNumber);
 
-        return answer.author.username == auth.username;
+        return answer.author.username === auth.username;
     }
 );
 
@@ -65,8 +65,8 @@ export const onlyAllowIfHasAccessToQuestion = authorize(
         if (auth.accountType === "teacher") {
             const cls = group.assignment.within; // TODO check if contains full objects
             return cls.teachers.map(mapToUsername).includes(auth.username);
-        } else { // user is student
+        }  // User is student
             return group.members.map(mapToUsername).includes(auth.username);
-        }
+        
     }
 );

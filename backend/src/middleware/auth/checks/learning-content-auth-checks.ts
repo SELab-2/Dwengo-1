@@ -1,7 +1,6 @@
 import {authorize} from "./auth-checks";
 import {AuthenticationInfo} from "../authentication-info";
 import {AuthenticatedRequest} from "../authenticated-request";
-import {fetchGroup, getGroup} from "../../../services/groups";
 
 /**
  * Only allows requests whose learning path personalization query parameters ('forGroup' / 'assignmentNo' / 'classId')
@@ -15,10 +14,10 @@ export const onlyAllowPersonalizationForOwnGroup = authorize(
         const {forGroup, assignmentNo, classId} = req.params;
         if (auth.accountType === "student" && forGroup && assignmentNo && classId) {
             // TODO: groupNumber? 
-            // const group = await fetchGroup(Number(classId), Number(assignmentNo), )
+            // Const group = await fetchGroup(Number(classId), Number(assignmentNo), )
             return false;
-        } else {
+        } 
             return true;
-        }
+        
     }
 );

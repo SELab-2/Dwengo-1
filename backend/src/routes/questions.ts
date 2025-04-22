@@ -1,7 +1,7 @@
 import express from 'express';
 import { createQuestionHandler, deleteQuestionHandler, getAllQuestionsHandler, getQuestionHandler } from '../controllers/questions.js';
 import answerRoutes from './answers.js';
-import {adminOnly, authenticatedOnly, studentsOnly} from "../middleware/auth/checks/auth-checks";
+import {adminOnly, studentsOnly} from "../middleware/auth/checks/auth-checks";
 import {updateAnswerHandler} from "../controllers/answers";
 import {
     onlyAllowAuthor,

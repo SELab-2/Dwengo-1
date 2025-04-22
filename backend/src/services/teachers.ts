@@ -58,7 +58,8 @@ export async function getTeacher(username: string): Promise<TeacherDTO> {
     return mapToTeacherDTO(user);
 }
 
-export async function createTeacher(userData: TeacherDTO, update?: boolean): Promise<TeacherDTO> {
+// TODO update parameter
+export async function createTeacher(userData: TeacherDTO, _update?: boolean): Promise<TeacherDTO> {
     const teacherRepository: TeacherRepository = getTeacherRepository();
 
     const newTeacher = mapToTeacher(userData);

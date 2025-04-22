@@ -1,6 +1,6 @@
 import {authorize} from "./auth-checks";
-import {fetchClass, getClass} from "../../../services/classes";
-import {fetchGroup, getGroup} from "../../../services/groups";
+import {fetchClass} from "../../../services/classes";
+import {fetchGroup} from "../../../services/groups";
 import {mapToUsername} from "../../../interfaces/user";
 
 /**
@@ -17,9 +17,9 @@ export const onlyAllowIfHasAccessToGroup = authorize(
         if (auth.accountType === "teacher") {
             const clazz = await fetchClass(classId);
             return clazz.teachers.map(mapToUsername).includes(auth.username);
-        } else { // user is student
+        }  // User is student
             const group = await fetchGroup(classId, assignmentId, groupId);
             return group.members.map(mapToUsername).includes(auth.username);
-        }
+        
     }
 );

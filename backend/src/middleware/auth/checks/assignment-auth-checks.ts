@@ -1,5 +1,4 @@
 import {authorize} from "./auth-checks";
-import {fetchAssignment} from "../../../services/assignments";
 import {fetchClass} from "../../../services/classes";
 import {fetchAllGroups} from "../../../services/groups";
 import {mapToUsername} from "../../../interfaces/user";
@@ -16,9 +15,9 @@ export const onlyAllowIfHasAccessToAssignment = authorize(
         if (auth.accountType === "teacher") {
             const clazz = await fetchClass(classId);
             return clazz.teachers.map(mapToUsername).includes(auth.username);
-        } else {
+        } 
             const groups = await fetchAllGroups(classId, assignmentId);
             return groups.some(group => group.members.map((member) => member.username).includes(auth.username) );
-        }
+        
     }
 );

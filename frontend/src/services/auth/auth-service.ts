@@ -29,10 +29,6 @@ const authState = reactive<AuthState>({
     activeRole: authStorage.getActiveRole() ?? null,
 });
 
-async function sendHello(): Promise<void> {
-    return apiClient.post("/auth/hello");
-}
-
 /**
  * Load the information about who is currently logged in from the IDP.
  */

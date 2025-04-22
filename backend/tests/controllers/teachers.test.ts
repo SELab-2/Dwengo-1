@@ -15,7 +15,6 @@ import {
 import { BadRequestException } from '../../src/exceptions/bad-request-exception.js';
 import { EntityAlreadyExistsException } from '../../src/exceptions/entity-already-exists-exception.js';
 import { getStudentRequestsHandler } from '../../src/controllers/students.js';
-import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { getClassHandler } from '../../src/controllers/classes';
 
 describe('Teacher controllers', () => {

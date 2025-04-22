@@ -14,10 +14,10 @@ export const onlyAllowSender = authorize(
 
 export const onlyAllowSenderBody = authorize(
     (auth: AuthenticationInfo, req: AuthenticatedRequest) =>
-        req.body.sender === auth.username
+        (req.body as { sender: string }).sender === auth.username
 );
 
 export const onlyAllowReceiverBody = authorize(
     (auth: AuthenticationInfo, req: AuthenticatedRequest) =>
-        req.body.receiver === auth.username
+        (req.body as { receiver: string }).receiver === auth.username
 );

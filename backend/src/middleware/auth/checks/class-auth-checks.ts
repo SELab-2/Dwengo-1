@@ -1,7 +1,7 @@
 import {authorize} from "./auth-checks";
 import {AuthenticationInfo} from "../authentication-info";
 import {AuthenticatedRequest} from "../authenticated-request";
-import {fetchClass, getClass} from "../../../services/classes";
+import {fetchClass} from "../../../services/classes";
 import {mapToUsername} from "../../../interfaces/user";
 
 async function teaches(teacherUsername: string, classId: string): Promise<boolean> {
