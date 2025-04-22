@@ -12,7 +12,7 @@ import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 import { fetchStudent } from './students.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { FALLBACK_VERSION_NUM } from '../config.js';
-import {ConflictException} from "../exceptions/conflict-exception";
+import { ConflictException } from '../exceptions/conflict-exception';
 
 export async function getQuestionsAboutLearningObjectInAssignment(
     loId: LearningObjectIdentifier,
@@ -91,12 +91,12 @@ export async function createQuestion(loId: LearningObjectIdentifier, questionDat
     const assignment = mapToAssignment(questionData.inGroup.assignment as AssignmentDTO, clazz!);
     const group = await getGroupRepository().findByAssignmentAndGroupNumber(assignment, questionData.inGroup.groupNumber);
 
-    if (!group){
-        throw new NotFoundException("Group with id and assignment not found");
+    if (!group) {
+        throw new NotFoundException('Group with id and assignment not found');
     }
 
-    if (! group.members.contains(author)) {
-        throw new ConflictException("Author is not part of this group");
+    if (!group.members.contains(author)) {
+        throw new ConflictException('Author is not part of this group');
     }
 
     const question = await questionRepository.createQuestion({

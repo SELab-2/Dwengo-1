@@ -1,6 +1,6 @@
 import express from 'express';
 import { getThemesHandler, getHruidsByThemeHandler } from '../controllers/themes.js';
-import {authenticatedOnly} from "../middleware/auth/checks/auth-checks";
+import { authenticatedOnly } from '../middleware/auth/checks/auth-checks';
 
 const router = express.Router();
 

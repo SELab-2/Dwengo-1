@@ -6,18 +6,19 @@ import {
     getInvitationHandler,
     updateInvitationHandler,
 } from '../controllers/teacher-invitations';
-import {onlyAllowUserHimself} from "../middleware/auth/checks/user-auth-checks";
+import { onlyAllowUserHimself } from '../middleware/auth/checks/user-auth-checks';
 import {
-    onlyAllowReceiverBody, onlyAllowSender,
+    onlyAllowReceiverBody,
+    onlyAllowSender,
     onlyAllowSenderBody,
-    onlyAllowSenderOrReceiver
-} from "../middleware/auth/checks/teacher-invitation-checks";
+    onlyAllowSenderOrReceiver,
+} from '../middleware/auth/checks/teacher-invitation-checks';
 
 const router = express.Router({ mergeParams: true });
 
 router.get('/:username', onlyAllowUserHimself, getAllInvitationsHandler);
 
-router.get('/:sender/:receiver/:classId', onlyAllowSenderOrReceiver ,getInvitationHandler);
+router.get('/:sender/:receiver/:classId', onlyAllowSenderOrReceiver, getInvitationHandler);
 
 router.post('/', onlyAllowSenderBody, createInvitationHandler);
 

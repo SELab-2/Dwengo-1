@@ -2,10 +2,10 @@ import { UnauthorizedException } from '../exceptions/unauthorized-exception.js';
 import { getLogger } from '../logging/initalize.js';
 import { AuthenticatedRequest } from '../middleware/auth/authenticated-request.js';
 import { envVars, getEnvVar } from '../util/envVars.js';
-import {createOrUpdateStudent, createStudent} from "../services/students";
-import {AuthenticationInfo} from "../middleware/auth/authentication-info";
-import {Request, Response} from "express";
-import {createOrUpdateTeacher, createTeacher} from "../services/teachers";
+import { createOrUpdateStudent, createStudent } from '../services/students';
+import { AuthenticationInfo } from '../middleware/auth/authentication-info';
+import { Request, Response } from 'express';
+import { createOrUpdateTeacher, createTeacher } from '../services/teachers';
 
 interface FrontendIdpConfig {
     authority: string;
@@ -47,20 +47,26 @@ export function handleGetFrontendAuthConfig(_req: Request, res: Response): void 
 
 export async function handleHello(req: AuthenticatedRequest): Promise<void> {
     const auth: AuthenticationInfo = req.auth!;
-    if (auth.accountType === "teacher") {
-        await createTeacher({
-            id: auth.username,
-            username: auth.username,
-            firstName: auth.firstName ?? "",
-            lastName: auth.lastName ?? "",
-        }, true);
+    if (auth.accountType === 'teacher') {
+        await createTeacher(
+            {
+                id: auth.username,
+                username: auth.username,
+                firstName: auth.firstName ?? '',
+                lastName: auth.lastName ?? '',
+            },
+            true
+        );
     } else {
-        await createStudent({
-            id: auth.username,
-            username: auth.username,
-            firstName: auth.firstName ?? "",
-            lastName: auth.lastName ?? "",
-        }, true);
+        await createStudent(
+            {
+                id: auth.username,
+                username: auth.username,
+                firstName: auth.firstName ?? '',
+                lastName: auth.lastName ?? '',
+            },
+            true
+        );
     }
 }
 

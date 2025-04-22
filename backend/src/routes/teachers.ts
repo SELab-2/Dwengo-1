@@ -12,9 +12,9 @@ import {
 } from '../controllers/teachers.js';
 import invitationRouter from './teacher-invitations.js';
 
-import {adminOnly} from "../middleware/auth/checks/auth-checks";
-import {onlyAllowUserHimself} from "../middleware/auth/checks/user-auth-checks";
-import {onlyAllowTeacherOfClass} from "../middleware/auth/checks/class-auth-checks";
+import { adminOnly } from '../middleware/auth/checks/auth-checks';
+import { onlyAllowUserHimself } from '../middleware/auth/checks/user-auth-checks';
+import { onlyAllowTeacherOfClass } from '../middleware/auth/checks/class-auth-checks';
 const router = express.Router();
 
 // Root endpoint used to search objects

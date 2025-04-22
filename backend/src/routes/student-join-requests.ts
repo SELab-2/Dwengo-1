@@ -5,8 +5,8 @@ import {
     getStudentRequestHandler,
     getStudentRequestsHandler,
 } from '../controllers/students.js';
-import {onlyAllowUserHimself} from "../middleware/auth/checks/user-auth-checks";
-import {onlyAllowStudentHimselfAndTeachersOfClass} from "../middleware/auth/checks/class-auth-checks";
+import { onlyAllowUserHimself } from '../middleware/auth/checks/user-auth-checks';
+import { onlyAllowStudentHimselfAndTeachersOfClass } from '../middleware/auth/checks/class-auth-checks';
 
 // Under /:username/joinRequests/
 

@@ -10,7 +10,7 @@ export function mapToUserDTO(user: User): UserDTO {
     };
 }
 
-export function mapToUsername(user: {username: string}): string {
+export function mapToUsername(user: { username: string }): string {
     return user.username;
 }
 

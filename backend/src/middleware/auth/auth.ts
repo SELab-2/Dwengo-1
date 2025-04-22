@@ -1,11 +1,11 @@
-import {envVars, getEnvVar} from '../../util/envVars.js';
-import {expressjwt} from 'express-jwt';
+import { envVars, getEnvVar } from '../../util/envVars.js';
+import { expressjwt } from 'express-jwt';
 import * as jwt from 'jsonwebtoken';
-import {JwtPayload} from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
 import * as express from 'express';
-import {AuthenticatedRequest} from './authenticated-request.js';
-import {AuthenticationInfo} from './authentication-info.js';
+import { AuthenticatedRequest } from './authenticated-request.js';
+import { AuthenticationInfo } from './authentication-info.js';
 import { UnauthorizedException } from '../../exceptions/unauthorized-exception.js';
 
 const JWKS_CACHE = true;

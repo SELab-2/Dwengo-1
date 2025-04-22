@@ -1,6 +1,6 @@
 import express from 'express';
 import { getLearningPaths } from '../controllers/learning-paths.js';
-import {authenticatedOnly} from "../middleware/auth/checks/auth-checks";
+import { authenticatedOnly } from '../middleware/auth/checks/auth-checks';
 
 const router = express.Router();
 

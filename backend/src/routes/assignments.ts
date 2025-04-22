@@ -8,9 +8,9 @@ import {
     putAssignmentHandler,
 } from '../controllers/assignments.js';
 import groupRouter from './groups.js';
-import {teachersOnly} from "../middleware/auth/checks/auth-checks";
-import {onlyAllowIfInClass} from "../middleware/auth/checks/class-auth-checks";
-import {onlyAllowIfHasAccessToAssignment} from "../middleware/auth/checks/assignment-auth-checks";
+import { teachersOnly } from '../middleware/auth/checks/auth-checks';
+import { onlyAllowIfInClass } from '../middleware/auth/checks/class-auth-checks';
+import { onlyAllowIfHasAccessToAssignment } from '../middleware/auth/checks/assignment-auth-checks';
 
 const router = express.Router({ mergeParams: true });
 

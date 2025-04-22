@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { requireFields } from './error-helper.js';
 import { createInvitation, deleteInvitation, getAllInvitations, getInvitation, updateInvitation } from '../services/teacher-invitations.js';
 import { TeacherInvitationData } from '@dwengo-1/common/interfaces/teacher-invitation';
-import {ConflictException} from "../exceptions/conflict-exception";
+import { ConflictException } from '../exceptions/conflict-exception';
 
 export async function getAllInvitationsHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
@@ -31,8 +31,8 @@ export async function createInvitationHandler(req: Request, res: Response): Prom
     const classId = req.body.class;
     requireFields({ sender, receiver, classId });
 
-    if (sender === receiver){
-        throw new ConflictException("Cannot send an invitation to yourself");
+    if (sender === receiver) {
+        throw new ConflictException('Cannot send an invitation to yourself');
     }
 
     const data = req.body as TeacherInvitationData;

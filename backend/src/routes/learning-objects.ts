@@ -3,7 +3,7 @@ import { getAllLearningObjects, getAttachment, getLearningObject, getLearningObj
 
 import submissionRoutes from './submissions.js';
 import questionRoutes from './questions.js';
-import {authenticatedOnly} from "../middleware/auth/checks/auth-checks";
+import { authenticatedOnly } from '../middleware/auth/checks/auth-checks';
 
 const router = express.Router();
 

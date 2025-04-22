@@ -1,12 +1,7 @@
 import express from 'express';
 import { createAnswerHandler, deleteAnswerHandler, getAnswerHandler, getAllAnswersHandler, updateAnswerHandler } from '../controllers/answers.js';
-import {adminOnly, teachersOnly} from "../middleware/auth/checks/auth-checks";
-import {
-    onlyAllowAuthor,
-    onlyAllowAuthorRequestAnswer,
-    onlyAllowIfHasAccessToQuestion
-} from "../middleware/auth/checks/question-checks";
-
+import { adminOnly, teachersOnly } from '../middleware/auth/checks/auth-checks';
+import { onlyAllowAuthor, onlyAllowAuthorRequestAnswer, onlyAllowIfHasAccessToQuestion } from '../middleware/auth/checks/question-checks';
 
 const router = express.Router({ mergeParams: true });
 
