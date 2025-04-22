@@ -14,9 +14,9 @@ export class Class {
     @Property({ type: 'string' })
     displayName!: string;
 
-    @ManyToMany(() => Teacher)
+    @ManyToMany({ entity: () => Teacher, owner: true, inversedBy: 'classes' })
     teachers!: Collection<Teacher>;
 
-    @ManyToMany(() => Student)
+    @ManyToMany({ entity: () => Student, owner: true, inversedBy: 'classes' })
     students!: Collection<Student>;
 }

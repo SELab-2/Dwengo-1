@@ -14,14 +14,12 @@ import { makeTestQuestions } from '../tests/test_assets/questions/questions.test
 import { makeTestStudents } from '../tests/test_assets/users/students.testdata.js';
 import { makeTestTeachers } from '../tests/test_assets/users/teachers.testdata.js';
 import { getLogger, Logger } from '../src/logging/initalize.js';
-import { Collection } from '@mikro-orm/core';
-import { Group } from '../dist/entities/assignments/group.entity.js';
+import { Collection, MikroORM } from '@mikro-orm/core';
+import { Group } from '../src/entities/assignments/group.entity';
 
 const logger: Logger = getLogger();
 
-export async function seedDatabase(): Promise<void> {
-    dotenv.config({ path: '.env.development.local' });
-    const orm = await initORM();
+export async function seedORM(orm: MikroORM): Promise<void> {
     await orm.schema.clearDatabase();
 
     const em = forkEntityManager();
@@ -34,6 +32,7 @@ export async function seedDatabase(): Promise<void> {
     const learningPaths = makeTestLearningPaths(em);
     const classes = makeTestClasses(em, students, teachers);
     const assignments = makeTestAssignemnts(em, classes);
+
     const groups = makeTestGroups(em, students, assignments);
 
     assignments[0].groups = new Collection<Group>(groups.slice(0, 3));
@@ -67,8 +66,17 @@ export async function seedDatabase(): Promise<void> {
     ]);
 
     logger.info('Development database seeded successfully!');
+}
+
+export async function seedDatabase(envFile = '.env.development.local', testMode = false): Promise<void> {
+    dotenv.config({ path: envFile });
+    const orm = await initORM(testMode);
+
+    await seedORM(orm);
 
     await orm.close();
 }
 
-seedDatabase().catch(logger.error);
+seedDatabase().catch((err) => {
+    logger.error(err);
+});

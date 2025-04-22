@@ -62,8 +62,18 @@ export async function createTeacher(userData: TeacherDTO, update?: boolean): Pro
     const teacherRepository: TeacherRepository = getTeacherRepository();
 
     const newTeacher = mapToTeacher(userData);
-    await teacherRepository.save(newTeacher, { preventOverwrite: !update });
+    await teacherRepository.save(newTeacher, { preventOverwrite: true });
+
     return mapToTeacherDTO(newTeacher);
+}
+
+export async function createOrUpdateTeacher(userData: TeacherDTO): Promise<TeacherDTO> {
+    await getTeacherRepository().upsert({
+        username: userData.username,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+    });
+    return userData;
 }
 
 export async function deleteTeacher(username: string): Promise<TeacherDTO> {

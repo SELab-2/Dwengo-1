@@ -13,36 +13,57 @@ import { computed, toValue, type MaybeRefOrGetter } from "vue";
 import { invalidateAllAssignmentKeys } from "./assignments";
 import { invalidateAllGroupKeys } from "./groups";
 import { invalidateAllSubmissionKeys } from "./submissions";
+import type { TeachersResponse } from "@/controllers/teachers";
+import type { TeacherInvitationsResponse } from "@/controllers/teacher-invitations";
 
 const classController = new ClassController();
 
 /* Query cache keys */
-function classesQueryKey(full: boolean) {
+type ClassesQueryKey = ["classes", boolean];
+
+function classesQueryKey(full: boolean): ClassesQueryKey {
     return ["classes", full];
 }
-function classQueryKey(classid: string) {
+
+type ClassQueryKey = ["class", string];
+
+function classQueryKey(classid: string): ClassQueryKey {
     return ["class", classid];
 }
-function classStudentsKey(classid: string, full: boolean) {
+
+type ClassStudentsKey = ["class-students", string, boolean];
+
+function classStudentsKey(classid: string, full: boolean): ClassStudentsKey {
     return ["class-students", classid, full];
 }
-function classTeachersKey(classid: string, full: boolean) {
+
+type ClassTeachersKey = ["class-teachers", string, boolean];
+
+function classTeachersKey(classid: string, full: boolean): ClassTeachersKey {
     return ["class-teachers", classid, full];
 }
-function classTeacherInvitationsKey(classid: string, full: boolean) {
+
+type ClassTeacherInvitationsKey = ["class-teacher-invitations", string, boolean];
+
+function classTeacherInvitationsKey(classid: string, full: boolean): ClassTeacherInvitationsKey {
     return ["class-teacher-invitations", classid, full];
 }
-function classAssignmentsKey(classid: string, full: boolean) {
+
+type ClassAssignmentsKey = ["class-assignments", string, boolean];
+
+function classAssignmentsKey(classid: string, full: boolean): ClassAssignmentsKey {
     return ["class-assignments", classid, full];
 }
 
-export async function invalidateAllClassKeys(queryClient: QueryClient, classid?: string) {
+export async function invalidateAllClassKeys(queryClient: QueryClient, classid?: string): Promise<void> {
     const keys = ["class", "class-students", "class-teachers", "class-teacher-invitations", "class-assignments"];
 
-    for (const key of keys) {
-        const queryKey = [key, classid].filter((arg) => arg !== undefined);
-        await queryClient.invalidateQueries({ queryKey: queryKey });
-    }
+    await Promise.all(
+        keys.map(async (key) => {
+            const queryKey = [key, classid].filter((arg) => arg !== undefined);
+            return queryClient.invalidateQueries({ queryKey: queryKey });
+        }),
+    );
 
     await queryClient.invalidateQueries({ queryKey: ["classes"] });
 }
@@ -157,7 +178,7 @@ export function useClassDeleteStudentMutation(): UseMutationReturnType<
 export function useClassTeachersQuery(
     id: MaybeRefOrGetter<string | undefined>,
     full: MaybeRefOrGetter<boolean> = true,
-): UseQueryReturnType<StudentsResponse, Error> {
+): UseQueryReturnType<TeachersResponse, Error> {
     return useQuery({
         queryKey: computed(() => classTeachersKey(toValue(id)!, toValue(full))),
         queryFn: async () => classController.getTeachers(toValue(id)!, toValue(full)),
@@ -204,7 +225,7 @@ export function useClassDeleteTeacherMutation(): UseMutationReturnType<
 export function useClassTeacherInvitationsQuery(
     id: MaybeRefOrGetter<string | undefined>,
     full: MaybeRefOrGetter<boolean> = true,
-): UseQueryReturnType<StudentsResponse, Error> {
+): UseQueryReturnType<TeacherInvitationsResponse, Error> {
     return useQuery({
         queryKey: computed(() => classTeacherInvitationsKey(toValue(id)!, toValue(full))),
         queryFn: async () => classController.getTeacherInvitations(toValue(id)!, toValue(full)),

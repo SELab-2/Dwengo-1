@@ -7,20 +7,21 @@
     "main": "dist/app.js",
     "scripts": {
         "build": "cross-env NODE_ENV=production tsc --build",
-        "dev": "cross-env NODE_ENV=development tsx tool/seed.ts; tsx watch --env-file=.env.development.local src/app.ts",
+        "predev": "tsc --build ../common/tsconfig.json",
+        "dev": "cross-env NODE_ENV=development tsx tool/seed.ts && tsx watch --env-file=.env.development.local src/app.ts",
         "start": "cross-env NODE_ENV=production node --env-file=.env dist/app.js",
         "format": "prettier --write src/",
         "format-check": "prettier --check src/",
         "lint": "eslint . --fix",
-        "pretest:unit": "npm run build",
+        "pretest:unit": "tsx ../docs/api/generate.ts && npm run build",
         "test:unit": "vitest --run"
     },
     "dependencies": {
-        "@mikro-orm/core": "6.4.9",
-        "@mikro-orm/knex": "6.4.9",
-        "@mikro-orm/postgresql": "6.4.9",
-        "@mikro-orm/reflection": "6.4.9",
-        "@mikro-orm/sqlite": "6.4.9",
+        "@mikro-orm/core": "6.4.12",
+        "@mikro-orm/knex": "6.4.12",
+        "@mikro-orm/postgresql": "6.4.12",
+        "@mikro-orm/reflection": "6.4.12",
+        "@mikro-orm/sqlite": "6.4.12",
         "axios": "^1.8.2",
         "cors": "^2.8.5",
         "cross": "^1.0.0",
@@ -43,7 +44,7 @@
         "winston-loki": "^6.1.3"
     },
     "devDependencies": {
-        "@mikro-orm/cli": "6.4.9",
+        "@mikro-orm/cli": "6.4.12",
         "@types/cors": "^2.8.17",
         "@types/express": "^5.0.0",
         "@types/js-yaml": "^4.0.9",

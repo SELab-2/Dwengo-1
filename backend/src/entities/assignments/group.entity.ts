@@ -7,17 +7,23 @@ import { GroupRepository } from '../../data/assignments/group-repository.js';
     repository: () => GroupRepository,
 })
 export class Group {
+    /*
+     WARNING: Don't move the definition of groupNumber! If it does not come before the definition of assignment,
+     creating groups fails because of a MikroORM bug!
+     */
+    @PrimaryKey({ type: 'integer', autoincrement: true })
+    groupNumber?: number;
+
     @ManyToOne({
         entity: () => Assignment,
         primary: true,
     })
     assignment!: Assignment;
 
-    @PrimaryKey({ type: 'integer', autoincrement: true })
-    groupNumber?: number;
-
     @ManyToMany({
         entity: () => Student,
+        owner: true,
+        inversedBy: 'groups',
     })
-    members!: Collection<Student>;
+    members: Collection<Student> = new Collection<Student>(this);
 }

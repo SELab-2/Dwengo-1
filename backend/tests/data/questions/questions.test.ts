@@ -38,8 +38,8 @@ describe('QuestionRepository', () => {
         const student = await studentRepository.findByUsername('Noordkaap');
 
         const clazz = await getClassRepository().findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
-        const assignment = await getAssignmentRepository().findByClassAndId(clazz!, 1);
-        const group = await getGroupRepository().findByAssignmentAndGroupNumber(assignment!, 1);
+        const assignment = await getAssignmentRepository().findByClassAndId(clazz!, 21000);
+        const group = await getGroupRepository().findByAssignmentAndGroupNumber(assignment!, 21001);
         await questionRepository.createQuestion({
             loId: id,
             inGroup: group!,
@@ -57,7 +57,7 @@ describe('QuestionRepository', () => {
     let loId: LearningObjectIdentifier;
     it('should find all questions for a certain learning object and assignment', async () => {
         clazz = await getClassRepository().findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
-        assignment = await getAssignmentRepository().findByClassAndId(clazz!, 1);
+        assignment = await getAssignmentRepository().findByClassAndId(clazz!, 21000);
         loId = {
             hruid: 'id05',
             language: Language.English,

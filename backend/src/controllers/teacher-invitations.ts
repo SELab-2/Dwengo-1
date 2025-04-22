@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { requireFields } from './error-helper';
-import { createInvitation, deleteInvitation, getAllInvitations, getInvitation, updateInvitation } from '../services/teacher-invitations';
+import { requireFields } from './error-helper.js';
+import { createInvitation, deleteInvitation, getAllInvitations, getInvitation, updateInvitation } from '../services/teacher-invitations.js';
 import { TeacherInvitationData } from '@dwengo-1/common/interfaces/teacher-invitation';
 import {ConflictException} from "../exceptions/conflict-exception";
 
@@ -45,7 +45,7 @@ export async function updateInvitationHandler(req: Request, res: Response): Prom
     const sender = req.body.sender;
     const receiver = req.body.receiver;
     const classId = req.body.class;
-    req.body.accepted = req.body.accepted !== 'false';
+    req.body.accepted = req.body.accepted !== false;
     requireFields({ sender, receiver, classId });
 
     const data = req.body as TeacherInvitationData;

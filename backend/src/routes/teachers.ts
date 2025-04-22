@@ -37,6 +37,6 @@ router.get('/:username/joinRequests/:classId', onlyAllowTeacherOfClass, getStude
 router.put('/:username/joinRequests/:classId/:studentUsername', onlyAllowTeacherOfClass, updateStudentJoinRequestHandler);
 
 // Invitations to other classes a teacher received
-router.get('/invitations', invitationRouter);
+router.use('/invitations', invitationRouter);
 
 export default router;
