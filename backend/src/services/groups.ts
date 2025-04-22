@@ -9,6 +9,8 @@ import { fetchAssignment } from './assignments.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { putObject } from './service-helper.js';
 import { fetchStudents } from './students.js';
+import { fetchClass } from './classes.js';
+import { BadRequestException } from '../exceptions/bad-request-exception.js';
 
 export async function fetchGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<Group> {
     const assignment = await fetchAssignment(classId, assignmentNumber);
@@ -60,8 +62,14 @@ export async function getExistingGroupFromGroupDTO(groupData: GroupDTO): Promise
 }
 
 export async function createGroup(groupData: GroupDTO, classid: string, assignmentNumber: number): Promise<GroupDTO> {
+    const cls = await fetchClass(classid);
+
     const memberUsernames = (groupData.members as string[]) || [];
     const members = await fetchStudents(memberUsernames);
+
+    if (!members.every(student => cls.students.contains(student))) {
+        throw new BadRequestException("It is not allowed to add a student to a group when the student is not part of the class");
+    }
 
     const assignment = await fetchAssignment(classid, assignmentNumber);
 
