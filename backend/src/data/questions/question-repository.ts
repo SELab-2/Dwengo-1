@@ -77,6 +77,13 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         });
     }
 
+    public async findAllByGroup(inGroup: Group): Promise<Question[]> {
+        return this.findAll({
+            where: { inGroup },
+            orderBy: { timestamp: 'DESC' },
+        })
+    }
+
     /**
      * Looks up all questions for the given learning object which were asked as part of the given assignment.
      * When forStudentUsername is set, only the questions within the given user's group are shown.

@@ -84,7 +84,7 @@ export async function createGroupHandler(req: Request, res: Response): Promise<v
     res.status(201).json({ group });
 }
 
-export async function getGroupSubmissionsHandler(req: Request, res: Response): Promise<void> {
+function getGroupParams(req: Request) {
     const classId = req.params.classid;
     const assignmentId = Number(req.params.assignmentid);
     const groupId = Number(req.params.groupid);
@@ -100,7 +100,21 @@ export async function getGroupSubmissionsHandler(req: Request, res: Response): P
         throw new BadRequestException('Group id must be a number');
     }
 
+    return { classId, assignmentId, groupId, full };
+}
+
+export async function getGroupSubmissionsHandler(req: Request, res: Response): Promise<void> {
+    const { classId, assignmentId, groupId, full } = getGroupParams(req);
+
     const submissions = await getGroupSubmissions(classId, assignmentId, groupId, full);
 
     res.json({ submissions });
+}
+
+export async function getGroupQuestionsHandler(req: Request, res: Response): Promise<void> {
+    const { classId, assignmentId, groupId, full } = getGroupParams(req);
+
+    const questions = await getGroupQuestions(classId, assignmentId, groupId, full);
+
+    res.json({ questions });
 }
