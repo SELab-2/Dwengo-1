@@ -79,7 +79,6 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
             an: num,
         });
         window.location.href = "/user/assignment";
-
     }
 </script>
 
