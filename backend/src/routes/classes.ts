@@ -19,31 +19,30 @@ import {onlyAllowIfInClass} from "../middleware/auth/checks/class-auth-checks";
 
 const router = express.Router();
 
-// Root endpoint used to search objects
 router.get('/', adminOnly, getAllClassesHandler);
 
 router.post('/', teachersOnly, createClassHandler);
 
-// Information about an class with id 'id'
 router.get('/:id', onlyAllowIfInClass, getClassHandler);
 
-router.put('/:id', putClassHandler);
+router.put('/:id', teachersOnly, onlyAllowIfInClass, putClassHandler);
 
-router.delete('/:id', deleteClassHandler);
+router.delete('/:id', teachersOnly, onlyAllowIfInClass, deleteClassHandler);
 
 router.get('/:id/teacher-invitations', teachersOnly, onlyAllowIfInClass, getTeacherInvitationsHandler);
 
 router.get('/:id/students', onlyAllowIfInClass, getClassStudentsHandler);
 
-router.post('/:id/students', addClassStudentHandler);
+router.post('/:id/students', teachersOnly, onlyAllowIfInClass, addClassStudentHandler);
 
-router.delete('/:id/students/:username', deleteClassStudentHandler);
+router.delete('/:id/students/:username', teachersOnly, onlyAllowIfInClass, deleteClassStudentHandler);
 
-router.get('/:id/teachers', getClassTeachersHandler);
+router.get('/:id/teachers', onlyAllowIfInClass, getClassTeachersHandler);
 
-router.post('/:id/teachers', addClassTeacherHandler);
+// De combinatie van deze POST en DELETE endpoints kan lethal zijn
+router.post('/:id/teachers', teachersOnly, onlyAllowIfInClass, addClassTeacherHandler);
 
-router.delete('/:id/teachers/:username', deleteClassTeacherHandler);
+router.delete('/:id/teachers/:username', teachersOnly, onlyAllowIfInClass, deleteClassTeacherHandler);
 
 router.use('/:classid/assignments', assignmentRouter);
 
