@@ -64,11 +64,11 @@
     const { mutate } = useDeleteAssignmentMutation();
 
     async function goToDeleteAssignment(num: number, clsId: string): Promise<void> {
-        mutate({ cid: clsId, an: num }, {
-            onSuccess: () => {
-                deletedAssignments.value.add(num);
-            },
+        mutate({
+            cid: clsId,
+            an: num,
         });
+        window.location.reload();
     }
 
     onMounted(async () => {
