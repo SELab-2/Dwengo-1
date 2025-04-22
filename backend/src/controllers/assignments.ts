@@ -66,7 +66,7 @@ export async function putAssignmentHandler(req: Request, res: Response): Promise
     res.json({ assignment });
 }
 
-export async function deleteAssignmentHandler(req: Request, _res: Response): Promise<void> {
+export async function deleteAssignmentHandler(req: Request, res: Response): Promise<void> {
     const id = Number(req.params.id);
     const classid = req.params.classid;
     requireFields({ id, classid });
@@ -75,7 +75,8 @@ export async function deleteAssignmentHandler(req: Request, _res: Response): Pro
         throw new BadRequestException('Assignment id should be a number');
     }
 
-    await deleteAssignment(classid, id);
+    const assignment = await deleteAssignment(classid, id);
+    res.json({assignment});
 }
 
 export async function getAssignmentsSubmissionsHandler(req: Request, res: Response): Promise<void> {

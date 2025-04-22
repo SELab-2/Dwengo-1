@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, computed, onMounted, watch} from "vue";
+    import { ref, computed, onMounted, watch } from "vue";
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
     import auth from "@/services/auth/auth-service.ts";
@@ -8,7 +8,7 @@ import {ref, computed, onMounted, watch} from "vue";
     import { ClassController } from "@/controllers/classes.ts";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { asyncComputed } from "@vueuse/core";
-    import {useCreateAssignmentMutation, useDeleteAssignmentMutation} from "@/queries/assignments.ts";
+    import { useDeleteAssignmentMutation } from "@/queries/assignments.ts";
 
     const { t } = useI18n();
     const router = useRouter();
@@ -70,7 +70,6 @@ import {ref, computed, onMounted, watch} from "vue";
 
     async function goToDeleteAssignment(num: number, clsId: string): Promise<void> {
         mutate({ cid: clsId, an: num });
-        window.location.reload(); // Remove later when isSuccess works
     }
 
     onMounted(async () => {

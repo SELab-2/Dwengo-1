@@ -73,11 +73,14 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
     const { mutate } = useDeleteAssignmentMutation();
 
     async function deleteAssignment(num: number, clsId: string): Promise<void> {
-        mutate({
-            cid: clsId,
-            an: num,
-        });
-        window.location.href = "/user/assignment";
+        mutate(
+            { cid: clsId, an: num },
+            {
+                onSuccess: () => {
+                    window.location.href = "/user/assignment";
+                },
+            },
+        );
     }
 </script>
 
