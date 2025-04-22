@@ -46,7 +46,7 @@ import {ref, computed, onMounted, watch} from "vue";
                     language: a.language,
                     groups: a.groups,
                 }));
-            })
+            }),
         );
 
         return result.flat();
