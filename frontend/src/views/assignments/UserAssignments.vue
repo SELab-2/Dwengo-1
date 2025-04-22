@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref, computed, onMounted } from "vue";
+import {ref, computed, onMounted, watch} from "vue";
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
     import auth from "@/services/auth/auth-service.ts";
@@ -8,7 +8,7 @@
     import { ClassController } from "@/controllers/classes.ts";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { asyncComputed } from "@vueuse/core";
-    import { useDeleteAssignmentMutation } from "@/queries/assignments.ts";
+    import {useCreateAssignmentMutation, useDeleteAssignmentMutation} from "@/queries/assignments.ts";
 
     const { t } = useI18n();
     const router = useRouter();
@@ -60,14 +60,17 @@
         await router.push(`/assignment/${clsId}/${id}`);
     }
 
-    const { mutate } = useDeleteAssignmentMutation();
+    const { mutate, data, isSuccess } = useDeleteAssignmentMutation();
+
+    watch([isSuccess, data], async ([success, oldData]) => {
+        if (success && oldData?.assignment) {
+            window.location.reload();
+        }
+    });
 
     async function goToDeleteAssignment(num: number, clsId: string): Promise<void> {
-        mutate({
-            cid: clsId,
-            an: num,
-        });
-        window.location.reload();
+        mutate({ cid: clsId, an: num });
+        window.location.reload(); // Remove later when isSuccess works
     }
 
     onMounted(async () => {

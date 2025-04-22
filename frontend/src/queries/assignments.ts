@@ -146,7 +146,7 @@ export function useDeleteAssignmentMutation(): UseMutationReturnType<
 
             await invalidateAllAssignmentKeys(queryClient, cid, an);
             await invalidateAllGroupKeys(queryClient, cid, an);
-            await invalidateAllSubmissionKeys(queryClient, cid, an);
+            await invalidateAllSubmissionKeys(queryClient, undefined, undefined, undefined, cid, an);
         },
     });
 }
