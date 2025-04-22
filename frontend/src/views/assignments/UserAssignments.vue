@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref, computed, onMounted, watch } from "vue";
+    import { ref, computed, onMounted } from "vue";
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
     import auth from "@/services/auth/auth-service.ts";
@@ -30,6 +30,7 @@
     //TODO: remove later
     const classController = new ClassController();
 
+    const deletedAssignments = ref<Set<number>>(new Set());
     //TODO: replace by query that fetches all user's assignment
     const assignments = asyncComputed(async () => {
         const classes = classesQueryResults?.data?.value?.classes;
@@ -49,7 +50,7 @@
             }),
         );
 
-        return result.flat();
+        return result.flat().filter(a => !deletedAssignments.value.has(a.id));
     }, []);
 
     async function goToCreateAssignment(): Promise<void> {
@@ -60,17 +61,13 @@
         await router.push(`/assignment/${clsId}/${id}`);
     }
 
-    const { mutate, isSuccess } = useDeleteAssignmentMutation();
-    watch(isSuccess, async (success) => {
-        if (success) {
-            await router.push("/user/assignment");
-        }
-    });
+    const { mutate } = useDeleteAssignmentMutation();
 
     async function goToDeleteAssignment(num: number, clsId: string): Promise<void> {
-        mutate({
-            cid: clsId,
-            an: num,
+        mutate({ cid: clsId, an: num }, {
+            onSuccess: () => {
+                deletedAssignments.value.add(num);
+            },
         });
     }
 
