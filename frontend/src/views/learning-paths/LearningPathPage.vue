@@ -138,6 +138,11 @@ import { watch } from "vue";
         return false;
     });
 
+    function submitQuestion() {
+      // Replace with actual submission logic
+      alert(`Submitted`);
+    }
+
 </script>
 
 <template>
@@ -209,7 +214,7 @@ import { watch } from "vue";
                 </using-query-result>
             </div>
             <v-divider></v-divider>
-            <div v-if="isAssignmentForStudent" class="assignment-indicator">  
+            <div v-if="true" class="assignment-indicator">  
                 ASSIGNMENT
             </div>
         </v-navigation-drawer>
@@ -230,6 +235,20 @@ import { watch } from "vue";
             :version="currentNode.version"
             v-if="currentNode"
         ></learning-object-view>
+        <div class="question-box">
+            <div class="input-wrapper">
+              <input
+                type="text"
+                placeholder="question : ..."
+                class="question-input"
+              />
+              <button @click="submitQuestion" class="send-button">▶</button>
+            </div>
+            <div class="discussion-link">
+              <span>view answers in </span>
+              <a href="/discussions/">discussions</a>.
+            </div>
+          </div>
         <div class="navigation-buttons-container">
             <v-btn
                 prepend-icon="mdi-chevron-left"
@@ -283,5 +302,59 @@ import { watch } from "vue";
       font-family: Arial, sans-serif;
       font-size: 14px;
       text-transform: uppercase;
+      }
+      .question-box {
+        width: 100%;
+        max-width: 400px;
+        margin: 20px auto;
+        font-family: sans-serif;
+      }
+      .input-wrapper {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 999px;
+        padding: 8px 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      
+      .question-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 14px;
+        background-color: transparent;
+      }
+      
+      .question-input::placeholder {
+        color: #999;
+      }
+      
+      .send-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        color: #555;
+        transition: color 0.2s ease;
+      }
+      
+      .send-button:hover {
+        color: #000;
+      }
+      
+      .discussion-link {
+        margin-top: 8px;
+        font-size: 13px;
+        color: #444;
+      }
+      
+      .discussion-link a {
+        color: #3b82f6; /* blue */
+        text-decoration: none;
+      }
+      
+      .discussion-link a:hover {
+        text-decoration: underline;
       }
 </style>
