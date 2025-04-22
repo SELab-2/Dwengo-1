@@ -7,7 +7,6 @@ import { GroupDTO, GroupDTOId } from '@dwengo-1/common/interfaces/group';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
 import { fetchAssignment } from './assignments.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
-import { putObject } from './service-helper.js';
 import { fetchStudents } from './students.js';
 import { fetchClass } from './classes.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
