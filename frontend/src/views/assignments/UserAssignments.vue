@@ -46,7 +46,7 @@
                     language: a.language,
                     groups: a.groups,
                 }));
-            }),
+            })
         );
 
         return result.flat();

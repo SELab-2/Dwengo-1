@@ -1,12 +1,11 @@
 <script setup lang="ts">
-    import { computed, type Ref, ref, watch } from "vue";
+    import { computed, type Ref, ref } from "vue";
     import { useI18n } from "vue-i18n";
     import { useAssignmentQuery, useDeleteAssignmentMutation } from "@/queries/assignments.ts";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import { useGroupsQuery } from "@/queries/groups.ts";
     import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
     import type { Language } from "@/data-objects/language.ts";
-    import router from "@/router";
     import type { AssignmentResponse } from "@/controllers/assignments.ts";
     import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
 
