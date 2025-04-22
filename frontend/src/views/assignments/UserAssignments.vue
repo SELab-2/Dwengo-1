@@ -30,7 +30,6 @@
     //TODO: remove later
     const classController = new ClassController();
 
-    const deletedAssignments = ref<Set<number>>(new Set());
     //TODO: replace by query that fetches all user's assignment
     const assignments = asyncComputed(async () => {
         const classes = classesQueryResults?.data?.value?.classes;
@@ -50,7 +49,7 @@
             }),
         );
 
-        return result.flat().filter(a => !deletedAssignments.value.has(a.id));
+        return result.flat();
     }, []);
 
     async function goToCreateAssignment(): Promise<void> {
