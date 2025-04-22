@@ -8,8 +8,8 @@ import {
     putAssignmentHandler,
 } from '../controllers/assignments.js';
 import groupRouter from './groups.js';
-import {adminOnly, teachersOnly} from "../middleware/auth/checks/auth-checks";
-import {onlyAllowIfInClass, onlyAllowOwnClassInBody} from "../middleware/auth/checks/class-auth-checks";
+import {teachersOnly} from "../middleware/auth/checks/auth-checks";
+import {onlyAllowIfInClass} from "../middleware/auth/checks/class-auth-checks";
 import {onlyAllowIfHasAccessToAssignment} from "../middleware/auth/checks/assignment-auth-checks";
 
 const router = express.Router({ mergeParams: true });
@@ -25,6 +25,12 @@ router.put('/:id', teachersOnly, onlyAllowIfHasAccessToAssignment, putAssignment
 router.delete('/:id', teachersOnly, onlyAllowIfHasAccessToAssignment, deleteAssignmentHandler);
 
 router.get('/:id/submissions', teachersOnly, onlyAllowIfHasAccessToAssignment, getAssignmentsSubmissionsHandler);
+
+router.get('/:id/questions', teachersOnly, onlyAllowIfHasAccessToAssignment, (_req, res) => {
+    res.json({
+        questions: ['0'],
+    });
+});
 
 router.use('/:assignmentid/groups', groupRouter);
 
