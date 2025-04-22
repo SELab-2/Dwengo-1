@@ -3,6 +3,9 @@
     import MenuBar from "@/components/MenuBar.vue";
     import { useRoute } from "vue-router";
     import { computed } from "vue";
+    import authService from "@/services/auth/auth-service.ts";
+
+    void authService.loadUser();
 
     const route = useRoute();
     interface RouteMeta {

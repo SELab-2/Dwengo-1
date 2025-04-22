@@ -12,11 +12,9 @@ import App from "./App.vue";
 import router from "./router";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 import { VueQueryPlugin, QueryClient } from "@tanstack/vue-query";
-import authService from "./services/auth/auth-service.ts";
 
 const app = createApp(App);
 
-await authService.loadUser();
 app.use(router);
 
 const link = document.createElement("link");
