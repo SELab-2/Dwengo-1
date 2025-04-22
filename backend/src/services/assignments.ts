@@ -134,6 +134,8 @@ export async function getAssignmentsSubmissions(
 export async function getAssignmentsQuestions(classid: string, assignmentNumber: number, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
     const assignment = await fetchAssignment(classid, assignmentNumber);
 
+    console.log(assignment);
+
     const questionRepository = getQuestionRepository();
     const questions = await questionRepository.findAllByAssignment(assignment);
 

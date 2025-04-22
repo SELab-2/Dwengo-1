@@ -62,9 +62,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
 
     public async findAllByAssignment(assignment: Assignment): Promise<Question[]> {
         return this.find({
-            inGroup: {
-                $contained: assignment.groups,
-            },
+            inGroup: assignment.groups.getItems(),
             learningObjectHruid: assignment.learningPathHruid,
             learningObjectLanguage: assignment.learningPathLanguage,
         });

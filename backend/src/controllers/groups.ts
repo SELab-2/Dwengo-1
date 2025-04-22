@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createGroup, deleteGroup, getAllGroups, getGroup, getGroupSubmissions, putGroup } from '../services/groups.js';
+import { createGroup, deleteGroup, getAllGroups, getGroup, getGroupQuestions, getGroupSubmissions, putGroup } from '../services/groups.js';
 import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 import { requireFields } from './error-helper.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
