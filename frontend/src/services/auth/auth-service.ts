@@ -37,7 +37,19 @@ async function loadUser(): Promise<User | null> {
     if (!activeRole) {
         return null;
     }
-    const user = await (await getUserManagers())[activeRole].getUser();
+
+    const userManager = (await getUserManagers())[activeRole];
+    let user = await userManager.getUser(); // Load the user from the local storage.
+    if (!user) { // If the user is not in the local storage, he could still be authenticated in Keycloak.
+        try {
+            user = await userManager.signinSilent()
+        } catch (e: unknown) {
+            // When the user was previously logged in and then logged out, signinSilent throws an error.
+            // In that case, the user is not authenticated anymore, so we set him to null.
+            user = null;
+        }
+    }
+
     setUserAuthInfo(user);
     authState.activeRole = activeRole ?? null;
     return user;
