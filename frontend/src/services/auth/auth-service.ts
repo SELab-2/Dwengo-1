@@ -44,7 +44,7 @@ async function loadUser(): Promise<User | null> {
         // If the user is not in the local storage, he could still be authenticated in Keycloak.
         try {
             user = await userManager.signinSilent();
-        } catch (e: unknown) {
+        } catch (_: unknown) {
             // When the user was previously logged in and then logged out, signinSilent throws an error.
             // In that case, the user is not authenticated anymore, so we set him to null.
             user = null;
