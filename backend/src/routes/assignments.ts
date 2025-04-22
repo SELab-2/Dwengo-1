@@ -4,6 +4,7 @@ import {
     deleteAssignmentHandler,
     getAllAssignmentsHandler,
     getAssignmentHandler,
+    getAssignmentQuestionsHandler,
     getAssignmentsSubmissionsHandler,
     putAssignmentHandler,
 } from '../controllers/assignments.js';
@@ -23,11 +24,7 @@ router.delete('/:id', deleteAssignmentHandler);
 
 router.get('/:id/submissions', getAssignmentsSubmissionsHandler);
 
-router.get('/:id/questions', (_req, res) => {
-    res.json({
-        questions: ['0'],
-    });
-});
+router.get('/:id/questions', getAssignmentQuestionsHandler);
 
 router.use('/:assignmentid/groups', groupRouter);
 
