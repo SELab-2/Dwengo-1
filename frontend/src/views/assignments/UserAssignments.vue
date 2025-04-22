@@ -50,7 +50,7 @@
             }),
         );
 
-        return result.flat().filter(a => !deletedAssignments.value.has(a.id));
+        return result.flat().filter((a) => !deletedAssignments.value.has(a.id));
     }, []);
 
     async function goToCreateAssignment(): Promise<void> {
@@ -64,11 +64,14 @@
     const { mutate } = useDeleteAssignmentMutation();
 
     async function goToDeleteAssignment(num: number, clsId: string): Promise<void> {
-        mutate({ cid: clsId, an: num }, {
-            onSuccess: () => {
-                deletedAssignments.value.add(num);
+        mutate(
+            { cid: clsId, an: num },
+            {
+                onSuccess: () => {
+                    deletedAssignments.value.add(num);
+                },
             },
-        });
+        );
     }
 
     onMounted(async () => {
