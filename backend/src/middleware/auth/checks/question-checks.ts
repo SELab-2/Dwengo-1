@@ -9,11 +9,11 @@ import {fetchAnswer} from "../../../services/answers";
 import {mapToUsername} from "../../../interfaces/user";
 
 export const onlyAllowAuthor = authorize(
-    (auth: AuthenticationInfo, req: AuthenticatedRequest) => req.body.author === auth.username
+    (auth: AuthenticationInfo, req: AuthenticatedRequest) => (req.body as { author: string }).author === auth.username
 );
 
 export const onlyAllowAuthorRequest = authorize(
-    (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
+    async (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
         const hruid = req.params.hruid;
         const version = req.params.version;
         const language = req.query.lang as string;
@@ -30,7 +30,7 @@ export const onlyAllowAuthorRequest = authorize(
 );
 
 export const onlyAllowAuthorRequestAnswer = authorize(
-    (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
+    async (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
         const hruid = req.params.hruid;
         const version = req.params.version;
         const language = req.query.lang as string;
@@ -49,7 +49,7 @@ export const onlyAllowAuthorRequestAnswer = authorize(
 );
 
 export const onlyAllowIfHasAccessToQuestion = authorize(
-    async (auth, req) => {
+    async (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
         const hruid = req.params.hruid;
         const version = req.params.version;
         const language = req.query.lang as string;

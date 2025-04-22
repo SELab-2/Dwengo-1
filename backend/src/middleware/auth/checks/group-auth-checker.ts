@@ -18,8 +18,8 @@ export const onlyAllowIfHasAccessToGroup = authorize(
             const clazz = await fetchClass(classId);
             return clazz.teachers.map(mapToUsername).includes(auth.username);
         } else { // user is student
-            const group = await fetchGroup(classId, assignmentId, groupId, false);
-            return clazz.students.map(mapToUsername).includes(auth.username);
+            const group = await fetchGroup(classId, assignmentId, groupId);
+            return group.members.map(mapToUsername).includes(auth.username);
         }
     }
 );

@@ -13,17 +13,15 @@ import {onlyAllowIfHasAccessToAssignment} from "../middleware/auth/checks/assign
 
 const router = express.Router({ mergeParams: true });
 
-// Root endpoint used to search objects
 router.get('/', onlyAllowIfHasAccessToAssignment, getAllGroupsHandler);
 
 router.post('/', teachersOnly, onlyAllowIfHasAccessToAssignment, createGroupHandler);
 
-// Information about a group (members, ... [TODO DOC])
-router.get('/:groupid', onlyAllowIfHasAccessToGroup, getGroupHandler);
+router.get('/:groupid', onlyAllowIfHasAccessToAssignment, getGroupHandler);
 
-router.put('/:groupid', putGroupHandler);
+router.put('/:groupid', teachersOnly, onlyAllowIfHasAccessToAssignment, putGroupHandler);
 
-router.delete('/:groupid', deleteGroupHandler);
+router.delete('/:groupid', teachersOnly, onlyAllowIfHasAccessToAssignment, deleteGroupHandler);
 
 router.get('/:groupid/submissions', onlyAllowIfHasAccessToGroup, getGroupSubmissionsHandler);
 
