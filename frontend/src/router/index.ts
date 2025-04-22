@@ -138,7 +138,7 @@ const router = createRouter({
 router.beforeEach(async (to, _from, next) => {
     // Verify if user is logged in before accessing certain routes
     if (to.meta.requiresAuth) {
-        if (!authService.isLoggedIn.value && !await authService.loadUser()) {
+        if (!authService.isLoggedIn.value && !(await authService.loadUser())) {
             next("/login");
         } else {
             next();
