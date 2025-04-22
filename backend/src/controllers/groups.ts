@@ -35,7 +35,11 @@ export async function putGroupHandler(req: Request, res: Response): Promise<void
     const groupId = parseInt(req.params.groupid);
     checkGroupFields(classId, assignmentId, groupId);
 
-    const group = await putGroup(classId, assignmentId, groupId, req.body as Partial<EntityDTO<Group>>);
+    // only members field can be changed
+    const members = req.body.members;
+    requireFields({ members });
+
+    const group = await putGroup(classId, assignmentId, groupId, { members } as Partial<GroupDTO>);
 
     res.json({ group });
 }
