@@ -84,7 +84,7 @@ export async function createGroupHandler(req: Request, res: Response): Promise<v
     res.status(201).json({ group });
 }
 
-function getGroupParams(req: Request) {
+function getGroupParams(req: Request): { classId: string, assignmentId: number, groupId: number, full: boolean } {
     const classId = req.params.classid;
     const assignmentId = Number(req.params.assignmentid);
     const groupId = Number(req.params.groupid);
