@@ -14,7 +14,7 @@ import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { EntityDTO } from '@mikro-orm/core';
 
-function getAssignmentParams(req: Request): { classid: string, assignmentNumber: number, full: boolean } {
+function getAssignmentParams(req: Request): { classid: string; assignmentNumber: number; full: boolean } {
     const classid = req.params.classid;
     const assignmentNumber = Number(req.params.id);
     const full = req.query.full === 'true';
