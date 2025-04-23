@@ -100,5 +100,6 @@
     "accepted": "akzeptiert",
     "enterUsername": "Geben Sie den Benutzernamen der Lehrkraft ein, die Sie einladen möchten",
     "username": "Nutzername",
-    "invite": "einladen"
+    "invite": "einladen",
+    "assignmentIndicator": "AUFGABE"
 }

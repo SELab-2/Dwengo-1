@@ -100,5 +100,6 @@
     "rejected": "rejected",
     "enterUsername": "enter the username of the teacher you would like to invite",
     "username": "username",
-    "invite": "invite"
+    "invite": "invite",
+    "assignmentIndicator": "ASSIGNMENT"
 }

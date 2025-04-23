@@ -100,5 +100,6 @@
     "rejected": "geweigerd",
     "enterUsername": "vul de gebruikersnaam van de leerkracht die je wilt uitnodigen in",
     "username": "gebruikersnaam",
-    "invite": "uitnodigen"
+    "invite": "uitnodigen",
+    "assignmentIndicator": "OPDRACHT"
 }

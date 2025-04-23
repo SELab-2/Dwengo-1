@@ -100,5 +100,6 @@
     "rejected": "rejetée",
     "enterUsername": "entrez le nom d'utilisateur de l'enseignant que vous souhaitez inviter",
     "username": "Nom d'utilisateur",
-    "invite": "inviter"
+    "invite": "inviter",
+    "assignmentIndicator": "DEVOIR"
 }

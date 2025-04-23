@@ -253,7 +253,7 @@
                 </v-list-item>
                 <v-list-item>
                     <div v-if="(authService.authState.activeRole === 'student') && (pathIsAssignment)" class="assignment-indicator">  
-                        ASSIGNMENT
+                        {{ t("assignmentIndicator") }}
                     </div>
                 </v-list-item>
             </div>
