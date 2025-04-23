@@ -19,6 +19,7 @@
     import QandA from "@/components/QandA.vue";
     import type { QuestionDTO } from "@dwengo-1/common/interfaces/question";
     import {useStudentAssignmentsQuery} from "@/queries/students"
+    import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
 
     const router = useRouter();
     const route = useRoute();
@@ -144,10 +145,20 @@
     }
 
     //TODO: berekenen of het een assignment is voor de student werkt nog niet zoals het hoort...
-
-    const studentAssignmentsQueryResult = useStudentAssignmentsQuery(authService.authState.user?.profile.preferred_username)
-    const pathIsAssignment = true  // TODO
-
+    const studentAssignmentsQueryResult = useStudentAssignmentsQuery(authService.authState.user?.profile.preferred_username);
+    const pathIsAssignment = computed(() => {
+        console.log("Query Result:", studentAssignmentsQueryResult); //debug
+        console.log("Loading:", studentAssignmentsQueryResult.isLoading.value); //debug
+        console.log("Succes:", studentAssignmentsQueryResult.isSuccess.value); //debug
+        console.log("data:", studentAssignmentsQueryResult.data.value); //debug
+        const assignments = studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[] || [];
+        console.log(assignments) //debug
+        return Array.isArray(assignments) && assignments.some(
+            (assignment) =>
+                assignment.title === props.hruid &&
+                assignment.language === props.language
+        );
+    });
     
     function submitQuestion() {
       // Replace with actual submission logic
