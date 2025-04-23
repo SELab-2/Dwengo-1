@@ -144,18 +144,12 @@
         });
     }
 
-    //TODO: berekenen of het een assignment is voor de student werkt nog niet zoals het hoort...
     const studentAssignmentsQueryResult = useStudentAssignmentsQuery(authService.authState.user?.profile.preferred_username);
     const pathIsAssignment = computed(() => {
-        console.log("Query Result:", studentAssignmentsQueryResult); //debug
-        console.log("Loading:", studentAssignmentsQueryResult.isLoading.value); //debug
-        console.log("Succes:", studentAssignmentsQueryResult.isSuccess.value); //debug
-        console.log("data:", studentAssignmentsQueryResult.data.value); //debug
         const assignments = studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[] || [];
-        console.log(assignments) //debug
-        return Array.isArray(assignments) && assignments.some(
+        return assignments.some(
             (assignment) =>
-                assignment.title === props.hruid &&
+                assignment.learningPath === props.hruid &&
                 assignment.language === props.language
         );
     });
