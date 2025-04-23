@@ -26,13 +26,15 @@ function initializeLogger(): Logger {
 
     const consoleTransport = new transports.Console({
         level: getEnvVar(envVars.LogLevel),
-        format: format.combine(format.cli(), format.colorize()),
+        format: format.combine(format.cli(), format.simple()),
     });
 
     if (getEnvVar(envVars.RunMode) === 'dev') {
-        return createLogger({
+        logger = createLogger({
             transports: [consoleTransport],
         });
+        logger.debug(`Logger initialized with level ${logLevel} to console`);
+        return logger;
     }
 
     const lokiHost = getEnvVar(envVars.LokiHost);

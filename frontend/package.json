@@ -10,14 +10,12 @@
         "preview": "vite preview",
         "type-check": "vue-tsc --build",
         "format": "prettier --write src/",
-        "test:e2e": "playwright test",
         "format-check": "prettier --check src/",
         "lint": "eslint . --fix",
-        "pretest:unit": "tsx ../docs/api/generate.ts && npm run build",
-        "test:unit": "vitest --run"
+        "test:unit": "vitest --run",
+        "test:e2e": "playwright test"
     },
     "dependencies": {
-        "@dwengo-1/common": "^0.1.1",
         "@tanstack/react-query": "^5.69.0",
         "@tanstack/vue-query": "^5.69.0",
         "axios": "^1.8.2",
