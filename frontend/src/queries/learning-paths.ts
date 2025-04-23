@@ -46,3 +46,16 @@ export function useSearchLearningPathQuery(
         enabled: () => Boolean(toValue(query)),
     });
 }
+
+export function useGetAllLearningPaths(
+    language: MaybeRefOrGetter<string | undefined>,
+): UseQueryReturnType<LearningPath[], Error> {
+    return useQuery({
+        queryKey: [LEARNING_PATH_KEY, "getAllLearningPaths", language],
+        queryFn: async () => {
+            const lang = toValue(language);
+            return learningPathController.getAllLearningPaths(lang);
+        },
+        enabled: () => Boolean(toValue(language)),
+    });
+}

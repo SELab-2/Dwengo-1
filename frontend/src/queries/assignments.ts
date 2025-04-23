@@ -104,7 +104,7 @@ export function useAssignmentsQuery(
 export function useAssignmentQuery(
     classid: MaybeRefOrGetter<string | undefined>,
     assignmentNumber: MaybeRefOrGetter<number | undefined>,
-): UseQueryReturnType<AssignmentsResponse, Error> {
+): UseQueryReturnType<AssignmentResponse, Error> {
     const { cid, an } = toValues(classid, assignmentNumber, 1, true);
 
     return useQuery({
@@ -146,7 +146,7 @@ export function useDeleteAssignmentMutation(): UseMutationReturnType<
 
             await invalidateAllAssignmentKeys(queryClient, cid, an);
             await invalidateAllGroupKeys(queryClient, cid, an);
-            await invalidateAllSubmissionKeys(queryClient, cid, an);
+            await invalidateAllSubmissionKeys(queryClient, undefined, undefined, undefined, cid, an);
         },
     });
 }

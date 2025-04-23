@@ -1,8 +1,10 @@
-import { computed, toValue } from "vue";
+import { computed, type Ref, toValue } from "vue";
 import type { MaybeRefOrGetter } from "vue";
 import {
+    type QueryObserverResult,
     useMutation,
     type UseMutationReturnType,
+    useQueries,
     useQuery,
     useQueryClient,
     type UseQueryReturnType,
@@ -67,6 +69,20 @@ export function useStudentQuery(
         queryKey: computed(() => studentQueryKey(toValue(username)!)),
         queryFn: async () => studentController.getByUsername(toValue(username)!),
         enabled: () => Boolean(toValue(username)),
+    });
+}
+
+export function useStudentsByUsernamesQuery(
+    usernames: MaybeRefOrGetter<string[] | undefined>,
+): Ref<QueryObserverResult<StudentResponse>[]> {
+    const resolvedUsernames = toValue(usernames) ?? [];
+
+    return useQueries({
+        queries: resolvedUsernames?.map((username) => ({
+            queryKey: computed(() => studentQueryKey(toValue(username))),
+            queryFn: async () => studentController.getByUsername(toValue(username)),
+            enabled: Boolean(toValue(username)),
+        })),
     });
 }
 

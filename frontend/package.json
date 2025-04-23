@@ -18,6 +18,7 @@
     "dependencies": {
         "@tanstack/react-query": "^5.69.0",
         "@tanstack/vue-query": "^5.69.0",
+        "@vueuse/core": "^13.1.0",
         "axios": "^1.8.2",
         "oidc-client-ts": "^3.1.0",
         "uuid": "^11.1.0",
