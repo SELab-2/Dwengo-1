@@ -17,6 +17,7 @@ import { ClassRepository } from '../../../src/data/classes/class-repository';
 import { Submission } from '../../../src/entities/assignments/submission.entity';
 import { Class } from '../../../src/entities/classes/class.entity';
 import { Assignment } from '../../../src/entities/assignments/assignment.entity';
+import { testLearningObject01 } from '../../test_assets/content/learning-objects.testdata';
 
 describe('SubmissionRepository', () => {
     let submissionRepository: SubmissionRepository;
@@ -106,7 +107,7 @@ describe('SubmissionRepository', () => {
     });
 
     it('should not find a deleted submission', async () => {
-        const id = new LearningObjectIdentifier('id01', Language.English, 1);
+        const id = new LearningObjectIdentifier(testLearningObject01.hruid, testLearningObject01.language, testLearningObject01.version);
         await submissionRepository.deleteSubmissionByLearningObjectAndSubmissionNumber(id, 1);
 
         const submission = await submissionRepository.findSubmissionByLearningObjectAndSubmissionNumber(id, 1);
