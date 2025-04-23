@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { ref } from "vue";
     import { useI18n } from "vue-i18n";
+    import { useRouter } from "vue-router";
 
     import auth from "@/services/auth/auth-service.ts";
 
@@ -10,9 +11,10 @@
     const { t, locale } = useI18n();
 
     const role = auth.authState.activeRole;
+    const _router = useRouter(); // Zonder '_' gaf dit een linter error voor unused variable
 
-    const name = ref(auth.authState.user!.profile.name!);
-    const initials: string = name.value
+    const name: string = auth.authState.user!.profile.name!;
+    const initials: string = name
         .split(" ")
         .map((n) => n[0])
         .join("");

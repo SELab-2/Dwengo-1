@@ -3,8 +3,6 @@ import { createGroup, deleteGroup, getAllGroups, getGroup, getGroupSubmissions, 
 import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 import { requireFields } from './error-helper.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
-import { EntityDTO } from '@mikro-orm/core';
-import { Group } from '../entities/assignments/group.entity.js';
 
 function checkGroupFields(classId: string, assignmentId: number, groupId: number): void {
     requireFields({ classId, assignmentId, groupId });
@@ -35,7 +33,11 @@ export async function putGroupHandler(req: Request, res: Response): Promise<void
     const groupId = parseInt(req.params.groupid);
     checkGroupFields(classId, assignmentId, groupId);
 
-    const group = await putGroup(classId, assignmentId, groupId, req.body as Partial<EntityDTO<Group>>);
+    // Only members field can be changed
+    const members = req.body.members;
+    requireFields({ members });
+
+    const group = await putGroup(classId, assignmentId, groupId, { members } as Partial<GroupDTO>);
 
     res.json({ group });
 }
