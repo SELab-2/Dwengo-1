@@ -251,10 +251,11 @@
                         >
                     </template>
                 </v-list-item>
-            </div>
-            <v-divider></v-divider>
-            <div v-if="(authService.authState.activeRole === 'student') && (pathIsAssignment)" class="assignment-indicator">  
-                ASSIGNMENT
+                <v-list-item>
+                    <div v-if="(authService.authState.activeRole === 'student') && (pathIsAssignment)" class="assignment-indicator">  
+                        ASSIGNMENT
+                    </div>
+                </v-list-item>
             </div>
         </v-navigation-drawer>
         <div class="control-bar-above-content">
@@ -277,7 +278,7 @@
                 v-if="currentNode"
             ></learning-object-view>
         </div>
-        <div class="question-box">
+        <div v-if="authService.authState.activeRole === 'student'" class="question-box">
             <div class="input-wrapper">
               <input
                 type="text"
@@ -343,19 +344,20 @@
         justify-content: space-between;
     }
     .assignment-indicator {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      padding: 4px 12px;
-      border: 2px solid #f8bcbc;
-      border-radius: 20px;
-      color: #f36c6c;
-      background-color: rgba(248, 188, 188, 0.1);
-      font-weight: bold;
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      text-transform: uppercase;
-      }
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        padding: 4px 12px;
+        border: 2px solid #f8bcbc;
+        border-radius: 20px;
+        color: #f36c6c;
+        background-color: rgba(248, 188, 188, 0.1);
+        font-weight: bold;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        text-transform: uppercase;
+        z-index: 2; /* Less than modals/popups */
+    }
       .question-box {
         width: 100%;
         max-width: 400px;
