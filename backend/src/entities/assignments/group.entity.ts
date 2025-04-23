@@ -1,4 +1,4 @@
-import {Cascade, Collection, Entity, ManyToMany, ManyToOne, PrimaryKey} from '@mikro-orm/core';
+import { Collection, Entity, ManyToMany, ManyToOne, PrimaryKey} from '@mikro-orm/core';
 import { Assignment } from './assignment.entity.js';
 import { Student } from '../users/student.entity.js';
 import { GroupRepository } from '../../data/assignments/group-repository.js';
@@ -24,7 +24,6 @@ export class Group {
         entity: () => Student,
         owner: true,
         inversedBy: 'groups',
-        cascade: [Cascade.ALL],
     })
     members: Collection<Student> = new Collection<Student>(this);
 }

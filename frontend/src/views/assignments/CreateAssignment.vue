@@ -75,12 +75,17 @@
         const { valid } = await form.value.validate();
         if (!valid) return;
 
+        let lp = selectedLearningPath.value;
+        if (!lpIsSelected) {
+            lp = selectedLearningPath.value?.hruid;
+        }
+
         const assignmentDTO: AssignmentDTO = {
             id: 0,
             within: selectedClass.value?.id || "",
             title: assignmentTitle.value,
             description: description.value,
-            learningPath: selectedLearningPath.value?.hruid || "",
+            learningPath: lp || "",
             language: language.value,
             groups: groups.value,
         };
@@ -188,14 +193,14 @@
                             color="secondary"
                             type="submit"
                             block
-                            >{{ t("submit") }}</v-btn
-                        >
+                            >{{ t("submit") }}
+                        </v-btn>
                         <v-btn
                             to="/user/assignment"
                             color="grey"
                             block
-                            >{{ t("cancel") }}</v-btn
-                        >
+                            >{{ t("cancel") }}
+                        </v-btn>
                     </v-card-text>
                 </v-container>
             </v-form>
