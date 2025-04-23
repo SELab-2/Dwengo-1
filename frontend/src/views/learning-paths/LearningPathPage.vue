@@ -13,13 +13,14 @@
     import authService from "@/services/auth/auth-service.ts";
     import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
     import LearningPathGroupSelector from "@/views/learning-paths/LearningPathGroupSelector.vue";
-    import { useQuestionsQuery } from "@/queries/questions";
+    import { useCreateQuestionMutation, useQuestionsQuery } from "@/queries/questions";
     import type { QuestionsResponse } from "@/controllers/questions";
     import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
     import QandA from "@/components/QandA.vue";
-    import type { QuestionDTO } from "@dwengo-1/common/interfaces/question";
-    import {useStudentAssignmentsQuery} from "@/queries/students"
+    import type { QuestionData, QuestionDTO } from "@dwengo-1/common/interfaces/question";
+    import {useStudentAssignmentsQuery, useStudentGroupsQuery} from "@/queries/students"
     import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
+import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
 
     const router = useRouter();
     const route = useRoute();
@@ -153,10 +154,39 @@
                 assignment.language === props.language
         );
     });
-    
+
+    const loID:LearningObjectIdentifierDTO = {
+            hruid: props.learningObjectHruid as string,
+            language: props.language
+        }
+    const createQuestionMutation = useCreateQuestionMutation(loID)
+    const groupsQueryResult = useStudentGroupsQuery(authService.authState.user?.profile.preferred_username)
+
+    const questionInput = ref("");
+
     function submitQuestion() {
-      // Replace with actual submission logic
-      alert(`Submitted`);
+        const assignments = studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[]
+        const assignment = assignments.find(
+            (assignment) =>
+                assignment.learningPath === props.hruid &&
+                assignment.language === props.language
+        )
+        const groups = groupsQueryResult.data.value?.groups as GroupDTO[]
+        const group = groups?.find(group => group.assignment === assignment?.id) as GroupDTO
+        const questionData:QuestionData = {
+            author: authService.authState.user?.profile.preferred_username,
+            content: questionInput.value,
+            inGroup: group //TODO: POST response zegt dat dit null is???
+        }
+        createQuestionMutation.mutate(questionData, {
+            onSuccess: () => {
+                questionInput.value = "question:..."; // Clear the input field after submission
+            },
+            onError: (e) => {
+                console.error(e)
+                questionInput.value = ""; // Clear the input field after submission
+            },
+        })
     }
 
 </script>
@@ -284,6 +314,7 @@
                 type="text"
                 placeholder="question : ..."
                 class="question-input"
+                v-model="questionInput"
               />
               <button @click="submitQuestion" class="send-button">▶</button>
             </div>
