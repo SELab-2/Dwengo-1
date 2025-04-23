@@ -18,10 +18,7 @@
     import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
     import QandA from "@/components/QandA.vue";
     import type { QuestionDTO } from "@dwengo-1/common/interfaces/question";
-
-    import { useStudentAssignmentsQuery } from "@/queries/students";
-    import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
-    import { watch } from "vue";
+    import {useStudentAssignmentsQuery} from "@/queries/students"
 
     const router = useRouter();
     const route = useRoute();
@@ -148,40 +145,10 @@
 
     //TODO: berekenen of het een assignment is voor de student werkt nog niet zoals het hoort...
 
-    const studentAssignmentsQuery = useStudentAssignmentsQuery(authService.authState.user?.profile?.preferred_username);
+    const studentAssignmentsQueryResult = useStudentAssignmentsQuery(authService.authState.user?.profile.preferred_username)
+    const pathIsAssignment = true  // TODO
 
-    watch(
-        () => authService.authState.user?.profile?.preferred_username,
-        (newUsername) => {
-            if (newUsername) {
-                studentAssignmentsQuery.refetch();
-            }
-        }
-    );
-
-    const isAssignmentForStudent = computed(() => {
-        // Check if the user is a student
-        const isStudent = authService.authState.activeRole === "student";
-
-        if (isStudent && studentAssignmentsQuery.isSuccess) {
-            // Use the query to fetch assignments for the current student
-            console.log("Query Result:", studentAssignmentsQuery.data?.value);
-
-            // Check if the query is successful and contains the current learning path
-            const isAssignment = (studentAssignmentsQuery.data?.value?.assignments as AssignmentDTO[]).some(
-                (assignment: AssignmentDTO) => {
-                    console.log(assignment.learningPath)
-                    return assignment.learningPath === props.hruid
-                }
-            );
-
-            // Return true only if the user is a student and the learning path is an assignment
-            return isAssignment;
-        }
-
-        return false;
-    });
-
+    
     function submitQuestion() {
       // Replace with actual submission logic
       alert(`Submitted`);
@@ -281,7 +248,7 @@
                 </v-list-item>
             </div>
             <v-divider></v-divider>
-            <div v-if="true" class="assignment-indicator">  
+            <div v-if="(authService.authState.activeRole === 'student') && (pathIsAssignment)" class="assignment-indicator">  
                 ASSIGNMENT
             </div>
         </v-navigation-drawer>
