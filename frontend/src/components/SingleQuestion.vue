@@ -1,0 +1,108 @@
+<script setup lang="ts">
+    import { useAnswersQuery } from "@/queries/answers";
+    import type { QuestionDTO, QuestionId } from "@dwengo-1/common/interfaces/question";
+    import { computed, ref } from "vue";
+    import UsingQueryResult from "./UsingQueryResult.vue";
+    import type { AnswersResponse } from "@/controllers/answers";
+    import type { AnswerDTO } from "@dwengo-1/common/interfaces/answer";
+
+    const props = defineProps<{
+        question: QuestionDTO;
+    }>();
+
+    const expanded = ref(false);
+
+    const toggle = () => {
+        expanded.value = !expanded.value;
+    };
+
+    const formatDate = (timestamp: string | Date): string => {
+        return new Date(timestamp).toLocaleString();
+    };
+
+    const answersQuery = useAnswersQuery(
+        computed(
+            () =>
+                ({
+                    learningObjectIdentifier: props.question.learningObjectIdentifier,
+                    sequenceNumber: props.question.sequenceNumber,
+                }) as QuestionId,
+        ),
+    );
+</script>
+<template>
+    <div class="space-y-4">
+        <div
+            class="flex justify-between items-center mb-2"
+            style="
+                margin-right: 5px;
+                margin-left: 5px;
+                font-weight: bold;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            "
+        >
+            <span class="font-semibold text-lg text-gray-800">{{
+                question.author.firstName + " " + question.author.lastName
+            }}</span>
+            <span class="text-sm text-gray-500">{{ formatDate(question.timestamp) }}</span>
+        </div>
+
+        <div
+            class="text-gray-700 mb-3"
+            style="margin-left: 10px"
+        >
+            {{ question.content }}
+        </div>
+
+        <using-query-result
+            :query-result="answersQuery"
+            v-slot="answersResponse: { data: AnswersResponse }"
+        >
+            <button
+                v-if="answersResponse.data.answers && answersResponse.data.answers.length > 0"
+                @click="toggle()"
+                class="text-blue-600 hover:underline text-sm"
+            >
+                {{ expanded ? "Hide Answers" : "Show Answers" }}
+            </button>
+
+            <div
+                v-if="expanded"
+                class="mt-3 pl-4 border-l-2 border-blue-200 space-y-2"
+            >
+                <div
+                    v-for="(answer, answerIndex) in answersResponse.data.answers as AnswerDTO[]"
+                    :key="answerIndex"
+                    class="text-gray-600"
+                >
+                    <div
+                        class="flex justify-between items-center mb-2"
+                        style="
+                            margin-right: 5px;
+                            margin-left: 5px;
+                            font-weight: bold;
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: space-between;
+                        "
+                    >
+                        <span class="font-semibold text-lg text-gray-800">{{
+                            answer.author.username
+                        }}</span>
+                        <span class="text-sm text-gray-500">{{ formatDate(answer.timestamp) }}</span>
+                    </div>
+
+                    <div
+                        class="text-gray-700 mb-3"
+                        style="margin-left: 10px"
+                    >
+                        {{ answer.content }}
+                    </div>
+                </div>
+            </div>
+        </using-query-result>
+    </div>
+</template>
+<style scoped></style>

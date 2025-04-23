@@ -11,28 +11,30 @@ export interface QuestionResponse {
 }
 
 export class QuestionController extends BaseController {
+    loId: LearningObjectIdentifierDTO;
+
     constructor(loId: LearningObjectIdentifierDTO) {
-        this.loId = loId;
         super(`learningObject/${loId.hruid}/:${loId.version}/questions`);
+        this.loId = loId;
     }
 
     async getAll(full = true): Promise<QuestionsResponse> {
-        return this.get<QuestionsResponse>("/", { lang: this.loId.lang, full });
+        return this.get<QuestionsResponse>("/", { lang: this.loId.language, full });
     }
 
     async getBy(sequenceNumber: number): Promise<QuestionResponse> {
-        return this.get<QuestionResponse>(`/${sequenceNumber}`, { lang: this.loId.lang });
+        return this.get<QuestionResponse>(`/${sequenceNumber}`, { lang: this.loId.language });
     }
 
     async create(questionData: QuestionData): Promise<QuestionResponse> {
-        return this.post<QuestionResponse>("/", questionData, { lang: this.loId.lang });
+        return this.post<QuestionResponse>("/", questionData, { lang: this.loId.language });
     }
 
     async remove(sequenceNumber: number): Promise<QuestionResponse> {
-        return this.delete<QuestionResponse>(`/${sequenceNumber}`, { lang: this.loId.lang });
+        return this.delete<QuestionResponse>(`/${sequenceNumber}`, { lang: this.loId.language });
     }
 
     async update(sequenceNumber: number, questionData: QuestionData): Promise<QuestionResponse> {
-        return this.put<QuestionResponse>(`/${sequenceNumber}`, questionData, { lang: this.loId.lang });
+        return this.put<QuestionResponse>(`/${sequenceNumber}`, questionData, { lang: this.loId.language });
     }
 }

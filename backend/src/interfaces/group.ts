@@ -1,14 +1,12 @@
 import { Group } from '../entities/assignments/group.entity.js';
 import { mapToAssignment } from './assignment.js';
 import { mapToStudent } from './student.js';
-import { mapToAssignmentDTO } from './assignment.js';
 import { mapToStudentDTO } from './student.js';
-import { GroupDTO } from '@dwengo-1/common/interfaces/group';
+import { GroupDTO, GroupDTOId } from '@dwengo-1/common/interfaces/group';
 import { getGroupRepository } from '../data/repositories.js';
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 import { Class } from '../entities/classes/class.entity.js';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
-import { mapToClassDTO } from './class';
 
 export function mapToGroup(groupDto: GroupDTO, clazz: Class): Group {
     const assignmentDto = groupDto.assignment as AssignmentDTO;
@@ -20,18 +18,18 @@ export function mapToGroup(groupDto: GroupDTO, clazz: Class): Group {
     });
 }
 
-export function mapToGroupDTO(group: Group): GroupDTO {
+export function mapToGroupDTO(group: Group, cls: Class): GroupDTO {
     return {
-        class: mapToClassDTO(group.assignment.within),
-        assignment: mapToAssignmentDTO(group.assignment),
+        class: cls.classId!,
+        assignment: group.assignment.id!,
         groupNumber: group.groupNumber!,
         members: group.members.map(mapToStudentDTO),
     };
 }
 
-export function mapToGroupDTOId(group: Group): GroupDTO {
+export function mapToGroupDTOId(group: Group, cls: Class): GroupDTOId {
     return {
-        class: group.assignment.within.classId!,
+        class: cls.classId!,
         assignment: group.assignment.id!,
         groupNumber: group.groupNumber!,
     };

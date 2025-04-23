@@ -28,7 +28,7 @@ import { ClassDTO } from '@dwengo-1/common/interfaces/class';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
-import { ClassJoinRequestStatus } from '@dwengo-1/common/util/class-join-request';
+import { ClassStatus } from '@dwengo-1/common/util/class-join-request';
 import { ConflictException } from '../exceptions/conflict-exception.js';
 
 export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | string[]> {
@@ -62,7 +62,17 @@ export async function createTeacher(userData: TeacherDTO): Promise<TeacherDTO> {
 
     const newTeacher = mapToTeacher(userData);
     await teacherRepository.save(newTeacher, { preventOverwrite: true });
+
     return mapToTeacherDTO(newTeacher);
+}
+
+export async function createOrUpdateTeacher(userData: TeacherDTO): Promise<TeacherDTO> {
+    await getTeacherRepository().upsert({
+        username: userData.username,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+    });
+    return userData;
 }
 
 export async function deleteTeacher(username: string): Promise<TeacherDTO> {
@@ -160,10 +170,10 @@ export async function updateClassJoinRequestStatus(studentUsername: string, clas
         throw new NotFoundException('Join request not found');
     }
 
-    request.status = ClassJoinRequestStatus.Declined;
+    request.status = ClassStatus.Declined;
 
     if (accepted) {
-        request.status = ClassJoinRequestStatus.Accepted;
+        request.status = ClassStatus.Accepted;
         await addClassStudent(classId, studentUsername);
     }
 

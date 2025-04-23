@@ -1,4 +1,4 @@
-import { Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
+import { Collection, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Teacher } from '../users/teacher.entity.js';
 import { LearningPathRepository } from '../../data/content/learning-path-repository.js';
 import { LearningPathNode } from './learning-path-node.entity.js';
@@ -25,5 +25,5 @@ export class LearningPath {
     image: Buffer | null = null;
 
     @OneToMany({ entity: () => LearningPathNode, mappedBy: 'learningPath' })
-    nodes: LearningPathNode[] = [];
+    nodes: Collection<LearningPathNode> = new Collection<LearningPathNode>(this);
 }

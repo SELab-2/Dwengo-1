@@ -69,8 +69,8 @@ export async function getAllGroupsHandler(req: Request, res: Response): Promise<
 export async function createGroupHandler(req: Request, res: Response): Promise<void> {
     const classid = req.params.classid;
     const assignmentId = Number(req.params.assignmentid);
-
-    requireFields({ classid, assignmentId });
+    const members = req.body.members;
+    requireFields({ classid, assignmentId, members });
 
     if (isNaN(assignmentId)) {
         throw new BadRequestException('Assignment id must be a number');
