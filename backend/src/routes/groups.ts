@@ -4,6 +4,7 @@ import {
     deleteGroupHandler,
     getAllGroupsHandler,
     getGroupHandler,
+    getGroupQuestionsHandler,
     getGroupSubmissionsHandler,
     putGroupHandler,
 } from '../controllers/groups.js';
@@ -31,5 +32,7 @@ router.get('/:groupid/questions', onlyAllowIfHasAccessToGroup, (_req, res) => {
         questions: ['0'],
     });
 });
+
+router.get('/:groupid/questions', getGroupQuestionsHandler);
 
 export default router;

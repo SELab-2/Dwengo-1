@@ -11,7 +11,7 @@
         selectedAge: { type: String, required: true },
     });
 
-    const { locale } = useI18n();
+    const { t, locale } = useI18n();
     const language = computed(() => locale.value);
 
     const { data: allThemes, isLoading, error } = useThemeQuery(language);
@@ -71,6 +71,22 @@
                     :title="card.title"
                     :description="card.description"
                     :image="card.image"
+                    class="fill-height"
+                />
+            </v-col>
+            <v-col
+                cols="12"
+                sm="6"
+                md="4"
+                lg="4"
+                class="d-flex"
+            >
+                <ThemeCard
+                    path="/learningPath/search"
+                    :is-absolute-path="true"
+                    :title="t('searchAllLearningPathsTitle')"
+                    :description="t('searchAllLearningPathsDescription')"
+                    icon="mdi-magnify"
                     class="fill-height"
                 />
             </v-col>
