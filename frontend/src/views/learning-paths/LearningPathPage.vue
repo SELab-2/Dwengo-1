@@ -182,11 +182,10 @@ import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
         if (questionInput.value != "") {
             createQuestionMutation.mutate(questionData, {
                 onSuccess: () => {
-                    questionInput.value = "question:..."; // Clear the input field after submission
+                    questionInput.value = ""; // Clear the input field after submission
                 },
                 onError: (e) => {
                     console.error(e)
-                    questionInput.value = ""; // Clear the input field after submission
                 },
             })
         } else {
