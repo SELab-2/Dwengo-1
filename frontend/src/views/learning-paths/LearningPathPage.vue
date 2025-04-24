@@ -20,7 +20,7 @@
     import type { QuestionData, QuestionDTO } from "@dwengo-1/common/interfaces/question";
     import {useStudentAssignmentsQuery, useStudentGroupsQuery} from "@/queries/students"
     import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
-import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
+    import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
 
     const router = useRouter();
     const route = useRoute();
@@ -192,7 +192,7 @@ import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
         } else {
             alert("Please type a question before submitting.") // TODO: i18n
         }
-        
+
     }
 
 </script>
@@ -271,8 +271,11 @@ import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
                                         :color="COLORS[getNavItemState(node)]"
                                         :icon="ICONS[getNavItemState(node)]"
                                     ></v-icon>
+                                </template> 
+                                <template v-slot:append>
+                                    <v-icon v-if="false" icon="mdi-help-circle-outline" color="red" />
+                                    <div>{{ node.estimatedTime }}'</div> 
                                 </template>
-                                <template v-slot:append> {{ node.estimatedTime }}' </template>
                             </v-list-item>
                         </template>
                     </using-query-result>
