@@ -1,10 +1,11 @@
 <script setup lang="ts">
-    import { useAnswersQuery } from "@/queries/answers";
+    import { useAnswersQuery, useCreateAnswerMutation } from "@/queries/answers";
     import type { QuestionDTO, QuestionId } from "@dwengo-1/common/interfaces/question";
     import { computed, ref } from "vue";
     import UsingQueryResult from "./UsingQueryResult.vue";
     import type { AnswersResponse } from "@/controllers/answers";
-    import type { AnswerDTO } from "@dwengo-1/common/interfaces/answer";
+    import type { AnswerData, AnswerDTO } from "@dwengo-1/common/interfaces/answer";
+import authService from "@/services/auth/auth-service";
 
     const props = defineProps<{
         question: QuestionDTO;
@@ -29,11 +30,28 @@
                 }) as QuestionId,
         ),
     );
+    
+    const questionId : QuestionId = {
+        learningObjectIdentifier: props.question.learningObjectIdentifier,
+        sequenceNumber: props.question.sequenceNumber as number
+    };
+    const createAnswerMutation = useCreateAnswerMutation(questionId);
 
-    const answer = ref('')
+    const answer = ref('');
 
     function submitAnswer() {
-        console.log('Submitted answer:', answer.value)
+        const answerData: AnswerData = {
+            author: authService.authState.user?.profile.preferred_username as string,
+            content: answer.value
+        };
+        if (answer.value != "") {
+            createAnswerMutation.mutate(answerData, {
+                onSuccess: () => {answer.value = "";}
+            });
+        } else {
+            alert("Please type an answer before submitting") //TODO: i18n
+        }
+        
     }
 </script>
 <template>
@@ -61,7 +79,7 @@
         >
             {{ question.content }}
         </div>
-        <div class="answer-input-container">
+        <div v-if="(authService.authState.activeRole === 'teacher')" class="answer-input-container">
             <input
               v-model="answer"
               type="text"
