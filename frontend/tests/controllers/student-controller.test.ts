@@ -1,5 +1,5 @@
 import { StudentController } from "../../src/controllers/students";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, test } from "vitest";
 
 describe("Test controller students", () => {
     let controller: StudentController;
@@ -18,13 +18,22 @@ describe("Test controller students", () => {
         const data = await controller.getByUsername(username);
         expect(data.student.username).to.equal(username);
     });
-
-    it("Get classes of student", async () => {
-        const students = await controller.getAll(true);
-
-        for (const student of students.students) {
-            const data = await controller.getClasses(student.username, true);
-            expect(data.classes).to.have.length.greaterThan(0);
-        }
-    });
 });
+
+const controller = new StudentController();
+
+test.each([
+        { username: 'Noordkaap', firstName: 'Stijn', lastName: 'Meuris' },
+        { username: 'DireStraits', firstName: 'Mark', lastName: 'Knopfler' },
+        { username: 'Tool', firstName: 'Maynard', lastName: 'Keenan' },
+        { username: 'SmashingPumpkins', firstName: 'Billy', lastName: 'Corgan' },
+        { username: 'PinkFloyd', firstName: 'David', lastName: 'Gilmoure' },
+        { username: 'TheDoors', firstName: 'Jim', lastName: 'Morisson' },
+        // ⚠️ Deze mag niet gebruikt worden in elke test!
+        { username: 'Nirvana', firstName: 'Kurt', lastName: 'Cobain' },
+        // Makes sure when logged in as leerling1, there exists a corresponding user
+        { username: 'testleerling1', firstName: 'Gerald', lastName: 'Schmittinger' },
+    ])('Get classes of student', async (student) => {
+    const data = await controller.getClasses(student.username, true);
+    expect(data.classes).to.have.length.greaterThan(0);
+})

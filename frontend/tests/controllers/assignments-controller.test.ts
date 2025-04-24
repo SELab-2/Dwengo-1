@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { AssignmentController } from "../../src/controllers/assignments";
-import { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
 
 describe("AssignmentController Tests", () => {
     let controller: AssignmentController;
