@@ -324,10 +324,6 @@ import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
               />
               <button @click="submitQuestion" class="send-button">▶</button>
             </div>
-            <div class="discussion-link">
-              <span>view answers in </span>
-              <a href="/discussions/">discussions</a>.
-            </div>
           </div>
         <div class="navigation-buttons-container">
             <v-btn
