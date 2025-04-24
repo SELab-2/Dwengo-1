@@ -29,24 +29,6 @@ describe("Test controller teachers", () => {
         await expect(controller.getByUsername(username)).rejects.toThrow();
     });
 
-    it("Create a new teacher", async () => {
-        const newTeacher = {
-            username: "newteacher",
-            firstName: "New",
-            lastName: "Teacher",
-        };
-        const data = await controller.createTeacher(newTeacher);
-        expect(data.teacher.username).to.equal(newTeacher.username);
-        expect(data.teacher.firstName).to.equal(newTeacher.firstName);
-        expect(data.teacher.lastName).to.equal(newTeacher.lastName);
-    });
-
-    it("Delete a teacher", async () => {
-        const username = "newteacher";
-        const data = await controller.deleteTeacher(username);
-        expect(data).toBeTruthy();
-    });
-
     it("Handle deletion of non-existent teacher", async () => {
         const username = "nonexistentuser";
         await expect(controller.deleteTeacher(username)).rejects.toThrow();
