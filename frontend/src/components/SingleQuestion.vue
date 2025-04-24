@@ -13,13 +13,13 @@
 
     const expanded = ref(false);
 
-    const toggle = () => {
+    function toggle (): void {
         expanded.value = !expanded.value;
-    };
+    }
 
-    const formatDate = (timestamp: string | Date): string => {
+    function formatDate (timestamp: string | Date): string {
         return new Date(timestamp).toLocaleString();
-    };
+    }
 
     const answersQuery = useAnswersQuery(
         computed(
@@ -39,16 +39,16 @@
 
     const answer = ref("");
 
-    function submitAnswer() {
+    function submitAnswer(): void {
         const answerData: AnswerData = {
             author: authService.authState.user?.profile.preferred_username as string,
             content: answer.value,
         };
-        if (answer.value != "") {
+        if (answer.value !== "") {
             createAnswerMutation.mutate(answerData, {
-                onSuccess: () => {
+                onSuccess: async () => {
                     answer.value = "";
-                    answersQuery.refetch();
+                    await answersQuery.refetch();
                 },
             });
         } else {

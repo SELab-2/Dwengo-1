@@ -2,7 +2,6 @@ import { EntityManager } from '@mikro-orm/core';
 import { Answer } from '../../../src/entities/questions/answer.entity';
 import { Teacher } from '../../../src/entities/users/teacher.entity';
 import { Question } from '../../../src/entities/questions/question.entity';
-import { getTestleerling1 } from '../users/students.testdata';
 import { getTestleerkracht1 } from '../users/teachers.testdata';
 import { getQuestion07 } from './questions.testdata';
 

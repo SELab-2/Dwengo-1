@@ -165,7 +165,7 @@
 
     const questionInput = ref("");
 
-    function submitQuestion() {
+    function submitQuestion(): void {
         const assignments = studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[];
         const assignment = assignments.find(
             (assignment) => assignment.learningPath === props.hruid && assignment.language === props.language,
@@ -176,16 +176,16 @@
             author: authService.authState.user?.profile.preferred_username,
             content: questionInput.value,
             inGroup: group, //TODO: POST response zegt dat dit null is???
-        };
-        console.log(questionData);
-        if (questionInput.value != "") {
+        }
+        if (questionInput.value !== "") {
             createQuestionMutation.mutate(questionData, {
-                onSuccess: () => {
+                onSuccess: async () => {
                     questionInput.value = ""; // Clear the input field after submission
-                    getQuestionsQuery.refetch(); // Reload the questions
+                    await getQuestionsQuery.refetch(); // Reload the questions
                 },
-                onError: (e) => {
-                    console.error(e);
+                onError: (_) => {
+                    // TODO Handle error
+                    // - console.error(e);
                 },
             });
         } else {
