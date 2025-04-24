@@ -5,7 +5,7 @@ import { AuthenticationInfo } from '../authentication-info';
 import { authorize } from './auth-checks';
 import { FALLBACK_LANG } from '../../../config';
 import { mapToUsername } from '../../../interfaces/user';
-import { languageMap } from "@dwengo-1/common/util/language";
+import { languageMap } from '@dwengo-1/common/util/language';
 
 export const onlyAllowSubmitter = authorize(
     (auth: AuthenticationInfo, req: AuthenticatedRequest) => (req.body as { submitter: string }).submitter === auth.username
