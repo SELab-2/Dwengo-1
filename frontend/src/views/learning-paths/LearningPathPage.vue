@@ -188,8 +188,6 @@
                     // - console.error(e);
                 },
             });
-        } else {
-            alert("Please type a question before submitting."); // TODO: i18n
         }
     }
 </script>

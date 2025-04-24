@@ -51,8 +51,6 @@
                     await answersQuery.refetch();
                 },
             });
-        } else {
-            alert("Please type an answer before submitting"); //TODO: i18n
         }
     }
 </script>
