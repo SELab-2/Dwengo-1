@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
-import { SubmissionController } from '../../src/controllers/submissions';
-import { Language } from '../../src/data-objects/language';
+import { describe, expect, it } from "vitest";
+import { SubmissionController } from "../../src/controllers/submissions";
+import { Language } from "../../src/data-objects/language";
 
 describe("Test controller submissions", () => {
     it("Get submission by number", async () => {

@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { TeacherController } from '../../src/controllers/teachers';
+import { beforeEach, describe, expect, it } from "vitest";
+import { TeacherController } from "../../src/controllers/teachers";
 
 describe("Test controller teachers", () => {
     let controller: TeacherController;

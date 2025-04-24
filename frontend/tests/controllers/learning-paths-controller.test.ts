@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { LearningPathController } from '../../src/controllers/learning-paths';
-import { Language } from '../../src/data-objects/language';
+import { beforeEach, describe, expect, it } from "vitest";
+import { LearningPathController } from "../../src/controllers/learning-paths";
+import { Language } from "../../src/data-objects/language";
 
 describe("Test controller learning paths", () => {
     let controller: LearningPathController;
