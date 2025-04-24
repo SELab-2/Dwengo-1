@@ -24,7 +24,7 @@ export default defineConfig({
     /* Fail the build on CI if you accidentally left test.only in the source code. */
     forbidOnly: Boolean(process.env.CI),
     /* Retry on CI only */
-    retries: process.env.CI ? 2 : 0,
+    retries: process.env.CI ? 2 : 1,
     /* Opt out of parallel tests on CI. */
     workers: process.env.CI ? 1 : undefined,
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
@@ -65,18 +65,18 @@ export default defineConfig({
         },
 
         /* Test against mobile viewports. */
-        // {
-        //   Name: 'Mobile Chrome',
-        //   Use: {
-        //     ...devices['Pixel 5'],
-        //   },
-        // },
-        // {
-        //   Name: 'Mobile Safari',
-        //   Use: {
-        //     ...devices['iPhone 12'],
-        //   },
-        // },
+        {
+            name: "Mobile Chrome",
+            use: {
+                ...devices["Pixel 5"],
+            },
+        },
+        {
+            name: "Mobile Safari",
+            use: {
+                ...devices["iPhone 12"],
+            },
+        },
 
         /* Test against branded browsers. */
         // {
@@ -97,14 +97,25 @@ export default defineConfig({
     // OutputDir: 'test-results/',
 
     /* Run your local dev server before starting the tests */
-    webServer: {
-        /**
-         * Use the dev server by default for faster feedback loop.
-         * Use the preview server on CI for more realistic testing.
-         * Playwright will re-use the local server if there is already a dev-server running.
-         */
-        command: process.env.CI ? "npm run preview" : "npm run dev",
-        port: process.env.CI ? 4173 : 5173,
-        reuseExistingServer: !process.env.CI,
-    },
+    webServer: [
+        // Assuming the idp is already running (because it is slow)
+        {
+            /* Frontend */
+            command: `VITE_API_BASE_URL='http://localhost:9876/api' ${process.env.CI ? "npm run preview" : "npm run dev"}`,
+            port: process.env.CI ? 4173 : 5173,
+            timeout: 120 * 1000,
+            reuseExistingServer: !process.env.CI,
+        },
+        {
+            /* Backend */
+            command: `
+            cd .. \
+            && npx tsc --build common/tsconfig.json \
+            && cd backend \
+            && npx tsx --env-file=./.env.test ./tool/startTestApp.ts
+            `,
+            port: 9876,
+            reuseExistingServer: !process.env.CI,
+        },
+    ],
 });

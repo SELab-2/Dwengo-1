@@ -13,7 +13,8 @@
         "format-check": "npm run format-check --workspace=backend --workspace=common --workspace=frontend",
         "lint": "npm run lint --workspace=backend --workspace=common --workspace=frontend",
         "pretest:unit": "npm run build",
-        "test:unit": "npm run test:unit --workspace=backend --workspace=frontend"
+        "test:unit": "npm run test:unit --workspace=backend --workspace=frontend",
+        "test:coverage": "npm run test:coverage --workspace=backend --workspace=frontend"
     },
     "workspaces": [
         "backend",
@@ -41,5 +42,8 @@
         "eslint-config-prettier": "^10.0.1",
         "jiti": "^2.4.2",
         "typescript-eslint": "^8.24.1"
+    },
+    "dependencies": {
+        "swagger": "^0.7.5"
     }
 }

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createGroup, deleteGroup, getAllGroups, getGroup, getGroupSubmissions, putGroup } from '../services/groups.js';
+import { createGroup, deleteGroup, getAllGroups, getGroup, getGroupQuestions, getGroupSubmissions, putGroup } from '../services/groups.js';
 import { GroupDTO } from '@dwengo-1/common/interfaces/group';
 import { requireFields } from './error-helper.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
@@ -84,7 +84,7 @@ export async function createGroupHandler(req: Request, res: Response): Promise<v
     res.status(201).json({ group });
 }
 
-export async function getGroupSubmissionsHandler(req: Request, res: Response): Promise<void> {
+function getGroupParams(req: Request): { classId: string; assignmentId: number; groupId: number; full: boolean } {
     const classId = req.params.classid;
     const assignmentId = Number(req.params.assignmentid);
     const groupId = Number(req.params.groupid);
@@ -100,7 +100,21 @@ export async function getGroupSubmissionsHandler(req: Request, res: Response): P
         throw new BadRequestException('Group id must be a number');
     }
 
+    return { classId, assignmentId, groupId, full };
+}
+
+export async function getGroupSubmissionsHandler(req: Request, res: Response): Promise<void> {
+    const { classId, assignmentId, groupId, full } = getGroupParams(req);
+
     const submissions = await getGroupSubmissions(classId, assignmentId, groupId, full);
 
     res.json({ submissions });
+}
+
+export async function getGroupQuestionsHandler(req: Request, res: Response): Promise<void> {
+    const { classId, assignmentId, groupId, full } = getGroupParams(req);
+
+    const questions = await getGroupQuestions(classId, assignmentId, groupId, full);
+
+    res.json({ questions });
 }

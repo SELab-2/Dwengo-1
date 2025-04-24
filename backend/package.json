@@ -14,7 +14,8 @@
         "format-check": "prettier --check src/",
         "lint": "eslint . --fix",
         "pretest:unit": "tsx ../docs/api/generate.ts && npm run build",
-        "test:unit": "vitest --run"
+        "test:unit": "vitest --run",
+        "test:coverage": "vitest --run --coverage.enabled true"
     },
     "dependencies": {
         "@mikro-orm/core": "6.4.12",
@@ -27,7 +28,6 @@
         "cross": "^1.0.0",
         "cross-env": "^7.0.3",
         "dotenv": "^16.4.7",
-        "dwengo-1-common": "^0.1.1",
         "express": "^5.0.1",
         "express-jwt": "^8.5.1",
         "gift-pegjs": "^1.0.2",
