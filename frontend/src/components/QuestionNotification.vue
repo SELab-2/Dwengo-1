@@ -19,6 +19,5 @@ const hasQuestions = computed(() => {
 </script>
 <template v-if="!isLoading & !error">
     <v-icon v-if="hasQuestions" icon="mdi-help-circle-outline" color="red" size="small" />
-    <div>{{ node.estimatedTime }}'</div> 
 </template>
 <style scoped></style>

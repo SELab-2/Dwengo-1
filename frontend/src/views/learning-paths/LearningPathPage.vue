@@ -272,7 +272,11 @@ import QuestionNotification from "@/components/QuestionNotification.vue";
                                         :icon="ICONS[getNavItemState(node)]"
                                     ></v-icon>
                                 </template> 
-                                <QuestionNotification :node="node" v-slot:append></QuestionNotification>
+                                <template v-slot:append>
+                                    <QuestionNotification :node="node"></QuestionNotification>
+                                    <div>{{ node.estimatedTime }}'</div> 
+                                </template>
+                                
                             </v-list-item>
                         </template>
                     </using-query-result>
