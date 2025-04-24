@@ -29,6 +29,12 @@
                 }) as QuestionId,
         ),
     );
+
+    const answer = ref('')
+
+    function submitAnswer() {
+        console.log('Submitted answer:', answer.value)
+    }
 </script>
 <template>
     <div class="space-y-4">
@@ -55,7 +61,15 @@
         >
             {{ question.content }}
         </div>
-
+        <div class="answer-input-container">
+            <input
+              v-model="answer"
+              type="text"
+              placeholder="answer: ..."
+              class="answer-input"
+            />
+            <button @click="submitAnswer" class="submit-button">▶</button>
+          </div>
         <using-query-result
             :query-result="answersQuery"
             v-slot="answersResponse: { data: AnswersResponse }"
@@ -105,4 +119,46 @@
         </using-query-result>
     </div>
 </template>
-<style scoped></style>
+<style scoped>
+.answer-input {
+    flex-grow: 1;
+    outline: none;
+    border: none;
+    background: transparent;
+    color: #374151; /* gray-700 */
+    font-size: 0.875rem; /* smaller font size */
+  }
+  
+  .answer-input::placeholder {
+    color: #9ca3af; /* gray-400 */
+  }
+  
+  .submit-button {
+    margin-left: 0.25rem;
+    padding: 0.25rem;
+    background-color: #f3f4f6; /* gray-100 */
+    border-radius: 9999px;
+    transition: background-color 0.2s;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: #e5e7eb; /* gray-200 */
+  }
+  
+  .submit-icon {
+    width: 0.75rem;
+    height: 0.75rem;
+    color: #4b5563; /* gray-600 */
+  }
+.answer-input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d1d5db; /* gray-300 */
+    border-radius: 9999px;
+    padding: 0.5rem 1rem;
+    max-width: 28rem;
+    width: 100%;
+  }
+</style>
