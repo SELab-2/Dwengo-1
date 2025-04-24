@@ -7,8 +7,17 @@ import { GroupDTO, GroupDTOId } from '@dwengo-1/common/interfaces/group';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
 import { fetchAssignment } from './assignments.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
-import { putObject } from './service-helper.js';
 import { fetchStudents } from './students.js';
+import { fetchClass } from './classes.js';
+import { BadRequestException } from '../exceptions/bad-request-exception.js';
+import { Student } from '../entities/users/student.entity.js';
+import { Class } from '../entities/classes/class.entity.js';
+
+async function assertMembersInClass(members: Student[], cls: Class): Promise<void> {
+    if (!members.every((student) => cls.students.contains(student))) {
+        throw new BadRequestException('Student does not belong to class');
+    }
+}
 
 export async function fetchGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<Group> {
     const assignment = await fetchAssignment(classId, assignmentNumber);
@@ -28,15 +37,18 @@ export async function getGroup(classId: string, assignmentNumber: number, groupN
     return mapToGroupDTO(group, group.assignment.within);
 }
 
-export async function putGroup(
-    classId: string,
-    assignmentNumber: number,
-    groupNumber: number,
-    groupData: Partial<EntityDTO<Group>>
-): Promise<GroupDTO> {
+export async function putGroup(classId: string, assignmentNumber: number, groupNumber: number, groupData: Partial<GroupDTO>): Promise<GroupDTO> {
     const group = await fetchGroup(classId, assignmentNumber, groupNumber);
 
-    await putObject<Group>(group, groupData, getGroupRepository());
+    const memberUsernames = groupData.members as string[];
+    const members = await fetchStudents(memberUsernames);
+
+    const cls = await fetchClass(classId);
+    await assertMembersInClass(members, cls);
+
+    const groupRepository = getGroupRepository();
+    groupRepository.assign(group, { members } as Partial<EntityDTO<Group>>);
+    await groupRepository.getEntityManager().persistAndFlush(group);
 
     return mapToGroupDTO(group, group.assignment.within);
 }
@@ -62,6 +74,9 @@ export async function getExistingGroupFromGroupDTO(groupData: GroupDTO): Promise
 export async function createGroup(groupData: GroupDTO, classid: string, assignmentNumber: number): Promise<GroupDTO> {
     const memberUsernames = (groupData.members as string[]) || [];
     const members = await fetchStudents(memberUsernames);
+
+    const cls = await fetchClass(classid);
+    await assertMembersInClass(members, cls);
 
     const assignment = await fetchAssignment(classid, assignmentNumber);
 

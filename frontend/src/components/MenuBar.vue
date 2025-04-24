@@ -11,7 +11,7 @@
     const { t, locale } = useI18n();
 
     const role = auth.authState.activeRole;
-    const router = useRouter();
+    const _router = useRouter(); // Zonder '_' gaf dit een linter error voor unused variable
 
     const name: string = auth.authState.user!.profile.name!;
     const initials: string = name

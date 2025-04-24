@@ -61,7 +61,7 @@ export function makeTestGroups(em: EntityManager, students: Student[], assignmen
      */
     group1ConditionalLearningPath = em.create(Group, {
         assignment: getConditionalPathAssignment(),
-        groupNumber: 1,
+        groupNumber: 21005,
         members: [getTestleerling1()],
     });
 

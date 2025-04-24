@@ -7,13 +7,13 @@ import CreateAssignment from "@/views/assignments/CreateAssignment.vue";
 import CreateDiscussion from "@/views/discussions/CreateDiscussion.vue";
 import CallbackPage from "@/views/CallbackPage.vue";
 import UserClasses from "@/views/classes/UserClasses.vue";
-import UserAssignments from "@/views/classes/UserAssignments.vue";
-import authService from "@/services/auth/auth-service.ts";
+import UserAssignments from "@/views/assignments/UserAssignments.vue";
 import LearningPathPage from "@/views/learning-paths/LearningPathPage.vue";
 import LearningPathSearchPage from "@/views/learning-paths/LearningPathSearchPage.vue";
 import UserHomePage from "@/views/homepage/UserHomePage.vue";
 import SingleTheme from "@/views/SingleTheme.vue";
 import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
+import authService from "@/services/auth/auth-service";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -72,16 +72,20 @@ const router = createRouter({
             meta: { requiresAuth: true },
         },
         {
-            path: "/assignment/create",
-            name: "CreateAssigment",
-            component: CreateAssignment,
+            path: "/assignment",
             meta: { requiresAuth: true },
-        },
-        {
-            path: "/assignment/:id",
-            name: "SingleAssigment",
-            component: SingleAssignment,
-            meta: { requiresAuth: true },
+            children: [
+                {
+                    path: "create",
+                    name: "CreateAssigment",
+                    component: CreateAssignment,
+                },
+                {
+                    path: ":classId/:id",
+                    name: "SingleAssigment",
+                    component: SingleAssignment,
+                },
+            ],
         },
         {
             path: "/class/:id",
@@ -138,7 +142,7 @@ const router = createRouter({
 router.beforeEach(async (to, _from, next) => {
     // Verify if user is logged in before accessing certain routes
     if (to.meta.requiresAuth) {
-        if (!authService.isLoggedIn.value) {
+        if (!authService.isLoggedIn.value && !(await authService.loadUser())) {
             next("/login");
         } else {
             next();

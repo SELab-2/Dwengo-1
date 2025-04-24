@@ -1,6 +1,6 @@
 import { Student } from '../users/student.entity.js';
 import { Group } from './group.entity.js';
-import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, Enum, ManyToOne, PrimaryKey, Property, Cascade } from '@mikro-orm/core';
 import { SubmissionRepository } from '../../data/assignments/submission-repository.js';
 import { Language } from '@dwengo-1/common/util/language';
 
@@ -21,8 +21,8 @@ export class Submission {
     @PrimaryKey({ type: 'numeric', autoincrement: false })
     learningObjectVersion = 1;
 
-    @ManyToOne({
-        entity: () => Group,
+    @ManyToOne(() => Group, {
+        cascade: [Cascade.REMOVE],
     })
     onBehalfOf!: Group;
 
