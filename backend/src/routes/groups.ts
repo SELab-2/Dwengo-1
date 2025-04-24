@@ -8,9 +8,9 @@ import {
     getGroupSubmissionsHandler,
     putGroupHandler,
 } from '../controllers/groups.js';
-import { onlyAllowIfHasAccessToGroup } from '../middleware/auth/checks/group-auth-checker';
-import { teachersOnly } from '../middleware/auth/checks/auth-checks';
-import { onlyAllowIfHasAccessToAssignment } from '../middleware/auth/checks/assignment-auth-checks';
+import { onlyAllowIfHasAccessToGroup } from '../middleware/auth/checks/group-auth-checker.js';
+import { teachersOnly } from '../middleware/auth/checks/auth-checks.js';
+import { onlyAllowIfHasAccessToAssignment } from '../middleware/auth/checks/assignment-auth-checks.js';
 
 const router = express.Router({ mergeParams: true });
 

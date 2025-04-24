@@ -5,14 +5,14 @@ import {
     getAllInvitationsHandler,
     getInvitationHandler,
     updateInvitationHandler,
-} from '../controllers/teacher-invitations';
-import { onlyAllowUserHimself } from '../middleware/auth/checks/user-auth-checks';
+} from '../controllers/teacher-invitations.js';
+import { onlyAllowUserHimself } from '../middleware/auth/checks/user-auth-checks.js';
 import {
     onlyAllowReceiverBody,
     onlyAllowSender,
     onlyAllowSenderBody,
     onlyAllowSenderOrReceiver,
-} from '../middleware/auth/checks/teacher-invitation-checks';
+} from '../middleware/auth/checks/teacher-invitation-checks.js';
 
 const router = express.Router({ mergeParams: true });
 

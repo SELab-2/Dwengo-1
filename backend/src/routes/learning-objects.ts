@@ -1,9 +1,8 @@
 import express from 'express';
 import { getAllLearningObjects, getAttachment, getLearningObject, getLearningObjectHTML } from '../controllers/learning-objects.js';
-
 import submissionRoutes from './submissions.js';
 import questionRoutes from './questions.js';
-import { authenticatedOnly } from '../middleware/auth/checks/auth-checks';
+import { authenticatedOnly } from '../middleware/auth/checks/auth-checks.js';
 
 const router = express.Router();
 

@@ -1,9 +1,9 @@
 import express from 'express';
 import { createQuestionHandler, deleteQuestionHandler, getAllQuestionsHandler, getQuestionHandler } from '../controllers/questions.js';
 import answerRoutes from './answers.js';
-import { adminOnly, studentsOnly } from '../middleware/auth/checks/auth-checks';
-import { updateAnswerHandler } from '../controllers/answers';
-import { onlyAllowAuthor, onlyAllowAuthorRequest, onlyAllowIfHasAccessToQuestion } from '../middleware/auth/checks/question-checks';
+import { adminOnly, studentsOnly } from '../middleware/auth/checks/auth-checks.js';
+import { updateAnswerHandler } from '../controllers/answers.js';
+import { onlyAllowAuthor, onlyAllowAuthorRequest, onlyAllowIfHasAccessToQuestion } from '../middleware/auth/checks/question-checks.js';
 
 const router = express.Router({ mergeParams: true });
 

@@ -11,10 +11,9 @@ import {
     updateStudentJoinRequestHandler,
 } from '../controllers/teachers.js';
 import invitationRouter from './teacher-invitations.js';
-
-import { adminOnly } from '../middleware/auth/checks/auth-checks';
-import { onlyAllowUserHimself } from '../middleware/auth/checks/user-auth-checks';
-import { onlyAllowTeacherOfClass } from '../middleware/auth/checks/class-auth-checks';
+import { adminOnly } from '../middleware/auth/checks/auth-checks.js';
+import { onlyAllowUserHimself } from '../middleware/auth/checks/user-auth-checks.js';
+import { onlyAllowTeacherOfClass } from '../middleware/auth/checks/class-auth-checks.js';
 const router = express.Router();
 
 // Root endpoint used to search objects

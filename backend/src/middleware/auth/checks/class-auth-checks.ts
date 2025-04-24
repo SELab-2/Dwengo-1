@@ -1,8 +1,8 @@
-import { authorize } from './auth-checks';
-import { AuthenticationInfo } from '../authentication-info';
-import { AuthenticatedRequest } from '../authenticated-request';
-import { fetchClass } from '../../../services/classes';
-import { mapToUsername } from '../../../interfaces/user';
+import { authorize } from './auth-checks.js';
+import { AuthenticationInfo } from '../authentication-info.js';
+import { AuthenticatedRequest } from '../authenticated-request.js';
+import { fetchClass } from '../../../services/classes.js';
+import { mapToUsername } from '../../../interfaces/user.js';
 
 async function teaches(teacherUsername: string, classId: string): Promise<boolean> {
     const clazz = await fetchClass(classId);

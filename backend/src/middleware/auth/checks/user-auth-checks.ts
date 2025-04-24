@@ -1,6 +1,6 @@
-import { authorize } from './auth-checks';
-import { AuthenticationInfo } from '../authentication-info';
-import { AuthenticatedRequest } from '../authenticated-request';
+import { authorize } from './auth-checks.js';
+import { AuthenticationInfo } from '../authentication-info.js';
+import { AuthenticatedRequest } from '../authenticated-request.js';
 
 /**
  * Only allow the user whose username is in the path parameter "username" to access the endpoint.

@@ -11,8 +11,8 @@ import {
     getStudentSubmissionsHandler,
 } from '../controllers/students.js';
 import joinRequestRouter from './student-join-requests.js';
-import { onlyAllowUserHimself } from '../middleware/auth/checks/user-auth-checks';
-import { adminOnly } from '../middleware/auth/checks/auth-checks';
+import { onlyAllowUserHimself } from '../middleware/auth/checks/user-auth-checks.js';
+import { adminOnly } from '../middleware/auth/checks/auth-checks.js';
 
 const router = express.Router();
 

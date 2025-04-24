@@ -2,10 +2,10 @@ import { UnauthorizedException } from '../exceptions/unauthorized-exception.js';
 import { getLogger } from '../logging/initalize.js';
 import { AuthenticatedRequest } from '../middleware/auth/authenticated-request.js';
 import { envVars, getEnvVar } from '../util/envVars.js';
-import { createOrUpdateStudent, createStudent } from '../services/students';
-import { AuthenticationInfo } from '../middleware/auth/authentication-info';
+import { createOrUpdateStudent, createStudent } from '../services/students.js';
+import { AuthenticationInfo } from '../middleware/auth/authentication-info.js';
 import { Request, Response } from 'express';
-import { createOrUpdateTeacher, createTeacher } from '../services/teachers';
+import { createOrUpdateTeacher, createTeacher } from '../services/teachers.js';
 
 interface FrontendIdpConfig {
     authority: string;

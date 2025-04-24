@@ -1,12 +1,12 @@
-import { authorize } from './auth-checks';
-import { AuthenticationInfo } from '../authentication-info';
-import { AuthenticatedRequest } from '../authenticated-request';
-import { requireFields } from '../../../controllers/error-helper';
-import { getLearningObjectId, getQuestionId } from '../../../controllers/questions';
-import { fetchQuestion } from '../../../services/questions';
-import { FALLBACK_SEQ_NUM } from '../../../config';
-import { fetchAnswer } from '../../../services/answers';
-import { mapToUsername } from '../../../interfaces/user';
+import { authorize } from './auth-checks.js';
+import { AuthenticationInfo } from '../authentication-info.js';
+import { AuthenticatedRequest } from '../authenticated-request.js';
+import { requireFields } from '../../../controllers/error-helper.js';
+import { getLearningObjectId, getQuestionId } from '../../../controllers/questions.js';
+import { fetchQuestion } from '../../../services/questions.js';
+import { FALLBACK_SEQ_NUM } from '../../../config.js';
+import { fetchAnswer } from '../../../services/answers.js';
+import { mapToUsername } from '../../../interfaces/user.js';
 
 export const onlyAllowAuthor = authorize(
     (auth: AuthenticationInfo, req: AuthenticatedRequest) => (req.body as { author: string }).author === auth.username

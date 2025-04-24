@@ -1,7 +1,7 @@
-import { authorize } from './auth-checks';
-import { fetchClass } from '../../../services/classes';
-import { fetchGroup } from '../../../services/groups';
-import { mapToUsername } from '../../../interfaces/user';
+import { authorize } from './auth-checks.js';
+import { fetchClass } from '../../../services/classes.js';
+import { fetchGroup } from '../../../services/groups.js';
+import { mapToUsername } from '../../../interfaces/user.js';
 
 /**
  * Expects the path to contain the path parameters 'classid', 'assignmentid' and 'groupid'.

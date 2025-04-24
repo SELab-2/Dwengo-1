@@ -1,11 +1,11 @@
-import { LearningObjectIdentifier } from '../../../entities/content/learning-object-identifier';
-import { fetchSubmission } from '../../../services/submissions';
-import { AuthenticatedRequest } from '../authenticated-request';
-import { AuthenticationInfo } from '../authentication-info';
-import { authorize } from './auth-checks';
-import { FALLBACK_LANG } from '../../../config';
-import { mapToUsername } from '../../../interfaces/user';
 import { languageMap } from '@dwengo-1/common/util/language';
+import { LearningObjectIdentifier } from '../../../entities/content/learning-object-identifier.js';
+import { fetchSubmission } from '../../../services/submissions.js';
+import { AuthenticatedRequest } from '../authenticated-request.js';
+import { AuthenticationInfo } from '../authentication-info.js';
+import { authorize } from './auth-checks.js';
+import { FALLBACK_LANG } from '../../../config.js';
+import { mapToUsername } from '../../../interfaces/user.js';
 
 export const onlyAllowSubmitter = authorize(
     (auth: AuthenticationInfo, req: AuthenticatedRequest) => (req.body as { submitter: string }).submitter === auth.username

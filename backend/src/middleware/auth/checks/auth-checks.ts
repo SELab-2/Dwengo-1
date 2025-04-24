@@ -1,9 +1,9 @@
-import { AuthenticationInfo } from '../authentication-info';
-import { AuthenticatedRequest } from '../authenticated-request';
+import { AuthenticationInfo } from '../authentication-info.js';
+import { AuthenticatedRequest } from '../authenticated-request.js';
 import * as express from 'express';
-import { UnauthorizedException } from '../../../exceptions/unauthorized-exception';
-import { ForbiddenException } from '../../../exceptions/forbidden-exception';
 import { RequestHandler } from 'express';
+import { UnauthorizedException } from '../../../exceptions/unauthorized-exception.js';
+import { ForbiddenException } from '../../../exceptions/forbidden-exception.js';
 
 /**
  * Middleware which rejects unauthenticated users (with HTTP 401) and authenticated users which do not fulfill
