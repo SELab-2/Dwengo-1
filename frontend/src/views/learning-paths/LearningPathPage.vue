@@ -178,15 +178,21 @@ import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
             content: questionInput.value,
             inGroup: group //TODO: POST response zegt dat dit null is???
         }
-        createQuestionMutation.mutate(questionData, {
-            onSuccess: () => {
-                questionInput.value = "question:..."; // Clear the input field after submission
-            },
-            onError: (e) => {
-                console.error(e)
-                questionInput.value = ""; // Clear the input field after submission
-            },
-        })
+        console.log(questionData)
+        if (questionInput.value != "") {
+            createQuestionMutation.mutate(questionData, {
+                onSuccess: () => {
+                    questionInput.value = "question:..."; // Clear the input field after submission
+                },
+                onError: (e) => {
+                    console.error(e)
+                    questionInput.value = ""; // Clear the input field after submission
+                },
+            })
+        } else {
+            alert("Please type a question before submitting.")
+        }
+        
     }
 
 </script>
