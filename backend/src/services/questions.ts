@@ -90,7 +90,7 @@ export async function createQuestion(loId: LearningObjectIdentifier, questionDat
 
     let assignment;
 
-    if (questionData.inGroup.assignment instanceof Number && questionData.inGroup.class instanceof String) {
+    if ((typeof questionData.inGroup.assignment === "number") && (typeof questionData.inGroup.class === "string")) {
         assignment = await fetchAssignment(questionData.inGroup.class as string,
             questionData.inGroup.assignment as number);
     } else {
@@ -100,14 +100,19 @@ export async function createQuestion(loId: LearningObjectIdentifier, questionDat
     }
 
     const inGroup = await getGroupRepository().findByAssignmentAndGroupNumber(assignment, questionData.inGroup.groupNumber);
-
+    
     const question = await questionRepository.createQuestion({
         loId,
         author,
         inGroup: inGroup!,
         content,
     });
-
+    console.log()
+    console.log(loId)
+    console.log(author)
+    console.log(inGroup)
+    console.log(content)
+    console.log(question)
     return mapToQuestionDTO(question);
 }
 
