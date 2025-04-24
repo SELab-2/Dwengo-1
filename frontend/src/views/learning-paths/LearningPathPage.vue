@@ -274,7 +274,7 @@ import QuestionNotification from "@/components/QuestionNotification.vue";
                                 </template> 
                                 <template v-slot:append>
                                     <QuestionNotification :node="node"></QuestionNotification>
-                                    <div>{{ node.estimatedTime }}'</div> 
+                                    <div>{{ (node.estimatedTime!).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) }}'</div> 
                                 </template>
                                 
                             </v-list-item>
