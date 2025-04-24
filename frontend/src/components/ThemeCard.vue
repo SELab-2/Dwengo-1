@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed } from "vue";
-import { useI18n } from "vue-i18n";
+    import { useI18n } from "vue-i18n";
 
     const { t } = useI18n();
 
@@ -13,7 +13,7 @@ import { useI18n } from "vue-i18n";
         icon?: string;
     }>();
 
-    const routerLink = computed(() => props.isAbsolutePath ? props.path : `/theme/${props.path}`);
+    const routerLink = computed(() => (props.isAbsolutePath ? props.path : `/theme/${props.path}`));
 </script>
 
 <template>
@@ -35,7 +35,8 @@ import { useI18n } from "vue-i18n";
             <v-icon
                 v-if="icon"
                 class="title-image"
-            >{{ icon }}</v-icon>
+                >{{ icon }}</v-icon
+            >
 
             <span class="title">{{ title }}</span>
         </v-card-title>
