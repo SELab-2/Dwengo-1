@@ -12,8 +12,7 @@ import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 import { fetchStudent } from './students.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { FALLBACK_VERSION_NUM } from '../config.js';
-import {fetchClass} from "./classes";
-import {fetchAssignment} from "./assignments";
+import { fetchAssignment } from './assignments.js';
 
 export async function getQuestionsAboutLearningObjectInAssignment(
     loId: LearningObjectIdentifier,
