@@ -4,6 +4,7 @@ import {
     deleteAssignment,
     getAllAssignments,
     getAssignment,
+    getAssignmentsQuestions,
     getAssignmentsSubmissions,
     putAssignment,
 } from '../services/assignments.js';
@@ -12,6 +13,19 @@ import { requireFields } from './error-helper.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { EntityDTO } from '@mikro-orm/core';
+
+function getAssignmentParams(req: Request): { classid: string; assignmentNumber: number; full: boolean } {
+    const classid = req.params.classid;
+    const assignmentNumber = Number(req.params.id);
+    const full = req.query.full === 'true';
+    requireFields({ assignmentNumber, classid });
+
+    if (isNaN(assignmentNumber)) {
+        throw new BadRequestException('Assignment id should be a number');
+    }
+
+    return { classid, assignmentNumber, full };
+}
 
 export async function getAllAssignmentsHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.classid;
@@ -38,57 +52,42 @@ export async function createAssignmentHandler(req: Request, res: Response): Prom
 }
 
 export async function getAssignmentHandler(req: Request, res: Response): Promise<void> {
-    const id = Number(req.params.id);
-    const classid = req.params.classid;
-    requireFields({ id, classid });
+    const { classid, assignmentNumber } = getAssignmentParams(req);
 
-    if (isNaN(id)) {
-        throw new BadRequestException('Assignment id should be a number');
-    }
-
-    const assignment = await getAssignment(classid, id);
+    const assignment = await getAssignment(classid, assignmentNumber);
 
     res.json({ assignment });
 }
 
 export async function putAssignmentHandler(req: Request, res: Response): Promise<void> {
-    const id = Number(req.params.id);
-    const classid = req.params.classid;
-    requireFields({ id, classid });
-
-    if (isNaN(id)) {
-        throw new BadRequestException('Assignment id should be a number');
-    }
+    const { classid, assignmentNumber } = getAssignmentParams(req);
 
     const assignmentData = req.body as Partial<EntityDTO<Assignment>>;
-    const assignment = await putAssignment(classid, id, assignmentData);
+    const assignment = await putAssignment(classid, assignmentNumber, assignmentData);
 
     res.json({ assignment });
 }
 
-export async function deleteAssignmentHandler(req: Request, _res: Response): Promise<void> {
-    const id = Number(req.params.id);
-    const classid = req.params.classid;
-    requireFields({ id, classid });
+export async function deleteAssignmentHandler(req: Request, res: Response): Promise<void> {
+    const { classid, assignmentNumber } = getAssignmentParams(req);
 
-    if (isNaN(id)) {
-        throw new BadRequestException('Assignment id should be a number');
-    }
+    const assignment = await deleteAssignment(classid, assignmentNumber);
 
-    await deleteAssignment(classid, id);
+    res.json({ assignment });
 }
 
 export async function getAssignmentsSubmissionsHandler(req: Request, res: Response): Promise<void> {
-    const classid = req.params.classid;
-    const assignmentNumber = Number(req.params.id);
-    const full = req.query.full === 'true';
-    requireFields({ assignmentNumber, classid });
-
-    if (isNaN(assignmentNumber)) {
-        throw new BadRequestException('Assignment id should be a number');
-    }
+    const { classid, assignmentNumber, full } = getAssignmentParams(req);
 
     const submissions = await getAssignmentsSubmissions(classid, assignmentNumber, full);
 
     res.json({ submissions });
+}
+
+export async function getAssignmentQuestionsHandler(req: Request, res: Response): Promise<void> {
+    const { classid, assignmentNumber, full } = getAssignmentParams(req);
+
+    const questions = await getAssignmentsQuestions(classid, assignmentNumber, full);
+
+    res.json({ questions });
 }

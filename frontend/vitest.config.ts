@@ -30,6 +30,13 @@ export default mergeConfig(
                     statements: 60,
                 },
             },
+
+            /*
+             * The test-backend server can be started for each test-file individually using `beforeAll(() => setup())`,
+             * or for all tests once using:
+             globalSetup: ["./tests/setup-backend.ts"],
+             * In this project, the backend server is started for each test-file individually.
+             */
         },
     }),
 );

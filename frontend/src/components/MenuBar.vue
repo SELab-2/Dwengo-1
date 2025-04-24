@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { ref } from "vue";
     import { useI18n } from "vue-i18n";
+    import { useRouter } from "vue-router";
 
     import auth from "@/services/auth/auth-service.ts";
 
@@ -10,6 +11,7 @@
     const { t, locale } = useI18n();
 
     const role = auth.authState.activeRole;
+    const _router = useRouter(); // Zonder '_' gaf dit een linter error voor unused variable
 
     const name: string = auth.authState.user!.profile.name!;
     const initials: string = name
@@ -80,13 +82,14 @@
             >
                 {{ t("classes") }}
             </v-btn>
-            <v-btn
-                class="menu_item"
-                variant="text"
-                to="/user/discussion"
-            >
-                {{ t("discussions") }}
-            </v-btn>
+            <!-- TODO Re-enable this button when the discussion page is ready -->
+            <!--            <v-btn-->
+            <!--                class="menu_item"-->
+            <!--                variant="text"-->
+            <!--                to="/user/discussion"-->
+            <!--            >-->
+            <!--                {{ t("discussions") }}-->
+            <!--            </v-btn>-->
             <v-menu open-on-hover>
                 <template v-slot:activator="{ props }">
                     <v-btn

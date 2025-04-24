@@ -1,13 +1,25 @@
 import { EntityDTO } from '@mikro-orm/core';
-import { getGroupRepository, getStudentRepository, getSubmissionRepository } from '../data/repositories.js';
+import { getGroupRepository, getQuestionRepository, getSubmissionRepository } from '../data/repositories.js';
 import { Group } from '../entities/assignments/group.entity.js';
-import { mapToGroupDTO, mapToShallowGroupDTO } from '../interfaces/group.js';
+import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
-import { GroupDTO } from '@dwengo-1/common/interfaces/group';
+import { GroupDTO, GroupDTOId } from '@dwengo-1/common/interfaces/group';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
 import { fetchAssignment } from './assignments.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
-import { putObject } from './service-helper.js';
+import { fetchStudents } from './students.js';
+import { fetchClass } from './classes.js';
+import { BadRequestException } from '../exceptions/bad-request-exception.js';
+import { Student } from '../entities/users/student.entity.js';
+import { Class } from '../entities/classes/class.entity.js';
+import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
+import { mapToQuestionDTO, mapToQuestionDTOId } from '../interfaces/question.js';
+
+async function assertMembersInClass(members: Student[], cls: Class): Promise<void> {
+    if (!members.every((student) => cls.students.contains(student))) {
+        throw new BadRequestException('Student does not belong to class');
+    }
+}
 
 export async function fetchGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<Group> {
     const assignment = await fetchAssignment(classId, assignmentNumber);
@@ -24,20 +36,23 @@ export async function fetchGroup(classId: string, assignmentNumber: number, grou
 
 export async function getGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<GroupDTO> {
     const group = await fetchGroup(classId, assignmentNumber, groupNumber);
-    return mapToGroupDTO(group);
+    return mapToGroupDTO(group, group.assignment.within);
 }
 
-export async function putGroup(
-    classId: string,
-    assignmentNumber: number,
-    groupNumber: number,
-    groupData: Partial<EntityDTO<Group>>
-): Promise<GroupDTO> {
+export async function putGroup(classId: string, assignmentNumber: number, groupNumber: number, groupData: Partial<GroupDTO>): Promise<GroupDTO> {
     const group = await fetchGroup(classId, assignmentNumber, groupNumber);
 
-    await putObject<Group>(group, groupData, getGroupRepository());
+    const memberUsernames = groupData.members as string[];
+    const members = await fetchStudents(memberUsernames);
 
-    return mapToGroupDTO(group);
+    const cls = await fetchClass(classId);
+    await assertMembersInClass(members, cls);
+
+    const groupRepository = getGroupRepository();
+    groupRepository.assign(group, { members } as Partial<EntityDTO<Group>>);
+    await groupRepository.getEntityManager().persistAndFlush(group);
+
+    return mapToGroupDTO(group, group.assignment.within);
 }
 
 export async function deleteGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<GroupDTO> {
@@ -47,7 +62,7 @@ export async function deleteGroup(classId: string, assignmentNumber: number, gro
     const groupRepository = getGroupRepository();
     await groupRepository.deleteByAssignmentAndGroupNumber(assignment, groupNumber);
 
-    return mapToGroupDTO(group);
+    return mapToGroupDTO(group, assignment.within);
 }
 
 export async function getExistingGroupFromGroupDTO(groupData: GroupDTO): Promise<Group> {
@@ -59,12 +74,11 @@ export async function getExistingGroupFromGroupDTO(groupData: GroupDTO): Promise
 }
 
 export async function createGroup(groupData: GroupDTO, classid: string, assignmentNumber: number): Promise<GroupDTO> {
-    const studentRepository = getStudentRepository();
-
     const memberUsernames = (groupData.members as string[]) || [];
-    const members = (await Promise.all([...memberUsernames].map(async (id) => studentRepository.findByUsername(id)))).filter(
-        (student) => student !== null
-    );
+    const members = await fetchStudents(memberUsernames);
+
+    const cls = await fetchClass(classid);
+    await assertMembersInClass(members, cls);
 
     const assignment = await fetchAssignment(classid, assignmentNumber);
 
@@ -73,22 +87,23 @@ export async function createGroup(groupData: GroupDTO, classid: string, assignme
         assignment: assignment,
         members: members,
     });
+
     await groupRepository.save(newGroup);
 
-    return mapToGroupDTO(newGroup);
+    return mapToGroupDTO(newGroup, newGroup.assignment.within);
 }
 
-export async function getAllGroups(classId: string, assignmentNumber: number, full: boolean): Promise<GroupDTO[]> {
+export async function getAllGroups(classId: string, assignmentNumber: number, full: boolean): Promise<GroupDTO[] | GroupDTOId[]> {
     const assignment = await fetchAssignment(classId, assignmentNumber);
 
     const groupRepository = getGroupRepository();
     const groups = await groupRepository.findAllGroupsForAssignment(assignment);
 
     if (full) {
-        return groups.map(mapToGroupDTO);
+        return groups.map((group) => mapToGroupDTO(group, assignment.within));
     }
 
-    return groups.map(mapToShallowGroupDTO);
+    return groups.map((group) => mapToGroupDTOId(group, assignment.within));
 }
 
 export async function getGroupSubmissions(
@@ -107,4 +122,22 @@ export async function getGroupSubmissions(
     }
 
     return submissions.map(mapToSubmissionDTOId);
+}
+
+export async function getGroupQuestions(
+    classId: string,
+    assignmentNumber: number,
+    groupNumber: number,
+    full: boolean
+): Promise<QuestionDTO[] | QuestionId[]> {
+    const group = await fetchGroup(classId, assignmentNumber, groupNumber);
+
+    const questionRepository = getQuestionRepository();
+    const questions = await questionRepository.findAllByGroup(group);
+
+    if (full) {
+        return questions.map(mapToQuestionDTO);
+    }
+
+    return questions.map(mapToQuestionDTOId);
 }

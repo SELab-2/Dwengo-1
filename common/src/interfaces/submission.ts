@@ -9,7 +9,7 @@ export interface SubmissionDTO {
     submissionNumber?: number;
     submitter: StudentDTO;
     time?: Date;
-    group: GroupDTO;
+    group?: GroupDTO;
     content: string;
 }
 

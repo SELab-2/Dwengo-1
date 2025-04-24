@@ -1,0 +1,14 @@
+<div class="learning-object-gift">
+    <div id="gift-q1" class="gift-question gift-question-type-MC">
+        <h2 id="gift-q1-title" class="gift-title">Self-evaluation</h2>
+        <p id="gift-q1-stem" class="gift-stem">Are you following along well?</p>
+        <div class="gift-choice-div">
+            <input value="0" name="gift-q1-choices" id="gift-q1-choice-0" type="radio">
+            <label for="gift-q1-choice-0">No, it's very difficult to follow along.</label>
+        </div>
+        <div class="gift-choice-div">
+            <input value="1" name="gift-q1-choices" id="gift-q1-choice-1" type="radio">
+            <label for="gift-q1-choice-1">Yes, no problem!</label>
+        </div>
+    </div>
+</div>

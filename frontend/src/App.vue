@@ -3,6 +3,9 @@
     import MenuBar from "@/components/MenuBar.vue";
     import { useRoute } from "vue-router";
     import { computed } from "vue";
+    import authService from "@/services/auth/auth-service.ts";
+
+    void authService.loadUser();
 
     const route = useRoute();
     interface RouteMeta {
@@ -10,10 +13,6 @@
     }
 
     const showMenuBar = computed(() => (route.meta as RouteMeta).requiresAuth && auth.authState.user);
-
-    auth.loadUser().catch((_error) => {
-        // TODO Could not load user!
-    });
 </script>
 
 <template>

@@ -1,4 +1,4 @@
-import { Collection, Entity, Enum, ManyToOne, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
+import { Cascade, Collection, Entity, Enum, ManyToOne, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Class } from '../classes/class.entity.js';
 import { Group } from './group.entity.js';
 import { Language } from '@dwengo-1/common/util/language';
@@ -14,7 +14,7 @@ export class Assignment {
     })
     within!: Class;
 
-    @PrimaryKey({ type: 'number', autoincrement: true })
+    @PrimaryKey({ type: 'integer', autoincrement: true })
     id?: number;
 
     @Property({ type: 'string' })
@@ -34,6 +34,7 @@ export class Assignment {
     @OneToMany({
         entity: () => Group,
         mappedBy: 'assignment',
+        cascade: [Cascade.ALL],
     })
-    groups!: Collection<Group>;
+    groups: Collection<Group> = new Collection<Group>(this);
 }

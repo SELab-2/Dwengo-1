@@ -26,7 +26,7 @@ async function getUserManagers(): Promise<UserManagersForRoles> {
 const authState = reactive<AuthState>({
     user: null,
     accessToken: null,
-    activeRole: authStorage.getActiveRole() || null,
+    activeRole: authStorage.getActiveRole() ?? null,
 });
 
 /**
@@ -37,19 +37,52 @@ async function loadUser(): Promise<User | null> {
     if (!activeRole) {
         return null;
     }
-    const user = await (await getUserManagers())[activeRole].getUser();
-    authState.user = user;
-    authState.accessToken = user?.access_token || null;
-    authState.activeRole = activeRole || null;
+
+    const userManager = (await getUserManagers())[activeRole];
+    let user = await userManager.getUser(); // Load the user from the local storage.
+    if (!user) {
+        // If the user is not in the local storage, he could still be authenticated in Keycloak.
+        try {
+            user = await userManager.signinSilent();
+        } catch (_: unknown) {
+            // When the user was previously logged in and then logged out, signinSilent throws an error.
+            // In that case, the user is not authenticated anymore, so we set him to null.
+            user = null;
+        }
+    }
+
+    setUserAuthInfo(user);
+    authState.activeRole = activeRole ?? null;
     return user;
 }
 
 const isLoggedIn = computed(() => authState.user !== null);
 
 /**
+ * Clears all the cached information about the current authentication.
+ */
+function clearAuthState(): void {
+    authStorage.deleteActiveRole();
+    authState.accessToken = null;
+    authState.user = null;
+    authState.activeRole = null;
+}
+
+/**
+ * Sets the information about the currently logged-in user in the cache.
+ */
+function setUserAuthInfo(newUser: User | null): void {
+    authState.user = newUser;
+    authState.accessToken = newUser?.access_token ?? null;
+}
+
+/**
  * Redirect the user to the login page where he/she can choose whether to log in as a student or teacher.
  */
 async function initiateLogin(): Promise<void> {
+    if (isLoggedIn.value) {
+        clearAuthState();
+    }
     await router.push(loginRoute);
 }
 
@@ -72,6 +105,7 @@ async function handleLoginCallback(): Promise<void> {
         throw new Error("Login callback received, but the user is not logging in!");
     }
     authState.user = (await (await getUserManagers())[activeRole].signinCallback()) || null;
+    await apiClient.post("/auth/hello");
 }
 
 /**
@@ -80,14 +114,14 @@ async function handleLoginCallback(): Promise<void> {
 async function renewToken(): Promise<User | null> {
     const activeRole = authStorage.getActiveRole();
     if (!activeRole) {
-        // FIXME console.log("Can't renew the token: Not logged in!");
         await initiateLogin();
         return null;
     }
     try {
-        return await (await getUserManagers())[activeRole].signinSilent();
-    } catch (_error) {
-        // FIXME console.log("Can't renew the token: " + error);
+        const userManagerForRole = (await getUserManagers())[activeRole];
+        const user = await userManagerForRole.signinSilent();
+        setUserAuthInfo(user);
+    } catch (_error: unknown) {
         await initiateLogin();
     }
     return null;
@@ -101,6 +135,7 @@ async function logout(): Promise<void> {
     if (activeRole) {
         await (await getUserManagers())[activeRole].signoutRedirect();
         authStorage.deleteActiveRole();
+        clearAuthState();
     }
 }
 
@@ -119,13 +154,15 @@ apiClient.interceptors.request.use(
 // Registering interceptor to refresh the token when a request failed because it was expired.
 apiClient.interceptors.response.use(
     (response) => response,
-    async (error: AxiosError<{ message?: string }>) => {
+    async (error: AxiosError<{ message?: string; inner?: { message?: string } }>) => {
         if (error.response?.status === 401) {
-            if (error.response.data.message === "token_expired") {
-                // FIXME console.log("Access token expired, trying to refresh...");
+            // If the user should already be logged in, his token is probably just expired.
+            if (isLoggedIn.value) {
                 await renewToken();
                 return apiClient(error.config!); // Retry the request
-            } // Apparently, the user got a 401 because he was not logged in yet at all. Redirect him to login.
+            }
+
+            // Apparently, the user got a 401 because he was not logged in yet at all. Redirect him to login.
             await initiateLogin();
         }
         return Promise.reject(error);

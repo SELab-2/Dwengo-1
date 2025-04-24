@@ -1,41 +1,49 @@
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
-    import { computed, onMounted, ref, type ComputedRef } from "vue";
+    import { onMounted, ref, watchEffect } from "vue";
     import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
-    import type { TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
+    import type { TeacherInvitationData, TeacherInvitationDTO } from "@dwengo-1/common/interfaces/teacher-invitation";
     import { useTeacherClassesQuery } from "@/queries/teachers";
-    import { ClassController, type ClassResponse } from "@/controllers/classes";
+    import type { ClassesResponse } from "@/controllers/classes";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import { useClassesQuery, useCreateClassMutation } from "@/queries/classes";
+    import type { TeacherInvitationsResponse } from "@/controllers/teacher-invitations";
+    import {
+        useRespondTeacherInvitationMutation,
+        useTeacherInvitationsReceivedQuery,
+    } from "@/queries/teacher-invitations";
+    import { useDisplay } from "vuetify";
 
     const { t } = useI18n();
-    const classController = new ClassController();
 
     // Username of logged in teacher
     const username = ref<string | undefined>(undefined);
+    const isLoading = ref(false);
+    const isError = ref(false);
+    const errorMessage = ref<string>("");
 
-    // Find the username of the logged in user so it can be used to fetch other information
-    // When loading the page
+    // Load current user before rendering the page
     onMounted(async () => {
-        const userObject = await authState.loadUser();
-        username.value = userObject?.profile?.preferred_username ?? undefined;
+        isLoading.value = true;
+        try {
+            const userObject = await authState.loadUser();
+            username.value = userObject!.profile.preferred_username;
+        } catch (error) {
+            isError.value = true;
+            errorMessage.value = error instanceof Error ? error.message : String(error);
+        } finally {
+            isLoading.value = false;
+        }
     });
 
     // Fetch all classes of the logged in teacher
-    const { data: classesResponse, isLoading, error, refetch } = useTeacherClassesQuery(username, true);
-
-    // Empty list when classes are not yet loaded, else the list of classes of the user
-    const classes: ComputedRef<ClassDTO[]> = computed(() => {
-        // The classes are not yet fetched
-        if (!classesResponse.value) {
-            return [];
-        }
-        // The user has no classes
-        if (classesResponse.value.classes.length === 0) {
-            return [];
-        }
-        return classesResponse.value.classes as ClassDTO[];
-    });
+    const classesQuery = useTeacherClassesQuery(username, true);
+    const allClassesQuery = useClassesQuery();
+    const { mutate } = useCreateClassMutation();
+    const getInvitationsQuery = useTeacherInvitationsReceivedQuery(username);
+    const { mutate: respondToInvitation } = useRespondTeacherInvitationMutation();
 
     // Boolean that handles visibility for dialogs
     // Creating a class will generate a popup with the generated code
@@ -44,19 +52,26 @@
     // Code generated when new class was created
     const code = ref<string>("");
 
-    // TODO: waiting on frontend controllers
-    const invitations = ref<TeacherInvitationDTO[]>([]);
+    // Function to handle an invitation request
+    function handleInvitation(ti: TeacherInvitationDTO, accepted: boolean): void {
+        const data: TeacherInvitationData = {
+            sender: (ti.sender as TeacherDTO).id,
+            receiver: (ti.receiver as TeacherDTO).id,
+            class: ti.classId,
+            accepted: accepted,
+        };
+        respondToInvitation(data, {
+            onSuccess: async () => {
+                if (accepted) {
+                    await classesQuery.refetch();
+                }
 
-    // Function to handle a accepted invitation request
-    function acceptRequest(): void {
-        //TODO: avoid linting issues when merging by filling the function
-        invitations.value = [];
-    }
-
-    // Function to handle a denied invitation request
-    function denyRequest(): void {
-        //TODO: avoid linting issues when merging by filling the function
-        invitations.value = [];
+                await getInvitationsQuery.refetch();
+            },
+            onError: (e) => {
+                showSnackbar(t("failed") + ": " + e.message, "error");
+            },
+        });
     }
 
     // Teacher should be able to set a displayname when making a class
@@ -76,25 +91,25 @@
     async function createClass(): Promise<void> {
         // Check if the class name is valid
         if (className.value && className.value.length > 0 && /^[a-zA-Z0-9_-]+$/.test(className.value)) {
-            try {
-                const classDto: ClassDTO = {
-                    id: "",
-                    displayName: className.value,
-                    teachers: [username.value!],
-                    students: [],
-                    joinRequests: [],
-                };
-                const classResponse: ClassResponse = await classController.createClass(classDto);
-                const createdClass: ClassDTO = classResponse.class;
-                code.value = createdClass.id;
-                dialog.value = true;
-                showSnackbar(t("created"), "success");
+            const classDto: ClassDTO = {
+                id: "",
+                displayName: className.value,
+                teachers: [username.value!],
+                students: [],
+            };
 
-                // Reload the table with classes so the new class appears
-                await refetch();
-            } catch (_) {
-                showSnackbar(t("wrong"), "error");
-            }
+            mutate(classDto, {
+                onSuccess: async (classResponse) => {
+                    showSnackbar(t("classCreated"), "success");
+                    const createdClass: ClassDTO = classResponse.class;
+                    code.value = createdClass.id;
+                    await classesQuery.refetch();
+                },
+                onError: (err) => {
+                    showSnackbar(t("creationFailed") + ": " + err.message, "error");
+                },
+            });
+            dialog.value = true;
         }
         if (!className.value || className.value === "") {
             showSnackbar(t("name is mandatory"), "error");
@@ -121,187 +136,272 @@
         await navigator.clipboard.writeText(code.value);
         copied.value = true;
     }
+
+    // Custom breakpoints
+    const customBreakpoints = {
+        xs: 0,
+        sm: 500,
+        md: 1370,
+        lg: 1400,
+        xl: 1600,
+    };
+
+    // Logic for small screens
+    const display = useDisplay();
+
+    // Reactive variables to hold custom logic based on breakpoints
+    const isMdAndDown = ref(false);
+    const isSmAndDown = ref(false);
+
+    watchEffect(() => {
+        // Custom breakpoint logic
+        isMdAndDown.value = display.width.value < customBreakpoints.md;
+        isSmAndDown.value = display.width.value < customBreakpoints.sm;
+    });
+
+    // Code display dialog logic
+    const viewCodeDialog = ref(false);
+    const selectedCode = ref("");
+    function openCodeDialog(codeToView: string): void {
+        selectedCode.value = codeToView;
+        viewCodeDialog.value = true;
+    }
 </script>
 <template>
     <main>
         <div
+            class="loading-div"
             v-if="isLoading"
-            class="text-center py-10"
         >
-            <v-progress-circular
-                indeterminate
-                color="primary"
-            />
-            <p>Loading...</p>
+            <v-progress-circular indeterminate></v-progress-circular>
         </div>
-
-        <div
-            v-else-if="error"
-            class="text-center py-10 text-error"
-        >
-            <v-icon large>mdi-alert-circle</v-icon>
-            <p>Error loading: {{ error.message }}</p>
+        <div v-if="isError">
+            <v-empty-state
+                icon="mdi-alert-circle-outline"
+                :text="errorMessage"
+                :title="t('error_title')"
+            ></v-empty-state>
         </div>
         <div v-else>
             <h1 class="title">{{ t("classes") }}</h1>
-            <v-container
-                fluid
-                class="ma-4"
+            <using-query-result
+                :query-result="classesQuery"
+                v-slot="classesResponse: { data: ClassesResponse }"
             >
-                <v-row
-                    no-gutters
+                <v-container
                     fluid
+                    class="ma-4"
                 >
-                    <v-col
-                        cols="12"
-                        sm="6"
-                        md="6"
+                    <v-row
+                        no-gutters
+                        class="custom-breakpoint"
                     >
-                        <v-table class="table">
-                            <thead>
-                                <tr>
-                                    <th class="header">{{ t("classes") }}</th>
-                                    <th class="header">
-                                        {{ t("code") }}
-                                    </th>
-                                    <th class="header">{{ t("members") }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr
-                                    v-for="c in classes"
-                                    :key="c.id"
-                                >
-                                    <td>
-                                        <v-btn
-                                            :to="`/class/${c.id}`"
-                                            variant="text"
-                                        >
-                                            {{ c.displayName }}
-                                            <v-icon end> mdi-menu-right </v-icon>
-                                        </v-btn>
-                                    </td>
-                                    <td>{{ c.id }}</td>
-                                    <td>{{ c.students.length }}</td>
-                                </tr>
-                            </tbody>
-                        </v-table>
-                    </v-col>
-                    <v-col
-                        cols="12"
-                        sm="6"
-                        md="6"
-                    >
-                        <div>
-                            <h2>{{ t("createClass") }}</h2>
-
-                            <v-sheet
-                                class="pa-4 sheet"
-                                max-width="600px"
-                            >
-                                <p>{{ t("createClassInstructions") }}</p>
-                                <v-form @submit.prevent>
-                                    <v-text-field
-                                        class="mt-4"
-                                        :label="`${t('classname')}`"
-                                        v-model="className"
-                                        :placeholder="`${t('EnterNameOfClass')}`"
-                                        :rules="nameRules"
-                                        variant="outlined"
-                                    ></v-text-field>
-                                    <v-btn
-                                        class="mt-4"
-                                        color="#f6faf2"
-                                        type="submit"
-                                        @click="createClass"
-                                        block
-                                        >{{ t("create") }}</v-btn
+                        <v-col
+                            cols="12"
+                            sm="6"
+                            md="6"
+                            class="responsive-col"
+                        >
+                            <v-table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="header">{{ t("classes") }}</th>
+                                        <th class="header">
+                                            {{ t("code") }}
+                                        </th>
+                                        <th class="header">{{ t("members") }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        v-for="c in classesResponse.data.classes as ClassDTO[]"
+                                        :key="c.id"
                                     >
-                                </v-form>
-                            </v-sheet>
-                            <v-container>
-                                <v-dialog
-                                    v-model="dialog"
-                                    max-width="400px"
-                                >
-                                    <v-card>
-                                        <v-card-title class="headline">code</v-card-title>
-                                        <v-card-text>
-                                            <v-text-field
-                                                v-model="code"
-                                                readonly
-                                                append-inner-icon="mdi-content-copy"
-                                                @click:append-inner="copyToClipboard"
-                                            ></v-text-field>
-                                            <v-slide-y-transition>
-                                                <div
-                                                    v-if="copied"
-                                                    class="text-center mt-2"
-                                                >
-                                                    {{ t("copied") }}
-                                                </div>
-                                            </v-slide-y-transition>
-                                        </v-card-text>
-                                        <v-card-actions>
-                                            <v-spacer></v-spacer>
+                                        <td>
                                             <v-btn
-                                                text
-                                                @click="
-                                                    dialog = false;
-                                                    copied = false;
-                                                "
+                                                :to="`/class/${c.id}`"
+                                                variant="text"
                                             >
-                                                {{ t("close") }}
+                                                {{ c.displayName }}
+                                                <v-icon end> mdi-menu-right </v-icon>
                                             </v-btn>
-                                        </v-card-actions>
-                                    </v-card>
-                                </v-dialog>
-                            </v-container>
-                        </div>
-                    </v-col>
-                </v-row>
-            </v-container>
+                                        </td>
+                                        <td>
+                                            <span v-if="!isMdAndDown">{{ c.id }}</span>
+                                            <span
+                                                v-else
+                                                style="cursor: pointer"
+                                                @click="openCodeDialog(c.id)"
+                                                ><v-icon icon="mdi-eye"></v-icon
+                                            ></span>
+                                        </td>
+
+                                        <td>{{ c.students.length }}</td>
+                                    </tr>
+                                </tbody>
+                            </v-table>
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            sm="6"
+                            md="6"
+                            class="responsive-col"
+                        >
+                            <div>
+                                <h2>{{ t("createClass") }}</h2>
+
+                                <v-sheet
+                                    class="pa-4 sheet"
+                                    max-width="600px"
+                                >
+                                    <p>{{ t("createClassInstructions") }}</p>
+                                    <v-form @submit.prevent>
+                                        <v-text-field
+                                            class="mt-4"
+                                            :label="`${t('classname')}`"
+                                            v-model="className"
+                                            :placeholder="`${t('EnterNameOfClass')}`"
+                                            :rules="nameRules"
+                                            variant="outlined"
+                                        ></v-text-field>
+                                        <v-btn
+                                            class="mt-4"
+                                            color="#f6faf2"
+                                            type="submit"
+                                            @click="createClass"
+                                            block
+                                            >{{ t("create") }}</v-btn
+                                        >
+                                    </v-form>
+                                </v-sheet>
+                                <v-container>
+                                    <v-dialog
+                                        v-model="dialog"
+                                        max-width="400px"
+                                    >
+                                        <v-card>
+                                            <v-card-title class="headline">code</v-card-title>
+                                            <v-card-text>
+                                                <v-text-field
+                                                    v-model="code"
+                                                    readonly
+                                                    append-inner-icon="mdi-content-copy"
+                                                    @click:append-inner="copyToClipboard"
+                                                ></v-text-field>
+                                                <v-slide-y-transition>
+                                                    <div
+                                                        v-if="copied"
+                                                        class="text-center mt-2"
+                                                    >
+                                                        {{ t("copied") }}
+                                                    </div>
+                                                </v-slide-y-transition>
+                                            </v-card-text>
+                                            <v-card-actions>
+                                                <v-spacer></v-spacer>
+                                                <v-btn
+                                                    text
+                                                    @click="
+                                                        dialog = false;
+                                                        copied = false;
+                                                    "
+                                                >
+                                                    {{ t("close") }}
+                                                </v-btn>
+                                            </v-card-actions>
+                                        </v-card>
+                                    </v-dialog>
+                                </v-container>
+                            </div>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </using-query-result>
 
             <h1 class="title">
                 {{ t("invitations") }}
             </h1>
-            <v-table class="table">
-                <thead>
-                    <tr>
-                        <th class="header">{{ t("class") }}</th>
-                        <th class="header">{{ t("sender") }}</th>
-                        <th class="header"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        v-for="i in invitations"
-                        :key="(i.class as ClassDTO).id"
-                    >
-                        <td>
-                            {{ (i.class as ClassDTO).displayName }}
-                        </td>
-                        <td>{{ (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName }}</td>
-                        <td class="text-right">
-                            <div>
-                                <v-btn
-                                    color="green"
-                                    @click="acceptRequest"
-                                    class="mr-2"
+            <v-container
+                fluid
+                class="ma-4"
+            >
+                <v-table class="table">
+                    <thead>
+                        <tr>
+                            <th class="header">{{ t("class") }}</th>
+                            <th class="header">{{ t("sender") }}</th>
+                            <th class="header">{{ t("accept") + "/" + t("reject") }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <using-query-result
+                            :query-result="getInvitationsQuery"
+                            v-slot="invitationsResponse: { data: TeacherInvitationsResponse }"
+                        >
+                            <using-query-result
+                                :query-result="allClassesQuery"
+                                v-slot="classesResponse: { data: ClassesResponse }"
+                            >
+                                <tr
+                                    v-for="i in invitationsResponse.data.invitations as TeacherInvitationDTO[]"
+                                    :key="i.classId"
                                 >
-                                    {{ t("accept") }}
-                                </v-btn>
-                                <v-btn
-                                    color="red"
-                                    @click="denyRequest"
-                                >
-                                    {{ t("deny") }}
-                                </v-btn>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </v-table>
+                                    <td>
+                                        {{
+                                            (classesResponse.data.classes as ClassDTO[]).filter(
+                                                (c) => c.id == i.classId,
+                                            )[0].displayName
+                                        }}
+                                    </td>
+                                    <td>
+                                        {{
+                                            (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName
+                                        }}
+                                    </td>
+                                    <td class="text-right">
+                                        <span v-if="!isSmAndDown">
+                                            <div>
+                                                <v-btn
+                                                    color="green"
+                                                    @click="handleInvitation(i, true)"
+                                                    class="mr-2"
+                                                >
+                                                    {{ t("accept") }}
+                                                </v-btn>
+                                                <v-btn
+                                                    color="red"
+                                                    @click="handleInvitation(i, false)"
+                                                >
+                                                    {{ t("deny") }}
+                                                </v-btn>
+                                            </div>
+                                        </span>
+                                        <span v-else>
+                                            <div>
+                                                <v-btn
+                                                    @click="handleInvitation(i, true)"
+                                                    class="mr-2"
+                                                    icon="mdi-check-circle"
+                                                    color="green"
+                                                    variant="text"
+                                                >
+                                                </v-btn>
+                                                <v-btn
+                                                    @click="handleInvitation(i, false)"
+                                                    class="mr-2"
+                                                    icon="mdi-close-circle"
+                                                    color="red"
+                                                    variant="text"
+                                                >
+                                                </v-btn></div
+                                        ></span>
+                                    </td>
+                                </tr>
+                            </using-query-result>
+                        </using-query-result>
+                    </tbody>
+                </v-table>
+            </v-container>
         </div>
         <v-snackbar
             v-model="snackbar.visible"
@@ -310,6 +410,42 @@
         >
             {{ snackbar.message }}
         </v-snackbar>
+        <v-dialog
+            v-model="viewCodeDialog"
+            max-width="400px"
+        >
+            <v-card>
+                <v-card-title class="headline">{{ t("code") }}</v-card-title>
+                <v-card-text>
+                    <v-text-field
+                        v-model="selectedCode"
+                        readonly
+                        append-inner-icon="mdi-content-copy"
+                        @click:append-inner="copyToClipboard"
+                    ></v-text-field>
+                    <v-slide-y-transition>
+                        <div
+                            v-if="copied"
+                            class="text-center mt-2"
+                        >
+                            {{ t("copied") }}
+                        </div>
+                    </v-slide-y-transition>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        text
+                        @click="
+                            viewCodeDialog = false;
+                            copied = false;
+                        "
+                    >
+                        {{ t("close") }}
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </main>
 </template>
 <style scoped>
@@ -377,7 +513,7 @@
         margin-left: 30px;
     }
 
-    @media screen and (max-width: 800px) {
+    @media screen and (max-width: 850px) {
         h1 {
             text-align: center;
             padding-left: 0;
@@ -399,6 +535,19 @@
             align-items: center;
             justify-content: center;
             margin: 5px;
+        }
+
+        .custom-breakpoint {
+            flex-direction: column !important;
+        }
+
+        .table {
+            width: 100%;
+        }
+
+        .responsive-col {
+            max-width: 100% !important;
+            flex-basis: 100% !important;
         }
     }
 </style>

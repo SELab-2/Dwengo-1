@@ -62,9 +62,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
 
     public async findAllByAssignment(assignment: Assignment): Promise<Question[]> {
         return this.find({
-            inGroup: {
-                $contained: assignment.groups,
-            },
+            inGroup: assignment.groups.getItems(),
             learningObjectHruid: assignment.learningPathHruid,
             learningObjectLanguage: assignment.learningPathLanguage,
         });
@@ -74,6 +72,13 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
         return this.findAll({
             where: { author },
             orderBy: { timestamp: 'DESC' }, // New to old
+        });
+    }
+
+    public async findAllByGroup(inGroup: Group): Promise<Question[]> {
+        return this.findAll({
+            where: { inGroup },
+            orderBy: { timestamp: 'DESC' },
         });
     }
 
