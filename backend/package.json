@@ -14,7 +14,8 @@
         "format-check": "prettier --check src/",
         "lint": "eslint . --fix",
         "pretest:unit": "tsx ../docs/api/generate.ts && npm run build",
-        "test:unit": "vitest --run"
+        "test:unit": "vitest --run",
+        "test:coverage": "vitest --run --coverage.enabled true"
     },
     "dependencies": {
         "@mikro-orm/core": "6.4.12",
