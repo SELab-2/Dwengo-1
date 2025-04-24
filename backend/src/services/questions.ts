@@ -12,6 +12,8 @@ import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 import { fetchStudent } from './students.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { FALLBACK_VERSION_NUM } from '../config.js';
+import {fetchClass} from "./classes";
+import {fetchAssignment} from "./assignments";
 
 export async function getQuestionsAboutLearningObjectInAssignment(
     loId: LearningObjectIdentifier,
@@ -86,8 +88,17 @@ export async function createQuestion(loId: LearningObjectIdentifier, questionDat
     const author = await fetchStudent(questionData.author!);
     const content = questionData.content;
 
-    const clazz = await getClassRepository().findById((questionData.inGroup.assignment as AssignmentDTO).within);
-    const assignment = mapToAssignment(questionData.inGroup.assignment as AssignmentDTO, clazz!);
+    let assignment;
+
+    if (questionData.inGroup.assignment instanceof Number && questionData.inGroup.class instanceof String) {
+        assignment = await fetchAssignment(questionData.inGroup.class as string,
+            questionData.inGroup.assignment as number);
+    } else {
+        // TODO check if necessary and no conflicts to delete this if
+        const clazz = await getClassRepository().findById((questionData.inGroup.assignment as AssignmentDTO).within);
+        assignment = mapToAssignment(questionData.inGroup.assignment as AssignmentDTO, clazz!);
+    }
+
     const inGroup = await getGroupRepository().findByAssignmentAndGroupNumber(assignment, questionData.inGroup.groupNumber);
 
     const question = await questionRepository.createQuestion({
