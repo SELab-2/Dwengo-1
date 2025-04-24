@@ -45,7 +45,7 @@ services:
     keycloak-db:
         image: postgres:latest
         ports:
-            - '5442:5432'  # Port numbers 10 higher than normal postgres ports
+            - '5442:5432'  # Port number 10 higher than normal postgres ports
         restart: unless-stopped
         volumes:
             - dwengo_postgres_keycloak:/var/lib/postgresql/keycloak
@@ -53,7 +53,6 @@ services:
             POSTGRES_USER: keycloak
             POSTGRES_PASSWORD: ChangeMe
             POSTGRES_DB: keycloak
-
         networks:
             - dwengo-1
 
@@ -61,19 +60,17 @@ services:
         extends:
             file: ./compose.yml
             service: idp
-        # TODO Replace with proper production command
         command: ['start', '--http-port', '7080', '--https-port', '7443', '--import-realm']
         networks:
             - dwengo-1
-        depends_on:
-            - keycloak-db
         labels:
             - 'traefik.enable=true'
             - 'traefik.http.routers.idp.rule=PathPrefix(`/idp`)'
             - 'traefik.http.services.idp.loadbalancer.server.port=7080'
             - 'traefik.http.routers.block-admin.rule=PathPrefix(`/idp/admin`)'
             - 'traefik.http.routers.block-admin.service=web'
-            - "traefik.tcp.routers.idp.tls.passthrough=true"  # Keycloak expects TLS in production mode, so it can't be terminated by the reverse proxy
+        depends_on:
+            - keycloak-db
         volumes:
             - /etc/keycloak:/keycloak
         env_file:
@@ -82,6 +79,7 @@ services:
             KC_HOSTNAME: 'sel2-1.ugent.be'
             PROXY_ADDRESS_FORWARDING: 'true'
             KC_PROXY_HEADERS: 'xforwarded'
+            KC_HTTP_ENABLED: 'true'
             KC_HTTP_RELATIVE_PATH: '/idp'
             KC_HTTPS_CERTIFICATE_FILE: '/keycloak/cert.pem'
             KC_HTTPS_CERTIFICATE_KEY_FILE: '/keycloak/key.pem'
