@@ -189,7 +189,7 @@ import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
                 },
             })
         } else {
-            alert("Please type a question before submitting.")
+            alert("Please type a question before submitting.") // TODO: i18n
         }
         
     }
