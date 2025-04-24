@@ -119,6 +119,7 @@
     "enterUsername": "entrez le nom d'utilisateur de l'enseignant que vous souhaitez inviter",
     "username": "Nom d'utilisateur",
     "invite": "inviter",
+    "assignmentIndicator": "DEVOIR",
     "searchAllLearningPathsTitle": "Rechercher tous les parcours d'apprentissage",
     "searchAllLearningPathsDescription": "Vous n'avez pas trouvé ce que vous cherchiez ? Cliquez ici pour rechercher dans toute notre base de données de parcours d'apprentissage disponibles."
 }
