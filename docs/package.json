@@ -1,6 +1,6 @@
 {
     "name": "dwengo-1-docs",
-    "version": "0.0.1",
+    "version": "0.2.0",
     "description": "Documentation for Dwengo-1",
     "private": true,
     "scripts": {
