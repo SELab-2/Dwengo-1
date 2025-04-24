@@ -9,13 +9,13 @@ name: Backend Testing
 #   - a draft PR to "dev" with backend js/ts files is marked as ready for review
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "dev", "main" ]
     paths:
       - 'backend/src/**.[jt]s'
       - 'backend/tests/**.[jt]s'
       - 'backend/vitest.config.ts'
   pull_request:
-    branches: [ "dev" ]
+    branches: [ "dev", "main" ]
     types: ["synchronize", "ready_for_review", "opened", "reopened"]
     paths:
       - 'backend/src/**.[jt]s'
