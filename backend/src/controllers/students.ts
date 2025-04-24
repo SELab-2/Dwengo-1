@@ -73,7 +73,7 @@ export async function getStudentAssignmentsHandler(req: Request, res: Response):
     const username = req.params.username;
     requireFields({ username });
 
-    const assignments = getStudentAssignments(username, full);
+    const assignments = await getStudentAssignments(username, full);
 
     res.json({ assignments });
 }
