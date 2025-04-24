@@ -90,8 +90,8 @@ export async function createQuestion(loId: LearningObjectIdentifier, questionDat
     let assignment;
 
     if ((typeof questionData.inGroup.assignment === "number") && (typeof questionData.inGroup.class === "string")) {
-        assignment = await fetchAssignment(questionData.inGroup.class as string,
-            questionData.inGroup.assignment as number);
+        assignment = await fetchAssignment(questionData.inGroup.class,
+            questionData.inGroup.assignment);
     } else {
         // TODO check if necessary and no conflicts to delete this if
         const clazz = await getClassRepository().findById((questionData.inGroup.assignment as AssignmentDTO).within);
