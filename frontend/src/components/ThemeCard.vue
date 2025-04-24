@@ -1,21 +1,26 @@
 <script setup lang="ts">
-    import { useI18n } from "vue-i18n";
+    import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 
     const { t } = useI18n();
 
-    defineProps<{
+    const props = defineProps<{
         path: string;
+        isAbsolutePath?: boolean;
         title: string;
         description: string;
-        image: string;
+        image?: string;
+        icon?: string;
     }>();
+
+    const routerLink = computed(() => props.isAbsolutePath ? props.path : `/theme/${props.path}`);
 </script>
 
 <template>
     <v-card
         variant="outlined"
         class="theme-card d-flex flex-column"
-        :to="`theme/${path}`"
+        :to="routerLink"
         link
     >
         <v-card-title class="title-container">
@@ -27,12 +32,17 @@
                 contain
                 class="title-image"
             ></v-img>
+            <v-icon
+                v-if="icon"
+                class="title-image"
+            >{{ icon }}</v-icon>
+
             <span class="title">{{ title }}</span>
         </v-card-title>
         <v-card-text class="description flex-grow-1">{{ description }}</v-card-text>
         <v-card-actions>
             <v-btn
-                :to="`theme/${path}`"
+                :to="routerLink"
                 variant="text"
             >
                 {{ t("read-more") }}

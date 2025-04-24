@@ -118,5 +118,7 @@
     "accepted": "akzeptiert",
     "enterUsername": "Geben Sie den Benutzernamen der Lehrkraft ein, die Sie einladen möchten",
     "username": "Nutzername",
-    "invite": "einladen"
+    "invite": "einladen",
+    "searchAllLearningPathsTitle": "Alle Lernpfade durchsuchen",
+    "searchAllLearningPathsDescription": "Nicht gefunden, was Sie gesucht haben? Klicken Sie hier, um unsere gesamte Lernpfad-Datenbank zu durchsuchen."
 }
