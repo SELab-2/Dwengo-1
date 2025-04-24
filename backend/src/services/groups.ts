@@ -12,7 +12,7 @@ import { fetchClass } from './classes.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { Student } from '../entities/users/student.entity.js';
 import { Class } from '../entities/classes/class.entity.js';
-import { QuestionDTO, QuestionId } from 'dwengo-1-common/interfaces/question';
+import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { mapToQuestionDTO, mapToQuestionDTOId } from '../interfaces/question.js';
 
 async function assertMembersInClass(members: Student[], cls: Class): Promise<void> {
