@@ -4,6 +4,7 @@ import {
     deleteGroupHandler,
     getAllGroupsHandler,
     getGroupHandler,
+    getGroupQuestionsHandler,
     getGroupSubmissionsHandler,
     putGroupHandler,
 } from '../controllers/groups.js';
@@ -22,5 +23,7 @@ router.put('/:groupid', putGroupHandler);
 router.delete('/:groupid', deleteGroupHandler);
 
 router.get('/:groupid/submissions', getGroupSubmissionsHandler);
+
+router.get('/:groupid/questions', getGroupQuestionsHandler);
 
 export default router;

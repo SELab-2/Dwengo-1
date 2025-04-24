@@ -1,5 +1,5 @@
 import { EntityDTO } from '@mikro-orm/core';
-import { getGroupRepository, getSubmissionRepository } from '../data/repositories.js';
+import { getGroupRepository, getQuestionRepository, getSubmissionRepository } from '../data/repositories.js';
 import { Group } from '../entities/assignments/group.entity.js';
 import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
@@ -12,6 +12,8 @@ import { fetchClass } from './classes.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { Student } from '../entities/users/student.entity.js';
 import { Class } from '../entities/classes/class.entity.js';
+import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
+import { mapToQuestionDTO, mapToQuestionDTOId } from '../interfaces/question.js';
 
 async function assertMembersInClass(members: Student[], cls: Class): Promise<void> {
     if (!members.every((student) => cls.students.contains(student))) {
@@ -120,4 +122,22 @@ export async function getGroupSubmissions(
     }
 
     return submissions.map(mapToSubmissionDTOId);
+}
+
+export async function getGroupQuestions(
+    classId: string,
+    assignmentNumber: number,
+    groupNumber: number,
+    full: boolean
+): Promise<QuestionDTO[] | QuestionId[]> {
+    const group = await fetchGroup(classId, assignmentNumber, groupNumber);
+
+    const questionRepository = getQuestionRepository();
+    const questions = await questionRepository.findAllByGroup(group);
+
+    if (full) {
+        return questions.map(mapToQuestionDTO);
+    }
+
+    return questions.map(mapToQuestionDTOId);
 }
