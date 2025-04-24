@@ -30,4 +30,10 @@ export class LearningPathController extends BaseController {
         const dtos = await this.get<LearningPathDTO[]>("/", { theme });
         return dtos.map((dto) => LearningPath.fromDTO(dto));
     }
+
+    async getAllLearningPaths(language: string | null = null): Promise<LearningPath[]> {
+        const query = language ? { language } : undefined;
+        const dtos = await this.get<LearningPathDTO[]>("/", query);
+        return dtos.map((dto) => LearningPath.fromDTO(dto));
+    }
 }

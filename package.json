@@ -41,5 +41,8 @@
         "eslint-config-prettier": "^10.0.1",
         "jiti": "^2.4.2",
         "typescript-eslint": "^8.24.1"
+    },
+    "dependencies": {
+        "swagger": "^0.7.5"
     }
 }
