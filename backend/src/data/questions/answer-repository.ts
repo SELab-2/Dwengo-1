@@ -15,7 +15,7 @@ export class AnswerRepository extends DwengoEntityRepository<Answer> {
         await this.insert(answerEntity);
         answerEntity.toQuestion = answer.toQuestion;
         answerEntity.author = answer.author;
-        answerEntity.content = answer.content;     
+        answerEntity.content = answer.content;
         return answerEntity;
     }
     public async findAllAnswersToQuestion(question: Question): Promise<Answer[]> {

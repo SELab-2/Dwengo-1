@@ -73,7 +73,7 @@ export function makeTestQuestions(em: EntityManager, students: Student[], groups
         timestamp: new Date(),
         content: 'question',
     });
-    
+
     question07 = em.create(Question, {
         learningObjectLanguage: Language.English,
         learningObjectVersion: 1,
@@ -93,7 +93,7 @@ export function makeTestQuestions(em: EntityManager, students: Student[], groups
         author: getTestleerling1(),
         inGroup: getGroup1ConditionalLearningPath(),
         timestamp: new Date(),
-        content: 'this is a second test question'
+        content: 'this is a second test question',
     });
 
     return [question01, question02, question03, question04, question05, question06, question07, question08];

@@ -12,13 +12,13 @@ export interface AnswerResponse {
 }
 
 export class AnswerController extends BaseController {
-
     loId: LearningObjectIdentifierDTO;
     sequenceNumber: number;
 
-
     constructor(questionId: QuestionId) {
-        super(`learningObject/${questionId.learningObjectIdentifier.hruid}/:${questionId.learningObjectIdentifier.version}/questions/${questionId.sequenceNumber}/answers`);
+        super(
+            `learningObject/${questionId.learningObjectIdentifier.hruid}/:${questionId.learningObjectIdentifier.version}/questions/${questionId.sequenceNumber}/answers`,
+        );
         this.loId = questionId.learningObjectIdentifier;
         this.sequenceNumber = questionId.sequenceNumber;
     }

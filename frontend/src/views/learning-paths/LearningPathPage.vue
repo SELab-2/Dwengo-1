@@ -18,10 +18,10 @@
     import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
     import QandA from "@/components/QandA.vue";
     import type { QuestionData, QuestionDTO } from "@dwengo-1/common/interfaces/question";
-    import {useStudentAssignmentsQuery, useStudentGroupsQuery} from "@/queries/students"
+    import { useStudentAssignmentsQuery, useStudentGroupsQuery } from "@/queries/students";
     import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
-import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
-import QuestionNotification from "@/components/QuestionNotification.vue";
+    import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
+    import QuestionNotification from "@/components/QuestionNotification.vue";
 
     const router = useRouter();
     const route = useRoute();
@@ -146,40 +146,38 @@ import QuestionNotification from "@/components/QuestionNotification.vue";
         });
     }
 
-    const studentAssignmentsQueryResult = useStudentAssignmentsQuery(authService.authState.user?.profile.preferred_username);
+    const studentAssignmentsQueryResult = useStudentAssignmentsQuery(
+        authService.authState.user?.profile.preferred_username,
+    );
     const pathIsAssignment = computed(() => {
-        const assignments = studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[] || [];
+        const assignments = (studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[]) || [];
         return assignments.some(
-            (assignment) =>
-                assignment.learningPath === props.hruid &&
-                assignment.language === props.language
+            (assignment) => assignment.learningPath === props.hruid && assignment.language === props.language,
         );
     });
 
-    const loID:LearningObjectIdentifierDTO = {
-            hruid: props.learningObjectHruid as string,
-            language: props.language
-        }
-    const createQuestionMutation = useCreateQuestionMutation(loID)
-    const groupsQueryResult = useStudentGroupsQuery(authService.authState.user?.profile.preferred_username)
+    const loID: LearningObjectIdentifierDTO = {
+        hruid: props.learningObjectHruid as string,
+        language: props.language,
+    };
+    const createQuestionMutation = useCreateQuestionMutation(loID);
+    const groupsQueryResult = useStudentGroupsQuery(authService.authState.user?.profile.preferred_username);
 
     const questionInput = ref("");
 
     function submitQuestion() {
-        const assignments = studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[]
+        const assignments = studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[];
         const assignment = assignments.find(
-            (assignment) =>
-                assignment.learningPath === props.hruid &&
-                assignment.language === props.language
-        )
-        const groups = groupsQueryResult.data.value?.groups as GroupDTO[]
-        const group = groups?.find(group => group.assignment === assignment?.id) as GroupDTO
-        const questionData:QuestionData = {
+            (assignment) => assignment.learningPath === props.hruid && assignment.language === props.language,
+        );
+        const groups = groupsQueryResult.data.value?.groups as GroupDTO[];
+        const group = groups?.find((group) => group.assignment === assignment?.id) as GroupDTO;
+        const questionData: QuestionData = {
             author: authService.authState.user?.profile.preferred_username,
             content: questionInput.value,
-            inGroup: group //TODO: POST response zegt dat dit null is???
-        }
-        console.log(questionData)
+            inGroup: group, //TODO: POST response zegt dat dit null is???
+        };
+        console.log(questionData);
         if (questionInput.value != "") {
             createQuestionMutation.mutate(questionData, {
                 onSuccess: () => {
@@ -187,14 +185,13 @@ import QuestionNotification from "@/components/QuestionNotification.vue";
                     getQuestionsQuery.refetch(); // Reload the questions
                 },
                 onError: (e) => {
-                    console.error(e)
+                    console.error(e);
                 },
-            })
+            });
         } else {
-            alert("Please type a question before submitting.") // TODO: i18n
+            alert("Please type a question before submitting."); // TODO: i18n
         }
     }
-
 </script>
 
 <template>
@@ -271,12 +268,18 @@ import QuestionNotification from "@/components/QuestionNotification.vue";
                                         :color="COLORS[getNavItemState(node)]"
                                         :icon="ICONS[getNavItemState(node)]"
                                     ></v-icon>
-                                </template> 
+                                </template>
                                 <template v-slot:append>
                                     <QuestionNotification :node="node"></QuestionNotification>
-                                    <div>{{ (node.estimatedTime!).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) }}'</div> 
+                                    <div>
+                                        {{
+                                            node.estimatedTime!.toLocaleString("en-US", {
+                                                minimumIntegerDigits: 2,
+                                                useGrouping: false,
+                                            })
+                                        }}'
+                                    </div>
                                 </template>
-                                
                             </v-list-item>
                         </template>
                     </using-query-result>
@@ -292,7 +295,10 @@ import QuestionNotification from "@/components/QuestionNotification.vue";
                     </template>
                 </v-list-item>
                 <v-list-item>
-                    <div v-if="(authService.authState.activeRole === 'student') && (pathIsAssignment)" class="assignment-indicator">  
+                    <div
+                        v-if="authService.authState.activeRole === 'student' && pathIsAssignment"
+                        class="assignment-indicator"
+                    >
                         {{ t("assignmentIndicator") }}
                     </div>
                 </v-list-item>
@@ -318,17 +324,25 @@ import QuestionNotification from "@/components/QuestionNotification.vue";
                 v-if="currentNode"
             ></learning-object-view>
         </div>
-        <div v-if="authService.authState.activeRole === 'student' && pathIsAssignment" class="question-box">
+        <div
+            v-if="authService.authState.activeRole === 'student' && pathIsAssignment"
+            class="question-box"
+        >
             <div class="input-wrapper">
-              <input
-                type="text"
-                placeholder="question : ..."
-                class="question-input"
-                v-model="questionInput"
-              />
-              <button @click="submitQuestion" class="send-button">▶</button>
+                <input
+                    type="text"
+                    placeholder="question : ..."
+                    class="question-input"
+                    v-model="questionInput"
+                />
+                <button
+                    @click="submitQuestion"
+                    class="send-button"
+                >
+                    ▶
+                </button>
             </div>
-          </div>
+        </div>
         <div class="navigation-buttons-container">
             <v-btn
                 prepend-icon="mdi-chevron-left"
@@ -351,7 +365,7 @@ import QuestionNotification from "@/components/QuestionNotification.vue";
             :query-result="getQuestionsQuery"
             v-slot="questionsResponse: { data: QuestionsResponse }"
         >
-            <QandA :questions="questionsResponse.data.questions as QuestionDTO[] ?? []" />
+            <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
         </using-query-result>
     </using-query-result>
 </template>
@@ -395,58 +409,58 @@ import QuestionNotification from "@/components/QuestionNotification.vue";
         text-transform: uppercase;
         z-index: 2; /* Less than modals/popups */
     }
-      .question-box {
+    .question-box {
         width: 100%;
         max-width: 400px;
         margin: 20px auto;
         font-family: sans-serif;
-      }
-      .input-wrapper {
+    }
+    .input-wrapper {
         display: flex;
         align-items: center;
         border: 1px solid #ccc;
         border-radius: 999px;
         padding: 8px 12px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      }
-      
-      .question-input {
+    }
+
+    .question-input {
         flex: 1;
         border: none;
         outline: none;
         font-size: 14px;
         background-color: transparent;
-      }
-      
-      .question-input::placeholder {
+    }
+
+    .question-input::placeholder {
         color: #999;
-      }
-      
-      .send-button {
+    }
+
+    .send-button {
         background: none;
         border: none;
         cursor: pointer;
         font-size: 16px;
         color: #555;
         transition: color 0.2s ease;
-      }
-      
-      .send-button:hover {
+    }
+
+    .send-button:hover {
         color: #000;
-      }
-      
-      .discussion-link {
+    }
+
+    .discussion-link {
         margin-top: 8px;
         font-size: 13px;
         color: #444;
-      }
-      
-      .discussion-link a {
+    }
+
+    .discussion-link a {
         color: #3b82f6; /* blue */
         text-decoration: none;
-      }
-      
-      .discussion-link a:hover {
+    }
+
+    .discussion-link a:hover {
         text-decoration: underline;
-      }
+    }
 </style>

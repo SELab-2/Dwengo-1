@@ -89,9 +89,8 @@ export async function createQuestion(loId: LearningObjectIdentifier, questionDat
 
     let assignment;
 
-    if ((typeof questionData.inGroup.assignment === "number") && (typeof questionData.inGroup.class === "string")) {
-        assignment = await fetchAssignment(questionData.inGroup.class,
-            questionData.inGroup.assignment);
+    if (typeof questionData.inGroup.assignment === 'number' && typeof questionData.inGroup.class === 'string') {
+        assignment = await fetchAssignment(questionData.inGroup.class, questionData.inGroup.assignment);
     } else {
         // TODO check if necessary and no conflicts to delete this if
         const clazz = await getClassRepository().findById((questionData.inGroup.assignment as AssignmentDTO).within);
@@ -99,14 +98,14 @@ export async function createQuestion(loId: LearningObjectIdentifier, questionDat
     }
 
     const inGroup = await getGroupRepository().findByAssignmentAndGroupNumber(assignment, questionData.inGroup.groupNumber);
-    
+
     const question = await questionRepository.createQuestion({
         loId,
         author,
         inGroup: inGroup!,
         content,
     });
-    
+
     return mapToQuestionDTO(question);
 }
 

@@ -5,7 +5,7 @@
     import UsingQueryResult from "./UsingQueryResult.vue";
     import type { AnswersResponse } from "@/controllers/answers";
     import type { AnswerData, AnswerDTO } from "@dwengo-1/common/interfaces/answer";
-import authService from "@/services/auth/auth-service";
+    import authService from "@/services/auth/auth-service";
 
     const props = defineProps<{
         question: QuestionDTO;
@@ -30,31 +30,30 @@ import authService from "@/services/auth/auth-service";
                 }) as QuestionId,
         ),
     );
-    
-    const questionId : QuestionId = {
+
+    const questionId: QuestionId = {
         learningObjectIdentifier: props.question.learningObjectIdentifier,
-        sequenceNumber: props.question.sequenceNumber as number
+        sequenceNumber: props.question.sequenceNumber as number,
     };
     const createAnswerMutation = useCreateAnswerMutation(questionId);
 
-    const answer = ref('');
+    const answer = ref("");
 
     function submitAnswer() {
         const answerData: AnswerData = {
             author: authService.authState.user?.profile.preferred_username as string,
-            content: answer.value
+            content: answer.value,
         };
         if (answer.value != "") {
             createAnswerMutation.mutate(answerData, {
                 onSuccess: () => {
                     answer.value = "";
                     answersQuery.refetch();
-                }
+                },
             });
         } else {
-            alert("Please type an answer before submitting") //TODO: i18n
+            alert("Please type an answer before submitting"); //TODO: i18n
         }
-        
     }
 </script>
 <template>
@@ -82,15 +81,23 @@ import authService from "@/services/auth/auth-service";
         >
             {{ question.content }}
         </div>
-        <div v-if="(authService.authState.activeRole === 'teacher')" class="answer-input-container">
+        <div
+            v-if="authService.authState.activeRole === 'teacher'"
+            class="answer-input-container"
+        >
             <input
-              v-model="answer"
-              type="text"
-              placeholder="answer: ..."
-              class="answer-input"
+                v-model="answer"
+                type="text"
+                placeholder="answer: ..."
+                class="answer-input"
             />
-            <button @click="submitAnswer" class="submit-button">▶</button>
-          </div>
+            <button
+                @click="submitAnswer"
+                class="submit-button"
+            >
+                ▶
+            </button>
+        </div>
         <using-query-result
             :query-result="answersQuery"
             v-slot="answersResponse: { data: AnswersResponse }"
@@ -123,9 +130,7 @@ import authService from "@/services/auth/auth-service";
                             justify-content: space-between;
                         "
                     >
-                        <span class="font-semibold text-lg text-gray-800">{{
-                            answer.author.username
-                        }}</span>
+                        <span class="font-semibold text-lg text-gray-800">{{ answer.author.username }}</span>
                         <span class="text-sm text-gray-500">{{ formatDate(answer.timestamp) }}</span>
                     </div>
 
@@ -141,45 +146,45 @@ import authService from "@/services/auth/auth-service";
     </div>
 </template>
 <style scoped>
-.answer-input {
-    flex-grow: 1;
-    outline: none;
-    border: none;
-    background: transparent;
-    color: #374151; /* gray-700 */
-    font-size: 0.875rem; /* smaller font size */
-  }
-  
-  .answer-input::placeholder {
-    color: #9ca3af; /* gray-400 */
-  }
-  
-  .submit-button {
-    margin-left: 0.25rem;
-    padding: 0.25rem;
-    background-color: #f3f4f6; /* gray-100 */
-    border-radius: 9999px;
-    transition: background-color 0.2s;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .submit-button:hover {
-    background-color: #e5e7eb; /* gray-200 */
-  }
-  
-  .submit-icon {
-    width: 0.75rem;
-    height: 0.75rem;
-    color: #4b5563; /* gray-600 */
-  }
-.answer-input-container {
-    display: flex;
-    align-items: center;
-    border: 1px solid #d1d5db; /* gray-300 */
-    border-radius: 9999px;
-    padding: 0.5rem 1rem;
-    max-width: 28rem;
-    width: 100%;
-  }
+    .answer-input {
+        flex-grow: 1;
+        outline: none;
+        border: none;
+        background: transparent;
+        color: #374151; /* gray-700 */
+        font-size: 0.875rem; /* smaller font size */
+    }
+
+    .answer-input::placeholder {
+        color: #9ca3af; /* gray-400 */
+    }
+
+    .submit-button {
+        margin-left: 0.25rem;
+        padding: 0.25rem;
+        background-color: #f3f4f6; /* gray-100 */
+        border-radius: 9999px;
+        transition: background-color 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+
+    .submit-button:hover {
+        background-color: #e5e7eb; /* gray-200 */
+    }
+
+    .submit-icon {
+        width: 0.75rem;
+        height: 0.75rem;
+        color: #4b5563; /* gray-600 */
+    }
+    .answer-input-container {
+        display: flex;
+        align-items: center;
+        border: 1px solid #d1d5db; /* gray-300 */
+        border-radius: 9999px;
+        padding: 0.5rem 1rem;
+        max-width: 28rem;
+        width: 100%;
+    }
 </style>

@@ -36,7 +36,7 @@ export function makeTestAnswers(em: EntityManager, teachers: Teacher[], question
         toQuestion: getQuestion07(),
         sequenceNumber: 1,
         timestamp: new Date(),
-        content: "this is a test answer"
+        content: 'this is a test answer',
     });
 
     const answer05 = em.create(Answer, {
@@ -44,7 +44,7 @@ export function makeTestAnswers(em: EntityManager, teachers: Teacher[], question
         toQuestion: getQuestion07(),
         sequenceNumber: 2,
         timestamp: new Date(),
-        content: "this is a test answer"
+        content: 'this is a test answer',
     });
 
     return [answer01, answer02, answer03, answer04, answer05];
