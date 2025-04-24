@@ -16,8 +16,9 @@ export default mergeConfig(
                 exclude: [
                     "**/*config*",
                     "**/tests/**",
-                    "src/*.ts",
-                    "src/*.vue",
+                    "src/**/*.vue",
+                    "src/**/*.d.ts",
+                    "src/assets/**",
                     "**/dist/**",
                     "**/e2e/**",
                     "**/*config*",
