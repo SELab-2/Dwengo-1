@@ -107,12 +107,7 @@ export async function createQuestion(loId: LearningObjectIdentifier, questionDat
         inGroup: inGroup!,
         content,
     });
-    console.log()
-    console.log(loId)
-    console.log(author)
-    console.log(inGroup)
-    console.log(content)
-    console.log(question)
+    
     return mapToQuestionDTO(question);
 }
 
