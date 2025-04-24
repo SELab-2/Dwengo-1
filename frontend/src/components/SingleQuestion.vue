@@ -13,11 +13,11 @@
 
     const expanded = ref(false);
 
-    function toggle (): void {
+    function toggle(): void {
         expanded.value = !expanded.value;
     }
 
-    function formatDate (timestamp: string | Date): string {
+    function formatDate(timestamp: string | Date): string {
         return new Date(timestamp).toLocaleString();
     }
 

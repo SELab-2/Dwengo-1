@@ -176,7 +176,7 @@
             author: authService.authState.user?.profile.preferred_username,
             content: questionInput.value,
             inGroup: group, //TODO: POST response zegt dat dit null is???
-        }
+        };
         if (questionInput.value !== "") {
             createQuestionMutation.mutate(questionData, {
                 onSuccess: async () => {
