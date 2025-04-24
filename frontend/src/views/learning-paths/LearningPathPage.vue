@@ -21,6 +21,7 @@
     import {useStudentAssignmentsQuery, useStudentGroupsQuery} from "@/queries/students"
     import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
 import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
+import QuestionNotification from "@/components/QuestionNotification.vue";
 
     const router = useRouter();
     const route = useRoute();
@@ -193,30 +194,6 @@ import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
             alert("Please type a question before submitting.") // TODO: i18n
         }
     }
-    
-    const learningObjectHasQuestions = computed(() => {
-        const result = new Map<string, boolean>();
-        const learningObjects = learningObjectListQueryResult.data?.value ?? [];
-
-        learningObjects.forEach((learningObject) => {
-            const nodeLoId: LearningObjectIdentifierDTO = {
-                hruid: learningObject.key,
-                language: learningObject.language,
-                version: learningObject.version
-            };
-
-            // Check if the learning object has questions
-            const questions = useQuestionsQuery(nodeLoId).data.value?.questions as QuestionDTO[] || [];
-            result.set(learningObject.key, questions.length > 0);
-        });
-
-        return result;
-    });
-
-// Helper function to check if a learning object has questions
-function hasQuestions(learningObjectKey: string): boolean {
-    return learningObjectHasQuestions.value.get(learningObjectKey) ?? false;
-}
 
 </script>
 
@@ -295,10 +272,7 @@ function hasQuestions(learningObjectKey: string): boolean {
                                         :icon="ICONS[getNavItemState(node)]"
                                     ></v-icon>
                                 </template> 
-                                <template v-slot:append>
-                                    <v-icon v-if="hasQuestions(node.key)" icon="mdi-help-circle-outline" color="red" />
-                                    <div>{{ node.estimatedTime }}'</div> 
-                                </template>
+                                <QuestionNotification :node="node" v-slot:append></QuestionNotification>
                             </v-list-item>
                         </template>
                     </using-query-result>
