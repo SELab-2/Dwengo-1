@@ -318,7 +318,7 @@ import QuestionNotification from "@/components/QuestionNotification.vue";
                 v-if="currentNode"
             ></learning-object-view>
         </div>
-        <div v-if="authService.authState.activeRole === 'student'" class="question-box">
+        <div v-if="authService.authState.activeRole === 'student' && pathIsAssignment" class="question-box">
             <div class="input-wrapper">
               <input
                 type="text"
