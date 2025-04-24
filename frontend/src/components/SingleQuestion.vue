@@ -46,7 +46,10 @@ import authService from "@/services/auth/auth-service";
         };
         if (answer.value != "") {
             createAnswerMutation.mutate(answerData, {
-                onSuccess: () => {answer.value = "";}
+                onSuccess: () => {
+                    answer.value = "";
+                    answersQuery.refetch();
+                }
             });
         } else {
             alert("Please type an answer before submitting") //TODO: i18n
