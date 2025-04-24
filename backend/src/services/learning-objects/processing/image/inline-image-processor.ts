@@ -13,7 +13,7 @@ class InlineImageProcessor extends StringProcessor {
         super(contentType);
     }
 
-    override renderFn(imageUrl: string) {
+    override renderFn(imageUrl: string): string {
         if (!isValidHttpUrl(imageUrl)) {
             throw new ProcessingError(`Image URL is invalid: ${imageUrl}`);
         }

@@ -12,6 +12,7 @@
         }
     ],
     "compilerOptions": {
+        "composite": true,
         "resolveJsonModule": true
     }
 }

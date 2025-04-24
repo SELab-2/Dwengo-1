@@ -1,5 +1,4 @@
 import { setupTestApp } from '../../setup-tests.js';
-import { Student } from '../../../src/entities/users/student.entity.js';
 import { describe, it, expect, beforeAll } from 'vitest';
 import { StudentRepository } from '../../../src/data/users/student-repository.js';
 import { getStudentRepository } from '../../../src/data/repositories.js';
@@ -30,7 +29,7 @@ describe('StudentRepository', () => {
     });
 
     it('should return the queried student after he was added', async () => {
-        await studentRepository.insert(new Student(username, firstName, lastName));
+        await studentRepository.insert(studentRepository.create({ username, firstName, lastName }));
 
         const retrievedStudent = await studentRepository.findByUsername(username);
         expect(retrievedStudent).toBeTruthy();

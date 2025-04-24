@@ -19,7 +19,16 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 ## Project Setup
 
 ```sh
+# Install dependencies
 npm install
+
+# Start necessary services for development
+cd ../ # Go to the root of the repository
+docker compose up -d
+# Start the backend
+cd backend
+cp .env.development.example .env.development.local
+npm run dev # or npm run build && npm run start
 ```
 
 ### Compile and Hot-Reload for Development
@@ -43,11 +52,18 @@ npm run test:unit
 ### Run End-to-End Tests with [Playwright](https://playwright.dev)
 
 ```sh
+cd frontend
+
 # Install browsers for the first run
 npx playwright install
+# On Ubuntu, you can also use
+npx playwright install --with-deps
+# to additionally install the dependencies.
 
 # When testing on CI, must build the project first
+cd ..
 npm run build
+cd frontend
 
 # Runs the end-to-end tests
 npm run test:e2e

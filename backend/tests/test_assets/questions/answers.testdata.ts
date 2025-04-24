@@ -1,9 +1,11 @@
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/core';
 import { Answer } from '../../../src/entities/questions/answer.entity';
 import { Teacher } from '../../../src/entities/users/teacher.entity';
 import { Question } from '../../../src/entities/questions/question.entity';
+import { getTestleerkracht1 } from '../users/teachers.testdata';
+import { getQuestion07 } from './questions.testdata';
 
-export function makeTestAnswers(em: EntityManager<IDatabaseDriver<Connection>>, teachers: Array<Teacher>, questions: Array<Question>): Array<Answer> {
+export function makeTestAnswers(em: EntityManager, teachers: Teacher[], questions: Question[]): Answer[] {
     const answer01 = em.create(Answer, {
         author: teachers[0],
         toQuestion: questions[1],
@@ -28,5 +30,21 @@ export function makeTestAnswers(em: EntityManager<IDatabaseDriver<Connection>>, 
         content: 'answer3',
     });
 
-    return [answer01, answer02, answer03];
+    const answer04 = em.create(Answer, {
+        author: getTestleerkracht1(),
+        toQuestion: getQuestion07(),
+        sequenceNumber: 1,
+        timestamp: new Date(),
+        content: 'this is a test answer',
+    });
+
+    const answer05 = em.create(Answer, {
+        author: getTestleerkracht1(),
+        toQuestion: getQuestion07(),
+        sequenceNumber: 2,
+        timestamp: new Date(),
+        content: 'this is a test answer',
+    });
+
+    return [answer01, answer02, answer03, answer04, answer05];
 }

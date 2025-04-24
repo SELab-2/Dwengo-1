@@ -8,13 +8,12 @@ import InlineImageProcessor from '../image/inline-image-processor.js';
 import * as marked from 'marked';
 import { getUrlStringForLearningObjectHTML, isValidHttpUrl } from '../../../../util/links.js';
 import { ProcessingError } from '../processing-error.js';
-import { LearningObjectIdentifier } from '../../../../interfaces/learning-content.js';
-import { Language } from '../../../../entities/content/language.js';
-
 import Image = marked.Tokens.Image;
 import Heading = marked.Tokens.Heading;
 import Link = marked.Tokens.Link;
 import RendererObject = marked.RendererObject;
+import { LearningObjectIdentifierDTO } from '@dwengo-1/common/interfaces/learning-content';
+import { Language } from '@dwengo-1/common/util/language';
 
 const prefixes = {
     learningObject: '@learning-object',
@@ -26,7 +25,7 @@ const prefixes = {
     blockly: '@blockly',
 };
 
-function extractLearningObjectIdFromHref(href: string): LearningObjectIdentifier {
+function extractLearningObjectIdFromHref(href: string): LearningObjectIdentifierDTO {
     const [hruid, language, version] = href.split(/\/(.+)/, 2)[1].split('/');
     return {
         hruid,

@@ -34,7 +34,7 @@ describe('ClassRepository', () => {
     });
 
     it('should return all invitations for a class', async () => {
-        const class_ = await classRepository.findById('id02');
+        const class_ = await classRepository.findById('34d484a1-295f-4e9f-bfdc-3e7a23d86a89');
         const invitations = await teacherInvitationRepository.findAllInvitationsForClass(class_!);
 
         expect(invitations).toBeTruthy();
@@ -42,7 +42,7 @@ describe('ClassRepository', () => {
     });
 
     it('should not find a removed invitation', async () => {
-        const class_ = await classRepository.findById('id01');
+        const class_ = await classRepository.findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
         const sender = await teacherRepository.findByUsername('FooFighters');
         const receiver = await teacherRepository.findByUsername('LimpBizkit');
         await teacherInvitationRepository.deleteBy(class_!, sender!, receiver!);

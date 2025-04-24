@@ -1,76 +1,93 @@
 import { Request, Response } from 'express';
-import { createAssignment, getAllAssignments, getAssignment, getAssignmentsSubmissions } from '../services/assignments.js';
-import { AssignmentDTO } from '../interfaces/assignment.js';
+import {
+    createAssignment,
+    deleteAssignment,
+    getAllAssignments,
+    getAssignment,
+    getAssignmentsQuestions,
+    getAssignmentsSubmissions,
+    putAssignment,
+} from '../services/assignments.js';
+import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
+import { requireFields } from './error-helper.js';
+import { BadRequestException } from '../exceptions/bad-request-exception.js';
+import { Assignment } from '../entities/assignments/assignment.entity.js';
+import { EntityDTO } from '@mikro-orm/core';
 
-// Typescript is annoy with with parameter forwarding from class.ts
-interface AssignmentParams {
-    classid: string;
-    id: string;
-}
-
-export async function getAllAssignmentsHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
+function getAssignmentParams(req: Request): { classid: string; assignmentNumber: number; full: boolean } {
     const classid = req.params.classid;
+    const assignmentNumber = Number(req.params.id);
     const full = req.query.full === 'true';
-
-    const assignments = await getAllAssignments(classid, full);
-
-    res.json({
-        assignments: assignments,
-    });
-}
-
-export async function createAssignmentHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
-    const classid = req.params.classid;
-    const assignmentData = req.body as AssignmentDTO;
-
-    if (!assignmentData.description || !assignmentData.language || !assignmentData.learningPath || !assignmentData.title) {
-        res.status(400).json({
-            error: 'Missing one or more required fields: title, description, learningPath, language',
-        });
-        return;
-    }
-
-    const assignment = await createAssignment(classid, assignmentData);
-
-    if (!assignment) {
-        res.status(500).json({ error: 'Could not create assignment ' });
-        return;
-    }
-
-    res.status(201).json({ assignment: assignment });
-}
-
-export async function getAssignmentHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
-    const id = +req.params.id;
-    const classid = req.params.classid;
-
-    if (isNaN(id)) {
-        res.status(400).json({ error: 'Assignment id must be a number' });
-        return;
-    }
-
-    const assignment = await getAssignment(classid, id);
-
-    if (!assignment) {
-        res.status(404).json({ error: 'Assignment not found' });
-        return;
-    }
-
-    res.json(assignment);
-}
-
-export async function getAssignmentsSubmissionsHandler(req: Request<AssignmentParams>, res: Response): Promise<void> {
-    const classid = req.params.classid;
-    const assignmentNumber = +req.params.id;
+    requireFields({ assignmentNumber, classid });
 
     if (isNaN(assignmentNumber)) {
-        res.status(400).json({ error: 'Assignment id must be a number' });
-        return;
+        throw new BadRequestException('Assignment id should be a number');
     }
 
-    const submissions = await getAssignmentsSubmissions(classid, assignmentNumber);
+    return { classid, assignmentNumber, full };
+}
 
-    res.json({
-        submissions: submissions,
-    });
+export async function getAllAssignmentsHandler(req: Request, res: Response): Promise<void> {
+    const classId = req.params.classid;
+    const full = req.query.full === 'true';
+
+    const assignments = await getAllAssignments(classId, full);
+
+    res.json({ assignments });
+}
+
+export async function createAssignmentHandler(req: Request, res: Response): Promise<void> {
+    const classid = req.params.classid;
+    const description = req.body.description;
+    const language = req.body.language;
+    const learningPath = req.body.learningPath;
+    const title = req.body.title;
+
+    requireFields({ description, language, learningPath, title });
+
+    const assignmentData = req.body as AssignmentDTO;
+    const assignment = await createAssignment(classid, assignmentData);
+
+    res.json({ assignment });
+}
+
+export async function getAssignmentHandler(req: Request, res: Response): Promise<void> {
+    const { classid, assignmentNumber } = getAssignmentParams(req);
+
+    const assignment = await getAssignment(classid, assignmentNumber);
+
+    res.json({ assignment });
+}
+
+export async function putAssignmentHandler(req: Request, res: Response): Promise<void> {
+    const { classid, assignmentNumber } = getAssignmentParams(req);
+
+    const assignmentData = req.body as Partial<EntityDTO<Assignment>>;
+    const assignment = await putAssignment(classid, assignmentNumber, assignmentData);
+
+    res.json({ assignment });
+}
+
+export async function deleteAssignmentHandler(req: Request, res: Response): Promise<void> {
+    const { classid, assignmentNumber } = getAssignmentParams(req);
+
+    const assignment = await deleteAssignment(classid, assignmentNumber);
+
+    res.json({ assignment });
+}
+
+export async function getAssignmentsSubmissionsHandler(req: Request, res: Response): Promise<void> {
+    const { classid, assignmentNumber, full } = getAssignmentParams(req);
+
+    const submissions = await getAssignmentsSubmissions(classid, assignmentNumber, full);
+
+    res.json({ submissions });
+}
+
+export async function getAssignmentQuestionsHandler(req: Request, res: Response): Promise<void> {
+    const { classid, assignmentNumber, full } = getAssignmentParams(req);
+
+    const questions = await getAssignmentsQuestions(classid, assignmentNumber, full);
+
+    res.json({ questions });
 }

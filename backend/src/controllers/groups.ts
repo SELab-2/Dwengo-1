@@ -1,95 +1,120 @@
 import { Request, Response } from 'express';
-import { createGroup, getAllGroups, getGroup, getGroupSubmissions } from '../services/groups.js';
-import { GroupDTO } from '../interfaces/group.js';
+import { createGroup, deleteGroup, getAllGroups, getGroup, getGroupQuestions, getGroupSubmissions, putGroup } from '../services/groups.js';
+import { GroupDTO } from '@dwengo-1/common/interfaces/group';
+import { requireFields } from './error-helper.js';
+import { BadRequestException } from '../exceptions/bad-request-exception.js';
 
-// Typescript is annoywith with parameter forwarding from class.ts
-interface GroupParams {
-    classid: string;
-    assignmentid: string;
-    groupid?: string;
-}
-
-export async function getGroupHandler(req: Request<GroupParams>, res: Response): Promise<void> {
-    const classId = req.params.classid;
-    const full = req.query.full === 'true';
-    const assignmentId = +req.params.assignmentid;
+function checkGroupFields(classId: string, assignmentId: number, groupId: number): void {
+    requireFields({ classId, assignmentId, groupId });
 
     if (isNaN(assignmentId)) {
-        res.status(400).json({ error: 'Assignment id must be a number' });
-        return;
+        throw new BadRequestException('Assignment id must be a number');
     }
-
-    const groupId = +req.params.groupid!; // Can't be undefined
 
     if (isNaN(groupId)) {
-        res.status(400).json({ error: 'Group id must be a number' });
-        return;
+        throw new BadRequestException('Group id must be a number');
     }
+}
 
-    const group = await getGroup(classId, assignmentId, groupId, full);
+export async function getGroupHandler(req: Request, res: Response): Promise<void> {
+    const classId = req.params.classid;
+    const assignmentId = parseInt(req.params.assignmentid);
+    const groupId = parseInt(req.params.groupid);
+    checkGroupFields(classId, assignmentId, groupId);
 
-    res.json(group);
+    const group = await getGroup(classId, assignmentId, groupId);
+
+    res.json({ group });
+}
+
+export async function putGroupHandler(req: Request, res: Response): Promise<void> {
+    const classId = req.params.classid;
+    const assignmentId = parseInt(req.params.assignmentid);
+    const groupId = parseInt(req.params.groupid);
+    checkGroupFields(classId, assignmentId, groupId);
+
+    // Only members field can be changed
+    const members = req.body.members;
+    requireFields({ members });
+
+    const group = await putGroup(classId, assignmentId, groupId, { members } as Partial<GroupDTO>);
+
+    res.json({ group });
+}
+
+export async function deleteGroupHandler(req: Request, res: Response): Promise<void> {
+    const classId = req.params.classid;
+    const assignmentId = parseInt(req.params.assignmentid);
+    const groupId = parseInt(req.params.groupid);
+    checkGroupFields(classId, assignmentId, groupId);
+
+    const group = await deleteGroup(classId, assignmentId, groupId);
+
+    res.json({ group });
 }
 
 export async function getAllGroupsHandler(req: Request, res: Response): Promise<void> {
     const classId = req.params.classid;
+    const assignmentId = Number(req.params.assignmentid);
     const full = req.query.full === 'true';
-
-    const assignmentId = +req.params.assignmentid;
+    requireFields({ classId, assignmentId });
 
     if (isNaN(assignmentId)) {
-        res.status(400).json({ error: 'Assignment id must be a number' });
-        return;
+        throw new BadRequestException('Assignment id must be a number');
     }
 
     const groups = await getAllGroups(classId, assignmentId, full);
 
-    res.json({
-        groups: groups,
-    });
+    res.json({ groups });
 }
 
 export async function createGroupHandler(req: Request, res: Response): Promise<void> {
     const classid = req.params.classid;
-    const assignmentId = +req.params.assignmentid;
+    const assignmentId = Number(req.params.assignmentid);
+    const members = req.body.members;
+    requireFields({ classid, assignmentId, members });
 
     if (isNaN(assignmentId)) {
-        res.status(400).json({ error: 'Assignment id must be a number' });
-        return;
+        throw new BadRequestException('Assignment id must be a number');
     }
 
     const groupData = req.body as GroupDTO;
     const group = await createGroup(groupData, classid, assignmentId);
 
-    if (!group) {
-        res.status(500).json({ error: 'Something went wrong while creating group' });
-        return;
+    res.status(201).json({ group });
+}
+
+function getGroupParams(req: Request): { classId: string; assignmentId: number; groupId: number; full: boolean } {
+    const classId = req.params.classid;
+    const assignmentId = Number(req.params.assignmentid);
+    const groupId = Number(req.params.groupid);
+    const full = req.query.full === 'true';
+
+    requireFields({ classId, assignmentId, groupId });
+
+    if (isNaN(assignmentId)) {
+        throw new BadRequestException('Assignment id must be a number');
     }
 
-    res.status(201).json({ group: group });
+    if (isNaN(groupId)) {
+        throw new BadRequestException('Group id must be a number');
+    }
+
+    return { classId, assignmentId, groupId, full };
 }
 
 export async function getGroupSubmissionsHandler(req: Request, res: Response): Promise<void> {
-    const classId = req.params.classid;
-    // Const full = req.query.full === 'true';
+    const { classId, assignmentId, groupId, full } = getGroupParams(req);
 
-    const assignmentId = +req.params.assignmentid;
+    const submissions = await getGroupSubmissions(classId, assignmentId, groupId, full);
 
-    if (isNaN(assignmentId)) {
-        res.status(400).json({ error: 'Assignment id must be a number' });
-        return;
-    }
+    res.json({ submissions });
+}
 
-    const groupId = +req.params.groupid!; // Can't be undefined
+export async function getGroupQuestionsHandler(req: Request, res: Response): Promise<void> {
+    const { classId, assignmentId, groupId, full } = getGroupParams(req);
 
-    if (isNaN(groupId)) {
-        res.status(400).json({ error: 'Group id must be a number' });
-        return;
-    }
+    const questions = await getGroupQuestions(classId, assignmentId, groupId, full);
 
-    const submissions = await getGroupSubmissions(classId, assignmentId, groupId);
-
-    res.json({
-        submissions: submissions,
-    });
+    res.json({ questions });
 }

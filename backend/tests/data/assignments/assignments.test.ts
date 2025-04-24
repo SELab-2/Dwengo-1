@@ -15,20 +15,27 @@ describe('AssignmentRepository', () => {
     });
 
     it('should return the requested assignment', async () => {
-        const class_ = await classRepository.findById('id02');
-        const assignment = await assignmentRepository.findByClassAndId(class_!, 2);
+        const class_ = await classRepository.findById('34d484a1-295f-4e9f-bfdc-3e7a23d86a89');
+        const assignment = await assignmentRepository.findByClassAndId(class_!, 21001);
 
         expect(assignment).toBeTruthy();
         expect(assignment!.title).toBe('tool');
     });
 
     it('should return all assignments for a class', async () => {
-        const class_ = await classRepository.findById('id02');
+        const class_ = await classRepository.findById('34d484a1-295f-4e9f-bfdc-3e7a23d86a89');
         const assignments = await assignmentRepository.findAllAssignmentsInClass(class_!);
 
         expect(assignments).toBeTruthy();
         expect(assignments).toHaveLength(1);
         expect(assignments[0].title).toBe('tool');
+    });
+
+    it('should find all by username of the responsible teacher', async () => {
+        const result = await assignmentRepository.findAllByResponsibleTeacher('testleerkracht1');
+        const resultIds = result.map((it) => it.id).sort((a, b) => (a ?? 0) - (b ?? 0));
+
+        expect(resultIds).toEqual([21000, 21002, 21003, 21004]);
     });
 
     it('should not find removed assignment', async () => {

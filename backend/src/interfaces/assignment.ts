@@ -1,52 +1,36 @@
-import { FALLBACK_LANG } from '../config.js';
+import { languageMap } from '@dwengo-1/common/util/language';
 import { Assignment } from '../entities/assignments/assignment.entity.js';
 import { Class } from '../entities/classes/class.entity.js';
-import { languageMap } from '../entities/content/language.js';
-import { GroupDTO, mapToGroupDTO } from './group.js';
+import { AssignmentDTO, AssignmentDTOId } from '@dwengo-1/common/interfaces/assignment';
+import { mapToGroupDTO } from './group.js';
+import { getAssignmentRepository } from '../data/repositories.js';
 
-export interface AssignmentDTO {
-    id: number;
-    class: string; // Id of class 'within'
-    title: string;
-    description: string;
-    learningPath: string;
-    language: string;
-    groups?: GroupDTO[] | string[]; // TODO
-}
-
-export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTO {
+export function mapToAssignmentDTOId(assignment: Assignment): AssignmentDTOId {
     return {
         id: assignment.id!,
-        class: assignment.within.classId!,
-        title: assignment.title,
-        description: assignment.description,
-        learningPath: assignment.learningPathHruid,
-        language: assignment.learningPathLanguage,
-        // Groups: assignment.groups.map(group => group.groupNumber),
+        within: assignment.within.classId!,
     };
 }
 
 export function mapToAssignmentDTO(assignment: Assignment): AssignmentDTO {
     return {
         id: assignment.id!,
-        class: assignment.within.classId!,
+        within: assignment.within.classId!,
         title: assignment.title,
         description: assignment.description,
         learningPath: assignment.learningPathHruid,
         language: assignment.learningPathLanguage,
-        // Groups: assignment.groups.map(mapToGroupDTO),
+        groups: assignment.groups.map((group) => mapToGroupDTO(group, assignment.within)),
     };
 }
 
 export function mapToAssignment(assignmentData: AssignmentDTO, cls: Class): Assignment {
-    const assignment = new Assignment();
-    assignment.title = assignmentData.title;
-    assignment.description = assignmentData.description;
-    assignment.learningPathHruid = assignmentData.learningPath;
-    assignment.learningPathLanguage = languageMap[assignmentData.language] || FALLBACK_LANG;
-    assignment.within = cls;
-
-    console.log(assignment);
-
-    return assignment;
+    return getAssignmentRepository().create({
+        within: cls,
+        title: assignmentData.title,
+        description: assignmentData.description,
+        learningPathHruid: assignmentData.learningPath,
+        learningPathLanguage: languageMap[assignmentData.language],
+        groups: [],
+    });
 }

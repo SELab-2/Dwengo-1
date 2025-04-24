@@ -1,0 +1,21 @@
+{
+    "name": "@dwengo-1/common",
+    "version": "0.2.0",
+    "description": "Common types and utilities for Dwengo-1",
+    "private": true,
+    "type": "module",
+    "files": [
+        "./dist"
+    ],
+    "scripts": {
+        "build": "tsc --build",
+        "clean": "tsc --build --clean",
+        "watch": "tsc --build --watch",
+        "format": "prettier --write src/",
+        "format-check": "prettier --check src/",
+        "lint": "eslint . --fix"
+    },
+    "exports": {
+        "./*": "./dist/*.js"
+    }
+}

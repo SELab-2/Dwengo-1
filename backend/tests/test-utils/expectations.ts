@@ -1,8 +1,8 @@
 import { AssertionError } from 'node:assert';
 import { LearningObject } from '../../src/entities/content/learning-object.entity';
-import { FilteredLearningObject, LearningPath } from '../../src/interfaces/learning-content';
-import { LearningPath as LearningPathEntity } from '../../src/entities/content/learning-path.entity';
 import { expect } from 'vitest';
+import { FilteredLearningObject, LearningPath } from '@dwengo-1/common/interfaces/learning-content';
+import { RequiredEntityData } from '@mikro-orm/core';
 
 // Ignored properties because they belang for example to the class, not to the entity itself.
 const IGNORE_PROPERTIES = ['parent'];
@@ -11,53 +11,44 @@ const IGNORE_PROPERTIES = ['parent'];
  * Checks if the actual entity from the database conforms to the entity that was added previously.
  * @param actual The actual entity retrieved from the database
  * @param expected The (previously added) entity we would expect to retrieve
+ * @param propertyPrefix Prefix to append to property in error messages.
  */
-export function expectToBeCorrectEntity<T extends object>(actual: { entity: T; name?: string }, expected: { entity: T; name?: string }): void {
-    if (!actual.name) {
-        actual.name = 'actual';
-    }
-    if (!expected.name) {
-        expected.name = 'expected';
-    }
-    for (const property in expected.entity) {
-        if (
-            property! in IGNORE_PROPERTIES &&
-            expected.entity[property] !== undefined && // If we don't expect a certain value for a property, we assume it can be filled in by the database however it wants.
-            typeof expected.entity[property] !== 'function' // Functions obviously are not persisted via the database
-        ) {
-            if (!actual.entity.hasOwnProperty(property)) {
-                throw new AssertionError({
-                    message: `${expected.name} has defined property ${property}, but ${actual.name} is missing it.`,
-                });
-            }
-            if (typeof expected.entity[property] === 'boolean') {
-                // Sometimes, booleans get represented by numbers 0 and 1 in the objects actual from the database.
-                if (Boolean(expected.entity[property]) !== Boolean(actual.entity[property])) {
+export function expectToBeCorrectEntity<T extends object>(actual: T, expected: T, propertyPrefix = ''): void {
+    for (const property in expected) {
+        if (Object.prototype.hasOwnProperty.call(expected, property)) {
+            const prefixedProperty = propertyPrefix + property;
+            if (
+                property in IGNORE_PROPERTIES &&
+                expected[property] !== undefined && // If we don't expect a certain value for a property, we assume it can be filled in by the database however it wants.
+                typeof expected[property] !== 'function' // Functions obviously are not persisted via the database
+            ) {
+                if (!Object.prototype.hasOwnProperty.call(actual, property)) {
                     throw new AssertionError({
-                        message: `${property} was ${expected.entity[property]} in ${expected.name},
-                        but ${actual.entity[property]} (${Boolean(expected.entity[property])}) in ${actual.name}`,
+                        message: `Expected property ${prefixedProperty}, but it is missing.`,
                     });
                 }
-            } else if (typeof expected.entity[property] !== typeof actual.entity[property]) {
-                throw new AssertionError({
-                    message: `${property} has type ${typeof expected.entity[property]} in ${expected.name}, but type ${typeof actual.entity[property]} in ${actual.name}.`,
-                });
-            } else if (typeof expected.entity[property] === 'object') {
-                expectToBeCorrectEntity(
-                    {
-                        name: actual.name + '.' + property,
-                        entity: actual.entity[property] as object,
-                    },
-                    {
-                        name: expected.name + '.' + property,
-                        entity: expected.entity[property] as object,
+                if (typeof expected[property] === 'boolean') {
+                    // Sometimes, booleans get represented by numbers 0 and 1 in the objects actual from the database.
+                    if (Boolean(expected[property]) !== Boolean(actual[property])) {
+                        throw new AssertionError({
+                            message: `Expected ${prefixedProperty} to be ${expected[property]},
+                        but was ${actual[property]} (${Boolean(expected[property])}).`,
+                        });
                     }
-                );
-            } else {
-                if (expected.entity[property] !== actual.entity[property]) {
+                } else if (typeof expected[property] !== typeof actual[property]) {
                     throw new AssertionError({
-                        message: `${property} was ${expected.entity[property]} in ${expected.name}, but ${actual.entity[property]} in ${actual.name}`,
+                        message:
+                            `${prefixedProperty} was expected to have type ${typeof expected[property]},` +
+                            `but had type ${typeof actual[property]}.`,
                     });
+                } else if (typeof expected[property] === 'object') {
+                    expectToBeCorrectEntity(actual[property] as object, expected[property] as object, property);
+                } else {
+                    if (expected[property] !== actual[property]) {
+                        throw new AssertionError({
+                            message: `${prefixedProperty} was expected to be ${expected[property]}, ` + `but was ${actual[property]}.`,
+                        });
+                    }
                 }
             }
         }
@@ -67,9 +58,9 @@ export function expectToBeCorrectEntity<T extends object>(actual: { entity: T; n
 /**
  * Checks that filtered is the correct representation of original as FilteredLearningObject.
  * @param filtered the representation as FilteredLearningObject
- * @param original the original entity added to the database
+ * @param original the data of the entity in the database that was filtered.
  */
-export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearningObject, original: LearningObject) {
+export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearningObject, original: RequiredEntityData<LearningObject>): void {
     expect(filtered.uuid).toEqual(original.uuid);
     expect(filtered.version).toEqual(original.version);
     expect(filtered.language).toEqual(original.language);
@@ -97,54 +88,55 @@ export function expectToBeCorrectFilteredLearningObject(filtered: FilteredLearni
  * is a correct representation of the given learning path entity.
  *
  * @param learningPath The learning path returned by the retriever, service or endpoint
- * @param expectedEntity The expected entity
- * @param learningObjectsOnPath The learning objects on LearningPath. Necessary since some information in
- *                              the learning path returned from the API endpoint
+ * @param expected The learning path that should have been returned.
  */
-export function expectToBeCorrectLearningPath(
-    learningPath: LearningPath,
-    expectedEntity: LearningPathEntity,
-    learningObjectsOnPath: FilteredLearningObject[]
-) {
-    expect(learningPath.hruid).toEqual(expectedEntity.hruid);
-    expect(learningPath.language).toEqual(expectedEntity.language);
-    expect(learningPath.description).toEqual(expectedEntity.description);
-    expect(learningPath.title).toEqual(expectedEntity.title);
+export function expectToBeCorrectLearningPath(learningPath: LearningPath, expected: LearningPath): void {
+    expect(learningPath.hruid).toEqual(expected.hruid);
+    expect(learningPath.language).toEqual(expected.language);
+    expect(learningPath.description).toEqual(expected.description);
+    expect(learningPath.title).toEqual(expected.title);
 
-    const keywords = new Set(learningObjectsOnPath.flatMap((it) => it.keywords || []));
-    expect(new Set(learningPath.keywords.split(' '))).toEqual(keywords);
+    expect(new Set(learningPath.keywords.split(' '))).toEqual(new Set(learningPath.keywords.split(' ')));
 
-    const targetAges = new Set(learningObjectsOnPath.flatMap((it) => it.targetAges || []));
-    expect(new Set(learningPath.target_ages)).toEqual(targetAges);
-    expect(learningPath.min_age).toEqual(Math.min(...targetAges));
-    expect(learningPath.max_age).toEqual(Math.max(...targetAges));
+    expect(new Set(learningPath.target_ages)).toEqual(new Set(expected.target_ages));
+    expect(learningPath.min_age).toEqual(Math.min(...expected.target_ages));
+    expect(learningPath.max_age).toEqual(Math.max(...expected.target_ages));
 
-    expect(learningPath.num_nodes).toEqual(expectedEntity.nodes.length);
-    expect(learningPath.image || null).toEqual(expectedEntity.image);
+    expect(learningPath.num_nodes).toEqual(expected.nodes.length);
+    expect(learningPath.image ?? null).toEqual(expected.image ?? null);
 
-    const expectedLearningPathNodes = new Map(
-        expectedEntity.nodes.map((node) => [
-            { learningObjectHruid: node.learningObjectHruid, language: node.language, version: node.version },
-            { startNode: node.startNode, transitions: node.transitions },
-        ])
-    );
-
-    for (const node of learningPath.nodes) {
-        const nodeKey = {
-            learningObjectHruid: node.learningobject_hruid,
-            language: node.language,
-            version: node.version,
-        };
-        expect(expectedLearningPathNodes.keys()).toContainEqual(nodeKey);
-        const expectedNode = [...expectedLearningPathNodes.entries()].filter(
-            ([key, _]) => key.learningObjectHruid === nodeKey.learningObjectHruid && key.language === node.language && key.version === node.version
-        )[0][1];
-        expect(node.start_node).toEqual(expectedNode?.startNode);
-
-        expect(new Set(node.transitions.map((it) => it.next.hruid))).toEqual(
-            new Set(expectedNode.transitions.map((it) => it.next.learningObjectHruid))
+    for (const node of expected.nodes) {
+        const correspondingNode = learningPath.nodes.find(
+            (it) => node.learningobject_hruid === it.learningobject_hruid && node.language === it.language && node.version === it.version
         );
-        expect(new Set(node.transitions.map((it) => it.next.language))).toEqual(new Set(expectedNode.transitions.map((it) => it.next.language)));
-        expect(new Set(node.transitions.map((it) => it.next.version))).toEqual(new Set(expectedNode.transitions.map((it) => it.next.version)));
+        expect(correspondingNode).toBeTruthy();
+        expect(Boolean(correspondingNode!.start_node)).toEqual(Boolean(node.start_node));
+
+        for (const transition of node.transitions) {
+            const correspondingTransition = correspondingNode!.transitions.find(
+                (it) =>
+                    it.next.hruid === transition.next.hruid &&
+                    it.next.language === transition.next.language &&
+                    it.next.version === transition.next.version
+            );
+            expect(correspondingTransition).toBeTruthy();
+        }
     }
+}
+
+/**
+ * Expect that the given result is a singleton list with exactly the given element.
+ */
+export function expectToHaveFoundPrecisely<T extends object>(expected: T, result: T[]): void {
+    expect(result).toHaveProperty('length');
+    expect(result.length).toBe(1);
+    expectToBeCorrectEntity(result[0], expected);
+}
+
+/**
+ * Expect that the given result is an empty list.
+ */
+export function expectToHaveFoundNothing<T>(result: T[]): void {
+    expect(result).toHaveProperty('length');
+    expect(result.length).toBe(0);
 }

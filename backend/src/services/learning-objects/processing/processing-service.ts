@@ -13,15 +13,15 @@ import GiftProcessor from './gift/gift-processor.js';
 import { LearningObject } from '../../../entities/content/learning-object.entity.js';
 import Processor from './processor.js';
 import { DwengoContentType } from './content-type.js';
-import { LearningObjectIdentifier } from '../../../interfaces/learning-content.js';
-import { Language } from '../../../entities/content/language.js';
 import { replaceAsync } from '../../../util/async.js';
+import { LearningObjectIdentifierDTO } from '@dwengo-1/common/interfaces/learning-content';
+import { Language } from '@dwengo-1/common/util/language';
 
 const EMBEDDED_LEARNING_OBJECT_PLACEHOLDER = /<learning-object hruid="([^"]+)" language="([^"]+)" version="([^"]+)"\/>/g;
 const LEARNING_OBJECT_DOES_NOT_EXIST = "<div class='non-existing-learning-object' />";
 
 class ProcessingService {
-    private processors!: Map<DwengoContentType, Processor<any>>;
+    private processors!: Map<DwengoContentType, Processor<DwengoContentType>>;
 
     constructor() {
         const processors = [
@@ -50,7 +50,7 @@ class ProcessingService {
      */
     async render(
         learningObject: LearningObject,
-        fetchEmbeddedLearningObjects?: (loId: LearningObjectIdentifier) => Promise<LearningObject | null>
+        fetchEmbeddedLearningObjects?: (loId: LearningObjectIdentifierDTO) => Promise<LearningObject | null>
     ): Promise<string> {
         const html = this.processors.get(learningObject.contentType)!.renderLearningObject(learningObject);
         if (fetchEmbeddedLearningObjects) {

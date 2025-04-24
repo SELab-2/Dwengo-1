@@ -1,0 +1,63 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, run backend tests across different versions of node (here 22.x)
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Backend Testing
+
+# Workflow runs when:
+#   - a backend js/ts file on "dev" changes
+#   - a non-draft PR to "dev" with backend js/ts files is opened, is reopened, or changes
+#   - a draft PR to "dev" with backend js/ts files is marked as ready for review
+on:
+  push:
+    branches: [ "dev", "main" ]
+    paths:
+      - 'backend/src/**.[jt]s'
+      - 'backend/tests/**.[jt]s'
+      - 'backend/vitest.config.ts'
+  pull_request:
+    branches: [ "dev", "main" ]
+    types: ["synchronize", "ready_for_review", "opened", "reopened"]
+    paths:
+      - 'backend/src/**.[jt]s'
+      - 'backend/tests/**.[jt]s'
+      - 'backend/vitest.config.ts'
+
+
+jobs:
+  test:
+    name: Run backend unit tests
+    if: '! github.event.pull_request.draft'
+    runs-on: [self-hosted, Linux, X64]
+
+    permissions:
+      # Required to checkout the code
+      contents: read
+      # Required to put a comment into the pull-request
+      pull-requests: write
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build
+    - run: npm run test:coverage -w backend
+    - name: 'Report Backend Coverage'
+      # Set if: always() to also generate the report if tests are failing
+      # Only works if you set `reportOnFailure: true` in your vite config as specified above
+      if: always() 
+      uses:  davelosert/vitest-coverage-report-action@v2
+      with:
+        name: 'Backend'
+        json-summary-path: './backend/coverage/coverage-summary.json'
+        json-final-path: './backend/coverage/coverage-final.json'
+        vite-config-path: './backend/vitest.config.ts'
+        file-coverage-mode: all

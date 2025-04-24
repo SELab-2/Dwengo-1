@@ -2,8 +2,6 @@ import { AnyEntity, EntityManager, EntityName, EntityRepository } from '@mikro-o
 import { forkEntityManager } from '../orm.js';
 import { StudentRepository } from './users/student-repository.js';
 import { Student } from '../entities/users/student.entity.js';
-import { User } from '../entities/users/user.entity.js';
-import { UserRepository } from './users/user-repository.js';
 import { Teacher } from '../entities/users/teacher.entity.js';
 import { TeacherRepository } from './users/teacher-repository.js';
 import { Class } from '../entities/classes/class.entity.js';
@@ -36,8 +34,8 @@ let entityManager: EntityManager | undefined;
 /**
  * Execute all the database operations within the function f in a single transaction.
  */
-export function transactional<T>(f: () => Promise<T>) {
-    entityManager?.transactional(f);
+export async function transactional<T>(f: () => Promise<T>): Promise<void> {
+    await entityManager?.transactional(f);
 }
 
 function repositoryGetter<T extends AnyEntity, R extends EntityRepository<T>>(entity: EntityName<T>): () => R {

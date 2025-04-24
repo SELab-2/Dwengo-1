@@ -1,28 +1,12 @@
-import { Embeddable, Embedded, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
-import { Language } from './language.js';
+import { ArrayType, Embedded, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
 import { DwengoContentType } from '../../services/learning-objects/processing/content-type.js';
 import { v4 } from 'uuid';
 import { LearningObjectRepository } from '../../data/content/learning-object-repository.js';
-
-@Embeddable()
-export class EducationalGoal {
-    @Property({ type: 'string' })
-    source!: string;
-
-    @Property({ type: 'string' })
-    id!: string;
-}
-
-@Embeddable()
-export class ReturnValue {
-    @Property({ type: 'string' })
-    callbackUrl!: string;
-
-    @Property({ type: 'json' })
-    callbackSchema!: string;
-}
+import { EducationalGoal } from './educational-goal.entity.js';
+import { ReturnValue } from './return-value.entity.js';
+import { Language } from '@dwengo-1/common/util/language';
 
 @Entity({ repository: () => LearningObjectRepository })
 export class LearningObject {
@@ -36,7 +20,7 @@ export class LearningObject {
     language!: Language;
 
     @PrimaryKey({ type: 'number' })
-    version: number = 1;
+    version = 1;
 
     @Property({ type: 'uuid', unique: true })
     uuid = v4();
@@ -58,11 +42,11 @@ export class LearningObject {
     @Property({ type: 'array' })
     keywords: string[] = [];
 
-    @Property({ type: 'array', nullable: true })
+    @Property({ type: new ArrayType((i) => Number(i)), nullable: true })
     targetAges?: number[] = [];
 
     @Property({ type: 'bool' })
-    teacherExclusive: boolean = false;
+    teacherExclusive = false;
 
     @Property({ type: 'array' })
     skosConcepts: string[] = [];
@@ -74,10 +58,10 @@ export class LearningObject {
     educationalGoals: EducationalGoal[] = [];
 
     @Property({ type: 'string' })
-    copyright: string = '';
+    copyright = '';
 
     @Property({ type: 'string' })
-    license: string = '';
+    license = '';
 
     @Property({ type: 'smallint', nullable: true })
     difficulty?: number;
@@ -91,7 +75,7 @@ export class LearningObject {
     returnValue!: ReturnValue;
 
     @Property({ type: 'bool' })
-    available: boolean = true;
+    available = true;
 
     @Property({ type: 'string', nullable: true })
     contentLocation?: string;

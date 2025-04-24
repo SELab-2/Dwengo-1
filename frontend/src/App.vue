@@ -1,10 +1,27 @@
 <script setup lang="ts">
     import auth from "@/services/auth/auth-service.ts";
-    auth.loadUser();
+    import MenuBar from "@/components/MenuBar.vue";
+    import { useRoute } from "vue-router";
+    import { computed } from "vue";
+    import authService from "@/services/auth/auth-service.ts";
+
+    void authService.loadUser();
+
+    const route = useRoute();
+    interface RouteMeta {
+        requiresAuth?: boolean;
+    }
+
+    const showMenuBar = computed(() => (route.meta as RouteMeta).requiresAuth && auth.authState.user);
 </script>
 
 <template>
-    <router-view />
+    <v-app>
+        <menu-bar v-if="showMenuBar"></menu-bar>
+        <v-main>
+            <router-view />
+        </v-main>
+    </v-app>
 </template>
 
 <style scoped></style>

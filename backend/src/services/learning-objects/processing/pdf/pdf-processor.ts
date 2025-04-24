@@ -15,7 +15,7 @@ class PdfProcessor extends StringProcessor {
         super(DwengoContentType.APPLICATION_PDF);
     }
 
-    override renderFn(pdfUrl: string) {
+    override renderFn(pdfUrl: string): string {
         if (!isValidHttpUrl(pdfUrl)) {
             throw new ProcessingError(`PDF URL is invalid: ${pdfUrl}`);
         }

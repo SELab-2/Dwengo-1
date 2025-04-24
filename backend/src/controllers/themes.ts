@@ -3,26 +3,30 @@ import { themes } from '../data/themes.js';
 import { loadTranslations } from '../util/translation-helper.js';
 
 interface Translations {
-    curricula_page: {
-        [key: string]: { title: string; description?: string };
-    };
+    curricula_page: Record<string, { title: string; description?: string }>;
 }
 
-export function getThemes(req: Request, res: Response) {
-    const language = (req.query.language as string)?.toLowerCase() || 'nl';
+export function getThemesHandler(req: Request, res: Response): void {
+    const language = ((req.query.language as string) || 'nl').toLowerCase();
     const translations = loadTranslations<Translations>(language);
     const themeList = themes.map((theme) => ({
         key: theme.title,
-        title: translations.curricula_page[theme.title]?.title || theme.title,
-        description: translations.curricula_page[theme.title]?.description,
+        title: translations.curricula_page[theme.title].title || theme.title,
+        description: translations.curricula_page[theme.title].description,
         image: `https://dwengo.org/images/curricula/logo_${theme.title}.png`,
     }));
 
     res.json(themeList);
 }
 
-export function getThemeByTitle(req: Request, res: Response) {
+export function getHruidsByThemeHandler(req: Request, res: Response): void {
     const themeKey = req.params.theme;
+
+    if (!themeKey) {
+        res.status(400).json({ error: 'Missing required field: theme' });
+        return;
+    }
+
     const theme = themes.find((t) => t.title === themeKey);
 
     if (theme) {
