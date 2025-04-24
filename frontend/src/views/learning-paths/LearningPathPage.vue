@@ -183,6 +183,7 @@ import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
             createQuestionMutation.mutate(questionData, {
                 onSuccess: () => {
                     questionInput.value = ""; // Clear the input field after submission
+                    getQuestionsQuery.refetch(); // Reload the questions
                 },
                 onError: (e) => {
                     console.error(e)
