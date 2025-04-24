@@ -118,5 +118,7 @@
     "rejected": "rejected",
     "enterUsername": "enter the username of the teacher you would like to invite",
     "username": "username",
-    "invite": "invite"
+    "invite": "invite",
+    "searchAllLearningPathsTitle": "Search all learning paths",
+    "searchAllLearningPathsDescription": "You didn't find what you were looking for? Click here to search our whole database of available learning paths."
 }
