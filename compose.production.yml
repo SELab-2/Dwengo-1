@@ -45,7 +45,7 @@ services:
     keycloak-db:
         image: postgres:latest
         ports:
-            - '5442:5432'  # Port number 10 higher than normal postgres ports
+            - '5442:5432' # Port number 10 higher than normal postgres ports
         restart: unless-stopped
         volumes:
             - dwengo_postgres_keycloak:/var/lib/postgresql/keycloak
@@ -83,7 +83,7 @@ services:
             KC_HTTP_RELATIVE_PATH: '/idp'
             KC_HTTPS_CERTIFICATE_FILE: '/keycloak/cert.pem'
             KC_HTTPS_CERTIFICATE_KEY_FILE: '/keycloak/key.pem'
-            KC_HTTP_MAX_QUEUED_REQUESTS: 30  # Prevent overload situations by limiting number of requests
+            KC_HTTP_MAX_QUEUED_REQUESTS: 30 # Prevent overload situations by limiting number of requests
             KC_DB: 'postgres'
             KC_DB_USERNAME: 'keycloak'
             KC_DB_PASSWORD: 'ChangeMe'
