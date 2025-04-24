@@ -54,6 +54,8 @@ services:
             - 'traefik.enable=true'
             - 'traefik.http.routers.idp.rule=PathPrefix(`/idp`)'
             - 'traefik.http.services.idp.loadbalancer.server.port=7080'
+            - 'traefik.http.routers.block-admin.rule=PathPrefix(`/idp/admin`)'
+            - 'traefik.http.routers.block-admin.service=web'
         env_file:
             - ./config/idp/.env
         environment:
