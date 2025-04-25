@@ -15,8 +15,8 @@ jobs:
         uses: actions/checkout@v4
       -
         name: Copy environment variables to correct file
-        run: cp /home/dev/.backend.env backend/.env
+        run: cp /home/dev/.backend.env backend/.env && cp /home/dev/.idp.env config/idp/.env
       -
         name: Start docker
-        run: docker compose -f compose.production.yml up --build -d
+        run: docker compose -f compose.yml -f compose.production.yml up --build -d
         
