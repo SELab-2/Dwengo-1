@@ -8,6 +8,7 @@ export function makeTestGroups(em: EntityManager): Group[] {
      * Group #1 for Assignment #1 in class 'id01'
      * => Assigned to do learning path 'id02'
      */
+    // gets deleted
     group01 = em.create(Group, {
         assignment: getAssignment01(),
         groupNumber: 21001,
