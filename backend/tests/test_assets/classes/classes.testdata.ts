@@ -39,6 +39,7 @@ export function makeTestClasses(em: EntityManager): Class[] {
     const studentsClass04: Student[] = [getNoordkaap(), getDireStraits()];
     const teacherClass04: Teacher[] = [getStaind()];
 
+    // gets deleted in test
     class04 = em.create(Class, {
         classId: '33d03536-83b8-4880-9982-9bbf2f908ddf',
         displayName: 'class04',

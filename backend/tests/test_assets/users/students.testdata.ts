@@ -9,7 +9,6 @@ export const TEST_STUDENTS = [
     { username: 'SmashingPumpkins', firstName: 'Billy', lastName: 'Corgan' },
     { username: 'PinkFloyd', firstName: 'David', lastName: 'Gilmoure' },
     { username: 'TheDoors', firstName: 'Jim', lastName: 'Morisson' },
-    // ⚠️ Deze mag niet gebruikt worden in elke test!
     { username: 'Nirvana', firstName: 'Kurt', lastName: 'Cobain' },
     // Makes sure when logged in as leerling1, there exists a corresponding user
     { username: 'testleerling1', firstName: 'Gerald', lastName: 'Schmittinger' },
