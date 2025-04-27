@@ -27,6 +27,7 @@ export function makeTestQuestions(em: EntityManager): Question[] {
         content: 'question',
     });
 
+    //gets deleted
     question03 = em.create(Question, {
         learningObjectLanguage: testLearningObject04.language,
         learningObjectVersion: testLearningObject04.version,
