@@ -1,10 +1,13 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Attachment } from '../../../src/entities/content/attachment.entity';
 import { testLearningObject01 } from './learning-objects.testdata';
+import { LearningObject } from '../../../src/entities/content/learning-object.entity';
 
 export function makeTestAttachments(em: EntityManager): Attachment[] {
+    const lo = em.merge(LearningObject, testLearningObject01);
+
     attachment01 = em.create(Attachment, {
-        learningObject: testLearningObject01,
+        learningObject: lo,
         name: 'attachment01',
         mimeType: '',
         content: Buffer.from(''),
