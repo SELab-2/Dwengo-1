@@ -2,35 +2,35 @@ import { EntityManager } from '@mikro-orm/core';
 import { Answer } from '../../../src/entities/questions/answer.entity';
 import { Teacher } from '../../../src/entities/users/teacher.entity';
 import { Question } from '../../../src/entities/questions/question.entity';
-import { getTestleerkracht1 } from '../users/teachers.testdata';
-import { getQuestion07 } from './questions.testdata';
+import { getFooFighters, getLimpBizkit, getTestleerkracht1 } from '../users/teachers.testdata';
+import { getQuestion02, getQuestion04, getQuestion07 } from './questions.testdata';
 
 export function makeTestAnswers(em: EntityManager, teachers: Teacher[], questions: Question[]): Answer[] {
-    const answer01 = em.create(Answer, {
-        author: teachers[0],
-        toQuestion: questions[1],
+    answer01 = em.create(Answer, {
+        author: getFooFighters(),
+        toQuestion: getQuestion02(),
         sequenceNumber: 1,
         timestamp: new Date(),
         content: 'answer',
     });
 
-    const answer02 = em.create(Answer, {
-        author: teachers[0],
-        toQuestion: questions[1],
+    answer02 = em.create(Answer, {
+        author: getFooFighters(),
+        toQuestion: getQuestion02(),
         sequenceNumber: 2,
         timestamp: new Date(),
         content: 'answer2',
     });
 
-    const answer03 = em.create(Answer, {
-        author: teachers[1],
-        toQuestion: questions[3],
+    answer03 = em.create(Answer, {
+        author: getLimpBizkit(),
+        toQuestion: getQuestion04(),
         sequenceNumber: 1,
         timestamp: new Date(),
         content: 'answer3',
     });
 
-    const answer04 = em.create(Answer, {
+    answer04 = em.create(Answer, {
         author: getTestleerkracht1(),
         toQuestion: getQuestion07(),
         sequenceNumber: 1,
@@ -38,7 +38,7 @@ export function makeTestAnswers(em: EntityManager, teachers: Teacher[], question
         content: 'this is a test answer',
     });
 
-    const answer05 = em.create(Answer, {
+    answer05 = em.create(Answer, {
         author: getTestleerkracht1(),
         toQuestion: getQuestion07(),
         sequenceNumber: 2,
@@ -47,4 +47,30 @@ export function makeTestAnswers(em: EntityManager, teachers: Teacher[], question
     });
 
     return [answer01, answer02, answer03, answer04, answer05];
+}
+
+let answer01: Answer;
+let answer02: Answer;
+let answer03: Answer;
+let answer04: Answer;
+let answer05: Answer;
+
+export function getAnswer01(): Answer {
+    return answer01;
+}
+
+export function getAnswer02(): Answer {
+    return answer02;
+}
+
+export function getAnswer03(): Answer {
+    return answer03;
+}
+
+export function getAnswer04(): Answer {
+    return answer04;
+}
+
+export function getAnswer05(): Answer {
+    return answer05;
 }
