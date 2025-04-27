@@ -2,7 +2,7 @@ import { forkEntityManager, initORM } from '../src/orm.js';
 import dotenv from 'dotenv';
 import { makeTestStudents } from './test_assets/users/students.testdata.js';
 import { makeTestTeachers } from './test_assets/users/teachers.testdata.js';
-import { makeTestLearningObjects } from './test_assets/content/learning-objects.testdata.js';
+import { makeTestLearningObjects, testLearningObject01 } from './test_assets/content/learning-objects.testdata.js';
 import { makeTestLearningPaths } from './test_assets/content/learning-paths.testdata.js';
 import { makeTestClasses } from './test_assets/classes/classes.testdata.js';
 import { getAssignment01, getAssignment02, makeTestAssignemnts } from './test_assets/assignments/assignments.testdata.js';
@@ -41,7 +41,7 @@ export async function setupTestApp(): Promise<void> {
     const classJoinRequests = makeTestClassJoinRequests(em, students, classes);
     const attachments = makeTestAttachments(em, learningObjects);
 
-    learningObjects[1].attachments = attachments;
+    testLearningObject01.attachments = attachments;
 
     const questions = makeTestQuestions(em, students, groups);
     const answers = makeTestAnswers(em, teachers, questions);
