@@ -5,8 +5,8 @@ import { makeTestTeachers } from './test_assets/users/teachers.testdata.js';
 import { makeTestLearningObjects } from './test_assets/content/learning-objects.testdata.js';
 import { makeTestLearningPaths } from './test_assets/content/learning-paths.testdata.js';
 import { makeTestClasses } from './test_assets/classes/classes.testdata.js';
-import { makeTestAssignemnts } from './test_assets/assignments/assignments.testdata.js';
-import { makeTestGroups } from './test_assets/assignments/groups.testdata.js';
+import { getAssignment01, getAssignment02, makeTestAssignemnts } from './test_assets/assignments/assignments.testdata.js';
+import { getTestGroup01, getTestGroup02, getTestGroup03, getTestGroup04, makeTestGroups } from './test_assets/assignments/groups.testdata.js';
 import { makeTestTeacherInvitations } from './test_assets/classes/teacher-invitations.testdata.js';
 import { makeTestClassJoinRequests } from './test_assets/classes/class-join-requests.testdata.js';
 import { makeTestAttachments } from './test_assets/content/attachments.testdata.js';
@@ -30,8 +30,12 @@ export async function setupTestApp(): Promise<void> {
     const assignments = makeTestAssignemnts(em, classes);
     const groups = makeTestGroups(em, students, assignments);
 
-    assignments[0].groups = new Collection<Group>(groups.slice(0, 3));
-    assignments[1].groups = new Collection<Group>(groups.slice(3, 4));
+    const groups1 = [getTestGroup01(), getTestGroup02(), getTestGroup03()];
+    const groups2 = [getTestGroup04()];
+    const assignment1 = getAssignment01();
+    const assignment2 = getAssignment02();
+    assignment1.groups = new Collection<Group>(groups1);
+    assignment2.groups = new Collection<Group>(groups2);
 
     const teacherInvitations = makeTestTeacherInvitations(em, teachers, classes);
     const classJoinRequests = makeTestClassJoinRequests(em, students, classes);
