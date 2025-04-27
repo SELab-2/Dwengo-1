@@ -1,12 +1,10 @@
 import { EntityManager } from '@mikro-orm/core';
 import { ClassJoinRequest } from '../../../src/entities/classes/class-join-request.entity';
-import { Student } from '../../../src/entities/users/student.entity';
-import { Class } from '../../../src/entities/classes/class.entity';
 import { ClassStatus } from '@dwengo-1/common/util/class-join-request';
 import { getPinkFloyd, getSmashingPumpkins, getTool } from '../users/students.testdata';
 import { getClass02, getClass03 } from './classes.testdata';
 
-export function makeTestClassJoinRequests(em: EntityManager, students: Student[], classes: Class[]): ClassJoinRequest[] {
+export function makeTestClassJoinRequests(em: EntityManager): ClassJoinRequest[] {
     classJoinRequest01 = em.create(ClassJoinRequest, {
         requester: getPinkFloyd(),
         class: getClass02(),

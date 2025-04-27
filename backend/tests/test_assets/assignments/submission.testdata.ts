@@ -1,13 +1,10 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Submission } from '../../../src/entities/assignments/submission.entity';
-import { Language } from '@dwengo-1/common/util/language';
-import { Student } from '../../../src/entities/users/student.entity';
-import { Group } from '../../../src/entities/assignments/group.entity';
 import { testLearningObject01, testLearningObject02, testLearningObject03 } from '../content/learning-objects.testdata';
 import { getDireStraits, getNoordkaap, getSmashingPumpkins } from '../users/students.testdata';
 import { getTestGroup01, getTestGroup02, getTestGroup04, getTestGroup05 } from './groups.testdata';
 
-export function makeTestSubmissions(em: EntityManager, students: Student[], groups: Group[]): Submission[] {
+export function makeTestSubmissions(em: EntityManager): Submission[] {
     submission01 = em.create(Submission, {
         learningObjectHruid: testLearningObject03.hruid,
         learningObjectLanguage: testLearningObject03.language,

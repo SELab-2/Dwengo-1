@@ -1,11 +1,9 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Answer } from '../../../src/entities/questions/answer.entity';
-import { Teacher } from '../../../src/entities/users/teacher.entity';
-import { Question } from '../../../src/entities/questions/question.entity';
 import { getFooFighters, getLimpBizkit, getTestleerkracht1 } from '../users/teachers.testdata';
 import { getQuestion02, getQuestion04, getQuestion07 } from './questions.testdata';
 
-export function makeTestAnswers(em: EntityManager, teachers: Teacher[], questions: Question[]): Answer[] {
+export function makeTestAnswers(em: EntityManager): Answer[] {
     answer01 = em.create(Answer, {
         author: getFooFighters(),
         toQuestion: getQuestion02(),

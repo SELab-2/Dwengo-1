@@ -1,11 +1,9 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Group } from '../../../src/entities/assignments/group.entity';
-import { Assignment } from '../../../src/entities/assignments/assignment.entity';
-import { Student } from '../../../src/entities/users/student.entity';
 import { getAssignment01, getAssignment02, getAssignment04, getConditionalPathAssignment } from './assignments.testdata';
 import { getDireStraits, getNoordkaap, getPinkFloyd, getSmashingPumpkins, getTestleerling1, getTheDoors, getTool } from '../users/students.testdata';
 
-export function makeTestGroups(em: EntityManager, students: Student[], assignments: Assignment[]): Group[] {
+export function makeTestGroups(em: EntityManager): Group[] {
     /*
      * Group #1 for Assignment #1 in class 'id01'
      * => Assigned to do learning path 'id02'

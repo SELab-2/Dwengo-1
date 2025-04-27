@@ -1,12 +1,10 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Question } from '../../../src/entities/questions/question.entity';
-import { Student } from '../../../src/entities/users/student.entity';
-import { Group } from '../../../src/entities/assignments/group.entity';
 import { getDireStraits, getNoordkaap, getTestleerling1, getTool } from '../users/students.testdata';
 import { testLearningObject01, testLearningObject04, testLearningObject05, testLearningObjectMultipleChoice } from '../content/learning-objects.testdata';
 import { getGroup1ConditionalLearningPath, getTestGroup01, getTestGroup02 } from '../assignments/groups.testdata';
 
-export function makeTestQuestions(em: EntityManager, students: Student[], groups: Group[]): Question[] {
+export function makeTestQuestions(em: EntityManager): Question[] {
     question01 = em.create(Question, {
         learningObjectLanguage: testLearningObject05.language,
         learningObjectVersion: testLearningObject05.version,

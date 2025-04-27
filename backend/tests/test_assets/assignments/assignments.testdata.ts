@@ -1,11 +1,10 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Assignment } from '../../../src/entities/assignments/assignment.entity';
-import { Class } from '../../../src/entities/classes/class.entity';
 import { Language } from '@dwengo-1/common/util/language';
 import { testLearningPath01, testLearningPath02, testLearningPathWithConditions } from '../content/learning-paths.testdata';
 import { getClass01, getClass02, getClassWithTestleerlingAndTestleerkracht } from '../classes/classes.testdata';
 
-export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assignment[] {
+export function makeTestAssignemnts(em: EntityManager): Assignment[] {
     assignment01 = em.create(Assignment, {
         id: 21000,
         within: getClass01(),

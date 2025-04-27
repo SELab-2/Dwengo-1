@@ -5,7 +5,7 @@ import { Teacher } from '../../../src/entities/users/teacher.entity';
 import { getLimpBizkit, getStaind, getTestleerkracht1 } from '../users/teachers.testdata';
 import { getDireStraits, getNoordkaap, getSmashingPumpkins, getTestleerling1, getTool } from '../users/students.testdata';
 
-export function makeTestClasses(em: EntityManager, students: Student[], teachers: Teacher[]): Class[] {
+export function makeTestClasses(em: EntityManager): Class[] {
     const studentsClass01 = [getTestleerling1()];
     const teacherClass01: Teacher[] = [getTestleerkracht1()];
 

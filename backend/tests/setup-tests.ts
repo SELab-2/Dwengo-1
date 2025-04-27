@@ -26,9 +26,9 @@ export async function setupTestApp(): Promise<void> {
     const teachers = makeTestTeachers(em);
     const learningObjects = makeTestLearningObjects(em);
     const learningPaths = makeTestLearningPaths(em);
-    const classes = makeTestClasses(em, students, teachers);
-    const assignments = makeTestAssignemnts(em, classes);
-    const groups = makeTestGroups(em, students, assignments);
+    const classes = makeTestClasses(em);
+    const assignments = makeTestAssignemnts(em);
+    const groups = makeTestGroups(em);
 
     const groups1 = [getTestGroup01(), getTestGroup02(), getTestGroup03()];
     const groups2 = [getTestGroup04()];
@@ -37,15 +37,15 @@ export async function setupTestApp(): Promise<void> {
     assignment1.groups = new Collection<Group>(groups1);
     assignment2.groups = new Collection<Group>(groups2);
 
-    const teacherInvitations = makeTestTeacherInvitations(em, teachers, classes);
-    const classJoinRequests = makeTestClassJoinRequests(em, students, classes);
-    const attachments = makeTestAttachments(em, learningObjects);
+    const teacherInvitations = makeTestTeacherInvitations(em);
+    const classJoinRequests = makeTestClassJoinRequests(em);
+    const attachments = makeTestAttachments(em);
 
     testLearningObject01.attachments = attachments;
 
-    const questions = makeTestQuestions(em, students, groups);
-    const answers = makeTestAnswers(em, teachers, questions);
-    const submissions = makeTestSubmissions(em, students, groups);
+    const questions = makeTestQuestions(em);
+    const answers = makeTestAnswers(em);
+    const submissions = makeTestSubmissions(em);
 
     await em.persistAndFlush([
         ...students,

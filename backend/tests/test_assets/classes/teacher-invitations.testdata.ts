@@ -1,12 +1,10 @@
 import { EntityManager } from '@mikro-orm/core';
 import { TeacherInvitation } from '../../../src/entities/classes/teacher-invitation.entity';
-import { Teacher } from '../../../src/entities/users/teacher.entity';
-import { Class } from '../../../src/entities/classes/class.entity';
 import { ClassStatus } from '@dwengo-1/common/util/class-join-request';
 import { getFooFighters, getLimpBizkit, getStaind } from '../users/teachers.testdata';
 import { getClass01, getClass02, getClass03 } from './classes.testdata';
 
-export function makeTestTeacherInvitations(em: EntityManager, teachers: Teacher[], classes: Class[]): TeacherInvitation[] {
+export function makeTestTeacherInvitations(em: EntityManager): TeacherInvitation[] {
     teacherInvitation01 = em.create(TeacherInvitation, {
         sender: getLimpBizkit(),
         receiver: getFooFighters(),
