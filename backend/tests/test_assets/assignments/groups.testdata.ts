@@ -2,8 +2,8 @@ import { EntityManager } from '@mikro-orm/core';
 import { Group } from '../../../src/entities/assignments/group.entity';
 import { Assignment } from '../../../src/entities/assignments/assignment.entity';
 import { Student } from '../../../src/entities/users/student.entity';
-import { getConditionalPathAssignment } from './assignments.testdata';
-import { getTestleerling1 } from '../users/students.testdata';
+import { getAssignment01, getAssignment02, getAssignment04, getConditionalPathAssignment } from './assignments.testdata';
+import { getDireStraits, getNoordkaap, getPinkFloyd, getSmashingPumpkins, getTestleerling1, getTheDoors, getTool } from '../users/students.testdata';
 
 export function makeTestGroups(em: EntityManager, students: Student[], assignments: Assignment[]): Group[] {
     /*
@@ -11,9 +11,9 @@ export function makeTestGroups(em: EntityManager, students: Student[], assignmen
      * => Assigned to do learning path 'id02'
      */
     group01 = em.create(Group, {
-        assignment: assignments[0],
+        assignment: getAssignment01(),
         groupNumber: 21001,
-        members: students.slice(0, 2),
+        members: [getNoordkaap(), getDireStraits()],
     });
 
     /*
@@ -21,9 +21,9 @@ export function makeTestGroups(em: EntityManager, students: Student[], assignmen
      * => Assigned to do learning path 'id02'
      */
     group02 = em.create(Group, {
-        assignment: assignments[0],
+        assignment: getAssignment01(),
         groupNumber: 21002,
-        members: students.slice(2, 4),
+        members: [getTool(), getSmashingPumpkins()],
     });
 
     /*
@@ -31,9 +31,9 @@ export function makeTestGroups(em: EntityManager, students: Student[], assignmen
      * => Assigned to do learning path 'id02'
      */
     group03 = em.create(Group, {
-        assignment: assignments[0],
+        assignment: getAssignment01(),
         groupNumber: 21003,
-        members: students.slice(4, 6),
+        members: [getPinkFloyd(), getTheDoors()],
     });
 
     /*
@@ -41,9 +41,9 @@ export function makeTestGroups(em: EntityManager, students: Student[], assignmen
      * => Assigned to do learning path 'id01'
      */
     group04 = em.create(Group, {
-        assignment: assignments[1],
+        assignment: getAssignment02(),
         groupNumber: 21004,
-        members: students.slice(3, 4),
+        members: getSmashingPumpkins(),
     });
 
     /*
@@ -51,9 +51,9 @@ export function makeTestGroups(em: EntityManager, students: Student[], assignmen
      * => Assigned to do learning path 'id01'
      */
     group05 = em.create(Group, {
-        assignment: assignments[3],
+        assignment: getAssignment04(),
         groupNumber: 21001,
-        members: students.slice(0, 2),
+        members: [getNoordkaap(), getDireStraits()],
     });
 
     /**
