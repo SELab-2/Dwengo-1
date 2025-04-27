@@ -5,6 +5,7 @@ import { getAllQuestionsHandler, getQuestionHandler, updateQuestionHandler } fro
 import { Language } from '@dwengo-1/common/util/language';
 import { NotFoundException } from '../../src/exceptions/not-found-exception';
 import { BadRequestException } from '../../src/exceptions/bad-request-exception';
+import { getQuestion01 } from '../test_assets/questions/questions.testdata';
 
 describe('Questions controllers', () => {
     let req: Partial<Request>;
@@ -24,9 +25,10 @@ describe('Questions controllers', () => {
     });
 
     it('Get question list', async () => {
+        const q = getQuestion01();
         req = {
-            params: { hruid: 'id05', version: '1' },
-            query: { lang: Language.English, full: 'true' },
+            params: { hruid: q.learningObjectHruid, version: q.learningObjectVersion.toString() },
+            query: { lang: q.learningObjectLanguage, full: 'true' },
         };
 
         await getAllQuestionsHandler(req as Request, res as Response);
@@ -38,9 +40,10 @@ describe('Questions controllers', () => {
     });
 
     it('Get question', async () => {
+        const q = getQuestion01();
         req = {
-            params: { hruid: 'id05', version: '1', seq: '1' },
-            query: { lang: Language.English, full: 'true' },
+            params: { hruid: q.learningObjectHruid, version: q.learningObjectVersion.toString(), seq: q.sequenceNumber!.toString() },
+            query: { lang: q.learningObjectLanguage, full: 'true' },
         };
 
         await getQuestionHandler(req as Request, res as Response);
@@ -51,8 +54,9 @@ describe('Questions controllers', () => {
     });
 
     it('Get question with fallback sequence number and version', async () => {
+        const q = getQuestion01();
         req = {
-            params: { hruid: 'id05' },
+            params: { hruid: q.learningObjectHruid },
             query: { lang: Language.English, full: 'true' },
         };
 
@@ -99,10 +103,11 @@ describe('Questions controllers', () => {
      */
 
     it('Update question', async () => {
+        const q = getQuestion01();
         const newContent = 'updated question';
         req = {
-            params: { hruid: 'id05', version: '1', seq: '1' },
-            query: { lang: Language.English },
+            params: { hruid: q.learningObjectHruid, version: q.learningObjectVersion.toString(), seq: q.sequenceNumber!.toString() },
+            query: { lang: q.learningObjectLanguage },
             body: { content: newContent },
         };
 
