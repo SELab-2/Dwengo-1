@@ -91,7 +91,10 @@
             <!--                {{ t("discussions") }}-->
             <!--            </v-btn>-->
         </v-toolbar-items>
-        <v-menu open-on-hover open-on-click>
+        <v-menu
+            open-on-hover
+            open-on-click
+        >
             <template v-slot:activator="{ props }">
                 <v-btn
                     v-bind="props"

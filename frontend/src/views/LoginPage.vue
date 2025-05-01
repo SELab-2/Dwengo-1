@@ -8,9 +8,9 @@
 
     watch(
         () => auth.isLoggedIn.value,
-        (newVal) => {
+        async (newVal) => {
             if (newVal) {
-                router.push("/user");
+                await router.push("/user");
             }
         },
         { immediate: true },
@@ -22,10 +22,6 @@
 
     async function loginAsTeacher(): Promise<void> {
         await auth.loginAs("teacher");
-    }
-
-    async function performLogout(): Promise<void> {
-        await auth.logout();
     }
 </script>
 
