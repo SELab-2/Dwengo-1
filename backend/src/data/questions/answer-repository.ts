@@ -12,7 +12,11 @@ export class AnswerRepository extends DwengoEntityRepository<Answer> {
             content: answer.content,
             timestamp: new Date(),
         });
-        return this.insert(answerEntity);
+        await this.insert(answerEntity);
+        answerEntity.toQuestion = answer.toQuestion;
+        answerEntity.author = answer.author;
+        answerEntity.content = answer.content;
+        return answerEntity;
     }
     public async findAllAnswersToQuestion(question: Question): Promise<Answer[]> {
         return this.findAll({

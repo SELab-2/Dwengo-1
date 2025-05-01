@@ -12,6 +12,7 @@ import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 import { fetchStudent } from './students.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { FALLBACK_VERSION_NUM } from '../config.js';
+import { fetchAssignment } from './assignments.js';
 import { ConflictException } from '../exceptions/conflict-exception.js';
 
 export async function getQuestionsAboutLearningObjectInAssignment(
@@ -87,22 +88,30 @@ export async function createQuestion(loId: LearningObjectIdentifier, questionDat
     const author = await fetchStudent(questionData.author!);
     const content = questionData.content;
 
-    const clazz = await getClassRepository().findById((questionData.inGroup.assignment as AssignmentDTO).within);
-    const assignment = mapToAssignment(questionData.inGroup.assignment as AssignmentDTO, clazz!);
-    const group = await getGroupRepository().findByAssignmentAndGroupNumber(assignment, questionData.inGroup.groupNumber);
+    let assignment;
 
-    if (!group) {
+    if (typeof questionData.inGroup.assignment === 'number' && typeof questionData.inGroup.class === 'string') {
+        assignment = await fetchAssignment(questionData.inGroup.class, questionData.inGroup.assignment);
+    } else {
+        // TODO check if necessary and no conflicts to delete this if
+        const clazz = await getClassRepository().findById((questionData.inGroup.assignment as AssignmentDTO).within);
+        assignment = mapToAssignment(questionData.inGroup.assignment as AssignmentDTO, clazz!);
+    }
+
+    const inGroup = await getGroupRepository().findByAssignmentAndGroupNumber(assignment, questionData.inGroup.groupNumber);
+
+    if (!inGroup) {
         throw new NotFoundException('Group with id and assignment not found');
     }
 
-    if (!group.members.contains(author)) {
+    if (!inGroup.members.contains(author)) {
         throw new ConflictException('Author is not part of this group');
     }
 
     const question = await questionRepository.createQuestion({
         loId,
         author,
-        inGroup: group,
+        inGroup: inGroup!,
         content,
     });
 

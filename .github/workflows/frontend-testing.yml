@@ -9,7 +9,7 @@ name: Frontend Testing
 #   - a draft PR to "dev" with frontend js/ts/vue/css files is marked as ready for review
 on:
     push:
-      branches: [ "dev" ]
+      branches: [ "dev", "main" ]
       paths:
         - 'frontend/src/**.[jt]s'
         - 'frontend/src/**.vue'
@@ -20,7 +20,7 @@ on:
         - 'frontend/vitest.config.ts'
         - 'frontend/playwright.config.ts'
     pull_request:
-      branches: [ "dev" ]
+      branches: [ "dev", "main" ]
       types: ["synchronize", "ready_for_review", "opened", "reopened"]
       paths:
         - 'frontend/src/**.[jt]s'

@@ -30,8 +30,8 @@ export function makeTestTeachers(em: EntityManager): Teacher[] {
     // Makes sure when logged in as testleerkracht1, there exists a corresponding user
     testleerkracht1 = em.create(Teacher, {
         username: 'testleerkracht1',
-        firstName: 'Kris',
-        lastName: 'Coolsaet',
+        firstName: 'David',
+        lastName: 'Bowie',
     });
 
     return [teacher01, teacher02, teacher03, teacher04, testleerkracht1];

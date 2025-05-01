@@ -13,6 +13,15 @@
     import authService from "@/services/auth/auth-service.ts";
     import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
     import LearningPathGroupSelector from "@/views/learning-paths/LearningPathGroupSelector.vue";
+    import { useCreateQuestionMutation, useQuestionsQuery } from "@/queries/questions";
+    import type { QuestionsResponse } from "@/controllers/questions";
+    import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
+    import QandA from "@/components/QandA.vue";
+    import type { QuestionData, QuestionDTO } from "@dwengo-1/common/interfaces/question";
+    import { useStudentAssignmentsQuery, useStudentGroupsQuery } from "@/queries/students";
+    import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
+    import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
+    import QuestionNotification from "@/components/QuestionNotification.vue";
 
     const router = useRouter();
     const route = useRoute();
@@ -67,6 +76,17 @@
         const currentIndex = nodesList.value?.indexOf(currentNode.value);
         return currentIndex < nodesList.value?.length ? nodesList.value?.[currentIndex - 1] : undefined;
     });
+
+    const getQuestionsQuery = useQuestionsQuery(
+        computed(
+            () =>
+                ({
+                    language: currentNode.value?.language,
+                    hruid: currentNode.value?.learningobjectHruid,
+                    version: currentNode.value?.version,
+                }) as LearningObjectIdentifierDTO,
+        ),
+    );
 
     const navigationDrawerShown = ref(true);
 
@@ -124,6 +144,51 @@
                 language: props.language,
             },
         });
+    }
+
+    const studentAssignmentsQueryResult = useStudentAssignmentsQuery(
+        authService.authState.user?.profile.preferred_username,
+    );
+    const pathIsAssignment = computed(() => {
+        const assignments = (studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[]) || [];
+        return assignments.some(
+            (assignment) => assignment.learningPath === props.hruid && assignment.language === props.language,
+        );
+    });
+
+    const loID: LearningObjectIdentifierDTO = {
+        hruid: props.learningObjectHruid as string,
+        language: props.language,
+    };
+    const createQuestionMutation = useCreateQuestionMutation(loID);
+    const groupsQueryResult = useStudentGroupsQuery(authService.authState.user?.profile.preferred_username);
+
+    const questionInput = ref("");
+
+    function submitQuestion(): void {
+        const assignments = studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[];
+        const assignment = assignments.find(
+            (assignment) => assignment.learningPath === props.hruid && assignment.language === props.language,
+        );
+        const groups = groupsQueryResult.data.value?.groups as GroupDTO[];
+        const group = groups?.find((group) => group.assignment === assignment?.id) as GroupDTO;
+        const questionData: QuestionData = {
+            author: authService.authState.user?.profile.preferred_username,
+            content: questionInput.value,
+            inGroup: group, //TODO: POST response zegt dat dit null is???
+        };
+        if (questionInput.value !== "") {
+            createQuestionMutation.mutate(questionData, {
+                onSuccess: async () => {
+                    questionInput.value = ""; // Clear the input field after submission
+                    await getQuestionsQuery.refetch(); // Reload the questions
+                },
+                onError: (_) => {
+                    // TODO Handle error
+                    // - console.error(e);
+                },
+            });
+        }
     }
 </script>
 
@@ -202,7 +267,17 @@
                                         :icon="ICONS[getNavItemState(node)]"
                                     ></v-icon>
                                 </template>
-                                <template v-slot:append> {{ node.estimatedTime }}' </template>
+                                <template v-slot:append>
+                                    <QuestionNotification :node="node"></QuestionNotification>
+                                    <div>
+                                        {{
+                                            node.estimatedTime!.toLocaleString("en-US", {
+                                                minimumIntegerDigits: 2,
+                                                useGrouping: false,
+                                            })
+                                        }}'
+                                    </div>
+                                </template>
                             </v-list-item>
                         </template>
                     </using-query-result>
@@ -216,6 +291,14 @@
                             >{{ t("assignLearningPath") }}</v-btn
                         >
                     </template>
+                </v-list-item>
+                <v-list-item>
+                    <div
+                        v-if="authService.authState.activeRole === 'student' && pathIsAssignment"
+                        class="assignment-indicator"
+                    >
+                        {{ t("assignmentIndicator") }}
+                    </div>
                 </v-list-item>
             </div>
         </v-navigation-drawer>
@@ -239,6 +322,25 @@
                 v-if="currentNode"
             ></learning-object-view>
         </div>
+        <div
+            v-if="authService.authState.activeRole === 'student' && pathIsAssignment"
+            class="question-box"
+        >
+            <div class="input-wrapper">
+                <input
+                    type="text"
+                    placeholder="question : ..."
+                    class="question-input"
+                    v-model="questionInput"
+                />
+                <button
+                    @click="submitQuestion"
+                    class="send-button"
+                >
+                    ▶
+                </button>
+            </div>
+        </div>
         <div class="navigation-buttons-container">
             <v-btn
                 prepend-icon="mdi-chevron-left"
@@ -257,6 +359,12 @@
                 {{ t("next") }}
             </v-btn>
         </div>
+        <using-query-result
+            :query-result="getQuestionsQuery"
+            v-slot="questionsResponse: { data: QuestionsResponse }"
+        >
+            <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
+        </using-query-result>
     </using-query-result>
 </template>
 
@@ -284,8 +392,73 @@
         display: flex;
         justify-content: space-between;
     }
-    .button-in-nav {
-        margin-top: 10px;
-        margin-bottom: 10px;
+    .assignment-indicator {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        padding: 4px 12px;
+        border: 2px solid #f8bcbc;
+        border-radius: 20px;
+        color: #f36c6c;
+        background-color: rgba(248, 188, 188, 0.1);
+        font-weight: bold;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        text-transform: uppercase;
+        z-index: 2; /* Less than modals/popups */
+    }
+    .question-box {
+        width: 100%;
+        max-width: 400px;
+        margin: 20px auto;
+        font-family: sans-serif;
+    }
+    .input-wrapper {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 999px;
+        padding: 8px 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .question-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 14px;
+        background-color: transparent;
+    }
+
+    .question-input::placeholder {
+        color: #999;
+    }
+
+    .send-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        color: #555;
+        transition: color 0.2s ease;
+    }
+
+    .send-button:hover {
+        color: #000;
+    }
+
+    .discussion-link {
+        margin-top: 8px;
+        font-size: 13px;
+        color: #444;
+    }
+
+    .discussion-link a {
+        color: #3b82f6; /* blue */
+        text-decoration: none;
+    }
+
+    .discussion-link a:hover {
+        text-decoration: underline;
     }
 </style>

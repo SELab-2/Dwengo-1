@@ -31,7 +31,7 @@ export function getQuestionId(learningObjectIdentifier: LearningObjectIdentifier
 export async function getAllQuestionsHandler(req: Request, res: Response): Promise<void> {
     const hruid = req.params.hruid;
     const version = req.params.version;
-    const language = req.query.lang as string;
+    const language = (req.query.lang ? req.query.lang : FALLBACK_LANG) as string;
     const full = req.query.full === 'true';
     requireFields({ hruid });
 
