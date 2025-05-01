@@ -90,31 +90,31 @@
             <!--            >-->
             <!--                {{ t("discussions") }}-->
             <!--            </v-btn>-->
-            <v-menu open-on-hover>
-                <template v-slot:activator="{ props }">
-                    <v-btn
-                        v-bind="props"
-                        icon
-                        variant="text"
-                    >
-                        <v-icon
-                            icon="mdi-translate"
-                            size="small"
-                            color="#0e6942"
-                        ></v-icon>
-                    </v-btn>
-                </template>
-                <v-list>
-                    <v-list-item
-                        v-for="(language, index) in languages"
-                        :key="index"
-                        @click="changeLanguage(language.code)"
-                    >
-                        <v-list-item-title>{{ language.name }}</v-list-item-title>
-                    </v-list-item>
-                </v-list>
-            </v-menu>
         </v-toolbar-items>
+        <v-menu open-on-hover open-on-click>
+            <template v-slot:activator="{ props }">
+                <v-btn
+                    v-bind="props"
+                    icon
+                    variant="text"
+                >
+                    <v-icon
+                        icon="mdi-translate"
+                        size="small"
+                        color="#0e6942"
+                    ></v-icon>
+                </v-btn>
+            </template>
+            <v-list>
+                <v-list-item
+                    v-for="(language, index) in languages"
+                    :key="index"
+                    @click="changeLanguage(language.code)"
+                >
+                    <v-list-item-title>{{ language.name }}</v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </v-menu>
         <v-spacer></v-spacer>
         <v-dialog max-width="500">
             <template v-slot:activator="{ props: activatorProps }">
@@ -246,6 +246,12 @@
         text-decoration: none;
         font-size: large;
         text-transform: none;
+    }
+
+    .translate-button {
+        z-index: 1;
+        position: relative;
+        margin-left: 10px;
     }
 
     @media (max-width: 700px) {
