@@ -7,7 +7,7 @@ export class AssignmentRepository extends DwengoEntityRepository<Assignment> {
         return this.findOne({ within: within, id: id }, { populate: ['groups', 'groups.members'] });
     }
     public async findByClassIdAndAssignmentId(withinClass: string, id: number): Promise<Assignment | null> {
-        return this.findOne({ within: { classId: withinClass }, id: id });
+        return this.findOne({ within: { classId: withinClass }, id: id }, { populate: ['groups', 'groups.members'] });
     }
     public async findAllByResponsibleTeacher(teacherUsername: string): Promise<Assignment[]> {
         return this.findAll({
@@ -20,6 +20,7 @@ export class AssignmentRepository extends DwengoEntityRepository<Assignment> {
                     },
                 },
             },
+            populate: ['groups', 'groups.members']
         });
     }
     public async findAllAssignmentsInClass(within: Class): Promise<Assignment[]> {

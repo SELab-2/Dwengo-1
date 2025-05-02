@@ -43,6 +43,8 @@ export async function getAllAssignments(classid: string, full: boolean): Promise
     const assignmentRepository = getAssignmentRepository();
     const assignments = await assignmentRepository.findAllAssignmentsInClass(cls);
 
+    console.log(assignments);
+
     if (full) {
         return assignments.map(mapToAssignmentDTO);
     }
