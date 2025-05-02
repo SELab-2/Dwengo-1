@@ -117,7 +117,7 @@ export function useAssignmentQuery(
 export function useCreateAssignmentMutation(): UseMutationReturnType<
     AssignmentResponse,
     Error,
-    { cid: string; data: AssignmentDTO },
+    { cid: string; data: Partial<AssignmentDTO> },
     unknown
 > {
     const queryClient = useQueryClient();
