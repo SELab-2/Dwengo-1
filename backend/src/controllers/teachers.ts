@@ -7,6 +7,7 @@ import {
     getJoinRequestsByClass,
     getStudentsByTeacher,
     getTeacher,
+    getTeacherAssignments,
     getTeacherQuestions,
     updateClassJoinRequestStatus,
 } from '../services/teachers.js';
@@ -58,6 +59,16 @@ export async function getTeacherClassHandler(req: Request, res: Response): Promi
     const classes = await getClassesByTeacher(username, full);
 
     res.json({ classes });
+}
+
+export async function getTeacherAssignmentsHandler(req: Request, res: Response): Promise<void> {
+    const username = req.params.username;
+    const full = req.query.full === 'true';
+    requireFields({ username });
+
+    const assignments = await getTeacherAssignments(username, full);
+
+    res.json({ assignments });
 }
 
 export async function getTeacherStudentHandler(req: Request, res: Response): Promise<void> {

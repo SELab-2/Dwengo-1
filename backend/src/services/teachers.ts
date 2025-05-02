@@ -1,4 +1,5 @@
 import {
+    getAssignmentRepository,
     getClassJoinRequestRepository,
     getClassRepository,
     getLearningObjectRepository,
@@ -30,6 +31,8 @@ import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
 import { ClassStatus } from '@dwengo-1/common/util/class-join-request';
 import { ConflictException } from '../exceptions/conflict-exception.js';
+import { AssignmentDTO, AssignmentDTOId } from '@dwengo-1/common/interfaces/assignment';
+import { mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment.js';
 
 export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | string[]> {
     const teacherRepository: TeacherRepository = getTeacherRepository();
@@ -99,6 +102,17 @@ export async function getClassesByTeacher(username: string, full: boolean): Prom
         return classes;
     }
     return classes.map((cls) => cls.id);
+}
+
+export async function getTeacherAssignments(username: string, full: boolean): Promise<AssignmentDTO[] | AssignmentDTOId[]> {
+    const assignmentRepository = getAssignmentRepository();
+    const assignments = await assignmentRepository.findAllByResponsibleTeacher(username);
+
+    if (full) {
+        return assignments.map(mapToAssignmentDTO);
+    }
+
+    return assignments.map(mapToAssignmentDTOId);
 }
 
 export async function getStudentsByTeacher(username: string, full: boolean): Promise<StudentDTO[] | string[]> {
