@@ -32,7 +32,7 @@ describe('Class controllers', () => {
         await createClassHandler(req as Request, res as Response);
 
         const result = jsonMock.mock.lastCall?.[0];
-        console.log('class', result.class);
+        // Console.log('class', result.class);
 
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ class: expect.anything() }));
 
