@@ -37,6 +37,7 @@
         "jwks-rsa": "^3.1.0",
         "loki-logger-ts": "^1.0.2",
         "marked": "^15.0.7",
+        "nanoid": "^5.1.5",
         "response-time": "^2.3.3",
         "swagger-ui-express": "^5.0.1",
         "uuid": "^11.1.0",
