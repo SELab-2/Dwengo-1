@@ -47,7 +47,7 @@ export function makeTestClasses(em: EntityManager, students: Student[], teachers
     });
 
     classWithTestleerlingAndTestleerkracht = em.create(Class, {
-        classId: 'ZAV71B', // a75298b5-18aa-471d-8eeb-5d77eb989393
+        classId: 'ZAV71B', // Was a75298b5-18aa-471d-8eeb-5d77eb989393
         displayName: 'Testklasse',
         teachers: [getTestleerkracht1()],
         students: [getTestleerling1()],
