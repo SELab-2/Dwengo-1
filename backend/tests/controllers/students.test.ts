@@ -21,6 +21,7 @@ import { BadRequestException } from '../../src/exceptions/bad-request-exception.
 import { ConflictException } from '../../src/exceptions/conflict-exception.js';
 import { EntityAlreadyExistsException } from '../../src/exceptions/entity-already-exists-exception.js';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
+import {getClass02} from "../test_assets/classes/classes.testdata";
 
 describe('Student controllers', () => {
     let req: Partial<Request>;
@@ -186,7 +187,7 @@ describe('Student controllers', () => {
 
     it('Get join request by student and class', async () => {
         req = {
-            params: { username: 'PinkFloyd', classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
+            params: { username: 'PinkFloyd', classId: getClass02().classId },
         };
 
         await getStudentRequestHandler(req as Request, res as Response);
@@ -201,7 +202,7 @@ describe('Student controllers', () => {
     it('Create and delete join request', async () => {
         req = {
             params: { username: 'TheDoors' },
-            body: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
+            body: { classId: getClass02().classId },
         };
 
         await createStudentRequestHandler(req as Request, res as Response);
@@ -209,7 +210,7 @@ describe('Student controllers', () => {
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ request: expect.anything() }));
 
         req = {
-            params: { username: 'TheDoors', classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
+            params: { username: 'TheDoors', classId: getClass02().classId },
         };
 
         await deleteClassJoinRequestHandler(req as Request, res as Response);
@@ -222,7 +223,7 @@ describe('Student controllers', () => {
     it('Create join request student already in class error', async () => {
         req = {
             params: { username: 'Noordkaap' },
-            body: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
+            body: { classId: getClass02().classId },
         };
 
         await expect(async () => createStudentRequestHandler(req as Request, res as Response)).rejects.toThrow(ConflictException);
@@ -231,7 +232,7 @@ describe('Student controllers', () => {
     it('Create join request duplicate', async () => {
         req = {
             params: { username: 'Tool' },
-            body: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
+            body: { classId: getClass02().classId },
         };
 
         await expect(async () => createStudentRequestHandler(req as Request, res as Response)).rejects.toThrow(ConflictException);

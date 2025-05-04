@@ -1,11 +1,12 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { AssignmentController } from "../../src/controllers/assignments";
+import {getClass01} from "@dwengo-1/backend/tests/test_assets/classes/classes.testdata";
 
 describe("AssignmentController Tests", () => {
     let controller: AssignmentController;
 
     beforeEach(() => {
-        controller = new AssignmentController("8764b861-90a6-42e5-9732-c0d9eb2f55f9"); // Example class ID
+        controller = new AssignmentController(getClass01().classId); // Example class ID
     });
 
     it("should fetch all assignments", async () => {
