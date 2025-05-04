@@ -288,8 +288,7 @@
                         <v-btn
                             class="button-in-nav"
                             width="100%"
-                            style="margin-top: 10px;"
-                            :color=COLORS.teacherExclusive
+                            :color="COLORS.teacherExclusive"
                             @click="assign()"
                             >{{ t("assignLearningPath") }}</v-btn
                         >
