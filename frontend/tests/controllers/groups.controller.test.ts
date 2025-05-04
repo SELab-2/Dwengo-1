@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { GroupController } from "../../src/controllers/groups";
-import {getClass01} from "@dwengo-1/backend/tests/test_assets/classes/classes.testdata";
+import { getClass01 } from "@dwengo-1/backend/tests/test_assets/classes/classes.testdata";
 
 describe("Test controller groups", () => {
     it("Get groups", async () => {

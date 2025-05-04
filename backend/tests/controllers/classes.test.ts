@@ -1,7 +1,7 @@
 import { setupTestApp } from '../setup-tests.js';
 import { describe, it, expect, beforeAll, beforeEach, vi, Mock } from 'vitest';
 import { Request, Response } from 'express';
-import {createClassHandler, deleteClassHandler} from "../../src/controllers/classes";
+import { createClassHandler, deleteClassHandler } from '../../src/controllers/classes';
 
 describe('Class controllers', () => {
     let req: Partial<Request>;
@@ -44,6 +44,4 @@ describe('Class controllers', () => {
 
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ class: expect.anything() }));
     });
-
-
 });

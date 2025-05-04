@@ -4,7 +4,7 @@ import { GroupRepository } from '../../../src/data/assignments/group-repository'
 import { getAssignmentRepository, getClassRepository, getGroupRepository } from '../../../src/data/repositories';
 import { AssignmentRepository } from '../../../src/data/assignments/assignment-repository';
 import { ClassRepository } from '../../../src/data/classes/class-repository';
-import {getClass01, getClass02} from "../../test_assets/classes/classes.testdata";
+import { getClass01, getClass02 } from '../../test_assets/classes/classes.testdata';
 
 describe('GroupRepository', () => {
     let groupRepository: GroupRepository;

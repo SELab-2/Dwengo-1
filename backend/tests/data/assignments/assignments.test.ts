@@ -3,7 +3,7 @@ import { setupTestApp } from '../../setup-tests';
 import { AssignmentRepository } from '../../../src/data/assignments/assignment-repository';
 import { getAssignmentRepository, getClassRepository } from '../../../src/data/repositories';
 import { ClassRepository } from '../../../src/data/classes/class-repository';
-import {getClass02} from "../../test_assets/classes/classes.testdata";
+import { getClass02 } from '../../test_assets/classes/classes.testdata';
 
 describe('AssignmentRepository', () => {
     let assignmentRepository: AssignmentRepository;

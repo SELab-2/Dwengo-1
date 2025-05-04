@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { SubmissionController } from "../../src/controllers/submissions";
 import { Language } from "../../src/data-objects/language";
-import {getClass01} from "@dwengo-1/backend/tests/test_assets/classes/classes.testdata";
+import { getClass01 } from "@dwengo-1/backend/tests/test_assets/classes/classes.testdata";
 
 describe("Test controller submissions", () => {
     it("Get submission by number", async () => {

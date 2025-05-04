@@ -17,7 +17,7 @@ import { EntityAlreadyExistsException } from '../../src/exceptions/entity-alread
 import { getStudentRequestsHandler } from '../../src/controllers/students.js';
 import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { getClassHandler } from '../../src/controllers/classes';
-import {getClass02} from "../test_assets/classes/classes.testdata";
+import { getClass02 } from '../test_assets/classes/classes.testdata';
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
