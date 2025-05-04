@@ -16,11 +16,6 @@ import {calculateProgress} from "@/utils/assignment-utils.ts";
     const props = defineProps<{
         classId: string;
         assignmentId: number;
-        useGroupsWithProgress: (
-            groups: Ref<GroupDTO[]>,
-            hruid: Ref<string>,
-            language: Ref<Language>,
-        ) => { groupProgressMap: Map<number, number> };
     }>();
 
     const { t } = useI18n();
@@ -38,13 +33,26 @@ import {calculateProgress} from "@/utils/assignment-utils.ts";
     const submitted = ref(false); //TODO: update by fetching submissions and check if group submitted
 
     const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
-    const group = computed(() =>
-        groupsQueryResult?.data.value?.groups.find((group) =>
-            group.members?.some((m) => m.username === username.value),
-        ),
-    );
+    const group = computed(() => {
+        const groups = groupsQueryResult.data.value?.groups;
 
-    watchEffect(() => {
+        if (!groups) return undefined;
+
+        // Sort by original groupNumber
+        const sortedGroups = [...groups].sort((a, b) => a.groupNumber - b.groupNumber);
+
+        return sortedGroups
+            .map((group, index) => ({
+                ...group,
+                groupNo: index + 1, // Renumbered index
+            }))
+            .find((group) =>
+                group.members?.some((m) => m.username === username.value),
+            );
+    });
+
+
+watchEffect(() => {
         learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
         lang.value = assignmentQueryResult.data.value?.assignment?.language as Language;
     });
