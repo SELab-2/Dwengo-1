@@ -19,8 +19,7 @@ const props = defineProps<{
     ) => { groupProgressMap: Map<number, number> };
 }>();
 
-const {t, locale} = useI18n();
-const language = computed(() => locale.value);
+const {t} = useI18n();
 const groups = ref();
 const learningPath = ref();
 
