@@ -4,7 +4,7 @@ import { getClassRepository, getTeacherInvitationRepository, getTeacherRepositor
 import { TeacherInvitationRepository } from '../../../src/data/classes/teacher-invitation-repository';
 import { TeacherRepository } from '../../../src/data/users/teacher-repository';
 import { ClassRepository } from '../../../src/data/classes/class-repository';
-import {getClass01, getClass02} from "../../test_assets/classes/classes.testdata";
+import { getClass01, getClass02 } from '../../test_assets/classes/classes.testdata';
 
 describe('ClassRepository', () => {
     let teacherInvitationRepository: TeacherInvitationRepository;

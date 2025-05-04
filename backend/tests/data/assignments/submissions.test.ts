@@ -18,7 +18,7 @@ import { Submission } from '../../../src/entities/assignments/submission.entity'
 import { Class } from '../../../src/entities/classes/class.entity';
 import { Assignment } from '../../../src/entities/assignments/assignment.entity';
 import { testLearningObject01 } from '../../test_assets/content/learning-objects.testdata';
-import {getClass01} from "../../test_assets/classes/classes.testdata";
+import { getClass01 } from '../../test_assets/classes/classes.testdata';
 
 describe('SubmissionRepository', () => {
     let submissionRepository: SubmissionRepository;

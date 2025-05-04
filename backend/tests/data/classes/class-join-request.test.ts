@@ -4,7 +4,7 @@ import { ClassJoinRequestRepository } from '../../../src/data/classes/class-join
 import { getClassJoinRequestRepository, getClassRepository, getStudentRepository } from '../../../src/data/repositories';
 import { StudentRepository } from '../../../src/data/users/student-repository';
 import { ClassRepository } from '../../../src/data/classes/class-repository';
-import {getClass02, getClass03} from "../../test_assets/classes/classes.testdata";
+import { getClass02, getClass03 } from '../../test_assets/classes/classes.testdata';
 
 describe('ClassJoinRequestRepository', () => {
     let classJoinRequestRepository: ClassJoinRequestRepository;

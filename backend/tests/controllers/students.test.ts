@@ -21,7 +21,7 @@ import { BadRequestException } from '../../src/exceptions/bad-request-exception.
 import { ConflictException } from '../../src/exceptions/conflict-exception.js';
 import { EntityAlreadyExistsException } from '../../src/exceptions/entity-already-exists-exception.js';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
-import {getClass02} from "../test_assets/classes/classes.testdata";
+import { getClass02 } from '../test_assets/classes/classes.testdata';
 
 describe('Student controllers', () => {
     let req: Partial<Request>;

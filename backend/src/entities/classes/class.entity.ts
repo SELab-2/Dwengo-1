@@ -2,10 +2,9 @@ import { Collection, Entity, ManyToMany, PrimaryKey, Property } from '@mikro-orm
 import { Teacher } from '../users/teacher.entity.js';
 import { Student } from '../users/student.entity.js';
 import { ClassRepository } from '../../data/classes/class-repository.js';
-import { customAlphabet } from "nanoid";
+import { customAlphabet } from 'nanoid';
 
 const generateClassId = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 6);
-
 
 @Entity({
     repository: () => ClassRepository,

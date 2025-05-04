@@ -12,7 +12,7 @@ import { TeacherInvitationData } from '@dwengo-1/common/interfaces/teacher-invit
 import { getClassHandler } from '../../src/controllers/classes';
 import { BadRequestException } from '../../src/exceptions/bad-request-exception';
 import { ClassStatus } from '@dwengo-1/common/util/class-join-request';
-import {getClass02} from "../test_assets/classes/classes.testdata";
+import { getClass02 } from '../test_assets/classes/classes.testdata';
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
