@@ -2,7 +2,7 @@
 import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
 import { computed } from "vue";
 import type { Language } from "@/data-objects/language.ts";
-import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
+import {calculateProgress} from "@/utils/assignment-utils.ts";
 
 const props = defineProps<{
     groupNumber: number;
@@ -11,10 +11,6 @@ const props = defineProps<{
     assignmentId: number;
     classId: string;
 }>();
-
-function calculateProgress(lp: LearningPath): number {
-    return ((lp.amountOfNodes - lp.amountOfNodesLeft) / lp.amountOfNodes) * 100;
-}
 
 const query = useGetLearningPathQuery(
     () => props.learningPath,
@@ -30,12 +26,18 @@ const progress = computed(() => {
     if (!query.data.value) return 0;
     return calculateProgress(query.data.value);
 });
+
+const progressColor = computed(() => {
+    if (progress.value < 50) return "error";
+    if (progress.value < 80) return "warning";
+    return "success";
+});
 </script>
 
 <template>
     <v-progress-linear
         :model-value="progress"
-        color="blue-grey"
+        :color="progressColor"
         height="25"
     >
         <template v-slot:default="{ value }">

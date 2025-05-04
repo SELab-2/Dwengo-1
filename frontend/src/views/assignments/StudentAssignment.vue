@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref, computed, type Ref } from "vue";
+import {ref, computed, type Ref, watchEffect} from "vue";
     import auth from "@/services/auth/auth-service.ts";
     import { useI18n } from "vue-i18n";
     import { useAssignmentQuery } from "@/queries/assignments.ts";
@@ -11,6 +11,7 @@
     import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
     import type { Language } from "@/data-objects/language.ts";
     import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
+import {calculateProgress} from "@/utils/assignment-utils.ts";
 
     const props = defineProps<{
         classId: string;
@@ -23,7 +24,7 @@
     }>();
 
     const { t } = useI18n();
-    const lang = ref<Language>();
+    const lang = ref();
     const learningPath = ref();
     // Get the user's username/id
     const username = asyncComputed(async () => {
@@ -36,11 +37,6 @@
 
     const submitted = ref(false); //TODO: update by fetching submissions and check if group submitted
 
-    const lpQueryResult = useGetLearningPathQuery(
-        computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
-        computed(() => assignmentQueryResult.data.value?.assignment?.language as Language),
-    );
-
     const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
     const group = computed(() =>
         groupsQueryResult?.data.value?.groups.find((group) =>
@@ -48,15 +44,27 @@
         ),
     );
 
-    const _groupArray = computed(() => (group.value ? [group.value] : []));
-    const progressValue = ref(0);
-    /* Crashes right now cause api data has inexistent hruid TODO: uncomment later and use it in progress bar
-Const {groupProgressMap} = props.useGroupsWithProgress(
-groupArray,
-learningPath,
-language
-);
-*/
+    watchEffect(() => {
+        learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
+        lang.value = assignmentQueryResult.data.value?.assignment?.language as Language;
+    });
+
+    const lpQueryResult = useGetLearningPathQuery(
+        () => learningPath.value,
+        () => lang.value,
+        () => ({
+            forGroup: group.value?.groupNumber ?? Number.NaN,
+            assignmentNo: props.assignmentId,
+            classId: props.classId,
+        }),
+    );
+
+    const progressColor = computed(() => {
+        const progress = calculateProgress(lpQueryResult.data.value);
+        if (progress >= 100) return "success";
+        if (progress >= 50) return "warning";
+        return "error";
+    });
 
     // Assuming group.value.members is a list of usernames TODO: case when it's StudentDTO's
     const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as string[]);
@@ -113,17 +121,15 @@ language
                     {{ data.assignment.description }}
                 </v-card-text>
                 <v-card-text>
-                    <v-row
-                        align="center"
-                        no-gutters
-                    >
-                        <v-col cols="auto">
-                            <span class="progress-label">{{ t("progress") + ": " }}</span>
-                        </v-col>
-                        <v-col>
+                    <v-card-text>
+                        <h3 class="mb-2">{{ t("progress") }}</h3>
+                        <using-query-result
+                            :query-result="lpQueryResult"
+                            v-slot="{ data: learningPData }"
+                        >
                             <v-progress-linear
-                                :model-value="progressValue"
-                                color="primary"
+                                :model-value="calculateProgress(learningPData)"
+                                :color="progressColor"
                                 height="20"
                                 class="progress-bar"
                             >
@@ -131,8 +137,9 @@ language
                                     <strong>{{ Math.ceil(value) }}%</strong>
                                 </template>
                             </v-progress-linear>
-                        </v-col>
-                    </v-row>
+                        </using-query-result>
+                    </v-card-text>
+
                 </v-card-text>
 
                 <v-card-text class="group-section">

@@ -8,8 +8,7 @@ import {computed, type Ref, ref, watchEffect} from "vue";
     import type { Language } from "@/data-objects/language.ts";
     import type { AssignmentResponse } from "@/controllers/assignments.ts";
     import type {GroupDTO, GroupDTOId} from "@dwengo-1/common/interfaces/group";
-import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
-import GroupProgressRow from "@/components/GroupProgressRow.vue";
+    import GroupProgressRow from "@/components/GroupProgressRow.vue";
 
     const props = defineProps<{
         classId: string;
