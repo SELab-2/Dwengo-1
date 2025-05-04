@@ -11,7 +11,6 @@
     const route = useRoute();
     const classId = ref<string>(route.params.classId as string);
     const assignmentId = ref(Number(route.params.id));
-
 </script>
 
 <template>

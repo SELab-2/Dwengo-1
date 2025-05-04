@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, computed, type Ref, watchEffect} from "vue";
+    import { ref, computed, watchEffect } from "vue";
     import auth from "@/services/auth/auth-service.ts";
     import { useI18n } from "vue-i18n";
     import { useAssignmentQuery } from "@/queries/assignments.ts";
@@ -10,8 +10,7 @@ import {ref, computed, type Ref, watchEffect} from "vue";
     import { useGroupsQuery } from "@/queries/groups.ts";
     import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
     import type { Language } from "@/data-objects/language.ts";
-    import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
-import {calculateProgress} from "@/utils/assignment-utils.ts";
+    import { calculateProgress } from "@/utils/assignment-utils.ts";
 
     const props = defineProps<{
         classId: string;
@@ -46,13 +45,10 @@ import {calculateProgress} from "@/utils/assignment-utils.ts";
                 ...group,
                 groupNo: index + 1, // Renumbered index
             }))
-            .find((group) =>
-                group.members?.some((m) => m.username === username.value),
-            );
+            .find((group) => group.members?.some((m) => m.username === username.value));
     });
 
-
-watchEffect(() => {
+    watchEffect(() => {
         learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
         lang.value = assignmentQueryResult.data.value?.assignment?.language as Language;
     });
@@ -147,7 +143,6 @@ watchEffect(() => {
                             </v-progress-linear>
                         </using-query-result>
                     </v-card-text>
-
                 </v-card-text>
 
                 <v-card-text class="group-section">
@@ -170,11 +165,6 @@ watchEffect(() => {
 
 <style scoped>
     @import "@/assets/assignment.css";
-
-    .progress-label {
-        font-weight: bold;
-        margin-right: 5px;
-    }
 
     .progress-bar {
         width: 40%;
