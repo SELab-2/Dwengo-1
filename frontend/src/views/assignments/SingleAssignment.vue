@@ -19,35 +19,33 @@
     function useGroupsWithProgress(
         groups: Ref<GroupDTO[]>,
         hruid: Ref<string>,
-        language: Ref<string>,
-    ): { groupProgressMap: Map<number, number> } {
-        const groupProgressMap: Map<number, number> = new Map<number, number>();
+        language: Ref<Language>,
+    ): { groupProgressMap: Map<number, number>; } {
+        const groupProgressMap = ref(new Map<number, number>());
 
         watchEffect(() => {
             // Clear existing entries to avoid stale data
-            groupProgressMap.clear();
+            groupProgressMap.value.clear();
 
-            const lang = ref(language.value as Language);
-
-            groups.value.forEach((group) => {
+            groups?.value.forEach((group) => {
                 const groupKey = group.groupNumber;
-                const forGroup = ref({
-                    forGroup: groupKey,
-                    assignmentNo: assignmentId,
-                    classId: classId,
-                });
-
-                const query = useGetLearningPathQuery(hruid.value, lang, forGroup);
+                const query = useGetLearningPathQuery(
+                    hruid,
+                    language,
+                    () => ({
+                        forGroup: groupKey,
+                        assignmentNo: assignmentId.value,
+                        classId: classId.value,
+                    })
+                );
 
                 const data = query.data.value;
 
-                groupProgressMap.set(groupKey, data ? calculateProgress(data) : 0);
+                groupProgressMap.value.set(groupKey, data ? calculateProgress(data) : 0);
             });
         });
 
-        return {
-            groupProgressMap,
-        };
+        return {  groupProgressMap: groupProgressMap.value };
     }
 
     function calculateProgress(lp: LearningPath): number {
@@ -59,7 +57,6 @@
     <TeacherAssignment
         :class-id="classId"
         :assignment-id="assignmentId"
-        :use-groups-with-progress="useGroupsWithProgress"
         v-if="isTeacher"
     >
     </TeacherAssignment>
