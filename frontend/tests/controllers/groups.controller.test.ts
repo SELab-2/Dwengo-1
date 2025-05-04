@@ -3,7 +3,7 @@ import { GroupController } from "../../src/controllers/groups";
 
 describe("Test controller groups", () => {
     it("Get groups", async () => {
-        const classId = 'X2J9QT'; // class01
+        const classId = 'X2J9QT'; // Class01
         const assignmentNumber = 21000;
 
         const controller = new GroupController(classId, assignmentNumber);
