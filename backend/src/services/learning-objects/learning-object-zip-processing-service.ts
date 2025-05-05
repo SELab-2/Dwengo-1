@@ -1,8 +1,9 @@
 import unzipper from 'unzipper';
 import mime from 'mime-types';
-import {LearningObjectMetadata} from "@dwengo-1/common/dist/interfaces/learning-content";
 import {LearningObject} from "../../entities/content/learning-object.entity";
 import {getAttachmentRepository, getLearningObjectRepository} from "../../data/repositories";
+import {BadRequestException} from "../../exceptions/bad-request-exception";
+import {LearningObjectMetadata} from "@dwengo-1/common/dist/interfaces/learning-content";
 
 /**
  * Process an uploaded zip file and construct a LearningObject from its contents.
@@ -20,7 +21,7 @@ export async function processLearningObjectZip(filePath: string): Promise<Learni
 
     for (const file of zip.files) {
         if (file.type === "Directory") {
-            throw Error("The learning object zip file should not contain directories.");
+            throw new BadRequestException("The learning object zip file should not contain directories.");
         } else if (file.path === "metadata.json") {
             metadata = await processMetadataJson(file);
         } else if (file.path.startsWith("index.")) {
@@ -34,10 +35,10 @@ export async function processLearningObjectZip(filePath: string): Promise<Learni
     }
 
     if (!metadata) {
-        throw Error("Missing metadata.json file");
+        throw new BadRequestException("Missing metadata.json file");
     }
     if (!content) {
-        throw Error("Missing index file");
+        throw new BadRequestException("Missing index file");
     }
 
     const learningObject = learningObjectRepo.create(metadata);

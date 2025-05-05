@@ -1,8 +1,15 @@
 import express from 'express';
-import { getAllLearningObjects, getAttachment, getLearningObject, getLearningObjectHTML } from '../controllers/learning-objects.js';
+import {
+    getAllLearningObjects,
+    getAttachment,
+    getLearningObject,
+    getLearningObjectHTML,
+    handlePostLearningObject
+} from '../controllers/learning-objects.js';
 
 import submissionRoutes from './submissions.js';
 import questionRoutes from './questions.js';
+import fileUpload from "express-fileupload";
 
 const router = express.Router();
 
@@ -17,6 +24,8 @@ const router = express.Router();
 // Route 2: list of object data
 // Example 2: http://localhost:3000/learningObject?full=true&hruid=un_artificiele_intelligentie
 router.get('/', getAllLearningObjects);
+
+router.post('/', fileUpload({useTempFiles: true}), handlePostLearningObject)
 
 // Parameter: hruid of learning object
 // Query: language

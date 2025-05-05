@@ -9,6 +9,7 @@ import {
 } from '@dwengo-1/common/interfaces/learning-content';
 import {getLearningObjectRepository} from "../../data/repositories";
 import {processLearningObjectZip} from "./learning-object-zip-processing-service";
+import {BadRequestException} from "../../exceptions/bad-request-exception";
 
 function getProvider(id: LearningObjectIdentifierDTO): LearningObjectProvider {
     if (id.hruid.startsWith(getEnvVar(envVars.UserContentPrefix))) {
@@ -58,7 +59,7 @@ const learningObjectService = {
         const learningObject = await processLearningObjectZip(learningObjectPath);
 
         if (!learningObject.hruid.startsWith(getEnvVar(envVars.UserContentPrefix))) {
-            throw Error("Learning object name must start with the user content prefix!");
+            throw new BadRequestException("Learning object name must start with the user content prefix!");
         }
 
         await learningObjectRepository.save(learningObject, {preventOverwrite: true});

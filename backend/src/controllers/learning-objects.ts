@@ -7,6 +7,7 @@ import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { envVars, getEnvVar } from '../util/envVars.js';
 import { FilteredLearningObject, LearningObjectIdentifierDTO, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import {UploadedFile} from "express-fileupload";
 
 function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIdentifierDTO {
     if (!req.params.hruid) {
@@ -71,4 +72,11 @@ export async function getAttachment(req: Request, res: Response): Promise<void> 
         throw new NotFoundException(`Attachment ${name} not found`);
     }
     res.setHeader('Content-Type', attachment.mimeType).send(attachment.content);
+}
+
+export async function handlePostLearningObject(req: Request, res: Response): Promise<void> {
+    if (!req.files || !req.files[0]) {
+        throw new BadRequestException('No file uploaded');
+    }
+    await learningObjectService.storeLearningObject((req.files[0] as UploadedFile).tempFilePath);
 }
