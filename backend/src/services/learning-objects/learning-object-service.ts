@@ -2,7 +2,13 @@ import dwengoApiLearningObjectProvider from './dwengo-api-learning-object-provid
 import { LearningObjectProvider } from './learning-object-provider.js';
 import { envVars, getEnvVar } from '../../util/envVars.js';
 import databaseLearningObjectProvider from './database-learning-object-provider.js';
-import { FilteredLearningObject, LearningObjectIdentifierDTO, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import {
+    FilteredLearningObject,
+    LearningObjectIdentifierDTO,
+    LearningPathIdentifier
+} from '@dwengo-1/common/interfaces/learning-content';
+import {getLearningObjectRepository} from "../../data/repositories";
+import {processLearningObjectZip} from "./learning-object-zip-processing-service";
 
 function getProvider(id: LearningObjectIdentifierDTO): LearningObjectProvider {
     if (id.hruid.startsWith(getEnvVar(envVars.UserContentPrefix))) {
@@ -42,6 +48,21 @@ const learningObjectService = {
     async getLearningObjectHTML(id: LearningObjectIdentifierDTO): Promise<string | null> {
         return getProvider(id).getLearningObjectHTML(id);
     },
+
+
+    /**
+     * Store the learning object in the given zip file in the database.
+     */
+    async storeLearningObject(learningObjectPath: string): Promise<void> {
+        const learningObjectRepository = getLearningObjectRepository();
+        const learningObject = await processLearningObjectZip(learningObjectPath);
+
+        if (!learningObject.hruid.startsWith(getEnvVar(envVars.UserContentPrefix))) {
+            throw Error("Learning object name must start with the user content prefix!");
+        }
+
+        await learningObjectRepository.save(learningObject, {preventOverwrite: true});
+    }
 };
 
 export default learningObjectService;
