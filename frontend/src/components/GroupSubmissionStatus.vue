@@ -31,7 +31,7 @@
             :to="data.submissions.length > 0 ? goToGroupSubmissionLink(props.group.groupNo) : undefined"
             :disabled="data.submissions.length === 0"
         >
-            {{ data.submissions.length > 0 ? t("see-submission") : t("no-submission") }}
+            {{ data.submissions.length > 0 ? t("submission") : t("noSubmissionsYet") }}
         </v-btn>
     </using-query-result>
 </template>

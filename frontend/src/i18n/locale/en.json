@@ -103,7 +103,6 @@
     "assignLearningPath": "assign",
     "group": "Group",
     "description": "Description",
-    "no-submission": "no submission",
     "submission": "Submission",
     "progress": "Progress",
     "created": "created",
