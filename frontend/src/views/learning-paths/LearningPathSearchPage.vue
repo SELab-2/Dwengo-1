@@ -17,32 +17,52 @@
 </script>
 
 <template>
-    <div class="search-field-container">
-        <learning-path-search-field class="search-field"></learning-path-search-field>
-    </div>
+    <v-container class="search-page-container">
+        <v-row
+            justify="center"
+            class="mb-6"
+        >
+            <v-col
+                cols="12"
+                sm="8"
+                md="6"
+                lg="4"
+            >
+                <learning-path-search-field class="search-field" />
+            </v-col>
+        </v-row>
 
-    <using-query-result
-        :query-result="searchQueryResults"
-        v-slot="{ data }: { data: LearningPath[] }"
-    >
-        <learning-paths-grid :learning-paths="data"></learning-paths-grid>
-    </using-query-result>
-    <div content="empty-state-container">
-        <v-empty-state
-            v-if="!query"
-            icon="mdi-magnify"
-            :title="t('enterSearchTerm')"
-            :text="t('enterSearchTermDescription')"
-        ></v-empty-state>
-    </div>
+        <v-row justify="center">
+            <v-col cols="12">
+                <using-query-result
+                    :query-result="searchQueryResults"
+                    v-slot="{ data }: { data: LearningPath[] }"
+                >
+                    <learning-paths-grid :learning-paths="data" />
+                </using-query-result>
+
+                <div
+                    v-if="!query"
+                    class="empty-state-container"
+                >
+                    <v-empty-state
+                        icon="mdi-magnify"
+                        :title="t('enterSearchTerm')"
+                        :text="t('enterSearchTermDescription')"
+                    />
+                </div>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <style scoped>
-    .search-field-container {
-        display: block;
-        margin: 20px;
+    .search-page-container {
+        padding-top: 40px;
+        padding-bottom: 40px;
     }
+
     .search-field {
-        max-width: 300px;
+        max-width: 100%;
     }
 </style>
