@@ -95,6 +95,13 @@
         justify-content: center;
     }
 
+    h1 {
+        color: #0e6942;
+        text-transform: uppercase;
+        font-weight: bolder;
+        font-size: 50px;
+    }
+
     .dropdowns {
         display: flex;
         justify-content: space-between;
