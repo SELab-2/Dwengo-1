@@ -18,6 +18,7 @@ import { Submission } from '../../../src/entities/assignments/submission.entity'
 import { Class } from '../../../src/entities/classes/class.entity';
 import { Assignment } from '../../../src/entities/assignments/assignment.entity';
 import { testLearningObject01 } from '../../test_assets/content/learning-objects.testdata';
+import { getClass01 } from '../../test_assets/classes/classes.testdata';
 
 describe('SubmissionRepository', () => {
     let submissionRepository: SubmissionRepository;
@@ -54,7 +55,7 @@ describe('SubmissionRepository', () => {
 
     it('should find the most recent submission for a group', async () => {
         const id = new LearningObjectIdentifier('id03', Language.English, 1);
-        const class_ = await classRepository.findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
+        const class_ = await classRepository.findById(getClass01().classId);
         const assignment = await assignmentRepository.findByClassAndId(class_!, 21000);
         const group = await groupRepository.findByAssignmentAndGroupNumber(assignment!, 21001);
         const submission = await submissionRepository.findMostRecentSubmissionForGroup(id, group!);
@@ -67,7 +68,7 @@ describe('SubmissionRepository', () => {
     let assignment: Assignment | null;
     let loId: LearningObjectIdentifier;
     it('should find all submissions for a certain learning object and assignment', async () => {
-        clazz = await classRepository.findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
+        clazz = await classRepository.findById(getClass01().classId);
         assignment = await assignmentRepository.findByClassAndId(clazz!, 21000);
         loId = {
             hruid: 'id02',

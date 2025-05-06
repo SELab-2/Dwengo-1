@@ -4,6 +4,7 @@ import { ClassJoinRequestRepository } from '../../../src/data/classes/class-join
 import { getClassJoinRequestRepository, getClassRepository, getStudentRepository } from '../../../src/data/repositories';
 import { StudentRepository } from '../../../src/data/users/student-repository';
 import { ClassRepository } from '../../../src/data/classes/class-repository';
+import { getClass02, getClass03 } from '../../test_assets/classes/classes.testdata';
 
 describe('ClassJoinRequestRepository', () => {
     let classJoinRequestRepository: ClassJoinRequestRepository;
@@ -26,7 +27,7 @@ describe('ClassJoinRequestRepository', () => {
     });
 
     it('should list all requests to a single class', async () => {
-        const class_ = await cassRepository.findById('34d484a1-295f-4e9f-bfdc-3e7a23d86a89');
+        const class_ = await cassRepository.findById(getClass02().classId);
         const requests = await classJoinRequestRepository.findAllOpenRequestsTo(class_!);
 
         expect(requests).toBeTruthy();
@@ -35,7 +36,7 @@ describe('ClassJoinRequestRepository', () => {
 
     it('should not find a removed request', async () => {
         const student = await studentRepository.findByUsername('SmashingPumpkins');
-        const class_ = await cassRepository.findById('80dcc3e0-1811-4091-9361-42c0eee91cfa');
+        const class_ = await cassRepository.findById(getClass03().classId);
         await classJoinRequestRepository.deleteBy(student!, class_!);
 
         const request = await classJoinRequestRepository.findAllRequestsBy(student!);
