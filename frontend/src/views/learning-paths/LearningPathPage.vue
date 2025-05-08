@@ -190,6 +190,13 @@
             });
         }
     }
+
+    const discussionLink = computed(() => 
+        "/discussion" 
+        + "/" + props.hruid
+        + "/" + currentNode.value?.language 
+        + "/" + currentNode.value?.learningobjectHruid);
+
 </script>
 
 <template>
@@ -363,6 +370,14 @@
             :query-result="getQuestionsQuery"
             v-slot="questionsResponse: { data: QuestionsResponse }"
         >
+            <p>
+                View questions in 
+                <router-link
+                    :to=discussionLink
+                >
+                    discussions
+                </router-link>
+            </p>
             <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
         </using-query-result>
     </using-query-result>
