@@ -100,9 +100,10 @@ const router = createRouter({
             meta: { requiresAuth: true },
         },
         {
-            path: "/discussion/:id",
+            path: "/discussion/:hruid/:language/:learningObjectHruid",
             name: "SingleDiscussion",
             component: SingleDiscussion,
+            props: true,
             meta: { requiresAuth: true },
         },
         {
