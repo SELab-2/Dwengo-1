@@ -1,5 +1,5 @@
 import { DWENGO_API_BASE } from '../config.js';
-import { fetchWithLogging } from '../util/api-helper.js';
+import { fetchRemote } from '../util/api-helper.js';
 
 import {
     FilteredLearningObject,
@@ -39,7 +39,7 @@ function filterData(data: LearningObjectMetadata, htmlUrl: string): FilteredLear
  */
 export async function getLearningObjectById(hruid: string, language: string): Promise<FilteredLearningObject | null> {
     const metadataUrl = `${DWENGO_API_BASE}/learningObject/getMetadata?hruid=${hruid}&language=${language}`;
-    const metadata = await fetchWithLogging<LearningObjectMetadata>(
+    const metadata = await fetchRemote<LearningObjectMetadata>(
         metadataUrl,
         `Metadata for Learning Object HRUID "${hruid}" (language ${language})`
     );
