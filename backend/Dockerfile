@@ -27,6 +27,13 @@ FROM node:22 AS production-stage
 
 WORKDIR /app/dwengo
 
+COPY package*.json ./
+COPY backend/package.json ./backend/
+# Backend depends on common
+COPY common/package.json ./common/
+
+RUN npm install --silent --only=production
+
 # Copy static files
 
 COPY ./backend/i18n ./i18n
@@ -36,15 +43,6 @@ COPY ./backend/i18n ./i18n
 COPY --from=build-stage /app/dwengo/common/dist ./common/dist
 COPY --from=build-stage /app/dwengo/backend/dist ./backend/dist
 COPY --from=build-stage /app/dwengo/docs/api/swagger.json ./docs/api/swagger.json
-
-COPY package*.json ./
-COPY backend/package.json ./backend/
-# Backend depends on common
-COPY common/package.json ./common/
-
-RUN npm install --silent --only=production
-
-COPY ./backend/i18n ./backend/i18n
 
 EXPOSE 3000
 

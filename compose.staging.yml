@@ -86,7 +86,17 @@ services:
             - dwengo_grafana_data:/var/lib/grafana
         restart: unless-stopped
 
+    caching:
+        image: redis:6.2-alpine
+        restart: always
+        ports:
+            - '6379:6379'
+        command: redis-server --save 20 1 --loglevel warning
+        volumes:
+            - dwengo_cache:/data
+
 volumes:
     dwengo_grafana_data:
     dwengo_loki_data:
     dwengo_postgres_data:
+    dwengo_cache:
