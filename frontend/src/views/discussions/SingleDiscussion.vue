@@ -65,18 +65,6 @@
         return nodesList.value?.find((it) => it.learningobjectHruid === currentHruid);
     });
 
-    const nextNode = computed(() => {
-        if (!currentNode.value || !nodesList.value) return undefined;
-        const currentIndex = nodesList.value?.indexOf(currentNode.value);
-        return currentIndex < nodesList.value?.length ? nodesList.value?.[currentIndex + 1] : undefined;
-    });
-
-    const previousNode = computed(() => {
-        if (!currentNode.value || !nodesList.value) return undefined;
-        const currentIndex = nodesList.value?.indexOf(currentNode.value);
-        return currentIndex < nodesList.value?.length ? nodesList.value?.[currentIndex - 1] : undefined;
-    });
-
     const getQuestionsQuery = useQuestionsQuery(
         computed(
             () =>
@@ -106,18 +94,6 @@
 
     type NavItemState = "teacherExclusive" | "completed" | "notCompleted";
 
-    const ICONS: Record<NavItemState, string> = {
-        teacherExclusive: "mdi-information",
-        completed: "mdi-checkbox-marked-circle-outline",
-        notCompleted: "mdi-checkbox-blank-circle-outline",
-    };
-
-    const COLORS: Record<NavItemState, string | undefined> = {
-        teacherExclusive: "info",
-        completed: "success",
-        notCompleted: undefined,
-    };
-
     function getNavItemState(learningObject: LearningObject): NavItemState {
         if (learningObject.teacherExclusive) {
             return "teacherExclusive";
@@ -125,25 +101,6 @@
             return "completed";
         }
         return "notCompleted";
-    }
-
-    const forGroupQueryParam = computed<number | undefined>({
-        get: () => route.query.forGroup,
-        set: async (value: number | undefined) => {
-            const query = structuredClone(route.query);
-            query.forGroup = value;
-            await router.push({ query });
-        },
-    });
-
-    async function assign(): Promise<void> {
-        await router.push({
-            path: "/assignment/create",
-            query: {
-                hruid: props.hruid,
-                language: props.language,
-            },
-        });
     }
 
     const studentAssignmentsQueryResult = useStudentAssignmentsQuery(
@@ -191,13 +148,6 @@
         }
     }
 
-    const discussionLink = computed(() => 
-        "/discussion" 
-        + "/" + props.hruid
-        + "/" + currentNode.value?.language 
-        + "/" + currentNode.value?.learningobjectHruid);
-
-    console.log(getQuestionsQuery.data.value)
 
 </script>
 
