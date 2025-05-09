@@ -33,7 +33,7 @@ function studentsQueryKey(full: boolean): [string, boolean] {
 function studentQueryKey(username: string): [string, string] {
     return ["student", username];
 }
-function studentClassesQueryKey(username: string, full: boolean): [string, string, boolean] {
+export function studentClassesQueryKey(username: string, full: boolean): [string, string, boolean] {
     return ["student-classes", username, full];
 }
 function studentAssignmentsQueryKey(username: string, full: boolean): [string, string, boolean] {

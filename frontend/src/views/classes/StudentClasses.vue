@@ -99,7 +99,7 @@
                         showSnackbar(t("sent"), "success");
                     },
                     onError: (e) => {
-                        showSnackbar(t("failed") + ": " + e.message, "error");
+                        showSnackbar(t("failed") + ": " + e.response.data.error || e.message, "error");
                     },
                 },
             );

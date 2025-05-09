@@ -10,6 +10,10 @@ export function mapToUserDTO(user: User): UserDTO {
     };
 }
 
+export function mapToUsername(user: { username: string }): string {
+    return user.username;
+}
+
 export function mapToUser<T extends User>(userData: UserDTO, userInstance: T): T {
     userInstance.username = userData.username;
     userInstance.firstName = userData.firstName;

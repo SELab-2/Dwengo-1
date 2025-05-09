@@ -15,7 +15,6 @@ import {
 import { BadRequestException } from '../../src/exceptions/bad-request-exception.js';
 import { EntityAlreadyExistsException } from '../../src/exceptions/entity-already-exists-exception.js';
 import { getStudentRequestsHandler } from '../../src/controllers/students.js';
-import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { getClassHandler } from '../../src/controllers/classes';
 import { getClass02 } from '../test_assets/classes/classes.testdata';
 
@@ -97,7 +96,7 @@ describe('Teacher controllers', () => {
     });
 
     it('Teacher list', async () => {
-        req = { query: { full: 'true' } };
+        req = { query: { full: 'false' } };
 
         await getAllTeachersHandler(req as Request, res as Response);
 
@@ -105,8 +104,7 @@ describe('Teacher controllers', () => {
 
         const result = jsonMock.mock.lastCall?.[0];
 
-        const teacherUsernames = result.teachers.map((s: TeacherDTO) => s.username);
-        expect(teacherUsernames).toContain('testleerkracht1');
+        expect(result.teachers).toContain('testleerkracht1');
 
         expect(result.teachers).toHaveLength(5);
     });

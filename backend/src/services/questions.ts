@@ -13,6 +13,7 @@ import { fetchStudent } from './students.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { FALLBACK_VERSION_NUM } from '../config.js';
 import { fetchAssignment } from './assignments.js';
+import { ConflictException } from '../exceptions/conflict-exception.js';
 
 export async function getQuestionsAboutLearningObjectInAssignment(
     loId: LearningObjectIdentifier,
@@ -99,10 +100,18 @@ export async function createQuestion(loId: LearningObjectIdentifier, questionDat
 
     const inGroup = await getGroupRepository().findByAssignmentAndGroupNumber(assignment, questionData.inGroup.groupNumber);
 
+    if (!inGroup) {
+        throw new NotFoundException('Group with id and assignment not found');
+    }
+
+    if (!inGroup.members.contains(author)) {
+        throw new ConflictException('Author is not part of this group');
+    }
+
     const question = await questionRepository.createQuestion({
         loId,
         author,
-        inGroup: inGroup!,
+        inGroup: inGroup,
         content,
     });
 

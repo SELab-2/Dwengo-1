@@ -24,7 +24,8 @@ import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/subm
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
 import { ConflictException } from '../exceptions/conflict-exception.js';
-import { Submission } from '../entities/assignments/submission.entity';
+import { Submission } from '../entities/assignments/submission.entity.js';
+import { mapToUsername } from '../interfaces/user.js';
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();
@@ -34,7 +35,7 @@ export async function getAllStudents(full: boolean): Promise<StudentDTO[] | stri
         return users.map(mapToStudentDTO);
     }
 
-    return users.map((user) => user.username);
+    return users.map(mapToUsername);
 }
 
 export async function fetchStudent(username: string): Promise<Student> {
@@ -58,13 +59,14 @@ export async function getStudent(username: string): Promise<StudentDTO> {
     return mapToStudentDTO(user);
 }
 
-export async function createStudent(userData: StudentDTO): Promise<StudentDTO> {
+// TODO allowupdate parameter?
+export async function createStudent(userData: StudentDTO, _allowUpdate = false): Promise<StudentDTO> {
     const studentRepository = getStudentRepository();
 
     const newStudent = mapToStudent(userData);
     await studentRepository.save(newStudent, { preventOverwrite: true });
 
-    return userData;
+    return mapToStudentDTO(newStudent);
 }
 
 export async function createOrUpdateStudent(userData: StudentDTO): Promise<StudentDTO> {

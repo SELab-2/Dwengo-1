@@ -30,6 +30,7 @@ import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
 import { ClassStatus } from '@dwengo-1/common/util/class-join-request';
 import { ConflictException } from '../exceptions/conflict-exception.js';
+import { mapToUsername } from '../interfaces/user.js';
 
 export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | string[]> {
     const teacherRepository: TeacherRepository = getTeacherRepository();
@@ -38,7 +39,7 @@ export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | stri
     if (full) {
         return users.map(mapToTeacherDTO);
     }
-    return users.map((user) => user.username);
+    return users.map(mapToUsername);
 }
 
 export async function fetchTeacher(username: string): Promise<Teacher> {
@@ -57,7 +58,8 @@ export async function getTeacher(username: string): Promise<TeacherDTO> {
     return mapToTeacherDTO(user);
 }
 
-export async function createTeacher(userData: TeacherDTO): Promise<TeacherDTO> {
+// TODO update parameter
+export async function createTeacher(userData: TeacherDTO, _update?: boolean): Promise<TeacherDTO> {
     const teacherRepository: TeacherRepository = getTeacherRepository();
 
     const newTeacher = mapToTeacher(userData);

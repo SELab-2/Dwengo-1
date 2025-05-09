@@ -15,6 +15,7 @@ import { invalidateAllGroupKeys } from "./groups";
 import { invalidateAllSubmissionKeys } from "./submissions";
 import type { TeachersResponse } from "@/controllers/teachers";
 import type { TeacherInvitationsResponse } from "@/controllers/teacher-invitations";
+import {studentClassesQueryKey} from "@/queries/students.ts";
 
 const classController = new ClassController();
 
@@ -171,6 +172,8 @@ export function useClassDeleteStudentMutation(): UseMutationReturnType<
             await queryClient.invalidateQueries({ queryKey: classQueryKey(data.class.id) });
             await queryClient.invalidateQueries({ queryKey: classStudentsKey(data.class.id, true) });
             await queryClient.invalidateQueries({ queryKey: classStudentsKey(data.class.id, false) });
+            await queryClient.invalidateQueries({ queryKey: studentClassesQueryKey(data.class.id, false) });
+            await queryClient.invalidateQueries({ queryKey: studentClassesQueryKey(data.class.id, true) });
         },
     });
 }

@@ -3,9 +3,9 @@ import { Question } from '../../entities/questions/question.entity.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { Student } from '../../entities/users/student.entity.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
+import { Group } from '../../entities/assignments/group.entity.js';
 import { Assignment } from '../../entities/assignments/assignment.entity.js';
 import { Loaded } from '@mikro-orm/core';
-import { Group } from '../../entities/assignments/group.entity';
 
 export class QuestionRepository extends DwengoEntityRepository<Question> {
     public async createQuestion(question: { loId: LearningObjectIdentifier; author: Student; inGroup: Group; content: string }): Promise<Question> {

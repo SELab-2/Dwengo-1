@@ -1,10 +1,10 @@
 import { UnauthorizedException } from '../exceptions/unauthorized-exception.js';
 import { getLogger } from '../logging/initalize.js';
 import { AuthenticatedRequest } from '../middleware/auth/authenticated-request.js';
-import { createOrUpdateStudent } from '../services/students.js';
-import { createOrUpdateTeacher } from '../services/teachers.js';
 import { envVars, getEnvVar } from '../util/envVars.js';
-import { Response } from 'express';
+import { createOrUpdateStudent } from '../services/students.js';
+import { Request, Response } from 'express';
+import { createOrUpdateTeacher } from '../services/teachers.js';
 
 interface FrontendIdpConfig {
     authority: string;
@@ -38,6 +38,10 @@ export function getFrontendAuthConfig(): FrontendAuthConfig {
             responseType: RESPONSE_TYPE,
         },
     };
+}
+
+export function handleGetFrontendAuthConfig(_req: Request, res: Response): void {
+    res.json(getFrontendAuthConfig());
 }
 
 export async function postHelloHandler(req: AuthenticatedRequest, res: Response): Promise<void> {
