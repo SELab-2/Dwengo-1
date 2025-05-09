@@ -14,6 +14,7 @@ import { Language } from '@dwengo-1/common/util/language';
 import { Question } from '../../../src/entities/questions/question.entity';
 import { Class } from '../../../src/entities/classes/class.entity';
 import { Assignment } from '../../../src/entities/assignments/assignment.entity';
+import { getClass01 } from '../../test_assets/classes/classes.testdata';
 
 describe('QuestionRepository', () => {
     let questionRepository: QuestionRepository;
@@ -37,7 +38,7 @@ describe('QuestionRepository', () => {
         const id = new LearningObjectIdentifier('id03', Language.English, 1);
         const student = await studentRepository.findByUsername('Noordkaap');
 
-        const clazz = await getClassRepository().findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
+        const clazz = await getClassRepository().findById(getClass01().classId);
         const assignment = await getAssignmentRepository().findByClassAndId(clazz!, 21000);
         const group = await getGroupRepository().findByAssignmentAndGroupNumber(assignment!, 21001);
         await questionRepository.createQuestion({
@@ -56,7 +57,7 @@ describe('QuestionRepository', () => {
     let assignment: Assignment | null;
     let loId: LearningObjectIdentifier;
     it('should find all questions for a certain learning object and assignment', async () => {
-        clazz = await getClassRepository().findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
+        clazz = await getClassRepository().findById(getClass01().classId);
         assignment = await getAssignmentRepository().findByClassAndId(clazz!, 21000);
         loId = {
             hruid: 'id05',

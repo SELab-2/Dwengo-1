@@ -287,6 +287,8 @@
                     <template v-slot:default>
                         <v-btn
                             class="button-in-nav"
+                            width="100%"
+                            :color="COLORS.teacherExclusive"
                             @click="assign()"
                             >{{ t("assignLearningPath") }}</v-btn
                         >
