@@ -346,9 +346,7 @@
                                     <ClassDisplay :classId="i.classId" />
                                 </td>
                                 <td>
-                                    {{
-                                        (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName
-                                    }}
+                                    {{ (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName }}
                                 </td>
                                 <td class="text-right">
                                     <span v-if="!isSmAndDown">

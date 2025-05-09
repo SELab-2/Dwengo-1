@@ -5,7 +5,7 @@ import { authenticatedOnly, studentsOnly, teachersOnly } from '../middleware/aut
 const router = express.Router();
 
 // Returns auth configuration for frontend
-router.get('/config', handleGetFrontendAuthConfig)
+router.get('/config', handleGetFrontendAuthConfig);
 
 router.get('/testAuthenticatedOnly', authenticatedOnly, (_req, res) => {
     /* #swagger.security = [{ "student": [ ] }, { "teacher": [ ] }] */
