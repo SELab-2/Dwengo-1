@@ -7,7 +7,7 @@
     import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
     import { useI18n } from "vue-i18n";
     import LearningPathSearchField from "@/components/LearningPathSearchField.vue";
-    import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
+    import { useGetAllLearningPaths, useGetLearningPathQuery } from "@/queries/learning-paths.ts";
     import { useLearningObjectListForPathQuery } from "@/queries/learning-objects.ts";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import authService from "@/services/auth/auth-service.ts";
@@ -21,7 +21,7 @@
     import { useStudentAssignmentsQuery, useStudentGroupsQuery } from "@/queries/students";
     import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
     import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
-    import QuestionNotification from "@/components/QuestionNotification.vue";
+    import DiscussionSideBarElement from "@/components/DiscussionSideBarElement.vue";
 
     const router = useRouter();
     const route = useRoute();
@@ -51,6 +51,33 @@
         }
         return undefined;
     });
+
+    const allLearningPathsResult = useGetAllLearningPaths(props.language)
+    
+    // TODO: dit moet alle leerpaden met vragen teruggeven, maar werkt niet
+    const questionedLearningPaths = computed(() => {
+        function objectHasQuestion(learningObject: LearningObject) {
+            const loid = {
+                hruid: learningObject.key,
+                version: learningObject.version,
+                language: learningObject.language,
+            } as LearningObjectIdentifierDTO;
+            const { data } = useQuestionsQuery(loid);
+            const hasQuestions = computed(() => (data.value?.questions.length ?? 0) > 0);
+            return hasQuestions;
+        }
+        function pathHasQuestion(learningPath: LearningPath) {
+            const learningPathQueryResult = useGetLearningPathQuery(learningPath.hruid, learningPath.language as Language, forGroup);
+            const learningObjectListQueryResult = useLearningObjectListForPathQuery(learningPathQueryResult.data);
+            const learningObjects = learningObjectListQueryResult.data.value;
+            console.log("Path: " + learningPath.hruid)
+            console.log(learningObjects)
+            console.log("questions: " + learningObjects?.some(objectHasQuestion))
+            return learningObjects?.some(objectHasQuestion);
+
+        }
+        return allLearningPathsResult.data.value?.filter(pathHasQuestion);
+    })
 
     const learningPathQueryResult = useGetLearningPathQuery(props.hruid, props.language, forGroup);
 
@@ -163,24 +190,25 @@
             <div class="d-flex flex-column h-100">
                 <v-list-item>
                     <template v-slot:title>
-                        <div class="learning-path-title">Learning paths with questions</div>
+                        <div class="learning-path-title">Discussions</div>
                     </template>
                 </v-list-item>
                 <v-divider></v-divider>
                 <div v-if="props.learningObjectHruid">
+                    <DiscussionSideBarElement
+                        :path="(learningPathQueryResult.data.value as LearningPath)"
+                        :activeObjectId="props.learningObjectHruid">
+                    </DiscussionSideBarElement>
                     <using-query-result
                         :query-result="learningObjectListQueryResult"
-                        v-slot="learningObjects: { data: LearningObject[] }"
-                    >
-                        <template v-for="node in learningObjects.data">
-                            <v-list-item
+                        v-slot="learningObjects: {data: LearningObject[]}">
+                            <v-list-item 
                                 link
-                                :to="{ path: node.key, query: route.query }"
-                                :title="node.title"
-                                :active="node.key === props.learningObjectHruid"
-                            >
+                                :to="{ path: learningObject.key, query: route.query }"
+                                :title="learningObject.title"
+                                :active="learningObject.key === props.learningObjectHruid"
+                                v-for="learningObject in learningObjects.data">
                             </v-list-item>
-                        </template>
                     </using-query-result>
                 </div>
             </div>
@@ -215,6 +243,7 @@
 </template>
 
 <style scoped>
+
     .learning-path-title {
         white-space: normal;
     }
