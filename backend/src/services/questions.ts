@@ -111,7 +111,7 @@ export async function createQuestion(loId: LearningObjectIdentifier, questionDat
     const question = await questionRepository.createQuestion({
         loId,
         author,
-        inGroup: inGroup!,
+        inGroup: inGroup,
         content,
     });
 

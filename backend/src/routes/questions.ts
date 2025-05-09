@@ -1,7 +1,7 @@
 import express from 'express';
 import { createQuestionHandler, deleteQuestionHandler, getAllQuestionsHandler, getQuestionHandler } from '../controllers/questions.js';
 import answerRoutes from './answers.js';
-import {adminOnly, authenticatedOnly, studentsOnly} from '../middleware/auth/checks/auth-checks.js';
+import { authenticatedOnly, studentsOnly } from '../middleware/auth/checks/auth-checks.js';
 import { updateAnswerHandler } from '../controllers/answers.js';
 import { onlyAllowAuthor, onlyAllowAuthorRequest, onlyAllowIfHasAccessToQuestion } from '../middleware/auth/checks/question-checks.js';
 
@@ -12,7 +12,7 @@ const router = express.Router({ mergeParams: true });
 // Root endpoint used to search objects
 router.get('/', authenticatedOnly, getAllQuestionsHandler);
 
-router.post('/', studentsOnly, onlyAllowAuthor, createQuestionHandler); // TODO part of group
+router.post('/', studentsOnly, onlyAllowAuthor, createQuestionHandler);
 
 // Information about a question with id
 router.get('/:seq', onlyAllowIfHasAccessToQuestion, getQuestionHandler);

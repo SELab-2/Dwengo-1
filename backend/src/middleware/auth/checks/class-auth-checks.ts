@@ -50,7 +50,7 @@ export const onlyAllowIfInClassOrInvited = authorize(async (auth: Authentication
     const clazz = await fetchClass(classId);
     if (auth.accountType === 'teacher') {
         const invitations = await getAllInvitations(auth.username, false);
-        return clazz.teachers.map(mapToUsername).includes(auth.username) || invitations.some(invitation => invitation.classId == classId);
+        return clazz.teachers.map(mapToUsername).includes(auth.username) || invitations.some(invitation => invitation.classId === classId);
     }
     return clazz.students.map(mapToUsername).includes(auth.username);
 });
