@@ -3,6 +3,7 @@ import { AuthenticationInfo } from '../authentication-info.js';
 import { AuthenticatedRequest } from '../authenticated-request.js';
 import { fetchClass } from '../../../services/classes.js';
 import { mapToUsername } from '../../../interfaces/user.js';
+import {getAllInvitations} from "../../../services/teacher-invitations";
 
 async function teaches(teacherUsername: string, classId: string): Promise<boolean> {
     const clazz = await fetchClass(classId);
@@ -40,6 +41,16 @@ export const onlyAllowIfInClass = authorize(async (auth: AuthenticationInfo, req
     const clazz = await fetchClass(classId);
     if (auth.accountType === 'teacher') {
         return clazz.teachers.map(mapToUsername).includes(auth.username);
+    }
+    return clazz.students.map(mapToUsername).includes(auth.username);
+});
+
+export const onlyAllowIfInClassOrInvited = authorize(async (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
+    const classId = req.params.classId ?? req.params.classid ?? req.params.id;
+    const clazz = await fetchClass(classId);
+    if (auth.accountType === 'teacher') {
+        const invitations = await getAllInvitations(auth.username, false);
+        return clazz.teachers.map(mapToUsername).includes(auth.username) || invitations.some(invitation => invitation.classId == classId);
     }
     return clazz.students.map(mapToUsername).includes(auth.username);
 });
