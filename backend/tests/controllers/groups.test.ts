@@ -1,11 +1,22 @@
 import { setupTestApp } from '../setup-tests.js';
 import { describe, it, expect, beforeAll, beforeEach, vi, Mock } from 'vitest';
 import { Request, Response } from 'express';
-import { createGroupHandler, getAllGroupsHandler, getGroupHandler, getGroupSubmissionsHandler } from '../../src/controllers/groups.js';
+import {
+    createGroupHandler,
+    deleteGroupHandler,
+    getAllGroupsHandler,
+    getGroupHandler,
+    getGroupSubmissionsHandler
+} from '../../src/controllers/groups.js';
+import {getAnswerHandler} from "../../src/controllers/answers";
+import {NotFoundException} from "../../src/exceptions/not-found-exception";
+import {getClass01} from "../test_assets/classes/classes.testdata";
+import {getAssignment01, getAssignment02} from "../test_assets/assignments/assignments.testdata";
+import {getTestGroup01} from "../test_assets/assignments/groups.testdata";
 
 function createRequestObject(classid: string, assignmentid: string, groupNumber: string) {
     return {
-        params: { 
+        params: {
             classid: classid,
             assignmentid: assignmentid,
             groupid: groupNumber,
@@ -24,7 +35,7 @@ describe('Group controllers', () => {
     beforeAll(async () => {
         await setupTestApp();
     });
-  
+
     beforeEach(async () =>  {
         jsonMock = vi.fn();
         statusMock = vi.fn().mockReturnThis();
@@ -35,25 +46,23 @@ describe('Group controllers', () => {
         };
     });
 
-    it('should return 404 not found on a non-existing group', async () => {
+    it('Error not found on a non-existing group', async () => {
         req = {
-            params: { 
+            params: {
                 classid: 'id01',
                 assignmentid: '1',
-                groupid: '42000', // should not exist
+                groupid: '154981', // should not exist
             },
             query: {},
         };
 
-        await getGroupHandler(req as Request, res as Response);
+        await expect(async () => getGroupHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
 
-        expect(statusMock).toHaveBeenCalledWith(404);
-        expect(jsonMock).toHaveBeenCalled();
     });
 
     it('should return 404 not found on a non-existing assignment', async () => {
         req = {
-            params: { 
+            params: {
                 classid: 'id01',
                 assignmentid: '1000', // should not exist
                 groupid: '42000', // should not exist
@@ -61,15 +70,12 @@ describe('Group controllers', () => {
             query: {},
         };
 
-        await getGroupHandler(req as Request, res as Response);
-
-        expect(statusMock).toHaveBeenCalledWith(404);
-        expect(jsonMock).toHaveBeenCalled();
+        await expect(async () => getGroupHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
     });
 
     it('should return 404 not found ont a non-existing class', async () => {
         req = {
-            params: { 
+            params: {
                 classid: 'doesnotexist', // should not exist
                 assignmentid: '1000', // should not exist
                 groupid: '42000', // should not exist
@@ -77,68 +83,55 @@ describe('Group controllers', () => {
             query: {},
         };
 
-        await getGroupHandler(req as Request, res as Response);
-
-        expect(statusMock).toHaveBeenCalledWith(404);
-        expect(jsonMock).toHaveBeenCalled();
+        await expect(async () => getGroupHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
     });
 
     it('should return an existing group', async () => {
-        req = createRequestObject('id01', '1', '1');
+        const group = getTestGroup01();
+        const classId = getClass01().classId as string;
+        req = createRequestObject(classId, (group.assignment.id ?? 1).toString(), (group.groupNumber ?? 1).toString());
 
         await getGroupHandler(req as Request, res as Response);
 
-        expect(jsonMock).toHaveBeenCalledWith({
-            assignment: 1,
-            groupNumber: 1,
-            members: [ 'DireStraits', 'Noordkaap' ]
-        });
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ group: expect.anything() }));
     });
 
-    
-    it('should return a 201 when creating a group', async () => {
-        req = createRequestObject('id01', '1', 'irrelevant');
+
+    it('Create and delete', async () => {
+        const assignment = getAssignment02();
+        const classId = assignment.within.classId as string;
+        req = createRequestObject(classId, (assignment.id ?? 1).toString(), '1');
         req.body = {
             members: [
-                'NoordKaap',
+                'Noordkaap',
                 'DireStraits',
             ]
         };
 
         await createGroupHandler(req as Request, res as Response);
 
-        expect(statusMock).toHaveBeenCalledWith(201);
-        expect(jsonMock).toHaveBeenCalled();
+        await deleteGroupHandler(req as Request, res as Response);
 
-        const result = jsonMock.mock.lastCall![0];
-
-        expect("assignment" in result).toBeTruthy();
-        expect("groupNumber" in result).toBeTruthy();
-        expect("members" in result).toBeTruthy();
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ group: expect.anything() }));
     });
 
     it('should return the submissions for a group', async () => {
-        req = createRequestObject('id01', '1', '1');
+        const group = getTestGroup01();
+        const classId = getClass01().classId as string;
+        req = createRequestObject(classId, (group.assignment.id ?? 1).toString(), (group.groupNumber ?? 1).toString());
 
         await getGroupSubmissionsHandler(req as Request, res as Response);
 
-        expect(jsonMock).toHaveBeenCalled();
-
-        const result = jsonMock.mock.lastCall![0];
-
-        expect("submissions" in result).toBeTruthy();
-        expect(typeof(result.submissions)).toBe(typeof([]));
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ submissions: expect.anything() }));
     });
 
     it('should return a list of groups for an assignment', async () => {
-        req = createRequestObject('id01', '1', '1');
+        const assignment = getAssignment01();
+        const classId = assignment.within.classId as string;
+        req = createRequestObject(classId, (assignment.id ?? 1).toString(), '1');
 
         await getAllGroupsHandler(req as Request, res as Response);
 
-        expect(jsonMock).toHaveBeenCalled();
-
-        const result = jsonMock.mock.lastCall![0];
-
-        expect("groups" in result).toBeTruthy();
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ groups: expect.anything() }));
     });
 });

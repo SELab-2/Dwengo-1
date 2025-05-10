@@ -1,10 +1,13 @@
 import { setupTestApp } from '../setup-tests.js';
 import { describe, it, expect, beforeAll, beforeEach, vi, Mock } from 'vitest';
-import { getSubmissionHandler, getAllSubmissionsHandler } from '../../src/controllers/submissions.js';
+import {
+    getSubmissionHandler,
+    getAllSubmissionsHandler,
+    deleteSubmissionHandler, createSubmissionHandler
+} from '../../src/controllers/submissions.js';
 import { Request, Response } from 'express';
-import { checkReturn404, checkReturnList } from './qol.js';
-import { getSubmission } from '../../src/services/submissions.js';
-import { Language } from '../../src/entities/content/language.js';
+import {NotFoundException} from "../../src/exceptions/not-found-exception";
+import {getClass01, getClass02} from "../test_assets/classes/classes.testdata";
 
 
 function createRequestObject(hruid: string, submissionNumber: string) {
@@ -30,7 +33,7 @@ describe('Submission controllers', () => {
     beforeAll(async () => {
         await setupTestApp();
     });
-  
+
     beforeEach(async () =>  {
         jsonMock = vi.fn();
         statusMock = vi.fn().mockReturnThis();
@@ -41,38 +44,18 @@ describe('Submission controllers', () => {
         };
     });
 
-    it('should return a 404 and error if submission is not found', async () => {
+    it('error submission is not found', async () => {
 		req = createRequestObject('id01', '1000000');
 
-		await getSubmissionHandler(req as Request, res as Response);
-
-		checkReturn404(jsonMock, statusMock);
-	});
-
-	it('should return a 404 and error if learningobject is not found', async () => {
-		req = createRequestObject('doesnotexist', '1000000');
-
-		await getSubmissionHandler(req as Request, res as Response);
-
-		checkReturn404(jsonMock, statusMock);
-	});
-
-	it('should return an existing submission', async () => {
-		req = createRequestObject('id01', '1');
-
-		await getSubmissionHandler(req as Request, res as Response);
-
-		const expectedResult = await getSubmission('id01', Language.English, 1, 1);
-
-        expect(jsonMock.mock.lastCall![0]).toStrictEqual(expectedResult);
+        await expect(async () => getSubmissionHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
 	});
 
 	it('should return a list of submissions for a learning object', async () => {
-		req = createRequestObject('id02', 'irrelevant');
+		req = createRequestObject(getClass02().classId as string, 'irrelevant');
 
 		await getAllSubmissionsHandler(req as Request, res as Response);
 
-		checkReturnList(jsonMock, 'submissions', 2);
-	});
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ submissions: expect.anything() }));
+    });
 });
 

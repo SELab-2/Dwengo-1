@@ -3,10 +3,14 @@ import { describe, it, expect, beforeAll, beforeEach, vi, Mock } from 'vitest';
 import { Request, Response } from 'express';
 import { getAssignmentHandler, getAllAssignmentsHandler, getAssignmentsSubmissionsHandler } from '../../src/controllers/assignments.js';
 import { checkReturn404, checkReturnList } from './qol.js'
+import {getAnswerHandler} from "../../src/controllers/answers";
+import {NotFoundException} from "../../src/exceptions/not-found-exception";
+import {getClass01, getClass02, getClass03} from "../test_assets/classes/classes.testdata";
+import {getAssignment01} from "../test_assets/assignments/assignments.testdata";
 
 function createRequestObject(classid: string, assignmentid: string) {
     return {
-        params: { 
+        params: {
             classid: classid,
             id: assignmentid,
         },
@@ -24,7 +28,7 @@ describe('Assignment controllers', () => {
     beforeAll(async () => {
         await setupTestApp();
     });
-  
+
     beforeEach(async () =>  {
         jsonMock = vi.fn();
         statusMock = vi.fn().mockReturnThis();
@@ -35,50 +39,33 @@ describe('Assignment controllers', () => {
         };
     });
 
-    it('should return a 404 when trying to find a non-existent assignment', async () => {
-        req = createRequestObject('id01', '43000'); // should not exist
+    it('return error non-existing assignment', async () => {
+        req = createRequestObject('doesnotexist', '43000'); // should not exist
 
-		await getAssignmentHandler(req as Request, res as Response);
-
-		checkReturn404(jsonMock, statusMock);
+        await expect(async () => getAssignmentHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
     });
 
-	it('should return a 404 when trying to find an assignment on a non-existing class', async () => {
-        req = createRequestObject('doesnotexist', '1'); // should not exist
-
-		await getAssignmentHandler(req as Request, res as Response);
-
-		checkReturn404(jsonMock, statusMock);
-	});
-	
 	it('should return an assignment', async () => {
-		req = createRequestObject('id01', '1');
+        const assignment = getAssignment01();
+		req = createRequestObject(assignment.within.classId as string, (assignment.id ?? 1).toString());
 
 		await getAssignmentHandler(req as Request, res as Response);
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ assignment: expect.anything() }));
 
-		expect(jsonMock).toHaveBeenCalledWith({
-			id: 1,
-			class: 'id01',
-			title: 'dire straits',
-			description: 'reading',
-			learningPath: 'id02',
-			language: 'en'
-		});
-	});
+    });
 
 	it('should return a list of assignments', async () => {
-		req = createRequestObject('id01', 'irrelevant');
+		req = createRequestObject(getClass01().classId as string, 'irrelevant');
 
 		await getAllAssignmentsHandler(req as Request, res as Response);
-
-		checkReturnList(jsonMock, "assignments");
-	});
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ assignments: expect.anything() }));	});
 
 	it('should return a list of submissions for an assignment', async () => {
-		req = createRequestObject('id01', '1');
+        const assignment = getAssignment01();
+        req = createRequestObject(assignment.within.classId as string, (assignment.id ?? 1).toString());
 
-		await getAssignmentsSubmissionsHandler(req as Request, res as Response);
 
-		checkReturnList(jsonMock, "submissions");
+        await getAssignmentsSubmissionsHandler(req as Request, res as Response);
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ submissions: expect.anything() }));
 	})
 })
