@@ -9,7 +9,7 @@
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { asyncComputed } from "@vueuse/core";
     import { useDeleteAssignmentMutation } from "@/queries/assignments.ts";
-    import '../../assets/common.css'
+    import "../../assets/common.css";
 
     const { t } = useI18n();
     const router = useRouter();

@@ -3,7 +3,7 @@
     import { useI18n } from "vue-i18n";
     import { THEMESITEMS, AGE_TO_THEMES } from "@/utils/constants.ts";
     import BrowseThemes from "@/components/BrowseThemes.vue";
-    import '../../assets/common.css'
+    import "../../assets/common.css";
 
     const { t, locale } = useI18n();
 
@@ -78,7 +78,6 @@
 </template>
 
 <style scoped>
-
     .dropdowns {
         display: flex;
         justify-content: space-between;
