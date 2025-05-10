@@ -15,6 +15,7 @@
         useTeacherInvitationsReceivedQuery,
     } from "@/queries/teacher-invitations";
     import { useDisplay } from "vuetify";
+    import '../../assets/common.css'
 
     const { t } = useI18n();
 
@@ -183,7 +184,7 @@
             ></v-empty-state>
         </div>
         <div v-else>
-            <h1 class="title">{{ t("classes") }}</h1>
+            <h1>{{ t("classes") }}</h1>
             <using-query-result
                 :query-result="classesQuery"
                 v-slot="classesResponse: { data: ClassesResponse }"
@@ -318,7 +319,7 @@
                 </v-container>
             </using-query-result>
 
-            <h1 class="title">
+            <h1>
                 {{ t("invitations") }}
             </h1>
             <v-container
@@ -484,14 +485,6 @@
         border-collapse: collapse;
     }
 
-    h1 {
-        color: #0e6942;
-        text-transform: uppercase;
-        font-weight: bolder;
-        padding-top: 2%;
-        font-size: 50px;
-    }
-
     h2 {
         color: #0e6942;
         font-size: 30px;
@@ -509,15 +502,7 @@
         text-decoration: underline;
     }
 
-    main {
-        margin-left: 30px;
-    }
-
     @media screen and (max-width: 850px) {
-        h1 {
-            text-align: center;
-            padding-left: 0;
-        }
 
         .join {
             text-align: center;

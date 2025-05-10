@@ -9,6 +9,7 @@
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { asyncComputed } from "@vueuse/core";
     import { useDeleteAssignmentMutation } from "@/queries/assignments.ts";
+    import '../../assets/common.css'
 
     const { t } = useI18n();
     const router = useRouter();
@@ -139,15 +140,7 @@
     .assignments-container {
         width: 100%;
         margin: 0 auto;
-        padding: 2% 4%;
         box-sizing: border-box;
-    }
-
-    h1 {
-        color: #0e6942;
-        text-transform: uppercase;
-        font-weight: bolder;
-        font-size: 50px;
     }
 
     .center-btn {

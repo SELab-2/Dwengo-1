@@ -12,6 +12,7 @@
     import { useClassStudentsQuery, useClassTeachersQuery } from "@/queries/classes";
     import type { StudentsResponse } from "@/controllers/students";
     import type { TeachersResponse } from "@/controllers/teachers";
+    import '../../assets/common.css'
 
     const { t } = useI18n();
 
@@ -135,7 +136,7 @@
             ></v-empty-state>
         </div>
         <div v-else>
-            <h1 class="title">{{ t("classes") }}</h1>
+            <h1>{{ t("classes") }}</h1>
             <using-query-result
                 :query-result="classesQuery"
                 v-slot="classResponse: { data: ClassesResponse }"
@@ -306,14 +307,6 @@
         border-collapse: collapse;
     }
 
-    h1 {
-        color: #0e6942;
-        text-transform: uppercase;
-        font-weight: bolder;
-        padding-top: 2%;
-        font-size: 50px;
-    }
-
     h2 {
         color: #0e6942;
         font-size: 30px;
@@ -331,16 +324,7 @@
         text-decoration: underline;
     }
 
-    main {
-        margin-left: 30px;
-    }
-
     @media screen and (max-width: 800px) {
-        h1 {
-            text-align: center;
-            padding-left: 0;
-        }
-
         .join {
             text-align: center;
             align-items: center;

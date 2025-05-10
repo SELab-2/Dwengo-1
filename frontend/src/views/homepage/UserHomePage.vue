@@ -3,6 +3,7 @@
     import { useI18n } from "vue-i18n";
     import { THEMESITEMS, AGE_TO_THEMES } from "@/utils/constants.ts";
     import BrowseThemes from "@/components/BrowseThemes.vue";
+    import '../../assets/common.css'
 
     const { t, locale } = useI18n();
 
@@ -46,7 +47,7 @@
 
 <template>
     <div class="main-container">
-        <h1 class="title">{{ t("themes") }}</h1>
+        <h1>{{ t("themes") }}</h1>
         <v-container class="dropdowns">
             <v-select
                 class="v-select"
@@ -77,30 +78,6 @@
 </template>
 
 <style scoped>
-    .main-container {
-        min-height: 100vh;
-        min-width: 100vw;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: flex-start;
-    }
-
-    .title {
-        max-width: 50rem;
-        margin-left: 1rem;
-        margin-top: 1rem;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-    }
-
-    h1 {
-        color: #0e6942;
-        text-transform: uppercase;
-        font-weight: bolder;
-        font-size: 50px;
-    }
 
     .dropdowns {
         display: flex;
@@ -112,12 +89,6 @@
     .v-select {
         flex: 1;
         min-width: 100px;
-    }
-
-    @media (max-width: 768px) {
-        .main-container {
-            padding: 1rem;
-        }
     }
 
     @media (max-width: 700px) {
