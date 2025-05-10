@@ -12,7 +12,7 @@
     import { useClassStudentsQuery, useClassTeachersQuery } from "@/queries/classes";
     import type { StudentsResponse } from "@/controllers/students";
     import type { TeachersResponse } from "@/controllers/teachers";
-    import '../../assets/common.css'
+    import "../../assets/common.css";
 
     const { t } = useI18n();
 
@@ -162,7 +162,7 @@
                                         <th class="header">{{ t("members") }}</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody v-if="classResponse.data.classes.length">
                                     <tr
                                         v-for="c in classResponse.data.classes as ClassDTO[]"
                                         :key="c.id"
@@ -179,6 +179,21 @@
                                             @click="openStudentDialog(c)"
                                         >
                                             {{ c.students.length }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody v-else>
+                                    <tr>
+                                        <td
+                                            colspan="3"
+                                            class="empty-message"
+                                        >
+                                            <v-icon
+                                                icon="mdi-information-outline"
+                                                size="small"
+                                            >
+                                            </v-icon>
+                                            {{ t("no-classes-found") }}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -272,41 +287,6 @@
     </main>
 </template>
 <style scoped>
-    .header {
-        font-weight: bold !important;
-        background-color: #0e6942;
-        color: white;
-        padding: 10px;
-    }
-
-    table thead th:first-child {
-        border-top-left-radius: 10px;
-    }
-
-    .table thead th:last-child {
-        border-top-right-radius: 10px;
-    }
-
-    .table tbody tr:nth-child(odd) {
-        background-color: white;
-    }
-
-    .table tbody tr:nth-child(even) {
-        background-color: #f6faf2;
-    }
-
-    td,
-    th {
-        border-bottom: 1px solid #0e6942;
-        border-top: 1px solid #0e6942;
-    }
-
-    .table {
-        width: 90%;
-        padding-top: 10px;
-        border-collapse: collapse;
-    }
-
     h2 {
         color: #0e6942;
         font-size: 30px;

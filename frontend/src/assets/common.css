@@ -6,6 +6,46 @@ h1 {
     padding-left: 1%;
 }
 
+.empty-message {
+    text-align: center;
+    font-size: 20px;
+}
+
+.header {
+    font-weight: bold !important;
+    background-color: #0e6942;
+    color: white;
+    padding: 10px;
+}
+
+table thead th:first-child {
+    border-top-left-radius: 10px;
+}
+
+.table thead th:last-child {
+    border-top-right-radius: 10px;
+}
+
+.table tbody tr:nth-child(odd) {
+    background-color: white;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f6faf2;
+}
+
+td,
+th {
+    border-bottom: 1px solid #0e6942;
+    border-top: 1px solid #0e6942;
+}
+
+.table {
+    width: 90%;
+    padding-top: 10px;
+    border-collapse: collapse;
+}
+
 @media screen and (max-width: 850px) {
     h1 {
         text-align: center;

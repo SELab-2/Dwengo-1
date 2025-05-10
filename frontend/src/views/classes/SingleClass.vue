@@ -13,7 +13,7 @@
     import { useCreateTeacherInvitationMutation } from "@/queries/teacher-invitations";
     import type { TeacherInvitationData } from "@dwengo-1/common/interfaces/teacher-invitation";
     import { useDisplay } from "vuetify";
-    import '../../assets/common.css'
+    import "../../assets/common.css";
 
     const { t } = useI18n();
 
@@ -212,16 +212,31 @@
                                             <th class="header"></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+
+                                    <tbody v-if="studentsResponse.data.students.length">
                                         <tr
                                             v-for="s in studentsResponse.data.students as StudentDTO[]"
                                             :key="s.id"
                                         >
+                                            <td>{{ s.firstName + " " + s.lastName }}</td>
                                             <td>
-                                                {{ s.firstName + " " + s.lastName }}
+                                                <v-btn @click="showPopup(s)">{{ t("remove") }}</v-btn>
                                             </td>
-                                            <td>
-                                                <v-btn @click="showPopup(s)"> {{ t("remove") }} </v-btn>
+                                        </tr>
+                                    </tbody>
+
+                                    <tbody v-else>
+                                        <tr>
+                                            <td
+                                                colspan="2"
+                                                class="empty-message"
+                                            >
+                                                <v-icon
+                                                    icon="mdi-information-outline"
+                                                    size="small"
+                                                >
+                                                </v-icon>
+                                                {{ t("no-students-found") }}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -243,7 +258,7 @@
                                                 <th class="header">{{ t("accept") + "/" + t("reject") }}</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody v-if="joinRequests.data.joinRequests.length">
                                             <tr
                                                 v-for="jr in joinRequests.data.joinRequests as ClassJoinRequestDTO[]"
                                                 :key="(jr.class, jr.requester, jr.status)"
@@ -285,6 +300,21 @@
                                                             variant="text"
                                                         ></v-btn>
                                                     </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody v-else>
+                                            <tr>
+                                                <td
+                                                    colspan="2"
+                                                    class="empty-message"
+                                                >
+                                                    <v-icon
+                                                        icon="mdi-information-outline"
+                                                        size="small"
+                                                    >
+                                                    </v-icon>
+                                                    {{ t("no-join-requests-found") }}
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -357,41 +387,6 @@
     </main>
 </template>
 <style scoped>
-    .header {
-        font-weight: bold !important;
-        background-color: #0e6942;
-        color: white;
-        padding: 10px;
-    }
-
-    table thead th:first-child {
-        border-top-left-radius: 10px;
-    }
-
-    .table thead th:last-child {
-        border-top-right-radius: 10px;
-    }
-
-    .table tbody tr:nth-child(odd) {
-        background-color: white;
-    }
-
-    .table tbody tr:nth-child(even) {
-        background-color: #f6faf2;
-    }
-
-    td,
-    th {
-        border-bottom: 1px solid #0e6942;
-        border-top: 1px solid #0e6942;
-    }
-
-    .table {
-        width: 90%;
-        padding-top: 10px;
-        border-collapse: collapse;
-    }
-
     h2 {
         color: #0e6942;
         font-size: 30px;
@@ -411,7 +406,6 @@
     }
 
     @media screen and (max-width: 800px) {
-
         .join {
             text-align: center;
             align-items: center;

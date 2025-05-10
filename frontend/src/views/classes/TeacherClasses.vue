@@ -15,7 +15,7 @@
         useTeacherInvitationsReceivedQuery,
     } from "@/queries/teacher-invitations";
     import { useDisplay } from "vuetify";
-    import '../../assets/common.css'
+    import "../../assets/common.css";
 
     const { t } = useI18n();
 
@@ -213,7 +213,7 @@
                                         <th class="header">{{ t("members") }}</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody v-if="classesResponse.data.classes.length">
                                     <tr
                                         v-for="c in classesResponse.data.classes as ClassDTO[]"
                                         :key="c.id"
@@ -238,6 +238,21 @@
                                         </td>
 
                                         <td>{{ c.students.length }}</td>
+                                    </tr>
+                                </tbody>
+                                <tbody v-else>
+                                    <tr>
+                                        <td
+                                            colspan="3"
+                                            class="empty-message"
+                                        >
+                                            <v-icon
+                                                icon="mdi-information-outline"
+                                                size="small"
+                                            >
+                                            </v-icon>
+                                            {{ t("no-classes-found") }}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </v-table>
@@ -343,61 +358,80 @@
                                 :query-result="allClassesQuery"
                                 v-slot="classesResponse: { data: ClassesResponse }"
                             >
-                                <tr
-                                    v-for="i in invitationsResponse.data.invitations as TeacherInvitationDTO[]"
-                                    :key="i.classId"
-                                >
-                                    <td>
-                                        {{
-                                            (classesResponse.data.classes as ClassDTO[]).filter(
-                                                (c) => c.id == i.classId,
-                                            )[0].displayName
-                                        }}
-                                    </td>
-                                    <td>
-                                        {{
-                                            (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        <span v-if="!isSmAndDown">
-                                            <div>
-                                                <v-btn
-                                                    color="green"
-                                                    @click="handleInvitation(i, true)"
-                                                    class="mr-2"
-                                                >
-                                                    {{ t("accept") }}
-                                                </v-btn>
-                                                <v-btn
-                                                    color="red"
-                                                    @click="handleInvitation(i, false)"
-                                                >
-                                                    {{ t("deny") }}
-                                                </v-btn>
-                                            </div>
-                                        </span>
-                                        <span v-else>
-                                            <div>
-                                                <v-btn
-                                                    @click="handleInvitation(i, true)"
-                                                    class="mr-2"
-                                                    icon="mdi-check-circle"
-                                                    color="green"
-                                                    variant="text"
-                                                >
-                                                </v-btn>
-                                                <v-btn
-                                                    @click="handleInvitation(i, false)"
-                                                    class="mr-2"
-                                                    icon="mdi-close-circle"
-                                                    color="red"
-                                                    variant="text"
-                                                >
-                                                </v-btn></div
-                                        ></span>
-                                    </td>
-                                </tr>
+                                <template v-if="invitationsResponse.data.invitations.length">
+                                    <tr
+                                        v-for="i in invitationsResponse.data.invitations as TeacherInvitationDTO[]"
+                                        :key="i.classId"
+                                    >
+                                        <td>
+                                            {{
+                                                (classesResponse.data.classes as ClassDTO[]).filter(
+                                                    (c) => c.id == i.classId,
+                                                )[0].displayName
+                                            }}
+                                        </td>
+                                        <td>
+                                            {{
+                                                (i.sender as TeacherDTO).firstName +
+                                                " " +
+                                                (i.sender as TeacherDTO).lastName
+                                            }}
+                                        </td>
+                                        <td class="text-right">
+                                            <span v-if="!isSmAndDown">
+                                                <div>
+                                                    <v-btn
+                                                        color="green"
+                                                        @click="handleInvitation(i, true)"
+                                                        class="mr-2"
+                                                    >
+                                                        {{ t("accept") }}
+                                                    </v-btn>
+                                                    <v-btn
+                                                        color="red"
+                                                        @click="handleInvitation(i, false)"
+                                                    >
+                                                        {{ t("deny") }}
+                                                    </v-btn>
+                                                </div>
+                                            </span>
+                                            <span v-else>
+                                                <div>
+                                                    <v-btn
+                                                        @click="handleInvitation(i, true)"
+                                                        class="mr-2"
+                                                        icon="mdi-check-circle"
+                                                        color="green"
+                                                        variant="text"
+                                                    >
+                                                    </v-btn>
+                                                    <v-btn
+                                                        @click="handleInvitation(i, false)"
+                                                        class="mr-2"
+                                                        icon="mdi-close-circle"
+                                                        color="red"
+                                                        variant="text"
+                                                    >
+                                                    </v-btn></div
+                                            ></span>
+                                        </td>
+                                    </tr>
+                                </template>
+                                <template v-else>
+                                    <tr>
+                                        <td
+                                            colspan="3"
+                                            class="empty-message"
+                                        >
+                                            <v-icon
+                                                icon="mdi-information-outline"
+                                                size="small"
+                                            >
+                                            </v-icon>
+                                            {{ t("no-invitations-found") }}
+                                        </td>
+                                    </tr>
+                                </template>
                             </using-query-result>
                         </using-query-result>
                     </tbody>
@@ -450,41 +484,6 @@
     </main>
 </template>
 <style scoped>
-    .header {
-        font-weight: bold !important;
-        background-color: #0e6942;
-        color: white;
-        padding: 10px;
-    }
-
-    table thead th:first-child {
-        border-top-left-radius: 10px;
-    }
-
-    .table thead th:last-child {
-        border-top-right-radius: 10px;
-    }
-
-    .table tbody tr:nth-child(odd) {
-        background-color: white;
-    }
-
-    .table tbody tr:nth-child(even) {
-        background-color: #f6faf2;
-    }
-
-    td,
-    th {
-        border-bottom: 1px solid #0e6942;
-        border-top: 1px solid #0e6942;
-    }
-
-    .table {
-        width: 90%;
-        padding-top: 10px;
-        border-collapse: collapse;
-    }
-
     h2 {
         color: #0e6942;
         font-size: 30px;
@@ -503,7 +502,6 @@
     }
 
     @media screen and (max-width: 850px) {
-
         .join {
             text-align: center;
             align-items: center;
@@ -524,10 +522,6 @@
 
         .custom-breakpoint {
             flex-direction: column !important;
-        }
-
-        .table {
-            width: 100%;
         }
 
         .responsive-col {
