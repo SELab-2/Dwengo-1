@@ -2,41 +2,27 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { setupTestApp } from '../../setup-tests.js';
 import { getLearningPathRepository } from '../../../src/data/repositories.js';
 import { LearningPathRepository } from '../../../src/data/content/learning-path-repository.js';
-import example from '../../test-assets/learning-paths/pn-werking-example.js';
 import { LearningPath } from '../../../src/entities/content/learning-path.entity.js';
-import { expectToBeCorrectEntity } from '../../test-utils/expectations.js';
-import { Language } from '../../../src/entities/content/language.js';
-
-function expectToHaveFoundPrecisely(expected: LearningPath, result: LearningPath[]): void {
-    expect(result).toHaveProperty('length');
-    expect(result.length).toBe(1);
-    expectToBeCorrectEntity({ entity: result[0]! }, { entity: expected });
-}
-
-function expectToHaveFoundNothing(result: LearningPath[]): void {
-    expect(result).toHaveProperty('length');
-    expect(result.length).toBe(0);
-}
+import { expectToBeCorrectEntity, expectToHaveFoundNothing, expectToHaveFoundPrecisely } from '../../test-utils/expectations.js';
+import { Language } from '@dwengo-1/common/util/language';
+import { testLearningPath01 } from '../../test_assets/content/learning-paths.testdata';
+import { mapToLearningPath } from '../../../src/services/learning-paths/learning-path-service';
 
 describe('LearningPathRepository', () => {
     let learningPathRepo: LearningPathRepository;
+    let examplePath: LearningPath;
 
     beforeAll(async () => {
         await setupTestApp();
         learningPathRepo = getLearningPathRepository();
+
+        examplePath = mapToLearningPath(testLearningPath01, []);
     });
 
-    let examplePath: LearningPath;
-
-    it('should be able to add a learning path without throwing an error', async () => {
-        examplePath = example.createLearningPath();
-        await learningPathRepo.insert(examplePath);
-    });
-
-    it('should return the added path when it is queried by hruid and language', async () => {
-        const result = await learningPathRepo.findByHruidAndLanguage(examplePath.hruid, examplePath.language);
+    it('should return a learning path when it is queried by hruid and language', async () => {
+        const result = await learningPathRepo.findByHruidAndLanguage(testLearningPath01.hruid, testLearningPath01.language as Language);
         expect(result).toBeInstanceOf(LearningPath);
-        expectToBeCorrectEntity({ entity: result! }, { entity: examplePath });
+        expectToBeCorrectEntity(result!, examplePath);
     });
 
     it('should return null to a query on a non-existing hruid or language', async () => {
@@ -45,7 +31,7 @@ describe('LearningPathRepository', () => {
     });
 
     it('should return the learning path when we search for a search term occurring in its title', async () => {
-        const result = await learningPathRepo.findByQueryStringAndLanguage(examplePath.title.slice(4, 9), examplePath.language);
+        const result = await learningPathRepo.findByQueryStringAndLanguage(examplePath.title.slice(9, 13), examplePath.language);
         expectToHaveFoundPrecisely(examplePath, result);
     });
 

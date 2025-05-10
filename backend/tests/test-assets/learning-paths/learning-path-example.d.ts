@@ -1,3 +1,0 @@
-type LearningPathExample = {
-    createLearningPath: () => LearningPath;
-};

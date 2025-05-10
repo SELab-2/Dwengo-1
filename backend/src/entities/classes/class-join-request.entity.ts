@@ -2,12 +2,7 @@ import { Entity, Enum, ManyToOne } from '@mikro-orm/core';
 import { Student } from '../users/student.entity.js';
 import { Class } from './class.entity.js';
 import { ClassJoinRequestRepository } from '../../data/classes/class-join-request-repository.js';
-
-export enum ClassJoinRequestStatus {
-    Open = 'open',
-    Accepted = 'accepted',
-    Declined = 'declined',
-}
+import { ClassStatus } from '@dwengo-1/common/util/class-join-request';
 
 @Entity({
     repository: () => ClassJoinRequestRepository,
@@ -25,6 +20,6 @@ export class ClassJoinRequest {
     })
     class!: Class;
 
-    @Enum(() => ClassJoinRequestStatus)
-    status!: ClassJoinRequestStatus;
+    @Enum(() => ClassStatus)
+    status!: ClassStatus;
 }

@@ -35,12 +35,8 @@ Om de applicatie lokaal te draaien als kant-en-klare Docker-containers:
 ```bash
 docker compose version
 git clone https://github.com/SELab-2/Dwengo-1.git
-cd Dwengo-1/backend
-cp .env.example .env
-# Pas .env aan
-nano .env
-cd ..
 docker compose -f compose.staging.yml up --build
+# Gebruikt backend/.env.staging
 ```
 
 ### Handmatige installatie en ontwikkeling

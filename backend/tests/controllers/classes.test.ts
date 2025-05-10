@@ -1,10 +1,7 @@
 import { setupTestApp } from '../setup-tests.js';
 import { describe, it, expect, beforeAll, beforeEach, vi, Mock } from 'vitest';
-import { createClassHandler, getAllClassesHandler, getClassHandler, getClassStudentsHandler, getTeacherInvitationsHandler } from '../../src/controllers/classes.js';
+import { createClassHandler, deleteClassHandler, getAllClassesHandler, getClassHandler, getClassStudentsHandler, getTeacherInvitationsHandler } from '../../src/controllers/classes.js';
 import { Request, Response } from 'express';
-import { getAllClasses } from '../../src/services/class.js';
-import { checkReturnList, checkReturn404 } from './qol.js';
-
 describe('Class controllers', () => {
     let req: Partial<Request>;
     let res: Partial<Response>;
@@ -15,8 +12,8 @@ describe('Class controllers', () => {
     beforeAll(async () => {
         await setupTestApp();
     });
-  
-    beforeEach(async () =>  {
+
+    beforeEach(async () => {
         jsonMock = vi.fn();
         statusMock = vi.fn().mockReturnThis();
 
@@ -26,13 +23,34 @@ describe('Class controllers', () => {
         };
     });
 
+    it('create and delete class', async () => {
+        req = {
+            body: { displayName: 'coole_nieuwe_klas' },
+        };
+
+        await createClassHandler(req as Request, res as Response);
+
+        const result = jsonMock.mock.lastCall?.[0];
+        // Console.log('class', result.class);
+
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ class: expect.anything() }));
+
+        req = {
+            params: { id: result.class.id },
+        };
+
+        await deleteClassHandler(req as Request, res as Response);
+
+        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ class: expect.anything() }));
+    });
+
     it('should return 404 and error if class is not found', async () => {
         req = {
             params: { id: 'doesnotexist'},
         }
 
         await getClassHandler(req as Request, res as Response);
-    
+
         expect(statusMock).toHaveBeenCalledWith(404);
         expect(jsonMock).toHaveBeenCalledWith({ error: 'Class not found' });
     });
@@ -43,7 +61,7 @@ describe('Class controllers', () => {
         }
 
         await getClassHandler(req as Request, res as Response);
-    
+
         // status can either not be called or called with code 200
         expect(
             statusMock.mock.calls.length === 0 || statusMock.mock.calls.some(([arg]) => arg === 200)
@@ -54,13 +72,13 @@ describe('Class controllers', () => {
         req = {
             body: { displayName: 'coolenieuweklas' },
         };
-        
+
         await createClassHandler(req as Request, res as Response);
-        
+
         expect(statusMock).toHaveBeenCalledWith(201);
         // TODO: return json should be a classDTO and not named (fixed in #130)
         //expect(jsonMock).toHaveBeenCalledWith();
-        
+
         // TODO: check if class is actually added to db
     });
     it.todo('return json should be a classDTO and not named (fixed in #130)')
@@ -85,7 +103,7 @@ describe('Class controllers', () => {
 
         await getClassStudentsHandler(req as Request, res as Response);
 
-		checkReturnList(jsonMock, 'students');
+        checkReturnList(jsonMock, 'students');
     });
 
     it('should return 404 not found when calling getClassStudentsHandler on a non-existent class', async () => {
@@ -109,12 +127,12 @@ describe('Class controllers', () => {
         await getTeacherInvitationsHandler(req as Request, res as Response);
 
         expect(jsonMock).toHaveBeenCalledWith({"invitations": [
-            {
-            "class": "id01",
-            "receiver": "LimpBizkit",
-            "sender": "FooFighters",
-            }
-        ]});
+                {
+                    "class": "id01",
+                    "receiver": "LimpBizkit",
+                    "sender": "FooFighters",
+                }
+            ]});
     });
 
     it('should return 404 not found when calling teacher-invitations on a non-existent class', async () => {
@@ -142,4 +160,5 @@ describe('Class controllers', () => {
 
         expect("classes" in result).toBeTruthy();
     })
-})
+
+});

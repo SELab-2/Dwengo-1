@@ -3,9 +3,8 @@ import { setupTestApp } from '../../setup-tests';
 import { ClassJoinRequestRepository } from '../../../src/data/classes/class-join-request-repository';
 import { getClassJoinRequestRepository, getClassRepository, getStudentRepository } from '../../../src/data/repositories';
 import { StudentRepository } from '../../../src/data/users/student-repository';
-import { Class } from '../../../src/entities/classes/class.entity';
 import { ClassRepository } from '../../../src/data/classes/class-repository';
-import { Student } from '../../../src/entities/users/student.entity';
+import { getClass02, getClass03 } from '../../test_assets/classes/classes.testdata';
 
 describe('ClassJoinRequestRepository', () => {
     let classJoinRequestRepository: ClassJoinRequestRepository;
@@ -28,7 +27,7 @@ describe('ClassJoinRequestRepository', () => {
     });
 
     it('should list all requests to a single class', async () => {
-        const class_ = await cassRepository.findById('id02');
+        const class_ = await cassRepository.findById(getClass02().classId);
         const requests = await classJoinRequestRepository.findAllOpenRequestsTo(class_!);
 
         expect(requests).toBeTruthy();
@@ -37,7 +36,7 @@ describe('ClassJoinRequestRepository', () => {
 
     it('should not find a removed request', async () => {
         const student = await studentRepository.findByUsername('SmashingPumpkins');
-        const class_ = await cassRepository.findById('id03');
+        const class_ = await cassRepository.findById(getClass03().classId);
         await classJoinRequestRepository.deleteBy(student!, class_!);
 
         const request = await classJoinRequestRepository.findAllRequestsBy(student!);

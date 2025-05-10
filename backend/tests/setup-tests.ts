@@ -13,8 +13,10 @@ import { makeTestAttachments } from './test_assets/content/attachments.testdata.
 import { makeTestQuestions } from './test_assets/questions/questions.testdata.js';
 import { makeTestAnswers } from './test_assets/questions/answers.testdata.js';
 import { makeTestSubmissions } from './test_assets/assignments/submission.testdata.js';
+import { Collection } from '@mikro-orm/core';
+import { Group } from '../src/entities/assignments/group.entity';
 
-export async function setupTestApp() {
+export async function setupTestApp(): Promise<void> {
     dotenv.config({ path: '.env.test' });
     await initORM(true);
 
@@ -28,8 +30,8 @@ export async function setupTestApp() {
     const assignments = makeTestAssignemnts(em, classes);
     const groups = makeTestGroups(em, students, assignments);
 
-    assignments[0].groups = groups.slice(0, 3);
-    assignments[1].groups = groups.slice(3, 4);
+    assignments[0].groups = new Collection<Group>(groups.slice(0, 3));
+    assignments[1].groups = new Collection<Group>(groups.slice(3, 4));
 
     const teacherInvitations = makeTestTeacherInvitations(em, teachers, classes);
     const classJoinRequests = makeTestClassJoinRequests(em, students, classes);
@@ -37,7 +39,7 @@ export async function setupTestApp() {
 
     learningObjects[1].attachments = attachments;
 
-    const questions = makeTestQuestions(em, students);
+    const questions = makeTestQuestions(em, students, groups);
     const answers = makeTestAnswers(em, teachers, questions);
     const submissions = makeTestSubmissions(em, students, groups);
 

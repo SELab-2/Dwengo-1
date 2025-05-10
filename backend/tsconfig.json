@@ -3,7 +3,11 @@
     "include": ["src/**/*.ts"],
     "compilerOptions": {
         "rootDir": "./src",
-        "outDir": "./dist",
-        "resolveJsonModule": true
-    }
+        "outDir": "./dist"
+    },
+    "references": [
+        {
+            "path": "../common"
+        }
+    ]
 }

@@ -1,16 +1,17 @@
 import { DWENGO_API_BASE } from '../../config.js';
 import { fetchWithLogging } from '../../util/api-helper.js';
+import dwengoApiLearningPathProvider from '../learning-paths/dwengo-api-learning-path-provider.js';
+import { LearningObjectProvider } from './learning-object-provider.js';
+import { getLogger, Logger } from '../../logging/initalize.js';
 import {
     FilteredLearningObject,
-    LearningObjectIdentifier,
+    LearningObjectIdentifierDTO,
     LearningObjectMetadata,
     LearningObjectNode,
     LearningPathIdentifier,
     LearningPathResponse,
-} from '../../interfaces/learning-content.js';
-import dwengoApiLearningPathProvider from '../learning-paths/dwengo-api-learning-path-provider.js';
-import { LearningObjectProvider } from './learning-object-provider.js';
-import { getLogger, Logger } from '../../logging/initalize.js';
+} from '@dwengo-1/common/interfaces/learning-content';
+import { v4 } from 'uuid';
 
 const logger: Logger = getLogger();
 
@@ -23,7 +24,7 @@ function filterData(data: LearningObjectMetadata): FilteredLearningObject {
     return {
         key: data.hruid, // Hruid learningObject (not path)
         _id: data._id,
-        uuid: data.uuid,
+        uuid: data.uuid ?? v4(),
         version: data.version,
         title: data.title,
         htmlUrl: `/learningObject/${data.hruid}/html?language=${data.language}&version=${data.version}`, // Url to fetch html content
@@ -66,12 +67,13 @@ async function fetchLearningObjects(learningPathId: LearningPathIdentifier, full
         }
 
         const objects = await Promise.all(
-            nodes.map(async (node) =>
-                dwengoApiLearningObjectProvider.getLearningObjectById({
+            nodes.map(async (node) => {
+                const learningObjectId: LearningObjectIdentifierDTO = {
                     hruid: node.learningobject_hruid,
                     language: learningPathId.language,
-                })
-            )
+                };
+                return dwengoApiLearningObjectProvider.getLearningObjectById(learningObjectId);
+            })
         );
         return objects.filter((obj): obj is FilteredLearningObject => obj !== null);
     } catch (error) {
@@ -84,13 +86,13 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
     /**
      * Fetches a single learning object by its HRUID
      */
-    async getLearningObjectById(id: LearningObjectIdentifier): Promise<FilteredLearningObject | null> {
+    async getLearningObjectById(id: LearningObjectIdentifierDTO): Promise<FilteredLearningObject | null> {
         const metadataUrl = `${DWENGO_API_BASE}/learningObject/getMetadata`;
         const metadata = await fetchWithLogging<LearningObjectMetadata>(
             metadataUrl,
             `Metadata for Learning Object HRUID "${id.hruid}" (language ${id.language})`,
             {
-                params: id,
+                params: { ...id },
             }
         );
 
@@ -120,10 +122,10 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
      * Obtain a HTML-rendering of the learning object with the given identifier (as a string). For learning objects
      * from the Dwengo API, this means passing through the HTML rendering from there.
      */
-    async getLearningObjectHTML(id: LearningObjectIdentifier): Promise<string | null> {
+    async getLearningObjectHTML(id: LearningObjectIdentifierDTO): Promise<string | null> {
         const htmlUrl = `${DWENGO_API_BASE}/learningObject/getRaw`;
         const html = await fetchWithLogging<string>(htmlUrl, `Metadata for Learning Object HRUID "${id.hruid}" (language ${id.language})`, {
-            params: id,
+            params: { ...id },
         });
 
         if (!html) {

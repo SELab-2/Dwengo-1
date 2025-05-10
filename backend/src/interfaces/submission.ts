@@ -1,26 +1,10 @@
 import { Submission } from '../entities/assignments/submission.entity.js';
-import { Language } from '../entities/content/language.js';
-import { GroupDTO, mapToGroupDTO } from './group.js';
-import { mapToStudent, mapToStudentDTO, StudentDTO } from './student.js';
-import { LearningObjectIdentifier } from './learning-content.js';
-
-export interface SubmissionDTO {
-    learningObjectIdentifier: LearningObjectIdentifier;
-
-    submissionNumber?: number;
-    submitter: StudentDTO;
-    time?: Date;
-    group?: GroupDTO;
-    content: string;
-}
-
-export interface SubmissionDTOId {
-    learningObjectHruid: string;
-    learningObjectLanguage: Language;
-    learningObjectVersion: number;
-
-    submissionNumber?: number;
-}
+import { mapToGroupDTOId } from './group.js';
+import { mapToStudentDTO } from './student.js';
+import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
+import { getSubmissionRepository } from '../data/repositories.js';
+import { Student } from '../entities/users/student.entity.js';
+import { Group } from '../entities/assignments/group.entity.js';
 
 export function mapToSubmissionDTO(submission: Submission): SubmissionDTO {
     return {
@@ -29,11 +13,10 @@ export function mapToSubmissionDTO(submission: Submission): SubmissionDTO {
             language: submission.learningObjectLanguage,
             version: submission.learningObjectVersion,
         },
-
         submissionNumber: submission.submissionNumber,
         submitter: mapToStudentDTO(submission.submitter),
         time: submission.submissionTime,
-        group: submission.onBehalfOf ? mapToGroupDTO(submission.onBehalfOf) : undefined,
+        group: submission.onBehalfOf ? mapToGroupDTOId(submission.onBehalfOf, submission.onBehalfOf.assignment.within) : undefined,
         content: submission.content,
     };
 }
@@ -48,17 +31,14 @@ export function mapToSubmissionDTOId(submission: Submission): SubmissionDTOId {
     };
 }
 
-export function mapToSubmission(submissionDTO: SubmissionDTO): Submission {
-    const submission = new Submission();
-    submission.learningObjectHruid = submissionDTO.learningObjectIdentifier.hruid;
-    submission.learningObjectLanguage = submissionDTO.learningObjectIdentifier.language;
-    submission.learningObjectVersion = submissionDTO.learningObjectIdentifier.version!;
-    // Submission.submissionNumber = submissionDTO.submissionNumber;
-    submission.submitter = mapToStudent(submissionDTO.submitter);
-    // Submission.submissionTime = submissionDTO.time;
-    // Submission.onBehalfOf =  submissionDTO.group!;
-    // TODO fix group
-    submission.content = submissionDTO.content;
-
-    return submission;
+export function mapToSubmission(submissionDTO: SubmissionDTO, submitter: Student, onBehalfOf: Group): Submission {
+    return getSubmissionRepository().create({
+        learningObjectHruid: submissionDTO.learningObjectIdentifier.hruid,
+        learningObjectLanguage: submissionDTO.learningObjectIdentifier.language,
+        learningObjectVersion: submissionDTO.learningObjectIdentifier.version || 1,
+        submitter: submitter,
+        submissionTime: new Date(),
+        content: submissionDTO.content,
+        onBehalfOf: onBehalfOf,
+    });
 }

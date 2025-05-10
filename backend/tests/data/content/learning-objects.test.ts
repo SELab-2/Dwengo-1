@@ -3,7 +3,8 @@ import { LearningObjectRepository } from '../../../src/data/content/learning-obj
 import { getLearningObjectRepository } from '../../../src/data/repositories';
 import { setupTestApp } from '../../setup-tests';
 import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
-import { Language } from '../../../src/entities/content/language';
+import { Language } from '@dwengo-1/common/util/language';
+import { testLearningObject01 } from '../../test_assets/content/learning-objects.testdata';
 
 describe('LearningObjectRepository', () => {
     let learningObjectRepository: LearningObjectRepository;
@@ -13,8 +14,8 @@ describe('LearningObjectRepository', () => {
         learningObjectRepository = getLearningObjectRepository();
     });
 
-    const id01 = new LearningObjectIdentifier('id01', Language.English, 1);
-    const id02 = new LearningObjectIdentifier('test_id', Language.English, 1);
+    const id01 = new LearningObjectIdentifier(testLearningObject01.hruid, testLearningObject01.language, testLearningObject01.version);
+    const id02 = new LearningObjectIdentifier('non_existing_id', Language.English, 1);
 
     it('should return the learning object that matches identifier 1', async () => {
         const learningObject = await learningObjectRepository.findByIdentifier(id01);

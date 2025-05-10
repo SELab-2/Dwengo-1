@@ -3,19 +3,21 @@ import {
     createTeacherHandler,
     deleteTeacherHandler,
     getAllTeachersHandler,
+    getStudentJoinRequestHandler,
     getTeacherClassHandler,
     getTeacherHandler,
     getTeacherQuestionHandler,
     getTeacherStudentHandler,
+    updateStudentJoinRequestHandler,
 } from '../controllers/teachers.js';
+import invitationRouter from './teacher-invitations.js';
+
 const router = express.Router();
 
 // Root endpoint used to search objects
 router.get('/', getAllTeachersHandler);
 
 router.post('/', createTeacherHandler);
-
-router.delete('/', deleteTeacherHandler);
 
 router.get('/:username', getTeacherHandler);
 
@@ -27,11 +29,11 @@ router.get('/:username/students', getTeacherStudentHandler);
 
 router.get('/:username/questions', getTeacherQuestionHandler);
 
+router.get('/:username/joinRequests/:classId', getStudentJoinRequestHandler);
+
+router.put('/:username/joinRequests/:classId/:studentUsername', updateStudentJoinRequestHandler);
+
 // Invitations to other classes a teacher received
-router.get('/:id/invitations', (req, res) => {
-    res.json({
-        invitations: ['0'],
-    });
-});
+router.use('/invitations', invitationRouter);
 
 export default router;

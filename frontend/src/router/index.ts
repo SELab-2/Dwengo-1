@@ -1,19 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
-import MenuBar from "@/components/MenuBar.vue";
 import SingleAssignment from "@/views/assignments/SingleAssignment.vue";
 import SingleClass from "@/views/classes/SingleClass.vue";
 import SingleDiscussion from "@/views/discussions/SingleDiscussion.vue";
 import NotFound from "@/components/errors/NotFound.vue";
-import CreateClass from "@/views/classes/CreateClass.vue";
 import CreateAssignment from "@/views/assignments/CreateAssignment.vue";
 import CreateDiscussion from "@/views/discussions/CreateDiscussion.vue";
 import CallbackPage from "@/views/CallbackPage.vue";
-import UserDiscussions from "@/views/discussions/UserDiscussions.vue";
 import UserClasses from "@/views/classes/UserClasses.vue";
-import UserAssignments from "@/views/classes/UserAssignments.vue";
-import authState from "@/services/auth/auth-service.ts";
+import UserAssignments from "@/views/assignments/UserAssignments.vue";
+import LearningPathPage from "@/views/learning-paths/LearningPathPage.vue";
+import LearningPathSearchPage from "@/views/learning-paths/LearningPathSearchPage.vue";
 import UserHomePage from "@/views/homepage/UserHomePage.vue";
 import SingleTheme from "@/views/SingleTheme.vue";
+import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
+import authService from "@/services/auth/auth-service";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,13 +21,13 @@ const router = createRouter({
         {
             path: "/",
             name: "home",
-            component: () => import("../views/HomePage.vue"),
+            component: async (): Promise<unknown> => import("../views/HomePage.vue"),
             meta: { requiresAuth: false },
         },
         {
             path: "/login",
             name: "LoginPage",
-            component: () => import("../views/LoginPage.vue"),
+            component: async (): Promise<unknown> => import("../views/LoginPage.vue"),
             meta: { requiresAuth: false },
         },
         {
@@ -38,7 +38,6 @@ const router = createRouter({
 
         {
             path: "/user",
-            component: MenuBar,
             meta: { requiresAuth: true },
             children: [
                 {
@@ -56,37 +55,37 @@ const router = createRouter({
                     name: "UserClasses",
                     component: UserClasses,
                 },
-                {
-                    path: "discussion",
-                    name: "UserDiscussions",
-                    component: UserDiscussions,
-                },
+                // TODO Re-enable this route when the discussion page is ready
+                // {
+                //     Path: "discussion",
+                //     Name: "UserDiscussions",
+                //     Component: UserDiscussions,
+                // },
             ],
         },
 
         {
-            path: "/theme/:id",
+            path: "/theme/:theme",
             name: "Theme",
             component: SingleTheme,
+            props: true,
             meta: { requiresAuth: true },
         },
         {
-            path: "/assignment/create",
-            name: "CreateAssigment",
-            component: CreateAssignment,
+            path: "/assignment",
             meta: { requiresAuth: true },
-        },
-        {
-            path: "/assignment/:id",
-            name: "SingleAssigment",
-            component: SingleAssignment,
-            meta: { requiresAuth: true },
-        },
-        {
-            path: "/class/create",
-            name: "CreateClass",
-            component: CreateClass,
-            meta: { requiresAuth: true },
+            children: [
+                {
+                    path: "create",
+                    name: "CreateAssigment",
+                    component: CreateAssignment,
+                },
+                {
+                    path: ":classId/:id",
+                    name: "SingleAssigment",
+                    component: SingleAssignment,
+                },
+            ],
         },
         {
             path: "/class/:id",
@@ -107,6 +106,31 @@ const router = createRouter({
             meta: { requiresAuth: true },
         },
         {
+            path: "/learningPath",
+            children: [
+                {
+                    path: "search",
+                    name: "LearningPathSearchPage",
+                    component: LearningPathSearchPage,
+                    meta: { requiresAuth: true },
+                },
+                {
+                    path: ":hruid/:language/:learningObjectHruid",
+                    name: "LearningPath",
+                    component: LearningPathPage,
+                    props: true,
+                    meta: { requiresAuth: true },
+                },
+            ],
+        },
+        {
+            path: "/learningObject/:hruid/:language/:version/raw",
+            name: "LearningObjectView",
+            component: LearningObjectView,
+            props: true,
+            meta: { requiresAuth: true },
+        },
+        {
             path: "/:catchAll(.*)",
             name: "NotFound",
             component: NotFound,
@@ -115,12 +139,11 @@ const router = createRouter({
     ],
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _from, next) => {
     // Verify if user is logged in before accessing certain routes
     if (to.meta.requiresAuth) {
-        if (!authState.isLoggedIn.value) {
-            //Next("/login");
-            next();
+        if (!authService.isLoggedIn.value && !(await authService.loadUser())) {
+            next("/login");
         } else {
             next();
         }

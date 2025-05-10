@@ -34,7 +34,9 @@ npm run test:unit
 
 ```shell
 # Omgevingsvariabelen
-cp .env.development.example .env
+cp .env.example .env
+# Configureer de .env file met de juiste waarden!
+nano .env
 
 npm run build
 npm run start

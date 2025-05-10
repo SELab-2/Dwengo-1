@@ -1,7 +1,8 @@
-import { Entity, ManyToOne } from '@mikro-orm/core';
+import { Entity, Enum, ManyToOne } from '@mikro-orm/core';
 import { Teacher } from '../users/teacher.entity.js';
 import { Class } from './class.entity.js';
 import { TeacherInvitationRepository } from '../../data/classes/teacher-invitation-repository.js';
+import { ClassStatus } from '@dwengo-1/common/util/class-join-request';
 
 /**
  * Invitation of a teacher into a class (in order to teach it).
@@ -25,4 +26,7 @@ export class TeacherInvitation {
         primary: true,
     })
     class!: Class;
+
+    @Enum(() => ClassStatus)
+    status!: ClassStatus;
 }

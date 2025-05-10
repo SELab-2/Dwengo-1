@@ -8,17 +8,9 @@ import { StudentRepository } from '../../data/users/student-repository.js';
     repository: () => StudentRepository,
 })
 export class Student extends User {
-    @ManyToMany(() => Class)
+    @ManyToMany({ entity: () => Class, mappedBy: 'students' })
     classes!: Collection<Class>;
 
-    @ManyToMany(() => Group)
-    groups!: Collection<Group>;
-
-    constructor(
-        public username: string,
-        public firstName: string,
-        public lastName: string
-    ) {
-        super();
-    }
+    @ManyToMany({ entity: () => Group, mappedBy: 'members' })
+    groups: Collection<Group> = new Collection<Group>(this);
 }

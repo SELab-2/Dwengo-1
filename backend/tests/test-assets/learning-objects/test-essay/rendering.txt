@@ -1,7 +1,0 @@
-<div class="learning-object-gift">
-    <div id="gift-q1" class="gift-question">
-        <h2 id="gift-q1-title" class="gift-title">MC basic</h2>
-        <p id="gift-q1-stem" class="gift-stem">How are you?</p>
-        <textarea id="gift-q1-answer" class="gift-essay-answer"></textarea>
-    </div>
-</div>

@@ -1,5 +1,13 @@
 import express from 'express';
-import { createGroupHandler, getAllGroupsHandler, getGroupHandler, getGroupSubmissionsHandler } from '../controllers/groups.js';
+import {
+    createGroupHandler,
+    deleteGroupHandler,
+    getAllGroupsHandler,
+    getGroupHandler,
+    getGroupQuestionsHandler,
+    getGroupSubmissionsHandler,
+    putGroupHandler,
+} from '../controllers/groups.js';
 
 const router = express.Router({ mergeParams: true });
 
@@ -8,16 +16,14 @@ router.get('/', getAllGroupsHandler);
 
 router.post('/', createGroupHandler);
 
-// Information about a group (members, ... [TODO DOC])
 router.get('/:groupid', getGroupHandler);
 
-router.get('/:groupid', getGroupSubmissionsHandler);
+router.put('/:groupid', putGroupHandler);
 
-// The list of questions a group has made
-router.get('/:id/questions', (req, res) => {
-    res.json({
-        questions: ['0'],
-    });
-});
+router.delete('/:groupid', deleteGroupHandler);
+
+router.get('/:groupid/submissions', getGroupSubmissionsHandler);
+
+router.get('/:groupid/questions', getGroupQuestionsHandler);
 
 export default router;

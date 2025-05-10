@@ -32,13 +32,13 @@ class GiftProcessor extends StringProcessor {
         super(DwengoContentType.GIFT);
     }
 
-    override renderFn(giftString: string) {
+    override renderFn(giftString: string): string {
         const quizQuestions: GIFTQuestion[] = parse(giftString);
 
         let html = "<div class='learning-object-gift'>\n";
         let i = 1;
         for (const question of quizQuestions) {
-            html += `    <div class='gift-question' id='gift-q${i}'>\n`;
+            html += `    <div class='gift-question gift-question-type-${question.type}' id='gift-q${i}'>\n`;
             html += '        ' + this.renderQuestion(question, i).replaceAll(/\n(.+)/g, '\n        $1'); // Replace for indentation.
             html += `    </div>\n`;
             i++;

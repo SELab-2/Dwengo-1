@@ -2,13 +2,11 @@ import { Request, Response } from 'express';
 import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
 import learningPathService from '../services/learning-paths/learning-path-service.js';
-import { BadRequestException, NotFoundException } from '../exceptions.js';
-import { Language } from '../entities/content/language.js';
-import {
-    PersonalizationTarget,
-    personalizedForGroup,
-    personalizedForStudent,
-} from '../services/learning-paths/learning-path-personalization-util.js';
+import { Language } from '@dwengo-1/common/util/language';
+import { BadRequestException } from '../exceptions/bad-request-exception.js';
+import { NotFoundException } from '../exceptions/not-found-exception.js';
+import { Group } from '../entities/assignments/group.entity.js';
+import { getAssignmentRepository, getGroupRepository } from '../data/repositories.js';
 
 /**
  * Fetch learning paths based on query parameters.
@@ -19,20 +17,20 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
     const searchQuery = req.query.search as string;
     const language = (req.query.language as string) || FALLBACK_LANG;
 
-    const forStudent = req.query.forStudent as string;
     const forGroupNo = req.query.forGroup as string;
     const assignmentNo = req.query.assignmentNo as string;
     const classId = req.query.classId as string;
 
-    let personalizationTarget: PersonalizationTarget | undefined;
+    let forGroup: Group | undefined;
 
-    if (forStudent) {
-        personalizationTarget = await personalizedForStudent(forStudent);
-    } else if (forGroupNo) {
+    if (forGroupNo) {
         if (!assignmentNo || !classId) {
             throw new BadRequestException('If forGroupNo is specified, assignmentNo and classId must also be specified.');
         }
-        personalizationTarget = await personalizedForGroup(classId, parseInt(assignmentNo), parseInt(forGroupNo));
+        const assignment = await getAssignmentRepository().findByClassIdAndAssignmentId(classId, parseInt(assignmentNo));
+        if (assignment) {
+            forGroup = (await getGroupRepository().findByAssignmentAndGroupNumber(assignment, parseInt(forGroupNo))) ?? undefined;
+        }
     }
 
     let hruidList;
@@ -47,18 +45,13 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
             throw new NotFoundException(`Theme "${themeKey}" not found.`);
         }
     } else if (searchQuery) {
-        const searchResults = await learningPathService.searchLearningPaths(searchQuery, language as Language, personalizationTarget);
+        const searchResults = await learningPathService.searchLearningPaths(searchQuery, language as Language, forGroup);
         res.json(searchResults);
         return;
     } else {
         hruidList = themes.flatMap((theme) => theme.hruids);
     }
 
-    const learningPaths = await learningPathService.fetchLearningPaths(
-        hruidList,
-        language as Language,
-        `HRUIDs: ${hruidList.join(', ')}`,
-        personalizationTarget
-    );
+    const learningPaths = await learningPathService.fetchLearningPaths(hruidList, language as Language, `HRUIDs: ${hruidList.join(', ')}`, forGroup);
     res.json(learningPaths.data);
 }
