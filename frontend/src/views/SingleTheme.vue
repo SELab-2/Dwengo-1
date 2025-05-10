@@ -33,7 +33,7 @@
 <template>
     <div class="container">
         <using-query-result :query-result="themeQueryResult">
-            <h1 class="h1">{{ currentThemeInfo!!.title }}</h1>
+            <h1>{{ currentThemeInfo!!.title }}</h1>
             <p>{{ currentThemeInfo!!.description }}</p>
             <div class="search-field-container">
                 <v-text-field
