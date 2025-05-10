@@ -96,7 +96,7 @@
 
 <template>
     <div class="main-container">
-        <h1 class="title">{{ t("new-assignment") }}</h1>
+        <h1 class="h1">{{ t("new-assignment") }}</h1>
         <v-card class="form-card">
             <v-form
                 ref="form"
