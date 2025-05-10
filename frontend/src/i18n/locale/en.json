@@ -126,5 +126,12 @@
     "no-students-found": "This class has no students.",
     "no-invitations-found": "You have no pending invitations.",
     "no-join-requests-found": "There are no pending join requests for this class.",
-    "no-classes-found": "You are not yet part of a class."
+    "no-classes-found": "You are not yet part of a class.",
+    "classCreated": "class created!",
+    "success": "success",
+    "submitted": "submitted",
+    "see-submission": "view submission",
+    "view-submissions": "view submissions",
+    "valid-username": "please enter a valid username",
+    "creationFailed": "creation failed, please try again"
 }

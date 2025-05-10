@@ -126,5 +126,12 @@
     "no-students-found": "Diese Klasse hat keine Schüler.",
     "no-invitations-found": "Sie haben keine ausstehenden Einladungen.",
     "no-join-requests-found": "Es gibt keine ausstehenden Beitrittsanfragen für diese Klasse.",
-    "no-classes-found": "Sie sind noch keinem Kurs beigetreten."
+    "no-classes-found": "Sie sind noch keinem Kurs beigetreten.",
+    "classCreated": "Klasse erstellt!",
+    "success": "Erfolg",
+    "submitted": "eingereicht",
+    "see-submission": "Einsendung anzeigen",
+    "view-submissions": "Einsendungen anzeigen",
+    "valid-username": "Bitte geben Sie einen gültigen Benutzernamen ein",
+    "creationFailed": "Erstellung fehlgeschlagen, bitte versuchen Sie es erneut"
 }

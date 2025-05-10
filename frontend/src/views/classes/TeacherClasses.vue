@@ -113,7 +113,7 @@
             dialog.value = true;
         }
         if (!className.value || className.value === "") {
-            showSnackbar(t("name is mandatory"), "error");
+            showSnackbar(t("nameIsMandatory"), "error");
         }
     }
 

@@ -126,5 +126,12 @@
     "no-students-found": "Deze klas heeft geen leerlingen.",
     "no-invitations-found": "U heeft geen openstaande uitnodigingen.",
     "no-join-requests-found": "Er zijn geen openstaande verzoeken om lid te worden van deze klas.",
-    "no-classes-found": "U maakt nog geen deel uit van een klas."
+    "no-classes-found": "U maakt nog geen deel uit van een klas.",
+    "classCreated": "Klas aangemaakt!",
+    "success": "succes",
+    "submitted": "ingediend",
+    "see-submission": "inzending bekijken",
+    "view-submissions": "inzendingen bekijken",
+    "valid-username": "voer een geldige gebruikersnaam in",
+    "creationFailed": "aanmaak mislukt, probeer het opnieuw"
 }

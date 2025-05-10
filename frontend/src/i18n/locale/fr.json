@@ -126,5 +126,12 @@
     "no-students-found": "Cette classe n'a pas d'élèves.",
     "no-invitations-found": "Vous n'avez aucune invitation en attente.",
     "no-join-requests-found": "Il n'y a aucune demande d'adhésion en attente pour cette classe.",
-    "no-classes-found": "Vous ne faites pas encore partie d'une classe."
+    "no-classes-found": "Vous ne faites pas encore partie d'une classe.",
+    "classCreated": "Classe créée !",
+    "success": "succès",
+    "submitted": "soumis",
+    "see-submission": "voir la soumission",
+    "view-submissions": "voir les soumissions",
+    "valid-username": "veuillez entrer un nom d'utilisateur valide",
+    "creationFailed": "échec de la création, veuillez réessayer"
 }

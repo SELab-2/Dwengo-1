@@ -113,7 +113,7 @@
 
     function sentInvite(): void {
         if (!usernameTeacher.value) {
-            showSnackbar(t("please enter a valid username"), "error");
+            showSnackbar(t("valid-username"), "error");
             return;
         }
         const data: TeacherInvitationData = {
