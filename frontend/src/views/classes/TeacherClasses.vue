@@ -235,7 +235,12 @@
                                             </v-btn>
                                         </td>
                                         <td>
-                                            <v-btn v-if="!isMdAndDown" variant="text" append-icon="mdi-content-copy" @click="copyCode(c.id)">
+                                            <v-btn
+                                                v-if="!isMdAndDown"
+                                                variant="text"
+                                                append-icon="mdi-content-copy"
+                                                @click="copyCode(c.id)"
+                                            >
                                                 {{ c.id }}
                                             </v-btn>
                                             <span
