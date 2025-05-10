@@ -314,6 +314,7 @@
 
     .join {
         display: flex;
+        margin-left: 1%;
         flex-direction: column;
         gap: 20px;
         margin-top: 50px;
