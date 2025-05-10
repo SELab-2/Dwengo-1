@@ -8,11 +8,10 @@ import {
     getGroupHandler,
     getGroupSubmissionsHandler
 } from '../../src/controllers/groups.js';
-import {getAnswerHandler} from "../../src/controllers/answers";
-import {NotFoundException} from "../../src/exceptions/not-found-exception";
-import {getClass01} from "../test_assets/classes/classes.testdata";
-import {getAssignment01, getAssignment02} from "../test_assets/assignments/assignments.testdata";
-import {getTestGroup01} from "../test_assets/assignments/groups.testdata";
+import { NotFoundException } from "../../src/exceptions/not-found-exception";
+import { getClass01 } from "../test_assets/classes/classes.testdata";
+import { getAssignment01, getAssignment02 } from "../test_assets/assignments/assignments.testdata";
+import { getTestGroup01 } from "../test_assets/assignments/groups.testdata";
 
 function createRequestObject(classid: string, assignmentid: string, groupNumber: string) {
     return {
@@ -51,7 +50,7 @@ describe('Group controllers', () => {
             params: {
                 classid: 'id01',
                 assignmentid: '1',
-                groupid: '154981', // should not exist
+                groupid: '154981', // Should not exist
             },
             query: {},
         };
@@ -64,8 +63,8 @@ describe('Group controllers', () => {
         req = {
             params: {
                 classid: 'id01',
-                assignmentid: '1000', // should not exist
-                groupid: '42000', // should not exist
+                assignmentid: '1000', // Should not exist
+                groupid: '42000', // Should not exist
             },
             query: {},
         };
@@ -76,9 +75,9 @@ describe('Group controllers', () => {
     it('should return 404 not found ont a non-existing class', async () => {
         req = {
             params: {
-                classid: 'doesnotexist', // should not exist
-                assignmentid: '1000', // should not exist
-                groupid: '42000', // should not exist
+                classid: 'doesnotexist', // Should not exist
+                assignmentid: '1000', // Should not exist
+                groupid: '42000', // Should not exist
             },
             query: {},
         };

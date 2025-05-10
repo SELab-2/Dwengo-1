@@ -2,13 +2,14 @@ import { setupTestApp } from '../setup-tests.js';
 import { describe, it, expect, beforeAll, beforeEach, vi, Mock } from 'vitest';
 import { Request, Response } from 'express';
 import { getAssignmentHandler, getAllAssignmentsHandler, getAssignmentsSubmissionsHandler } from '../../src/controllers/assignments.js';
-import { checkReturn404, checkReturnList } from './qol.js'
-import {getAnswerHandler} from "../../src/controllers/answers";
-import {NotFoundException} from "../../src/exceptions/not-found-exception";
-import {getClass01, getClass02, getClass03} from "../test_assets/classes/classes.testdata";
-import {getAssignment01} from "../test_assets/assignments/assignments.testdata";
+import { NotFoundException } from "../../src/exceptions/not-found-exception";
+import { getClass01 } from "../test_assets/classes/classes.testdata";
+import { getAssignment01 } from "../test_assets/assignments/assignments.testdata";
 
-function createRequestObject(classid: string, assignmentid: string) {
+function createRequestObject(classid: string, assignmentid: string): {
+    query: {};
+    params: { classid: string; id: string }
+} {
     return {
         params: {
             classid: classid,
@@ -40,7 +41,7 @@ describe('Assignment controllers', () => {
     });
 
     it('return error non-existing assignment', async () => {
-        req = createRequestObject('doesnotexist', '43000'); // should not exist
+        req = createRequestObject('doesnotexist', '43000'); // Should not exist
 
         await expect(async () => getAssignmentHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
     });

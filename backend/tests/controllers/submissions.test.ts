@@ -1,16 +1,15 @@
 import { setupTestApp } from '../setup-tests.js';
 import { describe, it, expect, beforeAll, beforeEach, vi, Mock } from 'vitest';
-import {
-    getSubmissionHandler,
-    getAllSubmissionsHandler,
-    deleteSubmissionHandler, createSubmissionHandler
-} from '../../src/controllers/submissions.js';
+import { getSubmissionHandler, getAllSubmissionsHandler } from '../../src/controllers/submissions.js';
 import { Request, Response } from 'express';
-import {NotFoundException} from "../../src/exceptions/not-found-exception";
-import {getClass01, getClass02} from "../test_assets/classes/classes.testdata";
+import { NotFoundException } from "../../src/exceptions/not-found-exception";
+import { getClass02 } from "../test_assets/classes/classes.testdata";
 
 
-function createRequestObject(hruid: string, submissionNumber: string) {
+function createRequestObject(hruid: string, submissionNumber: string): {
+    query: { language: string; version: string };
+    params: { hruid: string; id: string }
+} {
 	return {
 		params: {
 			hruid: hruid,
