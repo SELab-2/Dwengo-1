@@ -13,14 +13,15 @@ import { getClass01 } from '../test_assets/classes/classes.testdata';
 import { getAssignment01, getAssignment02 } from '../test_assets/assignments/assignments.testdata';
 import { getTestGroup01 } from '../test_assets/assignments/groups.testdata';
 
-function createRequestObject(classid: string, assignmentid: string, groupNumber: string) {
+function createRequestObject(classid: string, assignmentid: string, groupNumber: string): {
+    params: { classid: string; groupid: string; assignmentid: string }
+} {
     return {
         params: {
             classid: classid,
             assignmentid: assignmentid,
             groupid: groupNumber,
         },
-        query: {},
     };
 }
 
