@@ -121,5 +121,9 @@
     "invite": "invite",
     "assignmentIndicator": "ASSIGNMENT",
     "searchAllLearningPathsTitle": "Search all learning paths",
-    "searchAllLearningPathsDescription": "You didn't find what you were looking for? Click here to search our whole database of available learning paths."
+    "searchAllLearningPathsDescription": "You didn't find what you were looking for? Click here to search our whole database of available learning paths.",
+    "no-students-found": "This class has no students.",
+    "no-invitations-found": "You have no pending invitations.",
+    "no-join-requests-found": "There are no pending join requests for this class.",
+    "no-classes-found": "You are not yet part of a class."
 }

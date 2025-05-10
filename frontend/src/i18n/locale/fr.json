@@ -121,5 +121,9 @@
     "invite": "inviter",
     "assignmentIndicator": "DEVOIR",
     "searchAllLearningPathsTitle": "Rechercher tous les parcours d'apprentissage",
-    "searchAllLearningPathsDescription": "Vous n'avez pas trouvé ce que vous cherchiez ? Cliquez ici pour rechercher dans toute notre base de données de parcours d'apprentissage disponibles."
+    "searchAllLearningPathsDescription": "Vous n'avez pas trouvé ce que vous cherchiez ? Cliquez ici pour rechercher dans toute notre base de données de parcours d'apprentissage disponibles.",
+    "no-students-found": "Cette classe n'a pas d'élèves.",
+    "no-invitations-found": "Vous n'avez aucune invitation en attente.",
+    "no-join-requests-found": "Il n'y a aucune demande d'adhésion en attente pour cette classe.",
+    "no-classes-found": "Vous ne faites pas encore partie d'une classe."
 }

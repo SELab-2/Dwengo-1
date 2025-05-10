@@ -121,5 +121,9 @@
     "invite": "uitnodigen",
     "assignmentIndicator": "OPDRACHT",
     "searchAllLearningPathsTitle": "Alle leerpaden doorzoeken",
-    "searchAllLearningPathsDescription": "Niet gevonden waar je naar op zoek was? Klik hier om onze volledige databank van beschikbare leerpaden te doorzoeken."
+    "searchAllLearningPathsDescription": "Niet gevonden waar je naar op zoek was? Klik hier om onze volledige databank van beschikbare leerpaden te doorzoeken.",
+    "no-students-found": "Deze klas heeft geen leerlingen.",
+    "no-invitations-found": "U heeft geen openstaande uitnodigingen.",
+    "no-join-requests-found": "Er zijn geen openstaande verzoeken om lid te worden van deze klas.",
+    "no-classes-found": "U maakt nog geen deel uit van een klas."
 }

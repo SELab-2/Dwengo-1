@@ -121,5 +121,9 @@
     "invite": "einladen",
     "assignmentIndicator": "AUFGABE",
     "searchAllLearningPathsTitle": "Alle Lernpfade durchsuchen",
-    "searchAllLearningPathsDescription": "Nicht gefunden, was Sie gesucht haben? Klicken Sie hier, um unsere gesamte Lernpfad-Datenbank zu durchsuchen."
+    "searchAllLearningPathsDescription": "Nicht gefunden, was Sie gesucht haben? Klicken Sie hier, um unsere gesamte Lernpfad-Datenbank zu durchsuchen.",
+    "no-students-found": "Diese Klasse hat keine Schüler.",
+    "no-invitations-found": "Sie haben keine ausstehenden Einladungen.",
+    "no-join-requests-found": "Es gibt keine ausstehenden Beitrittsanfragen für diese Klasse.",
+    "no-classes-found": "Sie sind noch keinem Kurs beigetreten."
 }
