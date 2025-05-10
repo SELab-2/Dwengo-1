@@ -6,12 +6,12 @@ import {
     deleteGroupHandler,
     getAllGroupsHandler,
     getGroupHandler,
-    getGroupSubmissionsHandler
+    getGroupSubmissionsHandler,
 } from '../../src/controllers/groups.js';
-import { NotFoundException } from "../../src/exceptions/not-found-exception";
-import { getClass01 } from "../test_assets/classes/classes.testdata";
-import { getAssignment01, getAssignment02 } from "../test_assets/assignments/assignments.testdata";
-import { getTestGroup01 } from "../test_assets/assignments/groups.testdata";
+import { NotFoundException } from '../../src/exceptions/not-found-exception';
+import { getClass01 } from '../test_assets/classes/classes.testdata';
+import { getAssignment01, getAssignment02 } from '../test_assets/assignments/assignments.testdata';
+import { getTestGroup01 } from '../test_assets/assignments/groups.testdata';
 
 function createRequestObject(classid: string, assignmentid: string, groupNumber: string) {
     return {
@@ -35,7 +35,7 @@ describe('Group controllers', () => {
         await setupTestApp();
     });
 
-    beforeEach(async () =>  {
+    beforeEach(async () => {
         jsonMock = vi.fn();
         statusMock = vi.fn().mockReturnThis();
 
@@ -56,7 +56,6 @@ describe('Group controllers', () => {
         };
 
         await expect(async () => getGroupHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
-
     });
 
     it('should return 404 not found on a non-existing assignment', async () => {
@@ -95,16 +94,12 @@ describe('Group controllers', () => {
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ group: expect.anything() }));
     });
 
-
     it('Create and delete', async () => {
         const assignment = getAssignment02();
         const classId = assignment.within.classId as string;
         req = createRequestObject(classId, (assignment.id ?? 1).toString(), '1');
         req.body = {
-            members: [
-                'Noordkaap',
-                'DireStraits',
-            ]
+            members: ['Noordkaap', 'DireStraits'],
         };
 
         await createGroupHandler(req as Request, res as Response);
