@@ -47,7 +47,7 @@
 
 <template>
     <div class="main-container">
-        <h1>{{ t("themes") }}</h1>
+        <h1 class="h1">{{ t("themes") }}</h1>
         <v-container class="dropdowns">
             <v-select
                 class="v-select"

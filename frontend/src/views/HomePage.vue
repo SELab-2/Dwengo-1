@@ -28,7 +28,7 @@
                     alt="Dwengo logo"
                     style="align-self: center"
                 />
-                <h1>{{ t("homeTitle") }}</h1>
+                <h1 class="h1">{{ t("homeTitle") }}</h1>
                 <p class="info">
                     {{ t("homeIntroduction1") }}
                 </p>

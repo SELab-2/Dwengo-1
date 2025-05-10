@@ -81,7 +81,7 @@
 
 <template>
     <div class="assignments-container">
-        <h1>{{ t("assignments") }}</h1>
+        <h1 class="h1">{{ t("assignments") }}</h1>
 
         <v-btn
             v-if="isTeacher"

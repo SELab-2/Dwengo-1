@@ -136,7 +136,7 @@
             ></v-empty-state>
         </div>
         <div v-else>
-            <h1>{{ t("classes") }}</h1>
+            <h1 class="h1">{{ t("classes") }}</h1>
             <using-query-result
                 :query-result="classesQuery"
                 v-slot="classResponse: { data: ClassesResponse }"

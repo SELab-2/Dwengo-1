@@ -187,7 +187,7 @@
             v-slot="classResponse: { data: ClassResponse }"
         >
             <div>
-                <h1>{{ classResponse.data.class.displayName }}</h1>
+                <h1 class="h1">{{ classResponse.data.class.displayName }}</h1>
                 <using-query-result
                     :query-result="getStudents"
                     v-slot="studentsResponse: { data: StudentsResponse }"

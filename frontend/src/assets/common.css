@@ -1,4 +1,4 @@
-h1 {
+.h1 {
     color: #0e6942;
     text-transform: uppercase;
     font-weight: bolder;
@@ -47,7 +47,7 @@ th {
 }
 
 @media screen and (max-width: 850px) {
-    h1 {
+    .h1 {
         text-align: center;
         padding-left: 0;
     }
