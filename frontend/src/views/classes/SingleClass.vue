@@ -400,6 +400,7 @@
     .join {
         display: flex;
         flex-direction: column;
+        margin-left: 1%;
         gap: 20px;
         margin-top: 50px;
     }
