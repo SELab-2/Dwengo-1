@@ -138,6 +138,13 @@
         copied.value = true;
     }
 
+    async function copyCode(selectedCode: string): Promise<void> {
+        code.value = selectedCode;
+        await copyToClipboard();
+        showSnackbar(t("copied"), "white");
+        copied.value = false;
+    }
+
     // Custom breakpoints
     const customBreakpoints = {
         xs: 0,
@@ -228,7 +235,9 @@
                                             </v-btn>
                                         </td>
                                         <td>
-                                            <span v-if="!isMdAndDown">{{ c.id }}</span>
+                                            <v-btn v-if="!isMdAndDown" variant="text" append-icon="mdi-content-copy" @click="copyCode(c.id)">
+                                                {{ c.id }}
+                                            </v-btn>
                                             <span
                                                 v-else
                                                 style="cursor: pointer"
