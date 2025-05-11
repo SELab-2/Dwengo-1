@@ -14,4 +14,12 @@ export class LearningObjectController extends BaseController {
     async getHTML(hruid: string, language: Language, version: number): Promise<Document> {
         return this.get<Document>(`/${hruid}/html`, { language, version }, "document");
     }
+
+    async getAllAdministratedBy(admin: string): Promise<LearningObject[]> {
+        return this.get<LearningObject[]>("/", { admin });
+    }
+
+    async upload(learningObjectZip: File): Promise<LearningObject> {
+        return this.postFile<LearningObject>("/", "learningObject", learningObjectZip);
+    }
 }

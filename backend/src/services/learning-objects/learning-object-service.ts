@@ -9,7 +9,6 @@ import {
 } from '@dwengo-1/common/interfaces/learning-content';
 import {getLearningObjectRepository, getTeacherRepository} from "../../data/repositories";
 import {processLearningObjectZip} from "./learning-object-zip-processing-service";
-import {BadRequestException} from "../../exceptions/bad-request-exception";
 import {LearningObject} from "../../entities/content/learning-object.entity";
 
 function getProvider(id: LearningObjectIdentifierDTO): LearningObjectProvider {
@@ -67,7 +66,6 @@ const learningObjectService = {
         const learningObjectRepository = getLearningObjectRepository();
         const learningObject = await processLearningObjectZip(learningObjectPath);
 
-        console.log(learningObject);
         if (!learningObject.hruid.startsWith(getEnvVar(envVars.UserContentPrefix))) {
             learningObject.hruid = getEnvVar(envVars.UserContentPrefix) + learningObject.hruid;
         }
@@ -75,10 +73,10 @@ const learningObjectService = {
         // Lookup the admin teachers based on their usernames and add them to the admins of the learning object.
         const teacherRepo = getTeacherRepository();
         const adminTeachers = await Promise.all(
-            admins.map(it => teacherRepo.findByUsername(it))
+            admins.map(async it => teacherRepo.findByUsername(it))
         );
         adminTeachers.forEach(it => {
-            if (it != null) {
+            if (it !== null) {
                 learningObject.admins.add(it);
             }
         });

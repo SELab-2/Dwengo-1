@@ -14,6 +14,7 @@ import UserHomePage from "@/views/homepage/UserHomePage.vue";
 import SingleTheme from "@/views/SingleTheme.vue";
 import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
 import authService from "@/services/auth/auth-service";
+import OwnLearningContentPage from "@/views/own-learning-content/OwnLearningContentPage.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -113,6 +114,12 @@ const router = createRouter({
                     name: "LearningPathSearchPage",
                     component: LearningPathSearchPage,
                     meta: { requiresAuth: true },
+                },
+                {
+                    path: "my",
+                    name: "OwnLearningContentPage",
+                    component: OwnLearningContentPage,
+                    meta: { requiresAuth: true }
                 },
                 {
                     path: ":hruid/:language/:learningObjectHruid",
