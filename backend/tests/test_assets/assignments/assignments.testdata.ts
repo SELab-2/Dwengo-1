@@ -18,7 +18,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         description: 'reading',
         learningPathHruid: 'un_ai',
         learningPathLanguage: Language.English,
-        deadline: futureDate,
+        deadline: new Date(),
         groups: [],
     });
 

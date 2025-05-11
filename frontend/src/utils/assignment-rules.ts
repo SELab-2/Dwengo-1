@@ -58,7 +58,7 @@ export const deadlineRules = [
             return "Invalid date or time.";
         }
 
-        if (selectedDateTime <= now) {
+        if (selectedDateTime < now) {
             return "The deadline must be in the future.";
         }
 

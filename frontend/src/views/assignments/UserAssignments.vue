@@ -108,6 +108,21 @@
         });
     }
 
+    function getDeadlineClass(deadline?: string | Date): string {
+        if (!deadline) return "";
+        const date = new Date(deadline);
+        const now = new Date();
+        const isToday =
+            date.getDate() === now.getDate() &&
+            date.getMonth() === now.getMonth() &&
+            date.getFullYear() === now.getFullYear();
+
+        if (date.getTime() < now.getTime()) return "deadline-passed";
+        if (isToday) return "deadline-today";
+        return "deadline-upcoming";
+    }
+
+
 
 
     onMounted(async () => {
@@ -147,13 +162,12 @@
                             </div>
                             <div
                                 class="assignment-deadline"
-                                :class="{ 'deadline-passed': isPastDeadline(assignment.deadline) }"
+                                :class="getDeadlineClass(assignment.deadline)"
                             >
                                 {{ t("deadline") }}:
-                                <span>
-                                    {{ formatDate(assignment.deadline) }}
-                                </span>
+                                <span>{{ formatDate(assignment.deadline) }}</span>
                             </div>
+
 
                         </div>
 
@@ -256,6 +270,11 @@
 
     .assignment-deadline.deadline-passed {
         color: #d32f2f;
+        font-weight: bold;
+    }
+
+    .assignment-deadline.deadline-today {
+        color: #f57c00;
         font-weight: bold;
     }
 
