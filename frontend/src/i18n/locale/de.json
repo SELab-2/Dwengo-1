@@ -122,5 +122,6 @@
     "assignmentIndicator": "AUFGABE",
     "searchAllLearningPathsTitle": "Alle Lernpfade durchsuchen",
     "searchAllLearningPathsDescription": "Nicht gefunden, was Sie gesucht haben? Klicken Sie hier, um unsere gesamte Lernpfad-Datenbank zu durchsuchen.",
-    "no-assignments": "Derzeit gibt es keine Zuweisungen."
+    "no-assignments": "Derzeit gibt es keine Zuweisungen.",
+    "deadline": "deadline"
 }

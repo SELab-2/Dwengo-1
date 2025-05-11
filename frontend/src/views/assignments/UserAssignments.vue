@@ -270,23 +270,6 @@
         flex-wrap: wrap;
     }
 
-    .button-row .v-btn {
-        font-weight: 600;
-        text-transform: none;
-    }
-
-    .button-row .v-btn[color="primary"] {
-        color: #097180;
-    }
-
-    .button-row .v-btn[color="primary"]:hover {
-        color: #0e6942;
-    }
-
-    .button-row .v-btn[color="red"] {
-        color: #d32f2f;
-    }
-
     .no-assignments {
         text-align: center;
         font-size: 1.2rem;

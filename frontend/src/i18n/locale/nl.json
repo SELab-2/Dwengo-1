@@ -122,5 +122,6 @@
     "assignmentIndicator": "OPDRACHT",
     "searchAllLearningPathsTitle": "Alle leerpaden doorzoeken",
     "searchAllLearningPathsDescription": "Niet gevonden waar je naar op zoek was? Klik hier om onze volledige databank van beschikbare leerpaden te doorzoeken.",
-    "no-assignments": "Er zijn momenteel geen opdrachten."
+    "no-assignments": "Er zijn momenteel geen opdrachten.",
+    "deadline": "deadline"
 }
