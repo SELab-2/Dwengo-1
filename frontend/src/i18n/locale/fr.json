@@ -121,5 +121,6 @@
     "invite": "inviter",
     "assignmentIndicator": "DEVOIR",
     "searchAllLearningPathsTitle": "Rechercher tous les parcours d'apprentissage",
-    "searchAllLearningPathsDescription": "Vous n'avez pas trouvé ce que vous cherchiez ? Cliquez ici pour rechercher dans toute notre base de données de parcours d'apprentissage disponibles."
+    "searchAllLearningPathsDescription": "Vous n'avez pas trouvé ce que vous cherchiez ? Cliquez ici pour rechercher dans toute notre base de données de parcours d'apprentissage disponibles.",
+    "no-assignments": "Il n'y a actuellement aucun travail."
 }

@@ -65,7 +65,7 @@
 
                 return aTime - bTime;
             });
-    }, []);
+    }, [], {evaluating: true});
 
 
     async function goToCreateAssignment(): Promise<void> {
@@ -179,6 +179,14 @@
                     </v-card>
                 </v-col>
             </v-row>
+            <v-row v-if="assignments.length === 0">
+                <v-col cols="12">
+                    <div class="no-assignments">
+                        {{ t("no-assignments") }}
+                    </div>
+                </v-col>
+            </v-row>
+
         </v-container>
     </div>
 </template>
@@ -200,17 +208,55 @@
 
     .center-btn {
         display: block;
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 auto 2rem auto;
+        font-weight: 600;
+        background-color: #10ad61;
+        color: white;
+        transition: background-color 0.2s;
+    }
+    .center-btn:hover {
+        background-color: #0e6942;
     }
 
     .assignment-card {
-        padding: 1rem;
+        padding: 1.25rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        background-color: white;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .assignment-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
     }
 
     .top-content {
         margin-bottom: 1rem;
         word-break: break-word;
+    }
+
+    .assignment-title {
+        font-weight: 700;
+        font-size: 1.4rem;
+        color: #0e6942;
+        margin-bottom: 0.3rem;
+    }
+
+    .assignment-class,
+    .assignment-deadline {
+        font-size: 0.95rem;
+        color: #444;
+        margin-bottom: 0.2rem;
+    }
+
+    .class-name {
+        font-weight: 600;
+        color: #097180;
+    }
+
+    .assignment-deadline.deadline-passed {
+        color: #d32f2f;
+        font-weight: bold;
     }
 
     .spacer {
@@ -220,36 +266,33 @@
     .button-row {
         display: flex;
         justify-content: flex-end;
-        gap: 0.5rem;
+        gap: 0.75rem;
         flex-wrap: wrap;
     }
 
-    .assignment-title {
-        font-weight: bold;
-        font-size: 1.5rem;
-        margin-bottom: 0.1rem;
-        word-break: break-word;
+    .button-row .v-btn {
+        font-weight: 600;
+        text-transform: none;
     }
 
-    .assignment-class {
-        color: #666;
-        font-size: 0.95rem;
+    .button-row .v-btn[color="primary"] {
+        color: #097180;
     }
 
-    .class-name {
-        font-weight: 500;
-        color: #333;
+    .button-row .v-btn[color="primary"]:hover {
+        color: #0e6942;
     }
 
-    .assignment-deadline {
-        font-size: 0.95rem;
-        color: #444;
-        margin-top: 0.4rem;
+    .button-row .v-btn[color="red"] {
+        color: #d32f2f;
     }
 
-    .assignment-deadline.deadline-passed {
-        color: #d32f2f; /* red */
-        font-weight: bold;
+    .no-assignments {
+        text-align: center;
+        font-size: 1.2rem;
+        color: #777;
+        padding: 3rem 0;
     }
+
 
 </style>
