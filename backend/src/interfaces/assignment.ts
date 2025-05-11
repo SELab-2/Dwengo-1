@@ -20,7 +20,7 @@ export function mapToAssignmentDTO(assignment: Assignment): AssignmentDTO {
         description: assignment.description,
         learningPath: assignment.learningPathHruid,
         language: assignment.learningPathLanguage,
-        deadline: assignment.deadline,
+        deadline: assignment.deadline ?? new Date(),
         groups: assignment.groups.map((group) => mapToGroupDTO(group, assignment.within)),
     };
 }

@@ -29,30 +29,29 @@
 
     const classController = new ClassController();
 
-    const assignments = asyncComputed(async () => {
-        const classes = classesQueryResults?.data?.value?.classes;
-        if (!classes) return [];
+    const assignments = asyncComputed(
+        async () => {
+            const classes = classesQueryResults?.data?.value?.classes;
+            if (!classes) return [];
 
-        const result = await Promise.all(
-            (classes as ClassDTO[]).map(async (cls) => {
-                const { assignments } = await classController.getAssignments(cls.id);
-                return assignments.map((a) => ({
-                    id: a.id,
-                    class: cls,
-                    title: a.title,
-                    description: a.description,
-                    learningPath: a.learningPath,
-                    language: a.language,
-                    deadline: a.deadline,
-                    groups: a.groups,
-                }));
-            }),
-        );
+            const result = await Promise.all(
+                (classes as ClassDTO[]).map(async (cls) => {
+                    const { assignments } = await classController.getAssignments(cls.id);
+                    return assignments.map((a) => ({
+                        id: a.id,
+                        class: cls,
+                        title: a.title,
+                        description: a.description,
+                        learningPath: a.learningPath,
+                        language: a.language,
+                        deadline: a.deadline,
+                        groups: a.groups,
+                    }));
+                }),
+            );
 
-        // Order the assignments by deadline
-        return result
-            .flat()
-            .sort((a, b) => {
+            // Order the assignments by deadline
+            return result.flat().sort((a, b) => {
                 const now = Date.now();
                 const aTime = new Date(a.deadline).getTime();
                 const bTime = new Date(b.deadline).getTime();
@@ -65,8 +64,10 @@
 
                 return aTime - bTime;
             });
-    }, [], {evaluating: true});
-
+        },
+        [],
+        { evaluating: true },
+    );
 
     async function goToCreateAssignment(): Promise<void> {
         await router.push("/assignment/create");
@@ -86,11 +87,6 @@
 
     async function goToDeleteAssignment(num: number, clsId: string): Promise<void> {
         mutate({ cid: clsId, an: num });
-    }
-
-    function isPastDeadline(deadline?: string | Date): boolean {
-        if (!deadline) return false;
-        return new Date(deadline).getTime() < Date.now();
     }
 
     function formatDate(date?: string | Date): string {
@@ -121,9 +117,6 @@
         if (isToday) return "deadline-today";
         return "deadline-upcoming";
     }
-
-
-
 
     onMounted(async () => {
         const user = await auth.loadUser();
@@ -167,8 +160,6 @@
                                 {{ t("deadline") }}:
                                 <span>{{ formatDate(assignment.deadline) }}</span>
                             </div>
-
-
                         </div>
 
                         <div class="spacer"></div>
@@ -200,7 +191,6 @@
                     </div>
                 </v-col>
             </v-row>
-
         </v-container>
     </div>
 </template>
@@ -237,7 +227,9 @@
         border-radius: 16px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         background-color: white;
-        transition: transform 0.2s, box-shadow 0.2s;
+        transition:
+            transform 0.2s,
+            box-shadow 0.2s;
     }
     .assignment-card:hover {
         transform: translateY(-2px);
@@ -295,6 +287,4 @@
         color: #777;
         padding: 3rem 0;
     }
-
-
 </style>
