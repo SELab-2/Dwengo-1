@@ -32,6 +32,7 @@
     const assignments = asyncComputed(async () => {
         const classes = classesQueryResults?.data?.value?.classes;
         if (!classes) return [];
+
         const result = await Promise.all(
             (classes as ClassDTO[]).map(async (cls) => {
                 const { assignments } = await classController.getAssignments(cls.id);
@@ -48,8 +49,24 @@
             }),
         );
 
-        return result.flat();
+        // Order the assignments by deadline
+        return result
+            .flat()
+            .sort((a, b) => {
+                const now = Date.now();
+                const aTime = new Date(a.deadline).getTime();
+                const bTime = new Date(b.deadline).getTime();
+
+                const aIsPast = aTime < now;
+                const bIsPast = bTime < now;
+
+                if (aIsPast && !bIsPast) return 1;
+                if (!aIsPast && bIsPast) return -1;
+
+                return aTime - bTime;
+            });
     }, []);
+
 
     async function goToCreateAssignment(): Promise<void> {
         await router.push("/assignment/create");
