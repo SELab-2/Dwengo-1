@@ -143,6 +143,13 @@
         box-sizing: border-box;
     }
 
+    h1 {
+        color: #0e6942;
+        text-transform: uppercase;
+        font-weight: bolder;
+        font-size: 50px;
+    }
+
     .center-btn {
         display: block;
         margin-left: auto;

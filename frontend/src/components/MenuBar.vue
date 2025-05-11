@@ -14,6 +14,7 @@
     const _router = useRouter(); // Zonder '_' gaf dit een linter error voor unused variable
 
     const name: string = auth.authState.user!.profile.name!;
+    const email = auth.authState.user!.profile.email;
     const initials: string = name
         .split(" ")
         .map((n) => n[0])
@@ -90,31 +91,34 @@
             <!--            >-->
             <!--                {{ t("discussions") }}-->
             <!--            </v-btn>-->
-            <v-menu open-on-hover>
-                <template v-slot:activator="{ props }">
-                    <v-btn
-                        v-bind="props"
-                        icon
-                        variant="text"
-                    >
-                        <v-icon
-                            icon="mdi-translate"
-                            size="small"
-                            color="#0e6942"
-                        ></v-icon>
-                    </v-btn>
-                </template>
-                <v-list>
-                    <v-list-item
-                        v-for="(language, index) in languages"
-                        :key="index"
-                        @click="changeLanguage(language.code)"
-                    >
-                        <v-list-item-title>{{ language.name }}</v-list-item-title>
-                    </v-list-item>
-                </v-list>
-            </v-menu>
         </v-toolbar-items>
+        <v-menu
+            open-on-hover
+            open-on-click
+        >
+            <template v-slot:activator="{ props }">
+                <v-btn
+                    v-bind="props"
+                    icon
+                    variant="text"
+                >
+                    <v-icon
+                        icon="mdi-translate"
+                        size="small"
+                        color="#0e6942"
+                    ></v-icon>
+                </v-btn>
+            </template>
+            <v-list>
+                <v-list-item
+                    v-for="(language, index) in languages"
+                    :key="index"
+                    @click="changeLanguage(language.code)"
+                >
+                    <v-list-item-title>{{ language.name }}</v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </v-menu>
         <v-spacer></v-spacer>
         <v-dialog max-width="500">
             <template v-slot:activator="{ props: activatorProps }">
@@ -158,12 +162,43 @@
                 </v-card>
             </template>
         </v-dialog>
-        <v-avatar
-            size="large"
-            color="#0e6942"
-            class="user-button"
-            >{{ initials }}</v-avatar
-        >
+        <v-menu min-width="200px">
+            <template v-slot:activator="{ props }">
+                <v-btn
+                    icon
+                    v-bind="props"
+                >
+                    <v-avatar
+                        color="#0e6942"
+                        size="large"
+                        class="user-button"
+                    >
+                        <span>{{ initials }}</span>
+                    </v-avatar>
+                </v-btn>
+            </template>
+            <v-card>
+                <v-card-text>
+                    <div class="mx-auto text-center">
+                        <v-avatar color="#0e6942">
+                            <span class="text-h5">{{ initials }}</span>
+                        </v-avatar>
+                        <h3>{{ name }}</h3>
+                        <p class="text-caption mt-1">{{ email }}</p>
+                        <v-divider class="my-3"></v-divider>
+                        <v-btn
+                            variant="text"
+                            rounded
+                            append-icon="mdi-logout"
+                            @click="performLogout"
+                            to="/login"
+                            >{{ t("logout") }}</v-btn
+                        >
+                        <v-divider class="my-3"></v-divider>
+                    </div>
+                </v-card-text>
+            </v-card>
+        </v-menu>
     </v-app-bar>
     <v-navigation-drawer
         v-model="drawer"
@@ -246,6 +281,12 @@
         text-decoration: none;
         font-size: large;
         text-transform: none;
+    }
+
+    .translate-button {
+        z-index: 1;
+        position: relative;
+        margin-left: 10px;
     }
 
     @media (max-width: 700px) {

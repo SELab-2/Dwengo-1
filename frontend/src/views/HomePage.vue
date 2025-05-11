@@ -84,7 +84,10 @@
                 </div>
             </div>
             <div class="container_right">
-                <v-menu open-on-hover>
+                <v-menu
+                    open-on-hover
+                    open-on-click
+                >
                     <template v-slot:activator="{ props }">
                         <v-btn
                             v-bind="props"
