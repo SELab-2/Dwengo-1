@@ -10,7 +10,7 @@
     import { asyncComputed } from "@vueuse/core";
     import { useDeleteAssignmentMutation } from "@/queries/assignments.ts";
 
-    const { t } = useI18n();
+    const { t, locale } = useI18n();
     const router = useRouter();
 
     const role = ref(auth.authState.activeRole);
@@ -27,10 +27,8 @@
         classesQueryResults = useStudentClassesQuery(username, true);
     }
 
-    //TODO: remove later
     const classController = new ClassController();
 
-    //TODO: replace by query that fetches all user's assignment
     const assignments = asyncComputed(async () => {
         const classes = classesQueryResults?.data?.value?.classes;
         if (!classes) return [];
@@ -44,6 +42,7 @@
                     description: a.description,
                     learningPath: a.learningPath,
                     language: a.language,
+                    deadline: a.deadline,
                     groups: a.groups,
                 }));
             }),
@@ -71,6 +70,28 @@
     async function goToDeleteAssignment(num: number, clsId: string): Promise<void> {
         mutate({ cid: clsId, an: num });
     }
+
+    function isPastDeadline(deadline?: string | Date): boolean {
+        if (!deadline) return false;
+        return new Date(deadline).getTime() < Date.now();
+    }
+
+    function formatDate(date?: string | Date): string {
+        if (!date) return "–";
+        const d = new Date(date);
+
+        // Choose locale based on selected language
+        const currentLocale = locale.value;
+
+        return d.toLocaleDateString(currentLocale, {
+            weekday: "short",
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+        });
+    }
+
+
 
     onMounted(async () => {
         const user = await auth.loadUser();
@@ -107,6 +128,16 @@
                                     {{ assignment.class.displayName }}
                                 </span>
                             </div>
+                            <div
+                                class="assignment-deadline"
+                                :class="{ 'deadline-passed': isPastDeadline(assignment.deadline) }"
+                            >
+                                {{ t("deadline") }}:
+                                <span>
+                                    {{ formatDate(assignment.deadline) }}
+                                </span>
+                            </div>
+
                         </div>
 
                         <div class="spacer"></div>
@@ -192,4 +223,16 @@
         font-weight: 500;
         color: #333;
     }
+
+    .assignment-deadline {
+        font-size: 0.95rem;
+        color: #444;
+        margin-top: 0.4rem;
+    }
+
+    .assignment-deadline.deadline-passed {
+        color: #d32f2f; /* red */
+        font-weight: bold;
+    }
+
 </style>
