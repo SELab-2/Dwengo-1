@@ -1,9 +1,14 @@
-import { EntityManager } from '@mikro-orm/core';
-import { Assignment } from '../../../src/entities/assignments/assignment.entity';
-import { Class } from '../../../src/entities/classes/class.entity';
-import { Language } from '@dwengo-1/common/util/language';
-import { testLearningPathWithConditions } from '../content/learning-paths.testdata';
-import { getClassWithTestleerlingAndTestleerkracht } from '../classes/classes.testdata';
+import {EntityManager} from '@mikro-orm/core';
+import {Assignment} from '../../../src/entities/assignments/assignment.entity';
+import {Class} from '../../../src/entities/classes/class.entity';
+import {Language} from '@dwengo-1/common/util/language';
+import {testLearningPathWithConditions} from '../content/learning-paths.testdata';
+import {getClassWithTestleerlingAndTestleerkracht} from '../classes/classes.testdata';
+
+const futureDate = new Date();
+futureDate.setDate(futureDate.getDate() + 7);
+const pastDate = new Date();
+pastDate.setDate(pastDate.getDate() - 7);
 
 export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assignment[] {
     assignment01 = em.create(Assignment, {
@@ -11,8 +16,9 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         within: classes[0],
         title: 'dire straits',
         description: 'reading',
-        learningPathHruid: 'id02',
+        learningPathHruid: 'un_ai',
         learningPathLanguage: Language.English,
+        deadline: futureDate,
         groups: [],
     });
 
@@ -23,6 +29,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         description: 'reading',
         learningPathHruid: 'id01',
         learningPathLanguage: Language.English,
+        deadline: futureDate,
         groups: [],
     });
 
@@ -33,6 +40,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         description: 'will be deleted',
         learningPathHruid: 'id02',
         learningPathLanguage: Language.English,
+        deadline: pastDate,
         groups: [],
     });
 
@@ -43,6 +51,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         description: 'with a description',
         learningPathHruid: 'id01',
         learningPathLanguage: Language.English,
+        deadline: pastDate,
         groups: [],
     });
 
@@ -53,6 +62,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         description: 'You have to do the testing learning path with a condition.',
         learningPathHruid: testLearningPathWithConditions.hruid,
         learningPathLanguage: testLearningPathWithConditions.language as Language,
+        deadline: futureDate,
         groups: [],
     });
 
