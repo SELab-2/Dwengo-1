@@ -5,6 +5,9 @@ import {getAttachmentRepository, getLearningObjectRepository} from "../../data/r
 import {BadRequestException} from "../../exceptions/bad-request-exception";
 import {LearningObjectMetadata} from "@dwengo-1/common/dist/interfaces/learning-content";
 
+const METADATA_PATH_REGEX = /.*[/^]metadata\.json$/;
+const CONTENT_PATH_REGEX = /.*[/^]content\.[a-zA-Z]*$/;
+
 /**
  * Process an uploaded zip file and construct a LearningObject from its contents.
  * @param filePath Path of the zip file to process.
@@ -15,40 +18,62 @@ export async function processLearningObjectZip(filePath: string): Promise<Learni
 
     const zip = await unzipper.Open.file(filePath);
 
-    let metadata: LearningObjectMetadata | null = null;
+    let metadata: LearningObjectMetadata | undefined = undefined;
     const attachments: {name: string, content: Buffer}[] = [];
-    let content: Buffer | null = null;
+    let content: Buffer | undefined = undefined;
+
+    if (zip.files.length == 0) {
+        throw new BadRequestException("empty_zip")
+    }
 
     for (const file of zip.files) {
-        if (file.type === "Directory") {
-            throw new BadRequestException("The learning object zip file should not contain directories.");
-        } else if (file.path === "metadata.json") {
-            metadata = await processMetadataJson(file);
-        } else if (file.path.startsWith("index.")) {
-            content = await processFile(file);
-        } else {
-            attachments.push({
-                name: file.path,
-                content: await processFile(file)
-            });
+        if (file.type !== "Directory") {
+            if (METADATA_PATH_REGEX.test(file.path)) {
+                metadata = await processMetadataJson(file);
+            } else if (CONTENT_PATH_REGEX.test(file.path)) {
+                content = await processFile(file);
+            } else {
+                attachments.push({
+                    name: file.path,
+                    content: await processFile(file)
+                });
+            }
         }
     }
 
     if (!metadata) {
-        throw new BadRequestException("Missing metadata.json file");
+        throw new BadRequestException("missing_metadata");
     }
     if (!content) {
-        throw new BadRequestException("Missing index file");
+        throw new BadRequestException("missing_index");
     }
 
-    const learningObject = learningObjectRepo.create(metadata);
+
+    const learningObject = learningObjectRepo.create({
+        admins: [],
+        available: metadata.available ?? true,
+        content: content,
+        contentType: metadata.content_type,
+        copyright: metadata.copyright,
+        description: metadata.description,
+        educationalGoals: metadata.educational_goals,
+        hruid: metadata.hruid,
+        keywords: metadata.keywords,
+        language: metadata.language,
+        license: "",
+        returnValue: metadata.return_value,
+        skosConcepts: metadata.skos_concepts,
+        teacherExclusive: metadata.teacher_exclusive,
+        title: metadata.title,
+        version: metadata.version
+    });
     const attachmentEntities = attachments.map(it => attachmentRepo.create({
         name: it.name,
         content: it.content,
         mimeType: mime.lookup(it.name) || "text/plain",
         learningObject
     }))
-    learningObject.attachments.push(...attachmentEntities);
+    attachmentEntities.forEach(it => learningObject.attachments.add(it));
 
     return learningObject;
 }

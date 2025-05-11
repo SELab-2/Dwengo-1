@@ -7,9 +7,10 @@ import {
     LearningObjectIdentifierDTO,
     LearningPathIdentifier
 } from '@dwengo-1/common/interfaces/learning-content';
-import {getLearningObjectRepository} from "../../data/repositories";
+import {getLearningObjectRepository, getTeacherRepository} from "../../data/repositories";
 import {processLearningObjectZip} from "./learning-object-zip-processing-service";
 import {BadRequestException} from "../../exceptions/bad-request-exception";
+import {LearningObject} from "../../entities/content/learning-object.entity";
 
 function getProvider(id: LearningObjectIdentifierDTO): LearningObjectProvider {
     if (id.hruid.startsWith(getEnvVar(envVars.UserContentPrefix))) {
@@ -50,19 +51,40 @@ const learningObjectService = {
         return getProvider(id).getLearningObjectHTML(id);
     },
 
+    /**
+     * Obtain all learning objects administrated by the user with the given username.
+     */
+    async getLearningObjectsAdministratedBy(adminUsername: string): Promise<FilteredLearningObject[]> {
+        return databaseLearningObjectProvider.getLearningObjectsAdministratedBy(adminUsername);
+    },
 
     /**
      * Store the learning object in the given zip file in the database.
+     * @param learningObjectPath The path where the uploaded learning object resides.
+     * @param admins The usernames of the users which should be administrators of the learning object.
      */
-    async storeLearningObject(learningObjectPath: string): Promise<void> {
+    async storeLearningObject(learningObjectPath: string, admins: string[]): Promise<LearningObject> {
         const learningObjectRepository = getLearningObjectRepository();
         const learningObject = await processLearningObjectZip(learningObjectPath);
 
+        console.log(learningObject);
         if (!learningObject.hruid.startsWith(getEnvVar(envVars.UserContentPrefix))) {
-            throw new BadRequestException("Learning object name must start with the user content prefix!");
+            learningObject.hruid = getEnvVar(envVars.UserContentPrefix) + learningObject.hruid;
         }
 
+        // Lookup the admin teachers based on their usernames and add them to the admins of the learning object.
+        const teacherRepo = getTeacherRepository();
+        const adminTeachers = await Promise.all(
+            admins.map(it => teacherRepo.findByUsername(it))
+        );
+        adminTeachers.forEach(it => {
+            if (it != null) {
+                learningObject.admins.add(it);
+            }
+        });
+
         await learningObjectRepository.save(learningObject, {preventOverwrite: true});
+        return learningObject;
     }
 };
 

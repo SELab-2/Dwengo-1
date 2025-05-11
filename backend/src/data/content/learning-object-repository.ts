@@ -33,9 +33,9 @@ export class LearningObjectRepository extends DwengoEntityRepository<LearningObj
         );
     }
 
-    public async findAllByTeacher(teacher: Teacher): Promise<LearningObject[]> {
+    public async findAllByAdmin(adminUsername: string): Promise<LearningObject[]> {
         return this.find(
-            { admins: teacher },
+            { admins: { $contains: adminUsername } },
             { populate: ['admins'] } // Make sure to load admin relations
         );
     }

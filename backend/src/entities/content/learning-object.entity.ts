@@ -1,4 +1,14 @@
-import { ArrayType, Embedded, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
+import {
+    ArrayType,
+    Collection,
+    Embedded,
+    Entity,
+    Enum,
+    ManyToMany,
+    OneToMany,
+    PrimaryKey,
+    Property
+} from '@mikro-orm/core';
 import { Attachment } from './attachment.entity.js';
 import { Teacher } from '../users/teacher.entity.js';
 import { DwengoContentType } from '../../services/learning-objects/processing/content-type.js';
@@ -28,7 +38,7 @@ export class LearningObject {
     @ManyToMany({
         entity: () => Teacher,
     })
-    admins!: Teacher[];
+    admins: Collection<Teacher> = new Collection<Teacher>(this);
 
     @Property({ type: 'string' })
     title!: string;
@@ -84,7 +94,7 @@ export class LearningObject {
         entity: () => Attachment,
         mappedBy: 'learningObject',
     })
-    attachments: Attachment[] = [];
+    attachments: Collection<Attachment> = new Collection<Attachment>(this);
 
     @Property({ type: 'blob' })
     content!: Buffer;

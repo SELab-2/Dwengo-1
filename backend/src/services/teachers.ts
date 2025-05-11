@@ -124,7 +124,7 @@ export async function getTeacherQuestions(username: string, full: boolean): Prom
 
     // Find all learning objects that this teacher manages
     const learningObjectRepository: LearningObjectRepository = getLearningObjectRepository();
-    const learningObjects: LearningObject[] = await learningObjectRepository.findAllByTeacher(teacher);
+    const learningObjects: LearningObject[] = await learningObjectRepository.findAllByAdmin(teacher);
 
     if (!learningObjects || learningObjects.length === 0) {
         return [];
