@@ -1,9 +1,9 @@
-import {EntityManager} from '@mikro-orm/core';
-import {Assignment} from '../../../src/entities/assignments/assignment.entity';
-import {Class} from '../../../src/entities/classes/class.entity';
-import {Language} from '@dwengo-1/common/util/language';
-import {testLearningPathWithConditions} from '../content/learning-paths.testdata';
-import {getClassWithTestleerlingAndTestleerkracht} from '../classes/classes.testdata';
+import { EntityManager } from '@mikro-orm/core';
+import { Assignment } from '../../../src/entities/assignments/assignment.entity';
+import { Class } from '../../../src/entities/classes/class.entity';
+import { Language } from '@dwengo-1/common/util/language';
+import { testLearningPathWithConditions } from '../content/learning-paths.testdata';
+import { getClassWithTestleerlingAndTestleerkracht } from '../classes/classes.testdata';
 
 const futureDate = new Date();
 futureDate.setDate(futureDate.getDate() + 7);
