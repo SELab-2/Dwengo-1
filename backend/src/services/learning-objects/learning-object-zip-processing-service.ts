@@ -18,7 +18,7 @@ export async function processLearningObjectZip(filePath: string): Promise<Learni
     try {
         zip = await unzipper.Open.file(filePath);
     } catch(_: unknown) {
-        throw new BadRequestException("invalid_zip");
+        throw new BadRequestException("invalidZip");
     }
 
 
@@ -27,7 +27,7 @@ export async function processLearningObjectZip(filePath: string): Promise<Learni
     let content: Buffer | undefined = undefined;
 
     if (zip.files.length === 0) {
-        throw new BadRequestException("empty_zip")
+        throw new BadRequestException("emptyZip")
     }
 
     await Promise.all(
@@ -48,10 +48,10 @@ export async function processLearningObjectZip(filePath: string): Promise<Learni
     );
 
     if (!metadata) {
-        throw new BadRequestException("missing_metadata");
+        throw new BadRequestException("missingMetadata");
     }
     if (!content) {
-        throw new BadRequestException("missing_index");
+        throw new BadRequestException("missingIndex");
     }
 
 

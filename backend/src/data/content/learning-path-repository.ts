@@ -35,9 +35,7 @@ export class LearningPathRepository extends DwengoEntityRepository<LearningPath>
         return this.findAll({
             where: {
                 admins: {
-                    $contains: {
-                        username: adminUsername
-                    }
+                    username: adminUsername
                 }
             }
         });

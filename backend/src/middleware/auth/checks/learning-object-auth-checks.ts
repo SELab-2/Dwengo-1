@@ -12,5 +12,5 @@ export const onlyAdminsForLearningObject = authorize(async (auth: Authentication
         language: language as Language,
         version: parseInt(version as string)
     });
-    return auth.username in admins;
+    return admins.includes(auth.username);
 });

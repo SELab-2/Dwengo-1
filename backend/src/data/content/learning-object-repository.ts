@@ -12,7 +12,7 @@ export class LearningObjectRepository extends DwengoEntityRepository<LearningObj
                 version: identifier.version,
             },
             {
-                populate: ['keywords'],
+                populate: ['keywords', 'admins'],
             }
         );
     }
