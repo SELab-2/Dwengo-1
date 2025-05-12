@@ -5,12 +5,15 @@ import { Language } from '@dwengo-1/common/util/language';
 import { testLearningPathWithConditions } from '../content/learning-paths.testdata';
 import { getClassWithTestleerlingAndTestleerkracht } from '../classes/classes.testdata';
 
-const futureDate = new Date();
-futureDate.setDate(futureDate.getDate() + 7);
-const pastDate = new Date();
-pastDate.setDate(pastDate.getDate() - 7);
+
 
 export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assignment[] {
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + 7);
+    const pastDate = new Date();
+    pastDate.setDate(pastDate.getDate() - 7);
+    const today = new Date();
+    today.setHours(23, 59);
     assignment01 = em.create(Assignment, {
         id: 21000,
         within: classes[0],
@@ -18,7 +21,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         description: 'reading',
         learningPathHruid: 'un_ai',
         learningPathLanguage: Language.English,
-        deadline: new Date(),
+        deadline: today,
         groups: [],
     });
 

@@ -1,8 +1,8 @@
-import { Cascade, Collection, Entity, Enum, ManyToOne, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
-import { Class } from '../classes/class.entity.js';
-import { Group } from './group.entity.js';
-import { Language } from '@dwengo-1/common/util/language';
-import { AssignmentRepository } from '../../data/assignments/assignment-repository.js';
+import {Cascade, Collection, Entity, Enum, ManyToOne, OneToMany, PrimaryKey, Property} from '@mikro-orm/core';
+import {Class} from '../classes/class.entity.js';
+import {Group} from './group.entity.js';
+import {Language} from '@dwengo-1/common/util/language';
+import {AssignmentRepository} from '../../data/assignments/assignment-repository.js';
 
 @Entity({
     repository: () => AssignmentRepository,
@@ -14,19 +14,19 @@ export class Assignment {
     })
     within!: Class;
 
-    @PrimaryKey({ type: 'integer', autoincrement: true })
+    @PrimaryKey({type: 'integer', autoincrement: true})
     id?: number;
 
-    @Property({ type: 'string' })
+    @Property({type: 'string'})
     title!: string;
 
-    @Property({ type: 'text' })
+    @Property({type: 'text'})
     description!: string;
 
-    @Property({ type: 'string' })
+    @Property({type: 'string'})
     learningPathHruid!: string;
 
-    @Property({ type: 'datetime' })
+    @Property({type: 'datetime'})
     deadline?: Date;
 
     @Enum({
