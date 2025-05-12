@@ -5,7 +5,6 @@ import { getLearningObjectController } from "@/controllers/controllers.ts";
 import type { LearningObject } from "@/data-objects/learning-objects/learning-object.ts";
 import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
 import type { AxiosError } from "axios";
-import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
 
 export const LEARNING_OBJECT_KEY = "learningObject";
 const learningObjectController = getLearningObjectController();

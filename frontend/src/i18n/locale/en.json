@@ -121,5 +121,18 @@
     "invite": "invite",
     "assignmentIndicator": "ASSIGNMENT",
     "searchAllLearningPathsTitle": "Search all learning paths",
-    "searchAllLearningPathsDescription": "You didn't find what you were looking for? Click here to search our whole database of available learning paths."
+    "searchAllLearningPathsDescription": "You didn't find what you were looking for? Click here to search our whole database of available learning paths.",
+    "learningObjects": "Learning objects",
+    "learningPaths": "Learning paths",
+    "hruid": "HRUID",
+    "language": "Language",
+    "version": "Version",
+    "previewFor": "Preview for ",
+    "upload": "Upload",
+    "learningObjectUploadTitle": "Upload a learning object",
+    "uploadFailed": "Upload failed",
+    "invalidZip": "This is not a valid zip file.",
+    "emptyZip": "This zip file is empty",
+    "missingMetadata": "This learning object is missing a metadata.json file.",
+    "missingContent": "This learning object is missing a content.* file."
 }

@@ -32,17 +32,14 @@
 <template>
     <v-dialog max-width="500" v-model="dialogOpen">
         <template v-slot:activator="{ props: activatorProps }">
-            <v-fab icon="mdi mdi-plus" v-bind="activatorProps"></v-fab>
+            <v-fab icon="mdi mdi-plus" v-bind="activatorProps" color="rgb(14, 105, 66)" size="large"></v-fab>
         </template>
 
         <template v-slot:default="{ isActive }">
-            <v-card :title="t('learning_object_upload_title')">
+            <v-card :title="t('learningObjectUploadTitle')">
                 <v-card-text>
                     <v-file-upload
-                        :browse-text="t('upload_browse')"
-                        :divider-text="t('upload_divider')"
                         icon="mdi-upload"
-                        :title="t('upload_drag_and_drop')"
                         v-model="fileToUpload"
                         :disabled="isPending"
                     ></v-file-upload>
@@ -50,7 +47,7 @@
                         v-if="error"
                         icon="mdi mdi-alert-circle"
                         type="error"
-                        :title="t('upload_failed')"
+                        :title="t('uploadFailed')"
                         :text="t((error.response?.data as ContainsErrorString).error ?? error.message)"
                     ></v-alert>
                 </v-card-text>

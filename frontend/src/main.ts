@@ -7,15 +7,20 @@ import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import i18n from "./i18n/i18n.ts";
 
+// JSON-editor
+import JsonEditorVue from 'json-editor-vue';
+
 // Components
 import App from "./App.vue";
 import router from "./router";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 import { VueQueryPlugin, QueryClient } from "@tanstack/vue-query";
+import { de, en, fr, nl } from "vuetify/locale";
 
 const app = createApp(App);
 
 app.use(router);
+app.use(JsonEditorVue, {})
 
 const link = document.createElement("link");
 link.rel = "stylesheet";
@@ -32,6 +37,11 @@ const vuetify = createVuetify({
             mdi,
         },
     },
+    locale: {
+        locale: i18n.global.locale,
+        fallback: 'en',
+        messages: { nl, en, de, fr }
+    }
 });
 
 const queryClient = new QueryClient({

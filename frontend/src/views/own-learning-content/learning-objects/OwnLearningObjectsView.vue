@@ -1,11 +1,9 @@
 <script setup lang="ts">
     import type { LearningObject } from '@/data-objects/learning-objects/learning-object';
-    import LearningObjectUploadButton from '@/views/own-learning-content/LearningObjectUploadButton.vue'
-    import LearningObjectContentView from '../learning-paths/learning-object/content/LearningObjectContentView.vue';
+    import LearningObjectUploadButton from '@/views/own-learning-content/learning-objects/LearningObjectUploadButton.vue'
+    import LearningObjectPreviewCard from './LearningObjectPreviewCard.vue';
     import { computed, ref, type Ref } from 'vue';
     import { useI18n } from 'vue-i18n';
-import { useLearningObjectHTMLQuery } from '@/queries/learning-objects';
-import UsingQueryResult from '@/components/UsingQueryResult.vue';
 
     const { t } = useI18n();
     const props = defineProps<{
@@ -19,17 +17,12 @@ import UsingQueryResult from '@/components/UsingQueryResult.vue';
         { title: t("title"), key: "title" }
     ];
 
-    const selectedLearningObjects: Ref<LearningObject[]> = ref([])
+    const selectedLearningObjects: Ref<LearningObject[]> = ref([]);
 
     const selectedLearningObject = computed(() =>
         selectedLearningObjects.value ? selectedLearningObjects.value[0] : undefined
-    )
-
-    const learningObjectQueryResult = useLearningObjectHTMLQuery(
-        () => selectedLearningObject.value?.key,
-        () => selectedLearningObject.value?.language,
-        () => selectedLearningObject.value?.version
     );
+
 </script>
 
 <template>
@@ -43,17 +36,7 @@ import UsingQueryResult from '@/components/UsingQueryResult.vue';
             show-select
             return-object
         />
-        <v-card
-            class="preview"
-            v-if="selectedLearningObjects.length > 0"
-            :title="t('preview_for') + selectedLearningObjects[0].title"
-        >
-            <template v-slot:text>
-                <using-query-result :query-result="learningObjectQueryResult" v-slot="response: { data: Document }">
-                    <learning-object-content-view :learning-object-content="response.data"></learning-object-content-view>
-                </using-query-result>
-            </template>
-        </v-card>
+        <learning-object-preview-card class="preview" :selectedLearningObject="selectedLearningObject"/>
     </div>
     <div class="fab">
         <learning-object-upload-button/>
@@ -70,9 +53,11 @@ import UsingQueryResult from '@/components/UsingQueryResult.vue';
         display: flex;
         gap: 20px;
         padding: 20px;
+        flex-wrap: wrap;
     }
     .preview {
         flex: 1;
+        min-width: 400px;
     }
     .table {
         flex: 1;

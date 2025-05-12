@@ -37,9 +37,8 @@ export class LearningPathController extends BaseController {
         return dtos.map((dto) => LearningPath.fromDTO(dto));
     }
 
-    async getAllByAdmin(admin: string): Promise<LearningPath[]> {
-        const dtos = await this.get<LearningPathDTO[]>("/", { admin });
-        return dtos.map((dto) => LearningPath.fromDTO(dto));
+    async getAllByAdminRaw(admin: string): Promise<LearningPathDTO[]> {
+        return await this.get<LearningPathDTO[]>("/", { admin });
     }
 
     async postLearningPath(learningPath: LearningPathDTO): Promise<LearningPathDTO> {
