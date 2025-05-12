@@ -92,3 +92,22 @@ export async function handlePostLearningObject(req: AuthenticatedRequest, res: R
     );
     res.json(learningObject);
 }
+
+export async function handleDeleteLearningObject(req: AuthenticatedRequest, res: Response): Promise<void> {
+    const learningObjectId = getLearningObjectIdentifierFromRequest(req);
+
+    if (!learningObjectId.version) {
+        throw new BadRequestException("When deleting a learning object, a version must be specified.");
+    }
+
+    const deletedLearningObject = await learningObjectService.deleteLearningObject({
+        hruid: learningObjectId.hruid,
+        version: learningObjectId.version,
+        language: learningObjectId.language
+    });
+    if (deletedLearningObject) {
+        res.json(deletedLearningObject);
+    } else {
+        throw new NotFoundException("Learning object not found");
+    }
+}

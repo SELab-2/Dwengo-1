@@ -10,6 +10,7 @@ import {
 import {getLearningObjectRepository, getTeacherRepository} from "../../data/repositories";
 import {processLearningObjectZip} from "./learning-object-zip-processing-service";
 import {LearningObject} from "../../entities/content/learning-object.entity";
+import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 
 function getProvider(id: LearningObjectIdentifierDTO): LearningObjectProvider {
     if (id.hruid.startsWith(getEnvVar(envVars.UserContentPrefix))) {
@@ -83,6 +84,14 @@ const learningObjectService = {
 
         await learningObjectRepository.save(learningObject, {preventOverwrite: true});
         return learningObject;
+    },
+
+    /**
+     * Deletes the learning object with the given identifier.
+     */
+    async deleteLearningObject(id: LearningObjectIdentifier): Promise<LearningObject | null> {
+        const learningObjectRepository = getLearningObjectRepository();
+        return await learningObjectRepository.removeByIdentifier(id);
     }
 };
 
