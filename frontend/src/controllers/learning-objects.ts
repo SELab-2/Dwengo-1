@@ -22,4 +22,8 @@ export class LearningObjectController extends BaseController {
     async upload(learningObjectZip: File): Promise<LearningObject> {
         return this.postFile<LearningObject>("/", "learningObject", learningObjectZip);
     }
+
+    async deleteLearningObject(hruid: string, language: Language, version: number): Promise<LearningObject> {
+        return this.delete<LearningObject>(`/${hruid}`, { language, version });
+    }
 }

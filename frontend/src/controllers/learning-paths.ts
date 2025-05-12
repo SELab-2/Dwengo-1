@@ -36,4 +36,21 @@ export class LearningPathController extends BaseController {
         const dtos = await this.get<LearningPathDTO[]>("/", query);
         return dtos.map((dto) => LearningPath.fromDTO(dto));
     }
+
+    async getAllByAdmin(admin: string): Promise<LearningPath[]> {
+        const dtos = await this.get<LearningPathDTO[]>("/", { admin });
+        return dtos.map((dto) => LearningPath.fromDTO(dto));
+    }
+
+    async postLearningPath(learningPath: LearningPathDTO): Promise<LearningPathDTO> {
+        return await this.post<LearningPathDTO>("/", learningPath);
+    }
+
+    async putLearningPath(learningPath: LearningPathDTO): Promise<LearningPathDTO> {
+        return await this.put<LearningPathDTO>(`/${learningPath.hruid}/${learningPath.language}`, learningPath);
+    }
+
+    async deleteLearningPath(hruid: string, language: string): Promise<LearningPathDTO> {
+        return await this.delete<LearningPathDTO>(`/${hruid}/${language}`);
+    }
 }
