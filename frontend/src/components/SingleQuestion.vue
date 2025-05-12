@@ -12,9 +12,22 @@
     }>();
 
     const expanded = ref(false);
+    const answersContainer = ref<HTMLElement | null>(null); // Ref for the answers container
 
     function toggle(): void {
         expanded.value = !expanded.value;
+
+        // Scroll to the answers container if expanded
+        if (expanded.value && answersContainer.value) { 
+            setTimeout(function () {
+                if (answersContainer.value) {
+                    answersContainer.value.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                    });
+                }
+            }, 100);
+        }
     }
 
     function formatDate(timestamp: string | Date): string {
@@ -109,7 +122,8 @@
             </button>
 
             <div
-                v-if="expanded"
+                v-show="expanded"
+                ref="answersContainer"
                 class="mt-3 pl-4 border-l-2 border-blue-200 space-y-2"
             >
                 <div
