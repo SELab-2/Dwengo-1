@@ -32,10 +32,6 @@ function teacherStudentsQueryKey(username: string, full: boolean): [string, stri
     return ["teacher-students", username, full];
 }
 
-function teacherQuestionsQueryKey(username: string, full: boolean): [string, string, boolean] {
-    return ["teacher-questions", username, full];
-}
-
 export function teacherClassJoinRequests(classId: string): [string, string] {
     return ["teacher-class-join-requests", classId];
 }
