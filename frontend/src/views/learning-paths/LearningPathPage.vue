@@ -370,20 +370,39 @@
             :query-result="getQuestionsQuery"
             v-slot="questionsResponse: { data: QuestionsResponse }"
         >
-            <p>
-                View questions in 
-                <router-link
-                    :to=discussionLink
-                >
-                    discussions
-                </router-link>
-            </p>
+        <v-divider :thickness="6"></v-divider>
+            <div class="question-header">
+                <span class="question-title">Questions</span>
+                <span class="discussion-link-text">
+                    View questions in 
+                    <router-link
+                        :to=discussionLink
+                    >
+                        discussions
+                    </router-link>
+                </span>
+            </div>
+            
             <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
         </using-query-result>
     </using-query-result>
 </template>
 
 <style scoped>
+    .question-title {
+        color: #0e6942;
+        text-transform: uppercase;
+        font-weight: bolder;
+        font-size: 32px;
+    }
+    .discussion-link-text {
+        font-size: 24px;
+    }
+    .question-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+    }
     .learning-path-title {
         white-space: normal;
     }
