@@ -103,7 +103,7 @@
             <button
                 v-if="answersResponse.data.answers && answersResponse.data.answers.length > 0"
                 @click="toggle()"
-                class="text-blue-600 hover:underline text-sm"
+                class="toggle-answers-btn"
             >
                 {{ expanded ? "Hide Answers" : "Show Answers" }}
             </button>
@@ -144,6 +144,24 @@
     </div>
 </template>
 <style scoped>
+    .toggle-answers-btn {
+        font-size: 0.875rem;
+        text-decoration: none;
+        background-color: #f0f4ff; /* subtle blue background */
+        border: none;
+        border-radius: 4px;
+        padding: 6px 12px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .toggle-answers-btn:hover {
+        background-color: #e0eaff; /* slightly darker on hover */
+        text-decoration: underline;
+    }
+    .answer-input-container {
+        margin: 5px;
+    }
     .answer-input {
         flex-grow: 1;
         outline: none;
