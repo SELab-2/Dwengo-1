@@ -4,12 +4,15 @@ import {
     getAttachment,
     getLearningObject,
     getLearningObjectHTML,
+    handleDeleteLearningObject,
     handlePostLearningObject
 } from '../controllers/learning-objects.js';
 
 import submissionRoutes from './submissions.js';
 import questionRoutes from './questions.js';
 import fileUpload from "express-fileupload";
+import { teachersOnly } from '../middleware/auth/auth.js';
+import { onlyAdminsForLearningObject } from '../middleware/auth/checks/learning-object-auth-checks.js';
 
 const router = express.Router();
 
@@ -25,13 +28,19 @@ const router = express.Router();
 // Example 2: http://localhost:3000/learningObject?full=true&hruid=un_artificiele_intelligentie
 router.get('/', getAllLearningObjects);
 
-router.post('/', fileUpload({useTempFiles: true}), handlePostLearningObject)
+router.post('/', teachersOnly, fileUpload({useTempFiles: true}), handlePostLearningObject)
 
 // Parameter: hruid of learning object
 // Query: language
 // Route to fetch data of one learning object based on its hruid
 // Example: http://localhost:3000/learningObject/un_ai7
 router.get('/:hruid', getLearningObject);
+
+// Parameter: hruid of learning object
+// Query: language
+// Route to delete a learning object based on its hruid.
+// Example: http://localhost:3000/learningObject/un_ai7?language=nl&version=1
+router.delete('/:hruid', onlyAdminsForLearningObject, handleDeleteLearningObject)
 
 router.use('/:hruid/submissions', submissionRoutes);
 
