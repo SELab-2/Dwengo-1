@@ -5,6 +5,7 @@ import { getLearningObjectController } from "@/controllers/controllers.ts";
 import type { LearningObject } from "@/data-objects/learning-objects/learning-object.ts";
 import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
 import type { AxiosError } from "axios";
+import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
 
 export const LEARNING_OBJECT_KEY = "learningObject";
 const learningObjectController = getLearningObjectController();
@@ -75,6 +76,15 @@ export function useUploadLearningObjectMutation(): UseMutationReturnType<Learnin
 
     return useMutation({
         mutationFn: async ({ learningObjectZip }) => await learningObjectController.upload(learningObjectZip),
+        onSuccess: async () => { await queryClient.invalidateQueries({queryKey: [LEARNING_OBJECT_KEY, "forAdmin"]}); }
+    });
+}
+
+export function useDeleteLearningObjectMutation(): UseMutationReturnType<LearningObject, AxiosError, {hruid: string, language: Language, version: number}, unknown> {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ hruid, language, version }) => await learningObjectController.deleteLearningObject(hruid, language, version),
         onSuccess: async () => { await queryClient.invalidateQueries({queryKey: [LEARNING_OBJECT_KEY, "forAdmin"]}); }
     });
 }
