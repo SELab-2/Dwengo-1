@@ -1,5 +1,7 @@
 import express from 'express';
-import { getLearningPaths } from '../controllers/learning-paths.js';
+import { deleteLearningPath, getLearningPaths, postLearningPath, putLearningPath } from '../controllers/learning-paths.js';
+import { teachersOnly } from '../middleware/auth/auth.js';
+import { onlyAdminsForLearningObject } from '../middleware/auth/checks/learning-object-auth-checks.js';
 
 const router = express.Router();
 
@@ -23,5 +25,9 @@ const router = express.Router();
 // Example: http://localhost:3000/learningPath?theme=kiks
 
 router.get('/', getLearningPaths);
+router.post('/', teachersOnly, postLearningPath)
+
+router.put('/:hruid/:language', onlyAdminsForLearningObject, putLearningPath);
+router.delete('/:hruid/:language', onlyAdminsForLearningObject, deleteLearningPath);
 
 export default router;

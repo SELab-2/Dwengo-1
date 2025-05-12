@@ -45,6 +45,10 @@ const dwengoApiLearningPathProvider: LearningPathProvider = {
         const searchResults = await fetchWithLogging<LearningPath[]>(apiUrl, `Search learning paths with query "${query}"`, { params });
         return searchResults ?? [];
     },
+
+    async getLearningPathsAdministratedBy(_adminUsername: string) {
+        return []; // Learning paths fetched from the Dwengo API cannot be administrated by a user.
+    },
 };
 
 export default dwengoApiLearningPathProvider;

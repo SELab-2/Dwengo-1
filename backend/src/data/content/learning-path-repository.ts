@@ -28,6 +28,21 @@ export class LearningPathRepository extends DwengoEntityRepository<LearningPath>
         });
     }
 
+    /**
+     * Returns all learning paths which have the user with the given username as an administrator.
+     */
+    public async findAllByAdminUsername(adminUsername: string): Promise<LearningPath[]> {
+        return this.findAll({
+            where: {
+                admins: {
+                    $contains: {
+                        username: adminUsername
+                    }
+                }
+            }
+        });
+    }
+
     public createNode(nodeData: RequiredEntityData<LearningPathNode>): LearningPathNode {
         return this.em.create(LearningPathNode, nodeData);
     }
@@ -49,5 +64,17 @@ export class LearningPathRepository extends DwengoEntityRepository<LearningPath>
         await em.persistAndFlush(path);
         await Promise.all(nodes.map(async (it) => em.persistAndFlush(it)));
         await Promise.all(transitions.map(async (it) => em.persistAndFlush(it)));
+    }
+
+    /**
+     * Deletes the learning path with the given hruid and language.
+     * @returns the deleted learning path or null if it was not found.
+     */
+    public async deleteByHruidAndLanguage(hruid: string, language: Language): Promise<LearningPath | null> {
+        const path = await this.findByHruidAndLanguage(hruid, language);
+        if (path) {
+            await this.em.removeAndFlush(path);
+        }
+        return path;
     }
 }

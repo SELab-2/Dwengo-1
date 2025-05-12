@@ -199,6 +199,15 @@ const databaseLearningPathProvider: LearningPathProvider = {
     },
 
     /**
+     * Returns all the learning paths which have the user with the given username as an administrator.
+     */
+    async getLearningPathsAdministratedBy(adminUsername: string): Promise<LearningPath[]> {
+        const repo = getLearningPathRepository();
+        const paths = await repo.findAllByAdminUsername(adminUsername);
+        return await Promise.all(paths.map(async (result, index) => convertLearningPath(result, index)));
+    },
+
+    /**
      * Search learning paths in the database using the given search string.
      */
     async searchLearningPaths(query: string, language: Language, personalizedFor?: Group): Promise<LearningPath[]> {
