@@ -109,15 +109,13 @@
 
     function getDeadlineClass(deadline?: string | Date): string {
         if (!deadline) return "";
+
         const date = new Date(deadline);
         const now = new Date();
-        const isToday =
-            date.getDate() === now.getDate() &&
-            date.getMonth() === now.getMonth() &&
-            date.getFullYear() === now.getFullYear();
+        const in24Hours = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
         if (date.getTime() < now.getTime()) return "deadline-passed";
-        if (isToday) return "deadline-today";
+        if (date.getTime() <= in24Hours.getTime()) return "deadline-in24hours";
         return "deadline-upcoming";
     }
 
@@ -259,7 +257,7 @@
         font-weight: bold;
     }
 
-    .assignment-deadline.deadline-today {
+    .assignment-deadline.deadline-in24hours {
         color: #f57c00;
         font-weight: bold;
     }
