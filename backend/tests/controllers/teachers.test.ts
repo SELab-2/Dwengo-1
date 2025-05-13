@@ -155,27 +155,6 @@ describe('Teacher controllers', () => {
         expect(result.students.length).toBeGreaterThan(0);
     });
 
-    /*
-
-    It('Get teacher questions', async () => {
-        req = {
-            params: { username: 'FooFighters' },
-            query: { full: 'true' },
-        };
-
-        await getTeacherQuestionHandler(req as Request, res as Response);
-
-        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ questions: expect.anything() }));
-
-        const result = jsonMock.mock.lastCall?.[0];
-        // console.log('[TEACHER QUESTIONS]', result.questions);
-        expect(result.questions.length).toBeGreaterThan(0);
-
-        // TODO fix
-    });
-
-     */
-
     it('Get join requests by class', async () => {
         const jr = getClassJoinRequest01();
         req = {
