@@ -38,7 +38,7 @@ describe('LearningObjectRepository', () => {
     let newerExample: LearningObject;
 
     it('should allow a learning object with the same id except a different version to be added', async () => {
-        // structeredClone failed on teacher, this copies all fields to a json object
+        // StructeredClone failed on teacher, this copies all fields to a json object
         const testLearningObject01Newer = { ...testLearningObject01 };
         testLearningObject01Newer.version = 10;
         testLearningObject01Newer.title += ' (nieuw)';
@@ -52,9 +52,9 @@ describe('LearningObjectRepository', () => {
         
 
         const result = await learningObjectRepository.findLatestByHruidAndLanguage(newerExample.hruid, newerExample.language);
-        // expect(result).toBeInstanceOf(LearningObject);
-        // expect(result?.version).toBe(10);
-        // expect(result?.title).toContain('(nieuw)');
+        // Expect(result).toBeInstanceOf(LearningObject);
+        // Expect(result?.version).toBe(10);
+        // Expect(result?.title).toContain('(nieuw)');
     });
 
     it('should return null when queried by non-existing hruid or language', async () => {

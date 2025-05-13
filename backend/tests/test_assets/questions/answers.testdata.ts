@@ -20,7 +20,7 @@ export function makeTestAnswers(em: EntityManager): Answer[] {
         content: 'answer2',
     });
 
-    // gets deleted
+    // Gets deleted
     answer03 = em.create(Answer, {
         author: getLimpBizkit(),
         toQuestion: getQuestion04(),

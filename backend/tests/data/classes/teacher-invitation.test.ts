@@ -18,7 +18,7 @@ describe('ClassRepository', () => {
         const teacher = getLimpBizkit();
         const ti1 = getTeacherInvitation01();
         const ti2 = getTeacherInvitation02();
-        const invitations = await teacherInvitationRepository.findAllInvitationsBy(teacher!);
+        const invitations = await teacherInvitationRepository.findAllInvitationsBy(teacher);
 
         expect(invitations).toBeTruthy();
         expect(invitations).toHaveLength(2);
@@ -30,7 +30,7 @@ describe('ClassRepository', () => {
         const teacher = getFooFighters();
         const ti1 = getTeacherInvitation01();
         const ti2 = getTeacherInvitation03();
-        const invitations = await teacherInvitationRepository.findAllInvitationsFor(teacher!);
+        const invitations = await teacherInvitationRepository.findAllInvitationsFor(teacher);
 
         expect(invitations).toBeTruthy();
         expect(invitations).toHaveLength(2);
@@ -42,7 +42,7 @@ describe('ClassRepository', () => {
         const class_ = getClass02();
         const ti1 = getTeacherInvitation01();
         const ti2 = getTeacherInvitation02();
-        const invitations = await teacherInvitationRepository.findAllInvitationsForClass(class_!);
+        const invitations = await teacherInvitationRepository.findAllInvitationsForClass(class_);
 
         expect(invitations).toBeTruthy();
         expect(invitations).toHaveLength(2);
@@ -55,9 +55,9 @@ describe('ClassRepository', () => {
         const class_ = getClass01();
         const sender = getFooFighters();
         const receiver = getLimpBizkit();
-        await teacherInvitationRepository.deleteBy(class_!, sender!, receiver!);
+        await teacherInvitationRepository.deleteBy(class_, sender, receiver);
 
-        const invitation = await teacherInvitationRepository.findAllInvitationsBy(sender!);
+        const invitation = await teacherInvitationRepository.findAllInvitationsBy(sender);
 
         expect(invitation).toHaveLength(0);
     });

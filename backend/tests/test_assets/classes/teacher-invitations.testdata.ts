@@ -26,7 +26,7 @@ export function makeTestTeacherInvitations(em: EntityManager): TeacherInvitation
         status: ClassStatus.Open,
     });
 
-    // gets deleted in test
+    // Gets deleted in test
     teacherInvitation04 = em.create(TeacherInvitation, {
         sender: getFooFighters(),
         receiver: getLimpBizkit(),

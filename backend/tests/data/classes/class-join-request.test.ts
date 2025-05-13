@@ -30,7 +30,7 @@ describe('ClassJoinRequestRepository', () => {
         const class_ = getClass02();
         const jr1 = getClassJoinRequest01();
         const jr2 = getClassJoinRequest02();
-        const requests = await classJoinRequestRepository.findAllOpenRequestsTo(class_!);
+        const requests = await classJoinRequestRepository.findAllOpenRequestsTo(class_);
 
         expect(requests).toBeTruthy();
         expect(requests).toHaveLength(2);
@@ -41,9 +41,9 @@ describe('ClassJoinRequestRepository', () => {
     it('should not find a removed request', async () => {
         const studentUsed = getSmashingPumpkins();
         const class_ = getClass03();
-        await classJoinRequestRepository.deleteBy(studentUsed!, class_!);
+        await classJoinRequestRepository.deleteBy(studentUsed, class_);
 
-        const request = await classJoinRequestRepository.findAllRequestsBy(studentUsed!);
+        const request = await classJoinRequestRepository.findAllRequestsBy(studentUsed);
 
         expect(request).toHaveLength(0);
     });

@@ -24,7 +24,7 @@ describe('AnswerRepository', () => {
         const a1 = getAnswer01();
         const a2 = getAnswer02();
 
-        const answers = await answerRepository.findAllAnswersToQuestion(question!);
+        const answers = await answerRepository.findAllAnswersToQuestion(question);
 
         expect(answers).toBeTruthy();
         expect(answers).toHaveLength(2);
@@ -38,7 +38,7 @@ describe('AnswerRepository', () => {
 
         await answerRepository.createAnswer({
             toQuestion: question,
-            author: teacher!,
+            author: teacher,
             content: 'created answer',
         });
 

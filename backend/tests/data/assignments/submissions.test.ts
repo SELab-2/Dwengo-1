@@ -42,7 +42,7 @@ describe('SubmissionRepository', () => {
         const usedSubmission = getSubmission02();
         const id = new LearningObjectIdentifier(usedSubmission.learningObjectHruid, usedSubmission.learningObjectLanguage, usedSubmission.learningObjectVersion);
         
-        const submission = await submissionRepository.findMostRecentSubmissionForStudent(id, usedSubmission.submitter!);
+        const submission = await submissionRepository.findMostRecentSubmissionForStudent(id, usedSubmission.submitter);
 
         expect(submission).toBeTruthy();
         expect(submission?.submissionTime).toStrictEqual(usedSubmission.submissionTime);
@@ -67,7 +67,7 @@ describe('SubmissionRepository', () => {
             language: usedSubmission.learningObjectLanguage,
             version: usedSubmission.learningObjectVersion,
         };
-        const result = await submissionRepository.findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!);
+        const result = await submissionRepository.findAllSubmissionsForLearningObjectAndAssignment(loId, assignment);
         sortSubmissions(result);
 
         expect(result).toHaveLength(3);
@@ -94,7 +94,7 @@ describe('SubmissionRepository', () => {
             version: usedSubmission.learningObjectVersion,
         };
 
-        const result = await submissionRepository.findAllSubmissionsForLearningObjectAndGroup(loId, group!);
+        const result = await submissionRepository.findAllSubmissionsForLearningObjectAndGroup(loId, group);
 
         expect(result).toHaveLength(1);
 

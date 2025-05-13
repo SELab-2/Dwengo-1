@@ -21,7 +21,7 @@ describe('GroupRepository', () => {
         const member1 = getNoordkaap();
         const member2 = getDireStraits();
 
-        const group = await groupRepository.findByAssignmentAndGroupNumber(assignment!, usedGroup.groupNumber!);
+        const group = await groupRepository.findByAssignmentAndGroupNumber(assignment, usedGroup.groupNumber!);
 
         expect(group).toBeTruthy();
         expect(group?.groupNumber).toBe(usedGroup.groupNumber);
@@ -36,7 +36,7 @@ describe('GroupRepository', () => {
         const gr2 = getTestGroup02();
         const gr3 = getTestGroup03();
 
-        const groups = await groupRepository.findAllGroupsForAssignment(assignment!);
+        const groups = await groupRepository.findAllGroupsForAssignment(assignment);
 
         expect(groups).toBeTruthy();
         expect(groups).toHaveLength(3);
@@ -49,9 +49,9 @@ describe('GroupRepository', () => {
         const assignment = getAssignment02();
         const deleted = getTestGroup01();
 
-        await groupRepository.deleteByAssignmentAndGroupNumber(assignment!, deleted.groupNumber!);
+        await groupRepository.deleteByAssignmentAndGroupNumber(assignment, deleted.groupNumber!);
 
-        const group = await groupRepository.findByAssignmentAndGroupNumber(assignment!, deleted.groupNumber!);
+        const group = await groupRepository.findByAssignmentAndGroupNumber(assignment, deleted.groupNumber!);
 
         expect(group).toBeNull();
     });

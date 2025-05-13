@@ -17,7 +17,7 @@ describe('AssignmentRepository', () => {
     it('should return the requested assignment', async () => {
         const class_ = getClass02();
         const usedAssignment = getAssignment02();
-        const assignment = await assignmentRepository.findByClassAndId(class_!, 21001);
+        const assignment = await assignmentRepository.findByClassAndId(class_, 21001);
 
         expect(assignment).toBeTruthy();
         expect(assignment!.description).toBe(usedAssignment.description);
@@ -30,7 +30,7 @@ describe('AssignmentRepository', () => {
     it('should return all assignments for a class', async () => {
         const class_ = getClass02();
         const usedAssignment = getAssignment02();
-        const assignments = await assignmentRepository.findAllAssignmentsInClass(class_!);
+        const assignments = await assignmentRepository.findAllAssignmentsInClass(class_);
 
         expect(assignments).toBeTruthy();
         expect(assignments).toHaveLength(1);

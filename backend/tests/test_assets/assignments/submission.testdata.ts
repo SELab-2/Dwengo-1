@@ -71,7 +71,7 @@ export function makeTestSubmissions(em: EntityManager): Submission[] {
         content: '',
     });
 
-    // gets deleted
+    // Gets deleted
     submission07 = em.create(Submission, {
         learningObjectHruid: testLearningObject01.hruid,
         learningObjectLanguage: testLearningObject01.language,
