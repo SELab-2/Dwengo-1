@@ -7,6 +7,7 @@ export interface AssignmentDTO {
     description: string;
     learningPath: string;
     language: string;
+    deadline: Date;
     groups: GroupDTO[] | string[][];
 }
 
