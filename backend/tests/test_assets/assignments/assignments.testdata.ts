@@ -5,8 +5,6 @@ import { Language } from '@dwengo-1/common/util/language';
 import { testLearningPathWithConditions } from '../content/learning-paths.testdata';
 import { getClassWithTestleerlingAndTestleerkracht } from '../classes/classes.testdata';
 
-
-
 export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assignment[] {
     const futureDate = new Date();
     futureDate.setDate(futureDate.getDate() + 7);
