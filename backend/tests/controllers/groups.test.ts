@@ -18,6 +18,7 @@ function createRequestObject(
     assignmentid: string,
     groupNumber: string
 ): {
+    query: { full: string }
     params: { classid: string; groupid: string; assignmentid: string };
 } {
     return {
@@ -26,6 +27,9 @@ function createRequestObject(
             assignmentid: assignmentid,
             groupid: groupNumber,
         },
+        query: {
+            full: 'true'
+        }
     };
 }
 
