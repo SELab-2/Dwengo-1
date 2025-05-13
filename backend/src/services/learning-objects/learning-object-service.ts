@@ -72,8 +72,6 @@ const learningObjectService = {
             learningObject.hruid = getEnvVar(envVars.UserContentPrefix) + learningObject.hruid;
         }
 
-        await learningObjectRepository.getEntityManager().flush();
-
         // Lookup the admin teachers based on their usernames and add them to the admins of the learning object.
         const teacherRepo = getTeacherRepository();
         const adminTeachers = await Promise.all(
@@ -85,7 +83,13 @@ const learningObjectService = {
             }
         });
 
-        await learningObjectRepository.save(learningObject, {preventOverwrite: true});
+        try {
+            await learningObjectRepository.save(learningObject, {preventOverwrite: true});
+        } catch (e: unknown) {
+            learningObjectRepository.getEntityManager().clear();
+            throw e;
+        }
+
         return learningObject;
     },
 

@@ -32,7 +32,13 @@
 <template>
     <v-dialog max-width="500" v-model="dialogOpen">
         <template v-slot:activator="{ props: activatorProps }">
-            <v-fab icon="mdi mdi-plus" v-bind="activatorProps" color="rgb(14, 105, 66)" size="large"></v-fab>
+            <v-btn
+                prepend-icon="mdi mdi-plus"
+                :text="t('newLearningObject')"
+                v-bind="activatorProps"
+                color="rgb(14, 105, 66)"
+                size="large">
+            </v-btn>
         </template>
 
         <template v-slot:default="{ isActive }">

@@ -138,5 +138,6 @@
     "open": "open",
     "editLearningPath": "Edit learning path",
     "newLearningPath": "Create a new learning path",
-    "saveChanges": "Save changes"
+    "saveChanges": "Save changes",
+    "newLearningObject": "Upload learning object"
 }

@@ -30,6 +30,7 @@
 <template>
     <div class="root">
         <div class="table-container">
+            <learning-object-upload-button/>
             <v-data-table
                 class="table"
                 v-model="selectedLearningObjects"
@@ -44,17 +45,9 @@
             <learning-object-preview-card class="preview" :selectedLearningObject="selectedLearningObject"/>
         </div>
     </div>
-    <div class="fab">
-        <learning-object-upload-button/>
-    </div>
 </template>
 
 <style scoped>
-    .fab {
-        position: absolute;
-        right: 20px;
-        bottom: 20px;
-    }
     .root {
         display: flex;
         gap: 20px;
@@ -73,5 +66,6 @@
     }
     .table {
         width: 100%;
+        margin-top: 20px;
     }
 </style>

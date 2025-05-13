@@ -1,6 +1,5 @@
 import {
     ArrayType,
-    Cascade,
     Collection,
     Embedded,
     Entity,
@@ -93,8 +92,7 @@ export class LearningObject {
 
     @OneToMany({
         entity: () => Attachment,
-        mappedBy: 'learningObject',
-        cascade: [Cascade.ALL]
+        mappedBy: 'learningObject'
     })
     attachments: Collection<Attachment> = new Collection<Attachment>(this);
 
