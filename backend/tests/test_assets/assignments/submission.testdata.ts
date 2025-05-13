@@ -106,34 +106,34 @@ let submission06: Submission;
 let submission07: Submission;
 let submission08: Submission;
 
-export function getSubmission01(): Submission{
+export function getSubmission01(): Submission {
     return submission01;
 }
 
-export function getSubmission02(): Submission{
+export function getSubmission02(): Submission {
     return submission02;
 }
 
-export function getSubmission03(): Submission{
+export function getSubmission03(): Submission {
     return submission03;
 }
 
-export function getSubmission04(): Submission{
+export function getSubmission04(): Submission {
     return submission04;
 }
 
-export function getSubmission05(): Submission{
+export function getSubmission05(): Submission {
     return submission05;
 }
 
-export function getSubmission06(): Submission{
+export function getSubmission06(): Submission {
     return submission06;
 }
 
-export function getSubmission07(): Submission{
+export function getSubmission07(): Submission {
     return submission07;
 }
 
-export function getSubmission08(): Submission{
+export function getSubmission08(): Submission {
     return submission08;
 }

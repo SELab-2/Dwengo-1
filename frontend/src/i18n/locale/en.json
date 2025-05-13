@@ -133,5 +133,7 @@
     "see-submission": "view submission",
     "view-submissions": "view submissions",
     "valid-username": "please enter a valid username",
-    "creationFailed": "creation failed, please try again"
+    "creationFailed": "creation failed, please try again",
+    "no-assignments": "There are currently no assignments.",
+    "deadline": "deadline"
 }

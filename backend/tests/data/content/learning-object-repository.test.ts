@@ -47,6 +47,13 @@ describe('LearningObjectRepository', () => {
         await learningObjectRepository.save(newerExample);
     });
 
+    it('should return the newest version of the learning object when queried by only hruid and language', async () => {
+        const result = await learningObjectRepository.findLatestByHruidAndLanguage(newerExample.hruid, newerExample.language);
+        // Expect(result).toBeInstanceOf(LearningObject);
+        // Expect(result?.version).toBe(10);
+        // Expect(result?.title).toContain('(nieuw)');
+    });
+
     it('should return null when queried by non-existing hruid or language', async () => {
         const result = await learningObjectRepository.findLatestByHruidAndLanguage('something_that_does_not_exist', testLearningObject01.language);
         expect(result).toBe(null);

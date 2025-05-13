@@ -134,5 +134,7 @@
     "see-submission": "voir la soumission",
     "view-submissions": "voir les soumissions",
     "valid-username": "veuillez entrer un nom d'utilisateur valide",
-    "creationFailed": "échec de la création, veuillez réessayer"
+    "creationFailed": "échec de la création, veuillez réessayer",
+    "no-assignments": "Il n'y a actuellement aucun travail.",
+    "deadline": "délai"
 }
