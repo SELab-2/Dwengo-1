@@ -36,8 +36,8 @@ export class LearningObjectRepository extends DwengoEntityRepository<LearningObj
         return this.find(
             {
                 admins: {
-                    username: adminUsername
-                }
+                    username: adminUsername,
+                },
             },
             { populate: ['admins'] } // Make sure to load admin relations
         );
@@ -50,5 +50,4 @@ export class LearningObjectRepository extends DwengoEntityRepository<LearningObj
         }
         return learningObject;
     }
-
 }

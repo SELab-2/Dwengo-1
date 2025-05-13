@@ -60,7 +60,12 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
             hruidList = themes.flatMap((theme) => theme.hruids);
         }
 
-        const learningPaths = await learningPathService.fetchLearningPaths(hruidList, language as Language, `HRUIDs: ${hruidList.join(', ')}`, forGroup);
+        const learningPaths = await learningPathService.fetchLearningPaths(
+            hruidList,
+            language as Language,
+            `HRUIDs: ${hruidList.join(', ')}`,
+            forGroup
+        );
         res.json(learningPaths.data);
     }
 }
@@ -71,12 +76,12 @@ function postOrPutLearningPath(isPut: boolean): (req: AuthenticatedRequest, res:
         const teacher = await getTeacher(req.auth!.username);
         if (isPut) {
             if (req.params.hruid !== path.hruid || req.params.language !== path.language) {
-                throw new BadRequestException("id_not_matching_query_params");
+                throw new BadRequestException('id_not_matching_query_params');
             }
-            await learningPathService.deleteLearningPath({hruid: path.hruid, language: path.language as Language});
+            await learningPathService.deleteLearningPath({ hruid: path.hruid, language: path.language as Language });
         }
         res.json(await learningPathService.createNewLearningPath(path, [teacher]));
-    }
+    };
 }
 
 export const postLearningPath = postOrPutLearningPath(false);
@@ -85,12 +90,12 @@ export const putLearningPath = postOrPutLearningPath(true);
 export async function deleteLearningPath(req: AuthenticatedRequest, res: Response): Promise<void> {
     const id: LearningPathIdentifier = {
         hruid: req.params.hruid,
-        language: req.params.language as Language
+        language: req.params.language as Language,
     };
     const deletedPath = await learningPathService.deleteLearningPath(id);
     if (deletedPath) {
         res.json(deletedPath);
     } else {
-        throw new NotFoundException("The learning path could not be found.");
+        throw new NotFoundException('The learning path could not be found.');
     }
 }

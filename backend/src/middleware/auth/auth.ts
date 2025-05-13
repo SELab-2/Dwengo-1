@@ -116,14 +116,8 @@ export const authenticateUser = [verifyJwtToken, addAuthenticationInfo];
  * @param accessCondition Predicate over the current AuthenticationInfo. Access is only granted when this evaluates
  *                        to true.
  */
-export function authorize(
-    accessCondition: (auth: AuthenticationInfo, req: AuthenticatedRequest) => boolean | Promise<boolean>
-): RequestHandler {
-    return async (
-        req: AuthenticatedRequest,
-        _res: express.Response,
-        next: express.NextFunction
-    ): Promise<void> => {
+export function authorize(accessCondition: (auth: AuthenticationInfo, req: AuthenticatedRequest) => boolean | Promise<boolean>): RequestHandler {
+    return async (req: AuthenticatedRequest, _res: express.Response, next: express.NextFunction): Promise<void> => {
         if (!req.auth) {
             throw new UnauthorizedException();
         } else if (!(await accessCondition(req.auth, req))) {

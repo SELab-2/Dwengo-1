@@ -7,8 +7,8 @@ import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { envVars, getEnvVar } from '../util/envVars.js';
 import { FilteredLearningObject, LearningObjectIdentifierDTO, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
-import {UploadedFile} from "express-fileupload";
-import {AuthenticatedRequest} from "../middleware/auth/authenticated-request";
+import { UploadedFile } from 'express-fileupload';
+import { AuthenticatedRequest } from '../middleware/auth/authenticated-request';
 
 function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIdentifierDTO {
     if (!req.params.hruid) {
@@ -32,12 +32,13 @@ function getLearningPathIdentifierFromRequest(req: Request): LearningPathIdentif
 }
 
 export async function getAllLearningObjects(req: Request, res: Response): Promise<void> {
-    if (req.query.admin) { // If the admin query parameter is present, the user wants to have all learning objects with this admin.
-        const learningObjects =
-            await learningObjectService.getLearningObjectsAdministratedBy(req.query.admin as string);
+    if (req.query.admin) {
+        // If the admin query parameter is present, the user wants to have all learning objects with this admin.
+        const learningObjects = await learningObjectService.getLearningObjectsAdministratedBy(req.query.admin as string);
 
         res.json(learningObjects);
-    } else { // Else he/she wants all learning objects on the path specified by the request parameters.
+    } else {
+        // Else he/she wants all learning objects on the path specified by the request parameters.
         const learningPathId = getLearningPathIdentifierFromRequest(req);
         const full = req.query.full;
 
@@ -86,10 +87,9 @@ export async function handlePostLearningObject(req: AuthenticatedRequest, res: R
     if (!req.files || !req.files.learningObject) {
         throw new BadRequestException('No file uploaded');
     }
-    const learningObject = await learningObjectService.storeLearningObject(
-        (req.files.learningObject as UploadedFile).tempFilePath,
-        [req.auth!.username]
-    );
+    const learningObject = await learningObjectService.storeLearningObject((req.files.learningObject as UploadedFile).tempFilePath, [
+        req.auth!.username,
+    ]);
     res.json(learningObject);
 }
 
@@ -97,17 +97,17 @@ export async function handleDeleteLearningObject(req: AuthenticatedRequest, res:
     const learningObjectId = getLearningObjectIdentifierFromRequest(req);
 
     if (!learningObjectId.version) {
-        throw new BadRequestException("When deleting a learning object, a version must be specified.");
+        throw new BadRequestException('When deleting a learning object, a version must be specified.');
     }
 
     const deletedLearningObject = await learningObjectService.deleteLearningObject({
         hruid: learningObjectId.hruid,
         version: learningObjectId.version,
-        language: learningObjectId.language
+        language: learningObjectId.language,
     });
     if (deletedLearningObject) {
         res.json(deletedLearningObject);
     } else {
-        throw new NotFoundException("Learning object not found");
+        throw new NotFoundException('Learning object not found');
     }
 }

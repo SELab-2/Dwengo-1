@@ -9,7 +9,7 @@ export class Attachment {
     @ManyToOne({
         entity: () => LearningObject,
         primary: true,
-        deleteRule: 'cascade'
+        deleteRule: 'cascade',
     })
     learningObject!: LearningObject;
 

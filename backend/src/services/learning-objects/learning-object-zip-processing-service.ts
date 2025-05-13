@@ -1,9 +1,9 @@
 import unzipper from 'unzipper';
 import mime from 'mime-types';
-import {LearningObject} from "../../entities/content/learning-object.entity";
-import {getAttachmentRepository, getLearningObjectRepository} from "../../data/repositories";
-import {BadRequestException} from "../../exceptions/bad-request-exception";
-import {LearningObjectMetadata} from "@dwengo-1/common/interfaces/learning-content";
+import { LearningObject } from '../../entities/content/learning-object.entity';
+import { getAttachmentRepository, getLearningObjectRepository } from '../../data/repositories';
+import { BadRequestException } from '../../exceptions/bad-request-exception';
+import { LearningObjectMetadata } from '@dwengo-1/common/interfaces/learning-content';
 import { DwengoContentType } from './processing/content-type';
 
 const METADATA_PATH_REGEX = /.*[/^]metadata\.json$/;
@@ -17,22 +17,21 @@ export async function processLearningObjectZip(filePath: string): Promise<Learni
     let zip: unzipper.CentralDirectory;
     try {
         zip = await unzipper.Open.file(filePath);
-    } catch(_: unknown) {
-        throw new BadRequestException("invalidZip");
+    } catch (_: unknown) {
+        throw new BadRequestException('invalidZip');
     }
 
-
     let metadata: LearningObjectMetadata | undefined = undefined;
-    const attachments: {name: string, content: Buffer}[] = [];
+    const attachments: { name: string; content: Buffer }[] = [];
     let content: Buffer | undefined = undefined;
 
     if (zip.files.length === 0) {
-        throw new BadRequestException("emptyZip")
+        throw new BadRequestException('emptyZip');
     }
 
     await Promise.all(
-        zip.files.map(async file => {
-            if (file.type !== "Directory") {
+        zip.files.map(async (file) => {
+            if (file.type !== 'Directory') {
                 if (METADATA_PATH_REGEX.test(file.path)) {
                     metadata = await processMetadataJson(file);
                 } else if (CONTENT_PATH_REGEX.test(file.path)) {
@@ -40,7 +39,7 @@ export async function processLearningObjectZip(filePath: string): Promise<Learni
                 } else {
                     attachments.push({
                         name: file.path,
-                        content: await processFile(file)
+                        content: await processFile(file),
                     });
                 }
             }
@@ -48,27 +47,24 @@ export async function processLearningObjectZip(filePath: string): Promise<Learni
     );
 
     if (!metadata) {
-        throw new BadRequestException("missingMetadata");
+        throw new BadRequestException('missingMetadata');
     }
     if (!content) {
-        throw new BadRequestException("missingIndex");
+        throw new BadRequestException('missingIndex');
     }
-
 
     const learningObject = createLearningObject(metadata, content, attachments);
 
     return learningObject;
 }
 
-function createLearningObject(
-    metadata: LearningObjectMetadata, content: Buffer, attachments: { name: string; content: Buffer; }[]
-): LearningObject {
+function createLearningObject(metadata: LearningObjectMetadata, content: Buffer, attachments: { name: string; content: Buffer }[]): LearningObject {
     const learningObjectRepo = getLearningObjectRepository();
     const attachmentRepo = getAttachmentRepository();
 
     const returnValue = {
-        callbackUrl: metadata.return_value?.callback_url ?? "",
-        callbackSchema: metadata.return_value?.callback_schema ? JSON.stringify(metadata.return_value.callback_schema) : ""
+        callbackUrl: metadata.return_value?.callback_url ?? '',
+        callbackSchema: metadata.return_value?.callback_schema ? JSON.stringify(metadata.return_value.callback_schema) : '',
     };
 
     const learningObject = learningObjectRepo.create({
@@ -76,26 +72,30 @@ function createLearningObject(
         available: metadata.available ?? true,
         content: content,
         contentType: metadata.content_type as DwengoContentType,
-        copyright: metadata.copyright ?? "",
-        description: metadata.description ?? "",
+        copyright: metadata.copyright ?? '',
+        description: metadata.description ?? '',
         educationalGoals: metadata.educational_goals ?? [],
         hruid: metadata.hruid,
         keywords: metadata.keywords,
         language: metadata.language,
-        license: metadata.license ?? "",
+        license: metadata.license ?? '',
         returnValue,
         skosConcepts: metadata.skos_concepts ?? [],
         teacherExclusive: metadata.teacher_exclusive,
         title: metadata.title,
-        version: metadata.version
+        version: metadata.version,
     });
-    const attachmentEntities = attachments.map(it => attachmentRepo.create({
-        name: it.name,
-        content: it.content,
-        mimeType: mime.lookup(it.name) || "text/plain",
-        learningObject
-    }));
-    attachmentEntities.forEach(it => { learningObject.attachments.add(it); });
+    const attachmentEntities = attachments.map((it) =>
+        attachmentRepo.create({
+            name: it.name,
+            content: it.content,
+            mimeType: mime.lookup(it.name) || 'text/plain',
+            learningObject,
+        })
+    );
+    attachmentEntities.forEach((it) => {
+        learningObject.attachments.add(it);
+    });
     return learningObject;
 }
 

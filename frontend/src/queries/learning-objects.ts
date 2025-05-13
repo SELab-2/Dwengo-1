@@ -1,6 +1,12 @@
 import { type MaybeRefOrGetter, toValue } from "vue";
 import type { Language } from "@/data-objects/language.ts";
-import { useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
+import {
+    useMutation,
+    useQuery,
+    useQueryClient,
+    type UseMutationReturnType,
+    type UseQueryReturnType,
+} from "@tanstack/vue-query";
 import { getLearningObjectController } from "@/controllers/controllers.ts";
 import type { LearningObject } from "@/data-objects/learning-objects/learning-object.ts";
 import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
@@ -58,7 +64,7 @@ export function useLearningObjectListForPathQuery(
 }
 
 export function useLearningObjectListForAdminQuery(
-    admin: MaybeRefOrGetter<string | undefined>
+    admin: MaybeRefOrGetter<string | undefined>,
 ): UseQueryReturnType<LearningObject[], Error> {
     return useQuery({
         queryKey: [LEARNING_OBJECT_KEY, "forAdmin", admin],
@@ -66,24 +72,39 @@ export function useLearningObjectListForAdminQuery(
             const adminVal = toValue(admin);
             return await learningObjectController.getAllAdministratedBy(adminVal!);
         },
-        enabled: () => toValue(admin) !== undefined
+        enabled: () => toValue(admin) !== undefined,
     });
 }
 
-export function useUploadLearningObjectMutation(): UseMutationReturnType<LearningObject, AxiosError, {learningObjectZip: File}, unknown> {
+export function useUploadLearningObjectMutation(): UseMutationReturnType<
+    LearningObject,
+    AxiosError,
+    { learningObjectZip: File },
+    unknown
+> {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async ({ learningObjectZip }) => await learningObjectController.upload(learningObjectZip),
-        onSuccess: async () => { await queryClient.invalidateQueries({queryKey: [LEARNING_OBJECT_KEY, "forAdmin"]}); }
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: [LEARNING_OBJECT_KEY, "forAdmin"] });
+        },
     });
 }
 
-export function useDeleteLearningObjectMutation(): UseMutationReturnType<LearningObject, AxiosError, {hruid: string, language: Language, version: number}, unknown> {
+export function useDeleteLearningObjectMutation(): UseMutationReturnType<
+    LearningObject,
+    AxiosError,
+    { hruid: string; language: Language; version: number },
+    unknown
+> {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ hruid, language, version }) => await learningObjectController.deleteLearningObject(hruid, language, version),
-        onSuccess: async () => { await queryClient.invalidateQueries({queryKey: [LEARNING_OBJECT_KEY, "forAdmin"]}); }
+        mutationFn: async ({ hruid, language, version }) =>
+            await learningObjectController.deleteLearningObject(hruid, language, version),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: [LEARNING_OBJECT_KEY, "forAdmin"] });
+        },
     });
 }

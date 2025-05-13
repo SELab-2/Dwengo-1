@@ -2,14 +2,10 @@ import dwengoApiLearningObjectProvider from './dwengo-api-learning-object-provid
 import { LearningObjectProvider } from './learning-object-provider.js';
 import { envVars, getEnvVar } from '../../util/envVars.js';
 import databaseLearningObjectProvider from './database-learning-object-provider.js';
-import {
-    FilteredLearningObject,
-    LearningObjectIdentifierDTO,
-    LearningPathIdentifier
-} from '@dwengo-1/common/interfaces/learning-content';
-import {getLearningObjectRepository, getTeacherRepository} from "../../data/repositories";
-import {processLearningObjectZip} from "./learning-object-zip-processing-service";
-import {LearningObject} from "../../entities/content/learning-object.entity";
+import { FilteredLearningObject, LearningObjectIdentifierDTO, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
+import { getLearningObjectRepository, getTeacherRepository } from '../../data/repositories';
+import { processLearningObjectZip } from './learning-object-zip-processing-service';
+import { LearningObject } from '../../entities/content/learning-object.entity';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { NotFoundException } from '../../exceptions/not-found-exception.js';
 
@@ -74,17 +70,15 @@ const learningObjectService = {
 
         // Lookup the admin teachers based on their usernames and add them to the admins of the learning object.
         const teacherRepo = getTeacherRepository();
-        const adminTeachers = await Promise.all(
-            admins.map(async it => teacherRepo.findByUsername(it))
-        );
-        adminTeachers.forEach(it => {
+        const adminTeachers = await Promise.all(admins.map(async (it) => teacherRepo.findByUsername(it)));
+        adminTeachers.forEach((it) => {
             if (it !== null) {
                 learningObject.admins.add(it);
             }
         });
 
         try {
-            await learningObjectRepository.save(learningObject, {preventOverwrite: true});
+            await learningObjectRepository.save(learningObject, { preventOverwrite: true });
         } catch (e: unknown) {
             learningObjectRepository.getEntityManager().clear();
             throw e;
@@ -109,10 +103,10 @@ const learningObjectService = {
         const learningObjectRepo = getLearningObjectRepository();
         const learningObject = await learningObjectRepo.findByIdentifier(id);
         if (!learningObject) {
-            throw new NotFoundException("The specified learning object does not exist.");
+            throw new NotFoundException('The specified learning object does not exist.');
         }
-        return learningObject.admins.map(admin => admin.username);
-    }
+        return learningObject.admins.map((admin) => admin.username);
+    },
 };
 
 export default learningObjectService;

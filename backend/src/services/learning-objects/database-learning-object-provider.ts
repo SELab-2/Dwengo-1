@@ -116,10 +116,8 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
     async getLearningObjectsAdministratedBy(adminUsername: string): Promise<FilteredLearningObject[]> {
         const learningObjectRepo = getLearningObjectRepository();
         const learningObjects = await learningObjectRepo.findAllByAdmin(adminUsername);
-        return learningObjects
-                .map(it => convertLearningObject(it))
-                .filter(it => it != null);
-    }
+        return learningObjects.map((it) => convertLearningObject(it)).filter((it) => it != null);
+    },
 };
 
 export default databaseLearningObjectProvider;

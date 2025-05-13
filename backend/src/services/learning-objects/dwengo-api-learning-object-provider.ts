@@ -141,7 +141,7 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
      */
     async getLearningObjectsAdministratedBy(_adminUsername: string): Promise<FilteredLearningObject[]> {
         return []; // The dwengo database does not contain any learning objects administrated by users.
-    }
+    },
 };
 
 export default dwengoApiLearningObjectProvider;

@@ -46,16 +46,21 @@ export abstract class BaseController {
      * @param queryParams The query parameters.
      * @returns The response the POST request generated.
      */
-    protected async postFile<T>(path: string, formFieldName: string, file: File, queryParams?: QueryParams): Promise<T> {
+    protected async postFile<T>(
+        path: string,
+        formFieldName: string,
+        file: File,
+        queryParams?: QueryParams,
+    ): Promise<T> {
         const formData = new FormData();
         formData.append(formFieldName, file);
         const response = await apiClient.post<T>(this.absolutePathFor(path), formData, {
             params: queryParams,
             headers: {
-                'Content-Type': 'multipart/form-data'
-            }
+                "Content-Type": "multipart/form-data",
+            },
         });
-        BaseController.assertSuccessResponse(response)
+        BaseController.assertSuccessResponse(response);
         return response.data;
     }
 

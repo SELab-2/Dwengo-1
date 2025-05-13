@@ -1,8 +1,8 @@
 <script setup lang="ts">
-    import { useUploadLearningObjectMutation } from '@/queries/learning-objects';
-    import { ref, watch, type Ref } from 'vue';
-    import { useI18n } from 'vue-i18n';
-    import { VFileUpload } from 'vuetify/labs/VFileUpload';
+    import { useUploadLearningObjectMutation } from "@/queries/learning-objects";
+    import { ref, watch, type Ref } from "vue";
+    import { useI18n } from "vue-i18n";
+    import { VFileUpload } from "vuetify/labs/VFileUpload";
 
     const { t } = useI18n();
 
@@ -25,19 +25,23 @@
 
     function uploadFile() {
         if (fileToUpload.value) {
-            mutate({learningObjectZip: fileToUpload.value});
+            mutate({ learningObjectZip: fileToUpload.value });
         }
     }
 </script>
 <template>
-    <v-dialog max-width="500" v-model="dialogOpen">
+    <v-dialog
+        max-width="500"
+        v-model="dialogOpen"
+    >
         <template v-slot:activator="{ props: activatorProps }">
             <v-btn
                 prepend-icon="mdi mdi-plus"
                 :text="t('newLearningObject')"
                 v-bind="activatorProps"
                 color="rgb(14, 105, 66)"
-                size="large">
+                size="large"
+            >
             </v-btn>
         </template>
 
@@ -75,5 +79,4 @@
         </template>
     </v-dialog>
 </template>
-<style scoped>
-</style>
+<style scoped></style>
