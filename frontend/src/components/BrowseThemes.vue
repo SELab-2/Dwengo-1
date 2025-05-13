@@ -5,6 +5,7 @@
     import { AGE_TO_THEMES, THEMESITEMS } from "@/utils/constants.ts";
     import { useThemeQuery } from "@/queries/themes.ts";
     import type { Theme } from "@/data-objects/theme.ts";
+import authService from "@/services/auth/auth-service";
 
     const props = defineProps({
         selectedTheme: { type: String, required: true },
@@ -33,6 +34,8 @@
             cards.value = themes;
         }
     });
+
+    const isTeacher = computed(() => authService.authState.activeRole === "teacher");
 </script>
 
 <template>
@@ -91,6 +94,7 @@
                 />
             </v-col>
             <v-col
+                v-if="isTeacher"
                 cols="12"
                 sm="6"
                 md="4"
