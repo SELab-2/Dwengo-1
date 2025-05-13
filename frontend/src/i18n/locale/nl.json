@@ -133,5 +133,7 @@
     "see-submission": "inzending bekijken",
     "view-submissions": "inzendingen bekijken",
     "valid-username": "voer een geldige gebruikersnaam in",
-    "creationFailed": "aanmaak mislukt, probeer het opnieuw"
+    "creationFailed": "aanmaak mislukt, probeer het opnieuw",
+    "no-assignments": "Er zijn momenteel geen opdrachten.",
+    "deadline": "deadline"
 }

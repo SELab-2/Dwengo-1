@@ -48,7 +48,7 @@
 
     // Disable combobox when learningPath prop is passed
     const lpIsSelected = route.query.hruid !== undefined;
-    const deadline = ref(null);
+    const deadline = ref(new Date());
     const description = ref("");
     const groups = ref<string[][]>([]);
 
@@ -86,6 +86,7 @@
             title: assignmentTitle.value,
             description: description.value,
             learningPath: lp || "",
+            deadline: deadline.value,
             language: language.value,
             groups: groups.value,
         };
