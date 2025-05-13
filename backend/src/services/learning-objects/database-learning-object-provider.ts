@@ -118,7 +118,7 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
         const learningObjects = await learningObjectRepo.findAllByAdmin(adminUsername);
         return learningObjects
                 .map(it => convertLearningObject(it))
-                .filter(it => it != null);
+                .filter(it => it !== null);
     }
 };
 
