@@ -68,7 +68,6 @@ describe('SubmissionRepository', () => {
             version: usedSubmission.learningObjectVersion,
         };
         const result = await submissionRepository.findAllSubmissionsForLearningObjectAndAssignment(loId, assignment);
-        const result = await submissionRepository.findAllSubmissionsForLearningObjectAndAssignment(loId, assignment);
         sortSubmissions(result);
 
         expect(result).toHaveLength(3);
@@ -95,7 +94,6 @@ describe('SubmissionRepository', () => {
             version: usedSubmission.learningObjectVersion,
         };
 
-        const result = await submissionRepository.findAllSubmissionsForLearningObjectAndGroup(loId, group);
         const result = await submissionRepository.findAllSubmissionsForLearningObjectAndGroup(loId, group);
 
         expect(result).toHaveLength(1);
