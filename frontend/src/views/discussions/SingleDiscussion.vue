@@ -139,12 +139,15 @@
             (assignment) => assignment.learningPath === props.hruid && assignment.language === props.language,
         );
     });
+    const loID: ComputedRef<LearningObjectIdentifierDTO> = computed(() => {
+        return {
+            hruid: props.learningObjectHruid as string,
+            language: props.language,
+            version: currentNode.value?.version
+        };
+    });
 
-    const loID: LearningObjectIdentifierDTO = {
-        hruid: props.learningObjectHruid as string,
-        language: props.language,
-    };
-    const createQuestionMutation = useCreateQuestionMutation(loID);
+    const createQuestionMutation = useCreateQuestionMutation(loID.value);
     const groupsQueryResult = useStudentGroupsQuery(authService.authState.user?.profile.preferred_username);
 
     const questionInput = ref("");
@@ -159,7 +162,7 @@
         const questionData: QuestionData = {
             author: authService.authState.user?.profile.preferred_username,
             content: questionInput.value,
-            inGroup: group, //TODO: POST response zegt dat dit null is???
+            inGroup: group, 
         };
         if (questionInput.value !== "") {
             createQuestionMutation.mutate(questionData, {
