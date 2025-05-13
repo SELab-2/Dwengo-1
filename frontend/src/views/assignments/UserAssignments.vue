@@ -9,6 +9,7 @@
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { asyncComputed } from "@vueuse/core";
     import { useDeleteAssignmentMutation } from "@/queries/assignments.ts";
+    import "../../assets/common.css";
 
     const { t } = useI18n();
     const router = useRouter();
@@ -80,7 +81,7 @@
 
 <template>
     <div class="assignments-container">
-        <h1>{{ t("assignments") }}</h1>
+        <h1 class="h1">{{ t("assignments") }}</h1>
 
         <v-btn
             v-if="isTeacher"
@@ -139,7 +140,6 @@
     .assignments-container {
         width: 100%;
         margin: 0 auto;
-        padding: 2% 4%;
         box-sizing: border-box;
     }
 

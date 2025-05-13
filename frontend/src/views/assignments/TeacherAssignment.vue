@@ -19,8 +19,7 @@
         ) => { groupProgressMap: Map<number, number> };
     }>();
 
-    const { t, locale } = useI18n();
-    const language = computed(() => locale.value);
+    const { t } = useI18n();
     const groups = ref();
     const learningPath = ref();
 
@@ -29,7 +28,7 @@
     // Get learning path object
     const lpQueryResult = useGetLearningPathQuery(
         computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
-        computed(() => language.value as Language),
+        computed(() => assignmentQueryResult.data.value?.assignment.language as Language),
     );
 
     // Get all the groups withing the assignment
@@ -38,9 +37,9 @@
 
     /* Crashes right now cause api data has inexistent hruid TODO: uncomment later and use it in progress bar
 Const {groupProgressMap} = props.useGroupsWithProgress(
-    groups,
-    learningPath,
-    language
+groups,
+learningPath,
+language
 );
 */
 
@@ -121,7 +120,7 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
                     >
                         <v-btn
                             v-if="lpData"
-                            :to="`/learningPath/${lpData.hruid}/${language}/${lpData.startNode.learningobjectHruid}?assignmentNo=${assignmentId}&classId=${classId}`"
+                            :to="`/learningPath/${lpData.hruid}/${assignmentQueryResult.data.value?.assignment.language}/${lpData.startNode.learningobjectHruid}?assignmentNo=${assignmentId}&classId=${classId}`"
                             variant="tonal"
                             color="primary"
                         >
@@ -203,8 +202,8 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
                             <v-btn
                                 color="primary"
                                 @click="dialog = false"
-                                >Close</v-btn
-                            >
+                                >Close
+                            </v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>

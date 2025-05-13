@@ -22,8 +22,7 @@
         ) => { groupProgressMap: Map<number, number> };
     }>();
 
-    const { t, locale } = useI18n();
-    const language = ref<Language>(locale.value as Language);
+    const { t } = useI18n();
     const learningPath = ref();
     // Get the user's username/id
     const username = asyncComputed(async () => {
@@ -38,7 +37,7 @@
 
     const lpQueryResult = useGetLearningPathQuery(
         computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
-        computed(() => language.value),
+        computed(() => assignmentQueryResult.data.value?.assignment.language as Language),
     );
 
     const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
@@ -100,7 +99,7 @@ language
                     >
                         <v-btn
                             v-if="lpData"
-                            :to="`/learningPath/${lpData.hruid}/${language}/${lpData.startNode.learningobjectHruid}?forGroup=${group?.groupNumber}&assignmentNo=${assignmentId}&classId=${classId}`"
+                            :to="`/learningPath/${lpData.hruid}/${assignmentQueryResult.data.value?.assignment.language}/${lpData.startNode.learningobjectHruid}?forGroup=${group?.groupNumber}&assignmentNo=${assignmentId}&classId=${classId}`"
                             variant="tonal"
                             color="primary"
                         >
