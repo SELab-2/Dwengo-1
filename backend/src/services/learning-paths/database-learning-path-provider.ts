@@ -117,7 +117,7 @@ async function convertNode(
                 logger.error(`Transition could not be resolved: ${JSON.stringify(trans)}`);
                 return undefined; // Do not crash on invalid transitions, just ignore them so the rest of the learning path keeps working.
             }
-        }).filter(it => it);
+        }).filter(it => it !== undefined);
     return {
         _id: learningObject.uuid,
         language: learningObject.language,

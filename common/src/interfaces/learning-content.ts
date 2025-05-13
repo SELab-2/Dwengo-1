@@ -79,6 +79,8 @@ export interface LearningObjectMetadata {
     target_ages: number[];
     content_type: string; // Markdown, image, etc.
     content_location?: string;
+    copyright?: string;
+    license?: string;
     skos_concepts?: string[];
     return_value?: ReturnValue;
 }

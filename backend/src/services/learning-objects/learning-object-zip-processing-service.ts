@@ -3,8 +3,8 @@ import mime from 'mime-types';
 import {LearningObject} from "../../entities/content/learning-object.entity";
 import {getAttachmentRepository, getLearningObjectRepository} from "../../data/repositories";
 import {BadRequestException} from "../../exceptions/bad-request-exception";
-import {LearningObjectMetadata} from "@dwengo-1/common/dist/interfaces/learning-content";
-import { ReturnValue } from '../../entities/content/return-value.entity';
+import {LearningObjectMetadata} from "@dwengo-1/common/interfaces/learning-content";
+import { DwengoContentType } from './processing/content-type';
 
 const METADATA_PATH_REGEX = /.*[/^]metadata\.json$/;
 const CONTENT_PATH_REGEX = /.*[/^]content\.[a-zA-Z]*$/;
@@ -65,11 +65,17 @@ function createLearningObject(
 ): LearningObject {
     const learningObjectRepo = getLearningObjectRepository();
     const attachmentRepo = getAttachmentRepository();
+
+    const returnValue = {
+        callbackUrl: metadata.return_value?.callback_url ?? "",
+        callbackSchema: metadata.return_value?.callback_schema ? JSON.stringify(metadata.return_value.callback_schema) : ""
+    };
+
     const learningObject = learningObjectRepo.create({
         admins: [],
         available: metadata.available ?? true,
         content: content,
-        contentType: metadata.content_type,
+        contentType: metadata.content_type as DwengoContentType,
         copyright: metadata.copyright ?? "",
         description: metadata.description ?? "",
         educationalGoals: metadata.educational_goals ?? [],
@@ -77,7 +83,7 @@ function createLearningObject(
         keywords: metadata.keywords,
         language: metadata.language,
         license: metadata.license ?? "",
-        returnValue: metadata.return_value ?? new ReturnValue(),
+        returnValue,
         skosConcepts: metadata.skos_concepts ?? [],
         teacherExclusive: metadata.teacher_exclusive,
         title: metadata.title,
@@ -93,7 +99,7 @@ function createLearningObject(
     return learningObject;
 }
 
-async function processMetadataJson(file: unzipper.File): LearningObjectMetadata {
+async function processMetadataJson(file: unzipper.File): Promise<LearningObjectMetadata> {
     const buf = await file.buffer();
     const content = buf.toString();
     return JSON.parse(content);
