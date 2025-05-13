@@ -32,7 +32,7 @@ import { ref } from 'vue';
                 <template v-for="node in learningObjects.data">
                     <v-list-item
                         link
-                        :to="{ path: node.key, query: route.query }"
+                        :to="{ path: `/discussion/${currentPath.hruid}/${node.language}/${node.key}`, query: route.query }"
                         :title="node.title"
                         :active="node.key === props.activeObjectId"
                     >
