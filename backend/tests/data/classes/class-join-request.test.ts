@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { setupTestApp } from '../../setup-tests';
 import { ClassJoinRequestRepository } from '../../../src/data/classes/class-join-request-repository';
-import { getClassJoinRequestRepository, getClassRepository, getStudentRepository } from '../../../src/data/repositories';
+import { getClassJoinRequestRepository } from '../../../src/data/repositories';
 import { getPinkFloyd, getSmashingPumpkins } from '../../test_assets/users/students.testdata';
 import { getClass02, getClass03 } from '../../test_assets/classes/classes.testdata';
 import { getClassJoinRequest01, getClassJoinRequest02, getClassJoinRequest03 } from '../../test_assets/classes/class-join-requests.testdata';
@@ -30,7 +30,7 @@ describe('ClassJoinRequestRepository', () => {
         const class_ = getClass02();
         const jr1 = getClassJoinRequest01();
         const jr2 = getClassJoinRequest02();
-        const requests = await classJoinRequestRepository.findAllOpenRequestsTo(class_!);
+        const requests = await classJoinRequestRepository.findAllOpenRequestsTo(class_);
 
         expect(requests).toBeTruthy();
         expect(requests).toHaveLength(2);
@@ -41,9 +41,9 @@ describe('ClassJoinRequestRepository', () => {
     it('should not find a removed request', async () => {
         const studentUsed = getSmashingPumpkins();
         const class_ = getClass03();
-        await classJoinRequestRepository.deleteBy(studentUsed!, class_!);
+        await classJoinRequestRepository.deleteBy(studentUsed, class_);
 
-        const request = await classJoinRequestRepository.findAllRequestsBy(studentUsed!);
+        const request = await classJoinRequestRepository.findAllRequestsBy(studentUsed);
 
         expect(request).toHaveLength(0);
     });

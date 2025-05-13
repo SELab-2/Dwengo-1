@@ -14,7 +14,6 @@ import { BadRequestException } from '../../src/exceptions/bad-request-exception'
 import { ClassStatus } from '@dwengo-1/common/util/class-join-request';
 import { getTeacherInvitation01 } from '../test_assets/classes/teacher-invitations.testdata.js';
 import { getLimpBizkit, getTestleerkracht1 } from '../test_assets/users/teachers.testdata.js';
-import { getTestGroup01 } from '../test_assets/assignments/groups.testdata.js';
 import { getClass02 } from '../test_assets/classes/classes.testdata.js';
 
 describe('Teacher controllers', () => {

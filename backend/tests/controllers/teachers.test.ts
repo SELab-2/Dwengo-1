@@ -19,8 +19,7 @@ import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { getClassHandler } from '../../src/controllers/classes';
 import { getFooFighters, getTestleerkracht1 } from '../test_assets/users/teachers.testdata.js';
 import { getClass02 } from '../test_assets/classes/classes.testdata.js';
-import { getPinkFloyd, TEST_STUDENTS } from '../test_assets/users/students.testdata.js';
-import { getClassJoinRequest01, getClassJoinRequest02 } from '../test_assets/classes/class-join-requests.testdata.js';
+import { getClassJoinRequest01 } from '../test_assets/classes/class-join-requests.testdata.js';
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;

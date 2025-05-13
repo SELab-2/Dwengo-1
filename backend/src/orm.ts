@@ -17,7 +17,7 @@ export async function initORM(testingMode = false): Promise<MikroORM<IDatabaseDr
 
     // Update the database scheme if necessary and enabled.
     if (getEnvVar(envVars.DbUpdate)) {
-        logger.info("MikroORM: Updating database schema");
+        logger.info('MikroORM: Updating database schema');
         await orm.schema.updateSchema();
     } else {
         const diff = await orm.schema.getUpdateSchemaSQL();

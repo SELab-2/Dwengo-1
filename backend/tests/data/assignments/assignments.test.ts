@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { setupTestApp } from '../../setup-tests';
 import { AssignmentRepository } from '../../../src/data/assignments/assignment-repository';
 import { getAssignmentRepository } from '../../../src/data/repositories';
-import { getClass01, getClass02 } from '../../test_assets/classes/classes.testdata';
+import { getClass02 } from '../../test_assets/classes/classes.testdata';
 import { getAssignment02, getAssignment03 } from '../../test_assets/assignments/assignments.testdata';
 import { getTestleerkracht1 } from '../../test_assets/users/teachers.testdata';
 
@@ -17,7 +17,7 @@ describe('AssignmentRepository', () => {
     it('should return the requested assignment', async () => {
         const class_ = getClass02();
         const usedAssignment = getAssignment02();
-        const assignment = await assignmentRepository.findByClassAndId(class_!, 21001);
+        const assignment = await assignmentRepository.findByClassAndId(class_, 21001);
 
         expect(assignment).toBeTruthy();
         expect(assignment!.description).toBe(usedAssignment.description);
@@ -30,7 +30,7 @@ describe('AssignmentRepository', () => {
     it('should return all assignments for a class', async () => {
         const class_ = getClass02();
         const usedAssignment = getAssignment02();
-        const assignments = await assignmentRepository.findAllAssignmentsInClass(class_!);
+        const assignments = await assignmentRepository.findAllAssignmentsInClass(class_);
 
         expect(assignments).toBeTruthy();
         expect(assignments).toHaveLength(1);
