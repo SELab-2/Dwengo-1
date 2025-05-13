@@ -1,36 +1,38 @@
 <script setup lang="ts">
-    import type { LearningObject } from '@/data-objects/learning-objects/learning-object';
-    import LearningObjectUploadButton from '@/views/own-learning-content/learning-objects/LearningObjectUploadButton.vue'
-    import LearningObjectPreviewCard from './LearningObjectPreviewCard.vue';
-    import { computed, ref, watch, type Ref } from 'vue';
-    import { useI18n } from 'vue-i18n';
+    import type { LearningObject } from "@/data-objects/learning-objects/learning-object";
+    import LearningObjectUploadButton from "@/views/own-learning-content/learning-objects/LearningObjectUploadButton.vue";
+    import LearningObjectPreviewCard from "./LearningObjectPreviewCard.vue";
+    import { computed, ref, watch, type Ref } from "vue";
+    import { useI18n } from "vue-i18n";
 
     const { t } = useI18n();
     const props = defineProps<{
-        learningObjects: LearningObject[]
+        learningObjects: LearningObject[];
     }>();
 
     const tableHeaders = [
         { title: t("hruid"), width: "250px", key: "key" },
         { title: t("language"), width: "50px", key: "language" },
         { title: t("version"), width: "50px", key: "version" },
-        { title: t("title"), key: "title" }
+        { title: t("title"), key: "title" },
     ];
 
     const selectedLearningObjects: Ref<LearningObject[]> = ref([]);
 
-    watch(() => props.learningObjects, () => selectedLearningObjects.value = []);
-
-    const selectedLearningObject = computed(() =>
-        selectedLearningObjects.value ? selectedLearningObjects.value[0] : undefined
+    watch(
+        () => props.learningObjects,
+        () => (selectedLearningObjects.value = []),
     );
 
+    const selectedLearningObject = computed(() =>
+        selectedLearningObjects.value ? selectedLearningObjects.value[0] : undefined,
+    );
 </script>
 
 <template>
     <div class="root">
         <div class="table-container">
-            <learning-object-upload-button/>
+            <learning-object-upload-button />
             <v-data-table
                 class="table"
                 v-model="selectedLearningObjects"
@@ -41,8 +43,14 @@
                 return-object
             />
         </div>
-        <div class="preview-container" v-if="selectedLearningObject">
-            <learning-object-preview-card class="preview" :selectedLearningObject="selectedLearningObject"/>
+        <div
+            class="preview-container"
+            v-if="selectedLearningObject"
+        >
+            <learning-object-preview-card
+                class="preview"
+                :selectedLearningObject="selectedLearningObject"
+            />
         </div>
     </div>
 </template>

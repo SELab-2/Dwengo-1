@@ -110,7 +110,7 @@ const router = createRouter({
             path: "/my-content",
             name: "OwnLearningContentPage",
             component: OwnLearningContentPage,
-            meta: { requiresAuth: true }
+            meta: { requiresAuth: true },
         },
         {
             path: "/learningPath",
@@ -126,7 +126,7 @@ const router = createRouter({
                     name: "LearningPath",
                     component: LearningPathPage,
                     props: true,
-                    meta: { requiresAuth: true }
+                    meta: { requiresAuth: true },
                 },
             ],
         },

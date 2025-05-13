@@ -1,27 +1,30 @@
 <script setup lang="ts">
-    import LearningPathPreviewCard from './LearningPathPreviewCard.vue';
-    import { computed, ref, watch, type Ref } from 'vue';
-    import { useI18n } from 'vue-i18n';
-    import type { LearningPath as LearningPathDTO } from '@dwengo-1/common/interfaces/learning-content';
+    import LearningPathPreviewCard from "./LearningPathPreviewCard.vue";
+    import { computed, ref, watch, type Ref } from "vue";
+    import { useI18n } from "vue-i18n";
+    import type { LearningPath as LearningPathDTO } from "@dwengo-1/common/interfaces/learning-content";
 
     const { t } = useI18n();
     const props = defineProps<{
-        learningPaths: LearningPathDTO[]
+        learningPaths: LearningPathDTO[];
     }>();
 
     const tableHeaders = [
         { title: t("hruid"), width: "250px", key: "hruid" },
         { title: t("language"), width: "50px", key: "language" },
-        { title: t("title"), key: "title" }
+        { title: t("title"), key: "title" },
     ];
 
     const selectedLearningPaths: Ref<LearningPathDTO[]> = ref([]);
 
     const selectedLearningPath = computed(() =>
-        selectedLearningPaths.value ? selectedLearningPaths.value[0] : undefined
+        selectedLearningPaths.value ? selectedLearningPaths.value[0] : undefined,
     );
 
-    watch(() => props.learningPaths, () => selectedLearningPaths.value = []);
+    watch(
+        () => props.learningPaths,
+        () => (selectedLearningPaths.value = []),
+    );
 </script>
 
 <template>
@@ -38,7 +41,10 @@
             />
         </div>
         <div class="preview-container">
-            <learning-path-preview-card class="preview" :selectedLearningPath="selectedLearningPath"/>
+            <learning-path-preview-card
+                class="preview"
+                :selectedLearningPath="selectedLearningPath"
+            />
         </div>
     </div>
 </template>

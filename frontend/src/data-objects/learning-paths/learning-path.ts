@@ -82,7 +82,7 @@ export class LearningPath {
             keywords: dto.keywords.split(" "),
             targetAges: {
                 min: dto.min_age ?? NaN,
-                max: dto.max_age ?? NaN
+                max: dto.max_age ?? NaN,
             },
             startNode: LearningPathNode.fromDTOAndOtherNodes(LearningPath.getStartNode(dto), dto.nodes),
             image: dto.image,

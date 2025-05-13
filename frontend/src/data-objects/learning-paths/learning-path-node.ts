@@ -22,7 +22,7 @@ export class LearningPathNode {
         this.learningobjectHruid = options.learningobjectHruid;
         this.version = options.version;
         this.language = options.language;
-        this.transitions = options.transitions.map(it => ({ next: it.next, default: it.default ?? false }));
+        this.transitions = options.transitions.map((it) => ({ next: it.next, default: it.default ?? false }));
         this.createdAt = options.createdAt;
         this.updatedAt = options.updatedAt;
         this.done = options.done || false;

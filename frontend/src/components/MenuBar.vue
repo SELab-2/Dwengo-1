@@ -7,7 +7,7 @@
 
     // Import assets
     import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
-import { useLocale } from "vuetify";
+    import { useLocale } from "vuetify";
 
     const { t, locale } = useI18n();
     const { current: vuetifyLocale } = useLocale();

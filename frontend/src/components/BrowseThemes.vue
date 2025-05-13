@@ -5,7 +5,7 @@
     import { AGE_TO_THEMES, THEMESITEMS } from "@/utils/constants.ts";
     import { useThemeQuery } from "@/queries/themes.ts";
     import type { Theme } from "@/data-objects/theme.ts";
-import authService from "@/services/auth/auth-service";
+    import authService from "@/services/auth/auth-service";
 
     const props = defineProps({
         selectedTheme: { type: String, required: true },

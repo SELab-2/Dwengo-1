@@ -110,9 +110,7 @@ const learningPathService = {
      * Fetch the learning paths administrated by the teacher with the given username.
      */
     async getLearningPathsAdministratedBy(adminUsername: string): Promise<LearningPath[]> {
-        const providerResponses = await Promise.all(
-            allProviders.map(async (provider) => provider.getLearningPathsAdministratedBy(adminUsername))
-        );
+        const providerResponses = await Promise.all(allProviders.map(async (provider) => provider.getLearningPathsAdministratedBy(adminUsername)));
         return providerResponses.flat();
     },
 
@@ -157,7 +155,7 @@ const learningPathService = {
         if (deletedPath) {
             return deletedPath;
         }
-        throw new NotFoundException("No learning path with the given identifier found.");
+        throw new NotFoundException('No learning path with the given identifier found.');
     },
 
     /**
@@ -168,10 +166,10 @@ const learningPathService = {
         const repo = getLearningPathRepository();
         const path = await repo.findByHruidAndLanguage(id.hruid, id.language);
         if (!path) {
-            throw new NotFoundException("No learning path with the given identifier found.");
+            throw new NotFoundException('No learning path with the given identifier found.');
         }
-        return path.admins.map(admin => admin.username);
-    }
+        return path.admins.map((admin) => admin.username);
+    },
 };
 
 export default learningPathService;

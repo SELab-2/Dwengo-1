@@ -25,7 +25,7 @@ const router = express.Router();
 // Example: http://localhost:3000/learningPath?theme=kiks
 
 router.get('/', getLearningPaths);
-router.post('/', teachersOnly, postLearningPath)
+router.post('/', teachersOnly, postLearningPath);
 
 router.put('/:hruid/:language', onlyAdminsForLearningPath, putLearningPath);
 router.delete('/:hruid/:language', onlyAdminsForLearningPath, deleteLearningPath);
