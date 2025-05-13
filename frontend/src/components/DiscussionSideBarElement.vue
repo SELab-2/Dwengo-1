@@ -4,6 +4,7 @@ import type { LearningPath } from '@/data-objects/learning-paths/learning-path';
 import { useLearningObjectListForPathQuery } from '@/queries/learning-objects';
 import { useRoute } from 'vue-router';
 import UsingQueryResult from "@/components/UsingQueryResult.vue";
+import { ref } from 'vue';
 
     const route = useRoute();
 
@@ -12,7 +13,9 @@ import UsingQueryResult from "@/components/UsingQueryResult.vue";
         activeObjectId: string 
     }>();
 
-    const learningObjectListQueryResult = useLearningObjectListForPathQuery(props.path);
+    const currentPath = ref(props.path)
+
+    const learningObjectListQueryResult = useLearningObjectListForPathQuery(currentPath);
 
     console.log(learningObjectListQueryResult.data.value)
 
@@ -21,7 +24,7 @@ import UsingQueryResult from "@/components/UsingQueryResult.vue";
 <template>
     <main>
         <div>{{path.title}}</div>
-        <template>
+        <div>
             <using-query-result
                 :query-result="learningObjectListQueryResult"
                 v-slot="learningObjects: { data: LearningObject[] }"
@@ -36,7 +39,7 @@ import UsingQueryResult from "@/components/UsingQueryResult.vue";
                     </v-list-item>
                 </template>
             </using-query-result>
-        </template>
+        </div>
     </main>
 </template>
 

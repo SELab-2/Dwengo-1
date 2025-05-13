@@ -194,21 +194,15 @@
                     </template>
                 </v-list-item>
                 <v-divider></v-divider>
-                <div v-if="props.learningObjectHruid">
-                    <DiscussionSideBarElement
-                        :path="(learningPathQueryResult.data.value as LearningPath)"
-                        :activeObjectId="props.learningObjectHruid">
-                    </DiscussionSideBarElement>
+                <div>
                     <using-query-result
-                        :query-result="learningObjectListQueryResult"
-                        v-slot="learningObjects: {data: LearningObject[]}">
-                            <v-list-item 
-                                link
-                                :to="{ path: learningObject.key, query: route.query }"
-                                :title="learningObject.title"
-                                :active="learningObject.key === props.learningObjectHruid"
-                                v-for="learningObject in learningObjects.data">
-                            </v-list-item>
+                        :query-result="allLearningPathsResult"
+                        v-slot="learningPaths: {data: LearningPath[]}">
+                        <DiscussionSideBarElement
+                            v-for="learningPath in learningPaths.data"
+                            :path="learningPath"
+                            :activeObjectId="props.learningObjectHruid as string">
+                        </DiscussionSideBarElement>
                     </using-query-result>
                 </div>
             </div>
