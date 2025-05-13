@@ -1,9 +1,7 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { setupTestApp } from '../../setup-tests';
 import { SubmissionRepository } from '../../../src/data/assignments/submission-repository';
-import {
-    getSubmissionRepository,
-} from '../../../src/data/repositories';
+import { getSubmissionRepository } from '../../../src/data/repositories';
 import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
 import { Submission } from '../../../src/entities/assignments/submission.entity';
 import { testLearningObject01 } from '../../test_assets/content/learning-objects.testdata';
@@ -36,8 +34,12 @@ describe('SubmissionRepository', () => {
 
     it('should find the most recent submission for a student', async () => {
         const usedSubmission = getSubmission02();
-        const id = new LearningObjectIdentifier(usedSubmission.learningObjectHruid, usedSubmission.learningObjectLanguage, usedSubmission.learningObjectVersion);
-        
+        const id = new LearningObjectIdentifier(
+            usedSubmission.learningObjectHruid,
+            usedSubmission.learningObjectLanguage,
+            usedSubmission.learningObjectVersion
+        );
+
         const submission = await submissionRepository.findMostRecentSubmissionForStudent(id, usedSubmission.submitter);
 
         expect(submission).toBeTruthy();
