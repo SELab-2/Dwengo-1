@@ -1,6 +1,20 @@
 <script setup lang="ts">
+    import { useRouter } from "vue-router";
     import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
     import auth from "@/services/auth/auth-service.ts";
+    import { watch } from "vue";
+
+    const router = useRouter();
+
+    watch(
+        () => auth.isLoggedIn.value,
+        async (newVal) => {
+            if (newVal) {
+                await router.push("/user");
+            }
+        },
+        { immediate: true },
+    );
 
     async function loginAsStudent(): Promise<void> {
         await auth.loginAs("student");
@@ -8,10 +22,6 @@
 
     async function loginAsTeacher(): Promise<void> {
         await auth.loginAs("teacher");
-    }
-
-    async function performLogout(): Promise<void> {
-        await auth.logout();
     }
 </script>
 
@@ -64,13 +74,6 @@
                     </ul>
                 </div>
             </ul>
-        </div>
-        <div v-if="auth.isLoggedIn.value">
-            <p>
-                You are currently logged in as {{ auth.authState.user!.profile.name }} ({{ auth.authState.activeRole }})
-            </p>
-            <v-btn @click="performLogout">Logout</v-btn>
-            <v-btn to="/user">home</v-btn>
         </div>
     </main>
 </template>

@@ -1,49 +1,30 @@
 <script setup lang="ts">
-    import { ref, computed } from "vue";
+    import { ref, watch } from "vue";
     import { deadlineRules } from "@/utils/assignment-rules.ts";
 
-    const date = ref("");
-    const time = ref("23:59");
-    const emit = defineEmits(["update:deadline"]);
+    const emit = defineEmits<(e: "update:deadline", value: Date) => void>();
 
-    const formattedDeadline = computed(() => {
-        if (!date.value || !time.value) return "";
-        return `${date.value} ${time.value}`;
-    });
+    const datetime = ref("");
 
-    function updateDeadline(): void {
-        if (date.value && time.value) {
-            emit("update:deadline", formattedDeadline.value);
+    // Watch the datetime value and emit the update
+    watch(datetime, (val) => {
+        const newDate = new Date(val);
+        if (!isNaN(newDate.getTime())) {
+            emit("update:deadline", newDate);
         }
-    }
+    });
 </script>
 
 <template>
-    <div>
-        <v-card-text>
-            <v-text-field
-                v-model="date"
-                label="Select Deadline Date"
-                type="date"
-                variant="outlined"
-                density="compact"
-                :rules="deadlineRules"
-                required
-                @update:modelValue="updateDeadline"
-            ></v-text-field>
-        </v-card-text>
-
-        <v-card-text>
-            <v-text-field
-                v-model="time"
-                label="Select Deadline Time"
-                type="time"
-                variant="outlined"
-                density="compact"
-                @update:modelValue="updateDeadline"
-            ></v-text-field>
-        </v-card-text>
-    </div>
+    <v-card-text>
+        <v-text-field
+            v-model="datetime"
+            type="datetime-local"
+            label="Select Deadline"
+            variant="outlined"
+            density="compact"
+            :rules="deadlineRules"
+            required
+        />
+    </v-card-text>
 </template>
-
-<style scoped></style>

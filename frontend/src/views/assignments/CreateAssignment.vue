@@ -48,7 +48,7 @@
 
     // Disable combobox when learningPath prop is passed
     const lpIsSelected = route.query.hruid !== undefined;
-    const deadline = ref(null);
+    const deadline = ref(new Date());
     const description = ref("");
     const groups = ref<string[][]>([]);
 
@@ -86,6 +86,7 @@
             title: assignmentTitle.value,
             description: description.value,
             learningPath: lp || "",
+            deadline: deadline.value,
             language: language.value,
             groups: groups.value,
         };
@@ -96,7 +97,7 @@
 
 <template>
     <div class="main-container">
-        <h1 class="title">{{ t("new-assignment") }}</h1>
+        <h1 class="h1">{{ t("new-assignment") }}</h1>
         <v-card class="form-card">
             <v-form
                 ref="form"

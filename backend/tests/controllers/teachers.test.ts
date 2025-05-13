@@ -17,6 +17,7 @@ import { EntityAlreadyExistsException } from '../../src/exceptions/entity-alread
 import { getStudentRequestsHandler } from '../../src/controllers/students.js';
 import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { getClassHandler } from '../../src/controllers/classes';
+import { getClass02 } from '../test_assets/classes/classes.testdata';
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
@@ -169,7 +170,7 @@ describe('Teacher controllers', () => {
 
     it('Get join requests by class', async () => {
         req = {
-            params: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
+            params: { classId: getClass02().classId },
         };
 
         await getStudentJoinRequestHandler(req as Request, res as Response);
@@ -183,7 +184,7 @@ describe('Teacher controllers', () => {
 
     it('Update join request status', async () => {
         req = {
-            params: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89', studentUsername: 'PinkFloyd' },
+            params: { classId: getClass02().classId, studentUsername: 'PinkFloyd' },
             body: { accepted: 'true' },
         };
 
@@ -201,7 +202,7 @@ describe('Teacher controllers', () => {
         expect(status).toBeTruthy();
 
         req = {
-            params: { id: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
+            params: { id: getClass02().classId },
         };
 
         await getClassHandler(req as Request, res as Response);

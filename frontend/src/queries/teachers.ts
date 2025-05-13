@@ -10,7 +10,6 @@ import {
 import { TeacherController, type TeacherResponse, type TeachersResponse } from "@/controllers/teachers.ts";
 import type { ClassesResponse } from "@/controllers/classes.ts";
 import type { JoinRequestResponse, JoinRequestsResponse, StudentsResponse } from "@/controllers/students.ts";
-import type { QuestionsResponse } from "@/controllers/questions.ts";
 import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
 import { studentJoinRequestQueryKey, studentJoinRequestsQueryKey } from "@/queries/students.ts";
 
@@ -31,10 +30,6 @@ function teacherClassesQueryKey(username: string, full: boolean): [string, strin
 
 function teacherStudentsQueryKey(username: string, full: boolean): [string, string, boolean] {
     return ["teacher-students", username, full];
-}
-
-function teacherQuestionsQueryKey(username: string, full: boolean): [string, string, boolean] {
-    return ["teacher-questions", username, full];
 }
 
 export function teacherClassJoinRequests(classId: string): [string, string] {
@@ -76,17 +71,6 @@ export function useTeacherStudentsQuery(
     return useQuery({
         queryKey: computed(() => teacherStudentsQueryKey(toValue(username)!, toValue(full))),
         queryFn: async () => teacherController.getStudents(toValue(username)!, toValue(full)),
-        enabled: () => Boolean(toValue(username)),
-    });
-}
-
-export function useTeacherQuestionsQuery(
-    username: MaybeRefOrGetter<string | undefined>,
-    full: MaybeRefOrGetter<boolean> = false,
-): UseQueryReturnType<QuestionsResponse, Error> {
-    return useQuery({
-        queryKey: computed(() => teacherQuestionsQueryKey(toValue(username)!, toValue(full))),
-        queryFn: async () => teacherController.getQuestions(toValue(username)!, toValue(full)),
         enabled: () => Boolean(toValue(username)),
     });
 }
