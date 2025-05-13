@@ -1,7 +1,12 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Question } from '../../../src/entities/questions/question.entity';
 import { getDireStraits, getNoordkaap, getTestleerling1, getTool } from '../users/students.testdata';
-import { testLearningObject01, testLearningObject04, testLearningObject05, testLearningObjectMultipleChoice } from '../content/learning-objects.testdata';
+import {
+    testLearningObject01,
+    testLearningObject04,
+    testLearningObject05,
+    testLearningObjectMultipleChoice,
+} from '../content/learning-objects.testdata';
 import { getGroup1ConditionalLearningPath, getTestGroup01, getTestGroup02 } from '../assignments/groups.testdata';
 
 export function makeTestQuestions(em: EntityManager): Question[] {
@@ -129,7 +134,6 @@ export function getQuestion05(): Question {
 export function getQuestion06(): Question {
     return question06;
 }
-
 
 export function getQuestion07(): Question {
     return question07;

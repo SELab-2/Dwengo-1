@@ -29,7 +29,11 @@ describe('SubmissionRepository', () => {
 
     it('should find the requested submission', async () => {
         const usedSubmission = getSubmission01();
-        const id = new LearningObjectIdentifier(usedSubmission.learningObjectHruid, usedSubmission.learningObjectLanguage, usedSubmission.learningObjectVersion);
+        const id = new LearningObjectIdentifier(
+            usedSubmission.learningObjectHruid,
+            usedSubmission.learningObjectLanguage,
+            usedSubmission.learningObjectVersion
+        );
         const submission = await submissionRepository.findSubmissionByLearningObjectAndSubmissionNumber(id, usedSubmission.submissionNumber!);
 
         expect(submission).toBeTruthy();
@@ -40,8 +44,12 @@ describe('SubmissionRepository', () => {
 
     it('should find the most recent submission for a student', async () => {
         const usedSubmission = getSubmission02();
-        const id = new LearningObjectIdentifier(usedSubmission.learningObjectHruid, usedSubmission.learningObjectLanguage, usedSubmission.learningObjectVersion);
-        
+        const id = new LearningObjectIdentifier(
+            usedSubmission.learningObjectHruid,
+            usedSubmission.learningObjectLanguage,
+            usedSubmission.learningObjectVersion
+        );
+
         const submission = await submissionRepository.findMostRecentSubmissionForStudent(id, usedSubmission.submitter);
 
         expect(submission).toBeTruthy();
@@ -50,8 +58,12 @@ describe('SubmissionRepository', () => {
 
     it('should find the most recent submission for a group', async () => {
         const usedSubmission = getSubmission02();
-        const id = new LearningObjectIdentifier(usedSubmission.learningObjectHruid, usedSubmission.learningObjectLanguage, usedSubmission.learningObjectVersion);
-        
+        const id = new LearningObjectIdentifier(
+            usedSubmission.learningObjectHruid,
+            usedSubmission.learningObjectLanguage,
+            usedSubmission.learningObjectVersion
+        );
+
         const submission = await submissionRepository.findMostRecentSubmissionForGroup(id, usedSubmission.onBehalfOf);
 
         expect(submission).toBeTruthy();
@@ -61,7 +73,7 @@ describe('SubmissionRepository', () => {
     it('should find all submissions for a certain learning object and assignment', async () => {
         const usedSubmission = getSubmission08();
         const assignment = getAssignment01();
-        
+
         const loId = {
             hruid: usedSubmission.learningObjectHruid,
             language: usedSubmission.learningObjectLanguage,

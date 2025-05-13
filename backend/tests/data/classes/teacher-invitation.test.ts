@@ -48,7 +48,6 @@ describe('ClassRepository', () => {
         expect(invitations).toHaveLength(2);
         expect(invitations[0].class.classId).toBeOneOf([ti1.class.classId, ti2.class.classId]);
         expect(invitations[1].class.classId).toBeOneOf([ti1.class.classId, ti2.class.classId]);
-
     });
 
     it('should not find a removed invitation', async () => {

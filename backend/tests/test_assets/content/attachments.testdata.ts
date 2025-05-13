@@ -19,6 +19,6 @@ export function makeTestAttachments(em: EntityManager): Attachment[] {
 
 let attachment01: Attachment;
 
-export function getAttachment01(): Attachment{
+export function getAttachment01(): Attachment {
     return attachment01;
 }
