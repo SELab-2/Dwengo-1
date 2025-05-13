@@ -5,7 +5,7 @@ import { errorHandler } from '../src/middleware/error-handling/error-handler.js'
 import dotenv from 'dotenv';
 import cors from '../src/middleware/cors';
 import { authenticateUser } from '../src/middleware/auth/auth';
-import { seedORM } from './seed';
+import { seedORM } from './seedORM';
 
 const envFile = '../.env.test';
 

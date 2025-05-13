@@ -1,48 +1,47 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Assignment } from '../../../src/entities/assignments/assignment.entity';
-import { Class } from '../../../src/entities/classes/class.entity';
 import { Language } from '@dwengo-1/common/util/language';
-import { testLearningPathWithConditions } from '../content/learning-paths.testdata';
-import { getClassWithTestleerlingAndTestleerkracht } from '../classes/classes.testdata';
+import { testLearningPath01, testLearningPath02, testLearningPathWithConditions } from '../content/learning-paths.testdata';
+import { getClass01, getClass02, getClassWithTestleerlingAndTestleerkracht } from '../classes/classes.testdata';
 
-export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assignment[] {
+export function makeTestAssignemnts(em: EntityManager): Assignment[] {
     assignment01 = em.create(Assignment, {
         id: 21000,
-        within: classes[0],
+        within: getClass01(),
         title: 'dire straits',
         description: 'reading',
-        learningPathHruid: 'id02',
-        learningPathLanguage: Language.English,
+        learningPathHruid: testLearningPath02.hruid,
+        learningPathLanguage: testLearningPath02.language as Language,
         groups: [],
     });
 
     assignment02 = em.create(Assignment, {
         id: 21001,
-        within: classes[1],
+        within: getClass02(),
         title: 'tool',
         description: 'reading',
-        learningPathHruid: 'id01',
-        learningPathLanguage: Language.English,
+        learningPathHruid: testLearningPath01.hruid,
+        learningPathLanguage: testLearningPath01.language as Language,
         groups: [],
     });
 
     assignment03 = em.create(Assignment, {
         id: 21002,
-        within: classes[0],
+        within: getClass01(),
         title: 'delete',
         description: 'will be deleted',
-        learningPathHruid: 'id02',
-        learningPathLanguage: Language.English,
+        learningPathHruid: testLearningPath02.hruid,
+        learningPathLanguage: testLearningPath02.language as Language,
         groups: [],
     });
 
     assignment04 = em.create(Assignment, {
         id: 21003,
-        within: classes[0],
+        within: getClass01(),
         title: 'another assignment',
         description: 'with a description',
-        learningPathHruid: 'id01',
-        learningPathLanguage: Language.English,
+        learningPathHruid: testLearningPath01.hruid,
+        learningPathLanguage: testLearningPath01.language as Language,
         groups: [],
     });
 
