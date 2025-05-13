@@ -2,10 +2,12 @@
     import { useI18n } from 'vue-i18n';
     import { computed, ref, watch, type Ref } from 'vue';
     import JsonEditorVue from 'json-editor-vue'
+    import ButtonWithConfirmation from '@/components/ButtonWithConfirmation.vue'
     import { useDeleteLearningPathMutation, usePostLearningPathMutation, usePutLearningPathMutation } from '@/queries/learning-paths';
     import { Language } from '@/data-objects/language';
     import type { LearningPath } from '@dwengo-1/common/interfaces/learning-content';
     import type { AxiosError } from 'axios';
+import { parse } from 'uuid';
 
     const { t } = useI18n();
 
@@ -63,7 +65,7 @@
         }
     }
 
-    function deleteLearningObject(): void {
+    function deleteLearningPath(): void {
         if (props.selectedLearningPath) {
             mutate({
                 hruid: props.selectedLearningPath.hruid,
@@ -72,8 +74,28 @@
         }
     }
 
-    function extractErrorMessage(error: AxiosError | null): string | undefined {
-        return (error?.response?.data as {error: string}).error ?? error?.message;
+    function extractErrorMessage(error: AxiosError): string {
+        return (error.response?.data as {error: string}).error ?? error.message;
+    }
+
+    const isIdModified = computed(() =>
+        props.selectedLearningPath !== undefined && (
+            props.selectedLearningPath.hruid !== parsedLearningPath.value.hruid
+            || props.selectedLearningPath.language !== parsedLearningPath.value.language
+        )
+    );
+
+    function getErrorMessage(): string | null {
+        if (postError.value) {
+            return t(extractErrorMessage(postError.value));
+        } else if (putError.value) {
+            return t(extractErrorMessage(putError.value));
+        } else if (deleteError.value) {
+            return t(extractErrorMessage(deleteError.value));
+        } else if (isIdModified.value) {
+            return t('learningPathCantModifyId');
+        }
+        return null;
     }
 </script>
 
@@ -84,22 +106,34 @@
         <template v-slot:text>
             <json-editor-vue v-model="learningPath"></json-editor-vue>
             <v-alert
-                 v-if="postError || putError || deleteError"
+                 v-if="postError || putError || deleteError || isIdModified"
                  icon="mdi mdi-alert-circle"
                  type="error"
                  :title="t('error')"
-                 :text="t(extractErrorMessage(postError) || extractErrorMessage(putError) || extractErrorMessage(deleteError)!)"
+                 :text="getErrorMessage()!"
             ></v-alert>
         </template>
         <template v-slot:actions>
-            <v-btn @click="uploadLearningPath" :loading="isPostPending || isPutPending" :disabled="parsedLearningPath.hruid === DEFAULT_LEARNING_PATH.hruid">
+            <v-btn
+                @click="uploadLearningPath"
+                prependIcon="mdi mdi-check"
+                :loading="isPostPending || isPutPending"
+                :disabled="parsedLearningPath.hruid === DEFAULT_LEARNING_PATH.hruid || isIdModified"
+            >
                 {{ props.selectedLearningPath ? t('saveChanges') : t('create') }}
             </v-btn>
-            <v-btn @click="deleteLearningObject" :disabled="!props.selectedLearningPath">
-                {{ t('delete') }}
-            </v-btn>
+            <button-with-confirmation
+                @confirm="deleteLearningPath"
+                :disabled="!props.selectedLearningPath"
+                :text="t('delete')"
+                color="red"
+                prependIcon="mdi mdi-delete"
+                :confirmQueryText="t('learningPathDeleteQuery')"
+            />
             <v-btn
                 :href="`/learningPath/${props.selectedLearningPath?.hruid}/${props.selectedLearningPath?.language}/start`"
+                target="_blank"
+                prepend-icon="mdi mdi-open-in-new"
                 :disabled="!props.selectedLearningPath"
             >
                 {{ t('open') }}

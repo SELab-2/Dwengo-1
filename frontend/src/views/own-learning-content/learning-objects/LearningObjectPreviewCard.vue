@@ -2,6 +2,7 @@
     import type { LearningObject } from '@/data-objects/learning-objects/learning-object';
     import UsingQueryResult from '@/components/UsingQueryResult.vue';
     import LearningObjectContentView from '../../learning-paths/learning-object/content/LearningObjectContentView.vue';
+    import ButtonWithConfirmation from '@/components/ButtonWithConfirmation.vue';
     import { useDeleteLearningObjectMutation, useLearningObjectHTMLQuery } from '@/queries/learning-objects';
     import { useI18n } from 'vue-i18n';
 
@@ -41,7 +42,13 @@
             </using-query-result>
         </template>
         <template v-slot:actions>
-            <v-btn text="Delete" @click="deleteLearningObject()"></v-btn>
+            <button-with-confirmation
+                @confirm="deleteLearningObject"
+                prepend-icon="mdi mdi-delete"
+                color="red"
+                :text="t('delete')"
+                :confirmQueryText="t('learningObjectDeleteQuery')"
+            />
         </template>
     </v-card>
 </template>

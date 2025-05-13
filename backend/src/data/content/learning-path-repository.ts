@@ -4,7 +4,6 @@ import { Language } from '@dwengo-1/common/util/language';
 import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
 import { RequiredEntityData } from '@mikro-orm/core';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
-import { EntityAlreadyExistsException } from '../../exceptions/entity-already-exists-exception.js';
 
 export class LearningPathRepository extends DwengoEntityRepository<LearningPath> {
     public async findByHruidAndLanguage(hruid: string, language: Language): Promise<LearningPath | null> {
@@ -51,21 +50,6 @@ export class LearningPathRepository extends DwengoEntityRepository<LearningPath>
 
     public createTransition(transitionData: RequiredEntityData<LearningPathTransition>): LearningPathTransition {
         return this.em.create(LearningPathTransition, transitionData);
-    }
-
-    public async saveLearningPathNodesAndTransitions(
-        path: LearningPath,
-        nodes: LearningPathNode[],
-        transitions: LearningPathTransition[],
-        options?: { preventOverwrite?: boolean }
-    ): Promise<void> {
-        if (options?.preventOverwrite && (await this.findOne(path))) {
-            throw new EntityAlreadyExistsException('A learning path with this hruid/language combination already exists.');
-        }
-        const em = this.getEntityManager();
-        await em.persistAndFlush(path);
-        await Promise.all(nodes.map(async (it) => em.persistAndFlush(it)));
-        await Promise.all(transitions.map(async (it) => em.persistAndFlush(it)));
     }
 
     /**

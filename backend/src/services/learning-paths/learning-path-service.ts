@@ -134,8 +134,14 @@ const learningPathService = {
      */
     async createNewLearningPath(dto: LearningPath, admins: TeacherDTO[]): Promise<LearningPathEntity> {
         const repo = getLearningPathRepository();
+
         const path = mapToLearningPath(dto, admins);
-        await repo.save(path, { preventOverwrite: true });
+        try {
+            await repo.save(path, { preventOverwrite: true });
+        } catch (e: unknown) {
+            repo.getEntityManager().clear();
+            throw e;
+        }
         return path;
     },
 
@@ -146,6 +152,7 @@ const learningPathService = {
      */
     async deleteLearningPath(id: LearningPathIdentifier): Promise<LearningPathEntity> {
         const repo = getLearningPathRepository();
+
         const deletedPath = await repo.deleteByHruidAndLanguage(id.hruid, id.language);
         if (deletedPath) {
             return deletedPath;
