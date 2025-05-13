@@ -10,7 +10,7 @@ function createRequestObject(
     classid: string,
     assignmentid: string
 ): {
-    query: {full: string},
+    query: { full: string };
     params: { classid: string; id: string };
 } {
     return {
@@ -19,8 +19,8 @@ function createRequestObject(
             id: assignmentid,
         },
         query: {
-            full: 'true'
-        }
+            full: 'true',
+        },
     };
 }
 
