@@ -144,5 +144,7 @@
     "learningPathDeleteQuery": "Are you sure you want to delete this learning path?",
     "learningObjectDeleteQuery": "Are you sure you want to delete this learning object?",
     "learningPathCantModifyId": "The HRUID or language of a learning path cannot be modified.",
-    "error": "Error"
+    "error": "Error",
+    "ownLearningContentTitle": "Own learning content",
+    "ownLearningContentDescription": "Create and administrate your own learning objects and learning paths. For advanced users only."
 }

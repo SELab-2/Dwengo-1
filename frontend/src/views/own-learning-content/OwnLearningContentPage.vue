@@ -24,6 +24,8 @@
 
 <template>
     <div class="tab-pane-container">
+        <h1 class="title">{{ t("ownLearningContentTitle") }}</h1>
+
         <v-tabs v-model="tab">
         <v-tab value="learningObjects">{{ t('learningObjects') }}</v-tab>
         <v-tab value="learningPaths">{{ t('learningPaths') }}</v-tab>
@@ -51,6 +53,13 @@
 </template>
 
 <style scoped>
+    h1 {
+        color: #0e6942;
+        text-transform: uppercase;
+        font-weight: bolder;
+        font-size: 50px;
+    }
+
     .tab-pane-container {
         display: flex;
         flex-direction: column;

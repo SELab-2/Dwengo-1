@@ -144,5 +144,7 @@
     "learningPathDeleteQuery": "Möchten Sie diesen Lernpfad wirklich löschen?",
     "learningObjectDeleteQuery": "Möchten Sie dieses Lernobjekt wirklich löschen?",
     "learningPathCantModifyId": "Der HRUID oder die Sprache eines Lernpfads kann nicht geändert werden.",
-    "error": "Fehler"
+    "error": "Fehler",
+    "ownLearningContentTitle": "Eigene Lerninhalte",
+    "ownLearningContentDescription": "Erstellen und verwalten Sie eigene Lernobjekte und Lernpfade. Nur für fortgeschrittene Nutzer."
 }

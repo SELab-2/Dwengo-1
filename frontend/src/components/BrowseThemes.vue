@@ -90,6 +90,22 @@
                     class="fill-height"
                 />
             </v-col>
+            <v-col
+                cols="12"
+                sm="6"
+                md="4"
+                lg="4"
+                class="d-flex"
+            >
+                <ThemeCard
+                    path="/my-content"
+                    :is-absolute-path="true"
+                    :title="t('ownLearningContentTitle')"
+                    :description="t('ownLearningContentDescription')"
+                    icon="mdi-pencil"
+                    class="fill-height"
+                />
+            </v-col>
         </v-row>
     </v-container>
 </template>

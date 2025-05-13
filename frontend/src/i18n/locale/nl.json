@@ -144,5 +144,7 @@
     "learningPathDeleteQuery": "Weet u zeker dat u dit leerpad wilt verwijderen?",
     "learningObjectDeleteQuery": "Weet u zeker dat u dit leerobject wilt verwijderen?",
     "learningPathCantModifyId": "De HRUID of taal van een leerpad kan niet worden gewijzigd.",
-    "error": "Fout"
+    "error": "Fout",
+    "ownLearningContentTitle": "Eigen leerinhoud",
+    "ownLearningContentDescription": "Maak en beheer je eigen leerobjecten en leerpads. Alleen voor gevorderde gebruikers."
 }

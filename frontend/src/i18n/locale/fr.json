@@ -144,5 +144,7 @@
     "learningPathDeleteQuery": "Voulez-vous vraiment supprimer ce parcours d’apprentissage ?",
     "learningObjectDeleteQuery": "Voulez-vous vraiment supprimer cet objet d’apprentissage ?",
     "learningPathCantModifyId": "Le HRUID ou la langue d’un parcours ne peuvent pas être modifiés.",
-    "error": "Erreur"
+    "error": "Erreur",
+    "ownLearningContentTitle": "Contenu d’apprentissage personnel",
+    "ownLearningContentDescription": "Créez et gérez vos propres objets et parcours d’apprentissage. Réservé aux utilisateurs avancés."
 }
