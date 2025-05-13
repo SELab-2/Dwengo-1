@@ -68,13 +68,14 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
 function postOrPutLearningPath(isPut: boolean): (req: AuthenticatedRequest, res: Response) => Promise<void> {
     return async (req, res) => {
         const path: LearningPath = req.body;
+        const teacher = await getTeacher(req.auth!.username);
         if (isPut) {
             if (req.params.hruid !== path.hruid || req.params.language !== path.language) {
                 throw new BadRequestException("id_not_matching_query_params");
             }
+            await learningPathService.deleteLearningPath({hruid: path.hruid, language: path.language as Language});
         }
-        const teacher = await getTeacher(req.auth!.username);
-        res.json(await learningPathService.createNewLearningPath(path, [teacher], isPut));
+        res.json(await learningPathService.createNewLearningPath(path, [teacher]));
     }
 }
 

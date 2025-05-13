@@ -107,6 +107,12 @@ const router = createRouter({
             meta: { requiresAuth: true },
         },
         {
+            path: "/my-content",
+            name: "OwnLearningContentPage",
+            component: OwnLearningContentPage,
+            meta: { requiresAuth: true }
+        },
+        {
             path: "/learningPath",
             children: [
                 {
@@ -116,17 +122,11 @@ const router = createRouter({
                     meta: { requiresAuth: true },
                 },
                 {
-                    path: "my",
-                    name: "OwnLearningContentPage",
-                    component: OwnLearningContentPage,
-                    meta: { requiresAuth: true }
-                },
-                {
                     path: ":hruid/:language/:learningObjectHruid",
                     name: "LearningPath",
                     component: LearningPathPage,
                     props: true,
-                    meta: { requiresAuth: true },
+                    meta: { requiresAuth: true }
                 },
             ],
         },

@@ -1,6 +1,6 @@
 import type { Language } from "@/data-objects/language.ts";
 import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
-import type { LearningPathDTO } from "@/data-objects/learning-paths/learning-path-dto.ts";
+import type { LearningObjectNode, LearningPath as LearningPathDTO } from "@dwengo-1/common/interfaces/learning-content";
 
 export interface LearningPathNodeDTO {
     _id: string;
@@ -77,16 +77,19 @@ export class LearningPath {
             hruid: dto.hruid,
             title: dto.title,
             description: dto.description,
-            amountOfNodes: dto.num_nodes,
-            amountOfNodesLeft: dto.num_nodes_left,
+            amountOfNodes: dto.num_nodes ?? dto.nodes.length,
+            amountOfNodesLeft: dto.num_nodes_left ?? dto.nodes.length,
             keywords: dto.keywords.split(" "),
-            targetAges: { min: dto.min_age, max: dto.max_age },
+            targetAges: {
+                min: dto.min_age ?? NaN,
+                max: dto.max_age ?? NaN
+            },
             startNode: LearningPathNode.fromDTOAndOtherNodes(LearningPath.getStartNode(dto), dto.nodes),
             image: dto.image,
         });
     }
 
-    static getStartNode(dto: LearningPathDTO): LearningPathNodeDTO {
+    static getStartNode(dto: LearningPathDTO): LearningObjectNode {
         const startNodeDtos = dto.nodes.filter((it) => it.start_node === true);
         if (startNodeDtos.length < 1) {
             // The learning path has no starting node -> use the first node.

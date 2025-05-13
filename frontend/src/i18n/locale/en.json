@@ -134,5 +134,9 @@
     "invalidZip": "This is not a valid zip file.",
     "emptyZip": "This zip file is empty",
     "missingMetadata": "This learning object is missing a metadata.json file.",
-    "missingContent": "This learning object is missing a content.* file."
+    "missingContent": "This learning object is missing a content.* file.",
+    "open": "open",
+    "editLearningPath": "Edit learning path",
+    "newLearningPath": "Create a new learning path",
+    "saveChanges": "Save changes"
 }

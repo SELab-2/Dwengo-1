@@ -1,47 +1,79 @@
 <script setup lang="ts">
-    import UsingQueryResult from '@/components/UsingQueryResult.vue';
     import { useI18n } from 'vue-i18n';
-    import type { LearningPathDTO } from '@/data-objects/learning-paths/learning-path-dto';
-    import { computed, ref, watch } from 'vue';
+    import { computed, ref, watch, type Ref } from 'vue';
     import JsonEditorVue from 'json-editor-vue'
-import { useMutation } from '@tanstack/vue-query';
-import { usePostLearningPathMutation, usePutLearningPathMutation } from '@/queries/learning-paths';
+    import { useDeleteLearningPathMutation, usePostLearningPathMutation, usePutLearningPathMutation } from '@/queries/learning-paths';
+    import { Language } from '@/data-objects/language';
+    import type { LearningPath } from '@dwengo-1/common/interfaces/learning-content';
+    import type { AxiosError } from 'axios';
 
     const { t } = useI18n();
 
     const props = defineProps<{
-        selectedLearningPath?: LearningPathDTO
+        selectedLearningPath?: LearningPath
     }>();
 
-    const INDENT = 4;
-    const DEFAULT_LEARNING_PATH: LearningPathDTO = {
-        language: '',
-        hruid: '',
-        title: '',
-        description: '',
-        num_nodes: 0,
-        num_nodes_left: 0,
-        nodes: [],
-        keywords: '',
-        target_ages: [],
-        min_age: 0,
-        max_age: 0,
-        __order: 0
+    const { isPending, mutate, error: deleteError, isSuccess: deleteSuccess } = useDeleteLearningPathMutation();
+
+    const DEFAULT_LEARNING_PATH: LearningPath = {
+        language: 'en',
+        hruid: '...',
+        title: '...',
+        description: '...',
+        nodes: [
+            {
+                learningobject_hruid: '...',
+                language: Language.English,
+                version: 1,
+                start_node: true,
+                transitions: [
+                    {
+                        default: true,
+                        condition: "(remove if the transition should be unconditinal)",
+                        next: {
+                            hruid: '...',
+                            version: 1,
+                            language: '...'
+                        }
+                    }
+                ]
+            }
+        ],
+        keywords: 'Keywords separated by spaces',
+        target_ages: []
     }
 
-    const { isPending: isPostPending, mutate: doPost } = usePostLearningPathMutation();
-    const { isPending: isPutPending, mutate: doPut } = usePutLearningPathMutation();
+    const { isPending: isPostPending, error: postError, mutate: doPost } = usePostLearningPathMutation();
+    const { isPending: isPutPending, error: putError, mutate: doPut } = usePutLearningPathMutation();
 
-    const learningPath = ref(DEFAULT_LEARNING_PATH);
+    const learningPath: Ref<LearningPath | string> = ref(DEFAULT_LEARNING_PATH);
+
+    const parsedLearningPath = computed(() =>
+        typeof learningPath.value === "string" ? JSON.parse(learningPath.value) as LearningPath
+                                               : learningPath.value
+    );
 
     watch(() => props.selectedLearningPath, () => learningPath.value = props.selectedLearningPath ?? DEFAULT_LEARNING_PATH);
 
     function uploadLearningPath(): void {
         if (props.selectedLearningPath) {
-            doPut({ learningPath: learningPath.value });
+            doPut({ learningPath: parsedLearningPath.value });
         } else {
-            doPost({ learningPath: learningPath.value });
+            doPost({ learningPath: parsedLearningPath.value });
         }
+    }
+
+    function deleteLearningObject(): void {
+        if (props.selectedLearningPath) {
+            mutate({
+                hruid: props.selectedLearningPath.hruid,
+                language: props.selectedLearningPath.language as Language
+            });
+        }
+    }
+
+    function extractErrorMessage(error: AxiosError | null): string | undefined {
+        return (error?.response?.data as {error: string}).error ?? error?.message;
     }
 </script>
 
@@ -51,9 +83,27 @@ import { usePostLearningPathMutation, usePutLearningPathMutation } from '@/queri
     >
         <template v-slot:text>
             <json-editor-vue v-model="learningPath"></json-editor-vue>
+            <v-alert
+                 v-if="postError || putError || deleteError"
+                 icon="mdi mdi-alert-circle"
+                 type="error"
+                 :title="t('error')"
+                 :text="t(extractErrorMessage(postError) || extractErrorMessage(putError) || extractErrorMessage(deleteError)!)"
+            ></v-alert>
         </template>
         <template v-slot:actions>
-            <v-btn @click="uploadLearningPath" :loading="isPostPending || isPutPending">{{ props.selectedLearningPath ? t('saveChanges') : t('create') }}</v-btn>
+            <v-btn @click="uploadLearningPath" :loading="isPostPending || isPutPending" :disabled="parsedLearningPath.hruid === DEFAULT_LEARNING_PATH.hruid">
+                {{ props.selectedLearningPath ? t('saveChanges') : t('create') }}
+            </v-btn>
+            <v-btn @click="deleteLearningObject" :disabled="!props.selectedLearningPath">
+                {{ t('delete') }}
+            </v-btn>
+            <v-btn
+                :href="`/learningPath/${props.selectedLearningPath?.hruid}/${props.selectedLearningPath?.language}/start`"
+                :disabled="!props.selectedLearningPath"
+            >
+                {{ t('open') }}
+            </v-btn>
         </template>
     </v-card>
 </template>

@@ -2,9 +2,9 @@ import { type MaybeRefOrGetter, toValue } from "vue";
 import type { Language } from "@/data-objects/language.ts";
 import { useMutation, useQuery, useQueryClient, type UseMutationReturnType, type UseQueryReturnType } from "@tanstack/vue-query";
 import { getLearningPathController } from "@/controllers/controllers";
-import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
 import type { AxiosError } from "axios";
-import type { LearningPathDTO } from "@/data-objects/learning-paths/learning-path-dto";
+import type { LearningPath as LearningPathDTO } from "@dwengo-1/common/interfaces/learning-content";
+import type { LearningPath } from "@/data-objects/learning-paths/learning-path";
 
 export const LEARNING_PATH_KEY = "learningPath";
 const learningPathController = getLearningPathController();

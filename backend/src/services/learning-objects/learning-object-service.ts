@@ -72,6 +72,8 @@ const learningObjectService = {
             learningObject.hruid = getEnvVar(envVars.UserContentPrefix) + learningObject.hruid;
         }
 
+        await learningObjectRepository.getEntityManager().flush();
+
         // Lookup the admin teachers based on their usernames and add them to the admins of the learning object.
         const teacherRepo = getTeacherRepository();
         const adminTeachers = await Promise.all(

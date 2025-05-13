@@ -1,7 +1,7 @@
 import express from 'express';
 import { deleteLearningPath, getLearningPaths, postLearningPath, putLearningPath } from '../controllers/learning-paths.js';
 import { teachersOnly } from '../middleware/auth/auth.js';
-import { onlyAdminsForLearningObject } from '../middleware/auth/checks/learning-object-auth-checks.js';
+import { onlyAdminsForLearningPath } from '../middleware/auth/checks/learning-path-auth-checks.js';
 
 const router = express.Router();
 
@@ -27,7 +27,7 @@ const router = express.Router();
 router.get('/', getLearningPaths);
 router.post('/', teachersOnly, postLearningPath)
 
-router.put('/:hruid/:language', onlyAdminsForLearningObject, putLearningPath);
-router.delete('/:hruid/:language', onlyAdminsForLearningObject, deleteLearningPath);
+router.put('/:hruid/:language', onlyAdminsForLearningPath, putLearningPath);
+router.delete('/:hruid/:language', onlyAdminsForLearningPath, deleteLearningPath);
 
 export default router;

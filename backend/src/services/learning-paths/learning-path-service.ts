@@ -130,13 +130,12 @@ const learningPathService = {
      * Add a new learning path to the database.
      * @param dto Learning path DTO from which the learning path will be created.
      * @param admins Teachers who should become an admin of the learning path.
-     * @param allowReplace If this is set to true and there is already a learning path with the same identifier, it is replaced.
      * @returns the created learning path.
      */
-    async createNewLearningPath(dto: LearningPath, admins: TeacherDTO[], allowReplace = false): Promise<LearningPathEntity> {
+    async createNewLearningPath(dto: LearningPath, admins: TeacherDTO[]): Promise<LearningPathEntity> {
         const repo = getLearningPathRepository();
         const path = mapToLearningPath(dto, admins);
-        await repo.save(path, { preventOverwrite: allowReplace });
+        await repo.save(path, { preventOverwrite: true });
         return path;
     },
 

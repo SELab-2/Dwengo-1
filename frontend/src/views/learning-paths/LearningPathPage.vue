@@ -247,7 +247,7 @@
                     </template>
                 </v-list-item>
                 <v-divider></v-divider>
-                <div v-if="props.learningObjectHruid">
+                <div>
                     <using-query-result
                         :query-result="learningObjectListQueryResult"
                         v-slot="learningObjects: { data: LearningObject[] }"

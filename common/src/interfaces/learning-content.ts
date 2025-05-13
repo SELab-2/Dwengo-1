@@ -25,8 +25,8 @@ export interface LearningObjectNode {
     language: Language;
     start_node?: boolean;
     transitions: Transition[];
-    created_at: string;
-    updatedAt: string;
+    created_at?: string;
+    updatedAt?: string;
     done?: boolean; // True if a submission exists for this node by the user for whom the learning path is customized.
 }
 

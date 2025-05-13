@@ -1,8 +1,8 @@
 import { BaseController } from "@/controllers/base-controller.ts";
-import { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
 import type { Language } from "@/data-objects/language.ts";
+import { LearningPath } from "@/data-objects/learning-paths/learning-path";
 import { single } from "@/utils/response-assertions.ts";
-import type { LearningPathDTO } from "@/data-objects/learning-paths/learning-path-dto.ts";
+import type { LearningPath as LearningPathDTO } from "@dwengo-1/common/interfaces/learning-content";
 
 export class LearningPathController extends BaseController {
     constructor() {

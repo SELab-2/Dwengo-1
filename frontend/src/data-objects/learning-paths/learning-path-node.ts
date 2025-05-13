@@ -1,5 +1,5 @@
 import type { Language } from "@/data-objects/language.ts";
-import type { LearningPathNodeDTO } from "@/data-objects/learning-paths/learning-path.ts";
+import type { LearningObjectNode as LearningPathNodeDTO } from "@dwengo-1/common/interfaces/learning-content";
 
 export class LearningPathNode {
     public readonly learningobjectHruid: string;
@@ -14,7 +14,7 @@ export class LearningPathNode {
         learningobjectHruid: string;
         version: number;
         language: Language;
-        transitions: { next: LearningPathNode; default: boolean }[];
+        transitions: { next: LearningPathNode; default?: boolean }[];
         createdAt: Date;
         updatedAt: Date;
         done?: boolean;
@@ -22,7 +22,7 @@ export class LearningPathNode {
         this.learningobjectHruid = options.learningobjectHruid;
         this.version = options.version;
         this.language = options.language;
-        this.transitions = options.transitions;
+        this.transitions = options.transitions.map(it => ({ next: it.next, default: it.default ?? false }));
         this.createdAt = options.createdAt;
         this.updatedAt = options.updatedAt;
         this.done = options.done || false;
@@ -50,8 +50,8 @@ export class LearningPathNode {
                     return undefined;
                 })
                 .filter((it) => it !== undefined),
-            createdAt: new Date(dto.created_at),
-            updatedAt: new Date(dto.updatedAt),
+            createdAt: dto.created_at ? new Date(dto.created_at) : new Date(),
+            updatedAt: dto.updatedAt ? new Date(dto.updatedAt) : new Date(),
             done: dto.done,
         });
     }

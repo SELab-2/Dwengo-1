@@ -8,7 +8,10 @@ import { EntityAlreadyExistsException } from '../../exceptions/entity-already-ex
 
 export class LearningPathRepository extends DwengoEntityRepository<LearningPath> {
     public async findByHruidAndLanguage(hruid: string, language: Language): Promise<LearningPath | null> {
-        return this.findOne({ hruid: hruid, language: language }, { populate: ['nodes', 'nodes.transitions'] });
+        return this.findOne(
+            { hruid: hruid, language: language },
+            { populate: ['nodes', 'nodes.transitions', 'admins'] }
+        );
     }
 
     /**
@@ -24,7 +27,7 @@ export class LearningPathRepository extends DwengoEntityRepository<LearningPath>
                 language: language,
                 $or: [{ title: { $like: `%${query}%` } }, { description: { $like: `%${query}%` } }],
             },
-            populate: ['nodes', 'nodes.transitions'],
+            populate: ['nodes', 'nodes.transitions', 'admins'],
         });
     }
 
@@ -37,7 +40,8 @@ export class LearningPathRepository extends DwengoEntityRepository<LearningPath>
                 admins: {
                     username: adminUsername
                 }
-            }
+            },
+            populate: ['nodes', 'nodes.transitions', 'admins']
         });
     }
 

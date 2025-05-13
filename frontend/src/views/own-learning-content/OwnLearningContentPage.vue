@@ -6,9 +6,9 @@
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import type { LearningObject } from "@/data-objects/learning-objects/learning-object";
     import { ref, type Ref } from "vue";
-import { useI18n } from "vue-i18n";
-import { useGetAllLearningPathsByAdminQuery } from "@/queries/learning-paths";
-import type { LearningPathDTO } from "@/data-objects/learning-paths/learning-path-dto";
+    import { useI18n } from "vue-i18n";
+    import { useGetAllLearningPathsByAdminQuery } from "@/queries/learning-paths";
+    import type { LearningPath as LearningPathDTO } from "@dwengo-1/common/interfaces/learning-content";
 
     const { t } = useI18n();
 
@@ -43,7 +43,7 @@ import type { LearningPathDTO } from "@/data-objects/learning-paths/learning-pat
                     :query-result="learningPathsQuery"
                     v-slot="response: { data: LearningPathDTO[] }"
                 >
-                    <own-learning-paths-view :learning-paths="response.data"/>
+                    <own-learning-paths-view :learningPaths="response.data"/>
                 </using-query-result>
             </v-tabs-window-item>
         </v-tabs-window>
