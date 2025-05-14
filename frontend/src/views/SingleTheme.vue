@@ -6,7 +6,7 @@
     import { computed, ref } from "vue";
     import { useI18n } from "vue-i18n";
     import { useThemeQuery } from "@/queries/themes.ts";
-import type { Language } from "@/data-objects/language";
+    import type { Language } from "@/data-objects/language";
 
     const props = defineProps<{ theme: string }>();
 
@@ -17,7 +17,10 @@ import type { Language } from "@/data-objects/language";
 
     const currentThemeInfo = computed(() => themeQueryResult.data.value?.find((it) => it.key === props.theme));
 
-    const learningPathsForThemeQueryResult = useGetAllLearningPathsByThemeAndLanguageQuery(() => props.theme, () => locale.value as Language);
+    const learningPathsForThemeQueryResult = useGetAllLearningPathsByThemeAndLanguageQuery(
+        () => props.theme,
+        () => locale.value as Language,
+    );
 
     const { t } = useI18n();
     const searchFilter = ref("");

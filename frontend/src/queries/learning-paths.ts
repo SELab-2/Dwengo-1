@@ -24,7 +24,7 @@ export function useGetLearningPathQuery(
 
 export function useGetAllLearningPathsByThemeAndLanguageQuery(
     theme: MaybeRefOrGetter<string>,
-    language: MaybeRefOrGetter<Language>
+    language: MaybeRefOrGetter<Language>,
 ): UseQueryReturnType<LearningPath[], Error> {
     return useQuery({
         queryKey: [LEARNING_PATH_KEY, "getAllByTheme", theme, language],
