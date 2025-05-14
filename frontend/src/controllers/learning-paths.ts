@@ -25,7 +25,7 @@ export class LearningPathController extends BaseController {
             classId: forGroup?.classId,
         });
         if (dtos.length === 0) {
-            throw new NotFoundException('learningPathNotFound')
+            throw new NotFoundException("learningPathNotFound");
         }
         return LearningPath.fromDTO(dtos[0]);
     }
