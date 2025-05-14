@@ -15,7 +15,7 @@ describe("Test controller learning paths", () => {
     });
 
     it("Can get learning path by id", async () => {
-        const data = await controller.getAllByTheme("kiks");
+        const data = await controller.getAllByThemeAndLanguage("kiks", Language.Dutch);
         expect(data).to.have.length.greaterThan(0);
     });
 

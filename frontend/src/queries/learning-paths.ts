@@ -30,12 +30,13 @@ export function useGetLearningPathQuery(
     });
 }
 
-export function useGetAllLearningPathsByThemeQuery(
+export function useGetAllLearningPathsByThemeAndLanguageQuery(
     theme: MaybeRefOrGetter<string>,
+    language: MaybeRefOrGetter<Language>,
 ): UseQueryReturnType<LearningPath[], Error> {
     return useQuery({
-        queryKey: [LEARNING_PATH_KEY, "getAllByTheme", theme],
-        queryFn: async () => learningPathController.getAllByTheme(toValue(theme)),
+        queryKey: [LEARNING_PATH_KEY, "getAllByTheme", theme, language],
+        queryFn: async () => learningPathController.getAllByThemeAndLanguage(toValue(theme), toValue(language)),
         enabled: () => Boolean(toValue(theme)),
     });
 }
