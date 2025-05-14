@@ -43,7 +43,7 @@ export async function fetchStudent(username: string): Promise<Student> {
     const user = await studentRepository.findByUsername(username);
 
     if (!user) {
-        throw new NotFoundException('Student with username not found');
+        throw new NotFoundException(`Student with username ${username} not found`);
     }
 
     return user;
