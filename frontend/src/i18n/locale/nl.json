@@ -160,5 +160,7 @@
     "learningPathCantModifyId": "De HRUID of taal van een leerpad kan niet worden gewijzigd.",
     "error": "Fout",
     "ownLearningContentTitle": "Eigen leerinhoud",
-    "ownLearningContentDescription": "Maak en beheer je eigen leerobjecten en leerpads. Alleen voor gevorderde gebruikers."
+    "ownLearningContentDescription": "Maak en beheer je eigen leerobjecten en leerpads. Alleen voor gevorderde gebruikers.",
+    "learningPathNotFound": "Dit leerpad kon niet gevonden worden.",
+    "emptyLearningPath": "Dit leerpad bevat geen leerobjecten."
 }

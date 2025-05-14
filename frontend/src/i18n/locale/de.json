@@ -160,5 +160,7 @@
     "learningPathCantModifyId": "Der HRUID oder die Sprache eines Lernpfads kann nicht geändert werden.",
     "error": "Fehler",
     "ownLearningContentTitle": "Eigene Lerninhalte",
-    "ownLearningContentDescription": "Erstellen und verwalten Sie eigene Lernobjekte und Lernpfade. Nur für fortgeschrittene Nutzer."
+    "ownLearningContentDescription": "Erstellen und verwalten Sie eigene Lernobjekte und Lernpfade. Nur für fortgeschrittene Nutzer.",
+    "learningPathNotFound": "Dieser Lernpfad konnte nicht gefunden werden.",
+    "emptyLearningPath": "Dieser Lernpfad enthält keine Lernobjekte."
 }

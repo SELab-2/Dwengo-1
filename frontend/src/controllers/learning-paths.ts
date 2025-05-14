@@ -1,7 +1,7 @@
 import { BaseController } from "@/controllers/base-controller.ts";
 import type { Language } from "@/data-objects/language.ts";
 import { LearningPath } from "@/data-objects/learning-paths/learning-path";
-import { single } from "@/utils/response-assertions.ts";
+import { NotFoundException } from "@/exception/not-found-exception";
 import type { LearningPath as LearningPathDTO } from "@dwengo-1/common/interfaces/learning-content";
 
 export class LearningPathController extends BaseController {
@@ -24,7 +24,10 @@ export class LearningPathController extends BaseController {
             assignmentNo: forGroup?.assignmentNo,
             classId: forGroup?.classId,
         });
-        return LearningPath.fromDTO(single(dtos));
+        if (dtos.length === 0) {
+            throw new NotFoundException('learningPathNotFound')
+        }
+        return LearningPath.fromDTO(dtos[0]);
     }
     async getAllByTheme(theme: string): Promise<LearningPath[]> {
         const dtos = await this.get<LearningPathDTO[]>("/", { theme });

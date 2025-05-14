@@ -160,5 +160,7 @@
     "learningPathCantModifyId": "The HRUID or language of a learning path cannot be modified.",
     "error": "Error",
     "ownLearningContentTitle": "Own learning content",
-    "ownLearningContentDescription": "Create and administrate your own learning objects and learning paths. For advanced users only."
+    "ownLearningContentDescription": "Create and administrate your own learning objects and learning paths. For advanced users only.",
+    "learningPathNotFound": "This learning path could not be found.",
+    "emptyLearningPath": "This learning path does not contain any learning objects."
 }
