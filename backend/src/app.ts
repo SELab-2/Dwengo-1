@@ -25,7 +25,7 @@ app.use(responseTime(responseTimeLogger));
 app.use('/api', apiRouter);
 
 // Swagger
-app.use('/api-docs', swaggerUi.serve, swaggerMiddleware);
+// App.use('/api-docs', swaggerUi.serve, swaggerMiddleware);
 
 app.use(errorHandler);
 

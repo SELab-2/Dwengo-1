@@ -184,7 +184,7 @@
                         <v-avatar
                             color="#0e6942"
                             size="large"
-                            class="user-button"
+                            class="user-button mb-3"
                         >
                             <span>{{ initials }}</span>
                         </v-avatar>
