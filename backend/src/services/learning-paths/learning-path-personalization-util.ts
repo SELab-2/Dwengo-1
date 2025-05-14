@@ -22,8 +22,8 @@ export function idFromLearningObjectNode(node: LearningObjectNode): LearningObje
     return {
         hruid: node.learningobject_hruid,
         language: node.language,
-        version: node.version
-    }
+        version: node.version,
+    };
 }
 
 /**
@@ -33,8 +33,8 @@ export function idFromLearningPathNode(node: LearningPathNode): LearningObjectId
     return {
         hruid: node.learningObjectHruid,
         language: node.language,
-        version: node.version
-    }
+        version: node.version,
+    };
 }
 
 /**

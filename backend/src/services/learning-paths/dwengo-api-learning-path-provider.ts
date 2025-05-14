@@ -16,14 +16,14 @@ const logger: Logger = getLogger();
  */
 async function addProgressToLearningPath(learningPath: LearningPath, personalizedFor: Group): Promise<LearningPath> {
     await Promise.all(
-        learningPath.nodes.map(async node => {
-            const lastSubmission = personalizedFor ? await getLastSubmissionForGroup(idFromLearningObjectNode(node), personalizedFor) : null
+        learningPath.nodes.map(async (node) => {
+            const lastSubmission = personalizedFor ? await getLastSubmissionForGroup(idFromLearningObjectNode(node), personalizedFor) : null;
             node.done = Boolean(lastSubmission);
         })
     );
 
     learningPath.num_nodes = learningPath.nodes.length;
-    learningPath.num_nodes_left = learningPath.nodes.filter(it => !it.done).length;
+    learningPath.num_nodes_left = learningPath.nodes.filter((it) => !it.done).length;
 
     return learningPath;
 }
@@ -54,9 +54,7 @@ const dwengoApiLearningPathProvider: LearningPathProvider = {
             };
         }
 
-        await Promise.all(
-            learningPaths?.map(async it => addProgressToLearningPath(it, personalizedFor))
-        );
+        await Promise.all(learningPaths?.map(async (it) => addProgressToLearningPath(it, personalizedFor)));
 
         return {
             success: true,
@@ -71,11 +69,8 @@ const dwengoApiLearningPathProvider: LearningPathProvider = {
         const searchResults = await fetchWithLogging<LearningPath[]>(apiUrl, `Search learning paths with query "${query}"`, { params });
 
         if (searchResults) {
-            await Promise.all(
-                searchResults?.map(async it => addProgressToLearningPath(it, personalizedFor))
-            );
+            await Promise.all(searchResults?.map(async (it) => addProgressToLearningPath(it, personalizedFor)));
         }
-
 
         return searchResults ?? [];
     },
