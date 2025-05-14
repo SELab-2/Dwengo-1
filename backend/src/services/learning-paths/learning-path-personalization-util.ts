@@ -5,18 +5,36 @@ import { getSubmissionRepository } from '../../data/repositories.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
 import { JSONPath } from 'jsonpath-plus';
+import { LearningObjectNode } from '@dwengo-1/common/interfaces/learning-content';
 
 /**
  * Returns the last submission for the learning object associated with the given node and for the group
  */
-export async function getLastSubmissionForGroup(node: LearningPathNode, pathFor: Group): Promise<Submission | null> {
+export async function getLastSubmissionForGroup(learningObjectId: LearningObjectIdentifier, pathFor: Group): Promise<Submission | null> {
     const submissionRepo = getSubmissionRepository();
-    const learningObjectId: LearningObjectIdentifier = {
+    return await submissionRepo.findMostRecentSubmissionForGroup(learningObjectId, pathFor);
+}
+
+/**
+ * Creates a LearningObjectIdentifier describing the specified node.
+ */
+export function idFromLearningObjectNode(node: LearningObjectNode): LearningObjectIdentifier {
+    return {
+        hruid: node.learningobject_hruid,
+        language: node.language,
+        version: node.version
+    }
+}
+
+/**
+ * Creates a LearningObjectIdentifier describing the specified node.
+ */
+export function idFromLearningPathNode(node: LearningPathNode): LearningObjectIdentifier {
+    return {
         hruid: node.learningObjectHruid,
         language: node.language,
-        version: node.version,
-    };
-    return await submissionRepo.findMostRecentSubmissionForGroup(learningObjectId, pathFor);
+        version: node.version
+    }
 }
 
 /**
