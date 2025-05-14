@@ -180,6 +180,7 @@ function convertTransition(
         return {
             _id: String(index), // Retained for backwards compatibility. The index uniquely identifies the transition within the learning path.
             default: false, // We don't work with default transitions but retain this for backwards compatibility.
+            condition: transition.condition,
             next: {
                 _id: nextNode._id ? nextNode._id + index : v4(), // Construct a unique ID for the transition for backwards compatibility.
                 hruid: transition.next.learningObjectHruid,
