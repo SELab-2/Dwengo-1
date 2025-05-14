@@ -10,10 +10,21 @@
 
     const errorMessage: Ref<string | null> = ref(null);
 
+    async function redirectPage() {
+        const redirectUrl = localStorage.getItem("redirectAfterLogin");
+        if (redirectUrl) {
+            console.log("redirect", redirectUrl);
+            localStorage.removeItem("redirectAfterLogin");
+            await router.replace(redirectUrl);
+        } else {
+            await router.replace("/user"); // Redirect to theme page
+        }
+    }
+
     onMounted(async () => {
         try {
             await auth.handleLoginCallback();
-            await router.replace("/user"); // Redirect to theme page
+            await redirectPage();
         } catch (error) {
             errorMessage.value = `${t("loginUnexpectedError")}: ${error}`;
         }
