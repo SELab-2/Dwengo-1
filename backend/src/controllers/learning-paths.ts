@@ -10,6 +10,7 @@ import { getAssignmentRepository, getGroupRepository } from '../data/repositorie
 import { AuthenticatedRequest } from '../middleware/auth/authenticated-request.js';
 import { LearningPath, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
 import { getTeacher } from '../services/teachers.js';
+import { requireFields } from './error-helper.js';
 
 /**
  * Fetch learning paths based on query parameters.
@@ -73,6 +74,10 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
 function postOrPutLearningPath(isPut: boolean): (req: AuthenticatedRequest, res: Response) => Promise<void> {
     return async (req, res) => {
         const path: LearningPath = req.body;
+        const { hruid: hruidParam, language: languageParam } = req.params;
+
+        requireFields({ hruidParam, languageParam, path });
+
         const teacher = await getTeacher(req.auth!.username);
         if (isPut) {
             if (req.params.hruid !== path.hruid || req.params.language !== path.language) {
@@ -88,10 +93,11 @@ export const postLearningPath = postOrPutLearningPath(false);
 export const putLearningPath = postOrPutLearningPath(true);
 
 export async function deleteLearningPath(req: AuthenticatedRequest, res: Response): Promise<void> {
-    const id: LearningPathIdentifier = {
-        hruid: req.params.hruid,
-        language: req.params.language as Language,
-    };
+    const { hruid, language } = req.params;
+
+    requireFields({ hruid, language });
+
+    const id: LearningPathIdentifier = { hruid, language: language as Language };
     const deletedPath = await learningPathService.deleteLearningPath(id);
     if (deletedPath) {
         res.json(deletedPath);

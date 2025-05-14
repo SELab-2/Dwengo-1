@@ -9,6 +9,7 @@ import { envVars, getEnvVar } from '../util/envVars.js';
 import { FilteredLearningObject, LearningObjectIdentifierDTO, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
 import { UploadedFile } from 'express-fileupload';
 import { AuthenticatedRequest } from '../middleware/auth/authenticated-request';
+import { requireFields } from './error-helper.js';
 
 function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIdentifierDTO {
     if (!req.params.hruid) {
@@ -22,12 +23,12 @@ function getLearningObjectIdentifierFromRequest(req: Request): LearningObjectIde
 }
 
 function getLearningPathIdentifierFromRequest(req: Request): LearningPathIdentifier {
-    if (!req.query.hruid) {
-        throw new BadRequestException('HRUID is required.');
-    }
+    const { hruid, language } = req.params;
+    requireFields({ hruid });
+
     return {
-        hruid: req.params.hruid,
-        language: (req.query.language as Language) || FALLBACK_LANG,
+        hruid,
+        language: (language as Language) || FALLBACK_LANG,
     };
 }
 
