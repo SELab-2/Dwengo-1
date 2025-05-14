@@ -183,7 +183,7 @@ function convertTransition(
  */
 function traverseLearningPath(nodes: LearningObjectNode[]): LearningObjectNode[] {
     const traversedNodes: LearningObjectNode[] = [];
-    let currentNode = nodes.find(it => it.start_node);
+    let currentNode = nodes.find((it) => it.start_node);
 
     while (currentNode) {
         traversedNodes.push(currentNode);
@@ -191,9 +191,7 @@ function traverseLearningPath(nodes: LearningObjectNode[]): LearningObjectNode[]
         const next = currentNode.transitions[0]?.next;
 
         if (next) {
-            currentNode = nodes.find(it =>
-                it.learningobject_hruid === next.hruid && it.language === next.language && it.version === next.version
-            );
+            currentNode = nodes.find((it) => it.learningobject_hruid === next.hruid && it.language === next.language && it.version === next.version);
         } else {
             currentNode = undefined;
         }
