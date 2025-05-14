@@ -1,10 +1,10 @@
 import unzipper from 'unzipper';
 import mime from 'mime-types';
-import { LearningObject } from '../../entities/content/learning-object.entity';
-import { getAttachmentRepository, getLearningObjectRepository } from '../../data/repositories';
-import { BadRequestException } from '../../exceptions/bad-request-exception';
+import { LearningObject } from '../../entities/content/learning-object.entity.js';
+import { getAttachmentRepository, getLearningObjectRepository } from '../../data/repositories.js';
+import { BadRequestException } from '../../exceptions/bad-request-exception.js';
 import { LearningObjectMetadata } from '@dwengo-1/common/interfaces/learning-content';
-import { DwengoContentType } from './processing/content-type';
+import { DwengoContentType } from './processing/content-type.js';
 
 const METADATA_PATH_REGEX = /.*[/^]metadata\.json$/;
 const CONTENT_PATH_REGEX = /.*[/^]content\.[a-zA-Z]*$/;

@@ -1,8 +1,8 @@
 import { Language } from '@dwengo-1/common/util/language';
-import learningPathService from '../../../services/learning-paths/learning-path-service';
-import { authorize } from '../auth';
-import { AuthenticatedRequest } from '../authenticated-request';
-import { AuthenticationInfo } from '../authentication-info';
+import learningPathService from '../../../services/learning-paths/learning-path-service.js';
+import { authorize } from '../auth.js';
+import { AuthenticatedRequest } from '../authenticated-request.js';
+import { AuthenticationInfo } from '../authentication-info.js';
 
 export const onlyAdminsForLearningPath = authorize(async (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
     const adminsForLearningPath = await learningPathService.getAdmins({
