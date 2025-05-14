@@ -45,25 +45,24 @@ export function mapToLearningPath(dto: LearningPath, adminsDto: TeacherDTO[]): L
         const fromNode = nodes.find(
             (it) => it.learningObjectHruid === nodeDto.learningobject_hruid && it.language === nodeDto.language && it.version === nodeDto.version
         )!;
-        const transitions = nodeDto.transitions
-            .map((transDto, i) => {
-                const toNode = nodes.find(
-                    (it) =>
-                        it.learningObjectHruid === transDto.next.hruid &&
-                        it.language === transDto.next.language &&
-                        it.version === transDto.next.version
-                );
+        const transitions = nodeDto.transitions.map((transDto, i) => {
+            const toNode = nodes.find(
+                (it) =>
+                    it.learningObjectHruid === transDto.next.hruid && it.language === transDto.next.language && it.version === transDto.next.version
+            );
 
-                if (toNode) {
-                    return repo.createTransition({
-                        transitionNumber: i,
-                        node: fromNode,
-                        next: toNode,
-                        condition: transDto.condition ?? 'true',
-                    });
-                }
-                throw new BadRequestException(`Invalid transition destination: ${JSON.stringify(transDto.next)}: This learning object does not exist in this learning path.`);
-            });
+            if (toNode) {
+                return repo.createTransition({
+                    transitionNumber: i,
+                    node: fromNode,
+                    next: toNode,
+                    condition: transDto.condition ?? 'true',
+                });
+            }
+            throw new BadRequestException(
+                `Invalid transition destination: ${JSON.stringify(transDto.next)}: This learning object does not exist in this learning path.`
+            );
+        });
 
         fromNode.transitions = new Collection<LearningPathTransition>(fromNode, transitions);
     });
