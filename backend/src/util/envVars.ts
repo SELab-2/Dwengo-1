@@ -42,7 +42,7 @@ export const envVars: Record<string, EnvVar> = {
     LokiHost: { key: LOGGING_PREFIX + 'LOKI_HOST', defaultValue: 'http://localhost:3102' },
 
     CacheHost: { key: CACHE_PREFIX + 'HOST', defaultValue: 'localhost' },
-    CachePort: { key: CACHE_PREFIX + 'PORT', defaultValue: 6379 },
+    CachePort: { key: CACHE_PREFIX + 'PORT', defaultValue: 11211 },
     CacheTTL: { key: CACHE_PREFIX + 'TTL', defaultValue: 60 * 60 * 24 }, // 24 hours
     CacheKeyPrefix: { key: CACHE_PREFIX + 'KEY_PREFIX', defaultValue: 'dwengo' },
 } as const;

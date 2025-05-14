@@ -3,6 +3,7 @@ import { getLogger, Logger } from '../logging/initalize.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { getCacheClient } from '../caching.js';
 import { envVars, getEnvVar, getNumericEnvVar } from './envVars.js';
+import { createHash } from 'crypto';
 
 const logger: Logger = getLogger();
 const runMode: string = getEnvVar(envVars.RunMode);
@@ -29,13 +30,13 @@ export async function fetchRemote<T>(
     url: string,
     description: string,
     options?: Options,
-    cacheTTL?: number
+    cacheTTL?: number,
 ): Promise<T | null> {
-    if (runMode !== 'dev') {
+    if (runMode !== 'dev' && !runMode.includes('test')) {
         return fetchWithCache<T>(url, description, options, cacheTTL);
     }
 
-    getLogger().info(`🔄 INFO: Bypassing cache for ${description} at "${url}".`);
+    getLogger().debug(`🔄 INFO: Bypassing cache for ${description} at "${url}".`);
     return fetchWithLogging(url, description, options);
 }
 
@@ -43,25 +44,28 @@ async function fetchWithCache<T>(
     url: string,
     description: string,
     options?: Options,
-    cacheTTL?: number
+    cacheTTL?: number,
 ): Promise<T | null> {
-    // Create a unique cache key based on the URL and options
-    const cacheKey = `${prefix}:${url}${options?.params ? JSON.stringify(options.params) : ''}`;
-    const cacheClient = await getCacheClient();
+    // Combine the URL and parameters to create a unique cache key.
+    // NOTE Using a hash function to keep the key short, since Memcached has a limit on key size
+    const urlWithParams = `${url}${options?.params ? JSON.stringify(options.params) : ''}`;
+    const hashedUrl = createHash('sha256').update(urlWithParams).digest('hex');
+    const key = `${prefix}:${hashedUrl}`;
+    const client = await getCacheClient();
 
-    const cachedData = await cacheClient.get(cacheKey);
-    if (cachedData !== null && cachedData !== undefined) { // TODO What should this condition actually be?
-        // Cache hit! :)
-        getLogger().debug(`✅ INFO: Cache hit for ${description} at "${url}".`);
-        return JSON.parse(cachedData) as T;
+    const cachedData = await client.get(key);
+
+    if (cachedData?.value) {
+        logger.debug(`✅ INFO: Cache hit for ${description} at "${url}" (key: "${key}")`);
+        return JSON.parse(cachedData.value.toString()) as T;
     }
 
-    // Cache miss :(
     logger.debug(`🔄 INFO: Cache miss for ${description} at "${url}". Fetching data...`);
     const response = await fetchWithLogging<T>(url, description, options);
-    logger.debug(`🔄 INFO: Fetched data for ${description} at "${url}".`);
-    await cacheClient.setEx(cacheKey, cacheTTL || getNumericEnvVar(envVars.CacheTTL), JSON.stringify(response));
-    logger.debug(`✅ INFO: Cached response for ${description} at "${url}" for ${cacheTTL} seconds.`);
+
+    const ttl = cacheTTL || getNumericEnvVar(envVars.CacheTTL);
+    await client.set(key, JSON.stringify(response), { expires: ttl });
+    logger.debug(`✅ INFO: Cached response for ${description} at "${url}" for ${ttl} seconds. (key: "${key}")`);
 
     return response;
 }

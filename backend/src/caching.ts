@@ -1,42 +1,40 @@
-import { createClient, RedisClientType } from 'redis';
 import { getLogger } from './logging/initalize.js';
 import { envVars, getEnvVar } from './util/envVars.js';
+import { Client } from 'memjs';
 
-export type CacheClient = RedisClientType;
+export type CacheClient = Client;
 
-let redisClient: CacheClient;
+let cacheClient: CacheClient;
 
 async function initializeClient(): Promise<CacheClient> {
-    if (redisClient !== undefined) {
-        return redisClient;
+    if (cacheClient !== undefined) {
+        return cacheClient;
     }
 
-    const redisHost = getEnvVar(envVars.CacheHost);
-    const redisPort = getEnvVar(envVars.CachePort);
-    const redisUrl = `redis://${redisHost}:${redisPort}`;
+    const cachingHost = getEnvVar(envVars.CacheHost);
+    const cachingPort = getEnvVar(envVars.CachePort);
+    const cachingUrl = `${cachingHost}:${cachingPort}`;
 
-    redisClient = createClient({
-        url: redisUrl
-    });
+    cacheClient = Client.create(cachingUrl);
 
-    redisClient.on('error', (err) => getLogger().error('Redis error:', err));
-    await redisClient.connect();
+    getLogger().info(`Memcached client initialized at ${cachingUrl}`);
 
-    return redisClient;
+    return cacheClient;
 }
 
 export async function getCacheClient(): Promise<CacheClient> {
-    redisClient ||= await initializeClient();
-    return redisClient;
+    cacheClient ||= await initializeClient();
+    return cacheClient;
 }
 
-export async function checkRedisHealth(): Promise<boolean> {
+export async function checkCachingHealth(): Promise<boolean> {
     try {
-        await redisClient.set('health', 'ok');
-        const reply = await redisClient.get('health');
-        return reply === 'ok';
+        const client = await getCacheClient();
+        await client.set('health', Buffer.from('ok'), { expires: 60 });
+        const reply = await cacheClient.get('health');
+        return reply?.value?.toString() === 'ok';
     } catch (error) {
-        getLogger().error('Redis Health Check Failed:', error);
+        getLogger().error('Caching Health Check Failed:', error);
         return false;
     }
 }
