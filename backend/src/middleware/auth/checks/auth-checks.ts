@@ -16,7 +16,7 @@ export function authorize<P, ResBody, ReqBody, ReqQuery, Locals extends Record<s
     accessCondition: (auth: AuthenticationInfo, req: AuthenticatedRequest<P, ResBody, ReqBody, ReqQuery, Locals>) => boolean | Promise<boolean>
 ): RequestHandler<P, ResBody, ReqBody, ReqQuery, Locals> {
     // Bypass authentication during testing
-    if (getEnvVar(envVars.RunMode) === "test") {
+    if (getEnvVar(envVars.RunMode) === 'test') {
         return async (
             _req: AuthenticatedRequest<P, ResBody, ReqBody, ReqQuery, Locals>,
             _res: express.Response,
