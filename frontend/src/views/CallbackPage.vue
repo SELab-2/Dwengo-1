@@ -10,10 +10,9 @@
 
     const errorMessage: Ref<string | null> = ref(null);
 
-    async function redirectPage() {
+    async function redirectPage(): Promise<void> {
         const redirectUrl = localStorage.getItem("redirectAfterLogin");
         if (redirectUrl) {
-            console.log("redirect", redirectUrl);
             localStorage.removeItem("redirectAfterLogin");
             await router.replace(redirectUrl);
         } else {

@@ -132,7 +132,7 @@
     // Show the teacher, copying of the code was a successs
     const copied = ref(false);
 
-    async function copyToClipboard(code: string, isDialog: boolean = false, isLink: boolean = false): Promise<void> {
+    async function copyToClipboard(code: string, isDialog = false, isLink = false): Promise<void> {
         const content = isLink ? `${window.location.origin}/user/class?code=${code}` : code;
         await navigator.clipboard.writeText(content);
         copied.value = isDialog;
