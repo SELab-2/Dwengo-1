@@ -3,9 +3,9 @@ import { LearningObjectProvider } from './learning-object-provider.js';
 import { envVars, getEnvVar } from '../../util/envVars.js';
 import databaseLearningObjectProvider from './database-learning-object-provider.js';
 import { FilteredLearningObject, LearningObjectIdentifierDTO, LearningPathIdentifier } from '@dwengo-1/common/interfaces/learning-content';
-import { getLearningObjectRepository, getTeacherRepository } from '../../data/repositories';
-import { processLearningObjectZip } from './learning-object-zip-processing-service';
-import { LearningObject } from '../../entities/content/learning-object.entity';
+import { getLearningObjectRepository, getTeacherRepository } from '../../data/repositories.js';
+import { processLearningObjectZip } from './learning-object-zip-processing-service.js';
+import { LearningObject } from '../../entities/content/learning-object.entity.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { NotFoundException } from '../../exceptions/not-found-exception.js';
 

@@ -1,8 +1,8 @@
 import { Language } from '@dwengo-1/common/util/language';
-import learningObjectService from '../../../services/learning-objects/learning-object-service';
-import { authorize } from '../auth';
-import { AuthenticatedRequest } from '../authenticated-request';
-import { AuthenticationInfo } from '../authentication-info';
+import learningObjectService from '../../../services/learning-objects/learning-object-service.js';
+import { authorize } from '../auth.js';
+import { AuthenticatedRequest } from '../authenticated-request.js';
+import { AuthenticationInfo } from '../authentication-info.js';
 
 export const onlyAdminsForLearningObject = authorize(async (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
     const { hruid } = req.params;
