@@ -137,8 +137,7 @@
         await navigator.clipboard.writeText(content);
         copied.value = isDialog;
 
-        if (!isDialog)
-            showSnackbar(t("copied"), "white");
+        if (!isDialog) showSnackbar(t("copied"), "white");
     }
 
     // Custom breakpoints
@@ -231,7 +230,12 @@
                                             </v-btn>
                                         </td>
                                         <td>
-                                            <v-row v-if="!isMdAndDown" dense align="center" no-gutters>
+                                            <v-row
+                                                v-if="!isMdAndDown"
+                                                dense
+                                                align="center"
+                                                no-gutters
+                                            >
                                                 <v-btn
                                                     variant="text"
                                                     append-icon="mdi-content-copy"
@@ -247,7 +251,11 @@
                                                     <v-icon>mdi-link-variant</v-icon>
                                                 </v-btn>
                                             </v-row>
-                                            <span v-else style="cursor: pointer" @click="openCodeDialog(c.id)">
+                                            <span
+                                                v-else
+                                                style="cursor: pointer"
+                                                @click="openCodeDialog(c.id)"
+                                            >
                                                 <v-icon icon="mdi-eye"></v-icon>
                                             </span>
                                         </td>

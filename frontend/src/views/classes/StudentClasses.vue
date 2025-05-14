@@ -82,7 +82,7 @@
     // The code a student sends in to join a class needs to be formatted as v4 to be valid
     // These rules are used to display a message to the user if they use a code that has an invalid format
     function codeRegex(value: string): boolean {
-        return /^[a-zA-Z0-9]{6}$/.test(value)
+        return /^[a-zA-Z0-9]{6}$/.test(value);
     }
 
     const codeRules = [

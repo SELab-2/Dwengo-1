@@ -143,7 +143,7 @@ router.beforeEach(async (to, _from, next) => {
     // Verify if user is logged in before accessing certain routes
     if (to.meta.requiresAuth) {
         if (!authService.isLoggedIn.value && !(await authService.loadUser())) {
-            const path = to.fullPath
+            const path = to.fullPath;
             if (path !== "/") {
                 localStorage.setItem("redirectAfterLogin", path);
             }
