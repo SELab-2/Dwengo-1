@@ -24,8 +24,12 @@ router.get('/testTeachersOnly', teachersOnly, (_req, res) => {
 
 // This endpoint is called by the client when the user has just logged in.
 // It creates or updates the user entity based on the authentication data the endpoint was called with.
-router.post('/hello', authenticatedOnly, /*
+router.post(
+    '/hello',
+    authenticatedOnly,
+    /*
     #swagger.security = [{ "studentProduction": [ ] }, { "teacherProduction": [ ] }, { "studentStaging": [ ] }, { "teacherStaging": [ ] }, { "studentDev": [ ] }, { "teacherDev": [ ] }]
-*/ postHelloHandler );
+*/ postHelloHandler
+);
 
 export default router;

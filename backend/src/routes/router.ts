@@ -19,11 +19,29 @@ router.get('/', (_, res: Response) => {
 });
 
 router.use('/auth', authRouter /* #swagger.tags = ['Auth'] */);
-router.use('/class', classRouter /* #swagger.tags = ['Class'], #swagger.security = [{ "studentProduction": [ ] }, { "teacherProduction": [ ] }, { "studentStaging": [ ] }, { "teacherStaging": [ ] }, { "studentDev": [ ] }, { "teacherDev": [ ] }] */);
-router.use('/learningObject', learningObjectRoutes /* #swagger.tags = ['Learning Object'], #swagger.security = [{ "studentProduction": [ ] }, { "teacherProduction": [ ] }, { "studentStaging": [ ] }, { "teacherStaging": [ ] }, { "studentDev": [ ] }, { "teacherDev": [ ] }] */);
-router.use('/learningPath', learningPathRoutes /* #swagger.tags = ['Learning Path'], #swagger.security = [{ "studentProduction": [ ] }, { "teacherProduction": [ ] }, { "studentStaging": [ ] }, { "teacherStaging": [ ] }, { "studentDev": [ ] }, { "teacherDev": [ ] }] */);
-router.use('/student', studentRouter /* #swagger.tags = ['Student'], #swagger.security = [{ "studentProduction": [ ] }, { "teacherProduction": [ ] }, { "studentStaging": [ ] }, { "teacherStaging": [ ] }, { "studentDev": [ ] }, { "teacherDev": [ ] }] */);
-router.use('/teacher', teacherRouter /* #swagger.tags = ['Teacher'], #swagger.security = [{ "studentProduction": [ ] }, { "teacherProduction": [ ] }, { "studentStaging": [ ] }, { "teacherStaging": [ ] }, { "studentDev": [ ] }, { "teacherDev": [ ] }] */);
-router.use('/theme', themeRoutes /* #swagger.tags = ['Theme'], #swagger.security = [{ "studentProduction": [ ] }, { "teacherProduction": [ ] }, { "studentStaging": [ ] }, { "teacherStaging": [ ] }, { "studentDev": [ ] }, { "teacherDev": [ ] }] */);
+router.use(
+    '/class',
+    classRouter /* #swagger.tags = ['Class'], #swagger.security = [{ "studentProduction": [ ] }, { "teacherProduction": [ ] }, { "studentStaging": [ ] }, { "teacherStaging": [ ] }, { "studentDev": [ ] }, { "teacherDev": [ ] }] */
+);
+router.use(
+    '/learningObject',
+    learningObjectRoutes /* #swagger.tags = ['Learning Object'], #swagger.security = [{ "studentProduction": [ ] }, { "teacherProduction": [ ] }, { "studentStaging": [ ] }, { "teacherStaging": [ ] }, { "studentDev": [ ] }, { "teacherDev": [ ] }] */
+);
+router.use(
+    '/learningPath',
+    learningPathRoutes /* #swagger.tags = ['Learning Path'], #swagger.security = [{ "studentProduction": [ ] }, { "teacherProduction": [ ] }, { "studentStaging": [ ] }, { "teacherStaging": [ ] }, { "studentDev": [ ] }, { "teacherDev": [ ] }] */
+);
+router.use(
+    '/student',
+    studentRouter /* #swagger.tags = ['Student'], #swagger.security = [{ "studentProduction": [ ] }, { "teacherProduction": [ ] }, { "studentStaging": [ ] }, { "teacherStaging": [ ] }, { "studentDev": [ ] }, { "teacherDev": [ ] }] */
+);
+router.use(
+    '/teacher',
+    teacherRouter /* #swagger.tags = ['Teacher'], #swagger.security = [{ "studentProduction": [ ] }, { "teacherProduction": [ ] }, { "studentStaging": [ ] }, { "teacherStaging": [ ] }, { "studentDev": [ ] }, { "teacherDev": [ ] }] */
+);
+router.use(
+    '/theme',
+    themeRoutes /* #swagger.tags = ['Theme'], #swagger.security = [{ "studentProduction": [ ] }, { "teacherProduction": [ ] }, { "studentStaging": [ ] }, { "teacherStaging": [ ] }, { "studentDev": [ ] }, { "teacherDev": [ ] }] */
+);
 
 export default router;
