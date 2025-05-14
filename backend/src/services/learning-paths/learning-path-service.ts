@@ -132,6 +132,11 @@ const learningPathService = {
     async createNewLearningPath(dto: LearningPath, admins: TeacherDTO[]): Promise<LearningPathEntity> {
         const repo = getLearningPathRepository();
 
+        const userContentPrefix = getEnvVar(envVars.UserContentPrefix);
+        if (!dto.hruid.startsWith(userContentPrefix)) {
+            dto.hruid = userContentPrefix + dto.hruid;
+        }
+
         const path = mapToLearningPath(dto, admins);
         try {
             await repo.save(path, { preventOverwrite: true });
