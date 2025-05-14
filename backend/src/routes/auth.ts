@@ -18,7 +18,7 @@ router.get('/testStudentsOnly', studentsOnly, (_req, res) => {
 });
 
 router.get('/testTeachersOnly', teachersOnly, (_req, res) => {
-    /* #swagger.security = [{ { "teacherProduction": [ ] }, { "teacherStaging": [ ] }, { "teacherDev": [ ] }] */
+    /* #swagger.security = [{ "teacherProduction": [ ] }, { "teacherStaging": [ ] }, { "teacherDev": [ ] }] */
     res.json({ message: 'If you see this, you should be a teacher!' });
 });
 
