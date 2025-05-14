@@ -21,7 +21,6 @@ describe("Test controller learning paths", () => {
 
     it("Can get all learning paths administrated by a certain user.", async () => {
         const data = await controller.getAllByAdminRaw("user");
-        expect(typeof data).toEqual("array");
         expect(data.length).toBe(0); // This user does not administrate any learning paths in the test data.
     });
 });

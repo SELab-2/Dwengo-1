@@ -12,10 +12,10 @@ describe("Test controller learning object", () => {
     it("can get the metadata of a learning object", async () => {
         const result = await controller.getMetadata("u_id01", Language.English, 1);
         expect(result).not.toBeNull();
-        for (const property of ["hruid", "version", "language", "title"]) {
+        for (const property of ["key", "version", "language", "title"]) {
             expect(result).toHaveProperty(property);
         }
-        expect(result.hruid).toEqual("u_id01");
+        expect(result.key).toEqual("u_id01");
         expect(result.version).toEqual(1);
         expect(result.language).toEqual(Language.English);
     });
