@@ -13,6 +13,7 @@ import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { mapToTeacher } from '../../interfaces/teacher.js';
 import { Collection } from '@mikro-orm/core';
 import { NotFoundException } from '../../exceptions/not-found-exception.js';
+import { BadRequestException } from '../../exceptions/bad-request-exception.js';
 
 const userContentPrefix = getEnvVar(envVars.UserContentPrefix);
 const allProviders = [dwengoApiLearningPathProvider, databaseLearningPathProvider];
@@ -61,10 +62,8 @@ export function mapToLearningPath(dto: LearningPath, adminsDto: TeacherDTO[]): L
                         condition: transDto.condition ?? 'true',
                     });
                 }
-                return undefined;
-            })
-            .filter((it) => it)
-            .map((it) => it!);
+                throw new BadRequestException(`Invalid transition destination: ${JSON.stringify(transDto.next)}: This learning object does not exist in this learning path.`);
+            });
 
         fromNode.transitions = new Collection<LearningPathTransition>(fromNode, transitions);
     });
