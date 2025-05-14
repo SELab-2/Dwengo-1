@@ -2,10 +2,11 @@
     import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
     import LearningPathsGrid from "@/components/LearningPathsGrid.vue";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import { useGetAllLearningPathsByThemeQuery } from "@/queries/learning-paths.ts";
+    import { useGetAllLearningPathsByThemeAndLanguageQuery } from "@/queries/learning-paths.ts";
     import { computed, ref } from "vue";
     import { useI18n } from "vue-i18n";
     import { useThemeQuery } from "@/queries/themes.ts";
+    import type { Language } from "@/data-objects/language";
 
     const props = defineProps<{ theme: string }>();
 
@@ -16,7 +17,10 @@
 
     const currentThemeInfo = computed(() => themeQueryResult.data.value?.find((it) => it.key === props.theme));
 
-    const learningPathsForThemeQueryResult = useGetAllLearningPathsByThemeQuery(() => props.theme);
+    const learningPathsForThemeQueryResult = useGetAllLearningPathsByThemeAndLanguageQuery(
+        () => props.theme,
+        () => locale.value as Language,
+    );
 
     const { t } = useI18n();
     const searchFilter = ref("");
