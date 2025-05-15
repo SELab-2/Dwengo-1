@@ -1,75 +1,114 @@
 <script setup lang="ts">
-    import { ref } from "vue";
-    import { useI18n } from "vue-i18n";
-    import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import type { StudentsResponse } from "@/controllers/students.ts";
-    import { useClassStudentsQuery } from "@/queries/classes.ts";
+import { ref, } from "vue";
+import draggable from "vuedraggable";
+import { useI18n } from "vue-i18n";
 
-    const props = defineProps<{
-        classId: string | undefined;
-        groups: string[][];
-    }>();
-    const emit = defineEmits(["groupCreated"]);
-    const { t } = useI18n();
+const props = defineProps<{
+    classId: string | undefined;
+    groups: string[][];
+}>();
+const emit = defineEmits(["done", "groupsUpdated"]);
+const { t } = useI18n();
 
-    const selectedStudents = ref([]);
+const groupList = ref(props.groups.map(g => [...g])); // deep copy
+const unassigned = ref<string[]>([]); // voor vrije studenten
 
-    const studentQueryResult = useClassStudentsQuery(() => props.classId, true);
+function addNewGroup() {
+    groupList.value.push([]);
+}
 
-    function filterStudents(data: StudentsResponse): { title: string; value: string }[] {
-        const students = data.students;
-        const studentsInGroups = props.groups.flat();
+function removeGroup(index: number) {
+    unassigned.value.push(...groupList.value[index]);
+    groupList.value.splice(index, 1);
+}
 
-        return students
-            ?.map((st) => ({
-                title: `${st.firstName} ${st.lastName}`,
-                value: st.username,
-            }))
-            .filter((student) => !studentsInGroups.includes(student.value));
-    }
-
-    function createGroup(): void {
-        if (selectedStudents.value.length) {
-            // Extract only usernames (student.value)
-            const usernames = selectedStudents.value.map((student) => student.value);
-            emit("groupCreated", usernames);
-            selectedStudents.value = []; // Reset selection after creating group
-        }
-    }
+function saveChanges() {
+    emit("groupsUpdated", groupList.value);
+    emit("done");
+}
 </script>
 
 <template>
-    <using-query-result
-        :query-result="studentQueryResult"
-        v-slot="{ data }: { data: StudentsResponse }"
-    >
-        <h3>{{ t("create-groups") }}</h3>
+    <v-card>
+        <v-card-title>{{ t("edit-groups") }}</v-card-title>
         <v-card-text>
-            <v-combobox
-                v-model="selectedStudents"
-                :items="filterStudents(data)"
-                item-title="title"
-                item-value="value"
-                :label="t('choose-students')"
-                variant="outlined"
-                clearable
-                multiple
-                hide-details
-                density="compact"
-                chips
-                append-inner-icon="mdi-magnify"
-            ></v-combobox>
+            <v-row>
+                <!-- Ongegroepeerde studenten -->
+                <v-col cols="12" sm="4">
+                    <h4>{{ t("unassigned") }}</h4>
+                    <draggable
+                        v-model="unassigned"
+                        group="students"
+                        item-key="username"
+                        class="group-box"
+                    >
+                        <template #item="{ element }">
+                            <v-chip>{{ element }}</v-chip>
+                        </template>
+                    </draggable>
+                </v-col>
+
+                <!-- Bestaande groepen -->
+                <v-col
+                    v-for="(group, i) in groupList"
+                    :key="i"
+                    cols="12"
+                    sm="4"
+                >
+                    <h4>{{ t("group") }} {{ i + 1 }}</h4>
+                    <draggable
+                        v-model="groupList[i]"
+                        group="students"
+                        item-key="username"
+                        class="group-box"
+                    >
+                        <template #item="{ element }">
+                            <v-chip>{{ element }}</v-chip>
+                        </template>
+                    </draggable>
+
+                    <v-btn
+                        color="error"
+                        size="x-small"
+                        @click="removeGroup(i)"
+                        class="mt-2"
+                    >
+                        {{ t("remove-group") }}
+                    </v-btn>
+                </v-col>
+            </v-row>
 
             <v-btn
-                @click="createGroup"
                 color="primary"
-                class="mt-2"
-                size="small"
+                class="mt-4"
+                @click="addNewGroup"
             >
-                {{ t("create-group") }}
+                {{ t("add-group") }}
             </v-btn>
         </v-card-text>
-    </using-query-result>
+        <v-card-actions>
+            <v-btn
+                color="success"
+                @click="saveChanges"
+            >
+                {{ t("save") }}
+            </v-btn>
+            <v-btn
+                @click="$emit('done')"
+                variant="text"
+            >
+                {{ t("cancel") }}
+            </v-btn>
+        </v-card-actions>
+    </v-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+.group-box {
+    min-height: 100px;
+    border: 1px dashed #ccc;
+    padding: 8px;
+    margin-bottom: 16px;
+    background-color: #fafafa;
+}
+</style>

@@ -17,7 +17,7 @@ import {descriptionRules, learningPathRules} from "@/utils/assignment-rules.ts";
 import GroupSubmissionStatus from "@/components/GroupSubmissionStatus.vue"
 import GroupProgressRow from "@/components/GroupProgressRow.vue"
 import type {AssignmentDTO} from "@dwengo-1/common/dist/interfaces/assignment.ts";
-import router from "@/router";
+import GroupSelector from "@/components/assignments/GroupSelector.vue";
 
 const props = defineProps<{
     classId: string;
@@ -35,9 +35,12 @@ const {t} = useI18n();
 const lang = ref();
 const groups = ref<GroupDTO[] | GroupDTOId[]>([]);
 const learningPath = ref();
+const form = ref();
+
 
 const editingLearningPath = ref(learningPath);
 const description = ref("");
+const editGroups = ref(false);
 
 
 const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
@@ -111,7 +114,7 @@ function goToGroupSubmissionLink(groupNo: number): string | undefined {
 
 const learningPathsQueryResults = useGetAllLearningPaths(lang);
 
-const { mutate, data, isSuccess } = useUpdateAssignmentMutation();
+const {mutate, data, isSuccess} = useUpdateAssignmentMutation();
 
 watch([isSuccess, data], ([success, newData]) => {
     if (success && newData?.assignment) {
@@ -120,9 +123,10 @@ watch([isSuccess, data], ([success, newData]) => {
 });
 
 async function saveChanges(): Promise<void> {
+    const {valid} = await form.value.validate();
+    if (!valid) return;
+
     isEditing.value = false;
-    //const { valid } = await form.value.validate();
-    //if (!valid) return;
 
     const lp = learningPath.value;
 
@@ -133,8 +137,14 @@ async function saveChanges(): Promise<void> {
         deadline: new Date(),
     };
 
-    mutate({ cid: assignmentQueryResult.data.value?.assignment.within, an: assignmentQueryResult.data.value?.assignment.id, data: assignmentDTO });
+    mutate({
+        cid: assignmentQueryResult.data.value?.assignment.within,
+        an: assignmentQueryResult.data.value?.assignment.id,
+        data: assignmentDTO
+    });
 }
+
+
 </script>
 
 <template>
@@ -157,237 +167,256 @@ async function saveChanges(): Promise<void> {
                         md="6"
                         class="responsive-col"
                     >
-                        <v-card
-                            v-if="assignmentResponse"
-                            class="assignment-card"
-                        >
-                            <div class="top-buttons">
-                                <div class="top-buttons-wrapper">
-                                    <v-btn
-                                        icon
-                                        variant="text"
-                                        class="back-btn"
-                                        to="/user/assignment"
-                                    >
-                                        <v-icon>mdi-arrow-left</v-icon>
-                                    </v-btn>
-                                    <div class="right-buttons">
+                        <v-form ref="form" validate-on="submit lazy" @submit.prevent="saveChanges">
+                            <v-card
+                                v-if="assignmentResponse"
+                                class="assignment-card"
+                            >
+                                <div class="top-buttons">
+                                    <div class="top-buttons-wrapper">
                                         <v-btn
-                                            v-if="!isEditing"
                                             icon
                                             variant="text"
-                                            class="top_next_to_right_button"
-                                            @click="
+                                            class="back-btn"
+                                            to="/user/assignment"
+                                        >
+                                            <v-icon>mdi-arrow-left</v-icon>
+                                        </v-btn>
+                                        <div class="right-buttons">
+                                            <v-btn
+                                                v-if="!isEditing"
+                                                icon
+                                                variant="text"
+                                                class="top_next_to_right_button"
+                                                @click="
                                                 () => {
                                                     isEditing = true;
                                                     description = assignmentResponse.data.assignment.description;
                                                 }
                                             "
-                                        >
-                                            <v-icon>mdi-pencil</v-icon>
-                                        </v-btn>
-                                        <v-btn
-                                            v-else
-                                            variant="text"
-                                            class="top-right-btn"
-                                            @click="() => {isEditing = false; editingLearningPath=learningPath}"
-                                        >{{ t("cancel") }}
-                                        </v-btn
-                                        >
+                                            >
+                                                <v-icon>mdi-pencil</v-icon>
+                                            </v-btn>
+                                            <v-btn
+                                                v-else
+                                                variant="text"
+                                                class="top-right-btn"
+                                                @click="() => {isEditing = false; editingLearningPath=learningPath}"
+                                            >{{ t("cancel") }}
+                                            </v-btn
+                                            >
 
-                                        <v-btn
-                                            v-if="!isEditing"
-                                            icon
-                                            variant="text"
-                                            class="top-right-btn"
-                                            @click="
+                                            <v-btn
+                                                v-if="!isEditing"
+                                                icon
+                                                variant="text"
+                                                class="top-right-btn"
+                                                @click="
                                                 deleteAssignment(
                                                     assignmentResponse.data.assignment.id,
                                                     assignmentResponse.data.assignment.within,
                                                 )
                                             "
-                                        >
-                                            <v-icon>mdi-delete</v-icon>
-                                        </v-btn>
-                                        <v-btn
-                                            v-else
-                                            icon
-                                            variant="text"
-                                            class="top_next_to_right_button"
-                                            @click="saveChanges"
-                                        >
-                                            <v-icon>mdi-content-save-edit-outline</v-icon>
-                                        </v-btn>
+                                            >
+                                                <v-icon>mdi-delete</v-icon>
+                                            </v-btn>
+                                            <v-btn
+                                                v-else
+                                                icon
+                                                variant="text"
+                                                class="top_next_to_right_button"
+                                                @click="saveChanges"
+                                            >
+                                                <v-icon>mdi-content-save-edit-outline</v-icon>
+                                            </v-btn>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <v-card-title class="text-h4 assignmentTopTitle">{{
-                                    assignmentResponse.data.assignment.title
-                                }}
-                            </v-card-title>
-                            <v-card-subtitle
-                                v-if="!isEditing"
-                                class="subtitle-section"
-                            >
-                                <using-query-result
-                                    :query-result="lpQueryResult"
-                                    v-slot="{ data: lpData }"
+                                <v-card-title class="text-h4 assignmentTopTitle">{{
+                                        assignmentResponse.data.assignment.title
+                                    }}
+                                </v-card-title>
+                                <v-card-subtitle
+                                    v-if="!isEditing"
+                                    class="subtitle-section"
                                 >
-                                    <v-btn
-                                        v-if="lpData"
-                                        :to="goToLearningPathLink()"
-                                        variant="tonal"
-                                        color="primary"
+                                    <using-query-result
+                                        :query-result="lpQueryResult"
+                                        v-slot="{ data: lpData }"
                                     >
-                                        {{ t("learning-path") }}
-                                    </v-btn>
-                                </using-query-result>
-                            </v-card-subtitle>
-                            <using-query-result
-                                v-else
-                                :query-result="learningPathsQueryResults"
-                                v-slot="{ data }: { data: LearningPath[] }"
-                            >
-                                <v-card-text>
-                                    <v-combobox
-                                        v-model="editingLearningPath"
-                                        :items="data"
-                                        :label="t('choose-lp')"
-                                        :rules="learningPathRules"
-                                        variant="outlined"
-                                        clearable
-                                        hide-details
-                                        density="compact"
-                                        append-inner-icon="mdi-magnify"
-                                        item-title="title"
-                                        item-value="hruid"
-                                        required
-                                        :filter="
+                                        <v-btn
+                                            v-if="lpData"
+                                            :to="goToLearningPathLink()"
+                                            variant="tonal"
+                                            color="primary"
+                                        >
+                                            {{ t("learning-path") }}
+                                        </v-btn>
+                                    </using-query-result>
+                                </v-card-subtitle>
+                                <using-query-result
+                                    v-else
+                                    :query-result="learningPathsQueryResults"
+                                    v-slot="{ data }: { data: LearningPath[] }"
+                                >
+                                    <v-card-text>
+                                        <v-combobox
+                                            v-model="editingLearningPath"
+                                            :items="data"
+                                            :label="t('choose-lp')"
+                                            :rules="learningPathRules"
+                                            variant="outlined"
+                                            clearable
+                                            hide-details
+                                            density="compact"
+                                            append-inner-icon="mdi-magnify"
+                                            item-title="title"
+                                            item-value="hruid"
+                                            required
+                                            :filter="
                                             (item, query: string) =>
                                                 item.title.toLowerCase().includes(query.toLowerCase())
                                         "
-                                    ></v-combobox>
-                                </v-card-text>
-                            </using-query-result>
-
-                            <v-card-text
-                                v-if="!isEditing"
-                                class="description"
-                            >
-                                {{ assignmentResponse.data.assignment.description }}
-                            </v-card-text>
-                            <v-card-text v-else>
-                                <v-textarea
-                                    v-model="description"
-                                    :label="t('description')"
-                                    variant="outlined"
-                                    density="compact"
-                                    auto-grow
-                                    rows="3"
-                                    :rules="descriptionRules"
-                                ></v-textarea>
-                            </v-card-text>
-
-
-                            <v-dialog
-                                v-model="dialog"
-                                max-width="50%"
-                            >
-                                <v-card>
-                                    <v-card-title class="headline">{{ t("members") }}</v-card-title>
-                                    <v-card-text>
-                                        <v-list>
-                                            <v-list-item
-                                                v-for="(member, index) in selectedGroup.members"
-                                                :key="index"
-                                            >
-                                                <v-list-item-content>
-                                                    <v-list-item-title
-                                                    >{{ member.firstName + " " + member.lastName }}
-                                                    </v-list-item-title>
-                                                </v-list-item-content>
-                                            </v-list-item>
-                                        </v-list>
+                                        ></v-combobox>
                                     </v-card-text>
-                                    <v-card-actions>
-                                        <v-btn
-                                            color="primary"
-                                            @click="dialog = false"
-                                        >Close
-                                        </v-btn
+                                </using-query-result>
+
+                                <v-card-text
+                                    v-if="!isEditing"
+                                    class="description"
+                                >
+                                    {{ assignmentResponse.data.assignment.description }}
+                                </v-card-text>
+                                <v-card-text v-else>
+                                    <v-textarea
+                                        v-model="description"
+                                        :label="t('description')"
+                                        variant="outlined"
+                                        density="compact"
+                                        auto-grow
+                                        rows="3"
+                                        :rules="descriptionRules"
+                                    ></v-textarea>
+                                </v-card-text>
+                            </v-card>
+                        </v-form>
+
+                        <!-- A pop up to show group members -->
+                        <v-dialog
+                            v-model="dialog"
+                            max-width="50%"
+                        >
+                            <v-card>
+                                <v-card-title class="headline">{{ t("members") }}</v-card-title>
+                                <v-card-text>
+                                    <v-list>
+                                        <v-list-item
+                                            v-for="(member, index) in selectedGroup.members"
+                                            :key="index"
                                         >
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
-                        </v-card>
-                    </v-col>
-                    <v-col
-                        cols="12"
-                        sm="6"
-                        md="6"
-                        class="responsive-col"
-                    >
-                        <v-table class="table">
-                            <thead>
-                            <tr>
-                                <th class="header">{{ t("group") }}</th>
-                                <th class="header">{{ t("progress") }}</th>
-                                <th class="header">{{ t("submission") }}</th>
-                                <th class="header">
-                                    <v-icon>mdi-pencil</v-icon>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr
-                                v-for="g in allGroups"
-                                :key="g.originalGroupNo"
-                            >
-                                <td>
+                                            <v-list-item-content>
+                                                <v-list-item-title
+                                                >{{ member.firstName + " " + member.lastName }}
+                                                </v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                    </v-list>
+                                </v-card-text>
+                                <v-card-actions>
                                     <v-btn
-                                        @click="openGroupDetails(g)"
-                                        variant="text"
+                                        color="primary"
+                                        @click="dialog = false"
+                                    >Close
+                                    </v-btn
                                     >
-                                        {{ g.name }}
-                                        <v-icon end>mdi-menu-right</v-icon>
-                                    </v-btn>
-                                </td>
-
-                                <td>
-                                    <GroupProgressRow
-                                        :group-number="g.originalGroupNo"
-                                        :learning-path="learningPath"
-                                        :language="lang"
-                                        :assignment-id="assignmentId"
-                                        :class-id="classId"
-                                    />
-                                </td>
-
-                                <td>
-                                    <GroupSubmissionStatus
-                                        :group="g"
-                                        :assignment-id="assignmentId"
-                                        :class-id="classId"
-                                        :language="lang"
-                                        :go-to-group-submission-link="goToGroupSubmissionLink"
-                                    />
-                                </td>
-
-                                <!-- Edit icon -->
-                                <td>
-                                    <v-btn
-                                        to="/user"
-                                        variant="text"
-                                    >
-                                        <v-icon color="red"> mdi-delete</v-icon>
-                                    </v-btn>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </v-table>
-
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
                     </v-col>
+
+                    <!-- The second column of the screen -->
+                    <template v-if="!editGroups">
+                        <v-col
+                            cols="12"
+                            sm="6"
+                            md="6"
+                            class="responsive-col"
+                        >
+                            <v-table class="table">
+                                <thead>
+                                <tr>
+                                    <th class="header">{{ t("group") }}</th>
+                                    <th class="header">{{ t("progress") }}</th>
+                                    <th class="header">{{ t("submission") }}</th>
+                                    <th class="header">
+                                        <v-btn
+                                            @click="editGroups = true"
+                                            variant="text"
+                                        >
+                                            <v-icon>mdi-pencil</v-icon>
+                                        </v-btn>
+
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr
+                                    v-for="g in allGroups"
+                                    :key="g.originalGroupNo"
+                                >
+                                    <td>
+                                        <v-btn
+                                            @click="openGroupDetails(g)"
+                                            variant="text"
+                                        >
+                                            {{ g.name }}
+                                            <v-icon end>mdi-menu-right</v-icon>
+                                        </v-btn>
+                                    </td>
+
+                                    <td>
+                                        <GroupProgressRow
+                                            :group-number="g.originalGroupNo"
+                                            :learning-path="learningPath"
+                                            :language="lang"
+                                            :assignment-id="assignmentId"
+                                            :class-id="classId"
+                                        />
+                                    </td>
+
+                                    <td>
+                                        <GroupSubmissionStatus
+                                            :group="g"
+                                            :assignment-id="assignmentId"
+                                            :class-id="classId"
+                                            :language="lang"
+                                            :go-to-group-submission-link="goToGroupSubmissionLink"
+                                        />
+                                    </td>
+
+                                    <!-- Edit icon -->
+                                    <td>
+                                        <v-btn
+                                            @click=""
+                                            variant="text"
+                                        >
+                                            <v-icon color="red">mdi-delete</v-icon>
+                                        </v-btn>
+
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </v-table>
+                        </v-col>
+                    </template>
+                    <template v-else>
+                        <GroupSelector
+                            :groups="allGroups"
+                            :class-id="classId"
+                            @groupsUpdated="handleUpdatedGroups"
+                        />
+                    </template>
                 </v-row>
             </v-container>
         </using-query-result>
