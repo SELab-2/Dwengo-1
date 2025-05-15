@@ -201,7 +201,7 @@
             <div class="d-flex flex-column h-100">
                 <v-list-item>
                     <template v-slot:title>
-                        <div class="learning-path-title">Discussions</div>
+                        <div class="title">Discussions</div>
                     </template>
                 </v-list-item>
                 <v-divider></v-divider>
@@ -248,7 +248,13 @@
 </template>
 
 <style scoped>
-
+    .title {
+        color: #0e6942;
+        text-transform: uppercase;
+        font-weight: bolder;
+        padding-top: 2%;
+        font-size: 36px;
+    }
     .learning-path-title {
         white-space: normal;
     }
