@@ -59,8 +59,7 @@ export async function getStudent(username: string): Promise<StudentDTO> {
     return mapToStudentDTO(user);
 }
 
-// TODO allowupdate parameter?
-export async function createStudent(userData: StudentDTO, _allowUpdate = false): Promise<StudentDTO> {
+export async function createStudent(userData: StudentDTO): Promise<StudentDTO> {
     const studentRepository = getStudentRepository();
 
     const newStudent = mapToStudent(userData);

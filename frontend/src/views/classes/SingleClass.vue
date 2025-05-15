@@ -126,8 +126,6 @@
                 usernameTeacher.value = "";
             },
             onError: (e) => {
-                console.log("error", e);
-                console.log(e.response.data.error);
                 showSnackbar(t("failed") + ": " + e.response.data.error || e.message, "error");
             },
         });

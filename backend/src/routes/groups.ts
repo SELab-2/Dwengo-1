@@ -26,13 +26,6 @@ router.delete('/:groupid', teachersOnly, onlyAllowIfHasAccessToAssignment, delet
 
 router.get('/:groupid/submissions', onlyAllowIfHasAccessToGroup, getGroupSubmissionsHandler);
 
-// The list of questions a group has made
-router.get('/:groupid/questions', onlyAllowIfHasAccessToGroup, (_req, res) => {
-    res.json({
-        questions: ['0'],
-    });
-});
-
-router.get('/:groupid/questions', getGroupQuestionsHandler);
+router.get('/:groupid/questions', onlyAllowIfHasAccessToGroup, getGroupQuestionsHandler);
 
 export default router;
