@@ -131,6 +131,7 @@
                     :key="answerIndex"
                     class="text-gray-600"
                 >
+                    <v-divider :thickness=2 />
                     <div
                         class="flex justify-between items-center mb-2"
                         style="
