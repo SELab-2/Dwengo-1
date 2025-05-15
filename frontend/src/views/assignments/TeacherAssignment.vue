@@ -49,15 +49,6 @@
         },
     ];
 
-    const descriptionRules = [
-        (value: string): string | boolean => {
-            if (!value || value.trim() === "") {
-                return "Description cannot be empty.";
-            }
-            return true;
-        },
-    ];
-
     // Get all the groups withing the assignment
     const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
     groups.value = groupsQueryResult.data.value?.groups;

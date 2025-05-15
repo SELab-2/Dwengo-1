@@ -1,75 +1,93 @@
 <script setup lang="ts">
-    import { ref, computed, type Ref } from "vue";
-    import auth from "@/services/auth/auth-service.ts";
-    import { useI18n } from "vue-i18n";
-    import { useAssignmentQuery } from "@/queries/assignments.ts";
-    import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import type { AssignmentResponse } from "@/controllers/assignments.ts";
-    import { asyncComputed } from "@vueuse/core";
-    import { useStudentsByUsernamesQuery } from "@/queries/students.ts";
-    import { useGroupsQuery } from "@/queries/groups.ts";
-    import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
-    import type { Language } from "@/data-objects/language.ts";
-    import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
+import {ref, computed, watchEffect} from "vue";
+import auth from "@/services/auth/auth-service.ts";
+import {useI18n} from "vue-i18n";
+import {useAssignmentQuery} from "@/queries/assignments.ts";
+import UsingQueryResult from "@/components/UsingQueryResult.vue";
+import type {AssignmentResponse} from "@/controllers/assignments.ts";
+import {asyncComputed} from "@vueuse/core";
+import {useStudentsByUsernamesQuery} from "@/queries/students.ts";
+import {useGroupsQuery} from "@/queries/groups.ts";
+import {useGetLearningPathQuery} from "@/queries/learning-paths.ts";
+import type {Language} from "@/data-objects/language.ts";
+import {calculateProgress} from "@/utils/assignment-utils.ts";
 
-    const props = defineProps<{
-        classId: string;
-        assignmentId: number;
-        useGroupsWithProgress: (
-            groups: Ref<GroupDTO[]>,
-            hruid: Ref<string>,
-            language: Ref<Language>,
-        ) => { groupProgressMap: Map<number, number> };
-    }>();
+const props = defineProps<{
+    classId: string;
+    assignmentId: number;
+}>();
 
-    const { t, locale } = useI18n();
-    const language = ref<Language>(locale.value as Language);
-    const learningPath = ref();
-    // Get the user's username/id
-    const username = asyncComputed(async () => {
-        const user = await auth.loadUser();
-        return user?.profile?.preferred_username ?? undefined;
-    });
+const {t} = useI18n();
+const lang = ref();
+const learningPath = ref();
+// Get the user's username/id
+const username = asyncComputed(async () => {
+    const user = await auth.loadUser();
+    return user?.profile?.preferred_username ?? undefined;
+});
 
-    const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
+const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
+learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
+
+
+const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
+const group = computed(() => {
+    const groups = groupsQueryResult.data.value?.groups;
+
+    if (!groups) return undefined;
+
+    // Sort by original groupNumber
+    const sortedGroups = [...groups].sort((a, b) => a.groupNumber - b.groupNumber);
+
+    return sortedGroups
+        .map((group, index) => ({
+            ...group,
+            groupNo: index + 1, // Renumbered index
+        }))
+        .find((group) => group.members?.some((m) => m.username === username.value));
+});
+
+
+watchEffect(() => {
     learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
+    lang.value = assignmentQueryResult.data.value?.assignment?.language as Language;
+});
 
-    const submitted = ref(false); //TODO: update by fetching submissions and check if group submitted
+const learningPathParams = computed(() => {
+    if (!group.value || !learningPath.value || !lang.value) return undefined;
 
-    const lpQueryResult = useGetLearningPathQuery(
-        computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
-        computed(() => language.value),
-    );
+    return {
+        forGroup: group.value.groupNumber,
+        assignmentNo: props.assignmentId,
+        classId: props.classId,
+    };
+});
 
-    const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
-    const group = computed(() =>
-        groupsQueryResult?.data.value?.groups.find((group) =>
-            group.members?.some((m) => m.username === username.value),
-        ),
-    );
-
-    const _groupArray = computed(() => (group.value ? [group.value] : []));
-    const progressValue = ref(0);
-    /* Crashes right now cause api data has inexistent hruid TODO: uncomment later and use it in progress bar
-Const {groupProgressMap} = props.useGroupsWithProgress(
-groupArray,
-learningPath,
-language
+const lpQueryResult = useGetLearningPathQuery(
+    () => learningPath.value,
+    () => lang.value,
+    () => learningPathParams.value
 );
-*/
 
-    // Assuming group.value.members is a list of usernames TODO: case when it's StudentDTO's
-    const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as string[]);
+
+const progressColor = computed(() => {
+    const progress = calculateProgress(lpQueryResult.data.value);
+    if (progress >= 100) return "success";
+    if (progress >= 50) return "warning";
+    return "error";
+});
+
+const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as string[] ?? undefined);
 </script>
 
 <template>
     <div class="container">
         <using-query-result
             :query-result="assignmentQueryResult"
-            v-slot="{ data }: { data: AssignmentResponse }"
+            v-slot="assignmentResponse : { data: AssignmentResponse }"
         >
             <v-card
-                v-if="data"
+                v-if="assignmentResponse"
                 class="assignment-card"
             >
                 <div class="top-buttons">
@@ -81,17 +99,11 @@ language
                     >
                         <v-icon>mdi-arrow-left</v-icon>
                     </v-btn>
-
-                    <v-chip
-                        v-if="submitted"
-                        class="ma-2 top-right-btn"
-                        label
-                        color="success"
-                    >
-                        {{ t("submitted") }}
-                    </v-chip>
                 </div>
-                <v-card-title class="text-h4 assignmentTopTitle">{{ data.assignment.title }}</v-card-title>
+                <v-card-title class="text-h4 assignmentTopTitle">{{
+                        assignmentResponse.data.assignment.title
+                    }}
+                </v-card-title>
 
                 <v-card-subtitle class="subtitle-section">
                     <using-query-result
@@ -100,30 +112,31 @@ language
                     >
                         <v-btn
                             v-if="lpData"
-                            :to="`/learningPath/${lpData.hruid}/${language}/${lpData.startNode.learningobjectHruid}?forGroup=${group?.groupNumber}&assignmentNo=${assignmentId}&classId=${classId}`"
+                            :to="group ? `/learningPath/${lpData.hruid}/${assignmentResponse.data.assignment?.language}/${lpData.startNode.learningobjectHruid}?forGroup=${0}&assignmentNo=${assignmentId}&classId=${classId}` : undefined"
+                            :disabled="!group"
                             variant="tonal"
                             color="primary"
                         >
                             {{ t("learning-path") }}
                         </v-btn>
+
                     </using-query-result>
                 </v-card-subtitle>
 
                 <v-card-text class="description">
-                    {{ data.assignment.description }}
+                    {{ assignmentResponse.data.assignment.description }}
                 </v-card-text>
                 <v-card-text>
-                    <v-row
-                        align="center"
-                        no-gutters
-                    >
-                        <v-col cols="auto">
-                            <span class="progress-label">{{ t("progress") + ": " }}</span>
-                        </v-col>
-                        <v-col>
+                    <v-card-text>
+                        <h3 class="mb-2">{{ t("progress") }}</h3>
+                        <using-query-result
+                            :query-result="lpQueryResult"
+                            v-slot="{ data: learningPData }"
+                        >
                             <v-progress-linear
-                                :model-value="progressValue"
-                                color="primary"
+                                v-if="group"
+                                :model-value="calculateProgress(learningPData)"
+                                :color="progressColor"
                                 height="20"
                                 class="progress-bar"
                             >
@@ -131,37 +144,40 @@ language
                                     <strong>{{ Math.ceil(value) }}%</strong>
                                 </template>
                             </v-progress-linear>
-                        </v-col>
-                    </v-row>
+                        </using-query-result>
+                    </v-card-text>
                 </v-card-text>
 
                 <v-card-text class="group-section">
                     <h3>{{ t("group") }}</h3>
-                    <div v-if="studentQueries">
+
+                    <div v-if="group && studentQueries">
                         <ul>
                             <li
-                                v-for="student in group?.members"
+                                v-for="student in group.members"
                                 :key="student.username"
                             >
                                 {{ student.firstName + " " + student.lastName }}
                             </li>
                         </ul>
                     </div>
+
+                    <div v-else>
+                        <v-alert type="info" variant="text">
+                            {{ t("not-in-group-message") }}
+                        </v-alert>
+                    </div>
                 </v-card-text>
+
             </v-card>
         </using-query-result>
     </div>
 </template>
 
 <style scoped>
-    @import "@/assets/assignment.css";
+@import "@/assets/assignment.css";
 
-    .progress-label {
-        font-weight: bold;
-        margin-right: 5px;
-    }
-
-    .progress-bar {
-        width: 40%;
-    }
+.progress-bar {
+    width: 40%;
+}
 </style>

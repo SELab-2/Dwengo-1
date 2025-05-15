@@ -121,5 +121,6 @@
     "invite": "invite",
     "assignmentIndicator": "ASSIGNMENT",
     "searchAllLearningPathsTitle": "Search all learning paths",
-    "searchAllLearningPathsDescription": "You didn't find what you were looking for? Click here to search our whole database of available learning paths."
+    "searchAllLearningPathsDescription": "You didn't find what you were looking for? Click here to search our whole database of available learning paths.",
+    "not-in-group-message": "You are not part of a group yet"
 }
