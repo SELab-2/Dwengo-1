@@ -1,111 +1,140 @@
 <script setup lang="ts">
-    import { computed, type Ref, ref } from "vue";
-    import { useI18n } from "vue-i18n";
-    import { useAssignmentQuery, useDeleteAssignmentMutation } from "@/queries/assignments.ts";
-    import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import { useGroupsQuery } from "@/queries/groups.ts";
-    import { useGetAllLearningPaths, useGetLearningPathQuery } from "@/queries/learning-paths.ts";
-    import type { Language } from "@/data-objects/language.ts";
-    import type { AssignmentResponse } from "@/controllers/assignments.ts";
-    import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
-    import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
-    import type { LearningPath } from "@/data-objects/learning-paths/learning-path";
+import {computed, type Ref, ref, watch, watchEffect} from "vue";
+import {useI18n} from "vue-i18n";
+import {
+    useAssignmentQuery,
+    useDeleteAssignmentMutation,
+    useUpdateAssignmentMutation
+} from "@/queries/assignments.ts";
+import UsingQueryResult from "@/components/UsingQueryResult.vue";
+import {useGroupsQuery} from "@/queries/groups.ts";
+import {useGetAllLearningPaths, useGetLearningPathQuery} from "@/queries/learning-paths.ts";
+import type {Language} from "@/data-objects/language.ts";
+import type {AssignmentResponse} from "@/controllers/assignments.ts";
+import type {GroupDTO, GroupDTOId} from "@dwengo-1/common/interfaces/group";
+import type {LearningPath} from "@/data-objects/learning-paths/learning-path";
+import {descriptionRules, learningPathRules} from "@/utils/assignment-rules.ts";
+import GroupSubmissionStatus from "@/components/GroupSubmissionStatus.vue"
+import GroupProgressRow from "@/components/GroupProgressRow.vue"
+import type {AssignmentDTO} from "@dwengo-1/common/dist/interfaces/assignment.ts";
+import router from "@/router";
 
-    const props = defineProps<{
-        classId: string;
-        assignmentId: number;
-        useGroupsWithProgress: (
-            groups: Ref<GroupDTO[]>,
-            hruid: Ref<string>,
-            language: Ref<Language>,
-        ) => { groupProgressMap: Map<number, number> };
-    }>();
+const props = defineProps<{
+    classId: string;
+    assignmentId: number;
+    useGroupsWithProgress: (
+        groups: Ref<GroupDTO[]>,
+        hruid: Ref<string>,
+        language: Ref<Language>,
+    ) => { groupProgressMap: Map<number, number> };
+}>();
 
-    const isEditing = ref(false);
+const isEditing = ref(false);
 
-    const { t, locale } = useI18n();
-    const language = computed(() => locale.value);
-    const groups = ref();
-    const learningPath = ref();
-    const editingLearningPath = ref(learningPath);
-    const description = ref("");
+const {t} = useI18n();
+const lang = ref();
+const groups = ref<GroupDTO[] | GroupDTOId[]>([]);
+const learningPath = ref();
 
-    const assignmentQueryResult = useAssignmentQuery(props.classId, props.assignmentId);
-    learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
-    const learningPathsQueryResults = useGetAllLearningPaths(language);
+const editingLearningPath = ref(learningPath);
+const description = ref("");
 
-    // Get learning path object
-    const lpQueryResult = useGetLearningPathQuery(
-        computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
-        computed(() => language.value as Language),
-    );
 
-    const learningPathRules = [
-        (value: { hruid: string; title: string }): string | boolean => {
-            if (value && value.hruid) {
-                return true; // Valid if hruid is present
-            }
-            return "You must select a learning path.";
-        },
-    ];
-
-    // Get all the groups withing the assignment
-    const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
-    groups.value = groupsQueryResult.data.value?.groups;
-
-    /* Crashes right now cause api data has inexistent hruid TODO: uncomment later and use it in progress bar
-Const {groupProgressMap} = props.useGroupsWithProgress(
-    groups,
-    learningPath,
-    language
+const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
+// Get learning path object
+const lpQueryResult = useGetLearningPathQuery(
+    computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
+    computed(() => assignmentQueryResult.data.value?.assignment?.language as Language),
 );
-*/
 
-    const allGroups = computed(() => {
-        const groups = groupsQueryResult.data.value?.groups;
-        if (!groups) return [];
+// Get all the groups withing the assignment
+const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
+groups.value = groupsQueryResult.data.value?.groups ?? [];
 
-        return groups.map((group) => ({
-            name: `${t("group")} ${group.groupNumber}`,
-            progress: 0, //GroupProgressMap[group.groupNumber],
-            members: group.members,
-            submitted: false, //TODO: fetch from submission
-        }));
-    });
+watchEffect(() => {
+    learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
+    lang.value = assignmentQueryResult.data.value?.assignment?.language as Language;
+});
 
-    const dialog = ref(false);
-    const selectedGroup = ref({});
+const allGroups = computed(() => {
+    const groups = groupsQueryResult.data.value?.groups;
 
-    function openGroupDetails(group): void {
-        selectedGroup.value = group;
-        dialog.value = true;
-    }
+    if (!groups) return [];
 
-    const headers = computed(() => [
-        { title: t("group"), align: "start", key: "name" },
-        { title: t("progress"), align: "center", key: "progress" },
-        { title: t("submission"), align: "center", key: "submission" },
-    ]);
+    // Sort by original groupNumber
+    const sortedGroups = [...groups].sort((a, b) => a.groupNumber - b.groupNumber);
 
-    const { mutate } = useDeleteAssignmentMutation();
+    // Assign new sequential numbers starting from 1
+    return sortedGroups.map((group, index) => ({
+        groupNo: index + 1, // New group number that will be used
+        name: `${t("group")} ${index + 1}`,
+        members: group.members,
+        originalGroupNo: group.groupNumber, // Keep original number if needed
+    }));
+});
 
-    async function deleteAssignment(num: number, clsId: string): Promise<void> {
-        mutate(
-            { cid: clsId, an: num },
-            {
-                onSuccess: () => {
-                    window.location.href = "/user/assignment";
-                },
+const dialog = ref(false);
+const selectedGroup = ref({});
+
+function openGroupDetails(group): void {
+    selectedGroup.value = group;
+    dialog.value = true;
+}
+
+async function deleteAssignment(num: number, clsId: string): Promise<void> {
+    const {mutate} = useDeleteAssignmentMutation();
+    mutate(
+        {cid: clsId, an: num},
+        {
+            onSuccess: () => {
+                window.location.href = "/user/assignment";
             },
-        );
-    }
+        },
+    );
+}
 
-    function saveChanges() {
-        //TODO
-        const new_learningpath = editingLearningPath.value;
-        const new_description = description.value;
-        isEditing.value = false;
+function goToLearningPathLink(): string | undefined {
+    const assignment = assignmentQueryResult.data.value?.assignment;
+    const lp = lpQueryResult.data.value;
+
+    if (!assignment || !lp) return undefined;
+
+    return `/learningPath/${lp.hruid}/${assignment.language}/${lp.startNode.learningobjectHruid}?assignmentNo=${props.assignmentId}&classId=${props.classId}`;
+}
+
+function goToGroupSubmissionLink(groupNo: number): string | undefined {
+    const lp = lpQueryResult.data.value;
+    if (!lp) return undefined;
+
+    return `/learningPath/${lp.hruid}/${lp.language}/${lp.startNode.learningobjectHruid}?forGroup=${groupNo}&assignmentNo=${props.assignmentId}&classId=${props.classId}`;
+}
+
+const learningPathsQueryResults = useGetAllLearningPaths(lang);
+
+const { mutate, data, isSuccess } = useUpdateAssignmentMutation();
+
+watch([isSuccess, data], ([success, newData]) => {
+    if (success && newData?.assignment) {
+        window.location.reload();
     }
+});
+
+async function saveChanges(): Promise<void> {
+    isEditing.value = false;
+    //const { valid } = await form.value.validate();
+    //if (!valid) return;
+
+    const lp = learningPath.value;
+
+    const assignmentDTO: AssignmentDTO = {
+        id: assignmentQueryResult.data.value?.assignment.id,
+        description: description.value,
+        learningPath: lp || "",
+        deadline: new Date(),
+    };
+
+    mutate({ cid: assignmentQueryResult.data.value?.assignment.within, an: assignmentQueryResult.data.value?.assignment.id, data: assignmentDTO });
+}
 </script>
 
 <template>
@@ -162,7 +191,8 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
                                             variant="text"
                                             class="top-right-btn"
                                             @click="() => {isEditing = false; editingLearningPath=learningPath}"
-                                            >{{ t("cancel") }}</v-btn
+                                        >{{ t("cancel") }}
+                                        </v-btn
                                         >
 
                                         <v-btn
@@ -193,8 +223,9 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
                             </div>
 
                             <v-card-title class="text-h4 assignmentTopTitle">{{
-                                assignmentResponse.data.assignment.title
-                            }}</v-card-title>
+                                    assignmentResponse.data.assignment.title
+                                }}
+                            </v-card-title>
                             <v-card-subtitle
                                 v-if="!isEditing"
                                 class="subtitle-section"
@@ -205,7 +236,7 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
                                 >
                                     <v-btn
                                         v-if="lpData"
-                                        :to="`/learningPath/${lpData.hruid}/${language}/${lpData.startNode.learningobjectHruid}?assignmentNo=${assignmentId}&classId=${classId}`"
+                                        :to="goToLearningPathLink()"
                                         variant="tonal"
                                         color="primary"
                                     >
@@ -258,50 +289,6 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
                                 ></v-textarea>
                             </v-card-text>
 
-                            <v-card-text class="group-section">
-                                <h3>{{ t("groups") }}</h3>
-                                <div class="table-scroll">
-                                    <v-data-table
-                                        :headers="headers"
-                                        :items="allGroups"
-                                        item-key="id"
-                                        class="elevation-1"
-                                    >
-                                        <template #[`item.name`]="{ item }">
-                                            <v-btn
-                                                @click="openGroupDetails(item)"
-                                                variant="text"
-                                                color="primary"
-                                            >
-                                                {{ item.name }}
-                                            </v-btn>
-                                        </template>
-
-                                        <template #[`item.progress`]="{ item }">
-                                            <v-progress-linear
-                                                :model-value="item.progress"
-                                                color="blue-grey"
-                                                height="25"
-                                            >
-                                                <template v-slot:default="{ value }">
-                                                    <strong>{{ Math.ceil(value) }}%</strong>
-                                                </template>
-                                            </v-progress-linear>
-                                        </template>
-
-                                        <template #[`item.submission`]="{ item }">
-                                            <v-btn
-                                                :to="item.submitted ? `${props.assignmentId}/submissions/` : undefined"
-                                                :color="item.submitted ? 'green' : 'red'"
-                                                variant="text"
-                                                class="text-capitalize"
-                                            >
-                                                {{ item.submitted ? t("see-submission") : t("no-submission") }}
-                                            </v-btn>
-                                        </template>
-                                    </v-data-table>
-                                </div>
-                            </v-card-text>
 
                             <v-dialog
                                 v-model="dialog"
@@ -317,7 +304,7 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
                                             >
                                                 <v-list-item-content>
                                                     <v-list-item-title
-                                                        >{{ member.firstName + " " + member.lastName }}
+                                                    >{{ member.firstName + " " + member.lastName }}
                                                     </v-list-item-title>
                                                 </v-list-item-content>
                                             </v-list-item>
@@ -327,22 +314,12 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
                                         <v-btn
                                             color="primary"
                                             @click="dialog = false"
-                                            >Close</v-btn
+                                        >Close
+                                        </v-btn
                                         >
                                     </v-card-actions>
                                 </v-card>
                             </v-dialog>
-                            <!--
-                        <v-card-actions class="justify-end">
-                            <v-btn
-                                size="large"
-                                color="success"
-                                variant="text"
-                            >
-                                {{ t("view-submissions") }}
-                            </v-btn>
-                        </v-card-actions>
-                        -->
                         </v-card>
                     </v-col>
                     <v-col
@@ -353,61 +330,63 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
                     >
                         <v-table class="table">
                             <thead>
-                                <tr>
-                                    <th class="header">{{ t("group") }}</th>
-                                    <th class="header">
-                                        {{ t("progress") }}
-                                    </th>
-                                    <th class="header">{{ t("Members") }}</th>
-                                    <th class="header">
-                                        <v-btn
-                                            :to="`/assignment/${assignmentResponse.data.assignment.within}/${assignmentResponse.data.assignment.id}`"
-                                            variant="text"
-                                        >
-                                            <v-icon> mdi-pencil </v-icon>
-                                        </v-btn>
-                                    </th>
-                                </tr>
+                            <tr>
+                                <th class="header">{{ t("group") }}</th>
+                                <th class="header">{{ t("progress") }}</th>
+                                <th class="header">{{ t("submission") }}</th>
+                                <th class="header">
+                                    <v-icon>mdi-pencil</v-icon>
+                                </th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr
-                                    v-for="g in assignmentResponse.data.assignment.groups as GroupDTO[]"
-                                    :key="g.groupNumber"
-                                >
-                                    <td>
-                                        <v-btn
-                                            :to="`/assignment/${assignmentResponse.data.assignment.within}/${assignmentResponse.data.assignment.id}`"
-                                            variant="text"
-                                        >
-                                            {{ g.groupNumber }}
-                                            <v-icon end> mdi-menu-right </v-icon>
-                                        </v-btn>
-                                    </td>
-                                    <td>
-                                        <v-progress-linear
-                                            :model-value="0"
-                                            color="blue-grey"
-                                            height="25"
-                                        >
-                                            <template v-slot:default="{ value }">
-                                                <strong>{{ Math.ceil(value) }}%</strong>
-                                            </template>
-                                        </v-progress-linear>
-                                    </td>
-                                    <td>
-                                        {{ (g.members! as StudentDTO[]).map((member) => member.username).join(", ") }}
-                                    </td>
-                                    <td>
-                                        <v-btn
-                                            :to="`/assignment/${assignmentResponse.data.assignment.within}/${assignmentResponse.data.assignment.id}`"
-                                            variant="text"
-                                        >
-                                            <v-icon color="red"> mdi-delete </v-icon>
-                                        </v-btn>
-                                    </td>
-                                </tr>
+                            <tr
+                                v-for="g in allGroups"
+                                :key="g.originalGroupNo"
+                            >
+                                <td>
+                                    <v-btn
+                                        @click="openGroupDetails(g)"
+                                        variant="text"
+                                    >
+                                        {{ g.name }}
+                                        <v-icon end>mdi-menu-right</v-icon>
+                                    </v-btn>
+                                </td>
+
+                                <td>
+                                    <GroupProgressRow
+                                        :group-number="g.originalGroupNo"
+                                        :learning-path="learningPath"
+                                        :language="lang"
+                                        :assignment-id="assignmentId"
+                                        :class-id="classId"
+                                    />
+                                </td>
+
+                                <td>
+                                    <GroupSubmissionStatus
+                                        :group="g"
+                                        :assignment-id="assignmentId"
+                                        :class-id="classId"
+                                        :language="lang"
+                                        :go-to-group-submission-link="goToGroupSubmissionLink"
+                                    />
+                                </td>
+
+                                <!-- Edit icon -->
+                                <td>
+                                    <v-btn
+                                        to="/user"
+                                        variant="text"
+                                    >
+                                        <v-icon color="red"> mdi-delete</v-icon>
+                                    </v-btn>
+                                </td>
+                            </tr>
                             </tbody>
                         </v-table>
+
                     </v-col>
                 </v-row>
             </v-container>
@@ -416,112 +395,112 @@ Const {groupProgressMap} = props.useGroupsWithProgress(
 </template>
 
 <style scoped>
-    @import "@/assets/assignment.css";
+@import "@/assets/assignment.css";
 
-    .table-scroll {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
+.table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
 
-    .header {
-        font-weight: bold !important;
-        background-color: #0e6942;
-        color: white;
-        padding: 10px;
-    }
+.header {
+    font-weight: bold !important;
+    background-color: #0e6942;
+    color: white;
+    padding: 10px;
+}
 
-    table thead th:first-child {
-        border-top-left-radius: 10px;
-    }
+table thead th:first-child {
+    border-top-left-radius: 10px;
+}
 
-    .table thead th:last-child {
-        border-top-right-radius: 10px;
-    }
+.table thead th:last-child {
+    border-top-right-radius: 10px;
+}
 
-    .table tbody tr:nth-child(odd) {
-        background-color: white;
-    }
+.table tbody tr:nth-child(odd) {
+    background-color: white;
+}
 
-    .table tbody tr:nth-child(even) {
-        background-color: #f6faf2;
-    }
+.table tbody tr:nth-child(even) {
+    background-color: #f6faf2;
+}
 
-    td,
-    th {
-        border-bottom: 1px solid #0e6942;
-        border-top: 1px solid #0e6942;
-    }
+td,
+th {
+    border-bottom: 1px solid #0e6942;
+    border-top: 1px solid #0e6942;
+}
 
-    .table {
-        width: 90%;
-        padding-top: 10px;
-        border-collapse: collapse;
-    }
+.table {
+    width: 90%;
+    padding-top: 10px;
+    border-collapse: collapse;
+}
 
+h1 {
+    color: #0e6942;
+    text-transform: uppercase;
+    font-weight: bolder;
+    padding-top: 2%;
+    font-size: 50px;
+}
+
+h2 {
+    color: #0e6942;
+    font-size: 30px;
+}
+
+.join {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 50px;
+}
+
+.link {
+    color: #0b75bb;
+    text-decoration: underline;
+}
+
+main {
+    margin-left: 30px;
+}
+
+@media screen and (max-width: 850px) {
     h1 {
-        color: #0e6942;
-        text-transform: uppercase;
-        font-weight: bolder;
-        padding-top: 2%;
-        font-size: 50px;
-    }
-
-    h2 {
-        color: #0e6942;
-        font-size: 30px;
+        text-align: center;
+        padding-left: 0;
     }
 
     .join {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        margin-top: 50px;
+        text-align: center;
+        align-items: center;
+        margin-left: 0;
     }
 
-    .link {
-        color: #0b75bb;
-        text-decoration: underline;
+    .sheet {
+        width: 100%;
     }
 
     main {
-        margin-left: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 5px;
     }
 
-    @media screen and (max-width: 850px) {
-        h1 {
-            text-align: center;
-            padding-left: 0;
-        }
-
-        .join {
-            text-align: center;
-            align-items: center;
-            margin-left: 0;
-        }
-
-        .sheet {
-            width: 100%;
-        }
-
-        main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 5px;
-        }
-
-        .custom-breakpoint {
-            flex-direction: column !important;
-        }
-
-        .table {
-            width: 100%;
-        }
-
-        .responsive-col {
-            max-width: 100% !important;
-            flex-basis: 100% !important;
-        }
+    .custom-breakpoint {
+        flex-direction: column !important;
     }
+
+    .table {
+        width: 100%;
+    }
+
+    .responsive-col {
+        max-width: 100% !important;
+        flex-basis: 100% !important;
+    }
+}
 </style>
