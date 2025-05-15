@@ -127,5 +127,6 @@
     "question-input-placeholder": "vraag...",
     "answer-input-placeholder": "antwoord...",
     "answers-toggle-hide": "Verberg antwoorden",
-    "answers-toggle-show": "Toon antwoorden"
+    "answers-toggle-show": "Toon antwoorden",
+    "no-discussion-tip": "Kies een leerobject om zijn vragen te bekijken"
 }

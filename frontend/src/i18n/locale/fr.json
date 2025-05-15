@@ -127,5 +127,6 @@
     "question-input-placeholder": "question...",
     "answer-input-placeholder": "réponse...",
     "answers-toggle-hide": "Masquer réponses",
-    "answers-toggle-show": "Afficher réponse"
+    "answers-toggle-show": "Afficher réponse",
+    "no-discussion-tip": "Sélectionnez un objet d'apprentissage pour afficher les questions qui s'y rapportent"
 }

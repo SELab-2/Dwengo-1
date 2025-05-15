@@ -127,5 +127,6 @@
     "question-input-placeholder": "Frage...",
     "answer-input-placeholder": "Antwort...",
     "answers-toggle-hide": "Antworten verstecken",
-    "answers-toggle-show": "Antworten anzeigen"
+    "answers-toggle-show": "Antworten anzeigen",
+    "no-discussion-tip": "Wählen Sie ein Lernobjekt aus, um dessen Fragen anzuzeigen"
 }

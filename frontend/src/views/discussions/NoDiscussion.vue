@@ -4,44 +4,66 @@
     import { useGetAllLearningPaths } from "@/queries/learning-paths.ts";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import DiscussionSideBarElement from "@/components/DiscussionSideBarElement.vue";
+    import { ref } from "vue";
 
     const { t, locale } = useI18n();
 
     const allLearningPathsResult = useGetAllLearningPaths(locale.value)
 
+    const navigationDrawerShown = ref(true);
+
 </script>
 
 <template>
-    <div class="d-flex flex-column h-100">
-        <v-list-item>
-            <template v-slot:title>
-                <div class="title">{{t("discussions")}}</div>
-            </template>
-        </v-list-item>
-        <v-divider></v-divider>
-        <div>
-            <using-query-result
-                :query-result="allLearningPathsResult"
-                v-slot="learningPaths: {data: LearningPath[]}">
-                <DiscussionSideBarElement
-                    v-for="learningPath in learningPaths.data"
-                    :path="learningPath"
-                    :activeObjectId="'' as string"
-                    :key="learningPath.hruid"
-                    >
-                </DiscussionSideBarElement>
-            </using-query-result>
+    <v-navigation-drawer
+        v-model="navigationDrawerShown"
+        :width="350"
+        app
+    >
+        <div class="d-flex flex-column h-100">
+            <v-list-item>
+                <template v-slot:title>
+                    <div class="title">{{t("discussions")}}</div>
+                </template>
+            </v-list-item>
+            <v-divider></v-divider>
+            <div>
+                <using-query-result
+                    :query-result="allLearningPathsResult"
+                    v-slot="learningPaths: {data: LearningPath[]}">
+                    <DiscussionSideBarElement
+                        v-for="learningPath in learningPaths.data"
+                        :path="learningPath"
+                        :activeObjectId="'' as string"
+                        :key="learningPath.hruid"
+                        >
+                    </DiscussionSideBarElement>
+                </using-query-result>
+            </div>
         </div>
+    </v-navigation-drawer>
+    <div>
+        <p class="no-discussion-tip">{{t("no-discussion-tip")}}</p>
     </div>
 </template>
 
 <style scoped>
+    .no-discussion-tip {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; 
+        text-align: center;
+        font-size: 18px;
+        color: #666;
+        padding: 0 20px;
+    }
     .title {
         color: #0e6942;
         text-transform: uppercase;
         font-weight: bolder;
         padding-top: 2%;
-        font-size: 50px;
+        font-size: 36px;
     }
     .learning-path-title {
         white-space: normal;

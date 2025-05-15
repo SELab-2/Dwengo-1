@@ -185,7 +185,7 @@
             </v-list-item>
 
             <v-list-item
-                to="/user/discussion"
+                to="/discussion"
                 link
             >
                 <v-list-item-title class="menu_item">{{ t("discussions") }}</v-list-item-title>
