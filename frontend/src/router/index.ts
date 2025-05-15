@@ -15,6 +15,7 @@ import SingleTheme from "@/views/SingleTheme.vue";
 import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
 import authService from "@/services/auth/auth-service";
 import DiscussionForward from "@/views/discussions/DiscussionForward.vue";
+import NoDiscussion from "@/views/discussions/NoDiscussion.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -98,6 +99,12 @@ const router = createRouter({
             path: "/discussion/create",
             name: "CreateDiscussion",
             component: CreateDiscussion,
+            meta: { requiresAuth: true },
+        },
+        {
+            path: "/discussion",
+            name: "Discussions",
+            component: NoDiscussion,
             meta: { requiresAuth: true },
         },
         {
