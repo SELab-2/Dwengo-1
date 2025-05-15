@@ -1,6 +1,5 @@
 import { BaseController } from "@/controllers/base-controller.ts";
 import type { JoinRequestResponse, JoinRequestsResponse, StudentsResponse } from "@/controllers/students.ts";
-import type { QuestionsResponse } from "@/controllers/questions.ts";
 import type { ClassesResponse } from "@/controllers/classes.ts";
 import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
 
@@ -38,10 +37,6 @@ export class TeacherController extends BaseController {
 
     async getStudents(username: string, full = false): Promise<StudentsResponse> {
         return this.get<StudentsResponse>(`/${username}/students`, { full });
-    }
-
-    async getQuestions(username: string, full = false): Promise<QuestionsResponse> {
-        return this.get<QuestionsResponse>(`/${username}/questions`, { full });
     }
 
     async getStudentJoinRequests(username: string, classId: string): Promise<JoinRequestsResponse> {

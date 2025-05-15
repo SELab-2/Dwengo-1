@@ -4,7 +4,7 @@ import { getLearningPathRepository } from '../../data/repositories.js';
 import learningObjectService from '../learning-objects/learning-object-service.js';
 import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
-import { getLastSubmissionForGroup, isTransitionPossible } from './learning-path-personalization-util.js';
+import { getLastSubmissionForGroup, idFromLearningPathNode, isTransitionPossible } from './learning-path-personalization-util.js';
 import {
     FilteredLearningObject,
     LearningObjectNode,
@@ -95,7 +95,7 @@ async function convertNode(
     personalizedFor: Group | undefined,
     nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>
 ): Promise<LearningObjectNode> {
-    const lastSubmission = personalizedFor ? await getLastSubmissionForGroup(node, personalizedFor) : null;
+    const lastSubmission = personalizedFor ? await getLastSubmissionForGroup(idFromLearningPathNode(node), personalizedFor) : null;
     const transitions = node.transitions
         .filter(
             (trans) =>
