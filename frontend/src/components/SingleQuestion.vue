@@ -23,7 +23,7 @@
 
         // Scroll to the answers container if expanded
         if (expanded.value && answersContainer.value) { 
-            setTimeout(function () {
+            setTimeout(() => {
                 if (answersContainer.value) {
                     answersContainer.value.scrollIntoView({
                         behavior: "smooth",

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { Language } from '@/data-objects/language';
-import { useRoute, useRouter } from 'vue-router';
+import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const route = useRoute();
 
 const props = defineProps<{
     hruid: string;
@@ -16,7 +16,10 @@ const discussionURL = "/discussion"
     + "/" + props.language
     + "/" + props.learningObjectHruid
 
-router.replace(discussionURL);
+
+onMounted(async () => {
+    await router.replace(discussionURL);
+})
 
 </script>
 

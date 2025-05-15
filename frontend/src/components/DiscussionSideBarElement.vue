@@ -4,7 +4,7 @@ import type { LearningPath } from '@/data-objects/learning-paths/learning-path';
 import { useLearningObjectListForPathQuery } from '@/queries/learning-objects';
 import { useRoute } from 'vue-router';
 import UsingQueryResult from "@/components/UsingQueryResult.vue";
-import { computed, ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 
     const route = useRoute();
 
@@ -17,10 +17,10 @@ import { computed, ref, watchEffect } from 'vue';
 
     const learningObjectListQueryResult = useLearningObjectListForPathQuery(currentPath);
 
-    let dropdownEnabled = ref<boolean>(false);
+    const dropdownEnabled = ref<boolean>(false);
 
     watchEffect(() => {
-        const objects = learningObjectListQueryResult.data.value as LearningObject[] | undefined;
+        const objects = learningObjectListQueryResult.data.value;
 
         if (objects) {
             const objectInThisPath = objects.some((obj) => obj.key === props.activeObjectId);
@@ -30,9 +30,8 @@ import { computed, ref, watchEffect } from 'vue';
         }
     });
 
-    const toggleDropdown = () => {
+    function toggleDropdown(): void {
         dropdownEnabled.value = !dropdownEnabled.value;
-        console.log(dropdownEnabled.value)
     }
 
 </script>
@@ -45,7 +44,7 @@ import { computed, ref, watchEffect } from 'vue';
                 :query-result="learningObjectListQueryResult"
                 v-slot="learningObjects: { data: LearningObject[] }"
             >
-                <template v-for="node in learningObjects.data">
+                <template v-for="node in learningObjects.data" :key="node.key">
                     <v-list-item
                         link
                         :to="{ path: `/discussion-reload/${currentPath.hruid}/${node.language}/${node.key}`, query: route.query }"

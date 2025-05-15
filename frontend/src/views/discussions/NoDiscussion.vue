@@ -1,29 +1,10 @@
 <script setup lang="ts">
-    import { Language } from "@/data-objects/language.ts";
     import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
-    import { computed, type ComputedRef, provide, ref, watch } from "vue";
-    import type { LearningObject } from "@/data-objects/learning-objects/learning-object.ts";
-    import { useRoute, useRouter } from "vue-router";
-    import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
     import { useI18n } from "vue-i18n";
-    import LearningPathSearchField from "@/components/LearningPathSearchField.vue";
-    import { useGetAllLearningPaths, useGetLearningPathQuery } from "@/queries/learning-paths.ts";
-    import { useLearningObjectListForPathQuery } from "@/queries/learning-objects.ts";
+    import { useGetAllLearningPaths } from "@/queries/learning-paths.ts";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import authService from "@/services/auth/auth-service.ts";
-    import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
-    import LearningPathGroupSelector from "@/views/learning-paths/LearningPathGroupSelector.vue";
-    import { useCreateQuestionMutation, useQuestionsQuery } from "@/queries/questions";
-    import type { QuestionsResponse } from "@/controllers/questions";
-    import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
-    import QandA from "@/components/QandA.vue";
-    import type { QuestionData, QuestionDTO } from "@dwengo-1/common/interfaces/question";
-    import { useStudentAssignmentsQuery, useStudentGroupsQuery } from "@/queries/students";
-    import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
-    import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
     import DiscussionSideBarElement from "@/components/DiscussionSideBarElement.vue";
 
-    const route = useRoute();
     const { t, locale } = useI18n();
 
     const allLearningPathsResult = useGetAllLearningPaths(locale.value)
@@ -45,7 +26,9 @@
                 <DiscussionSideBarElement
                     v-for="learningPath in learningPaths.data"
                     :path="learningPath"
-                    :activeObjectId="'' as string">
+                    :activeObjectId="'' as string"
+                    :key="learningPath.hruid"
+                    >
                 </DiscussionSideBarElement>
             </using-query-result>
         </div>
