@@ -14,6 +14,7 @@ import { mapToTeacher } from '../../interfaces/teacher.js';
 import { Collection } from '@mikro-orm/core';
 import { NotFoundException } from '../../exceptions/not-found-exception.js';
 import { BadRequestException } from '../../exceptions/bad-request-exception.js';
+import learningObjectService from '../learning-objects/learning-object-service.js';
 
 const userContentPrefix = getEnvVar(envVars.UserContentPrefix);
 const allProviders = [dwengoApiLearningPathProvider, databaseLearningPathProvider];
@@ -137,6 +138,21 @@ const learningPathService = {
         }
 
         const path = mapToLearningPath(dto, admins);
+
+        // Verify that all specified learning objects actually exist.
+        const learningObjectsOnPath = await Promise.all(
+            path.nodes.map(async node =>
+                learningObjectService.getLearningObjectById({
+                    hruid: node.learningObjectHruid,
+                    language: node.language,
+                    version: node.version
+                })
+            )
+        );
+        if (learningObjectsOnPath.some(it => !it)) {
+            throw new BadRequestException("At least one of the specified learning objects does not exist.")
+        }
+
         try {
             await repo.save(path, { preventOverwrite: true });
         } catch (e: unknown) {
