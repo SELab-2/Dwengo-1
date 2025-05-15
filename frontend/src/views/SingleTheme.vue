@@ -35,7 +35,7 @@
         <using-query-result :query-result="themeQueryResult">
             <h1>{{ currentThemeInfo!!.title }}</h1>
             <p>{{ currentThemeInfo!!.description }}</p>
-            <br>
+            <br />
             <div class="search-field-container mt-sm-6">
                 <v-text-field
                     class="search-field mx-auto"

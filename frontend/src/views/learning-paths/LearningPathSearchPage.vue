@@ -18,9 +18,8 @@
 
 <template>
     <div class="search-page-container d-flex flex-column align-items-center justify-center">
-
-        <div class = "search-field-container">
-            <learning-path-search-field class="mx-auto"/>
+        <div class="search-field-container">
+            <learning-path-search-field class="mx-auto" />
         </div>
 
         <using-query-result
@@ -40,7 +39,6 @@
                 :text="t('enterSearchTermDescription')"
             />
         </div>
-
     </div>
 </template>
 

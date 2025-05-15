@@ -3,7 +3,7 @@
     import { useI18n } from "vue-i18n";
     import { onMounted, ref, type Ref } from "vue";
     import auth from "../services/auth/auth-service.ts";
-    import {Redirect} from "@/utils/redirect.ts";
+    import { Redirect } from "@/utils/redirect.ts";
 
     const { t } = useI18n();
 
