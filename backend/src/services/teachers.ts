@@ -112,7 +112,13 @@ export async function getStudentsByTeacher(username: string, full: boolean): Pro
 
     const classIds: string[] = classes.map((cls) => cls.id);
 
-    const students: StudentDTO[] = (await Promise.all(classIds.map(async (username) => await getClassStudentsDTO(username)))).flat();
+    const students: StudentDTO[] = (await Promise.all(
+        classIds.map(async (classId) => await getClassStudentsDTO(classId))
+    ))
+        .flat()
+        .filter((student, index, self) =>
+            self.findIndex((s) => s.username === student.username) === index
+        );
 
     if (full) {
         return students;
