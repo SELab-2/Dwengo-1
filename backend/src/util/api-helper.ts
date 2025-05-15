@@ -26,12 +26,7 @@ interface Options {
  * @param cacheTTL Time-to-live for the cache in seconds (default: 60 seconds).
  * @returns The response data if successful, or null if an error occurs.
  */
-export async function fetchRemote<T>(
-    url: string,
-    description: string,
-    options?: Options,
-    cacheTTL?: number,
-): Promise<T | null> {
+export async function fetchRemote<T>(url: string, description: string, options?: Options, cacheTTL?: number): Promise<T | null> {
     if (runMode !== 'dev' && !runMode.includes('test')) {
         return fetchWithCache<T>(url, description, options, cacheTTL);
     }
@@ -40,12 +35,7 @@ export async function fetchRemote<T>(
     return fetchWithLogging(url, description, options);
 }
 
-async function fetchWithCache<T>(
-    url: string,
-    description: string,
-    options?: Options,
-    cacheTTL?: number,
-): Promise<T | null> {
+async function fetchWithCache<T>(url: string, description: string, options?: Options, cacheTTL?: number): Promise<T | null> {
     // Combine the URL and parameters to create a unique cache key.
     // NOTE Using a hash function to keep the key short, since Memcached has a limit on key size
     const urlWithParams = `${url}${options?.params ? JSON.stringify(options.params) : ''}`;
@@ -70,11 +60,7 @@ async function fetchWithCache<T>(
     return response;
 }
 
-async function fetchWithLogging<T>(
-    url: string,
-    description: string,
-    options?: Options,
-): Promise<T | null> {
+async function fetchWithLogging<T>(url: string, description: string, options?: Options): Promise<T | null> {
     try {
         const config: AxiosRequestConfig = options || {};
         const response = await axios.get<T>(url, config);
@@ -86,7 +72,7 @@ async function fetchWithLogging<T>(
                     logger.debug(`❌ ERROR: ${description} not found (404) at "${url}".`);
                 } else {
                     logger.debug(
-                        `❌ ERROR: Failed to fetch ${description}. Status: ${error.response.status} - ${error.response.statusText} (URL: "${url}")`,
+                        `❌ ERROR: Failed to fetch ${description}. Status: ${error.response.status} - ${error.response.statusText} (URL: "${url}")`
                     );
                 }
             } else {
