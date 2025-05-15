@@ -9,6 +9,7 @@
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { asyncComputed } from "@vueuse/core";
     import { useDeleteAssignmentMutation } from "@/queries/assignments.ts";
+    import {AccountType} from "@dwengo-1/common/util/account-types";
 
     const { t } = useI18n();
     const router = useRouter();
@@ -16,7 +17,7 @@
     const role = ref(auth.authState.activeRole);
     const username = ref<string>("");
 
-    const isTeacher = computed(() => role.value === "teacher");
+    const isTeacher = computed(() => role.value === AccountType.Teacher);
 
     // Fetch and store all the teacher's classes
     let classesQueryResults = undefined;

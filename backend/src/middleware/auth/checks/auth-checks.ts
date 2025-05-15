@@ -4,6 +4,7 @@ import * as express from 'express';
 import { RequestHandler } from 'express';
 import { UnauthorizedException } from '../../../exceptions/unauthorized-exception.js';
 import { ForbiddenException } from '../../../exceptions/forbidden-exception.js';
+import {AccountType} from "@dwengo-1/common/util/account-types";
 
 /**
  * Middleware which rejects unauthenticated users (with HTTP 401) and authenticated users which do not fulfill
@@ -36,11 +37,11 @@ export const authenticatedOnly = authorize((_) => true);
 /**
  * Middleware which rejects requests from unauthenticated users or users that aren't students.
  */
-export const studentsOnly = authorize((auth) => auth.accountType === 'student');
+export const studentsOnly = authorize((auth) => auth.accountType === AccountType.Student);
 /**
  * Middleware which rejects requests from unauthenticated users or users that aren't teachers.
  */
-export const teachersOnly = authorize((auth) => auth.accountType === 'teacher');
+export const teachersOnly = authorize((auth) => auth.accountType === AccountType.Teacher);
 /**
  * Middleware which is to be used on requests no normal user should be able to execute.
  * Since there is no concept of administrator accounts yet, currently, those requests will always be blocked.

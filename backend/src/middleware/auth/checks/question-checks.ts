@@ -7,6 +7,7 @@ import { fetchQuestion } from '../../../services/questions.js';
 import { FALLBACK_SEQ_NUM } from '../../../config.js';
 import { fetchAnswer } from '../../../services/answers.js';
 import { mapToUsername } from '../../../interfaces/user.js';
+import {AccountType} from "@dwengo-1/common/util/account-types";
 
 export const onlyAllowAuthor = authorize(
     (auth: AuthenticationInfo, req: AuthenticatedRequest) => (req.body as { author: string }).author === auth.username
@@ -57,7 +58,7 @@ export const onlyAllowIfHasAccessToQuestion = authorize(async (auth: Authenticat
     const question = await fetchQuestion(questionId);
     const group = question.inGroup;
 
-    if (auth.accountType === 'teacher') {
+    if (auth.accountType === AccountType.Teacher) {
         const cls = group.assignment.within; // TODO check if contains full objects
         return cls.teachers.map(mapToUsername).includes(auth.username);
     } // User is student

@@ -5,6 +5,7 @@ import { envVars, getEnvVar } from '../util/envVars.js';
 import { createOrUpdateStudent } from '../services/students.js';
 import { Request, Response } from 'express';
 import { createOrUpdateTeacher } from '../services/teachers.js';
+import {AccountType} from "@dwengo-1/common/util/account-types";
 
 interface FrontendIdpConfig {
     authority: string;
@@ -55,7 +56,7 @@ export async function postHelloHandler(req: AuthenticatedRequest, res: Response)
         firstName: auth.firstName ?? '',
         lastName: auth.lastName ?? '',
     };
-    if (auth.accountType === 'student') {
+    if (auth.accountType === AccountType.Student) {
         await createOrUpdateStudent(userData);
         logger.debug(`Synchronized student ${userData.username} with IDP`);
     } else {

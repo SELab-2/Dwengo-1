@@ -3,6 +3,7 @@
     import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
     import auth from "@/services/auth/auth-service.ts";
     import { watch } from "vue";
+    import {AccountType} from "@dwengo-1/common/util/account-types";
 
     const router = useRouter();
 
@@ -17,11 +18,11 @@
     );
 
     async function loginAsStudent(): Promise<void> {
-        await auth.loginAs("student");
+        await auth.loginAs(AccountType.Student);
     }
 
     async function loginAsTeacher(): Promise<void> {
-        await auth.loginAs("teacher");
+        await auth.loginAs(AccountType.Teacher);
     }
 </script>
 

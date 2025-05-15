@@ -6,6 +6,7 @@ import { AuthenticationInfo } from '../authentication-info.js';
 import { authorize } from './auth-checks.js';
 import { FALLBACK_LANG } from '../../../config.js';
 import { mapToUsername } from '../../../interfaces/user.js';
+import {AccountType} from "@dwengo-1/common/util/account-types";
 
 export const onlyAllowSubmitter = authorize(
     (auth: AuthenticationInfo, req: AuthenticatedRequest) => (req.body as { submitter: string }).submitter === auth.username
@@ -18,7 +19,7 @@ export const onlyAllowIfHasAccessToSubmission = authorize(async (auth: Authentic
     const loId = new LearningObjectIdentifier(lohruid, languageMap[lang as string] ?? FALLBACK_LANG, Number(version));
     const submission = await fetchSubmission(loId, Number(submissionNumber));
 
-    if (auth.accountType === 'teacher') {
+    if (auth.accountType === AccountType.Teacher) {
         // Dit kan niet werken om dat al deze objecten niet gepopulate zijn.
         return submission.onBehalfOf.assignment.within.teachers.map(mapToUsername).includes(auth.username);
     }
