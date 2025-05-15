@@ -6,7 +6,7 @@ import {
     getInvitationHandler,
     updateInvitationHandler,
 } from '../controllers/teacher-invitations.js';
-import { onlyAllowUserHimself } from '../middleware/auth/checks/user-auth-checks.js';
+import { preventImpersonation } from '../middleware/auth/checks/user-auth-checks.js';
 import {
     onlyAllowReceiverBody,
     onlyAllowSender,
@@ -16,7 +16,7 @@ import {
 
 const router = express.Router({ mergeParams: true });
 
-router.get('/:username', onlyAllowUserHimself, getAllInvitationsHandler);
+router.get('/:username', preventImpersonation, getAllInvitationsHandler);
 
 router.get('/:sender/:receiver/:classId', onlyAllowSenderOrReceiver, getInvitationHandler);
 

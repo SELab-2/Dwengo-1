@@ -12,7 +12,7 @@ import {
 } from '../controllers/teachers.js';
 import invitationRouter from './teacher-invitations.js';
 import { adminOnly } from '../middleware/auth/checks/auth-checks.js';
-import { onlyAllowUserHimself } from '../middleware/auth/checks/user-auth-checks.js';
+import { preventImpersonation } from '../middleware/auth/checks/user-auth-checks.js';
 import { onlyAllowTeacherOfClass } from '../middleware/auth/checks/class-auth-checks.js';
 const router = express.Router();
 
@@ -21,15 +21,15 @@ router.get('/', adminOnly, getAllTeachersHandler);
 
 router.post('/', adminOnly, createTeacherHandler);
 
-router.get('/:username', onlyAllowUserHimself, getTeacherHandler);
+router.get('/:username', preventImpersonation, getTeacherHandler);
 
-router.delete('/:username', onlyAllowUserHimself, deleteTeacherHandler);
+router.delete('/:username', preventImpersonation, deleteTeacherHandler);
 
-router.get('/:username/classes', onlyAllowUserHimself, getTeacherClassHandler);
+router.get('/:username/classes', preventImpersonation, getTeacherClassHandler);
 
-router.get('/:username/students', onlyAllowUserHimself, getTeacherStudentHandler);
+router.get('/:username/students', preventImpersonation, getTeacherStudentHandler);
 
-router.get('/:username/questions', onlyAllowUserHimself, getTeacherQuestionHandler);
+router.get('/:username/questions', preventImpersonation, getTeacherQuestionHandler);
 
 router.get('/:username/joinRequests/:classId', onlyAllowTeacherOfClass, getStudentJoinRequestHandler);
 

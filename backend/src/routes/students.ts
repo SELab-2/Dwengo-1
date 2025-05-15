@@ -11,7 +11,7 @@ import {
     getStudentSubmissionsHandler,
 } from '../controllers/students.js';
 import joinRequestRouter from './student-join-requests.js';
-import { onlyAllowUserHimself } from '../middleware/auth/checks/user-auth-checks.js';
+import { preventImpersonation } from '../middleware/auth/checks/user-auth-checks.js';
 import { adminOnly } from '../middleware/auth/checks/auth-checks.js';
 
 const router = express.Router();
@@ -23,25 +23,25 @@ router.get('/', adminOnly, getAllStudentsHandler);
 // Can only be used by an administrator.
 router.post('/', adminOnly, createStudentHandler);
 
-router.delete('/:username', onlyAllowUserHimself, deleteStudentHandler);
+router.delete('/:username', preventImpersonation, deleteStudentHandler);
 
 // Information about a student's profile
-router.get('/:username', onlyAllowUserHimself, getStudentHandler);
+router.get('/:username', preventImpersonation, getStudentHandler);
 
 // The list of classes a student is in
-router.get('/:username/classes', onlyAllowUserHimself, getStudentClassesHandler);
+router.get('/:username/classes', preventImpersonation, getStudentClassesHandler);
 
 // The list of submissions a student has made
-router.get('/:username/submissions', onlyAllowUserHimself, getStudentSubmissionsHandler);
+router.get('/:username/submissions', preventImpersonation, getStudentSubmissionsHandler);
 
 // The list of assignments a student has
-router.get('/:username/assignments', onlyAllowUserHimself, getStudentAssignmentsHandler);
+router.get('/:username/assignments', preventImpersonation, getStudentAssignmentsHandler);
 
 // The list of groups a student is in
-router.get('/:username/groups', onlyAllowUserHimself, getStudentGroupsHandler);
+router.get('/:username/groups', preventImpersonation, getStudentGroupsHandler);
 
 // A list of questions a user has created
-router.get('/:username/questions', onlyAllowUserHimself, getStudentQuestionsHandler);
+router.get('/:username/questions', preventImpersonation, getStudentQuestionsHandler);
 
 router.use('/:username/joinRequests', joinRequestRouter);
 

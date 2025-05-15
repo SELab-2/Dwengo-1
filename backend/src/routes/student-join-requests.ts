@@ -5,16 +5,16 @@ import {
     getStudentRequestHandler,
     getStudentRequestsHandler,
 } from '../controllers/students.js';
-import { onlyAllowUserHimself } from '../middleware/auth/checks/user-auth-checks.js';
+import { preventImpersonation } from '../middleware/auth/checks/user-auth-checks.js';
 import { onlyAllowStudentHimselfAndTeachersOfClass } from '../middleware/auth/checks/class-auth-checks.js';
 
 // Under /:username/joinRequests/
 
 const router = express.Router({ mergeParams: true });
 
-router.get('/', onlyAllowUserHimself, getStudentRequestsHandler);
+router.get('/', preventImpersonation, getStudentRequestsHandler);
 
-router.post('/', onlyAllowUserHimself, createStudentRequestHandler);
+router.post('/', preventImpersonation, createStudentRequestHandler);
 
 router.get('/:classId', onlyAllowStudentHimselfAndTeachersOfClass, getStudentRequestHandler);
 
