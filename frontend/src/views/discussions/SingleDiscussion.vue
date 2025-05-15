@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { Language } from "@/data-objects/language.ts";
     import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
-    import { computed, type ComputedRef, ref } from "vue";
+    import { computed, type ComputedRef, provide, ref, watch } from "vue";
     import type { LearningObject } from "@/data-objects/learning-objects/learning-object.ts";
     import { useRoute, useRouter } from "vue-router";
     import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
@@ -139,7 +139,7 @@
             (assignment) => assignment.learningPath === props.hruid && assignment.language === props.language,
         );
     });
-    const loID: ComputedRef<LearningObjectIdentifierDTO> = computed(() => {
+    let loID: ComputedRef<LearningObjectIdentifierDTO> = computed(() => {
         return {
             hruid: props.learningObjectHruid as string,
             language: props.language,
@@ -147,7 +147,15 @@
         };
     });
 
-    const createQuestionMutation = useCreateQuestionMutation(loID.value);
+    let createQuestionMutation = useCreateQuestionMutation(loID.value);
+
+    watch(
+        () => [route.params.hruid, route.params.language, route.params.learningObjectHruid],
+        () => {
+            //TODO: moet op een of andere manier createQuestionMutation opnieuw kunnen instellen
+        }
+    );
+
     const groupsQueryResult = useStudentGroupsQuery(authService.authState.user?.profile.preferred_username);
 
     const questionInput = ref("");
