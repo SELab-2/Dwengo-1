@@ -31,4 +31,9 @@
     ></v-text-field>
 </template>
 
-<style scoped></style>
+<style scoped>
+    .search-field {
+        width: 25%;
+        min-width: 300px;
+    }
+</style>

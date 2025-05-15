@@ -17,43 +17,31 @@
 </script>
 
 <template>
-    <v-container class="search-page-container">
-        <v-row
-            justify="center"
-            class="mb-6"
+    <div class="search-page-container d-flex flex-column align-items-center justify-center">
+
+        <div class = "search-field-container">
+            <learning-path-search-field class="mx-auto"/>
+        </div>
+
+        <using-query-result
+            :query-result="searchQueryResults"
+            v-slot="{ data }: { data: LearningPath[] }"
         >
-            <v-col
-                cols="12"
-                sm="8"
-                md="6"
-                lg="4"
-            >
-                <learning-path-search-field class="search-field" />
-            </v-col>
-        </v-row>
+            <learning-paths-grid :learning-paths="data" />
+        </using-query-result>
 
-        <v-row justify="center">
-            <v-col cols="12">
-                <using-query-result
-                    :query-result="searchQueryResults"
-                    v-slot="{ data }: { data: LearningPath[] }"
-                >
-                    <learning-paths-grid :learning-paths="data" />
-                </using-query-result>
+        <div
+            v-if="!query"
+            class="empty-state-container"
+        >
+            <v-empty-state
+                icon="mdi-magnify"
+                :title="t('enterSearchTerm')"
+                :text="t('enterSearchTermDescription')"
+            />
+        </div>
 
-                <div
-                    v-if="!query"
-                    class="empty-state-container"
-                >
-                    <v-empty-state
-                        icon="mdi-magnify"
-                        :title="t('enterSearchTerm')"
-                        :text="t('enterSearchTermDescription')"
-                    />
-                </div>
-            </v-col>
-        </v-row>
-    </v-container>
+    </div>
 </template>
 
 <style scoped>
@@ -61,8 +49,7 @@
         padding-top: 40px;
         padding-bottom: 40px;
     }
-
-    .search-field {
-        max-width: 100%;
+    .search-field-container {
+        justify-content: center !important;
     }
 </style>
