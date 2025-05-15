@@ -17,8 +17,6 @@ import { ref } from 'vue';
 
     const learningObjectListQueryResult = useLearningObjectListForPathQuery(currentPath);
 
-    console.log(learningObjectListQueryResult.data.value)
-
 </script>
 
 <template>
