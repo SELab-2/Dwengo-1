@@ -5,7 +5,7 @@ import { envVars, getEnvVar } from '../util/envVars.js';
 import { createOrUpdateStudent } from '../services/students.js';
 import { Request, Response } from 'express';
 import { createOrUpdateTeacher } from '../services/teachers.js';
-import {AccountType} from "@dwengo-1/common/util/account-types";
+import { AccountType } from '@dwengo-1/common/util/account-types';
 
 interface FrontendIdpConfig {
     authority: string;

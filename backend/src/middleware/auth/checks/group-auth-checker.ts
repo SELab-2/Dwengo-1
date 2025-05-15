@@ -2,7 +2,7 @@ import { authorize } from './auth-checks.js';
 import { fetchClass } from '../../../services/classes.js';
 import { fetchGroup } from '../../../services/groups.js';
 import { mapToUsername } from '../../../interfaces/user.js';
-import {AccountType} from "@dwengo-1/common/util/account-types";
+import { AccountType } from '@dwengo-1/common/util/account-types';
 
 /**
  * Expects the path to contain the path parameters 'classid', 'assignmentid' and 'groupid'.

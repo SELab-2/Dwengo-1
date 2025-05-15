@@ -14,7 +14,7 @@
     import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
     import { useCreateAssignmentMutation } from "@/queries/assignments.ts";
     import { useRoute } from "vue-router";
-    import {AccountType} from "@dwengo-1/common/util/account-types";
+    import { AccountType } from "@dwengo-1/common/util/account-types";
 
     const route = useRoute();
     const router = useRouter();

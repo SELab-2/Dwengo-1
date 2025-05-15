@@ -22,7 +22,7 @@
     import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
     import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
     import QuestionNotification from "@/components/QuestionNotification.vue";
-    import {AccountType} from "@dwengo-1/common/util/account-types";
+    import { AccountType } from "@dwengo-1/common/util/account-types";
 
     const router = useRouter();
     const route = useRoute();
@@ -237,7 +237,9 @@
                     </template>
                 </v-list-item>
                 <v-list-itemF
-                    v-if="query.classId && query.assignmentNo && authService.authState.activeRole === AccountType.Teacher"
+                    v-if="
+                        query.classId && query.assignmentNo && authService.authState.activeRole === AccountType.Teacher
+                    "
                 >
                     <template v-slot:default>
                         <learning-path-group-selector
@@ -260,7 +262,9 @@
                                 :title="node.title"
                                 :active="node.key === props.learningObjectHruid"
                                 :key="node.key"
-                                v-if="!node.teacherExclusive || authService.authState.activeRole === AccountType.Teacher"
+                                v-if="
+                                    !node.teacherExclusive || authService.authState.activeRole === AccountType.Teacher
+                                "
                             >
                                 <template v-slot:prepend>
                                     <v-icon

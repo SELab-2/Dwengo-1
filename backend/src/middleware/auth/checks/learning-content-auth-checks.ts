@@ -1,7 +1,7 @@
 import { authorize } from './auth-checks';
 import { AuthenticationInfo } from '../authentication-info';
 import { AuthenticatedRequest } from '../authenticated-request';
-import {AccountType} from "@dwengo-1/common/util/account-types";
+import { AccountType } from '@dwengo-1/common/util/account-types';
 
 /**
  * Only allows requests whose learning path personalization query parameters ('forGroup' / 'assignmentNo' / 'classId')
