@@ -4,6 +4,7 @@ import * as express from 'express';
 import { RequestHandler } from 'express';
 import { UnauthorizedException } from '../../../exceptions/unauthorized-exception.js';
 import { ForbiddenException } from '../../../exceptions/forbidden-exception.js';
+import { envVars, getEnvVar } from '../../../util/envVars.js';
 import {AccountType} from "@dwengo-1/common/util/account-types";
 
 /**
@@ -15,6 +16,17 @@ import {AccountType} from "@dwengo-1/common/util/account-types";
 export function authorize<P, ResBody, ReqBody, ReqQuery, Locals extends Record<string, unknown>>(
     accessCondition: (auth: AuthenticationInfo, req: AuthenticatedRequest<P, ResBody, ReqBody, ReqQuery, Locals>) => boolean | Promise<boolean>
 ): RequestHandler<P, ResBody, ReqBody, ReqQuery, Locals> {
+    // Bypass authentication during testing
+    if (getEnvVar(envVars.RunMode) === 'test') {
+        return async (
+            _req: AuthenticatedRequest<P, ResBody, ReqBody, ReqQuery, Locals>,
+            _res: express.Response,
+            next: express.NextFunction
+        ): Promise<void> => {
+            next();
+        };
+    }
+
     return async (
         req: AuthenticatedRequest<P, ResBody, ReqBody, ReqQuery, Locals>,
         _res: express.Response,

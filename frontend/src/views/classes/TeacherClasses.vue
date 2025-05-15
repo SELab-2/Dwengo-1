@@ -8,13 +8,14 @@
     import { useTeacherClassesQuery } from "@/queries/teachers";
     import type { ClassesResponse } from "@/controllers/classes";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import { useClassesQuery, useCreateClassMutation } from "@/queries/classes";
+    import { useCreateClassMutation } from "@/queries/classes";
     import type { TeacherInvitationsResponse } from "@/controllers/teacher-invitations";
     import {
         useRespondTeacherInvitationMutation,
         useTeacherInvitationsReceivedQuery,
     } from "@/queries/teacher-invitations";
     import { useDisplay } from "vuetify";
+    import "../../assets/common.css";
     import ClassDisplay from "@/views/classes/ClassDisplay.vue";
 
     const { t } = useI18n();
@@ -112,7 +113,7 @@
             dialog.value = true;
         }
         if (!className.value || className.value === "") {
-            showSnackbar(t("name is mandatory"), "error");
+            showSnackbar(t("nameIsMandatory"), "error");
         }
     }
 
@@ -135,6 +136,13 @@
     async function copyToClipboard(): Promise<void> {
         await navigator.clipboard.writeText(code.value);
         copied.value = true;
+    }
+
+    async function copyCode(selectedCode: string): Promise<void> {
+        code.value = selectedCode;
+        await copyToClipboard();
+        showSnackbar(t("copied"), "white");
+        copied.value = false;
     }
 
     // Custom breakpoints
@@ -162,6 +170,7 @@
     // Code display dialog logic
     const viewCodeDialog = ref(false);
     const selectedCode = ref("");
+
     function openCodeDialog(codeToView: string): void {
         selectedCode.value = codeToView;
         viewCodeDialog.value = true;
@@ -183,7 +192,7 @@
             ></v-empty-state>
         </div>
         <div v-else>
-            <h1 class="title">{{ t("classes") }}</h1>
+            <h1 class="h1">{{ t("classes") }}</h1>
             <using-query-result
                 :query-result="classesQuery"
                 v-slot="classesResponse: { data: ClassesResponse }"
@@ -212,7 +221,7 @@
                                         <th class="header">{{ t("members") }}</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody v-if="classesResponse.data.classes.length">
                                     <tr
                                         v-for="c in classesResponse.data.classes as ClassDTO[]"
                                         :key="c.id"
@@ -223,11 +232,18 @@
                                                 variant="text"
                                             >
                                                 {{ c.displayName }}
-                                                <v-icon end> mdi-menu-right </v-icon>
+                                                <v-icon end> mdi-menu-right</v-icon>
                                             </v-btn>
                                         </td>
                                         <td>
-                                            <span v-if="!isMdAndDown">{{ c.id }}</span>
+                                            <v-btn
+                                                v-if="!isMdAndDown"
+                                                variant="text"
+                                                append-icon="mdi-content-copy"
+                                                @click="copyCode(c.id)"
+                                            >
+                                                {{ c.id }}
+                                            </v-btn>
                                             <span
                                                 v-else
                                                 style="cursor: pointer"
@@ -237,6 +253,21 @@
                                         </td>
 
                                         <td>{{ c.students.length }}</td>
+                                    </tr>
+                                </tbody>
+                                <tbody v-else>
+                                    <tr>
+                                        <td
+                                            colspan="3"
+                                            class="empty-message"
+                                        >
+                                            <v-icon
+                                                icon="mdi-information-outline"
+                                                size="small"
+                                            >
+                                            </v-icon>
+                                            {{ t("no-classes-found") }}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </v-table>
@@ -270,8 +301,8 @@
                                             type="submit"
                                             @click="createClass"
                                             block
-                                            >{{ t("create") }}</v-btn
-                                        >
+                                            >{{ t("create") }}
+                                        </v-btn>
                                     </v-form>
                                 </v-sheet>
                                 <v-container>
@@ -318,7 +349,7 @@
                 </v-container>
             </using-query-result>
 
-            <h1 class="title">
+            <h1 class="h1">
                 {{ t("invitations") }}
             </h1>
             <v-container
@@ -338,57 +369,75 @@
                             :query-result="getInvitationsQuery"
                             v-slot="invitationsResponse: { data: TeacherInvitationsResponse }"
                         >
-                            <tr
-                                v-for="i in invitationsResponse.data.invitations as TeacherInvitationDTO[]"
-                                :key="i.classId"
-                            >
-                                <td>
-                                    <ClassDisplay :classId="i.classId" />
-                                </td>
-                                <td>
-                                    {{
-                                        (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName
-                                    }}
-                                </td>
-                                <td class="text-right">
-                                    <span v-if="!isSmAndDown">
-                                        <div>
-                                            <v-btn
-                                                color="green"
-                                                @click="handleInvitation(i, true)"
-                                                class="mr-2"
-                                            >
-                                                {{ t("accept") }}
-                                            </v-btn>
-                                            <v-btn
-                                                color="red"
-                                                @click="handleInvitation(i, false)"
-                                            >
-                                                {{ t("deny") }}
-                                            </v-btn>
-                                        </div>
-                                    </span>
-                                    <span v-else>
-                                        <div>
-                                            <v-btn
-                                                @click="handleInvitation(i, true)"
-                                                class="mr-2"
-                                                icon="mdi-check-circle"
-                                                color="green"
-                                                variant="text"
-                                            >
-                                            </v-btn>
-                                            <v-btn
-                                                @click="handleInvitation(i, false)"
-                                                class="mr-2"
-                                                icon="mdi-close-circle"
-                                                color="red"
-                                                variant="text"
-                                            >
-                                            </v-btn></div
-                                    ></span>
-                                </td>
-                            </tr>
+                            <template v-if="invitationsResponse.data.invitations.length">
+                                <tr
+                                    v-for="i in invitationsResponse.data.invitations as TeacherInvitationDTO[]"
+                                    :key="i.classId"
+                                >
+                                    <td>
+                                        <ClassDisplay :classId="i.classId" />
+                                    </td>
+                                    <td>
+                                        {{
+                                            (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName
+                                        }}
+                                    </td>
+                                    <td class="text-right">
+                                        <span v-if="!isSmAndDown">
+                                            <div>
+                                                <v-btn
+                                                    color="green"
+                                                    @click="handleInvitation(i, true)"
+                                                    class="mr-2"
+                                                >
+                                                    {{ t("accept") }}
+                                                </v-btn>
+                                                <v-btn
+                                                    color="red"
+                                                    @click="handleInvitation(i, false)"
+                                                >
+                                                    {{ t("deny") }}
+                                                </v-btn>
+                                            </div>
+                                        </span>
+                                        <span v-else>
+                                            <div>
+                                                <v-btn
+                                                    @click="handleInvitation(i, true)"
+                                                    class="mr-2"
+                                                    icon="mdi-check-circle"
+                                                    color="green"
+                                                    variant="text"
+                                                >
+                                                </v-btn>
+                                                <v-btn
+                                                    @click="handleInvitation(i, false)"
+                                                    class="mr-2"
+                                                    icon="mdi-close-circle"
+                                                    color="red"
+                                                    variant="text"
+                                                >
+                                                </v-btn>
+                                            </div>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </template>
+                            <template v-else>
+                                <tr>
+                                    <td
+                                        colspan="3"
+                                        class="empty-message"
+                                    >
+                                        <v-icon
+                                            icon="mdi-information-outline"
+                                            size="small"
+                                        >
+                                        </v-icon>
+                                        {{ t("no-invitations-found") }}
+                                    </td>
+                                </tr>
+                            </template>
                         </using-query-result>
                     </tbody>
                 </v-table>
@@ -440,49 +489,6 @@
     </main>
 </template>
 <style scoped>
-    .header {
-        font-weight: bold !important;
-        background-color: #0e6942;
-        color: white;
-        padding: 10px;
-    }
-
-    table thead th:first-child {
-        border-top-left-radius: 10px;
-    }
-
-    .table thead th:last-child {
-        border-top-right-radius: 10px;
-    }
-
-    .table tbody tr:nth-child(odd) {
-        background-color: white;
-    }
-
-    .table tbody tr:nth-child(even) {
-        background-color: #f6faf2;
-    }
-
-    td,
-    th {
-        border-bottom: 1px solid #0e6942;
-        border-top: 1px solid #0e6942;
-    }
-
-    .table {
-        width: 90%;
-        padding-top: 10px;
-        border-collapse: collapse;
-    }
-
-    h1 {
-        color: #0e6942;
-        text-transform: uppercase;
-        font-weight: bolder;
-        padding-top: 2%;
-        font-size: 50px;
-    }
-
     h2 {
         color: #0e6942;
         font-size: 30px;
@@ -500,16 +506,7 @@
         text-decoration: underline;
     }
 
-    main {
-        margin-left: 30px;
-    }
-
     @media screen and (max-width: 850px) {
-        h1 {
-            text-align: center;
-            padding-left: 0;
-        }
-
         .join {
             text-align: center;
             align-items: center;
@@ -530,10 +527,6 @@
 
         .custom-breakpoint {
             flex-direction: column !important;
-        }
-
-        .table {
-            width: 100%;
         }
 
         .responsive-col {

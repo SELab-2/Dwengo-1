@@ -3,7 +3,7 @@ import { AuthenticationInfo } from '../authentication-info.js';
 import { AuthenticatedRequest } from '../authenticated-request.js';
 import { fetchClass } from '../../../services/classes.js';
 import { mapToUsername } from '../../../interfaces/user.js';
-import {getAllInvitations} from "../../../services/teacher-invitations";
+import { getAllInvitations } from '../../../services/teacher-invitations.js';
 import {AccountType} from "@dwengo-1/common/util/account-types";
 
 async function teaches(teacherUsername: string, classId: string): Promise<boolean> {
@@ -51,7 +51,7 @@ export const onlyAllowIfInClassOrInvited = authorize(async (auth: Authentication
     const clazz = await fetchClass(classId);
     if (auth.accountType === AccountType.Teacher) {
         const invitations = await getAllInvitations(auth.username, false);
-        return clazz.teachers.map(mapToUsername).includes(auth.username) || invitations.some(invitation => invitation.classId === classId);
+        return clazz.teachers.map(mapToUsername).includes(auth.username) || invitations.some((invitation) => invitation.classId === classId);
     }
     return clazz.students.map(mapToUsername).includes(auth.username);
 });

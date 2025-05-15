@@ -6,7 +6,6 @@ import {
     getStudentJoinRequestHandler,
     getTeacherClassHandler,
     getTeacherHandler,
-    getTeacherQuestionHandler,
     getTeacherStudentHandler,
     updateStudentJoinRequestHandler,
 } from '../controllers/teachers.js';
@@ -28,8 +27,6 @@ router.delete('/:username', preventImpersonation, deleteTeacherHandler);
 router.get('/:username/classes', preventImpersonation, getTeacherClassHandler);
 
 router.get('/:username/students', preventImpersonation, getTeacherStudentHandler);
-
-router.get('/:username/questions', preventImpersonation, getTeacherQuestionHandler);
 
 router.get('/:username/joinRequests/:classId', onlyAllowTeacherOfClass, getStudentJoinRequestHandler);
 

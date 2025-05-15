@@ -15,7 +15,7 @@ import {
 } from '../controllers/classes.js';
 import assignmentRouter from './assignments.js';
 import { adminOnly, teachersOnly } from '../middleware/auth/checks/auth-checks.js';
-import {onlyAllowIfInClass, onlyAllowIfInClassOrInvited} from '../middleware/auth/checks/class-auth-checks.js';
+import { onlyAllowIfInClass, onlyAllowIfInClassOrInvited } from '../middleware/auth/checks/class-auth-checks.js';
 
 const router = express.Router();
 

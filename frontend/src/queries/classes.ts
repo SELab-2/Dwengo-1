@@ -15,7 +15,7 @@ import { invalidateAllGroupKeys } from "./groups";
 import { invalidateAllSubmissionKeys } from "./submissions";
 import type { TeachersResponse } from "@/controllers/teachers";
 import type { TeacherInvitationsResponse } from "@/controllers/teacher-invitations";
-import {studentClassesQueryKey} from "@/queries/students.ts";
+import { studentClassesQueryKey } from "@/queries/students.ts";
 
 const classController = new ClassController();
 
