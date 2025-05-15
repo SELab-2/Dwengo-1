@@ -4,7 +4,7 @@ import type { LearningPath } from '@/data-objects/learning-paths/learning-path';
 import { useLearningObjectListForPathQuery } from '@/queries/learning-objects';
 import { useRoute } from 'vue-router';
 import UsingQueryResult from "@/components/UsingQueryResult.vue";
-import { ref } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 
     const route = useRoute();
 
@@ -17,12 +17,30 @@ import { ref } from 'vue';
 
     const learningObjectListQueryResult = useLearningObjectListForPathQuery(currentPath);
 
+    let dropdownEnabled = ref<boolean>(false);
+
+    watchEffect(() => {
+        const objects = learningObjectListQueryResult.data.value as LearningObject[] | undefined;
+
+        if (objects) {
+            const objectInThisPath = objects.some((obj) => obj.key === props.activeObjectId);
+            if (objectInThisPath) {
+                dropdownEnabled.value = true;
+            }
+        }
+    });
+
+    const toggleDropdown = () => {
+        dropdownEnabled.value = !dropdownEnabled.value;
+        console.log(dropdownEnabled.value)
+    }
+
 </script>
 
 <template>
     <main>
-        <div>{{path.title}}</div>
-        <div>
+        <div class="dropdown-toggle" @click="toggleDropdown()">▼{{path.title}}</div>
+        <div class="dropdown" v-if="dropdownEnabled">
             <using-query-result
                 :query-result="learningObjectListQueryResult"
                 v-slot="learningObjects: { data: LearningObject[] }"
@@ -41,4 +59,32 @@ import { ref } from 'vue';
     </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+.dropdown {
+    margin-left: 1.5rem;
+    padding-left: 1rem;
+    border-left: 2px solid #e0e0e0;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+.dropdown-toggle {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    user-select: none;
+    padding: 0.5rem;
+    transition: color 0.2s;
+}
+
+.dropdown-toggle:hover {
+    color: #27c53f;
+}
+
+.dropdown-icon {
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+}
+</style>
