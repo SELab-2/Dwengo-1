@@ -5,7 +5,7 @@ import { RequestHandler } from 'express';
 import { UnauthorizedException } from '../../../exceptions/unauthorized-exception.js';
 import { ForbiddenException } from '../../../exceptions/forbidden-exception.js';
 import { envVars, getEnvVar } from '../../../util/envVars.js';
-import {AccountType} from "@dwengo-1/common/util/account-types";
+import { AccountType } from '@dwengo-1/common/util/account-types';
 
 /**
  * Middleware which rejects unauthenticated users (with HTTP 401) and authenticated users which do not fulfill

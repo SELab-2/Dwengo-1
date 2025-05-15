@@ -9,7 +9,7 @@
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { asyncComputed } from "@vueuse/core";
     import { useDeleteAssignmentMutation } from "@/queries/assignments.ts";
-    import {AccountType} from "@dwengo-1/common/util/account-types";
+    import { AccountType } from "@dwengo-1/common/util/account-types";
     import "../../assets/common.css";
 
     const { t, locale } = useI18n();

@@ -6,7 +6,7 @@
     import type { AnswersResponse } from "@/controllers/answers";
     import type { AnswerData, AnswerDTO } from "@dwengo-1/common/interfaces/answer";
     import authService from "@/services/auth/auth-service";
-    import {AccountType} from "@dwengo-1/common/util/account-types";
+    import { AccountType } from "@dwengo-1/common/util/account-types";
 
     const props = defineProps<{
         question: QuestionDTO;

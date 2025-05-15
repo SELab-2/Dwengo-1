@@ -2,7 +2,7 @@
     import authState from "@/services/auth/auth-service.ts";
     import TeacherClasses from "./TeacherClasses.vue";
     import StudentClasses from "./StudentClasses.vue";
-    import {AccountType} from "@dwengo-1/common/util/account-types";
+    import { AccountType } from "@dwengo-1/common/util/account-types";
 
     // Determine if role is student or teacher to render correct view
     const role: string = authState.authState.activeRole!;

@@ -6,7 +6,7 @@ import { AuthenticationInfo } from '../authentication-info.js';
 import { authorize } from './auth-checks.js';
 import { FALLBACK_LANG } from '../../../config.js';
 import { mapToUsername } from '../../../interfaces/user.js';
-import {AccountType} from "@dwengo-1/common/util/account-types";
+import { AccountType } from '@dwengo-1/common/util/account-types';
 
 export const onlyAllowSubmitter = authorize(
     (auth: AuthenticationInfo, req: AuthenticatedRequest) => (req.body as { submitter: string }).submitter === auth.username

@@ -11,7 +11,7 @@
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
     import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
     import { useI18n } from "vue-i18n";
-    import {AccountType} from "@dwengo-1/common/util/account-types";
+    import { AccountType } from "@dwengo-1/common/util/account-types";
 
     const { t } = useI18n();
 
