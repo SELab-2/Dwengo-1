@@ -14,6 +14,7 @@ import UserHomePage from "@/views/homepage/UserHomePage.vue";
 import SingleTheme from "@/views/SingleTheme.vue";
 import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
 import authService from "@/services/auth/auth-service";
+import DiscussionForward from "@/views/discussions/DiscussionForward.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -103,6 +104,13 @@ const router = createRouter({
             path: "/discussion/:hruid/:language/:learningObjectHruid",
             name: "SingleDiscussion",
             component: SingleDiscussion,
+            props: true,
+            meta: { requiresAuth: true },
+        },
+        {
+            path: "/discussion-reload/:hruid/:language/:learningObjectHruid",
+            name: "DiscussionForwardWorkaround",
+            component: DiscussionForward,
             props: true,
             meta: { requiresAuth: true },
         },
