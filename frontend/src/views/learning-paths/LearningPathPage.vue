@@ -336,7 +336,7 @@
             <div class="input-wrapper">
                 <input
                     type="text"
-                    placeholder="question : ..."
+                    :placeholder="t('question-input-placeholder')"
                     class="question-input"
                     v-model="questionInput"
                 />
@@ -372,13 +372,13 @@
         >
         <v-divider :thickness="6"></v-divider>
             <div class="question-header">
-                <span class="question-title">Questions</span>
+                <span class="question-title">{{t("questions")}}</span>
                 <span class="discussion-link-text">
-                    View questions in 
+                    {{t("view-questions")}}
                     <router-link
                         :to=discussionLink
                     >
-                        discussions
+                        {{t("discussions")}}
                     </router-link>
                 </span>
             </div>

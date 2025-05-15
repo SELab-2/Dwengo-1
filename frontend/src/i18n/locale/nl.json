@@ -4,7 +4,7 @@
     "teacher": "leerkracht",
     "assignments": "Opdrachten",
     "classes": "Klassen",
-    "discussions": "discussies",
+    "discussions": "Discussies",
     "logout": "log uit",
     "error_title": "Fout",
     "previous": "Vorige",
@@ -121,5 +121,11 @@
     "invite": "uitnodigen",
     "assignmentIndicator": "OPDRACHT",
     "searchAllLearningPathsTitle": "Alle leerpaden doorzoeken",
-    "searchAllLearningPathsDescription": "Niet gevonden waar je naar op zoek was? Klik hier om onze volledige databank van beschikbare leerpaden te doorzoeken."
+    "searchAllLearningPathsDescription": "Niet gevonden waar je naar op zoek was? Klik hier om onze volledige databank van beschikbare leerpaden te doorzoeken.",
+    "questions": "vragen",
+    "view-questions": "Bekijk vragen in ",
+    "question-input-placeholder": "vraag...",
+    "answer-input-placeholder": "antwoord...",
+    "answers-toggle-hide": "Verberg antwoorden",
+    "answers-toggle-show": "Toon antwoorden"
 }

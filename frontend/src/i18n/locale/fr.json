@@ -121,5 +121,11 @@
     "invite": "inviter",
     "assignmentIndicator": "DEVOIR",
     "searchAllLearningPathsTitle": "Rechercher tous les parcours d'apprentissage",
-    "searchAllLearningPathsDescription": "Vous n'avez pas trouvé ce que vous cherchiez ? Cliquez ici pour rechercher dans toute notre base de données de parcours d'apprentissage disponibles."
+    "searchAllLearningPathsDescription": "Vous n'avez pas trouvé ce que vous cherchiez ? Cliquez ici pour rechercher dans toute notre base de données de parcours d'apprentissage disponibles.",
+    "questions": "Questions",
+    "view-questions": "Voir les questions dans ",
+    "question-input-placeholder": "question...",
+    "answer-input-placeholder": "réponse...",
+    "answers-toggle-hide": "Masquer réponses",
+    "answers-toggle-show": "Afficher réponse"
 }

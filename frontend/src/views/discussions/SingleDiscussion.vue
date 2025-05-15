@@ -201,7 +201,7 @@
             <div class="d-flex flex-column h-100">
                 <v-list-item>
                     <template v-slot:title>
-                        <div class="title">Discussions</div>
+                        <div class="title">{{t("discussions")}}</div>
                     </template>
                 </v-list-item>
                 <v-divider></v-divider>

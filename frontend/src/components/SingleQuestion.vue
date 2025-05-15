@@ -6,6 +6,10 @@
     import type { AnswersResponse } from "@/controllers/answers";
     import type { AnswerData, AnswerDTO } from "@dwengo-1/common/interfaces/answer";
     import authService from "@/services/auth/auth-service";
+    import { useI18n } from "vue-i18n";
+    
+    
+    const { t } = useI18n();
 
     const props = defineProps<{
         question: QuestionDTO;
@@ -99,7 +103,7 @@
             <input
                 v-model="answer"
                 type="text"
-                placeholder="answer: ..."
+                :placeholder="t('answer-input-placeholder')"
                 class="answer-input"
             />
             <button
@@ -118,7 +122,7 @@
                 @click="toggle()"
                 class="toggle-answers-btn"
             >
-                {{ expanded ? "Hide Answers" : "Show Answers" }}
+                {{ expanded ? t("answers-toggle-hide") : t("answers-toggle-show") }}
             </button>
 
             <div

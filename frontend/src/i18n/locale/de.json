@@ -121,5 +121,11 @@
     "invite": "einladen",
     "assignmentIndicator": "AUFGABE",
     "searchAllLearningPathsTitle": "Alle Lernpfade durchsuchen",
-    "searchAllLearningPathsDescription": "Nicht gefunden, was Sie gesucht haben? Klicken Sie hier, um unsere gesamte Lernpfad-Datenbank zu durchsuchen."
+    "searchAllLearningPathsDescription": "Nicht gefunden, was Sie gesucht haben? Klicken Sie hier, um unsere gesamte Lernpfad-Datenbank zu durchsuchen.",
+    "questions": "Fragen",
+    "view-questions": "Fragen anzeigen auf ",
+    "question-input-placeholder": "Frage...",
+    "answer-input-placeholder": "Antwort...",
+    "answers-toggle-hide": "Antworten verstecken",
+    "answers-toggle-show": "Antworten anzeigen"
 }

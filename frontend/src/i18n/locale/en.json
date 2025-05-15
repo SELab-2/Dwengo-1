@@ -4,7 +4,7 @@
     "teacher": "teacher",
     "assignments": "Assignments",
     "classes": "Classes",
-    "discussions": "discussions",
+    "discussions": "Discussions",
     "logout": "log out",
     "error_title": "Error",
     "previous": "Previous",
@@ -121,5 +121,12 @@
     "invite": "invite",
     "assignmentIndicator": "ASSIGNMENT",
     "searchAllLearningPathsTitle": "Search all learning paths",
-    "searchAllLearningPathsDescription": "You didn't find what you were looking for? Click here to search our whole database of available learning paths."
+    "searchAllLearningPathsDescription": "You didn't find what you were looking for? Click here to search our whole database of available learning paths.",
+    "questions": "questions",
+    "view-questions": "View questions in ",
+    "question-input-placeholder": "question...",
+    "answer-input-placeholder": "answer...",
+    "answers-toggle-hide": "Hide answers",
+    "answers-toggle-show": "Show answers"
+
 }
