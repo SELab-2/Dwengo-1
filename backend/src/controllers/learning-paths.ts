@@ -76,7 +76,9 @@ function postOrPutLearningPath(isPut: boolean): (req: AuthenticatedRequest, res:
         const path: LearningPath = req.body;
         const { hruid: hruidParam, language: languageParam } = req.params;
 
-        requireFields({ hruidParam, languageParam, path });
+        if (isPut) {
+            requireFields({ hruidParam, languageParam, path });
+        }
 
         const teacher = await getTeacher(req.auth!.username);
         if (isPut) {
