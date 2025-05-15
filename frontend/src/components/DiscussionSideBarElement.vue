@@ -61,7 +61,7 @@ import { computed, ref, watchEffect } from 'vue';
 
 <style scoped>
 .dropdown {
-    margin-left: 1.5rem;
+    margin-left: 0.5rem;
     padding-left: 1rem;
     border-left: 2px solid #e0e0e0;
     background-color: #f9f9f9;
