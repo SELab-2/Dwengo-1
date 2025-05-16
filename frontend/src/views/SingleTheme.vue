@@ -35,13 +35,14 @@
 </script>
 
 <template>
-    <div class="container">
+    <div class="container d-flex flex-column align-items-center justify-center">
         <using-query-result :query-result="themeQueryResult">
             <h1>{{ currentThemeInfo!!.title }}</h1>
             <p>{{ currentThemeInfo!!.description }}</p>
-            <div class="search-field-container">
+            <br />
+            <div class="search-field-container mt-sm-6">
                 <v-text-field
-                    class="search-field"
+                    class="search-field mx-auto"
                     :label="t('search')"
                     append-inner-icon="mdi-magnify"
                     v-model="searchFilter"
@@ -60,13 +61,15 @@
 
 <style scoped>
     .search-field-container {
-        display: block;
-        margin: 20px;
+        justify-content: center !important;
     }
     .search-field {
-        max-width: 300px;
+        width: 25%;
+        min-width: 300px;
     }
     .container {
         padding: 20px;
+        justify-content: center;
+        justify-items: center;
     }
 </style>

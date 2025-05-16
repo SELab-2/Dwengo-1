@@ -32,6 +32,10 @@ export async function createInvitation(data: TeacherInvitationData): Promise<Tea
         throw new ConflictException('The teacher sending the invite is not part of the class');
     }
 
+    if (cls.teachers.contains(receiver)) {
+        throw new ConflictException('The teacher receiving the invite is already part of the class');
+    }
+
     const newInvitation = mapToInvitation(sender, receiver, cls);
     await teacherInvitationRepository.save(newInvitation, { preventOverwrite: true });
 

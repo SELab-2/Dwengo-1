@@ -77,7 +77,7 @@
                 },
                 onError: (e) => {
                     dialog.value = false;
-                    showSnackbar(t("failed") + ": " + e.message, "error");
+                    showSnackbar(t("failed") + ": " + e.response.data.error || e.message, "error");
                 },
             },
         );
@@ -105,7 +105,7 @@
                     }
                 },
                 onError: (e) => {
-                    showSnackbar(t("failed") + ": " + e.message, "error");
+                    showSnackbar(t("failed") + ": " + e.response.data.error || e.message, "error");
                 },
             },
         );
@@ -126,7 +126,7 @@
                 usernameTeacher.value = "";
             },
             onError: (e) => {
-                showSnackbar(t("failed") + ": " + e.message, "error");
+                showSnackbar(t("failed") + ": " + e.response.data.error || e.message, "error");
             },
         });
     }
