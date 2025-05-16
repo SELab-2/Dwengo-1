@@ -150,7 +150,8 @@ services:
             - '11211:11211'
         command:
             - --conn-limit=1024
-            - --memory-limit=64
+            - --memory-limit=2048
+            - -I 128m
             - --threads=4
 
 volumes:
