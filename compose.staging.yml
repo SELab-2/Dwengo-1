@@ -82,8 +82,12 @@ services:
         image: grafana/grafana:latest
         ports:
             - '9002:3000'
+        labels:
+            - 'traefik.http.routers.graphs.rule=PathPrefix(`/graphs`)'
+            - 'traefik.http.services.graphs.loadbalancer.server.port=3000'
         volumes:
             - dwengo_grafana_data:/var/lib/grafana
+            - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini
         restart: unless-stopped
 
 volumes:
