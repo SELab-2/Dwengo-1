@@ -7,13 +7,16 @@
 
     // Import assets
     import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
+    import { useLocale } from "vuetify";
 
     const { t, locale } = useI18n();
+    const { current: vuetifyLocale } = useLocale();
 
     const role = auth.authState.activeRole;
     const _router = useRouter(); // Zonder '_' gaf dit een linter error voor unused variable
 
     const name: string = auth.authState.user!.profile.name!;
+    const username = auth.authState.user!.profile.preferred_username!;
     const email = auth.authState.user!.profile.email;
     const initials: string = name
         .split(" ")
@@ -31,6 +34,7 @@
     // Logic to change the language of the website to the selected language
     function changeLanguage(langCode: string): void {
         locale.value = langCode;
+        vuetifyLocale.value = langCode;
         localStorage.setItem("user-lang", langCode);
     }
 
@@ -180,10 +184,15 @@
             <v-card>
                 <v-card-text>
                     <div class="mx-auto text-center">
-                        <v-avatar color="#0e6942">
-                            <span class="text-h5">{{ initials }}</span>
+                        <v-avatar
+                            color="#0e6942"
+                            size="large"
+                            class="user-button mb-3"
+                        >
+                            <span>{{ initials }}</span>
                         </v-avatar>
                         <h3>{{ name }}</h3>
+                        <p class="text-caption mt-1">{{ username }}</p>
                         <p class="text-caption mt-1">{{ email }}</p>
                         <v-divider class="my-3"></v-divider>
                         <v-btn

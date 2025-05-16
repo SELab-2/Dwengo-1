@@ -67,8 +67,6 @@ services:
             - 'traefik.enable=true'
             - 'traefik.http.routers.idp.rule=PathPrefix(`/idp`)'
             - 'traefik.http.services.idp.loadbalancer.server.port=7080'
-            - 'traefik.http.routers.block-admin.rule=PathPrefix(`/idp/admin`)'
-            - 'traefik.http.routers.block-admin.service=web'
         depends_on:
             - keycloak-db
         volumes:
@@ -95,6 +93,9 @@ services:
             - '80:80/tcp'
             - '443:443/tcp'
         command:
+            # Enable web UI
+            - '--api=true'
+
             # Add Docker provider
             - '--providers.docker=true'
             - '--providers.docker.exposedbydefault=false'
@@ -115,6 +116,17 @@ services:
             - '--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web'
             - '--certificatesresolvers.letsencrypt.acme.email=timo.demeyst@ugent.be'
             - '--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json'
+        labels:
+            # BasicAuth middleware
+            # To create a user:password pair, the following command can be used:
+            # echo $(htpasswd -nb user password) | sed -e s/\\$/\\$\\$/g
+            - 'traefik.http.middlewares.protected-sub-path.basicauth.users=dwengo.org:$$apr1$$FdALqAjI$$7ZhPq0I/qEQ6k3OYqxJKZ1'
+            # Proxying
+            - 'traefik.enable=true'
+            - 'traefik.http.routers.proxy.middlewares=protected-sub-path'
+            - 'traefik.http.routers.proxy.service=api@internal'
+            - 'traefik.http.routers.proxy.rule=PathPrefix(`/proxy`)'
+            - 'traefik.http.services.proxy.loadbalancer.server.port=8080'
         restart: unless-stopped
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -137,8 +149,10 @@ services:
 
     dashboards:
         image: grafana/grafana:latest
-        ports:
-            - '9002:3000'
+        labels:
+            - 'traefik.enable=true'
+            - 'traefik.http.routers.graphs.rule=PathPrefix(`/graphs`)'
+            - 'traefik.http.services.graphs.loadbalancer.server.port=3000'
         restart: unless-stopped
         volumes:
             - dwengo_grafana_data:/var/lib/grafana

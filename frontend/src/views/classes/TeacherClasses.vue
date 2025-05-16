@@ -8,7 +8,7 @@
     import { useTeacherClassesQuery } from "@/queries/teachers";
     import type { ClassesResponse } from "@/controllers/classes";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import { useClassesQuery, useCreateClassMutation } from "@/queries/classes";
+    import { useCreateClassMutation } from "@/queries/classes";
     import type { TeacherInvitationsResponse } from "@/controllers/teacher-invitations";
     import {
         useRespondTeacherInvitationMutation,
@@ -16,6 +16,7 @@
     } from "@/queries/teacher-invitations";
     import { useDisplay } from "vuetify";
     import "../../assets/common.css";
+    import ClassDisplay from "@/views/classes/ClassDisplay.vue";
 
     const { t } = useI18n();
 
@@ -41,7 +42,6 @@
 
     // Fetch all classes of the logged in teacher
     const classesQuery = useTeacherClassesQuery(username, true);
-    const allClassesQuery = useClassesQuery();
     const { mutate } = useCreateClassMutation();
     const getInvitationsQuery = useTeacherInvitationsReceivedQuery(username);
     const { mutate: respondToInvitation } = useRespondTeacherInvitationMutation();
@@ -70,7 +70,7 @@
                 await getInvitationsQuery.refetch();
             },
             onError: (e) => {
-                showSnackbar(t("failed") + ": " + e.message, "error");
+                showSnackbar(t("failed") + ": " + e.response.data.error || e.message, "error");
             },
         });
     }
@@ -132,17 +132,12 @@
     // Show the teacher, copying of the code was a successs
     const copied = ref(false);
 
-    // Copy the generated code to the clipboard
-    async function copyToClipboard(): Promise<void> {
-        await navigator.clipboard.writeText(code.value);
-        copied.value = true;
-    }
+    async function copyToClipboard(code: string, isDialog = false, isLink = false): Promise<void> {
+        const content = isLink ? `${window.location.origin}/user/class?code=${code}` : code;
+        await navigator.clipboard.writeText(content);
+        copied.value = isDialog;
 
-    async function copyCode(selectedCode: string): Promise<void> {
-        code.value = selectedCode;
-        await copyToClipboard();
-        showSnackbar(t("copied"), "white");
-        copied.value = false;
+        if (!isDialog) showSnackbar(t("copied"), "white");
     }
 
     // Custom breakpoints
@@ -170,6 +165,7 @@
     // Code display dialog logic
     const viewCodeDialog = ref(false);
     const selectedCode = ref("");
+
     function openCodeDialog(codeToView: string): void {
         selectedCode.value = codeToView;
         viewCodeDialog.value = true;
@@ -231,24 +227,38 @@
                                                 variant="text"
                                             >
                                                 {{ c.displayName }}
-                                                <v-icon end> mdi-menu-right </v-icon>
+                                                <v-icon end> mdi-menu-right</v-icon>
                                             </v-btn>
                                         </td>
                                         <td>
-                                            <v-btn
+                                            <v-row
                                                 v-if="!isMdAndDown"
-                                                variant="text"
-                                                append-icon="mdi-content-copy"
-                                                @click="copyCode(c.id)"
+                                                dense
+                                                align="center"
+                                                no-gutters
                                             >
-                                                {{ c.id }}
-                                            </v-btn>
+                                                <v-btn
+                                                    variant="text"
+                                                    append-icon="mdi-content-copy"
+                                                    @click="copyToClipboard(c.id)"
+                                                >
+                                                    {{ c.id }}
+                                                </v-btn>
+                                                <v-btn
+                                                    icon
+                                                    variant="text"
+                                                    @click="copyToClipboard(c.id, false, true)"
+                                                >
+                                                    <v-icon>mdi-link-variant</v-icon>
+                                                </v-btn>
+                                            </v-row>
                                             <span
                                                 v-else
                                                 style="cursor: pointer"
                                                 @click="openCodeDialog(c.id)"
-                                                ><v-icon icon="mdi-eye"></v-icon
-                                            ></span>
+                                            >
+                                                <v-icon icon="mdi-eye"></v-icon>
+                                            </span>
                                         </td>
 
                                         <td>{{ c.students.length }}</td>
@@ -300,8 +310,8 @@
                                             type="submit"
                                             @click="createClass"
                                             block
-                                            >{{ t("create") }}</v-btn
-                                        >
+                                            >{{ t("create") }}
+                                        </v-btn>
                                     </v-form>
                                 </v-sheet>
                                 <v-container>
@@ -310,14 +320,29 @@
                                         max-width="400px"
                                     >
                                         <v-card>
-                                            <v-card-title class="headline">code</v-card-title>
+                                            <v-card-title class="headline">{{ t("code") }}</v-card-title>
                                             <v-card-text>
                                                 <v-text-field
                                                     v-model="code"
                                                     readonly
-                                                    append-inner-icon="mdi-content-copy"
-                                                    @click:append-inner="copyToClipboard"
-                                                ></v-text-field>
+                                                >
+                                                    <template #append>
+                                                        <v-btn
+                                                            icon
+                                                            variant="text"
+                                                            @click="copyToClipboard(code, true)"
+                                                        >
+                                                            <v-icon>mdi-content-copy</v-icon>
+                                                        </v-btn>
+                                                        <v-btn
+                                                            icon
+                                                            variant="text"
+                                                            @click="copyToClipboard(code, true, true)"
+                                                        >
+                                                            <v-icon>mdi-link-variant</v-icon>
+                                                        </v-btn>
+                                                    </template>
+                                                </v-text-field>
                                                 <v-slide-y-transition>
                                                     <div
                                                         v-if="copied"
@@ -368,85 +393,75 @@
                             :query-result="getInvitationsQuery"
                             v-slot="invitationsResponse: { data: TeacherInvitationsResponse }"
                         >
-                            <using-query-result
-                                :query-result="allClassesQuery"
-                                v-slot="classesResponse: { data: ClassesResponse }"
-                            >
-                                <template v-if="invitationsResponse.data.invitations.length">
-                                    <tr
-                                        v-for="i in invitationsResponse.data.invitations as TeacherInvitationDTO[]"
-                                        :key="i.classId"
+                            <template v-if="invitationsResponse.data.invitations.length">
+                                <tr
+                                    v-for="i in invitationsResponse.data.invitations as TeacherInvitationDTO[]"
+                                    :key="i.classId"
+                                >
+                                    <td>
+                                        <ClassDisplay :classId="i.classId" />
+                                    </td>
+                                    <td>
+                                        {{
+                                            (i.sender as TeacherDTO).firstName + " " + (i.sender as TeacherDTO).lastName
+                                        }}
+                                    </td>
+                                    <td class="text-right">
+                                        <span v-if="!isSmAndDown">
+                                            <div>
+                                                <v-btn
+                                                    color="green"
+                                                    @click="handleInvitation(i, true)"
+                                                    class="mr-2"
+                                                >
+                                                    {{ t("accept") }}
+                                                </v-btn>
+                                                <v-btn
+                                                    color="red"
+                                                    @click="handleInvitation(i, false)"
+                                                >
+                                                    {{ t("deny") }}
+                                                </v-btn>
+                                            </div>
+                                        </span>
+                                        <span v-else>
+                                            <div>
+                                                <v-btn
+                                                    @click="handleInvitation(i, true)"
+                                                    class="mr-2"
+                                                    icon="mdi-check-circle"
+                                                    color="green"
+                                                    variant="text"
+                                                >
+                                                </v-btn>
+                                                <v-btn
+                                                    @click="handleInvitation(i, false)"
+                                                    class="mr-2"
+                                                    icon="mdi-close-circle"
+                                                    color="red"
+                                                    variant="text"
+                                                >
+                                                </v-btn>
+                                            </div>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </template>
+                            <template v-else>
+                                <tr>
+                                    <td
+                                        colspan="3"
+                                        class="empty-message"
                                     >
-                                        <td>
-                                            {{
-                                                (classesResponse.data.classes as ClassDTO[]).filter(
-                                                    (c) => c.id == i.classId,
-                                                )[0].displayName
-                                            }}
-                                        </td>
-                                        <td>
-                                            {{
-                                                (i.sender as TeacherDTO).firstName +
-                                                " " +
-                                                (i.sender as TeacherDTO).lastName
-                                            }}
-                                        </td>
-                                        <td class="text-right">
-                                            <span v-if="!isSmAndDown">
-                                                <div>
-                                                    <v-btn
-                                                        color="green"
-                                                        @click="handleInvitation(i, true)"
-                                                        class="mr-2"
-                                                    >
-                                                        {{ t("accept") }}
-                                                    </v-btn>
-                                                    <v-btn
-                                                        color="red"
-                                                        @click="handleInvitation(i, false)"
-                                                    >
-                                                        {{ t("deny") }}
-                                                    </v-btn>
-                                                </div>
-                                            </span>
-                                            <span v-else>
-                                                <div>
-                                                    <v-btn
-                                                        @click="handleInvitation(i, true)"
-                                                        class="mr-2"
-                                                        icon="mdi-check-circle"
-                                                        color="green"
-                                                        variant="text"
-                                                    >
-                                                    </v-btn>
-                                                    <v-btn
-                                                        @click="handleInvitation(i, false)"
-                                                        class="mr-2"
-                                                        icon="mdi-close-circle"
-                                                        color="red"
-                                                        variant="text"
-                                                    >
-                                                    </v-btn></div
-                                            ></span>
-                                        </td>
-                                    </tr>
-                                </template>
-                                <template v-else>
-                                    <tr>
-                                        <td
-                                            colspan="3"
-                                            class="empty-message"
+                                        <v-icon
+                                            icon="mdi-information-outline"
+                                            size="small"
                                         >
-                                            <v-icon
-                                                icon="mdi-information-outline"
-                                                size="small"
-                                            >
-                                            </v-icon>
-                                            {{ t("no-invitations-found") }}
-                                        </td>
-                                    </tr>
-                                </template>
-                            </using-query-result>
+                                        </v-icon>
+                                        {{ t("no-invitations-found") }}
+                                    </td>
+                                </tr>
+                            </template>
                         </using-query-result>
                     </tbody>
                 </v-table>
@@ -469,9 +484,24 @@
                     <v-text-field
                         v-model="selectedCode"
                         readonly
-                        append-inner-icon="mdi-content-copy"
-                        @click:append-inner="copyToClipboard"
-                    ></v-text-field>
+                    >
+                        <template #append>
+                            <v-btn
+                                icon
+                                variant="text"
+                                @click="copyToClipboard(selectedCode, true)"
+                            >
+                                <v-icon>mdi-content-copy</v-icon>
+                            </v-btn>
+                            <v-btn
+                                icon
+                                variant="text"
+                                @click="copyToClipboard(selectedCode, true, true)"
+                            >
+                                <v-icon>mdi-link-variant</v-icon>
+                            </v-btn>
+                        </template>
+                    </v-text-field>
                     <v-slide-y-transition>
                         <div
                             v-if="copied"

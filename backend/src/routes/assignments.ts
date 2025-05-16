@@ -9,22 +9,25 @@ import {
     putAssignmentHandler,
 } from '../controllers/assignments.js';
 import groupRouter from './groups.js';
+import { teachersOnly } from '../middleware/auth/checks/auth-checks.js';
+import { onlyAllowIfInClass } from '../middleware/auth/checks/class-auth-checks.js';
+import { onlyAllowIfHasAccessToAssignment } from '../middleware/auth/checks/assignment-auth-checks.js';
 
 const router = express.Router({ mergeParams: true });
 
-router.get('/', getAllAssignmentsHandler);
+router.get('/', teachersOnly, onlyAllowIfInClass, getAllAssignmentsHandler);
 
-router.post('/', createAssignmentHandler);
+router.post('/', teachersOnly, onlyAllowIfInClass, createAssignmentHandler);
 
-router.get('/:id', getAssignmentHandler);
+router.get('/:id', onlyAllowIfHasAccessToAssignment, getAssignmentHandler);
 
-router.put('/:id', putAssignmentHandler);
+router.put('/:id', teachersOnly, onlyAllowIfHasAccessToAssignment, putAssignmentHandler);
 
-router.delete('/:id', deleteAssignmentHandler);
+router.delete('/:id', teachersOnly, onlyAllowIfHasAccessToAssignment, deleteAssignmentHandler);
 
-router.get('/:id/submissions', getAssignmentsSubmissionsHandler);
+router.get('/:id/submissions', teachersOnly, onlyAllowIfHasAccessToAssignment, getAssignmentsSubmissionsHandler);
 
-router.get('/:id/questions', getAssignmentQuestionsHandler);
+router.get('/:id/questions', teachersOnly, onlyAllowIfHasAccessToAssignment, getAssignmentQuestionsHandler);
 
 router.use('/:assignmentid/groups', groupRouter);
 

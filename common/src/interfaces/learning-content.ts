@@ -25,8 +25,8 @@ export interface LearningObjectNode {
     language: Language;
     start_node?: boolean;
     transitions: Transition[];
-    created_at: string;
-    updatedAt: string;
+    created_at?: string;
+    updatedAt?: string;
     done?: boolean; // True if a submission exists for this node by the user for whom the learning path is customized.
 }
 
@@ -79,6 +79,8 @@ export interface LearningObjectMetadata {
     target_ages: number[];
     content_type: string; // Markdown, image, etc.
     content_location?: string;
+    copyright?: string;
+    license?: string;
     skos_concepts?: string[];
     return_value?: ReturnValue;
 }

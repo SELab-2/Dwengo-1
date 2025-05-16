@@ -135,6 +135,13 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
 
         return html;
     },
+
+    /**
+     * Obtain all learning objects who have the user with the given username as an admin.
+     */
+    async getLearningObjectsAdministratedBy(_adminUsername: string): Promise<FilteredLearningObject[]> {
+        return []; // The dwengo database does not contain any learning objects administrated by users.
+    },
 };
 
 export default dwengoApiLearningObjectProvider;
