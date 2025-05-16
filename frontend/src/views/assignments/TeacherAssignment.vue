@@ -144,6 +144,7 @@ async function saveChanges(): Promise<void> {
 }
 
 async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
+    console.log(updatedGroups);
     const assignmentDTO: AssignmentDTO = {
         groups: updatedGroups,
     };

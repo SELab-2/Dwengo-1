@@ -406,7 +406,7 @@ function removeStudent(groupIndex: number, student: StudentItem): void {
                             <v-btn
                                 color="primary"
                                 @click="generateRandomGroups"
-                                :disabled="groupSize < 1"
+                                :disabled="groupSize < 1 || groupSize > allStudents.length"
                                 block
                             >
                                 {{ t("generate-groups") }}
