@@ -78,3 +78,27 @@ test("Student can join class by code", async ({ page }) => {
     await page.getByRole('button', { name: 'submit' }).click();
     await expect(page.getByText('failed: Request failed with status code 404', { exact: true })).toBeVisible();
 });
+
+test('Teacher can remove student from class', async ({ page }) => {
+    // Login
+    await page.getByRole("link", { name: "log in" }).click();
+    await page.getByRole("button", { name: "teacher" }).click();
+    await page.getByRole("textbox", { name: "Username or email" }).fill("testleerkracht1");
+    await page.getByRole("textbox", { name: "Password" }).fill("password");
+    await page.getByRole("button", { name: "Sign In" }).click();
+
+    await expect(page.getByRole('banner').getByRole('link', { name: 'Classes' })).toBeVisible();
+    await page.getByRole('banner').getByRole('link', { name: 'Classes' }).click();
+    await expect(page.getByRole('link', { name: 'class01' })).toBeVisible();
+    await expect(page.locator('#app')).toContainText('8');
+    await page.getByRole('link', { name: 'class01' }).click();
+    await expect(page.getByRole('cell', { name: 'Kurt Cobain' })).toBeVisible();
+    await expect(page.getByRole('row', { name: 'Kurt Cobain remove' }).getByRole('button')).toBeVisible();
+    await page.getByRole('row', { name: 'Kurt Cobain remove' }).getByRole('button').click();
+    await expect(page.getByText('Are you sure?')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'cancel' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'yes' })).toBeVisible();
+    await page.getByRole('button', { name: 'yes' }).click();
+    await page.getByRole('banner').getByRole('link', { name: 'Classes' }).click();
+    await expect(page.locator('#app')).toContainText('7');
+});
