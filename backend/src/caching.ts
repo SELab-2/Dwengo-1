@@ -15,6 +15,10 @@ async function initializeClient(): Promise<CacheClient> {
     const cachingPort = getEnvVar(envVars.CachePort);
     const cachingUrl = `${cachingHost}:${cachingPort}`;
 
+    if (cachingHost === '') {
+        return cacheClient;
+    }
+
     cacheClient = Client.create(cachingUrl);
 
     getLogger().info(`Memcached client initialized at ${cachingUrl}`);

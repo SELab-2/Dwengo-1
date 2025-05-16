@@ -5,6 +5,7 @@ import { getCacheClient } from '../caching.js';
 import { envVars, getEnvVar, getNumericEnvVar } from './envVars.js';
 import { createHash } from 'crypto';
 
+const cacheClient = await getCacheClient();
 const logger: Logger = getLogger();
 const runMode: string = getEnvVar(envVars.RunMode);
 const prefix: string = getEnvVar(envVars.CacheKeyPrefix);
@@ -27,7 +28,7 @@ interface Options {
  * @returns The response data if successful, or null if an error occurs.
  */
 export async function fetchRemote<T>(url: string, description: string, options?: Options, cacheTTL?: number): Promise<T | null> {
-    if (runMode !== 'dev' && !runMode.includes('test')) {
+    if (runMode !== 'dev' && !runMode.includes('test') && cacheClient !== undefined) {
         return fetchWithCache<T>(url, description, options, cacheTTL);
     }
 
@@ -41,9 +42,8 @@ async function fetchWithCache<T>(url: string, description: string, options?: Opt
     const urlWithParams = `${url}${options?.params ? JSON.stringify(options.params) : ''}`;
     const hashedUrl = createHash('sha256').update(urlWithParams).digest('hex');
     const key = `${prefix}:${hashedUrl}`;
-    const client = await getCacheClient();
 
-    const cachedData = await client.get(key);
+    const cachedData = await cacheClient.get(key);
 
     if (cachedData?.value) {
         logger.debug(`✅ INFO: Cache hit for ${description} at "${url}" (key: "${key}")`);
@@ -54,7 +54,7 @@ async function fetchWithCache<T>(url: string, description: string, options?: Opt
     const response = await fetchWithLogging<T>(url, description, options);
 
     const ttl = cacheTTL || getNumericEnvVar(envVars.CacheTTL);
-    await client.set(key, JSON.stringify(response), { expires: ttl });
+    await cacheClient.set(key, JSON.stringify(response), { expires: ttl });
     logger.debug(`✅ INFO: Cached response for ${description} at "${url}" for ${ttl} seconds. (key: "${key}")`);
 
     return response;
