@@ -22,6 +22,7 @@
     import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
     import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
     import QuestionNotification from "@/components/QuestionNotification.vue";
+    import { AccountType } from "@dwengo-1/common/util/account-types";
 
     const router = useRouter();
     const route = useRoute();
@@ -235,8 +236,10 @@
                         </p>
                     </template>
                 </v-list-item>
-                <v-list-item
-                    v-if="query.classId && query.assignmentNo && authService.authState.activeRole === 'teacher'"
+                <v-list-itemF
+                    v-if="
+                        query.classId && query.assignmentNo && authService.authState.activeRole === AccountType.Teacher
+                    "
                 >
                     <template v-slot:default>
                         <learning-path-group-selector
@@ -245,7 +248,7 @@
                             v-model="forGroupQueryParam"
                         />
                     </template>
-                </v-list-item>
+                </v-list-itemF>
                 <v-divider></v-divider>
                 <div>
                     <using-query-result
@@ -259,7 +262,9 @@
                                 :title="node.title"
                                 :active="node.key === props.learningObjectHruid"
                                 :key="node.key"
-                                v-if="!node.teacherExclusive || authService.authState.activeRole === 'teacher'"
+                                v-if="
+                                    !node.teacherExclusive || authService.authState.activeRole === AccountType.Teacher
+                                "
                             >
                                 <template v-slot:prepend>
                                     <v-icon
@@ -283,7 +288,7 @@
                     </using-query-result>
                 </div>
                 <v-spacer></v-spacer>
-                <v-list-item v-if="authService.authState.activeRole === 'teacher'">
+                <v-list-item v-if="authService.authState.activeRole === AccountType.Teacher">
                     <template v-slot:default>
                         <v-btn
                             class="button-in-nav"
@@ -296,7 +301,7 @@
                 </v-list-item>
                 <v-list-item>
                     <div
-                        v-if="authService.authState.activeRole === 'student' && pathIsAssignment"
+                        v-if="authService.authState.activeRole === AccountType.Student && pathIsAssignment"
                         class="assignment-indicator"
                     >
                         {{ t("assignmentIndicator") }}
@@ -325,7 +330,7 @@
             ></learning-object-view>
         </div>
         <div
-            v-if="authService.authState.activeRole === 'student' && pathIsAssignment"
+            v-if="authService.authState.activeRole === AccountType.Student && pathIsAssignment"
             class="question-box"
         >
             <div class="input-wrapper">

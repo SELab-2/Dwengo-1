@@ -73,7 +73,7 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
 
 function postOrPutLearningPath(isPut: boolean): (req: AuthenticatedRequest, res: Response) => Promise<void> {
     return async (req, res) => {
-        const path: LearningPath = req.body;
+        const path = req.body as LearningPath;
         const { hruid: hruidParam, language: languageParam } = req.params;
 
         if (isPut) {

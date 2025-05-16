@@ -8,8 +8,9 @@
     import type { SubmissionData } from "@/views/learning-paths/learning-object/submission-data";
     import LearningObjectContentView from "@/views/learning-paths/learning-object/content/LearningObjectContentView.vue";
     import LearningObjectSubmissionsView from "@/views/learning-paths/learning-object/submissions/LearningObjectSubmissionsView.vue";
+    import { AccountType } from "@dwengo-1/common/util/account-types";
 
-    const _isStudent = computed(() => authService.authState.activeRole === "student");
+    const _isStudent = computed(() => authService.authState.activeRole === AccountType.Student);
 
     const props = defineProps<{
         hruid: string;

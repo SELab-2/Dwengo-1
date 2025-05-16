@@ -1,6 +1,6 @@
 import express from 'express';
+import { authenticatedOnly, teachersOnly } from '../middleware/auth/checks/auth-checks.js';
 import { deleteLearningPath, getLearningPaths, postLearningPath, putLearningPath } from '../controllers/learning-paths.js';
-import { teachersOnly } from '../middleware/auth/auth.js';
 import { onlyAdminsForLearningPath } from '../middleware/auth/checks/learning-path-auth-checks.js';
 
 const router = express.Router();
@@ -24,7 +24,7 @@ const router = express.Router();
 // Route to fetch learning paths based on a theme
 // Example: http://localhost:3000/learningPath?theme=kiks
 
-router.get('/', getLearningPaths);
+router.get('/', authenticatedOnly, getLearningPaths);
 router.post('/', teachersOnly, postLearningPath);
 
 router.put('/:hruid/:language', onlyAdminsForLearningPath, putLearningPath);

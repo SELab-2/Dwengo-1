@@ -141,11 +141,11 @@ const learningPathService = {
 
         // Verify that all specified learning objects actually exist.
         const learningObjectsOnPath = await Promise.all(
-            path.nodes.map(async node =>
+            path.nodes.map(async (node) =>
                 learningObjectService.getLearningObjectById({
                     hruid: node.learningObjectHruid,
                     language: node.language,
-                    version: node.version
+                    version: node.version,
                 })
             )
         );
