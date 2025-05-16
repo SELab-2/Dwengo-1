@@ -1,7 +1,7 @@
-import { test, expect } from "@playwright/test"
+import { test, expect } from "@playwright/test";
 
 test("Users can filter", async ({ page }) => {
-    await page.goto("/")
+    await page.goto("/");
 
     // Login
     await page.getByRole("link", { name: "log in" }).click();
