@@ -21,7 +21,7 @@
 
     const { isPending, mutate, error: deleteError, isSuccess: deleteSuccess } = useDeleteLearningPathMutation();
 
-    const DEFAULT_LEARNING_PATH: LearningPath = {
+    const DEFAULT_LEARNING_PATH: Partial<LearningPath> = {
         language: "en",
         hruid: "...",
         title: "...",
@@ -35,7 +35,7 @@
                 transitions: [
                     {
                         default: true,
-                        condition: "(remove if the transition should be unconditinal)",
+                        condition: t("hintRemoveIfUnconditionalTransition"),
                         next: {
                             hruid: "...",
                             version: 1,
@@ -45,14 +45,13 @@
                 ],
             },
         ],
-        keywords: "Keywords separated by spaces",
-        target_ages: [],
+        keywords: t("hintKeywordsSeparatedBySpaces")
     };
 
     const { isPending: isPostPending, error: postError, mutate: doPost } = usePostLearningPathMutation();
     const { isPending: isPutPending, error: putError, mutate: doPut } = usePutLearningPathMutation();
 
-    const learningPath: Ref<LearningPath | string> = ref(DEFAULT_LEARNING_PATH);
+    const learningPath: Ref<Partial<LearningPath> | string> = ref(DEFAULT_LEARNING_PATH);
 
     const parsedLearningPath = computed(() =>
         typeof learningPath.value === "string" ? (JSON.parse(learningPath.value) as LearningPath) : learningPath.value,

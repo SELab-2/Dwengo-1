@@ -163,5 +163,9 @@
     "ownLearningContentTitle": "Contenu d’apprentissage personnel",
     "ownLearningContentDescription": "Créez et gérez vos propres objets et parcours d’apprentissage. Réservé aux utilisateurs avancés.",
     "learningPathNotFound": "Ce parcours d'apprentissage est introuvable.",
-    "emptyLearningPath": "Ce parcours d'apprentissage ne contient aucun objet d'apprentissage."
+    "emptyLearningPath": "Ce parcours d'apprentissage ne contient aucun objet d'apprentissage.",
+    "pathContainsNonExistingLearningObjects": "Au moins un des objets d’apprentissage référencés dans ce chemin n’existe pas.",
+    "targetAgesMandatory": "Les âges cibles doivent être spécifiés.",
+    "hintRemoveIfUnconditionalTransition": "(supprimer ceci s’il s’agit d’une transition inconditionnelle)",
+    "hintKeywordsSeparatedBySpaces": "Mots-clés séparés par des espaces"
 }

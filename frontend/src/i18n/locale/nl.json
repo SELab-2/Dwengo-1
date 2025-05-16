@@ -162,5 +162,9 @@
     "ownLearningContentTitle": "Eigen leerinhoud",
     "ownLearningContentDescription": "Maak en beheer je eigen leerobjecten en leerpads. Alleen voor gevorderde gebruikers.",
     "learningPathNotFound": "Dit leerpad kon niet gevonden worden.",
-    "emptyLearningPath": "Dit leerpad bevat geen leerobjecten."
+    "emptyLearningPath": "Dit leerpad bevat geen leerobjecten.",
+    "pathContainsNonExistingLearningObjects": "Ten minste één van de leerobjecten in dit pad bestaat niet.",
+    "targetAgesMandatory": "Doelleeftijden moeten worden opgegeven.",
+    "hintRemoveIfUnconditionalTransition": "(verwijder dit voor onvoorwaardelijke overgangen)",
+    "hintKeywordsSeparatedBySpaces": "Trefwoorden gescheiden door spaties"
 }

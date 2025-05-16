@@ -44,11 +44,11 @@ export class LearningPathController extends BaseController {
         return await this.get<LearningPathDTO[]>("/", { admin });
     }
 
-    async postLearningPath(learningPath: LearningPathDTO): Promise<LearningPathDTO> {
+    async postLearningPath(learningPath: Partial<LearningPathDTO>): Promise<LearningPathDTO> {
         return await this.post<LearningPathDTO>("/", learningPath);
     }
 
-    async putLearningPath(learningPath: LearningPathDTO): Promise<LearningPathDTO> {
+    async putLearningPath(learningPath: Partial<LearningPathDTO>): Promise<LearningPathDTO> {
         return await this.put<LearningPathDTO>(`/${learningPath.hruid}/${learningPath.language}`, learningPath);
     }
 

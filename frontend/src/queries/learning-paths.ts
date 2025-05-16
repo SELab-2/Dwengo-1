@@ -54,7 +54,7 @@ export function useGetAllLearningPathsByAdminQuery(
 export function usePostLearningPathMutation(): UseMutationReturnType<
     LearningPathDTO,
     AxiosError,
-    { learningPath: LearningPathDTO },
+    { learningPath: Partial<LearningPathDTO> },
     unknown
 > {
     const queryClient = useQueryClient();
@@ -68,7 +68,7 @@ export function usePostLearningPathMutation(): UseMutationReturnType<
 export function usePutLearningPathMutation(): UseMutationReturnType<
     LearningPathDTO,
     AxiosError,
-    { learningPath: LearningPathDTO },
+    { learningPath: Partial<LearningPathDTO> },
     unknown
 > {
     const queryClient = useQueryClient();

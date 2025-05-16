@@ -162,5 +162,9 @@
     "ownLearningContentTitle": "Own learning content",
     "ownLearningContentDescription": "Create and administrate your own learning objects and learning paths. For advanced users only.",
     "learningPathNotFound": "This learning path could not be found.",
-    "emptyLearningPath": "This learning path does not contain any learning objects."
+    "emptyLearningPath": "This learning path does not contain any learning objects.",
+    "pathContainsNonExistingLearningObjects": "At least one of the learning objects referenced in this path does not exist.",
+    "targetAgesMandatory": "Target ages must be specified.",
+    "hintRemoveIfUnconditionalTransition": "(remove this if this should be an unconditional transition)",
+    "hintKeywordsSeparatedBySpaces": "Keywords separated by spaces"
 }

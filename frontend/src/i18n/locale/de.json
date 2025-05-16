@@ -162,5 +162,9 @@
     "ownLearningContentTitle": "Eigene Lerninhalte",
     "ownLearningContentDescription": "Erstellen und verwalten Sie eigene Lernobjekte und Lernpfade. Nur für fortgeschrittene Nutzer.",
     "learningPathNotFound": "Dieser Lernpfad konnte nicht gefunden werden.",
-    "emptyLearningPath": "Dieser Lernpfad enthält keine Lernobjekte."
+    "emptyLearningPath": "Dieser Lernpfad enthält keine Lernobjekte.",
+    "pathContainsNonExistingLearningObjects": "Mindestens eines der in diesem Pfad referenzierten Lernobjekte existiert nicht.",
+    "targetAgesMandatory": "Zielalter müssen angegeben werden.",
+    "hintRemoveIfUnconditionalTransition": "(entfernen, wenn dies ein bedingungsloser Übergang sein soll)",
+    "hintKeywordsSeparatedBySpaces": "Schlüsselwörter durch Leerzeichen getrennt"
 }
