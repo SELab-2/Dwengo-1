@@ -69,7 +69,7 @@ function createLearningObject(metadata: LearningObjectMetadata, content: Buffer,
     };
 
     if (!metadata.target_ages || metadata.target_ages.length === 0) {
-        throw new BadRequestException('errorTargetAgesMandatory');
+        throw new BadRequestException('targetAgesMandatory');
     }
 
     const learningObject = learningObjectRepo.create({
