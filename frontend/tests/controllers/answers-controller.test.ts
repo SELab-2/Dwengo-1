@@ -29,5 +29,3 @@ describe("AnswerController Tests", () => {
         expect(result.answer).toHaveProperty("sequenceNumber", answerNumber);
     });
 });
-
-
