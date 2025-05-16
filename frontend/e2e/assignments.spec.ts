@@ -56,3 +56,26 @@ test("Student can see list of assignments", async ({ page }) => {
     await expect(page.locator('.button-row > .v-btn').first()).toBeVisible();
     await expect(page.getByText('Class: class01').first()).toBeVisible();
 });
+
+test('Student can see assignment details', async ({ page }) => {
+    await page.goto("/")
+
+    // Login
+    await page.getByRole("link", { name: "log in" }).click();
+    await page.getByRole("button", { name: "student" }).click();
+    await page.getByRole("textbox", { name: "Username or email" }).fill("testleerling1");
+    await page.getByRole("textbox", { name: "Password" }).fill("password");
+    await page.getByRole("button", { name: "Sign In" }).click();
+
+    // Go to assignments
+    await expect(page.getByRole('banner').getByRole('link', { name: 'Assignments' })).toBeVisible();
+    await page.getByRole('banner').getByRole('link', { name: 'Assignments' }).click();
+    await expect(page.getByText('Assignment: Conditional')).toBeVisible();
+    await expect(page.locator('div:nth-child(2) > .v-card > .button-row > .v-btn')).toBeVisible();
+
+    // View assignment details
+    await page.locator('div:nth-child(2) > .v-card > .button-row > .v-btn').click();
+    await expect(page.getByText('Assignment: Conditional')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Learning path' })).toBeVisible();
+    await expect(page.getByRole('progressbar').locator('div').first()).toBeVisible();
+});
