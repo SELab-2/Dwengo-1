@@ -6,13 +6,20 @@ import { testLearningPathWithConditions } from '../content/learning-paths.testda
 import { getClassWithTestleerlingAndTestleerkracht } from '../classes/classes.testdata';
 
 export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assignment[] {
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + 7);
+    const pastDate = new Date();
+    pastDate.setDate(pastDate.getDate() - 7);
+    const today = new Date();
+    today.setHours(23, 59);
     assignment01 = em.create(Assignment, {
         id: 21000,
         within: classes[0],
         title: 'dire straits',
         description: 'reading',
-        learningPathHruid: 'id02',
+        learningPathHruid: 'un_ai',
         learningPathLanguage: Language.English,
+        deadline: today,
         groups: [],
     });
 
@@ -23,6 +30,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         description: 'reading',
         learningPathHruid: 'id01',
         learningPathLanguage: Language.English,
+        deadline: futureDate,
         groups: [],
     });
 
@@ -33,6 +41,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         description: 'will be deleted',
         learningPathHruid: 'id02',
         learningPathLanguage: Language.English,
+        deadline: pastDate,
         groups: [],
     });
 
@@ -43,6 +52,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         description: 'with a description',
         learningPathHruid: 'id01',
         learningPathLanguage: Language.English,
+        deadline: pastDate,
         groups: [],
     });
 
@@ -53,6 +63,7 @@ export function makeTestAssignemnts(em: EntityManager, classes: Class[]): Assign
         description: 'You have to do the testing learning path with a condition.',
         learningPathHruid: testLearningPathWithConditions.hruid,
         learningPathLanguage: testLearningPathWithConditions.language as Language,
+        deadline: futureDate,
         groups: [],
     });
 

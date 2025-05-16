@@ -113,7 +113,7 @@ export async function createStudentRequestHandler(req: Request, res: Response): 
     const classId = req.body.classId;
     requireFields({ username, classId });
 
-    const request = await createClassJoinRequest(username, classId);
+    const request = await createClassJoinRequest(username, classId.toUpperCase());
     res.json({ request });
 }
 

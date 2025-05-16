@@ -3,6 +3,7 @@ import { setupTestApp } from '../../setup-tests';
 import { AssignmentRepository } from '../../../src/data/assignments/assignment-repository';
 import { getAssignmentRepository, getClassRepository } from '../../../src/data/repositories';
 import { ClassRepository } from '../../../src/data/classes/class-repository';
+import { getClass02 } from '../../test_assets/classes/classes.testdata';
 
 describe('AssignmentRepository', () => {
     let assignmentRepository: AssignmentRepository;
@@ -15,7 +16,7 @@ describe('AssignmentRepository', () => {
     });
 
     it('should return the requested assignment', async () => {
-        const class_ = await classRepository.findById('34d484a1-295f-4e9f-bfdc-3e7a23d86a89');
+        const class_ = await classRepository.findById(getClass02().classId);
         const assignment = await assignmentRepository.findByClassAndId(class_!, 21001);
 
         expect(assignment).toBeTruthy();
@@ -23,7 +24,7 @@ describe('AssignmentRepository', () => {
     });
 
     it('should return all assignments for a class', async () => {
-        const class_ = await classRepository.findById('34d484a1-295f-4e9f-bfdc-3e7a23d86a89');
+        const class_ = await classRepository.findById(getClass02().classId);
         const assignments = await assignmentRepository.findAllAssignmentsInClass(class_!);
 
         expect(assignments).toBeTruthy();

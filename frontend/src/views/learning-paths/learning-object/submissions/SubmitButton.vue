@@ -11,6 +11,7 @@
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
     import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
     import { useI18n } from "vue-i18n";
+    import { AccountType } from "@dwengo-1/common/util/account-types";
 
     const { t } = useI18n();
 
@@ -31,7 +32,7 @@
         mutate: submitSolution,
     } = useCreateSubmissionMutation();
 
-    const isStudent = computed(() => authService.authState.activeRole === "student");
+    const isStudent = computed(() => authService.authState.activeRole === AccountType.Student);
 
     const isSubmitDisabled = computed(() => {
         if (!props.submissionData || props.submissions === undefined) {
