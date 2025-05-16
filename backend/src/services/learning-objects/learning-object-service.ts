@@ -103,7 +103,7 @@ const learningObjectService = {
         const learningObjectRepo = getLearningObjectRepository();
         const learningObject = await learningObjectRepo.findByIdentifier(id);
         if (!learningObject) {
-            throw new NotFoundException('The specified learning object does not exist.');
+            throw new NotFoundException('learningObjectNotFound');
         }
         return learningObject.admins.map((admin) => admin.username);
     },

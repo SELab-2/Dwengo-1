@@ -68,6 +68,10 @@ function createLearningObject(metadata: LearningObjectMetadata, content: Buffer,
         callbackSchema: metadata.return_value?.callback_schema ? JSON.stringify(metadata.return_value.callback_schema) : '',
     };
 
+    if (!metadata.target_ages || metadata.target_ages.length === 0) {
+        throw new BadRequestException("errorTargetAgesMandatory");
+    }
+
     const learningObject = learningObjectRepo.create({
         admins: [],
         available: metadata.available ?? true,

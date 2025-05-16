@@ -150,7 +150,7 @@ const learningPathService = {
             )
         );
         if (learningObjectsOnPath.some(it => !it)) {
-            throw new BadRequestException("At least one of the specified learning objects does not exist.")
+            throw new BadRequestException("pathContainsNonExistingLearningObjects")
         }
 
         try {
