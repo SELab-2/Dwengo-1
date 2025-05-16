@@ -37,3 +37,22 @@ test('Teacher can create new assignment', async ({ page }) => {
     await expect(page.getByRole('link', { name: 'Learning path' })).toBeVisible();
     await expect(page.getByRole('main')).toContainText('Assignment description');
 });
+
+test("Student can see list of assignments", async ({ page }) => {
+    await page.goto("/")
+
+    // Login
+    await page.getByRole("link", { name: "log in" }).click();
+    await page.getByRole("button", { name: "student" }).click();
+    await page.getByRole("textbox", { name: "Username or email" }).fill("testleerling1");
+    await page.getByRole("textbox", { name: "Password" }).fill("password");
+    await page.getByRole("button", { name: "Sign In" }).click();
+
+    // Go to assignments
+    await expect(page.getByRole('banner').getByRole('link', { name: 'Assignments' })).toBeVisible();
+    await page.getByRole('banner').getByRole('link', { name: 'Assignments' }).click();
+    await expect(page.getByRole('heading', { name: 'Assignments' })).toBeVisible();
+    await expect(page.getByText('dire straits')).toBeVisible();
+    await expect(page.locator('.button-row > .v-btn').first()).toBeVisible();
+    await expect(page.getByText('Class: class01').first()).toBeVisible();
+});
