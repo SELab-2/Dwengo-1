@@ -118,6 +118,8 @@ services:
             - '--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json'
         labels:
             # BasicAuth middleware
+            # To create a user:password pair, the following command can be used:
+            # echo $(htpasswd -nb user password) | sed -e s/\\$/\\$\\$/g
             - 'traefik.http.middlewares.protected-sub-path.basicauth.users=dwengo.org:$$apr1$$FdALqAjI$$7ZhPq0I/qEQ6k3OYqxJKZ1'
             # Proxying
             - 'traefik.enable=true'
