@@ -132,17 +132,12 @@
     // Show the teacher, copying of the code was a successs
     const copied = ref(false);
 
-    // Copy the generated code to the clipboard
-    async function copyToClipboard(): Promise<void> {
-        await navigator.clipboard.writeText(code.value);
-        copied.value = true;
-    }
+    async function copyToClipboard(code: string, isDialog = false, isLink = false): Promise<void> {
+        const content = isLink ? `${window.location.origin}/user/class?code=${code}` : code;
+        await navigator.clipboard.writeText(content);
+        copied.value = isDialog;
 
-    async function copyCode(selectedCode: string): Promise<void> {
-        code.value = selectedCode;
-        await copyToClipboard();
-        showSnackbar(t("copied"), "white");
-        copied.value = false;
+        if (!isDialog) showSnackbar(t("copied"), "white");
     }
 
     // Custom breakpoints
@@ -236,20 +231,34 @@
                                             </v-btn>
                                         </td>
                                         <td>
-                                            <v-btn
+                                            <v-row
                                                 v-if="!isMdAndDown"
-                                                variant="text"
-                                                append-icon="mdi-content-copy"
-                                                @click="copyCode(c.id)"
+                                                dense
+                                                align="center"
+                                                no-gutters
                                             >
-                                                {{ c.id }}
-                                            </v-btn>
+                                                <v-btn
+                                                    variant="text"
+                                                    append-icon="mdi-content-copy"
+                                                    @click="copyToClipboard(c.id)"
+                                                >
+                                                    {{ c.id }}
+                                                </v-btn>
+                                                <v-btn
+                                                    icon
+                                                    variant="text"
+                                                    @click="copyToClipboard(c.id, false, true)"
+                                                >
+                                                    <v-icon>mdi-link-variant</v-icon>
+                                                </v-btn>
+                                            </v-row>
                                             <span
                                                 v-else
                                                 style="cursor: pointer"
                                                 @click="openCodeDialog(c.id)"
-                                                ><v-icon icon="mdi-eye"></v-icon
-                                            ></span>
+                                            >
+                                                <v-icon icon="mdi-eye"></v-icon>
+                                            </span>
                                         </td>
 
                                         <td>{{ c.students.length }}</td>
@@ -311,14 +320,29 @@
                                         max-width="400px"
                                     >
                                         <v-card>
-                                            <v-card-title class="headline">code</v-card-title>
+                                            <v-card-title class="headline">{{ t("code") }}</v-card-title>
                                             <v-card-text>
                                                 <v-text-field
                                                     v-model="code"
                                                     readonly
-                                                    append-inner-icon="mdi-content-copy"
-                                                    @click:append-inner="copyToClipboard"
-                                                ></v-text-field>
+                                                >
+                                                    <template #append>
+                                                        <v-btn
+                                                            icon
+                                                            variant="text"
+                                                            @click="copyToClipboard(code, true)"
+                                                        >
+                                                            <v-icon>mdi-content-copy</v-icon>
+                                                        </v-btn>
+                                                        <v-btn
+                                                            icon
+                                                            variant="text"
+                                                            @click="copyToClipboard(code, true, true)"
+                                                        >
+                                                            <v-icon>mdi-link-variant</v-icon>
+                                                        </v-btn>
+                                                    </template>
+                                                </v-text-field>
                                                 <v-slide-y-transition>
                                                     <div
                                                         v-if="copied"
@@ -460,9 +484,24 @@
                     <v-text-field
                         v-model="selectedCode"
                         readonly
-                        append-inner-icon="mdi-content-copy"
-                        @click:append-inner="copyToClipboard"
-                    ></v-text-field>
+                    >
+                        <template #append>
+                            <v-btn
+                                icon
+                                variant="text"
+                                @click="copyToClipboard(selectedCode, true)"
+                            >
+                                <v-icon>mdi-content-copy</v-icon>
+                            </v-btn>
+                            <v-btn
+                                icon
+                                variant="text"
+                                @click="copyToClipboard(selectedCode, true, true)"
+                            >
+                                <v-icon>mdi-link-variant</v-icon>
+                            </v-btn>
+                        </template>
+                    </v-text-field>
                     <v-slide-y-transition>
                         <div
                             v-if="copied"
