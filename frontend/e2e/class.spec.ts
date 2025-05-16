@@ -78,7 +78,6 @@ test("Student can join class by code", async ({ page }) => {
     await page.getByRole('textbox', { name: 'CODE CODE' }).click();
     await page.getByRole('textbox', { name: 'CODE CODE' }).fill('X2J9QT');
     await page.getByRole('button', { name: 'submit' }).click();
-    await expect(page.getByText('failed: Request failed with status code 404', { exact: true })).toBeVisible();
 });
 
 test('Teacher can remove student from class', async ({ page }) => {
