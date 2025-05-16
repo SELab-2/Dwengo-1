@@ -44,8 +44,7 @@
                     },
                 ],
             },
-        ],
-        keywords: t("hintKeywordsSeparatedBySpaces"),
+        ]
     };
 
     const { isPending: isPostPending, error: postError, mutate: doPost } = usePostLearningPathMutation();
