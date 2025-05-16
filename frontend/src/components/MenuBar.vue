@@ -7,8 +7,10 @@
 
     // Import assets
     import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
+    import { useLocale } from "vuetify";
 
     const { t, locale } = useI18n();
+    const { current: vuetifyLocale } = useLocale();
 
     const role = auth.authState.activeRole;
     const _router = useRouter(); // Zonder '_' gaf dit een linter error voor unused variable
@@ -32,6 +34,7 @@
     // Logic to change the language of the website to the selected language
     function changeLanguage(langCode: string): void {
         locale.value = langCode;
+        vuetifyLocale.value = langCode;
         localStorage.setItem("user-lang", langCode);
     }
 

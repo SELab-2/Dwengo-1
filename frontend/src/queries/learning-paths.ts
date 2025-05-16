@@ -1,8 +1,16 @@
 import { type MaybeRefOrGetter, toValue } from "vue";
 import type { Language } from "@/data-objects/language.ts";
-import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
+import {
+    useMutation,
+    useQuery,
+    useQueryClient,
+    type UseMutationReturnType,
+    type UseQueryReturnType,
+} from "@tanstack/vue-query";
 import { getLearningPathController } from "@/controllers/controllers";
-import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
+import type { AxiosError } from "axios";
+import type { LearningPath as LearningPathDTO } from "@dwengo-1/common/interfaces/learning-content";
+import type { LearningPath } from "@/data-objects/learning-paths/learning-path";
 
 export const LEARNING_PATH_KEY = "learningPath";
 const learningPathController = getLearningPathController();
@@ -30,6 +38,58 @@ export function useGetAllLearningPathsByThemeAndLanguageQuery(
         queryKey: [LEARNING_PATH_KEY, "getAllByTheme", theme, language],
         queryFn: async () => learningPathController.getAllByThemeAndLanguage(toValue(theme), toValue(language)),
         enabled: () => Boolean(toValue(theme)),
+    });
+}
+
+export function useGetAllLearningPathsByAdminQuery(
+    admin: MaybeRefOrGetter<string | undefined>,
+): UseQueryReturnType<LearningPathDTO[], AxiosError> {
+    return useQuery({
+        queryKey: [LEARNING_PATH_KEY, "getAllByAdmin", admin],
+        queryFn: async () => learningPathController.getAllByAdminRaw(toValue(admin)!),
+        enabled: () => Boolean(toValue(admin)),
+    });
+}
+
+export function usePostLearningPathMutation(): UseMutationReturnType<
+    LearningPathDTO,
+    AxiosError,
+    { learningPath: Partial<LearningPathDTO> },
+    unknown
+> {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ learningPath }) => learningPathController.postLearningPath(learningPath),
+        onSuccess: async () => queryClient.invalidateQueries({ queryKey: [LEARNING_PATH_KEY] }),
+    });
+}
+
+export function usePutLearningPathMutation(): UseMutationReturnType<
+    LearningPathDTO,
+    AxiosError,
+    { learningPath: Partial<LearningPathDTO> },
+    unknown
+> {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ learningPath }) => learningPathController.putLearningPath(learningPath),
+        onSuccess: async () => queryClient.invalidateQueries({ queryKey: [LEARNING_PATH_KEY] }),
+    });
+}
+
+export function useDeleteLearningPathMutation(): UseMutationReturnType<
+    LearningPathDTO,
+    AxiosError,
+    { hruid: string; language: Language },
+    unknown
+> {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ hruid, language }) => learningPathController.deleteLearningPath(hruid, language),
+        onSuccess: async () => queryClient.invalidateQueries({ queryKey: [LEARNING_PATH_KEY] }),
     });
 }
 

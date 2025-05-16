@@ -20,4 +20,9 @@ export interface LearningObjectProvider {
      * Obtain a HTML-rendering of the learning object with the given identifier (as a string).
      */
     getLearningObjectHTML(id: LearningObjectIdentifierDTO): Promise<string | null>;
+
+    /**
+     * Obtain all learning object who have the user with the given username as an admin.
+     */
+    getLearningObjectsAdministratedBy(username: string): Promise<FilteredLearningObject[]>;
 }
