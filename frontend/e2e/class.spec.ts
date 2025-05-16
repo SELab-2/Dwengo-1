@@ -76,7 +76,7 @@ test("Student can join class by code", async ({ page }) => {
 
     // Join a class
     await page.getByRole('textbox', { name: 'CODE CODE' }).click();
-    await page.getByRole('textbox', { name: 'CODE CODE' }).fill('16c822ca-633d-49e3-89fc-8d7a291450e6');
+    await page.getByRole('textbox', { name: 'CODE CODE' }).fill('X2J9QT');
     await page.getByRole('button', { name: 'submit' }).click();
     await expect(page.getByText('failed: Request failed with status code 404', { exact: true })).toBeVisible();
 });
