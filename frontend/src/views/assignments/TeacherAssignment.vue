@@ -344,69 +344,71 @@ async function saveChanges(): Promise<void> {
                         md="6"
                         class="responsive-col"
                     >
-                        <v-table class="table">
-                            <thead>
-                            <tr>
-                                <th class="header">{{ t("group") }}</th>
-                                <th class="header">{{ t("progress") }}</th>
-                                <th class="header">{{ t("submission") }}</th>
-                                <th class="header">
-                                    <v-btn
-                                        @click="editGroups = true"
-                                        variant="text"
-                                    >
-                                        <v-icon>mdi-pencil</v-icon>
-                                    </v-btn>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr
-                                v-for="g in allGroups"
-                                :key="g.originalGroupNo"
-                            >
-                                <td>
-                                    <v-btn
-                                        @click="openGroupDetails(g)"
-                                        variant="text"
-                                    >
-                                        {{ g.name }}
-                                        <v-icon end>mdi-menu-right</v-icon>
-                                    </v-btn>
-                                </td>
+                        <div class="table-container">
+                            <v-table class="table">
+                                <thead>
+                                <tr>
+                                    <th class="header">{{ t("group") }}</th>
+                                    <th class="header">{{ t("progress") }}</th>
+                                    <th class="header">{{ t("submission") }}</th>
+                                    <th class="header">
+                                        <v-btn
+                                            @click="editGroups = true"
+                                            variant="text"
+                                        >
+                                            <v-icon>mdi-pencil</v-icon>
+                                        </v-btn>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr
+                                    v-for="g in allGroups"
+                                    :key="g.originalGroupNo"
+                                >
+                                    <td>
+                                        <v-btn
+                                            @click="openGroupDetails(g)"
+                                            variant="text"
+                                        >
+                                            {{ g.name }}
+                                            <v-icon end>mdi-menu-right</v-icon>
+                                        </v-btn>
+                                    </td>
 
-                                <td>
-                                    <GroupProgressRow
-                                        :group-number="g.originalGroupNo"
-                                        :learning-path="learningPath"
-                                        :language="lang"
-                                        :assignment-id="assignmentId"
-                                        :class-id="classId"
-                                    />
-                                </td>
+                                    <td>
+                                        <GroupProgressRow
+                                            :group-number="g.originalGroupNo"
+                                            :learning-path="learningPath"
+                                            :language="lang"
+                                            :assignment-id="assignmentId"
+                                            :class-id="classId"
+                                        />
+                                    </td>
 
-                                <td>
-                                    <GroupSubmissionStatus
-                                        :group="g"
-                                        :assignment-id="assignmentId"
-                                        :class-id="classId"
-                                        :language="lang"
-                                        :go-to-group-submission-link="goToGroupSubmissionLink"
-                                    />
-                                </td>
+                                    <td>
+                                        <GroupSubmissionStatus
+                                            :group="g"
+                                            :assignment-id="assignmentId"
+                                            :class-id="classId"
+                                            :language="lang"
+                                            :go-to-group-submission-link="goToGroupSubmissionLink"
+                                        />
+                                    </td>
 
-                                <!-- Edit icon -->
-                                <td>
-                                    <v-btn
-                                        @click=""
-                                        variant="text"
-                                    >
-                                        <v-icon color="red">mdi-delete</v-icon>
-                                    </v-btn>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </v-table>
+                                    <!-- Edit icon -->
+                                    <td>
+                                        <v-btn
+                                            @click=""
+                                            variant="text"
+                                        >
+                                            <v-icon color="red">mdi-delete</v-icon>
+                                        </v-btn>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </v-table>
+                        </div>
                     </v-col>
                 </v-row>
                 <v-dialog
@@ -510,6 +512,17 @@ main {
     margin-left: 30px;
 }
 
+.table-container {
+    width: 100%;
+    overflow-x: visible;
+}
+
+.table {
+    width: 100%;
+    min-width: auto;
+    table-layout: auto;
+}
+
 @media screen and (max-width: 850px) {
     h1 {
         text-align: center;
@@ -540,6 +553,12 @@ main {
 
     .table {
         width: 100%;
+        display: block;
+        overflow-x: auto;
+    }
+
+    .table-container {
+        overflow-x: auto;
     }
 
     .responsive-col {
