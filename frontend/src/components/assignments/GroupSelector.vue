@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import { computed, ref, watch } from "vue";
-    import draggable from "vuedraggable";
     import { useI18n } from "vue-i18n";
     import { useClassStudentsQuery } from "@/queries/classes";
 
@@ -46,7 +45,12 @@
 
             // Initialize groups if they exist
             if (existingGroups && existingGroups.length > 0) {
-                currentGroups.value = existingGroups.map((g) => [...g.members]);
+                currentGroups.value = existingGroups.map((group) =>
+                    group.members.map(member => ({
+                        username: member.username,
+                        fullName: `${member.firstName} ${member.lastName}`
+                    }))
+                );
                 const assignedUsernames = new Set(
                     existingGroups.flatMap((g) => g.members.map((m: StudentItem) => m.username)),
                 );
@@ -62,6 +66,7 @@
         },
         { immediate: true },
     );
+
 
     // Random groups functions
     function generateRandomGroups() {
@@ -195,22 +200,9 @@
         >
             <h3 class="mb-2">{{ t("current-groups") }}</h3>
             <div
-                v-for="(group, index) in currentGroups"
-                :key="'preview-' + index"
-                class="mb-3"
             >
-                <div class="d-flex align-center">
-                    <strong class="mr-2">{{ t("group") }} {{ index + 1 }}:</strong>
-                    <span class="text-caption">({{ group.length }} {{ t("members") }})</span>
-                </div>
                 <div class="d-flex flex-wrap">
-                    <v-chip
-                        v-for="student in group"
-                        :key="student.username"
-                        class="ma-1"
-                    >
-                        {{ student.fullName }}
-                    </v-chip>
+                    <label>{{currentGroups.length}}</label>
                 </div>
             </div>
 
@@ -218,7 +210,7 @@
                 v-if="unassignedStudents.length > 0"
                 class="mt-3"
             >
-                <strong>{{ t("unassigned") }}:</strong>
+                <strong>{{ t("unassigned-students") }}:</strong>
                 <div class="d-flex flex-wrap">
                     <label>{{unassignedStudents.length}}</label>
                 </div>

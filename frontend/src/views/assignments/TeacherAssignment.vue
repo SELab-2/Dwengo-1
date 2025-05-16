@@ -1,146 +1,146 @@
 <script setup lang="ts">
-    import { computed, type Ref, ref, watch, watchEffect } from "vue";
-    import { useI18n } from "vue-i18n";
-    import {
-        useAssignmentQuery,
-        useDeleteAssignmentMutation,
-        useUpdateAssignmentMutation,
-    } from "@/queries/assignments.ts";
-    import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import { useGroupsQuery } from "@/queries/groups.ts";
-    import { useGetAllLearningPaths, useGetLearningPathQuery } from "@/queries/learning-paths.ts";
-    import type { Language } from "@/data-objects/language.ts";
-    import type { AssignmentResponse } from "@/controllers/assignments.ts";
-    import type { GroupDTO, GroupDTOId } from "@dwengo-1/common/interfaces/group";
-    import type { LearningPath } from "@/data-objects/learning-paths/learning-path";
-    import { descriptionRules, learningPathRules } from "@/utils/assignment-rules.ts";
-    import GroupSubmissionStatus from "@/components/GroupSubmissionStatus.vue";
-    import GroupProgressRow from "@/components/GroupProgressRow.vue";
-    import type { AssignmentDTO } from "@dwengo-1/common/dist/interfaces/assignment.ts";
-    import GroupSelector from "@/components/assignments/GroupSelector.vue";
+import {computed, type Ref, ref, watch, watchEffect} from "vue";
+import {useI18n} from "vue-i18n";
+import {
+    useAssignmentQuery,
+    useDeleteAssignmentMutation,
+    useUpdateAssignmentMutation,
+} from "@/queries/assignments.ts";
+import UsingQueryResult from "@/components/UsingQueryResult.vue";
+import {useGroupsQuery} from "@/queries/groups.ts";
+import {useGetAllLearningPaths, useGetLearningPathQuery} from "@/queries/learning-paths.ts";
+import type {Language} from "@/data-objects/language.ts";
+import type {AssignmentResponse} from "@/controllers/assignments.ts";
+import type {GroupDTO, GroupDTOId} from "@dwengo-1/common/interfaces/group";
+import type {LearningPath} from "@/data-objects/learning-paths/learning-path";
+import {descriptionRules, learningPathRules} from "@/utils/assignment-rules.ts";
+import GroupSubmissionStatus from "@/components/GroupSubmissionStatus.vue";
+import GroupProgressRow from "@/components/GroupProgressRow.vue";
+import type {AssignmentDTO} from "@dwengo-1/common/dist/interfaces/assignment.ts";
+import GroupSelector from "@/components/assignments/GroupSelector.vue";
 
-    const props = defineProps<{
-        classId: string;
-        assignmentId: number;
-        useGroupsWithProgress: (
-            groups: Ref<GroupDTO[]>,
-            hruid: Ref<string>,
-            language: Ref<Language>,
-        ) => { groupProgressMap: Map<number, number> };
-    }>();
+const props = defineProps<{
+    classId: string;
+    assignmentId: number;
+    useGroupsWithProgress: (
+        groups: Ref<GroupDTO[]>,
+        hruid: Ref<string>,
+        language: Ref<Language>,
+    ) => { groupProgressMap: Map<number, number> };
+}>();
 
-    const isEditing = ref(false);
+const isEditing = ref(false);
 
-    const { t } = useI18n();
-    const lang = ref();
-    const groups = ref<GroupDTO[] | GroupDTOId[]>([]);
-    const learningPath = ref();
-    const form = ref();
+const {t} = useI18n();
+const lang = ref();
+const groups = ref<GroupDTO[] | GroupDTOId[]>([]);
+const learningPath = ref();
+const form = ref();
 
-    const editingLearningPath = ref(learningPath);
-    const description = ref("");
-    const editGroups = ref(false);
+const editingLearningPath = ref(learningPath);
+const description = ref("");
+const editGroups = ref(false);
 
-    const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
-    // Get learning path object
-    const lpQueryResult = useGetLearningPathQuery(
-        computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
-        computed(() => assignmentQueryResult.data.value?.assignment?.language as Language),
-    );
+const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
+// Get learning path object
+const lpQueryResult = useGetLearningPathQuery(
+    computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
+    computed(() => assignmentQueryResult.data.value?.assignment?.language as Language),
+);
 
-    // Get all the groups withing the assignment
-    const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
-    groups.value = groupsQueryResult.data.value?.groups ?? [];
+// Get all the groups withing the assignment
+const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
+groups.value = groupsQueryResult.data.value?.groups ?? [];
 
-    watchEffect(() => {
-        learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
-        lang.value = assignmentQueryResult.data.value?.assignment?.language as Language;
-    });
+watchEffect(() => {
+    learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
+    lang.value = assignmentQueryResult.data.value?.assignment?.language as Language;
+});
 
-    const allGroups = computed(() => {
-        const groups = groupsQueryResult.data.value?.groups;
+const allGroups = computed(() => {
+    const groups = groupsQueryResult.data.value?.groups;
 
-        if (!groups) return [];
+    if (!groups) return [];
 
-        // Sort by original groupNumber
-        const sortedGroups = [...groups].sort((a, b) => a.groupNumber - b.groupNumber);
+    // Sort by original groupNumber
+    const sortedGroups = [...groups].sort((a, b) => a.groupNumber - b.groupNumber);
 
-        // Assign new sequential numbers starting from 1
-        return sortedGroups.map((group, index) => ({
-            groupNo: index + 1, // New group number that will be used
-            name: `${t("group")} ${index + 1}`,
-            members: group.members,
-            originalGroupNo: group.groupNumber, // Keep original number if needed
-        }));
-    });
+    // Assign new sequential numbers starting from 1
+    return sortedGroups.map((group, index) => ({
+        groupNo: index + 1, // New group number that will be used
+        name: `${t("group")} ${index + 1}`,
+        members: group.members,
+        originalGroupNo: group.groupNumber, // Keep original number if needed
+    }));
+});
 
-    const dialog = ref(false);
-    const selectedGroup = ref({});
+const dialog = ref(false);
+const selectedGroup = ref({});
 
-    function openGroupDetails(group): void {
-        selectedGroup.value = group;
-        dialog.value = true;
-    }
+function openGroupDetails(group): void {
+    selectedGroup.value = group;
+    dialog.value = true;
+}
 
-    async function deleteAssignment(num: number, clsId: string): Promise<void> {
-        const { mutate } = useDeleteAssignmentMutation();
-        mutate(
-            { cid: clsId, an: num },
-            {
-                onSuccess: () => {
-                    window.location.href = "/user/assignment";
-                },
+async function deleteAssignment(num: number, clsId: string): Promise<void> {
+    const {mutate} = useDeleteAssignmentMutation();
+    mutate(
+        {cid: clsId, an: num},
+        {
+            onSuccess: () => {
+                window.location.href = "/user/assignment";
             },
-        );
+        },
+    );
+}
+
+function goToLearningPathLink(): string | undefined {
+    const assignment = assignmentQueryResult.data.value?.assignment;
+    const lp = lpQueryResult.data.value;
+
+    if (!assignment || !lp) return undefined;
+
+    return `/learningPath/${lp.hruid}/${assignment.language}/${lp.startNode.learningobjectHruid}?assignmentNo=${props.assignmentId}&classId=${props.classId}`;
+}
+
+function goToGroupSubmissionLink(groupNo: number): string | undefined {
+    const lp = lpQueryResult.data.value;
+    if (!lp) return undefined;
+
+    return `/learningPath/${lp.hruid}/${lp.language}/${lp.startNode.learningobjectHruid}?forGroup=${groupNo}&assignmentNo=${props.assignmentId}&classId=${props.classId}`;
+}
+
+const learningPathsQueryResults = useGetAllLearningPaths(lang);
+
+const {mutate, data, isSuccess} = useUpdateAssignmentMutation();
+
+watch([isSuccess, data], ([success, newData]) => {
+    if (success && newData?.assignment) {
+        window.location.reload();
     }
+});
 
-    function goToLearningPathLink(): string | undefined {
-        const assignment = assignmentQueryResult.data.value?.assignment;
-        const lp = lpQueryResult.data.value;
+async function saveChanges(): Promise<void> {
+    const {valid} = await form.value.validate();
+    if (!valid) return;
 
-        if (!assignment || !lp) return undefined;
+    isEditing.value = false;
 
-        return `/learningPath/${lp.hruid}/${assignment.language}/${lp.startNode.learningobjectHruid}?assignmentNo=${props.assignmentId}&classId=${props.classId}`;
-    }
+    const lp = learningPath.value;
 
-    function goToGroupSubmissionLink(groupNo: number): string | undefined {
-        const lp = lpQueryResult.data.value;
-        if (!lp) return undefined;
+    const assignmentDTO: AssignmentDTO = {
+        id: assignmentQueryResult.data.value?.assignment.id,
+        description: description.value,
+        learningPath: lp || "",
+        deadline: new Date(),
+    };
 
-        return `/learningPath/${lp.hruid}/${lp.language}/${lp.startNode.learningobjectHruid}?forGroup=${groupNo}&assignmentNo=${props.assignmentId}&classId=${props.classId}`;
-    }
-
-    const learningPathsQueryResults = useGetAllLearningPaths(lang);
-
-    const { mutate, data, isSuccess } = useUpdateAssignmentMutation();
-
-    watch([isSuccess, data], ([success, newData]) => {
-        if (success && newData?.assignment) {
-            window.location.reload();
-        }
+    mutate({
+        cid: assignmentQueryResult.data.value?.assignment.within,
+        an: assignmentQueryResult.data.value?.assignment.id,
+        data: assignmentDTO,
     });
-
-    async function saveChanges(): Promise<void> {
-        const { valid } = await form.value.validate();
-        if (!valid) return;
-
-        isEditing.value = false;
-
-        const lp = learningPath.value;
-
-        const assignmentDTO: AssignmentDTO = {
-            id: assignmentQueryResult.data.value?.assignment.id,
-            description: description.value,
-            learningPath: lp || "",
-            deadline: new Date(),
-        };
-
-        mutate({
-            cid: assignmentQueryResult.data.value?.assignment.within,
-            an: assignmentQueryResult.data.value?.assignment.id,
-            data: assignmentDTO,
-        });
-    }
+}
 </script>
 
 <template>
@@ -207,7 +207,7 @@
                                                         editingLearningPath = learningPath;
                                                     }
                                                 "
-                                                >{{ t("cancel") }}
+                                            >{{ t("cancel") }}
                                             </v-btn>
 
                                             <v-btn
@@ -238,7 +238,7 @@
                                 </div>
 
                                 <v-card-title class="text-h4 assignmentTopTitle"
-                                    >{{ assignmentResponse.data.assignment.title }}
+                                >{{ assignmentResponse.data.assignment.title }}
                                 </v-card-title>
                                 <v-card-subtitle
                                     v-if="!isEditing"
@@ -320,7 +320,7 @@
                                         >
                                             <v-list-item-content>
                                                 <v-list-item-title
-                                                    >{{ member.firstName + " " + member.lastName }}
+                                                >{{ member.firstName + " " + member.lastName }}
                                                 </v-list-item-title>
                                             </v-list-item-content>
                                         </v-list-item>
@@ -330,7 +330,7 @@
                                     <v-btn
                                         color="primary"
                                         @click="dialog = false"
-                                        >Close
+                                    >Close
                                     </v-btn>
                                 </v-card-actions>
                             </v-card>
@@ -346,65 +346,65 @@
                     >
                         <v-table class="table">
                             <thead>
-                                <tr>
-                                    <th class="header">{{ t("group") }}</th>
-                                    <th class="header">{{ t("progress") }}</th>
-                                    <th class="header">{{ t("submission") }}</th>
-                                    <th class="header">
-                                        <v-btn
-                                            @click="editGroups = true"
-                                            variant="text"
-                                        >
-                                            <v-icon>mdi-pencil</v-icon>
-                                        </v-btn>
-                                    </th>
-                                </tr>
+                            <tr>
+                                <th class="header">{{ t("group") }}</th>
+                                <th class="header">{{ t("progress") }}</th>
+                                <th class="header">{{ t("submission") }}</th>
+                                <th class="header">
+                                    <v-btn
+                                        @click="editGroups = true"
+                                        variant="text"
+                                    >
+                                        <v-icon>mdi-pencil</v-icon>
+                                    </v-btn>
+                                </th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr
-                                    v-for="g in allGroups"
-                                    :key="g.originalGroupNo"
-                                >
-                                    <td>
-                                        <v-btn
-                                            @click="openGroupDetails(g)"
-                                            variant="text"
-                                        >
-                                            {{ g.name }}
-                                            <v-icon end>mdi-menu-right</v-icon>
-                                        </v-btn>
-                                    </td>
+                            <tr
+                                v-for="g in allGroups"
+                                :key="g.originalGroupNo"
+                            >
+                                <td>
+                                    <v-btn
+                                        @click="openGroupDetails(g)"
+                                        variant="text"
+                                    >
+                                        {{ g.name }}
+                                        <v-icon end>mdi-menu-right</v-icon>
+                                    </v-btn>
+                                </td>
 
-                                    <td>
-                                        <GroupProgressRow
-                                            :group-number="g.originalGroupNo"
-                                            :learning-path="learningPath"
-                                            :language="lang"
-                                            :assignment-id="assignmentId"
-                                            :class-id="classId"
-                                        />
-                                    </td>
+                                <td>
+                                    <GroupProgressRow
+                                        :group-number="g.originalGroupNo"
+                                        :learning-path="learningPath"
+                                        :language="lang"
+                                        :assignment-id="assignmentId"
+                                        :class-id="classId"
+                                    />
+                                </td>
 
-                                    <td>
-                                        <GroupSubmissionStatus
-                                            :group="g"
-                                            :assignment-id="assignmentId"
-                                            :class-id="classId"
-                                            :language="lang"
-                                            :go-to-group-submission-link="goToGroupSubmissionLink"
-                                        />
-                                    </td>
+                                <td>
+                                    <GroupSubmissionStatus
+                                        :group="g"
+                                        :assignment-id="assignmentId"
+                                        :class-id="classId"
+                                        :language="lang"
+                                        :go-to-group-submission-link="goToGroupSubmissionLink"
+                                    />
+                                </td>
 
-                                    <!-- Edit icon -->
-                                    <td>
-                                        <v-btn
-                                            @click=""
-                                            variant="text"
-                                        >
-                                            <v-icon color="red">mdi-delete</v-icon>
-                                        </v-btn>
-                                    </td>
-                                </tr>
+                                <!-- Edit icon -->
+                                <td>
+                                    <v-btn
+                                        @click=""
+                                        variant="text"
+                                    >
+                                        <v-icon color="red">mdi-delete</v-icon>
+                                    </v-btn>
+                                </td>
+                            </tr>
                             </tbody>
                         </v-table>
                     </v-col>
@@ -414,14 +414,24 @@
                     max-width="800"
                     persistent
                 >
-                    <v-card-text>
-                        <GroupSelector
-                            :groups="allGroups"
-                            :class-id="props.classId"
-                            :assignment-id="props.assignmentId"
-                            @close="editGroups = false"
-                        />
-                    </v-card-text>
+                    <v-card>
+                        <v-card-text>
+                            <GroupSelector
+                                :groups="allGroups"
+                                :class-id="props.classId"
+                                :assignment-id="props.assignmentId"
+                                @close="editGroups = false"
+                            />
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-btn
+                                text
+                                @click="editGroups = false"
+                            >{{ t("cancel") }}
+                            </v-btn
+                            >
+                        </v-card-actions>
+                    </v-card>
                 </v-dialog>
             </v-container>
         </using-query-result>
@@ -429,112 +439,112 @@
 </template>
 
 <style scoped>
-    @import "@/assets/assignment.css";
+@import "@/assets/assignment.css";
 
-    .table-scroll {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
+.table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
 
-    .header {
-        font-weight: bold !important;
-        background-color: #0e6942;
-        color: white;
-        padding: 10px;
-    }
+.header {
+    font-weight: bold !important;
+    background-color: #0e6942;
+    color: white;
+    padding: 10px;
+}
 
-    table thead th:first-child {
-        border-top-left-radius: 10px;
-    }
+table thead th:first-child {
+    border-top-left-radius: 10px;
+}
 
-    .table thead th:last-child {
-        border-top-right-radius: 10px;
-    }
+.table thead th:last-child {
+    border-top-right-radius: 10px;
+}
 
-    .table tbody tr:nth-child(odd) {
-        background-color: white;
-    }
+.table tbody tr:nth-child(odd) {
+    background-color: white;
+}
 
-    .table tbody tr:nth-child(even) {
-        background-color: #f6faf2;
-    }
+.table tbody tr:nth-child(even) {
+    background-color: #f6faf2;
+}
 
-    td,
-    th {
-        border-bottom: 1px solid #0e6942;
-        border-top: 1px solid #0e6942;
-    }
+td,
+th {
+    border-bottom: 1px solid #0e6942;
+    border-top: 1px solid #0e6942;
+}
 
-    .table {
-        width: 90%;
-        padding-top: 10px;
-        border-collapse: collapse;
-    }
+.table {
+    width: 90%;
+    padding-top: 10px;
+    border-collapse: collapse;
+}
 
+h1 {
+    color: #0e6942;
+    text-transform: uppercase;
+    font-weight: bolder;
+    padding-top: 2%;
+    font-size: 50px;
+}
+
+h2 {
+    color: #0e6942;
+    font-size: 30px;
+}
+
+.join {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 50px;
+}
+
+.link {
+    color: #0b75bb;
+    text-decoration: underline;
+}
+
+main {
+    margin-left: 30px;
+}
+
+@media screen and (max-width: 850px) {
     h1 {
-        color: #0e6942;
-        text-transform: uppercase;
-        font-weight: bolder;
-        padding-top: 2%;
-        font-size: 50px;
-    }
-
-    h2 {
-        color: #0e6942;
-        font-size: 30px;
+        text-align: center;
+        padding-left: 0;
     }
 
     .join {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        margin-top: 50px;
+        text-align: center;
+        align-items: center;
+        margin-left: 0;
     }
 
-    .link {
-        color: #0b75bb;
-        text-decoration: underline;
+    .sheet {
+        width: 100%;
     }
 
     main {
-        margin-left: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 5px;
     }
 
-    @media screen and (max-width: 850px) {
-        h1 {
-            text-align: center;
-            padding-left: 0;
-        }
-
-        .join {
-            text-align: center;
-            align-items: center;
-            margin-left: 0;
-        }
-
-        .sheet {
-            width: 100%;
-        }
-
-        main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 5px;
-        }
-
-        .custom-breakpoint {
-            flex-direction: column !important;
-        }
-
-        .table {
-            width: 100%;
-        }
-
-        .responsive-col {
-            max-width: 100% !important;
-            flex-basis: 100% !important;
-        }
+    .custom-breakpoint {
+        flex-direction: column !important;
     }
+
+    .table {
+        width: 100%;
+    }
+
+    .responsive-col {
+        max-width: 100% !important;
+        flex-basis: 100% !important;
+    }
+}
 </style>
