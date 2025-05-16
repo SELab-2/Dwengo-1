@@ -8,9 +8,10 @@
     import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
     import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
     import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
+    import { AccountType } from "@dwengo-1/common/util/account-types";
 
     const role = auth.authState.activeRole;
-    const isTeacher = computed(() => role === "teacher");
+    const isTeacher = computed(() => role === AccountType.Teacher);
 
     const route = useRoute();
     const classId = ref<string>(route.params.classId as string);
