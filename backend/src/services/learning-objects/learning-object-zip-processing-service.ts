@@ -5,6 +5,7 @@ import { getAttachmentRepository, getLearningObjectRepository } from '../../data
 import { BadRequestException } from '../../exceptions/bad-request-exception.js';
 import { LearningObjectMetadata } from '@dwengo-1/common/interfaces/learning-content';
 import { DwengoContentType } from './processing/content-type.js';
+import { v4 } from 'uuid';
 
 const METADATA_PATH_REGEX = /.*[/^]metadata\.json$/;
 const CONTENT_PATH_REGEX = /.*[/^]content\.[a-zA-Z]*$/;
@@ -84,6 +85,10 @@ function createLearningObject(metadata: LearningObjectMetadata, content: Buffer,
         teacherExclusive: metadata.teacher_exclusive,
         title: metadata.title,
         version: metadata.version,
+        estimatedTime: metadata.estimated_time ?? 1,
+        targetAges: metadata.target_ages ?? [],
+        difficulty: metadata.difficulty ?? 1,
+        uuid: v4()
     });
     const attachmentEntities = attachments.map((it) =>
         attachmentRepo.create({
