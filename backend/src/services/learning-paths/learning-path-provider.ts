@@ -15,4 +15,9 @@ export interface LearningPathProvider {
      * Search learning paths in the data source using the given search string.
      */
     searchLearningPaths(query: string, language: Language, personalizedFor?: Group): Promise<LearningPath[]>;
+
+    /**
+     * Get all learning paths which have the teacher with the given user as an administrator.
+     */
+    getLearningPathsAdministratedBy(adminUsername: string): Promise<LearningPath[]>;
 }

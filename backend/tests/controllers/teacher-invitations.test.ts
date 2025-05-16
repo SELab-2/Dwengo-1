@@ -12,6 +12,7 @@ import { TeacherInvitationData } from '@dwengo-1/common/interfaces/teacher-invit
 import { getClassHandler } from '../../src/controllers/classes';
 import { BadRequestException } from '../../src/exceptions/bad-request-exception';
 import { ClassStatus } from '@dwengo-1/common/util/class-join-request';
+import { getClass02 } from '../test_assets/classes/classes.testdata';
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
@@ -57,7 +58,7 @@ describe('Teacher controllers', () => {
         const body = {
             sender: 'LimpBizkit',
             receiver: 'testleerkracht1',
-            class: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89',
+            class: getClass02().classId,
         } as TeacherInvitationData;
         req = { body };
 
@@ -67,7 +68,7 @@ describe('Teacher controllers', () => {
             params: {
                 sender: 'LimpBizkit',
                 receiver: 'testleerkracht1',
-                classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89',
+                classId: getClass02().classId,
             },
             body: { accepted: 'false' },
         };
@@ -80,7 +81,7 @@ describe('Teacher controllers', () => {
             params: {
                 sender: 'LimpBizkit',
                 receiver: 'FooFighters',
-                classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89',
+                classId: getClass02().classId,
             },
         };
         await getInvitationHandler(req as Request, res as Response);
@@ -100,7 +101,7 @@ describe('Teacher controllers', () => {
         const body = {
             sender: 'LimpBizkit',
             receiver: 'FooFighters',
-            class: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89',
+            class: getClass02().classId,
         } as TeacherInvitationData;
         req = { body };
 
@@ -111,7 +112,7 @@ describe('Teacher controllers', () => {
 
         req = {
             params: {
-                id: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89',
+                id: getClass02().classId,
             },
         };
 

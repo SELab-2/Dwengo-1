@@ -28,7 +28,7 @@
                     alt="Dwengo logo"
                     style="align-self: center"
                 />
-                <h1>{{ t("homeTitle") }}</h1>
+                <h1 class="h1">{{ t("homeTitle") }}</h1>
                 <p class="info">
                     {{ t("homeIntroduction1") }}
                 </p>
@@ -84,7 +84,10 @@
                 </div>
             </div>
             <div class="container_right">
-                <v-menu open-on-hover>
+                <v-menu
+                    open-on-hover
+                    open-on-click
+                >
                     <template v-slot:activator="{ props }">
                         <v-btn
                             v-bind="props"

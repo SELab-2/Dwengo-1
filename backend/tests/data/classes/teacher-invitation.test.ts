@@ -4,6 +4,7 @@ import { getClassRepository, getTeacherInvitationRepository, getTeacherRepositor
 import { TeacherInvitationRepository } from '../../../src/data/classes/teacher-invitation-repository';
 import { TeacherRepository } from '../../../src/data/users/teacher-repository';
 import { ClassRepository } from '../../../src/data/classes/class-repository';
+import { getClass01, getClass02 } from '../../test_assets/classes/classes.testdata';
 
 describe('ClassRepository', () => {
     let teacherInvitationRepository: TeacherInvitationRepository;
@@ -34,7 +35,7 @@ describe('ClassRepository', () => {
     });
 
     it('should return all invitations for a class', async () => {
-        const class_ = await classRepository.findById('34d484a1-295f-4e9f-bfdc-3e7a23d86a89');
+        const class_ = await classRepository.findById(getClass02().classId);
         const invitations = await teacherInvitationRepository.findAllInvitationsForClass(class_!);
 
         expect(invitations).toBeTruthy();
@@ -42,7 +43,7 @@ describe('ClassRepository', () => {
     });
 
     it('should not find a removed invitation', async () => {
-        const class_ = await classRepository.findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
+        const class_ = await classRepository.findById(getClass01().classId);
         const sender = await teacherRepository.findByUsername('FooFighters');
         const receiver = await teacherRepository.findByUsername('LimpBizkit');
         await teacherInvitationRepository.deleteBy(class_!, sender!, receiver!);

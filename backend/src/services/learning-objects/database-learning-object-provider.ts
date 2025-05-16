@@ -109,6 +109,15 @@ const databaseLearningObjectProvider: LearningObjectProvider = {
         );
         return learningObjects.filter((it) => it !== null);
     },
+
+    /**
+     * Returns all learning objects containing the given username as an admin.
+     */
+    async getLearningObjectsAdministratedBy(adminUsername: string): Promise<FilteredLearningObject[]> {
+        const learningObjectRepo = getLearningObjectRepository();
+        const learningObjects = await learningObjectRepo.findAllByAdmin(adminUsername);
+        return learningObjects.map((it) => convertLearningObject(it)).filter((it) => it !== null);
+    },
 };
 
 export default databaseLearningObjectProvider;

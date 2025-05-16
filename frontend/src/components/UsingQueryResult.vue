@@ -27,7 +27,7 @@
     <div v-if="isError">
         <v-empty-state
             icon="mdi-alert-circle-outline"
-            :text="errorMessage"
+            :text="t(errorMessage)"
             :title="t('error_title')"
         ></v-empty-state>
     </div>

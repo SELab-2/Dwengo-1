@@ -2,12 +2,9 @@ import {
     getAssignmentRepository,
     getClassJoinRequestRepository,
     getClassRepository,
-    getLearningObjectRepository,
-    getQuestionRepository,
     getTeacherRepository,
 } from '../data/repositories.js';
 import { mapToClassDTO } from '../interfaces/class.js';
-import { mapToQuestionDTO, mapToQuestionDTOId } from '../interfaces/question.js';
 import { mapToTeacher, mapToTeacherDTO } from '../interfaces/teacher.js';
 import { Teacher } from '../entities/users/teacher.entity.js';
 import { fetchStudent } from './students.js';
@@ -16,10 +13,6 @@ import { mapToStudentRequestDTO } from '../interfaces/student-request.js';
 import { TeacherRepository } from '../data/users/teacher-repository.js';
 import { ClassRepository } from '../data/classes/class-repository.js';
 import { Class } from '../entities/classes/class.entity.js';
-import { LearningObjectRepository } from '../data/content/learning-object-repository.js';
-import { LearningObject } from '../entities/content/learning-object.entity.js';
-import { QuestionRepository } from '../data/questions/question-repository.js';
-import { Question } from '../entities/questions/question.entity.js';
 import { ClassJoinRequestRepository } from '../data/classes/class-join-request-repository.js';
 import { Student } from '../entities/users/student.entity.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
@@ -27,12 +20,12 @@ import { addClassStudent, fetchClass, getClassStudentsDTO } from './classes.js';
 import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { ClassDTO } from '@dwengo-1/common/interfaces/class';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
-import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
 import { ClassStatus } from '@dwengo-1/common/util/class-join-request';
 import { ConflictException } from '../exceptions/conflict-exception.js';
 import { AssignmentDTO, AssignmentDTOId } from '@dwengo-1/common/interfaces/assignment';
 import { mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment.js';
+import { mapToUsername } from '../interfaces/user.js';
 
 export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | string[]> {
     const teacherRepository: TeacherRepository = getTeacherRepository();
@@ -41,7 +34,7 @@ export async function getAllTeachers(full: boolean): Promise<TeacherDTO[] | stri
     if (full) {
         return users.map(mapToTeacherDTO);
     }
-    return users.map((user) => user.username);
+    return users.map(mapToUsername);
 }
 
 export async function fetchTeacher(username: string): Promise<Teacher> {
@@ -60,7 +53,8 @@ export async function getTeacher(username: string): Promise<TeacherDTO> {
     return mapToTeacherDTO(user);
 }
 
-export async function createTeacher(userData: TeacherDTO): Promise<TeacherDTO> {
+// TODO update parameter
+export async function createTeacher(userData: TeacherDTO, _update?: boolean): Promise<TeacherDTO> {
     const teacherRepository: TeacherRepository = getTeacherRepository();
 
     const newTeacher = mapToTeacher(userData);
@@ -124,35 +118,15 @@ export async function getStudentsByTeacher(username: string, full: boolean): Pro
 
     const classIds: string[] = classes.map((cls) => cls.id);
 
-    const students: StudentDTO[] = (await Promise.all(classIds.map(async (username) => await getClassStudentsDTO(username)))).flat();
+    const students: StudentDTO[] = (await Promise.all(classIds.map(async (classId) => await getClassStudentsDTO(classId))))
+        .flat()
+        .filter((student, index, self) => self.findIndex((s) => s.username === student.username) === index);
 
     if (full) {
         return students;
     }
 
     return students.map((student) => student.username);
-}
-
-export async function getTeacherQuestions(username: string, full: boolean): Promise<QuestionDTO[] | QuestionId[]> {
-    const teacher: Teacher = await fetchTeacher(username);
-
-    // Find all learning objects that this teacher manages
-    const learningObjectRepository: LearningObjectRepository = getLearningObjectRepository();
-    const learningObjects: LearningObject[] = await learningObjectRepository.findAllByTeacher(teacher);
-
-    if (!learningObjects || learningObjects.length === 0) {
-        return [];
-    }
-
-    // Fetch all questions related to these learning objects
-    const questionRepository: QuestionRepository = getQuestionRepository();
-    const questions: Question[] = await questionRepository.findAllByLearningObjects(learningObjects);
-
-    if (full) {
-        return questions.map(mapToQuestionDTO);
-    }
-
-    return questions.map(mapToQuestionDTOId);
 }
 
 export async function getJoinRequestsByClass(classId: string): Promise<ClassJoinRequestDTO[]> {

@@ -5,6 +5,7 @@
     import { AGE_TO_THEMES, THEMESITEMS } from "@/utils/constants.ts";
     import { useThemeQuery } from "@/queries/themes.ts";
     import type { Theme } from "@/data-objects/theme.ts";
+    import authService from "@/services/auth/auth-service";
 
     const props = defineProps({
         selectedTheme: { type: String, required: true },
@@ -33,6 +34,8 @@
             cards.value = themes;
         }
     });
+
+    const isTeacher = computed(() => authService.authState.activeRole === "teacher");
 </script>
 
 <template>
@@ -58,6 +61,39 @@
 
         <v-row v-else>
             <v-col
+                cols="12"
+                sm="6"
+                md="4"
+                lg="4"
+                class="d-flex"
+            >
+                <ThemeCard
+                    path="/learningPath/search"
+                    :is-absolute-path="true"
+                    :title="t('searchAllLearningPathsTitle')"
+                    :description="t('searchAllLearningPathsDescription')"
+                    icon="mdi-magnify"
+                    class="fill-height grey-bg-card"
+                />
+            </v-col>
+            <v-col
+                v-if="isTeacher"
+                cols="12"
+                sm="6"
+                md="4"
+                lg="4"
+                class="d-flex"
+            >
+                <ThemeCard
+                    path="/my-content"
+                    :is-absolute-path="true"
+                    :title="t('ownLearningContentTitle')"
+                    :description="t('ownLearningContentDescription')"
+                    icon="mdi-pencil"
+                    class="fill-height grey-bg-card"
+                />
+            </v-col>
+            <v-col
                 v-for="card in cards"
                 :key="card.key"
                 cols="12"
@@ -74,24 +110,13 @@
                     class="fill-height"
                 />
             </v-col>
-            <v-col
-                cols="12"
-                sm="6"
-                md="4"
-                lg="4"
-                class="d-flex"
-            >
-                <ThemeCard
-                    path="/learningPath/search"
-                    :is-absolute-path="true"
-                    :title="t('searchAllLearningPathsTitle')"
-                    :description="t('searchAllLearningPathsDescription')"
-                    icon="mdi-magnify"
-                    class="fill-height"
-                />
-            </v-col>
         </v-row>
     </v-container>
 </template>
 
-<style scoped></style>
+<style scoped>
+    .grey-bg-card {
+        background-color: #f6faf2;
+        border: 2px solid #0e6942;
+    }
+</style>

@@ -1,4 +1,4 @@
-import { Collection, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
+import { Cascade, Collection, Entity, Enum, ManyToMany, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Teacher } from '../users/teacher.entity.js';
 import { LearningPathRepository } from '../../data/content/learning-path-repository.js';
 import { LearningPathNode } from './learning-path-node.entity.js';
@@ -24,6 +24,6 @@ export class LearningPath {
     @Property({ type: 'blob', nullable: true })
     image: Buffer | null = null;
 
-    @OneToMany({ entity: () => LearningPathNode, mappedBy: 'learningPath' })
+    @OneToMany({ entity: () => LearningPathNode, mappedBy: 'learningPath', cascade: [Cascade.ALL] })
     nodes: Collection<LearningPathNode> = new Collection<LearningPathNode>(this);
 }

@@ -5,7 +5,7 @@ describe("AssignmentController Tests", () => {
     let controller: AssignmentController;
 
     beforeEach(() => {
-        controller = new AssignmentController("8764b861-90a6-42e5-9732-c0d9eb2f55f9"); // Example class ID
+        controller = new AssignmentController("X2J9QT"); // Example class ID (class01)
     });
 
     it("should fetch all assignments", async () => {

@@ -9,6 +9,7 @@ export default defineConfig({
     resolve: {
         alias: {
             "@": fileURLToPath(new URL("./src", import.meta.url)),
+            "@dwengo-1/common": fileURLToPath(new URL("../common/src", import.meta.url)),
         },
     },
     build: {
