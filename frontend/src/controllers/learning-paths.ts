@@ -1,8 +1,8 @@
 import { BaseController } from "@/controllers/base-controller.ts";
-import { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
 import type { Language } from "@/data-objects/language.ts";
-import { single } from "@/utils/response-assertions.ts";
-import type { LearningPathDTO } from "@/data-objects/learning-paths/learning-path-dto.ts";
+import { LearningPath } from "@/data-objects/learning-paths/learning-path";
+import { NotFoundException } from "@/exception/not-found-exception";
+import type { LearningPath as LearningPathDTO } from "@dwengo-1/common/interfaces/learning-content";
 
 export class LearningPathController extends BaseController {
     constructor() {
@@ -24,10 +24,13 @@ export class LearningPathController extends BaseController {
             assignmentNo: forGroup?.assignmentNo,
             classId: forGroup?.classId,
         });
-        return LearningPath.fromDTO(single(dtos));
+        if (dtos.length === 0) {
+            throw new NotFoundException("learningPathNotFound");
+        }
+        return LearningPath.fromDTO(dtos[0]);
     }
-    async getAllByTheme(theme: string): Promise<LearningPath[]> {
-        const dtos = await this.get<LearningPathDTO[]>("/", { theme });
+    async getAllByThemeAndLanguage(theme: string, language: Language): Promise<LearningPath[]> {
+        const dtos = await this.get<LearningPathDTO[]>("/", { theme, language });
         return dtos.map((dto) => LearningPath.fromDTO(dto));
     }
 
@@ -35,5 +38,21 @@ export class LearningPathController extends BaseController {
         const query = language ? { language } : undefined;
         const dtos = await this.get<LearningPathDTO[]>("/", query);
         return dtos.map((dto) => LearningPath.fromDTO(dto));
+    }
+
+    async getAllByAdminRaw(admin: string): Promise<LearningPathDTO[]> {
+        return await this.get<LearningPathDTO[]>("/", { admin });
+    }
+
+    async postLearningPath(learningPath: Partial<LearningPathDTO>): Promise<LearningPathDTO> {
+        return await this.post<LearningPathDTO>("/", learningPath);
+    }
+
+    async putLearningPath(learningPath: Partial<LearningPathDTO>): Promise<LearningPathDTO> {
+        return await this.put<LearningPathDTO>(`/${learningPath.hruid}/${learningPath.language}`, learningPath);
+    }
+
+    async deleteLearningPath(hruid: string, language: string): Promise<LearningPathDTO> {
+        return await this.delete<LearningPathDTO>(`/${hruid}/${language}`);
     }
 }

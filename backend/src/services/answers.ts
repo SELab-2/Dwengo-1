@@ -34,7 +34,7 @@ export async function createAnswer(questionId: QuestionId, answerData: AnswerDat
     return mapToAnswerDTO(answer);
 }
 
-async function fetchAnswer(questionId: QuestionId, sequenceNumber: number): Promise<Answer> {
+export async function fetchAnswer(questionId: QuestionId, sequenceNumber: number): Promise<Answer> {
     const answerRepository = getAnswerRepository();
     const question = await fetchQuestion(questionId);
     const answer = await answerRepository.findAnswer(question, sequenceNumber);

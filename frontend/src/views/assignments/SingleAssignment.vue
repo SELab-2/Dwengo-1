@@ -4,9 +4,10 @@
     import StudentAssignment from "@/views/assignments/StudentAssignment.vue";
     import TeacherAssignment from "@/views/assignments/TeacherAssignment.vue";
     import { useRoute } from "vue-router";
+    import { AccountType } from "@dwengo-1/common/util/account-types";
 
     const role = auth.authState.activeRole;
-    const isTeacher = computed(() => role === "teacher");
+    const isTeacher = computed(() => role === AccountType.Teacher);
 
     const route = useRoute();
     const classId = ref<string>(route.params.classId as string);

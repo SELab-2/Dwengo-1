@@ -12,7 +12,7 @@ export class LearningObjectRepository extends DwengoEntityRepository<LearningObj
                 version: identifier.version,
             },
             {
-                populate: ['keywords'],
+                populate: ['keywords', 'admins'],
             }
         );
     }
@@ -30,5 +30,24 @@ export class LearningObjectRepository extends DwengoEntityRepository<LearningObj
                 },
             }
         );
+    }
+
+    public async findAllByAdmin(adminUsername: string): Promise<LearningObject[]> {
+        return this.find(
+            {
+                admins: {
+                    username: adminUsername,
+                },
+            },
+            { populate: ['admins'] } // Make sure to load admin relations
+        );
+    }
+
+    public async removeByIdentifier(identifier: LearningObjectIdentifier): Promise<LearningObject | null> {
+        const learningObject = await this.findByIdentifier(identifier);
+        if (learningObject) {
+            await this.em.removeAndFlush(learningObject);
+        }
+        return learningObject;
     }
 }

@@ -53,9 +53,9 @@
         white-space: normal;
     }
     .results-grid {
-        margin: 20px;
+        margin: 20px auto;
         display: flex;
-        align-items: stretch;
+        justify-content: center;
         gap: 20px;
         flex-wrap: wrap;
     }
