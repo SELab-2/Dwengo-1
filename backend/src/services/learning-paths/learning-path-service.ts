@@ -149,8 +149,8 @@ const learningPathService = {
                 })
             )
         );
-        if (learningObjectsOnPath.some(it => !it)) {
-            throw new BadRequestException("pathContainsNonExistingLearningObjects")
+        if (learningObjectsOnPath.some((it) => !it)) {
+            throw new BadRequestException('pathContainsNonExistingLearningObjects');
         }
 
         try {

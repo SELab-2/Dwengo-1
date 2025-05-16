@@ -69,7 +69,7 @@ function createLearningObject(metadata: LearningObjectMetadata, content: Buffer,
     };
 
     if (!metadata.target_ages || metadata.target_ages.length === 0) {
-        throw new BadRequestException("errorTargetAgesMandatory");
+        throw new BadRequestException('errorTargetAgesMandatory');
     }
 
     const learningObject = learningObjectRepo.create({
@@ -92,7 +92,7 @@ function createLearningObject(metadata: LearningObjectMetadata, content: Buffer,
         estimatedTime: metadata.estimated_time ?? 1,
         targetAges: metadata.target_ages ?? [],
         difficulty: metadata.difficulty ?? 1,
-        uuid: v4()
+        uuid: v4(),
     });
     const attachmentEntities = attachments.map((it) =>
         attachmentRepo.create({
