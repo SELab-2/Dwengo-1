@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-import UsingQueryResult from "@/components/UsingQueryResult.vue";
-import { useAssignmentSubmissionsQuery } from "@/queries/assignments.ts";
-import type { SubmissionsResponse } from "@/controllers/submissions.ts";
+    import { useI18n } from "vue-i18n";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import { useAssignmentSubmissionsQuery } from "@/queries/assignments.ts";
+    import type { SubmissionsResponse } from "@/controllers/submissions.ts";
 
-const props = defineProps<{
-    group: object;
-    assignmentId: number;
-    classId: string;
-    goToGroupSubmissionLink: (groupNo: number) => void;
-}>();
+    const props = defineProps<{
+        group: object;
+        assignmentId: number;
+        classId: string;
+        goToGroupSubmissionLink: (groupNo: number) => void;
+    }>();
 
-const { t } = useI18n();
-const submissionsQuery = useAssignmentSubmissionsQuery(
-    () => props.classId,
-    () => props.assignmentId,
-    () => props.group.originalGroupNo,
-    () => true,
-);
+    const { t } = useI18n();
+    const submissionsQuery = useAssignmentSubmissionsQuery(
+        () => props.classId,
+        () => props.assignmentId,
+        () => props.group.originalGroupNo,
+        () => true,
+    );
 </script>
 
 <template>

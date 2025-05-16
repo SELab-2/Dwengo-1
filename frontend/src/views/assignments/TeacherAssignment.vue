@@ -1,150 +1,146 @@
 <script setup lang="ts">
-import {computed, type Ref, ref, watch, watchEffect} from "vue";
-import {useI18n} from "vue-i18n";
-import {
-    useAssignmentQuery,
-    useDeleteAssignmentMutation,
-    useUpdateAssignmentMutation
-} from "@/queries/assignments.ts";
-import UsingQueryResult from "@/components/UsingQueryResult.vue";
-import {useGroupsQuery} from "@/queries/groups.ts";
-import {useGetAllLearningPaths, useGetLearningPathQuery} from "@/queries/learning-paths.ts";
-import type {Language} from "@/data-objects/language.ts";
-import type {AssignmentResponse} from "@/controllers/assignments.ts";
-import type {GroupDTO, GroupDTOId} from "@dwengo-1/common/interfaces/group";
-import type {LearningPath} from "@/data-objects/learning-paths/learning-path";
-import {descriptionRules, learningPathRules} from "@/utils/assignment-rules.ts";
-import GroupSubmissionStatus from "@/components/GroupSubmissionStatus.vue"
-import GroupProgressRow from "@/components/GroupProgressRow.vue"
-import type {AssignmentDTO} from "@dwengo-1/common/dist/interfaces/assignment.ts";
-import GroupSelector from "@/components/assignments/GroupSelector.vue";
+    import { computed, type Ref, ref, watch, watchEffect } from "vue";
+    import { useI18n } from "vue-i18n";
+    import {
+        useAssignmentQuery,
+        useDeleteAssignmentMutation,
+        useUpdateAssignmentMutation,
+    } from "@/queries/assignments.ts";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import { useGroupsQuery } from "@/queries/groups.ts";
+    import { useGetAllLearningPaths, useGetLearningPathQuery } from "@/queries/learning-paths.ts";
+    import type { Language } from "@/data-objects/language.ts";
+    import type { AssignmentResponse } from "@/controllers/assignments.ts";
+    import type { GroupDTO, GroupDTOId } from "@dwengo-1/common/interfaces/group";
+    import type { LearningPath } from "@/data-objects/learning-paths/learning-path";
+    import { descriptionRules, learningPathRules } from "@/utils/assignment-rules.ts";
+    import GroupSubmissionStatus from "@/components/GroupSubmissionStatus.vue";
+    import GroupProgressRow from "@/components/GroupProgressRow.vue";
+    import type { AssignmentDTO } from "@dwengo-1/common/dist/interfaces/assignment.ts";
+    import GroupSelector from "@/components/assignments/GroupSelector.vue";
 
-const props = defineProps<{
-    classId: string;
-    assignmentId: number;
-    useGroupsWithProgress: (
-        groups: Ref<GroupDTO[]>,
-        hruid: Ref<string>,
-        language: Ref<Language>,
-    ) => { groupProgressMap: Map<number, number> };
-}>();
+    const props = defineProps<{
+        classId: string;
+        assignmentId: number;
+        useGroupsWithProgress: (
+            groups: Ref<GroupDTO[]>,
+            hruid: Ref<string>,
+            language: Ref<Language>,
+        ) => { groupProgressMap: Map<number, number> };
+    }>();
 
-const isEditing = ref(false);
+    const isEditing = ref(false);
 
-const {t} = useI18n();
-const lang = ref();
-const groups = ref<GroupDTO[] | GroupDTOId[]>([]);
-const learningPath = ref();
-const form = ref();
+    const { t } = useI18n();
+    const lang = ref();
+    const groups = ref<GroupDTO[] | GroupDTOId[]>([]);
+    const learningPath = ref();
+    const form = ref();
 
+    const editingLearningPath = ref(learningPath);
+    const description = ref("");
+    const editGroups = ref(false);
 
-const editingLearningPath = ref(learningPath);
-const description = ref("");
-const editGroups = ref(false);
-
-
-const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
-// Get learning path object
-const lpQueryResult = useGetLearningPathQuery(
-    computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
-    computed(() => assignmentQueryResult.data.value?.assignment?.language as Language),
-);
-
-// Get all the groups withing the assignment
-const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
-groups.value = groupsQueryResult.data.value?.groups ?? [];
-
-watchEffect(() => {
-    learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
-    lang.value = assignmentQueryResult.data.value?.assignment?.language as Language;
-});
-
-const allGroups = computed(() => {
-    const groups = groupsQueryResult.data.value?.groups;
-
-    if (!groups) return [];
-
-    // Sort by original groupNumber
-    const sortedGroups = [...groups].sort((a, b) => a.groupNumber - b.groupNumber);
-
-    // Assign new sequential numbers starting from 1
-    return sortedGroups.map((group, index) => ({
-        groupNo: index + 1, // New group number that will be used
-        name: `${t("group")} ${index + 1}`,
-        members: group.members,
-        originalGroupNo: group.groupNumber, // Keep original number if needed
-    }));
-});
-
-const dialog = ref(false);
-const selectedGroup = ref({});
-
-function openGroupDetails(group): void {
-    selectedGroup.value = group;
-    dialog.value = true;
-}
-
-async function deleteAssignment(num: number, clsId: string): Promise<void> {
-    const {mutate} = useDeleteAssignmentMutation();
-    mutate(
-        {cid: clsId, an: num},
-        {
-            onSuccess: () => {
-                window.location.href = "/user/assignment";
-            },
-        },
+    const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
+    // Get learning path object
+    const lpQueryResult = useGetLearningPathQuery(
+        computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
+        computed(() => assignmentQueryResult.data.value?.assignment?.language as Language),
     );
-}
 
-function goToLearningPathLink(): string | undefined {
-    const assignment = assignmentQueryResult.data.value?.assignment;
-    const lp = lpQueryResult.data.value;
+    // Get all the groups withing the assignment
+    const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
+    groups.value = groupsQueryResult.data.value?.groups ?? [];
 
-    if (!assignment || !lp) return undefined;
-
-    return `/learningPath/${lp.hruid}/${assignment.language}/${lp.startNode.learningobjectHruid}?assignmentNo=${props.assignmentId}&classId=${props.classId}`;
-}
-
-function goToGroupSubmissionLink(groupNo: number): string | undefined {
-    const lp = lpQueryResult.data.value;
-    if (!lp) return undefined;
-
-    return `/learningPath/${lp.hruid}/${lp.language}/${lp.startNode.learningobjectHruid}?forGroup=${groupNo}&assignmentNo=${props.assignmentId}&classId=${props.classId}`;
-}
-
-const learningPathsQueryResults = useGetAllLearningPaths(lang);
-
-const {mutate, data, isSuccess} = useUpdateAssignmentMutation();
-
-watch([isSuccess, data], ([success, newData]) => {
-    if (success && newData?.assignment) {
-        window.location.reload();
-    }
-});
-
-async function saveChanges(): Promise<void> {
-    const {valid} = await form.value.validate();
-    if (!valid) return;
-
-    isEditing.value = false;
-
-    const lp = learningPath.value;
-
-    const assignmentDTO: AssignmentDTO = {
-        id: assignmentQueryResult.data.value?.assignment.id,
-        description: description.value,
-        learningPath: lp || "",
-        deadline: new Date(),
-    };
-
-    mutate({
-        cid: assignmentQueryResult.data.value?.assignment.within,
-        an: assignmentQueryResult.data.value?.assignment.id,
-        data: assignmentDTO
+    watchEffect(() => {
+        learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
+        lang.value = assignmentQueryResult.data.value?.assignment?.language as Language;
     });
-}
 
+    const allGroups = computed(() => {
+        const groups = groupsQueryResult.data.value?.groups;
 
+        if (!groups) return [];
+
+        // Sort by original groupNumber
+        const sortedGroups = [...groups].sort((a, b) => a.groupNumber - b.groupNumber);
+
+        // Assign new sequential numbers starting from 1
+        return sortedGroups.map((group, index) => ({
+            groupNo: index + 1, // New group number that will be used
+            name: `${t("group")} ${index + 1}`,
+            members: group.members,
+            originalGroupNo: group.groupNumber, // Keep original number if needed
+        }));
+    });
+
+    const dialog = ref(false);
+    const selectedGroup = ref({});
+
+    function openGroupDetails(group): void {
+        selectedGroup.value = group;
+        dialog.value = true;
+    }
+
+    async function deleteAssignment(num: number, clsId: string): Promise<void> {
+        const { mutate } = useDeleteAssignmentMutation();
+        mutate(
+            { cid: clsId, an: num },
+            {
+                onSuccess: () => {
+                    window.location.href = "/user/assignment";
+                },
+            },
+        );
+    }
+
+    function goToLearningPathLink(): string | undefined {
+        const assignment = assignmentQueryResult.data.value?.assignment;
+        const lp = lpQueryResult.data.value;
+
+        if (!assignment || !lp) return undefined;
+
+        return `/learningPath/${lp.hruid}/${assignment.language}/${lp.startNode.learningobjectHruid}?assignmentNo=${props.assignmentId}&classId=${props.classId}`;
+    }
+
+    function goToGroupSubmissionLink(groupNo: number): string | undefined {
+        const lp = lpQueryResult.data.value;
+        if (!lp) return undefined;
+
+        return `/learningPath/${lp.hruid}/${lp.language}/${lp.startNode.learningobjectHruid}?forGroup=${groupNo}&assignmentNo=${props.assignmentId}&classId=${props.classId}`;
+    }
+
+    const learningPathsQueryResults = useGetAllLearningPaths(lang);
+
+    const { mutate, data, isSuccess } = useUpdateAssignmentMutation();
+
+    watch([isSuccess, data], ([success, newData]) => {
+        if (success && newData?.assignment) {
+            window.location.reload();
+        }
+    });
+
+    async function saveChanges(): Promise<void> {
+        const { valid } = await form.value.validate();
+        if (!valid) return;
+
+        isEditing.value = false;
+
+        const lp = learningPath.value;
+
+        const assignmentDTO: AssignmentDTO = {
+            id: assignmentQueryResult.data.value?.assignment.id,
+            description: description.value,
+            learningPath: lp || "",
+            deadline: new Date(),
+        };
+
+        mutate({
+            cid: assignmentQueryResult.data.value?.assignment.within,
+            an: assignmentQueryResult.data.value?.assignment.id,
+            data: assignmentDTO,
+        });
+    }
 </script>
 
 <template>
@@ -167,7 +163,11 @@ async function saveChanges(): Promise<void> {
                         md="6"
                         class="responsive-col"
                     >
-                        <v-form ref="form" validate-on="submit lazy" @submit.prevent="saveChanges">
+                        <v-form
+                            ref="form"
+                            validate-on="submit lazy"
+                            @submit.prevent="saveChanges"
+                        >
                             <v-card
                                 v-if="assignmentResponse"
                                 class="assignment-card"
@@ -189,11 +189,11 @@ async function saveChanges(): Promise<void> {
                                                 variant="text"
                                                 class="top_next_to_right_button"
                                                 @click="
-                                                () => {
-                                                    isEditing = true;
-                                                    description = assignmentResponse.data.assignment.description;
-                                                }
-                                            "
+                                                    () => {
+                                                        isEditing = true;
+                                                        description = assignmentResponse.data.assignment.description;
+                                                    }
+                                                "
                                             >
                                                 <v-icon>mdi-pencil</v-icon>
                                             </v-btn>
@@ -201,10 +201,14 @@ async function saveChanges(): Promise<void> {
                                                 v-else
                                                 variant="text"
                                                 class="top-right-btn"
-                                                @click="() => {isEditing = false; editingLearningPath=learningPath}"
-                                            >{{ t("cancel") }}
-                                            </v-btn
-                                            >
+                                                @click="
+                                                    () => {
+                                                        isEditing = false;
+                                                        editingLearningPath = learningPath;
+                                                    }
+                                                "
+                                                >{{ t("cancel") }}
+                                            </v-btn>
 
                                             <v-btn
                                                 v-if="!isEditing"
@@ -212,11 +216,11 @@ async function saveChanges(): Promise<void> {
                                                 variant="text"
                                                 class="top-right-btn"
                                                 @click="
-                                                deleteAssignment(
-                                                    assignmentResponse.data.assignment.id,
-                                                    assignmentResponse.data.assignment.within,
-                                                )
-                                            "
+                                                    deleteAssignment(
+                                                        assignmentResponse.data.assignment.id,
+                                                        assignmentResponse.data.assignment.within,
+                                                    )
+                                                "
                                             >
                                                 <v-icon>mdi-delete</v-icon>
                                             </v-btn>
@@ -233,9 +237,8 @@ async function saveChanges(): Promise<void> {
                                     </div>
                                 </div>
 
-                                <v-card-title class="text-h4 assignmentTopTitle">{{
-                                        assignmentResponse.data.assignment.title
-                                    }}
+                                <v-card-title class="text-h4 assignmentTopTitle"
+                                    >{{ assignmentResponse.data.assignment.title }}
                                 </v-card-title>
                                 <v-card-subtitle
                                     v-if="!isEditing"
@@ -275,9 +278,9 @@ async function saveChanges(): Promise<void> {
                                             item-value="hruid"
                                             required
                                             :filter="
-                                            (item, query: string) =>
-                                                item.title.toLowerCase().includes(query.toLowerCase())
-                                        "
+                                                (item, query: string) =>
+                                                    item.title.toLowerCase().includes(query.toLowerCase())
+                                            "
                                         ></v-combobox>
                                     </v-card-text>
                                 </using-query-result>
@@ -317,7 +320,7 @@ async function saveChanges(): Promise<void> {
                                         >
                                             <v-list-item-content>
                                                 <v-list-item-title
-                                                >{{ member.firstName + " " + member.lastName }}
+                                                    >{{ member.firstName + " " + member.lastName }}
                                                 </v-list-item-title>
                                             </v-list-item-content>
                                         </v-list-item>
@@ -327,24 +330,22 @@ async function saveChanges(): Promise<void> {
                                     <v-btn
                                         color="primary"
                                         @click="dialog = false"
-                                    >Close
-                                    </v-btn
-                                    >
+                                        >Close
+                                    </v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
                     </v-col>
 
                     <!-- The second column of the screen -->
-                    <template v-if="!editGroups">
-                        <v-col
-                            cols="12"
-                            sm="6"
-                            md="6"
-                            class="responsive-col"
-                        >
-                            <v-table class="table">
-                                <thead>
+                    <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                        class="responsive-col"
+                    >
+                        <v-table class="table">
+                            <thead>
                                 <tr>
                                     <th class="header">{{ t("group") }}</th>
                                     <th class="header">{{ t("progress") }}</th>
@@ -356,11 +357,10 @@ async function saveChanges(): Promise<void> {
                                         >
                                             <v-icon>mdi-pencil</v-icon>
                                         </v-btn>
-
                                     </th>
                                 </tr>
-                                </thead>
-                                <tbody>
+                            </thead>
+                            <tbody>
                                 <tr
                                     v-for="g in allGroups"
                                     :key="g.originalGroupNo"
@@ -403,133 +403,138 @@ async function saveChanges(): Promise<void> {
                                         >
                                             <v-icon color="red">mdi-delete</v-icon>
                                         </v-btn>
-
                                     </td>
                                 </tr>
-                                </tbody>
-                            </v-table>
-                        </v-col>
-                    </template>
-                    <template v-else>
+                            </tbody>
+                        </v-table>
+                    </v-col>
+                </v-row>
+                <v-dialog
+                    v-model="editGroups"
+                    max-width="800"
+                    persistent
+                >
+                    <v-card-text>
                         <GroupSelector
                             :groups="allGroups"
-                            :class-id="classId"
-                            @groupsUpdated="handleUpdatedGroups"
+                            :class-id="props.classId"
+                            :assignment-id="props.assignmentId"
+                            @close="editGroups = false"
                         />
-                    </template>
-                </v-row>
+                    </v-card-text>
+                </v-dialog>
             </v-container>
         </using-query-result>
     </div>
 </template>
 
 <style scoped>
-@import "@/assets/assignment.css";
+    @import "@/assets/assignment.css";
 
-.table-scroll {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.header {
-    font-weight: bold !important;
-    background-color: #0e6942;
-    color: white;
-    padding: 10px;
-}
-
-table thead th:first-child {
-    border-top-left-radius: 10px;
-}
-
-.table thead th:last-child {
-    border-top-right-radius: 10px;
-}
-
-.table tbody tr:nth-child(odd) {
-    background-color: white;
-}
-
-.table tbody tr:nth-child(even) {
-    background-color: #f6faf2;
-}
-
-td,
-th {
-    border-bottom: 1px solid #0e6942;
-    border-top: 1px solid #0e6942;
-}
-
-.table {
-    width: 90%;
-    padding-top: 10px;
-    border-collapse: collapse;
-}
-
-h1 {
-    color: #0e6942;
-    text-transform: uppercase;
-    font-weight: bolder;
-    padding-top: 2%;
-    font-size: 50px;
-}
-
-h2 {
-    color: #0e6942;
-    font-size: 30px;
-}
-
-.join {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-top: 50px;
-}
-
-.link {
-    color: #0b75bb;
-    text-decoration: underline;
-}
-
-main {
-    margin-left: 30px;
-}
-
-@media screen and (max-width: 850px) {
-    h1 {
-        text-align: center;
-        padding-left: 0;
+    .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
-    .join {
-        text-align: center;
-        align-items: center;
-        margin-left: 0;
+    .header {
+        font-weight: bold !important;
+        background-color: #0e6942;
+        color: white;
+        padding: 10px;
     }
 
-    .sheet {
-        width: 100%;
+    table thead th:first-child {
+        border-top-left-radius: 10px;
     }
 
-    main {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin: 5px;
+    .table thead th:last-child {
+        border-top-right-radius: 10px;
     }
 
-    .custom-breakpoint {
-        flex-direction: column !important;
+    .table tbody tr:nth-child(odd) {
+        background-color: white;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: #f6faf2;
+    }
+
+    td,
+    th {
+        border-bottom: 1px solid #0e6942;
+        border-top: 1px solid #0e6942;
     }
 
     .table {
-        width: 100%;
+        width: 90%;
+        padding-top: 10px;
+        border-collapse: collapse;
     }
 
-    .responsive-col {
-        max-width: 100% !important;
-        flex-basis: 100% !important;
+    h1 {
+        color: #0e6942;
+        text-transform: uppercase;
+        font-weight: bolder;
+        padding-top: 2%;
+        font-size: 50px;
     }
-}
+
+    h2 {
+        color: #0e6942;
+        font-size: 30px;
+    }
+
+    .join {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 50px;
+    }
+
+    .link {
+        color: #0b75bb;
+        text-decoration: underline;
+    }
+
+    main {
+        margin-left: 30px;
+    }
+
+    @media screen and (max-width: 850px) {
+        h1 {
+            text-align: center;
+            padding-left: 0;
+        }
+
+        .join {
+            text-align: center;
+            align-items: center;
+            margin-left: 0;
+        }
+
+        .sheet {
+            width: 100%;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 5px;
+        }
+
+        .custom-breakpoint {
+            flex-direction: column !important;
+        }
+
+        .table {
+            width: 100%;
+        }
+
+        .responsive-col {
+            max-width: 100% !important;
+            flex-basis: 100% !important;
+        }
+    }
 </style>

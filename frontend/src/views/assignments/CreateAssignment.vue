@@ -1,72 +1,72 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-import { computed, onMounted, ref, watch } from "vue";
-import { assignmentTitleRules, classRules, learningPathRules } from "@/utils/assignment-rules.ts";
-import auth from "@/services/auth/auth-service.ts";
-import { useTeacherClassesQuery } from "@/queries/teachers.ts";
-import { useRouter, useRoute } from "vue-router";
-import { useGetAllLearningPaths } from "@/queries/learning-paths.ts";
-import UsingQueryResult from "@/components/UsingQueryResult.vue";
-import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
-import type { ClassesResponse } from "@/controllers/classes.ts";
-import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
-import { useCreateAssignmentMutation } from "@/queries/assignments.ts";
+    import { useI18n } from "vue-i18n";
+    import { computed, onMounted, ref, watch } from "vue";
+    import { assignmentTitleRules, classRules, learningPathRules } from "@/utils/assignment-rules.ts";
+    import auth from "@/services/auth/auth-service.ts";
+    import { useTeacherClassesQuery } from "@/queries/teachers.ts";
+    import { useRouter, useRoute } from "vue-router";
+    import { useGetAllLearningPaths } from "@/queries/learning-paths.ts";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
+    import type { ClassesResponse } from "@/controllers/classes.ts";
+    import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
+    import { useCreateAssignmentMutation } from "@/queries/assignments.ts";
 
-const route = useRoute();
-const router = useRouter();
-const { t, locale } = useI18n();
-const role = ref(auth.authState.activeRole);
-const username = ref<string>("");
+    const route = useRoute();
+    const router = useRouter();
+    const { t, locale } = useI18n();
+    const role = ref(auth.authState.activeRole);
+    const username = ref<string>("");
 
-onMounted(async () => {
-    if (role.value === "student") {
-        await router.push("/user");
+    onMounted(async () => {
+        if (role.value === "student") {
+            await router.push("/user");
+        }
+        const user = await auth.loadUser();
+        username.value = user?.profile?.preferred_username ?? "";
+    });
+
+    const language = computed(() => locale.value);
+    const form = ref();
+
+    const learningPathsQueryResults = useGetAllLearningPaths(language);
+    const classesQueryResults = useTeacherClassesQuery(username, true);
+
+    const selectedClass = ref(undefined);
+    const assignmentTitle = ref("");
+    const selectedLearningPath = ref(route.query.hruid || undefined);
+    const lpIsSelected = route.query.hruid !== undefined;
+
+    const { mutate, data, isSuccess } = useCreateAssignmentMutation();
+
+    watch([isSuccess, data], async ([success, newData]) => {
+        if (success && newData?.assignment) {
+            await router.push(`/assignment/${newData.assignment.within}/${newData.assignment.id}`);
+        }
+    });
+
+    async function submitFormHandler(): Promise<void> {
+        const { valid } = await form.value.validate();
+        if (!valid) return;
+
+        let lp = selectedLearningPath.value;
+        if (!lpIsSelected) {
+            lp = selectedLearningPath.value?.hruid;
+        }
+
+        const assignmentDTO: AssignmentDTO = {
+            id: 0,
+            within: selectedClass.value?.id || "",
+            title: assignmentTitle.value,
+            description: "",
+            learningPath: lp || "",
+            deadline: new Date(),
+            language: language.value,
+            groups: [],
+        };
+
+        mutate({ cid: assignmentDTO.within, data: assignmentDTO });
     }
-    const user = await auth.loadUser();
-    username.value = user?.profile?.preferred_username ?? "";
-});
-
-const language = computed(() => locale.value);
-const form = ref();
-
-const learningPathsQueryResults = useGetAllLearningPaths(language);
-const classesQueryResults = useTeacherClassesQuery(username, true);
-
-const selectedClass = ref(undefined);
-const assignmentTitle = ref("");
-const selectedLearningPath = ref(route.query.hruid || undefined);
-const lpIsSelected = route.query.hruid !== undefined;
-
-const { mutate, data, isSuccess } = useCreateAssignmentMutation();
-
-watch([isSuccess, data], async ([success, newData]) => {
-    if (success && newData?.assignment) {
-        await router.push(`/assignment/${newData.assignment.within}/${newData.assignment.id}`);
-    }
-});
-
-async function submitFormHandler(): Promise<void> {
-    const { valid } = await form.value.validate();
-    if (!valid) return;
-
-    let lp = selectedLearningPath.value;
-    if (!lpIsSelected) {
-        lp = selectedLearningPath.value?.hruid;
-    }
-
-    const assignmentDTO: AssignmentDTO = {
-        id: 0,
-        within: selectedClass.value?.id || "",
-        title: assignmentTitle.value,
-        description: "",
-        learningPath: lp || "",
-        deadline: new Date(),
-        language: language.value,
-        groups: [],
-    };
-
-    mutate({ cid: assignmentDTO.within, data: assignmentDTO });
-}
 </script>
 
 <template>
@@ -74,9 +74,13 @@ async function submitFormHandler(): Promise<void> {
         <h1 class="h1">{{ t("new-assignment") }}</h1>
 
         <v-card class="form-card elevation-2 pa-6">
-            <v-form ref="form" class="form-container" validate-on="submit lazy" @submit.prevent="submitFormHandler">
+            <v-form
+                ref="form"
+                class="form-container"
+                validate-on="submit lazy"
+                @submit.prevent="submitFormHandler"
+            >
                 <v-container class="step-container pa-0">
-
                     <!-- Titel veld -->
                     <v-text-field
                         v-model="assignmentTitle"
@@ -90,7 +94,10 @@ async function submitFormHandler(): Promise<void> {
                     />
 
                     <!-- Learning Path keuze -->
-                    <using-query-result :query-result="learningPathsQueryResults" v-slot="{ data }: { data: LearningPath[] }">
+                    <using-query-result
+                        :query-result="learningPathsQueryResults"
+                        v-slot="{ data }: { data: LearningPath[] }"
+                    >
                         <v-combobox
                             v-model="selectedLearningPath"
                             :items="data"
@@ -111,7 +118,10 @@ async function submitFormHandler(): Promise<void> {
                     </using-query-result>
 
                     <!-- Klas keuze -->
-                    <using-query-result :query-result="classesQueryResults" v-slot="{ data }: { data: ClassesResponse }">
+                    <using-query-result
+                        :query-result="classesQueryResults"
+                        v-slot="{ data }: { data: ClassesResponse }"
+                    >
                         <v-combobox
                             v-model="selectedClass"
                             :items="data?.classes ?? []"
@@ -153,7 +163,6 @@ async function submitFormHandler(): Promise<void> {
                             {{ t("cancel") }}
                         </v-btn>
                     </div>
-
                 </v-container>
             </v-form>
         </v-card>
@@ -161,65 +170,59 @@ async function submitFormHandler(): Promise<void> {
 </template>
 
 <style scoped>
-.main-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: start;
-    padding-top: 32px;
-    text-align: center;
-}
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+        padding-top: 32px;
+        text-align: center;
+    }
 
-.form-card {
-    width: 100%;
-    max-width: 720px;
-    border-radius: 16px;
-}
-
-.form-container {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    width: 100%;
-}
-
-.step-container {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-@media (max-width: 1000px) {
     .form-card {
-        width: 85%;
-        padding: 1%;
+        width: 100%;
+        max-width: 720px;
+        border-radius: 16px;
     }
 
-}
-
-@media (max-width: 600px) {
-
-    h1 {
-        font-size: 32px;
-        text-align: center;
-        margin-left: 0;
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        width: 100%;
     }
-}
 
-@media (max-width: 400px) {
-
-    h1 {
-        font-size: 24px;
-        text-align: center;
-        margin-left: 0;
+    .step-container {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
     }
-}
 
-.v-card {
-    border: 2px solid #0e6942;
-    border-radius: 12px;
-}
+    @media (max-width: 1000px) {
+        .form-card {
+            width: 85%;
+            padding: 1%;
+        }
+    }
 
+    @media (max-width: 600px) {
+        h1 {
+            font-size: 32px;
+            text-align: center;
+            margin-left: 0;
+        }
+    }
 
+    @media (max-width: 400px) {
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-left: 0;
+        }
+    }
+
+    .v-card {
+        border: 2px solid #0e6942;
+        border-radius: 12px;
+    }
 </style>
-

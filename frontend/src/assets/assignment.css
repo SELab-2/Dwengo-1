@@ -30,9 +30,8 @@
     display: flex;
     gap: 0.5rem;
     align-items: center;
-    color: #0e6942
+    color: #0e6942;
 }
-
 
 .group-section {
     margin-top: 2rem;

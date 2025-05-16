@@ -1,90 +1,87 @@
 <script setup lang="ts">
-import {ref, computed, watchEffect} from "vue";
-import auth from "@/services/auth/auth-service.ts";
-import {useI18n} from "vue-i18n";
-import {useAssignmentQuery} from "@/queries/assignments.ts";
-import UsingQueryResult from "@/components/UsingQueryResult.vue";
-import type {AssignmentResponse} from "@/controllers/assignments.ts";
-import {asyncComputed} from "@vueuse/core";
-import {useStudentsByUsernamesQuery} from "@/queries/students.ts";
-import {useGroupsQuery} from "@/queries/groups.ts";
-import {useGetLearningPathQuery} from "@/queries/learning-paths.ts";
-import type {Language} from "@/data-objects/language.ts";
-import {calculateProgress} from "@/utils/assignment-utils.ts";
+    import { ref, computed, watchEffect } from "vue";
+    import auth from "@/services/auth/auth-service.ts";
+    import { useI18n } from "vue-i18n";
+    import { useAssignmentQuery } from "@/queries/assignments.ts";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import type { AssignmentResponse } from "@/controllers/assignments.ts";
+    import { asyncComputed } from "@vueuse/core";
+    import { useStudentsByUsernamesQuery } from "@/queries/students.ts";
+    import { useGroupsQuery } from "@/queries/groups.ts";
+    import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
+    import type { Language } from "@/data-objects/language.ts";
+    import { calculateProgress } from "@/utils/assignment-utils.ts";
 
-const props = defineProps<{
-    classId: string;
-    assignmentId: number;
-}>();
+    const props = defineProps<{
+        classId: string;
+        assignmentId: number;
+    }>();
 
-const {t} = useI18n();
-const lang = ref();
-const learningPath = ref();
-// Get the user's username/id
-const username = asyncComputed(async () => {
-    const user = await auth.loadUser();
-    return user?.profile?.preferred_username ?? undefined;
-});
+    const { t } = useI18n();
+    const lang = ref();
+    const learningPath = ref();
+    // Get the user's username/id
+    const username = asyncComputed(async () => {
+        const user = await auth.loadUser();
+        return user?.profile?.preferred_username ?? undefined;
+    });
 
-const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
-learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
-
-
-const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
-const group = computed(() => {
-    const groups = groupsQueryResult.data.value?.groups;
-
-    if (!groups) return undefined;
-
-    // Sort by original groupNumber
-    const sortedGroups = [...groups].sort((a, b) => a.groupNumber - b.groupNumber);
-
-    return sortedGroups
-        .map((group, index) => ({
-            ...group,
-            groupNo: index + 1, // Renumbered index
-        }))
-        .find((group) => group.members?.some((m) => m.username === username.value));
-});
-
-
-watchEffect(() => {
+    const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
     learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
-    lang.value = assignmentQueryResult.data.value?.assignment?.language as Language;
-});
 
-const learningPathParams = computed(() => {
-    if (!group.value || !learningPath.value || !lang.value) return undefined;
+    const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
+    const group = computed(() => {
+        const groups = groupsQueryResult.data.value?.groups;
 
-    return {
-        forGroup: group.value.groupNumber,
-        assignmentNo: props.assignmentId,
-        classId: props.classId,
-    };
-});
+        if (!groups) return undefined;
 
-const lpQueryResult = useGetLearningPathQuery(
-    () => learningPath.value,
-    () => lang.value,
-    () => learningPathParams.value
-);
+        // Sort by original groupNumber
+        const sortedGroups = [...groups].sort((a, b) => a.groupNumber - b.groupNumber);
 
+        return sortedGroups
+            .map((group, index) => ({
+                ...group,
+                groupNo: index + 1, // Renumbered index
+            }))
+            .find((group) => group.members?.some((m) => m.username === username.value));
+    });
 
-const progressColor = computed(() => {
-    const progress = calculateProgress(lpQueryResult.data.value);
-    if (progress >= 100) return "success";
-    if (progress >= 50) return "warning";
-    return "error";
-});
+    watchEffect(() => {
+        learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
+        lang.value = assignmentQueryResult.data.value?.assignment?.language as Language;
+    });
 
-const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as string[] ?? undefined);
+    const learningPathParams = computed(() => {
+        if (!group.value || !learningPath.value || !lang.value) return undefined;
+
+        return {
+            forGroup: group.value.groupNumber,
+            assignmentNo: props.assignmentId,
+            classId: props.classId,
+        };
+    });
+
+    const lpQueryResult = useGetLearningPathQuery(
+        () => learningPath.value,
+        () => lang.value,
+        () => learningPathParams.value,
+    );
+
+    const progressColor = computed(() => {
+        const progress = calculateProgress(lpQueryResult.data.value);
+        if (progress >= 100) return "success";
+        if (progress >= 50) return "warning";
+        return "error";
+    });
+
+    const studentQueries = useStudentsByUsernamesQuery(() => (group.value?.members as string[]) ?? undefined);
 </script>
 
 <template>
     <div class="container">
         <using-query-result
             :query-result="assignmentQueryResult"
-            v-slot="assignmentResponse : { data: AssignmentResponse }"
+            v-slot="assignmentResponse: { data: AssignmentResponse }"
         >
             <v-card
                 v-if="assignmentResponse"
@@ -100,9 +97,8 @@ const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as
                         <v-icon>mdi-arrow-left</v-icon>
                     </v-btn>
                 </div>
-                <v-card-title class="text-h4 assignmentTopTitle">{{
-                        assignmentResponse.data.assignment.title
-                    }}
+                <v-card-title class="text-h4 assignmentTopTitle"
+                    >{{ assignmentResponse.data.assignment.title }}
                 </v-card-title>
 
                 <v-card-subtitle class="subtitle-section">
@@ -112,14 +108,17 @@ const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as
                     >
                         <v-btn
                             v-if="lpData"
-                            :to="group ? `/learningPath/${lpData.hruid}/${assignmentResponse.data.assignment?.language}/${lpData.startNode.learningobjectHruid}?forGroup=${0}&assignmentNo=${assignmentId}&classId=${classId}` : undefined"
+                            :to="
+                                group
+                                    ? `/learningPath/${lpData.hruid}/${assignmentResponse.data.assignment?.language}/${lpData.startNode.learningobjectHruid}?forGroup=${0}&assignmentNo=${assignmentId}&classId=${classId}`
+                                    : undefined
+                            "
                             :disabled="!group"
                             variant="tonal"
                             color="primary"
                         >
                             {{ t("learning-path") }}
                         </v-btn>
-
                     </using-query-result>
                 </v-card-subtitle>
 
@@ -163,21 +162,23 @@ const studentQueries = useStudentsByUsernamesQuery(() => group.value?.members as
                     </div>
 
                     <div v-else>
-                        <v-alert type="info" variant="text">
+                        <v-alert
+                            type="info"
+                            variant="text"
+                        >
                             {{ t("not-in-group-message") }}
                         </v-alert>
                     </div>
                 </v-card-text>
-
             </v-card>
         </using-query-result>
     </div>
 </template>
 
 <style scoped>
-@import "@/assets/assignment.css";
+    @import "@/assets/assignment.css";
 
-.progress-bar {
-    width: 40%;
-}
+    .progress-bar {
+        width: 40%;
+    }
 </style>

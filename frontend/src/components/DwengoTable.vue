@@ -1,7 +1,10 @@
 <template>
     <v-table class="table">
         <thead>
-            <tr v-for="name in columns" :key="column">
+            <tr
+                v-for="name in columns"
+                :key="column"
+            >
                 <th class="header">{{ name }}</th>
             </tr>
         </thead>
@@ -37,13 +40,13 @@
 </template>
 
 <script>
-export default {
-  name: 'columnList',
-  props: {
-    items: {
-      type: Array,
-      required: true
-    }
-  }
-}
+    export default {
+        name: "columnList",
+        props: {
+            items: {
+                type: Array,
+                required: true,
+            },
+        },
+    };
 </script>

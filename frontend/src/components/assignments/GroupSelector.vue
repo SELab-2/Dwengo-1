@@ -1,114 +1,438 @@
 <script setup lang="ts">
-import { ref, } from "vue";
-import draggable from "vuedraggable";
-import { useI18n } from "vue-i18n";
+    import { computed, ref, watch } from "vue";
+    import draggable from "vuedraggable";
+    import { useI18n } from "vue-i18n";
+    import { useClassStudentsQuery } from "@/queries/classes";
 
-const props = defineProps<{
-    classId: string | undefined;
-    groups: string[][];
-}>();
-const emit = defineEmits(["done", "groupsUpdated"]);
-const { t } = useI18n();
+    const props = defineProps<{
+        classId: string | undefined;
+        groups: object[];
+    }>();
+    const emit = defineEmits(["close", "groupsUpdated", "done"]);
+    const { t } = useI18n();
 
-const groupList = ref(props.groups.map(g => [...g])); // deep copy
-const unassigned = ref<string[]>([]); // voor vrije studenten
+    interface StudentItem {
+        username: string;
+        fullName: string;
+    }
 
-function addNewGroup() {
-    groupList.value.push([]);
-}
+    const { data: studentsData } = useClassStudentsQuery(() => props.classId, true);
 
-function removeGroup(index: number) {
-    unassigned.value.push(...groupList.value[index]);
-    groupList.value.splice(index, 1);
-}
+    // Dialog states
+    const activeDialog = ref<"random" | "dragdrop" | null>(null);
 
-function saveChanges() {
-    emit("groupsUpdated", groupList.value);
-    emit("done");
-}
+    // Drag state
+    const draggedItem = ref<{groupIndex: number, studentIndex: number} | null>(null);
+
+    const currentGroups = ref<StudentItem[][]>([]);
+    const unassignedStudents = ref<StudentItem[]>([]);
+    const allStudents = ref<StudentItem[]>([]);
+
+    // Random groups state
+    const groupSize = ref(1);
+    const randomGroupsPreview = ref<StudentItem[][]>([]);
+
+    // Initialize data
+    watch(
+        () => [studentsData.value, props.groups],
+        ([studentsVal, existingGroups]) => {
+            if (!studentsVal) return;
+
+            // Initialize all students
+            allStudents.value = studentsVal.students.map((s) => ({
+                username: s.username,
+                fullName: `${s.firstName} ${s.lastName}`,
+            }));
+
+            // Initialize groups if they exist
+            if (existingGroups && existingGroups.length > 0) {
+                currentGroups.value = existingGroups.map((g) => [...g.members]);
+                const assignedUsernames = new Set(
+                    existingGroups.flatMap((g) => g.members.map((m: StudentItem) => m.username)),
+                );
+                unassignedStudents.value = allStudents.value.filter((s) => !assignedUsernames.has(s.username));
+            } else {
+                // Default to all students unassigned
+                currentGroups.value = [];
+                unassignedStudents.value = [...allStudents.value];
+            }
+
+            // Initialize random preview with current groups
+            randomGroupsPreview.value = [...currentGroups.value];
+        },
+        { immediate: true },
+    );
+
+    // Random groups functions
+    function generateRandomGroups() {
+        if (groupSize.value < 1) return;
+
+        // Shuffle students
+        const shuffled = [...allStudents.value].sort(() => Math.random() - 0.5);
+
+        // Create new groups
+        const newGroups: StudentItem[][] = [];
+        const groupCount = Math.ceil(shuffled.length / groupSize.value);
+
+        for (let i = 0; i < groupCount; i++) {
+            newGroups.push([]);
+        }
+
+        // Distribute students
+        shuffled.forEach((student, index) => {
+            const groupIndex = index % groupCount;
+            newGroups[groupIndex].push(student);
+        });
+
+        randomGroupsPreview.value = newGroups;
+    }
+
+    function saveRandomGroups() {
+        if (randomGroupsPreview.value.length === 0) {
+            alert(t("please-generate-groups-first"));
+            return;
+        }
+
+        emit(
+            "groupsUpdated",
+            randomGroupsPreview.value.map((g) => g.map((s) => s.username)),
+        );
+        activeDialog.value = null;
+        emit("done");
+        emit("close");
+    }
+
+    // Drag and drop functions
+    function addNewGroup() {
+        currentGroups.value.push([]);
+    }
+
+    function removeGroup(index: number) {
+        // Move students back to unassigned
+        unassignedStudents.value.push(...currentGroups.value[index]);
+        currentGroups.value.splice(index, 1);
+    }
+
+    // Native Drag & Drop Handlers
+    function handleDragStart(groupIndex: number, studentIndex: number) {
+        draggedItem.value = { groupIndex, studentIndex };
+    }
+
+    function handleDragOver(e: DragEvent, _: number) {
+        e.preventDefault();
+        e.dataTransfer!.dropEffect = "move";
+    }
+
+    function handleDrop(e: DragEvent, targetGroupIndex: number, targetStudentIndex?: number) {
+        e.preventDefault();
+        if (!draggedItem.value) return;
+
+        const { groupIndex: sourceGroupIndex, studentIndex: sourceStudentIndex } = draggedItem.value;
+        const isSameGroup = sourceGroupIndex === targetGroupIndex;
+
+        let sourceArray, targetArray;
+
+        // Determine source and target arrays
+        if (sourceGroupIndex === -1) {
+            sourceArray = unassignedStudents.value;
+        } else {
+            sourceArray = currentGroups.value[sourceGroupIndex];
+        }
+
+        if (targetGroupIndex === -1) {
+            targetArray = unassignedStudents.value;
+        } else {
+            targetArray = currentGroups.value[targetGroupIndex];
+        }
+
+        // Remove from source
+        const [movedStudent] = sourceArray.splice(sourceStudentIndex, 1);
+
+        // Add to target
+        if (targetStudentIndex !== undefined) {
+            targetArray.splice(targetStudentIndex, 0, movedStudent);
+        } else {
+            targetArray.push(movedStudent);
+        }
+
+        draggedItem.value = null;
+    }
+
+
+    function saveDragDrop() {
+        if (unassignedStudents.value.length > 0) {
+            alert(t("please-assign-all-students"));
+            return;
+        }
+
+        emit(
+            "groupsUpdated",
+            currentGroups.value.map((g) => g.map((s) => s.username)),
+        );
+        activeDialog.value = null;
+        emit("done");
+        emit("close");
+    }
+
+    // Preview current groups in the main view
+    const showGroupsPreview = computed(() => {
+        return currentGroups.value.length > 0 || unassignedStudents.value.length > 0;
+    });
+
+    function removeStudent(groupIndex, student) {
+        const group = currentGroups.value[groupIndex];
+        currentGroups.value[groupIndex] = group.filter((s) => s.username !== student.username);
+        unassignedStudents.value.push(student);
+    }
 </script>
 
 <template>
-    <v-card>
-        <v-card-title>{{ t("edit-groups") }}</v-card-title>
-        <v-card-text>
-            <v-row>
-                <!-- Ongegroepeerde studenten -->
-                <v-col cols="12" sm="4">
-                    <h4>{{ t("unassigned") }}</h4>
-                    <draggable
-                        v-model="unassigned"
-                        group="students"
-                        item-key="username"
-                        class="group-box"
+    <v-card class="pa-4">
+        <!-- Current Groups Preview -->
+        <div
+            v-if="showGroupsPreview"
+            class="mb-6"
+        >
+            <h3 class="mb-2">{{ t("current-groups") }}</h3>
+            <div
+                v-for="(group, index) in currentGroups"
+                :key="'preview-' + index"
+                class="mb-3"
+            >
+                <div class="d-flex align-center">
+                    <strong class="mr-2">{{ t("group") }} {{ index + 1 }}:</strong>
+                    <span class="text-caption">({{ group.length }} {{ t("members") }})</span>
+                </div>
+                <div class="d-flex flex-wrap">
+                    <v-chip
+                        v-for="student in group"
+                        :key="student.username"
+                        class="ma-1"
                     >
-                        <template #item="{ element }">
-                            <v-chip>{{ element }}</v-chip>
-                        </template>
-                    </draggable>
-                </v-col>
+                        {{ student.fullName }}
+                    </v-chip>
+                </div>
+            </div>
 
-                <!-- Bestaande groepen -->
-                <v-col
-                    v-for="(group, i) in groupList"
-                    :key="i"
-                    cols="12"
-                    sm="4"
-                >
-                    <h4>{{ t("group") }} {{ i + 1 }}</h4>
-                    <draggable
-                        v-model="groupList[i]"
-                        group="students"
-                        item-key="username"
-                        class="group-box"
-                    >
-                        <template #item="{ element }">
-                            <v-chip>{{ element }}</v-chip>
-                        </template>
-                    </draggable>
+            <div
+                v-if="unassignedStudents.length > 0"
+                class="mt-3"
+            >
+                <strong>{{ t("unassigned") }}:</strong>
+                <div class="d-flex flex-wrap">
+                    <label>{{unassignedStudents.length}}</label>
+                </div>
+            </div>
+        </div>
 
-                    <v-btn
-                        color="error"
-                        size="x-small"
-                        @click="removeGroup(i)"
-                        class="mt-2"
-                    >
-                        {{ t("remove-group") }}
-                    </v-btn>
-                </v-col>
-            </v-row>
-
+        <!-- Action Buttons -->
+        <v-row
+            justify="center"
+            class="mb-4"
+        >
             <v-btn
                 color="primary"
-                class="mt-4"
-                @click="addNewGroup"
+                @click="activeDialog = 'random'"
             >
-                {{ t("add-group") }}
-            </v-btn>
-        </v-card-text>
-        <v-card-actions>
-            <v-btn
-                color="success"
-                @click="saveChanges"
-            >
-                {{ t("save") }}
+                {{ t("randomly-create-groups") }}
             </v-btn>
             <v-btn
-                @click="$emit('done')"
-                variant="text"
+                color="secondary"
+                class="ml-4"
+                @click="activeDialog = 'dragdrop'"
             >
-                {{ t("cancel") }}
+                {{ t("drag-and-drop") }}
             </v-btn>
-        </v-card-actions>
+        </v-row>
+
+        <!-- Random Groups Dialog -->
+        <v-dialog
+            :model-value="activeDialog === 'random'"
+            @update:model-value="(val) => (val ? (activeDialog = 'random') : (activeDialog = null))"
+            max-width="600"
+        >
+            <v-card>
+                <v-card-title>{{ t("randomly-create-groups") }}</v-card-title>
+                <v-card-text>
+                    <v-row align="center">
+                        <v-col cols="6">
+                            <v-text-field
+                                v-model.number="groupSize"
+                                type="number"
+                                min="1"
+                                :max="allStudents.length"
+                                :label="t('group-size-label')"
+                                dense
+                            />
+                        </v-col>
+                        <v-col cols="6">
+                            <v-btn
+                                color="primary"
+                                @click="generateRandomGroups"
+                                :disabled="groupSize < 1"
+                                block
+                            >
+                                {{ t("generate-groups") }}
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+
+                    <div class="mt-4">
+                        <div class="d-flex justify-space-between align-center mb-2">
+                            <strong>{{ t("preview") }}</strong>
+                            <span class="text-caption"> {{ randomGroupsPreview.length }} {{ t("groups") }} </span>
+                        </div>
+
+                        <v-expansion-panels>
+                            <v-expansion-panel
+                                v-for="(group, index) in randomGroupsPreview"
+                                :key="'random-preview-' + index"
+                            >
+                                <v-expansion-panel-title>
+                                    {{ t("group") }} {{ index + 1 }} ({{ group.length }} {{ t("members") }})
+                                </v-expansion-panel-title>
+                                <v-expansion-panel-text>
+                                    <v-chip
+                                        v-for="student in group"
+                                        :key="student.username"
+                                        class="ma-1"
+                                    >
+                                        {{ student.fullName }}
+                                    </v-chip>
+                                </v-expansion-panel-text>
+                            </v-expansion-panel>
+                        </v-expansion-panels>
+                    </div>
+                </v-card-text>
+
+                <v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                        text
+                        @click="activeDialog = null"
+                        >{{ t("cancel") }}</v-btn
+                    >
+                    <v-btn
+                        color="success"
+                        @click="saveRandomGroups"
+                        :disabled="randomGroupsPreview.length === 0"
+                    >
+                        {{ t("save") }}
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <!-- Drag and Drop Dialog -->
+        <v-dialog
+            :model-value="activeDialog === 'dragdrop'"
+            @update:model-value="(val) => (val ? (activeDialog = 'dragdrop') : (activeDialog = null))"
+            max-width="900"
+        >
+            <v-card>
+                <v-card-title class="d-flex justify-space-between align-center">
+                    <div>{{ t("drag-and-drop") }}</div>
+                    <v-btn color="primary" small @click="addNewGroup">+</v-btn>
+                </v-card-title>
+
+                <v-card-text>
+                    <v-row>
+                        <!-- Groups Column -->
+                        <v-col cols="12" md="8">
+                            <div v-if="currentGroups.length === 0" class="text-center py-4">
+                                <v-alert type="info">{{ t("no-groups-yet") }}</v-alert>
+                            </div>
+
+                            <template v-else>
+                                <div
+                                    v-for="(group, groupIndex) in currentGroups"
+                                    :key="groupIndex"
+                                    class="mb-4"
+                                    @dragover.prevent="handleDragOver($event, groupIndex)"
+                                    @drop="handleDrop($event, groupIndex)"
+                                >
+                                    <div class="d-flex justify-space-between align-center mb-2">
+                                        <strong>{{ t("group") }} {{ groupIndex + 1 }}</strong>
+                                        <v-btn icon small color="error" @click="removeGroup(groupIndex)">
+                                            <v-icon>mdi-delete</v-icon>
+                                        </v-btn>
+                                    </div>
+
+                                    <div class="group-box pa-2">
+                                        <div
+                                            v-for="(student, studentIndex) in group"
+                                            :key="student.username"
+                                            class="draggable-item ma-1"
+                                            draggable="true"
+                                            @dragstart="handleDragStart(groupIndex, studentIndex)"
+                                            @dragover.prevent="handleDragOver($event, groupIndex)"
+                                            @drop="handleDrop($event, groupIndex, studentIndex)"
+                                        >
+                                            <v-chip close @click:close="removeStudent(groupIndex, student)">
+                                                {{ student.fullName }}
+                                            </v-chip>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </v-col>
+
+                        <!-- Unassigned Students Column -->
+                        <v-col
+                            cols="12"
+                            md="4"
+                            @dragover.prevent="handleDragOver($event, -1)"
+                            @drop="handleDrop($event, -1)"
+                        >
+                            <div class="mb-2">
+                                <strong>{{ t("unassigned") }}</strong>
+                                <span class="text-caption ml-2">({{ unassignedStudents.length }})</span>
+                            </div>
+
+                            <div class="group-box pa-2">
+                                <div
+                                    v-for="(student, studentIndex) in unassignedStudents"
+                                    :key="student.username"
+                                    class="draggable-item ma-1"
+                                    draggable="true"
+                                    @dragstart="handleDragStart(-1, studentIndex)"
+                                    @dragover.prevent="handleDragOver($event, -1)"
+                                    @drop="handleDrop($event, -1, studentIndex)"
+                                >
+                                    <v-chip>{{ student.fullName }}</v-chip>
+                                </div>
+                            </div>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+
+                <v-card-actions>
+                    <v-spacer />
+                    <v-btn text @click="activeDialog = null">{{ t("cancel") }}</v-btn>
+                    <v-btn
+                        color="primary"
+                        @click="saveDragDrop"
+                        :disabled="unassignedStudents.length > 0"
+                    >
+                        {{ t("save") }}
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-card>
 </template>
 
 <style scoped>
-.group-box {
-    min-height: 100px;
-    border: 1px dashed #ccc;
-    padding: 8px;
-    margin-bottom: 16px;
-    background-color: #fafafa;
-}
+    .group-box {
+        min-height: 150px;
+        max-height: 300px;
+        overflow-y: auto;
+        background-color: #fafafa;
+        border-radius: 4px;
+    }
+
+    .v-expansion-panel-text {
+        max-height: 200px;
+        overflow-y: auto;
+    }
 </style>
