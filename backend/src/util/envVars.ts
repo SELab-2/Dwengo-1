@@ -62,7 +62,7 @@ export function getEnvVar(envVar: EnvVar): string {
     } else if (envVar.required) {
         throw new Error(`Missing environment variable: ${envVar.key}`);
     } else {
-        return (envVar.defaultValue !== undefined) ? String(envVar.defaultValue) || '' : '';
+        return envVar.defaultValue !== undefined ? String(envVar.defaultValue) || '' : '';
     }
 }
 
