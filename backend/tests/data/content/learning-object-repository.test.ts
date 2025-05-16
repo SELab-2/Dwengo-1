@@ -48,7 +48,6 @@ describe('LearningObjectRepository', () => {
     });
 
     it('should return the newest version of the learning object when queried by only hruid and language', async () => {
-
         const result = await learningObjectRepository.findLatestByHruidAndLanguage(newerExample.hruid, newerExample.language);
         expect(result).toBeInstanceOf(LearningObject);
         expect(result?.version).toBe(10);

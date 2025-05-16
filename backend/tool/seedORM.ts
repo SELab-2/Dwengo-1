@@ -36,7 +36,7 @@ export async function seedORM(orm: MikroORM): Promise<void> {
 
     const groups = makeTestGroups(em);
 
-    assignments[0].groups = new Collection<Group>([getTestGroup01(), getTestGroup02(), getTestGroup03()])
+    assignments[0].groups = new Collection<Group>([getTestGroup01(), getTestGroup02(), getTestGroup03()]);
     assignments[1].groups = new Collection<Group>([getTestGroup04()]);
 
     const teacherInvitations = makeTestTeacherInvitations(em);
