@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test"
 
-test("Teacher create a class", async ({ page }) => {
+test("Teacher can create a class", async ({ page }) => {
     const className = "DeTijdLoze"
 
     await page.goto("/")
@@ -29,6 +29,27 @@ test("Teacher create a class", async ({ page }) => {
     // Check if the class is created
     await expect(page.getByRole('dialog').getByText('code')).toBeVisible();
     await expect(page.getByRole('button', { name: 'close' })).toBeVisible();
+});
+
+test('Teacher can share a class by code', async ({ page }) => {
+    // Login
+    await page.getByRole("link", { name: "log in" }).click();
+    await page.getByRole("button", { name: "teacher" }).click();
+    await page.getByRole("textbox", { name: "Username or email" }).fill("testleerkracht1");
+    await page.getByRole("textbox", { name: "Password" }).fill("password");
+    await page.getByRole("button", { name: "Sign In" }).click();
+
+    // Go to classes
+    await expect(page.getByRole('banner').getByRole('link', { name: 'Classes' })).toBeVisible();
+    await page.getByRole('banner').getByRole('link', { name: 'Classes' }).click();
+
+    await expect(page.getByRole('row', { name: 'class01' }).locator('i').nth(1)).toBeVisible();
+    await page.getByRole('row', { name: 'class01' }).locator('i').nth(1).click();
+    await expect(page.getByRole('button').filter({ hasText: /^$/ }).nth(2)).toBeVisible();
+    await expect(page.getByRole('button').filter({ hasText: /^$/ }).nth(3)).toBeVisible();
+    await page.getByRole('button').filter({ hasText: /^$/ }).nth(3).click();
+    await expect(page.getByText('copied!')).toBeVisible();
+    await page.getByRole('button', { name: 'close' }).click();
 });
 
 test("Student can join class by code", async ({ page }) => {
