@@ -1,60 +1,37 @@
 import { test, expect } from '@playwright/test';
 
-test('test', async ({ page }) => {
-    await page.goto('http://localhost/');
-    await page.getByRole('link', { name: 'log in' }).click();
-    await page.getByRole('button', { name: 'teacher' }).click();
-    await page.getByRole('textbox', { name: 'Username or email' }).fill('testleerkracht1');
-    await page.getByRole('textbox', { name: 'Username or email' }).press('Tab');
-    await page.getByRole('textbox', { name: 'Password' }).fill('password');
-    await page.getByRole('button', { name: 'Sign In' }).click();
-    await page.getByRole('link', { name: 'AI and Climate Students in' }).click();
-    await page.goto('http://localhost/user');
-    await page.getByRole('link', { name: 'Search all learning paths You' }).click();
-    await page.getByRole('textbox', { name: 'Search... Search...' }).click();
-    await page.getByRole('textbox', { name: 'Search... Search...' }).fill('dyn');
-    await page.getByRole('textbox', { name: 'Search... Search...' }).press('Enter');
-    await page.getByRole('textbox', { name: 'Search... Search...' }).dblclick();
-    await page.getByRole('textbox', { name: 'Search... Search...' }).fill('com');
-    await page.getByRole('textbox', { name: 'Search... Search...' }).press('Enter');
-    await page.getByRole('textbox', { name: 'Search... Search...' }).fill('cus');
-    await page.getByRole('textbox', { name: 'Search... Search...' }).press('Enter');
-    await page.getByRole('link', { name: 'Module 4 12 - 14 years In' }).click();
-    await page.getByRole('button', { name: 'assign' }).click();
-    await page.getByRole('textbox', { name: 'Title Title' }).click();
-    await page.getByRole('textbox', { name: 'Title Title' }).fill('Testopdracht');
+test('Teacher can create new assignment', async ({ page }) => {
+    // Login
+    await page.getByRole("link", { name: "log in" }).click();
+    await page.getByRole("button", { name: "teacher" }).click();
+    await page.getByRole("textbox", { name: "Username or email" }).fill("testleerkracht1");
+    await page.getByRole("textbox", { name: "Password" }).fill("password");
+    await page.getByRole("button", { name: "Sign In" }).click();
+
+    // Go to assignments
+    await expect(page.getByRole('banner').getByRole('link', { name: 'Assignments' })).toBeVisible();
+    await page.getByRole('banner').getByRole('link', { name: 'Assignments' }).click();
+    await expect(page.getByRole('heading', { name: 'Assignments' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'New Assignment' })).toBeVisible();
+
+    // Create new assignment
+    await page.getByRole('button', { name: 'New Assignment' }).click();
+    await expect(page.getByRole('button', { name: 'submit' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'cancel' })).toBeVisible();
+
+    await page.getByRole('textbox', { name: 'Title Title' }).fill('Assignment test 1');
+    await page.getByRole('textbox', { name: 'Select a learning path Select' }).click();
+    await page.getByText('Using notebooks').click();
     await page.getByRole('textbox', { name: 'Pick a class Pick a class' }).click();
-    await page.getByRole('textbox', { name: 'Select Deadline Date Select' }).fill('3000-01-01');
+    await page.getByText('class01').click();
+    await page.getByRole('textbox', { name: 'Select Deadline Select' }).fill('2099-01-01T12:34');
+    await page.getByRole('textbox', { name: 'Description Description' }).fill('Assignment description');
+
     await page.getByRole('button', { name: 'submit' }).click();
-    await page.getByRole('textbox', { name: 'Description Description' }).click();
-    await page.getByRole('textbox', { name: 'Description Description' }).fill('Description');
-    await page.locator('div:nth-child(3) > .v-input > .v-input__control > .v-field > .v-field__field > .v-field__input').click();
-    await page.getByRole('textbox', { name: 'Pick a class Pick a class' }).fill('a');
-    await page.getByRole('textbox', { name: 'Pick a class Pick a class' }).press('Enter');
-    await page.getByRole('banner').getByRole('link', { name: 'Classes' }).click();
-    await page.getByRole('textbox', { name: 'classname classname' }).click();
-    await page.getByRole('textbox', { name: 'classname classname' }).fill('class');
-    await page.getByRole('button', { name: 'create' }).click();
-    await page.getByRole('button', { name: 'close' }).click();
-    await page.getByRole('link', { name: 'Dwengo logo teacher' }).click();
-    await page.getByRole('link', { name: 'AI and Climate Students in' }).click();
-    await page.getByRole('link', { name: 'Artificiële intelligentie 12' }).click();
-    await page.getByRole('button', { name: 'assign' }).click();
-    await page.getByRole('textbox', { name: 'Title Title' }).click();
-    await page.getByRole('textbox', { name: 'Title Title' }).fill('Assignment');
-    await page.getByRole('textbox', { name: 'Pick a class Pick a class' }).click();
-    await page.getByRole('textbox', { name: 'Pick a class Pick a class' }).fill('class');
-    await page.getByText('New AssignmentTitleTitleSelect a learning').click();
-    await page.getByRole('textbox', { name: 'Select Deadline Date Select' }).fill('3000-01-01');
-    await page.getByRole('textbox', { name: 'Description Description' }).click();
-    await page.getByRole('textbox', { name: 'Description Description' }).fill('Description');
-    await page.getByRole('button', { name: 'submit' }).click();
-    await page.getByRole('button', { name: 'submit' }).click();
-    await page.getByRole('button', { name: 'submit' }).click();
-    await page.getByRole('textbox', { name: 'Pick a class Pick a class' }).click();
-    await page.getByRole('textbox', { name: 'Pick a class Pick a class' }).fill('class');
-    await page.locator('#v-menu-v-130').getByText('class').click();
-    await page.getByRole('button', { name: 'submit' }).click();
-    await page.getByText('AssignmentLearning').click();
-    await page.getByText('New AssignmentTitleTitleSelect a learning').click();
+
+    await expect(page.getByText('Assignment test')).toBeVisible();
+    await expect(page.getByRole('main').getByRole('button').first()).toBeVisible();
+    await expect(page.getByRole('main')).toContainText('Assignment test 1');
+    await expect(page.getByRole('link', { name: 'Learning path' })).toBeVisible();
+    await expect(page.getByRole('main')).toContainText('Assignment description');
 });
