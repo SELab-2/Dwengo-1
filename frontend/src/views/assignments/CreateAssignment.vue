@@ -49,6 +49,8 @@
         const { valid } = await form.value.validate();
         if (!valid) return;
 
+        console.log(selectedLearningPath.value);
+
         let lp = selectedLearningPath.value;
         if (!lpIsSelected) {
             lp = selectedLearningPath.value?.hruid;
@@ -81,7 +83,7 @@
                 @submit.prevent="submitFormHandler"
             >
                 <v-container class="step-container pa-0">
-                    <!-- Titel veld -->
+                    <!-- Title field -->
                     <v-text-field
                         v-model="assignmentTitle"
                         :label="t('title')"

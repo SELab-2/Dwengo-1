@@ -8,12 +8,11 @@ import {
 } from "@/queries/assignments.ts";
 import UsingQueryResult from "@/components/UsingQueryResult.vue";
 import {useGroupsQuery} from "@/queries/groups.ts";
-import {useGetAllLearningPaths, useGetLearningPathQuery} from "@/queries/learning-paths.ts";
+import {useGetLearningPathQuery} from "@/queries/learning-paths.ts";
 import type {Language} from "@/data-objects/language.ts";
 import type {AssignmentResponse} from "@/controllers/assignments.ts";
 import type {GroupDTO, GroupDTOId} from "@dwengo-1/common/interfaces/group";
-import type {LearningPath} from "@/data-objects/learning-paths/learning-path";
-import {descriptionRules, learningPathRules} from "@/utils/assignment-rules.ts";
+import {descriptionRules} from "@/utils/assignment-rules.ts";
 import GroupSubmissionStatus from "@/components/GroupSubmissionStatus.vue";
 import GroupProgressRow from "@/components/GroupProgressRow.vue";
 import type {AssignmentDTO} from "@dwengo-1/common/dist/interfaces/assignment.ts";
@@ -53,8 +52,15 @@ const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true
 groups.value = groupsQueryResult.data.value?.groups ?? [];
 
 watchEffect(() => {
-    learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
-    lang.value = assignmentQueryResult.data.value?.assignment?.language as Language;
+    const assignment = assignmentQueryResult.data.value?.assignment;
+    if (assignment) {
+        learningPath.value = assignment.learningPath;
+        lang.value = assignment.language as Language;
+
+        if (lpQueryResult.data.value) {
+            editingLearningPath.value = lpQueryResult.data.value;
+        }
+    }
 });
 
 const allGroups = computed(() => {
@@ -77,10 +83,11 @@ const allGroups = computed(() => {
 const dialog = ref(false);
 const selectedGroup = ref({});
 
-function openGroupDetails(group): void {
+function openGroupDetails(group: object): void {
     selectedGroup.value = group;
     dialog.value = true;
 }
+
 
 async function deleteAssignment(num: number, clsId: string): Promise<void> {
     const {mutate} = useDeleteAssignmentMutation();
@@ -110,13 +117,11 @@ function goToGroupSubmissionLink(groupNo: number): string | undefined {
     return `/learningPath/${lp.hruid}/${lp.language}/${lp.startNode.learningobjectHruid}?forGroup=${groupNo}&assignmentNo=${props.assignmentId}&classId=${props.classId}`;
 }
 
-const learningPathsQueryResults = useGetAllLearningPaths(lang);
-
 const {mutate, data, isSuccess} = useUpdateAssignmentMutation();
 
-watch([isSuccess, data], ([success, newData]) => {
+watch([isSuccess, data], async ([success, newData]) => {
     if (success && newData?.assignment) {
-        window.location.reload();
+        await assignmentQueryResult.refetch();
     }
 });
 
@@ -126,13 +131,9 @@ async function saveChanges(): Promise<void> {
 
     isEditing.value = false;
 
-    const lp = learningPath.value;
-
     const assignmentDTO: AssignmentDTO = {
-        id: assignmentQueryResult.data.value?.assignment.id,
         description: description.value,
-        learningPath: lp || "",
-        deadline: new Date(),
+        //deadline: new Date(),TODO: deadline aanpassen
     };
 
     mutate({
@@ -141,6 +142,18 @@ async function saveChanges(): Promise<void> {
         data: assignmentDTO,
     });
 }
+
+async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
+    const assignmentDTO: AssignmentDTO = {
+        groups: updatedGroups,
+    };
+    mutate({
+        cid: assignmentQueryResult.data.value?.assignment.within,
+        an: assignmentQueryResult.data.value?.assignment.id,
+        data: assignmentDTO,
+    });
+}
+
 </script>
 
 <template>
@@ -240,10 +253,7 @@ async function saveChanges(): Promise<void> {
                                 <v-card-title class="text-h4 assignmentTopTitle"
                                 >{{ assignmentResponse.data.assignment.title }}
                                 </v-card-title>
-                                <v-card-subtitle
-                                    v-if="!isEditing"
-                                    class="subtitle-section"
-                                >
+                                <v-card-subtitle class="subtitle-section">
                                     <using-query-result
                                         :query-result="lpQueryResult"
                                         v-slot="{ data: lpData }"
@@ -256,34 +266,14 @@ async function saveChanges(): Promise<void> {
                                         >
                                             {{ t("learning-path") }}
                                         </v-btn>
+                                        <v-alert
+                                            v-else
+                                            type="info"
+                                        >
+                                            {{ t("no-learning-path-selected") }}
+                                        </v-alert>
                                     </using-query-result>
                                 </v-card-subtitle>
-                                <using-query-result
-                                    v-else
-                                    :query-result="learningPathsQueryResults"
-                                    v-slot="{ data }: { data: LearningPath[] }"
-                                >
-                                    <v-card-text>
-                                        <v-combobox
-                                            v-model="editingLearningPath"
-                                            :items="data"
-                                            :label="t('choose-lp')"
-                                            :rules="learningPathRules"
-                                            variant="outlined"
-                                            clearable
-                                            hide-details
-                                            density="compact"
-                                            append-inner-icon="mdi-magnify"
-                                            item-title="title"
-                                            item-value="hruid"
-                                            required
-                                            :filter="
-                                                (item, query: string) =>
-                                                    item.title.toLowerCase().includes(query.toLowerCase())
-                                            "
-                                        ></v-combobox>
-                                    </v-card-text>
-                                </using-query-result>
 
                                 <v-card-text
                                     v-if="!isEditing"
@@ -422,6 +412,7 @@ async function saveChanges(): Promise<void> {
                                 :groups="allGroups"
                                 :class-id="props.classId"
                                 :assignment-id="props.assignmentId"
+                                @groupsUpdated="handleGroupsUpdated"
                                 @close="editGroups = false"
                             />
                         </v-card-text>
