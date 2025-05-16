@@ -14,33 +14,35 @@ import {
     putClassHandler,
 } from '../controllers/classes.js';
 import assignmentRouter from './assignments.js';
+import { adminOnly, teachersOnly } from '../middleware/auth/checks/auth-checks.js';
+import { onlyAllowIfInClass, onlyAllowIfInClassOrInvited } from '../middleware/auth/checks/class-auth-checks.js';
 
 const router = express.Router();
 
-// Root endpoint used to search objects
-router.get('/', getAllClassesHandler);
+router.get('/', adminOnly, getAllClassesHandler);
 
-router.post('/', createClassHandler);
+router.post('/', teachersOnly, createClassHandler);
 
-router.get('/:id', getClassHandler);
+router.get('/:id', onlyAllowIfInClassOrInvited, getClassHandler);
 
-router.put('/:id', putClassHandler);
+router.put('/:id', teachersOnly, onlyAllowIfInClass, putClassHandler);
 
-router.delete('/:id', deleteClassHandler);
+router.delete('/:id', teachersOnly, onlyAllowIfInClass, deleteClassHandler);
 
-router.get('/:id/teacher-invitations', getTeacherInvitationsHandler);
+router.get('/:id/teacher-invitations', teachersOnly, onlyAllowIfInClass, getTeacherInvitationsHandler);
 
-router.get('/:id/students', getClassStudentsHandler);
+router.get('/:id/students', onlyAllowIfInClass, getClassStudentsHandler);
 
-router.post('/:id/students', addClassStudentHandler);
+router.post('/:id/students', teachersOnly, onlyAllowIfInClass, addClassStudentHandler);
 
-router.delete('/:id/students/:username', deleteClassStudentHandler);
+router.delete('/:id/students/:username', teachersOnly, onlyAllowIfInClass, deleteClassStudentHandler);
 
-router.get('/:id/teachers', getClassTeachersHandler);
+router.get('/:id/teachers', onlyAllowIfInClass, getClassTeachersHandler);
 
-router.post('/:id/teachers', addClassTeacherHandler);
+// De combinatie van deze POST en DELETE endpoints kan lethal zijn
+router.post('/:id/teachers', teachersOnly, onlyAllowIfInClass, addClassTeacherHandler);
 
-router.delete('/:id/teachers/:username', deleteClassTeacherHandler);
+router.delete('/:id/teachers/:username', teachersOnly, onlyAllowIfInClass, deleteClassTeacherHandler);
 
 router.use('/:classid/assignments', assignmentRouter);
 

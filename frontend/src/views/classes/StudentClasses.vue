@@ -2,7 +2,7 @@
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
     import { computed, onMounted, ref } from "vue";
-    import { validate, version } from "uuid";
+    import { useRoute } from "vue-router";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { useCreateJoinRequestMutation, useStudentClassesQuery } from "@/queries/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
@@ -15,6 +15,7 @@
     import "../../assets/common.css";
 
     const { t } = useI18n();
+    const route = useRoute();
 
     // Username of logged in student
     const username = ref<string | undefined>(undefined);
@@ -37,6 +38,11 @@
             errorMessage.value = error instanceof Error ? error.message : String(error);
         } finally {
             isLoading.value = false;
+        }
+
+        const queryCode = route.query.code as string | undefined;
+        if (queryCode) {
+            code.value = queryCode;
         }
     });
 
@@ -75,11 +81,15 @@
 
     // The code a student sends in to join a class needs to be formatted as v4 to be valid
     // These rules are used to display a message to the user if they use a code that has an invalid format
+    function codeRegex(value: string): boolean {
+        return /^[a-zA-Z0-9]{6}$/.test(value);
+    }
+
     const codeRules = [
         (value: string | undefined): string | boolean => {
             if (value === undefined || value === "") {
                 return true;
-            } else if (value !== undefined && validate(value) && version(value) === 4) {
+            } else if (codeRegex(value)) {
                 return true;
             }
             return t("invalidFormat");
@@ -92,7 +102,7 @@
     // Function called when a student submits a code to join a class
     function submitCode(): void {
         // Check if the code is valid
-        if (code.value !== undefined && validate(code.value) && version(code.value) === 4) {
+        if (code.value !== undefined && codeRegex(code.value)) {
             mutate(
                 { username: username.value!, classId: code.value },
                 {
@@ -100,7 +110,7 @@
                         showSnackbar(t("sent"), "success");
                     },
                     onError: (e) => {
-                        showSnackbar(t("failed") + ": " + e.message, "error");
+                        showSnackbar(t("failed") + ": " + e.response.data.error || e.message, "error");
                     },
                 },
             );
@@ -260,7 +270,7 @@
                             <v-text-field
                                 label="CODE"
                                 v-model="code"
-                                placeholder="XXXXXXXX-XXXX-4XXX-XXXX-XXXXXXXXXXXX"
+                                placeholder="XXXXXX"
                                 :rules="codeRules"
                                 variant="outlined"
                             ></v-text-field>
