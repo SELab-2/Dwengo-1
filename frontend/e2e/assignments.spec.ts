@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 
 test('Teacher can create new assignment', async ({ page }) => {
+    await page.goto("/")
+
     // Login
     await page.getByRole("link", { name: "log in" }).click();
     await page.getByRole("button", { name: "teacher" }).click();

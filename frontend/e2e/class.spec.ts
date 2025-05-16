@@ -32,6 +32,8 @@ test("Teacher can create a class", async ({ page }) => {
 });
 
 test('Teacher can share a class by code', async ({ page }) => {
+    await page.goto("/")
+
     // Login
     await page.getByRole("link", { name: "log in" }).click();
     await page.getByRole("button", { name: "teacher" }).click();
@@ -80,6 +82,8 @@ test("Student can join class by code", async ({ page }) => {
 });
 
 test('Teacher can remove student from class', async ({ page }) => {
+    await page.goto("/")
+
     // Login
     await page.getByRole("link", { name: "log in" }).click();
     await page.getByRole("button", { name: "teacher" }).click();
