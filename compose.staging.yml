@@ -60,6 +60,13 @@ services:
 
             # Add web entrypoint
             - '--entrypoints.web.address=:80/tcp'
+
+            # Proxying the web UI on a sub-path
+            - '--api.basePath=/proxy'
+        labels:
+            - 'traefik.http.routers.proxy.service=api@internal'
+            - 'traefik.http.routers.proxy.rule=PathPrefix(`/proxy`)'
+            - 'traefik.http.services.proxy.loadbalancer.server.port=8080'
         ports:
             - '9000:8080'
             - '80:80/tcp'
