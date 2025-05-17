@@ -5,7 +5,7 @@ import { LearningObjectNode, LearningPath, LearningPathIdentifier, LearningPathR
 import { Language } from '@dwengo-1/common/util/language';
 import { Group } from '../../entities/assignments/group.entity.js';
 import { LearningPath as LearningPathEntity } from '../../entities/content/learning-path.entity.js';
-import { getLearningPathRepository, getTeacherRepository } from '../../data/repositories.js';
+import { getLearningPathRepository } from '../../data/repositories.js';
 import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
 import { base64ToArrayBuffer } from '../../util/base64-buffer-conversion.js';
@@ -15,7 +15,6 @@ import { Collection } from '@mikro-orm/core';
 import { NotFoundException } from '../../exceptions/not-found-exception.js';
 import { BadRequestException } from '../../exceptions/bad-request-exception.js';
 import learningObjectService from '../learning-objects/learning-object-service.js';
-import { Teacher } from '../../entities/users/teacher.entity';
 
 const userContentPrefix = getEnvVar(envVars.UserContentPrefix);
 const allProviders = [dwengoApiLearningPathProvider, databaseLearningPathProvider];
