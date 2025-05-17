@@ -163,10 +163,12 @@
 
                     <div v-else>
                         <v-alert class="empty-message">
-                            <v-icon icon="mdi-information-outline" size="small" />
+                            <v-icon
+                                icon="mdi-information-outline"
+                                size="small"
+                            />
                             {{ t("currently-no-groups") }}
                         </v-alert>
-
                     </div>
                 </v-card-text>
             </v-card>
