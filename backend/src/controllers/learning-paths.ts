@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
 import learningPathService from '../services/learning-paths/learning-path-service.js';
@@ -7,11 +7,13 @@ import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { Group } from '../entities/assignments/group.entity.js';
 import { getAssignmentRepository, getGroupRepository } from '../data/repositories.js';
+import { AuthenticatedRequest } from '../middleware/auth/authenticated-request';
+import { LearningPath } from '@dwengo-1/common/interfaces/learning-content';
 
 /**
  * Fetch learning paths based on query parameters.
  */
-export async function getLearningPaths(req: Request, res: Response): Promise<void> {
+export async function getLearningPaths(req: AuthenticatedRequest, res: Response): Promise<void> {
     const hruids = req.query.hruid;
     const themeKey = req.query.theme as string;
     const searchQuery = req.query.search as string;
@@ -50,14 +52,18 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
         return;
     } else {
         hruidList = themes.flatMap((theme) => theme.hruids);
-        const apiLearningPaths = await learningPathService.fetchLearningPaths(hruidList, language as Language, 'All themes', forGroup);
-        // TODO Remove hardcoding
-        const userLearningPaths = await learningPathService.searchLearningPathsByAdmin(['testleerkracht1'], language as Language, forGroup);
-        if (!apiLearningPaths.data) {
-            res.json(userLearningPaths);
-            return;
+
+        const apiLearningPathResponse = await learningPathService.fetchLearningPaths(hruidList, language as Language, 'All themes', forGroup);
+        const apiLearningPaths: LearningPath[] = apiLearningPathResponse.data || [];
+        let allLearningPaths: LearningPath[] = apiLearningPaths;
+
+        if (req.auth) {
+            const adminUsername = req.auth.username;
+            const userLearningPaths = await learningPathService.searchLearningPathsByAdmin([adminUsername], language as Language, forGroup) || [];
+            allLearningPaths = apiLearningPaths.concat(userLearningPaths);
         }
-        res.json(apiLearningPaths.data.concat(userLearningPaths));
+
+        res.json(allLearningPaths);
         return;
     }
 

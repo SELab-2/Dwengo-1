@@ -12,6 +12,7 @@ import { base64ToArrayBuffer } from '../../util/base64-buffer-conversion.js';
 import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { mapToTeacher } from '../../interfaces/teacher.js';
 import { Collection } from '@mikro-orm/core';
+import { Teacher } from '../../entities/users/teacher.entity';
 
 const userContentPrefix = getEnvVar(envVars.UserContentPrefix);
 const allProviders = [dwengoApiLearningPathProvider, databaseLearningPathProvider];
@@ -121,17 +122,12 @@ const learningPathService = {
     async searchLearningPathsByAdmin(adminsIds: string[], language: Language, personalizedFor?: Group): Promise<LearningPath[]> {
         const teacherRepo = getTeacherRepository();
         const admins = await Promise.all(
-            adminsIds.map(async (adminId) => {
-                const admin = await teacherRepo.findByUsername(adminId);
-                if (!admin) {
-                    throw new Error(`Admin with ID ${adminId} not found.`);
-                }
-                return admin;
-            }),
+            adminsIds .map(async (adminId) => await teacherRepo.findByUsername(adminId))
         );
+        const adminsNotNull: Teacher[] = admins.filter((admin) => admin !== undefined) as Teacher[];
 
         const providerResponses = await Promise.all(
-            allProviders.map(async (provider) => provider.searchLearningPathsByAdmin(admins, language, personalizedFor)),
+            allProviders.map(async (provider) => provider.searchLearningPathsByAdmin(adminsNotNull, language, personalizedFor)),
         );
         return providerResponses.flat();
     },
