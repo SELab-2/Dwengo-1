@@ -6,8 +6,7 @@
 
     const datetime = ref("");
 
-    datetime.value = props.deadline ? new Date(props.deadline).toISOString().slice(0, 16) : ""
-
+    datetime.value = props.deadline ? new Date(props.deadline).toISOString().slice(0, 16) : "";
 
     // Watch the datetime value and emit the update
     watch(datetime, (val) => {
@@ -21,7 +20,6 @@
 
     const deadlineRules = [
         (value: string): string | boolean => {
-
             const selectedDateTime = new Date(value);
             const now = new Date();
 

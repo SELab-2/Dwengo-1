@@ -20,7 +20,7 @@ export class AssignmentRepository extends DwengoEntityRepository<Assignment> {
                     },
                 },
             },
-            populate: ['groups', 'groups.members']
+            populate: ['groups', 'groups.members'],
         });
     }
     public async findAllAssignmentsInClass(within: Class): Promise<Assignment[]> {

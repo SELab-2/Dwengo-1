@@ -39,9 +39,9 @@ export async function getAllAssignmentsHandler(req: Request, res: Response): Pro
 
 export async function createAssignmentHandler(req: Request, res: Response): Promise<void> {
     const classid = req.params.classid;
-    const description = req.body.description || "";
+    const description = req.body.description || '';
     const language = req.body.language || FALLBACK_LANG;
-    const learningPath = req.body.learningPath || "";
+    const learningPath = req.body.learningPath || '';
     const title = req.body.title;
 
     requireFields({ title });

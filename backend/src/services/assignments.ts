@@ -103,20 +103,22 @@ export async function putAssignment(classid: string, id: number, assignmentData:
     if (assignmentData.groups) {
         const hasDuplicates = (arr: string[]) => new Set(arr).size !== arr.length;
         if (hasDuplicates(assignmentData.groups.flat() as string[])) {
-            throw new BadRequestException("Student can only be in one group");
+            throw new BadRequestException('Student can only be in one group');
         }
 
-        const studentLists = await Promise.all((assignmentData.groups! as string[][]).map(async group => await fetchStudents(group)));
+        const studentLists = await Promise.all((assignmentData.groups as string[][]).map(async (group) => await fetchStudents(group)));
 
         const groupRepository = getGroupRepository();
         await groupRepository.deleteAllByAssignment(assignment);
-        await Promise.all(studentLists.map(async students => {
-            const newGroup = groupRepository.create({
-                assignment: assignment,
-                members: students,
-            });
-            await groupRepository.save(newGroup);
-        }));
+        await Promise.all(
+            studentLists.map(async (students) => {
+                const newGroup = groupRepository.create({
+                    assignment: assignment,
+                    members: students,
+                });
+                await groupRepository.save(newGroup);
+            })
+        );
 
         delete assignmentData.groups;
     }
