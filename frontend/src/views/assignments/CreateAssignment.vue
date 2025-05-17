@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import { computed, onMounted, ref, watch } from "vue";
-import { assignmentTitleRules, classRules } from "@/utils/assignment-rules.ts";
 import auth from "@/services/auth/auth-service.ts";
 import { useTeacherClassesQuery } from "@/queries/teachers.ts";
 import { useRouter, useRoute } from "vue-router";
@@ -95,6 +94,25 @@ const learningPathRules = [
         return valid || t("lp-invalid");
     }
 ];
+
+const assignmentTitleRules = [
+    (value: string): string | boolean => {
+        if (value?.length >= 1) {
+            return true;
+        } // Title must not be empty
+        return t("title-required");
+    },
+];
+
+const classRules = [
+    (value: string): string | boolean => {
+        if (value) {
+            return true;
+        }
+        return t("class-required");
+    },
+];
+
 
 </script>
 
