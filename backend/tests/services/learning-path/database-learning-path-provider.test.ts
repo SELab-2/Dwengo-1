@@ -14,11 +14,14 @@ import {
     testLearningObjectEssayQuestion,
     testLearningObjectMultipleChoice,
 } from '../../test_assets/content/learning-objects.testdata';
-import { testLearningPathWithConditions } from '../../test_assets/content/learning-paths.testdata';
+import { testLearningPath02, testLearningPathWithConditions } from '../../test_assets/content/learning-paths.testdata';
 import { mapToLearningPath } from '../../../src/services/learning-paths/learning-path-service';
 import { getTestGroup01, getTestGroup02 } from '../../test_assets/assignments/groups.testdata';
 import { Group } from '../../../src/entities/assignments/group.entity.js';
+import { Teacher } from '../../../src/entities/users/teacher.entity.js';
 import { RequiredEntityData } from '@mikro-orm/core';
+import { getFooFighters, getLimpBizkit } from '../../test_assets/users/teachers.testdata';
+import { mapToTeacherDTO } from '../../../src/interfaces/teacher';
 
 function expectBranchingObjectNode(result: LearningPathResponse): LearningObjectNode {
     const branchingObjectMatches = result.data![0].nodes.filter((it) => it.learningobject_hruid === testLearningObjectMultipleChoice.hruid);
@@ -33,6 +36,8 @@ describe('DatabaseLearningPathProvider', () => {
     let finalLearningObject: RequiredEntityData<LearningObject>;
     let groupA: Group;
     let groupB: Group;
+    let teacherA: Teacher;
+    let teacherB: Teacher;
 
     beforeAll(async () => {
         await setupTestApp();
@@ -42,6 +47,8 @@ describe('DatabaseLearningPathProvider', () => {
         finalLearningObject = testLearningObjectEssayQuestion;
         groupA = getTestGroup01();
         groupB = getTestGroup02();
+        teacherA = getFooFighters();
+        teacherB = getLimpBizkit();
 
         // Place different submissions for group A and B.
         const submissionRepo = getSubmissionRepository();
@@ -135,6 +142,26 @@ describe('DatabaseLearningPathProvider', () => {
         it('returns an empty result when queried with a text which is not a substring of the title or the description of a learning path', async () => {
             const result = await databaseLearningPathProvider.searchLearningPaths(
                 'substring which does not occur in the title or the description of a learning object',
+                testLearningPath.language
+            );
+            expect(result.length).toBe(0);
+        });
+    });
+
+    describe('searchLearningPathsByAdmin', () => {
+        it('returns the learning path owned by the admin', async () => {
+            const expectedLearningPath = mapToLearningPath(testLearningPath02, [mapToTeacherDTO(teacherB)]);
+            const result = await databaseLearningPathProvider.searchLearningPathsByAdmin(
+                [teacherB],
+                expectedLearningPath.language
+            );
+            expect(result.length).toBe(1);
+            expect(result[0].title).toBe(expectedLearningPath.title);
+            expect(result[0].description).toBe(expectedLearningPath.description);
+        });
+        it('returns an empty result when querying admins that do not have custom learning paths', async() => {
+            const result = await databaseLearningPathProvider.searchLearningPathsByAdmin(
+                [teacherA],
                 testLearningPath.language
             );
             expect(result.length).toBe(0);
