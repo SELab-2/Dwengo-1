@@ -25,7 +25,7 @@ export class AssignmentController extends BaseController {
         return this.get<AssignmentResponse>(`/${num}`);
     }
 
-    async createAssignment(data: AssignmentDTO): Promise<AssignmentResponse> {
+    async createAssignment(data: Partial<AssignmentDTO>): Promise<AssignmentResponse> {
         return this.post<AssignmentResponse>(`/`, data);
     }
 

@@ -28,4 +28,9 @@ export class GroupRepository extends DwengoEntityRepository<Group> {
             groupNumber: groupNumber,
         });
     }
+    public async deleteAllByAssignment(assignment: Assignment): Promise<void> {
+        return this.deleteAllWhere({
+            assignment: assignment,
+        });
+    }
 }

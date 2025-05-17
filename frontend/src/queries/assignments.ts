@@ -117,7 +117,7 @@ export function useAssignmentQuery(
 export function useCreateAssignmentMutation(): UseMutationReturnType<
     AssignmentResponse,
     Error,
-    { cid: string; data: AssignmentDTO },
+    { cid: string; data: Partial<AssignmentDTO> },
     unknown
 > {
     const queryClient = useQueryClient();
@@ -181,7 +181,7 @@ export function useAssignmentSubmissionsQuery(
 
     return useQuery({
         queryKey: computed(() => assignmentSubmissionsQueryKey(cid!, an!, f)),
-        queryFn: async () => new AssignmentController(cid!).getSubmissions(gn!, f),
+        queryFn: async () => new AssignmentController(cid!).getSubmissions(an!, f),
         enabled: () => checkEnabled(cid, an, gn),
     });
 }

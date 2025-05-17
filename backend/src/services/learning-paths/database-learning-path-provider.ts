@@ -70,6 +70,8 @@ async function convertLearningPath(learningPath: LearningPathEntity, order: numb
     // Convert the learning object notes as retrieved from the database into the expected response format-
     const convertedNodes = await convertNodes(nodesToLearningObjects, personalizedFor);
 
+    const nodesActuallyOnPath = traverseLearningPath(convertedNodes);
+
     return {
         _id: `${learningPath.hruid}/${learningPath.language}`, // For backwards compatibility with the original Dwengo API.
         __order: order,
@@ -79,8 +81,8 @@ async function convertLearningPath(learningPath: LearningPathEntity, order: numb
         image: image,
         title: learningPath.title,
         nodes: convertedNodes,
-        num_nodes: learningPath.nodes.length,
-        num_nodes_left: convertedNodes.filter((it) => !it.done).length,
+        num_nodes: nodesActuallyOnPath.length,
+        num_nodes_left: nodesActuallyOnPath.filter((it) => !it.done).length,
         keywords: keywords.join(' '),
         target_ages: targetAges,
         max_age: Math.max(...targetAges),
@@ -180,7 +182,6 @@ function convertTransition(
         return {
             _id: String(index), // Retained for backwards compatibility. The index uniquely identifies the transition within the learning path.
             default: false, // We don't work with default transitions but retain this for backwards compatibility.
-            condition: transition.condition,
             next: {
                 _id: nextNode._id ? nextNode._id + index : v4(), // Construct a unique ID for the transition for backwards compatibility.
                 hruid: transition.next.learningObjectHruid,
@@ -189,6 +190,29 @@ function convertTransition(
             },
         };
     }
+}
+
+/**
+ * Start from the start node and then always take the first transition until there are no transitions anymore.
+ * Returns the traversed nodes as an array. (This effectively filters outs nodes that cannot be reached.)
+ */
+function traverseLearningPath(nodes: LearningObjectNode[]): LearningObjectNode[] {
+    const traversedNodes: LearningObjectNode[] = [];
+    let currentNode = nodes.find((it) => it.start_node);
+
+    while (currentNode) {
+        traversedNodes.push(currentNode);
+
+        const next = currentNode.transitions[0]?.next;
+
+        if (next) {
+            currentNode = nodes.find((it) => it.learningobject_hruid === next.hruid && it.language === next.language && it.version === next.version);
+        } else {
+            currentNode = undefined;
+        }
+    }
+
+    return traversedNodes;
 }
 
 /**

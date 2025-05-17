@@ -4,6 +4,7 @@ import {
     deleteTeacherHandler,
     getAllTeachersHandler,
     getStudentJoinRequestHandler,
+    getTeacherAssignmentsHandler,
     getTeacherClassHandler,
     getTeacherHandler,
     getTeacherStudentHandler,
@@ -27,6 +28,8 @@ router.delete('/:username', preventImpersonation, deleteTeacherHandler);
 router.get('/:username/classes', preventImpersonation, getTeacherClassHandler);
 
 router.get('/:username/students', preventImpersonation, getTeacherStudentHandler);
+
+router.get(`/:username/assignments`, getTeacherAssignmentsHandler);
 
 router.get('/:username/joinRequests/:classId', onlyAllowTeacherOfClass, getStudentJoinRequestHandler);
 
