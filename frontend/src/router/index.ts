@@ -57,12 +57,6 @@ const router = createRouter({
                     name: "UserClasses",
                     component: UserClasses,
                 },
-                // TODO Re-enable this route when the discussion page is ready
-                // {
-                //     Path: "discussion",
-                //     Name: "UserDiscussions",
-                //     Component: UserDiscussions,
-                // },
             ],
         },
 

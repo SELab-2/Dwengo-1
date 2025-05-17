@@ -1,47 +1,13 @@
 <script setup lang="ts">
-    import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
-    import { useI18n } from "vue-i18n";
-    import { useGetAllLearningPaths } from "@/queries/learning-paths.ts";
-    import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import DiscussionSideBarElement from "@/components/DiscussionSideBarElement.vue";
-    import { ref } from "vue";
+import { useI18n } from 'vue-i18n';
+import DiscussionsSideBar from '@/components/DiscussionsSideBar.vue';
 
-    const { t, locale } = useI18n();
-
-    const allLearningPathsResult = useGetAllLearningPaths(locale.value)
-
-    const navigationDrawerShown = ref(true);
+const { t } = useI18n();
 
 </script>
 
 <template>
-    <v-navigation-drawer
-        v-model="navigationDrawerShown"
-        :width="350"
-        app
-    >
-        <div class="d-flex flex-column h-100">
-            <v-list-item>
-                <template v-slot:title>
-                    <div class="title">{{t("discussions")}}</div>
-                </template>
-            </v-list-item>
-            <v-divider></v-divider>
-            <div>
-                <using-query-result
-                    :query-result="allLearningPathsResult"
-                    v-slot="learningPaths: {data: LearningPath[]}">
-                    <DiscussionSideBarElement
-                        v-for="learningPath in learningPaths.data"
-                        :path="learningPath"
-                        :activeObjectId="'' as string"
-                        :key="learningPath.hruid"
-                        >
-                    </DiscussionSideBarElement>
-                </using-query-result>
-            </div>
-        </div>
-    </v-navigation-drawer>
+    <DiscussionsSideBar></DiscussionsSideBar>
     <div>
         <p class="no-discussion-tip">{{t("no-discussion-tip")}}</p>
     </div>
@@ -52,18 +18,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh; 
+        height: 100vh;
         text-align: center;
         font-size: 18px;
         color: #666;
         padding: 0 20px;
-    }
-    .title {
-        color: #0e6942;
-        text-transform: uppercase;
-        font-weight: bolder;
-        padding-top: 2%;
-        font-size: 36px;
     }
     .learning-path-title {
         white-space: normal;
@@ -128,19 +87,6 @@
 
     .question-input::placeholder {
         color: #999;
-    }
-
-    .send-button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        color: #555;
-        transition: color 0.2s ease;
-    }
-
-    .send-button:hover {
-        color: #000;
     }
 
     .discussion-link {
