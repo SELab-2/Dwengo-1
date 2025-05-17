@@ -7,17 +7,14 @@ import { useRoute } from 'vue-router';
 import { useGetAllLearningPaths, useGetLearningPathQuery } from '@/queries/learning-paths.ts';
 import { useLearningObjectListForPathQuery } from '@/queries/learning-objects.ts';
 import UsingQueryResult from '@/components/UsingQueryResult.vue';
-import authService from '@/services/auth/auth-service.ts';
 import { LearningPathNode } from '@/data-objects/learning-paths/learning-path-node.ts';
-import { useCreateQuestionMutation, useQuestionsQuery } from '@/queries/questions';
+import { useQuestionsQuery } from '@/queries/questions';
 import type { QuestionsResponse } from '@/controllers/questions';
 import type { LearningObjectIdentifierDTO } from '@dwengo-1/common/interfaces/learning-content';
 import QandA from '@/components/QandA.vue';
-import type { QuestionData, QuestionDTO } from '@dwengo-1/common/interfaces/question';
-import { useStudentAssignmentsQuery, useStudentGroupsQuery } from '@/queries/students';
-import type { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
-import type { GroupDTO } from '@dwengo-1/common/interfaces/group';
+import type { QuestionDTO } from '@dwengo-1/common/interfaces/question';
 import DiscussionsSideBar from '@/components/DiscussionsSideBar.vue';
+import QuestionBox from '@/components/QuestionBox.vue';
 
 const route = useRoute();
 
@@ -88,8 +85,6 @@ watch(
 
 const learningPathQueryResult = useGetLearningPathQuery(props.hruid, props.language, forGroup);
 
-const learningObjectListQueryResult = useLearningObjectListForPathQuery(learningPathQueryResult.data);
-
 const nodesList: ComputedRef<LearningPathNode[] | null> = computed(
     () => learningPathQueryResult.data.value?.nodesAsList ?? null,
 );
@@ -110,23 +105,6 @@ const getQuestionsQuery = useQuestionsQuery(
     ),
 );
 
-const studentAssignmentsQueryResult = useStudentAssignmentsQuery(
-    authService.authState.user?.profile.preferred_username,
-);
-const pathIsAssignment = computed(() => {
-    const assignments = (studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[]) || [];
-    return assignments.some(
-        (assignment) => assignment.learningPath === props.hruid && assignment.language === props.language,
-    );
-});
-const loID: ComputedRef<LearningObjectIdentifierDTO> = computed(() => ({
-    hruid: props.learningObjectHruid as string,
-    language: props.language,
-    version: currentNode.value?.version,
-}));
-
-const createQuestionMutation = useCreateQuestionMutation(loID.value);
-
 watch(
     () => [route.params.hruid, route.params.language, route.params.learningObjectHruid],
     () => {
@@ -135,61 +113,16 @@ watch(
     },
 );
 
-const groupsQueryResult = useStudentGroupsQuery(authService.authState.user?.profile.preferred_username);
-
-const questionInput = ref('');
-
-function submitQuestion(): void {
-    const assignments = studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[];
-    const assignment = assignments.find(
-        (assignment) => assignment.learningPath === props.hruid && assignment.language === props.language,
-    );
-    const groups = groupsQueryResult.data.value?.groups as GroupDTO[];
-    const group = groups?.find((group) => group.assignment === assignment?.id) as GroupDTO;
-    const questionData: QuestionData = {
-        author: authService.authState.user?.profile.preferred_username,
-        content: questionInput.value,
-        inGroup: group,
-    };
-    if (questionInput.value !== '') {
-        createQuestionMutation.mutate(questionData, {
-            onSuccess: async () => {
-                questionInput.value = ''; // Clear the input field after submission
-                await getQuestionsQuery.refetch(); // Reload the questions
-            },
-            onError: (_) => {
-                // TODO Handle error
-                // - console.error(e);
-            },
-        });
-    }
-}
-
-
 </script>
 
 <template>
     <DiscussionsSideBar></DiscussionsSideBar>
-
-    <div
-        v-if="authService.authState.activeRole === 'student' && pathIsAssignment"
-        class="question-box"
-    >
-        <div class="input-wrapper">
-            <input
-                type="text"
-                placeholder="question : ..."
-                class="question-input"
-                v-model="questionInput"
-            />
-            <button
-                @click="submitQuestion"
-                class="send-button"
-            >
-                ▶
-            </button>
-        </div>
-    </div>
+    <QuestionBox
+        :hruid=props.hruid
+        :language=props.language
+        :learningObjectHruid=props.learningObjectHruid
+        :forGroup=forGroup
+    />
     <using-query-result
         :query-result="getQuestionsQuery"
         v-slot="questionsResponse: { data: QuestionsResponse }"

@@ -1,29 +1,29 @@
 <script setup lang="ts">
-    import { Language } from "@/data-objects/language.ts";
-    import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
-    import { computed, type ComputedRef, ref } from "vue";
-    import type { LearningObject } from "@/data-objects/learning-objects/learning-object.ts";
-    import { useRoute, useRouter } from "vue-router";
-    import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
-    import { useI18n } from "vue-i18n";
-    import LearningPathSearchField from "@/components/LearningPathSearchField.vue";
-    import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
-    import { useLearningObjectListForPathQuery } from "@/queries/learning-objects.ts";
-    import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import authService from "@/services/auth/auth-service.ts";
-    import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
-    import LearningPathGroupSelector from "@/views/learning-paths/LearningPathGroupSelector.vue";
-    import { useCreateQuestionMutation, useQuestionsQuery } from "@/queries/questions";
-    import type { QuestionsResponse } from "@/controllers/questions";
-    import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
-    import QandA from "@/components/QandA.vue";
-    import type { QuestionData, QuestionDTO } from "@dwengo-1/common/interfaces/question";
-    import { useStudentAssignmentsQuery, useStudentGroupsQuery } from "@/queries/students";
-    import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
-    import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
-    import QuestionNotification from "@/components/QuestionNotification.vue";
+import { Language } from '@/data-objects/language.ts';
+import type { LearningPath } from '@/data-objects/learning-paths/learning-path.ts';
+import { computed, type ComputedRef, ref } from 'vue';
+import type { LearningObject } from '@/data-objects/learning-objects/learning-object.ts';
+import { useRoute, useRouter } from 'vue-router';
+import LearningObjectView from '@/views/learning-paths/learning-object/LearningObjectView.vue';
+import { useI18n } from 'vue-i18n';
+import LearningPathSearchField from '@/components/LearningPathSearchField.vue';
+import { useGetLearningPathQuery } from '@/queries/learning-paths.ts';
+import { useLearningObjectListForPathQuery } from '@/queries/learning-objects.ts';
+import UsingQueryResult from '@/components/UsingQueryResult.vue';
+import authService from '@/services/auth/auth-service.ts';
+import { LearningPathNode } from '@/data-objects/learning-paths/learning-path-node.ts';
+import LearningPathGroupSelector from '@/views/learning-paths/LearningPathGroupSelector.vue';
+import { useQuestionsQuery } from '@/queries/questions';
+import type { QuestionsResponse } from '@/controllers/questions';
+import type { LearningObjectIdentifierDTO } from '@dwengo-1/common/interfaces/learning-content';
+import QandA from '@/components/QandA.vue';
+import type { QuestionDTO } from '@dwengo-1/common/interfaces/question';
+import { useStudentAssignmentsQuery } from '@/queries/students';
+import type { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
+import QuestionNotification from '@/components/QuestionNotification.vue';
+import QuestionBox from '@/components/QuestionBox.vue';
 
-    const router = useRouter();
+const router = useRouter();
     const route = useRoute();
     const { t } = useI18n();
 
@@ -156,45 +156,10 @@
         );
     });
 
-    const loID: LearningObjectIdentifierDTO = {
-        hruid: props.learningObjectHruid as string,
-        language: props.language,
-    };
-    const createQuestionMutation = useCreateQuestionMutation(loID);
-    const groupsQueryResult = useStudentGroupsQuery(authService.authState.user?.profile.preferred_username);
-
-    const questionInput = ref("");
-
-    function submitQuestion(): void {
-        const assignments = studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[];
-        const assignment = assignments.find(
-            (assignment) => assignment.learningPath === props.hruid && assignment.language === props.language,
-        );
-        const groups = groupsQueryResult.data.value?.groups as GroupDTO[];
-        const group = groups?.find((group) => group.assignment === assignment?.id) as GroupDTO;
-        const questionData: QuestionData = {
-            author: authService.authState.user?.profile.preferred_username,
-            content: questionInput.value,
-            inGroup: group, //TODO: POST response zegt dat dit null is???
-        };
-        if (questionInput.value !== "") {
-            createQuestionMutation.mutate(questionData, {
-                onSuccess: async () => {
-                    questionInput.value = ""; // Clear the input field after submission
-                    await getQuestionsQuery.refetch(); // Reload the questions
-                },
-                onError: (_) => {
-                    // TODO Handle error
-                    // - console.error(e);
-                },
-            });
-        }
-    }
-
-    const discussionLink = computed(() => 
-        "/discussion" 
+    const discussionLink = computed(() =>
+        "/discussion"
         + "/" + props.hruid
-        + "/" + currentNode.value?.language 
+        + "/" + currentNode.value?.language
         + "/" + currentNode.value?.learningobjectHruid);
 
 </script>
@@ -329,25 +294,12 @@
                 v-if="currentNode"
             ></learning-object-view>
         </div>
-        <div
-            v-if="authService.authState.activeRole === 'student' && pathIsAssignment"
-            class="question-box"
-        >
-            <div class="input-wrapper">
-                <input
-                    type="text"
-                    :placeholder="t('question-input-placeholder')"
-                    class="question-input"
-                    v-model="questionInput"
-                />
-                <button
-                    @click="submitQuestion"
-                    class="send-button"
-                >
-                    ▶
-                </button>
-            </div>
-        </div>
+        <QuestionBox
+            :hruid=props.hruid
+            :language=props.language
+            :learningObjectHruid=props.learningObjectHruid
+            :forGroup=forGroup
+        />
         <div class="navigation-buttons-container">
             <v-btn
                 prepend-icon="mdi-chevron-left"
@@ -382,7 +334,7 @@
                     </router-link>
                 </span>
             </div>
-            
+
             <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
         </using-query-result>
     </using-query-result>
@@ -440,45 +392,6 @@
         font-size: 14px;
         text-transform: uppercase;
         z-index: 2; /* Less than modals/popups */
-    }
-    .question-box {
-        width: 100%;
-        max-width: 400px;
-        margin: 20px auto;
-        font-family: sans-serif;
-    }
-    .input-wrapper {
-        display: flex;
-        align-items: center;
-        border: 1px solid #ccc;
-        border-radius: 999px;
-        padding: 8px 12px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .question-input {
-        flex: 1;
-        border: none;
-        outline: none;
-        font-size: 14px;
-        background-color: transparent;
-    }
-
-    .question-input::placeholder {
-        color: #999;
-    }
-
-    .send-button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        color: #555;
-        transition: color 0.2s ease;
-    }
-
-    .send-button:hover {
-        color: #000;
     }
 
     .discussion-link {
