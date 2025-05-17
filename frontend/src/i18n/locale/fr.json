@@ -128,5 +128,6 @@
     "answer-input-placeholder": "réponse...",
     "answers-toggle-hide": "Masquer réponses",
     "answers-toggle-show": "Afficher réponse",
+    "no-questions": "Aucune question trouvée",
     "no-discussion-tip": "Sélectionnez un objet d'apprentissage pour afficher les questions qui s'y rapportent"
 }

@@ -128,6 +128,7 @@
     "answer-input-placeholder": "answer...",
     "answers-toggle-hide": "Hide answers",
     "answers-toggle-show": "Show answers",
+    "no-questions": "No questions asked yet",
     "no-discussion-tip": "Choose a learning object to view its questions"
 
 }
