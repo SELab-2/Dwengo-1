@@ -4,7 +4,7 @@ import { testLearningObject01 } from './learning-objects.testdata';
 import { LearningObject } from '../../../src/entities/content/learning-object.entity';
 
 export function makeTestAttachments(em: EntityManager): Attachment[] {
-    // prevent duplicate insertion
+    // Prevent duplicate insertion
     const lo = em.merge(LearningObject, testLearningObject01);
 
     attachment01 = em.create(Attachment, {
@@ -19,6 +19,6 @@ export function makeTestAttachments(em: EntityManager): Attachment[] {
 
 let attachment01: Attachment;
 
-export function getAttachment01(): Attachment{
+export function getAttachment01(): Attachment {
     return attachment01;
 }

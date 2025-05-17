@@ -3,6 +3,7 @@
     import { useI18n } from "vue-i18n";
     import { onMounted, ref, type Ref } from "vue";
     import auth from "../services/auth/auth-service.ts";
+    import { Redirect } from "@/utils/redirect.ts";
 
     const { t } = useI18n();
 
@@ -10,10 +11,20 @@
 
     const errorMessage: Ref<string | null> = ref(null);
 
+    async function redirectPage(): Promise<void> {
+        const redirectUrl = localStorage.getItem(Redirect.AFTER_LOGIN_KEY);
+        if (redirectUrl) {
+            localStorage.removeItem(Redirect.AFTER_LOGIN_KEY);
+            await router.replace(redirectUrl);
+        } else {
+            await router.replace(Redirect.HOME);
+        }
+    }
+
     onMounted(async () => {
         try {
             await auth.handleLoginCallback();
-            await router.replace("/user"); // Redirect to theme page
+            await redirectPage();
         } catch (error) {
             errorMessage.value = `${t("loginUnexpectedError")}: ${error}`;
         }

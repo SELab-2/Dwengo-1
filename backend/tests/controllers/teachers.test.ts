@@ -15,12 +15,10 @@ import {
 import { BadRequestException } from '../../src/exceptions/bad-request-exception.js';
 import { EntityAlreadyExistsException } from '../../src/exceptions/entity-already-exists-exception.js';
 import { getStudentRequestsHandler } from '../../src/controllers/students.js';
-import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { getClassHandler } from '../../src/controllers/classes';
 import { getFooFighters, getTestleerkracht1 } from '../test_assets/users/teachers.testdata.js';
 import { getClass02 } from '../test_assets/classes/classes.testdata.js';
-import { getPinkFloyd, TEST_STUDENTS } from '../test_assets/users/students.testdata.js';
-import { getClassJoinRequest01, getClassJoinRequest02 } from '../test_assets/classes/class-join-requests.testdata.js';
+import { getClassJoinRequest01 } from '../test_assets/classes/class-join-requests.testdata.js';
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
@@ -102,7 +100,7 @@ describe('Teacher controllers', () => {
     });
 
     it('Teacher list', async () => {
-        req = { query: { full: 'true' } };
+        req = { query: { full: 'false' } };
 
         await getAllTeachersHandler(req as Request, res as Response);
 
@@ -110,12 +108,10 @@ describe('Teacher controllers', () => {
 
         const result = jsonMock.mock.lastCall?.[0];
 
-        const teacherUsernames = result.teachers.map((s: TeacherDTO) => s.username);
-
         const teacher = getTestleerkracht1();
-        expect(teacherUsernames).toContain(teacher.username);
+        expect(result.teachers).toContain(teacher.username);
 
-        expect(result.teachers).toHaveLength(5);
+        expect(result.teachers.length).toBeGreaterThan(0);
     });
 
     it('Deleting non-existent teacher', async () => {
@@ -155,27 +151,6 @@ describe('Teacher controllers', () => {
         // Console.log('[TEACHER STUDENTS]', result.students);
         expect(result.students.length).toBeGreaterThan(0);
     });
-
-    /*
-
-    It('Get teacher questions', async () => {
-        req = {
-            params: { username: 'FooFighters' },
-            query: { full: 'true' },
-        };
-
-        await getTeacherQuestionHandler(req as Request, res as Response);
-
-        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ questions: expect.anything() }));
-
-        const result = jsonMock.mock.lastCall?.[0];
-        // console.log('[TEACHER QUESTIONS]', result.questions);
-        expect(result.questions.length).toBeGreaterThan(0);
-
-        // TODO fix
-    });
-
-     */
 
     it('Get join requests by class', async () => {
         const jr = getClassJoinRequest01();

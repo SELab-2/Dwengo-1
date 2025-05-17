@@ -17,32 +17,37 @@
 </script>
 
 <template>
-    <div class="search-field-container">
-        <learning-path-search-field class="search-field"></learning-path-search-field>
-    </div>
+    <div class="search-page-container d-flex flex-column align-items-center justify-center">
+        <div class="search-field-container">
+            <learning-path-search-field class="mx-auto" />
+        </div>
 
-    <using-query-result
-        :query-result="searchQueryResults"
-        v-slot="{ data }: { data: LearningPath[] }"
-    >
-        <learning-paths-grid :learning-paths="data"></learning-paths-grid>
-    </using-query-result>
-    <div content="empty-state-container">
-        <v-empty-state
+        <using-query-result
+            :query-result="searchQueryResults"
+            v-slot="{ data }: { data: LearningPath[] }"
+        >
+            <learning-paths-grid :learning-paths="data" />
+        </using-query-result>
+
+        <div
             v-if="!query"
-            icon="mdi-magnify"
-            :title="t('enterSearchTerm')"
-            :text="t('enterSearchTermDescription')"
-        ></v-empty-state>
+            class="empty-state-container"
+        >
+            <v-empty-state
+                icon="mdi-magnify"
+                :title="t('enterSearchTerm')"
+                :text="t('enterSearchTermDescription')"
+            />
+        </div>
     </div>
 </template>
 
 <style scoped>
-    .search-field-container {
-        display: block;
-        margin: 20px;
+    .search-page-container {
+        padding-top: 40px;
+        padding-bottom: 40px;
     }
-    .search-field {
-        max-width: 300px;
+    .search-field-container {
+        justify-content: center !important;
     }
 </style>

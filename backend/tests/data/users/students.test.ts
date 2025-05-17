@@ -2,7 +2,6 @@ import { setupTestApp } from '../../setup-tests.js';
 import { describe, it, expect, beforeAll } from 'vitest';
 import { StudentRepository } from '../../../src/data/users/student-repository.js';
 import { getStudentRepository } from '../../../src/data/repositories.js';
-import { getNameOfJSDocTypedef } from 'typescript';
 import { getNoordkaap } from '../../test_assets/users/students.testdata.js';
 
 const username = 'teststudent';

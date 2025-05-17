@@ -5,7 +5,6 @@ import { Language } from '@dwengo-1/common/util/language';
 import { getAllAnswersHandler, getAnswerHandler, updateAnswerHandler } from '../../src/controllers/answers';
 import { BadRequestException } from '../../src/exceptions/bad-request-exception';
 import { NotFoundException } from '../../src/exceptions/not-found-exception';
-import { getQuestion02 } from '../test_assets/questions/questions.testdata';
 import { getAnswer02 } from '../test_assets/questions/answers.testdata';
 
 describe('Questions controllers', () => {

@@ -29,7 +29,8 @@ function initializeLogger(): Logger {
         format: format.combine(format.cli(), format.simple()),
     });
 
-    if (getEnvVar(envVars.RunMode) === 'dev') {
+    const runMode = getEnvVar(envVars.RunMode);
+    if (runMode === 'dev' || runMode.includes('test')) {
         logger = createLogger({
             transports: [consoleTransport],
         });

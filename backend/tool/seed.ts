@@ -5,7 +5,10 @@ import { seedORM } from './seedORM.js';
 
 const logger: Logger = getLogger();
 
-export async function seedDatabase(envFile = '.env.development.local', testMode = process.env.NODE_ENV !== undefined && process.env.NODE_ENV === 'test'): Promise<void> {
+export async function seedDatabase(
+    envFile = '.env.development.local',
+    testMode = process.env.NODE_ENV !== undefined && process.env.NODE_ENV === 'test'
+): Promise<void> {
     dotenv.config({ path: envFile });
 
     try {

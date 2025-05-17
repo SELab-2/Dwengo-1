@@ -7,8 +7,8 @@
     import type { AnswerData, AnswerDTO } from "@dwengo-1/common/interfaces/answer";
     import authService from "@/services/auth/auth-service";
     import { useI18n } from "vue-i18n";
-    
-    
+
+
     const { t } = useI18n();
 
     const props = defineProps<{
@@ -22,7 +22,7 @@
         expanded.value = !expanded.value;
 
         // Scroll to the answers container if expanded
-        if (expanded.value && answersContainer.value) { 
+        if (expanded.value && answersContainer.value) {
             setTimeout(() => {
                 if (answersContainer.value) {
                     answersContainer.value.scrollIntoView({
@@ -97,7 +97,7 @@
             {{ question.content }}
         </div>
         <div
-            v-if="authService.authState.activeRole === 'teacher'"
+            v-if="authService.authState.activeRole === AccountType.Teacher"
             class="answer-input-container"
         >
             <input

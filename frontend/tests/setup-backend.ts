@@ -1,5 +1,6 @@
 import { spawn } from "child_process";
 import { ChildProcess, spawnSync } from "node:child_process";
+import { getLogger } from "../../backend/src/logging/initalize";
 
 let backendProcess: ChildProcess;
 
@@ -35,6 +36,8 @@ export async function setup(): Promise<void> {
 
 export async function teardown(): Promise<void> {
     if (backendProcess) {
-        backendProcess.kill();
+        while (!backendProcess.kill()) {
+            getLogger().error(`Failed to kill backend process! Retrying...`);
+        }
     }
 }

@@ -48,8 +48,8 @@ describe('QuestionRepository', () => {
         const group = getTestGroup01();
         await questionRepository.createQuestion({
             loId: id,
-            inGroup: group!,
-            author: student!,
+            inGroup: group,
+            author: student,
             content: 'question?',
         });
         const question = await questionRepository.findAllQuestionsAboutLearningObject(id);
@@ -66,7 +66,7 @@ describe('QuestionRepository', () => {
             language: testLearningObject05.language,
             version: testLearningObject05.version,
         };
-        const result = await questionRepository.findAllQuestionsAboutLearningObjectInAssignment(loId, assignment!);
+        const result = await questionRepository.findAllQuestionsAboutLearningObjectInAssignment(loId, assignment);
         sortQuestions(result);
 
         expect(result).toHaveLength(3);
@@ -94,7 +94,7 @@ describe('QuestionRepository', () => {
         };
         const assignment = getAssignment01();
 
-        const result = await questionRepository.findAllQuestionsAboutLearningObjectInAssignment(loId, assignment!, getTool().username);
+        const result = await questionRepository.findAllQuestionsAboutLearningObjectInAssignment(loId, assignment, getTool().username);
         // (student Tool is in group #2)
 
         expect(result).toHaveLength(1);

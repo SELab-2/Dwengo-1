@@ -1,15 +1,10 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { setupTestApp } from '../../setup-tests';
 import { AnswerRepository } from '../../../src/data/questions/answer-repository';
-import { getAnswerRepository, getQuestionRepository, getTeacherRepository } from '../../../src/data/repositories';
-import { QuestionRepository } from '../../../src/data/questions/question-repository';
-import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
-import { Language } from '@dwengo-1/common/util/language';
-import { TeacherRepository } from '../../../src/data/users/teacher-repository';
-import { getQuestion01, getQuestion02, getQuestion04, getQuestion05, getQuestion06 } from '../../test_assets/questions/questions.testdata';
+import { getAnswerRepository } from '../../../src/data/repositories';
+import { getQuestion01, getQuestion02 } from '../../test_assets/questions/questions.testdata';
 import { getAnswer01, getAnswer02, getAnswer03 } from '../../test_assets/questions/answers.testdata';
 import { getFooFighters } from '../../test_assets/users/teachers.testdata';
-import { testLearningObject05 } from '../../test_assets/content/learning-objects.testdata';
 
 describe('AnswerRepository', () => {
     let answerRepository: AnswerRepository;
@@ -24,7 +19,7 @@ describe('AnswerRepository', () => {
         const a1 = getAnswer01();
         const a2 = getAnswer02();
 
-        const answers = await answerRepository.findAllAnswersToQuestion(question!);
+        const answers = await answerRepository.findAllAnswersToQuestion(question);
 
         expect(answers).toBeTruthy();
         expect(answers).toHaveLength(2);
@@ -38,7 +33,7 @@ describe('AnswerRepository', () => {
 
         await answerRepository.createAnswer({
             toQuestion: question,
-            author: teacher!,
+            author: teacher,
             content: 'created answer',
         });
 

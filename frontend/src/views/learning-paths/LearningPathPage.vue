@@ -22,6 +22,7 @@ import { useStudentAssignmentsQuery } from '@/queries/students';
 import type { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 import QuestionNotification from '@/components/QuestionNotification.vue';
 import QuestionBox from '@/components/QuestionBox.vue';
+    import { AccountType } from "@dwengo-1/common/util/account-types";
 
 const router = useRouter();
     const route = useRoute();
@@ -207,8 +208,10 @@ const router = useRouter();
                         </p>
                     </template>
                 </v-list-item>
-                <v-list-item
-                    v-if="query.classId && query.assignmentNo && authService.authState.activeRole === 'teacher'"
+                <v-list-itemF
+                    v-if="
+                        query.classId && query.assignmentNo && authService.authState.activeRole === AccountType.Teacher
+                    "
                 >
                     <template v-slot:default>
                         <learning-path-group-selector
@@ -217,9 +220,9 @@ const router = useRouter();
                             v-model="forGroupQueryParam"
                         />
                     </template>
-                </v-list-item>
+                </v-list-itemF>
                 <v-divider></v-divider>
-                <div v-if="props.learningObjectHruid">
+                <div>
                     <using-query-result
                         :query-result="learningObjectListQueryResult"
                         v-slot="learningObjects: { data: LearningObject[] }"
@@ -231,7 +234,9 @@ const router = useRouter();
                                 :title="node.title"
                                 :active="node.key === props.learningObjectHruid"
                                 :key="node.key"
-                                v-if="!node.teacherExclusive || authService.authState.activeRole === 'teacher'"
+                                v-if="
+                                    !node.teacherExclusive || authService.authState.activeRole === AccountType.Teacher
+                                "
                             >
                                 <template v-slot:prepend>
                                     <v-icon
@@ -255,10 +260,12 @@ const router = useRouter();
                     </using-query-result>
                 </div>
                 <v-spacer></v-spacer>
-                <v-list-item v-if="authService.authState.activeRole === 'teacher'">
+                <v-list-item v-if="authService.authState.activeRole === AccountType.Teacher">
                     <template v-slot:default>
                         <v-btn
                             class="button-in-nav"
+                            width="100%"
+                            :color="COLORS.teacherExclusive"
                             @click="assign()"
                             >{{ t("assignLearningPath") }}</v-btn
                         >
@@ -266,7 +273,7 @@ const router = useRouter();
                 </v-list-item>
                 <v-list-item>
                     <div
-                        v-if="authService.authState.activeRole === 'student' && pathIsAssignment"
+                        v-if="authService.authState.activeRole === AccountType.Student && pathIsAssignment"
                         class="assignment-indicator"
                     >
                         {{ t("assignmentIndicator") }}

@@ -1,5 +1,5 @@
 import { DWENGO_API_BASE } from '../../config.js';
-import { fetchWithLogging } from '../../util/api-helper.js';
+import { fetchRemote } from '../../util/api-helper.js';
 import dwengoApiLearningPathProvider from '../learning-paths/dwengo-api-learning-path-provider.js';
 import { LearningObjectProvider } from './learning-object-provider.js';
 import { getLogger, Logger } from '../../logging/initalize.js';
@@ -88,7 +88,7 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
      */
     async getLearningObjectById(id: LearningObjectIdentifierDTO): Promise<FilteredLearningObject | null> {
         const metadataUrl = `${DWENGO_API_BASE}/learningObject/getMetadata`;
-        const metadata = await fetchWithLogging<LearningObjectMetadata>(
+        const metadata = await fetchRemote<LearningObjectMetadata>(
             metadataUrl,
             `Metadata for Learning Object HRUID "${id.hruid}" (language ${id.language})`,
             {
@@ -124,7 +124,7 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
      */
     async getLearningObjectHTML(id: LearningObjectIdentifierDTO): Promise<string | null> {
         const htmlUrl = `${DWENGO_API_BASE}/learningObject/getRaw`;
-        const html = await fetchWithLogging<string>(htmlUrl, `Metadata for Learning Object HRUID "${id.hruid}" (language ${id.language})`, {
+        const html = await fetchRemote<string>(htmlUrl, `Metadata for Learning Object HRUID "${id.hruid}" (language ${id.language})`, {
             params: { ...id },
         });
 
@@ -134,6 +134,13 @@ const dwengoApiLearningObjectProvider: LearningObjectProvider = {
         }
 
         return html;
+    },
+
+    /**
+     * Obtain all learning objects who have the user with the given username as an admin.
+     */
+    async getLearningObjectsAdministratedBy(_adminUsername: string): Promise<FilteredLearningObject[]> {
+        return []; // The dwengo database does not contain any learning objects administrated by users.
     },
 };
 

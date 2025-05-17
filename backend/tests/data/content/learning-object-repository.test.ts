@@ -6,7 +6,6 @@ import { LearningObject } from '../../../src/entities/content/learning-object.en
 import { expectToBeCorrectEntity } from '../../test-utils/expectations.js';
 import { testLearningObject01, testLearningObject02, testLearningObject03 } from '../../test_assets/content/learning-objects.testdata';
 import { v4 } from 'uuid';
-import { wrap } from '@mikro-orm/core';
 
 describe('LearningObjectRepository', () => {
     let learningObjectRepository: LearningObjectRepository;
@@ -38,7 +37,7 @@ describe('LearningObjectRepository', () => {
     let newerExample: LearningObject;
 
     it('should allow a learning object with the same id except a different version to be added', async () => {
-        // structeredClone failed on teacher, this copies all fields to a json object
+        // StructeredClone failed on teacher, this copies all fields to a json object
         const testLearningObject01Newer = { ...testLearningObject01 };
         testLearningObject01Newer.version = 10;
         testLearningObject01Newer.title += ' (nieuw)';
@@ -49,12 +48,10 @@ describe('LearningObjectRepository', () => {
     });
 
     it('should return the newest version of the learning object when queried by only hruid and language', async () => {
-        
-
         const result = await learningObjectRepository.findLatestByHruidAndLanguage(newerExample.hruid, newerExample.language);
-        // expect(result).toBeInstanceOf(LearningObject);
-        // expect(result?.version).toBe(10);
-        // expect(result?.title).toContain('(nieuw)');
+        expect(result).toBeInstanceOf(LearningObject);
+        expect(result?.version).toBe(10);
+        expect(result?.title).toContain('(nieuw)');
     });
 
     it('should return null when queried by non-existing hruid or language', async () => {

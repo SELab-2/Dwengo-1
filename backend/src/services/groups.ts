@@ -34,6 +34,15 @@ export async function fetchGroup(classId: string, assignmentNumber: number, grou
     return group;
 }
 
+export async function fetchAllGroups(classId: string, assignmentNumber: number): Promise<Group[]> {
+    const assignment = await fetchAssignment(classId, assignmentNumber);
+
+    const groupRepository = getGroupRepository();
+    const groups = await groupRepository.findAllGroupsForAssignment(assignment);
+
+    return groups;
+}
+
 export async function getGroup(classId: string, assignmentNumber: number, groupNumber: number): Promise<GroupDTO> {
     const group = await fetchGroup(classId, assignmentNumber, groupNumber);
     return mapToGroupDTO(group, group.assignment.within);

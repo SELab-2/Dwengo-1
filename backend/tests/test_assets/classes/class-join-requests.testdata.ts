@@ -37,18 +37,18 @@ let classJoinRequest02: ClassJoinRequest;
 let classJoinRequest03: ClassJoinRequest;
 let classJoinRequest04: ClassJoinRequest;
 
-export function getClassJoinRequest01(): ClassJoinRequest{
+export function getClassJoinRequest01(): ClassJoinRequest {
     return classJoinRequest01;
 }
 
-export function getClassJoinRequest02(): ClassJoinRequest{
+export function getClassJoinRequest02(): ClassJoinRequest {
     return classJoinRequest02;
 }
 
-export function getClassJoinRequest03(): ClassJoinRequest{
+export function getClassJoinRequest03(): ClassJoinRequest {
     return classJoinRequest03;
 }
 
-export function getClassJoinRequest04(): ClassJoinRequest{
+export function getClassJoinRequest04(): ClassJoinRequest {
     return classJoinRequest04;
 }

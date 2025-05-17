@@ -15,7 +15,7 @@ import {
     deleteClassJoinRequestHandler,
     getStudentRequestHandler,
 } from '../../src/controllers/students.js';
-import { getDireStraits, getNoordkaap, getPinkFloyd, getTheDoors, TEST_STUDENTS } from '../test_assets/users/students.testdata.js';
+import { getDireStraits, getNoordkaap, getTheDoors, TEST_STUDENTS } from '../test_assets/users/students.testdata.js';
 import { NotFoundException } from '../../src/exceptions/not-found-exception.js';
 import { BadRequestException } from '../../src/exceptions/bad-request-exception.js';
 import { ConflictException } from '../../src/exceptions/conflict-exception.js';
@@ -25,7 +25,6 @@ import { getClass02 } from '../test_assets/classes/classes.testdata.js';
 import { getClassJoinRequest02 } from '../test_assets/classes/class-join-requests.testdata.js';
 import { getTestGroup01 } from '../test_assets/assignments/groups.testdata.js';
 import { getSubmission01 } from '../test_assets/assignments/submission.testdata.js';
-import { getQuestion } from '../../src/services/questions.js';
 import { getQuestion01 } from '../test_assets/questions/questions.testdata.js';
 
 describe('Student controllers', () => {

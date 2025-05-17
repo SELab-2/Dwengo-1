@@ -5,6 +5,12 @@ import { testLearningPath01, testLearningPath02, testLearningPathWithConditions 
 import { getClass01, getClass02, getClassWithTestleerlingAndTestleerkracht } from '../classes/classes.testdata';
 
 export function makeTestAssignemnts(em: EntityManager): Assignment[] {
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + 7);
+    const pastDate = new Date();
+    pastDate.setDate(pastDate.getDate() - 7);
+    const today = new Date();
+    today.setHours(23, 59);
     assignment01 = em.create(Assignment, {
         id: 21000,
         within: getClass01(),
@@ -12,6 +18,7 @@ export function makeTestAssignemnts(em: EntityManager): Assignment[] {
         description: 'reading',
         learningPathHruid: testLearningPath02.hruid,
         learningPathLanguage: testLearningPath02.language as Language,
+        deadline: today,
         groups: [],
     });
 
@@ -22,6 +29,7 @@ export function makeTestAssignemnts(em: EntityManager): Assignment[] {
         description: 'reading',
         learningPathHruid: testLearningPath01.hruid,
         learningPathLanguage: testLearningPath01.language as Language,
+        deadline: futureDate,
         groups: [],
     });
 
@@ -32,6 +40,7 @@ export function makeTestAssignemnts(em: EntityManager): Assignment[] {
         description: 'will be deleted',
         learningPathHruid: testLearningPath02.hruid,
         learningPathLanguage: testLearningPath02.language as Language,
+        deadline: pastDate,
         groups: [],
     });
 
@@ -42,6 +51,7 @@ export function makeTestAssignemnts(em: EntityManager): Assignment[] {
         description: 'with a description',
         learningPathHruid: testLearningPath01.hruid,
         learningPathLanguage: testLearningPath01.language as Language,
+        deadline: pastDate,
         groups: [],
     });
 
@@ -52,6 +62,7 @@ export function makeTestAssignemnts(em: EntityManager): Assignment[] {
         description: 'You have to do the testing learning path with a condition.',
         learningPathHruid: testLearningPathWithConditions.hruid,
         learningPathLanguage: testLearningPathWithConditions.language as Language,
+        deadline: futureDate,
         groups: [],
     });
 
