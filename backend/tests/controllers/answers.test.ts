@@ -5,6 +5,7 @@ import { Language } from '@dwengo-1/common/util/language';
 import { getAllAnswersHandler, getAnswerHandler, updateAnswerHandler } from '../../src/controllers/answers';
 import { BadRequestException } from '../../src/exceptions/bad-request-exception';
 import { NotFoundException } from '../../src/exceptions/not-found-exception';
+import { getAnswer02 } from '../test_assets/questions/answers.testdata';
 
 describe('Questions controllers', () => {
     let req: Partial<Request>;
@@ -24,9 +25,14 @@ describe('Questions controllers', () => {
     });
 
     it('Get answers list', async () => {
+        const a = getAnswer02();
         req = {
-            params: { hruid: 'id05', version: '1', seq: '2' },
-            query: { lang: Language.English, full: 'true' },
+            params: {
+                hruid: a.toQuestion.learningObjectHruid,
+                version: a.toQuestion.learningObjectVersion.toString(),
+                seq: a.toQuestion.sequenceNumber!.toString(),
+            },
+            query: { lang: a.toQuestion.learningObjectLanguage, full: 'true' },
         };
 
         await getAllAnswersHandler(req as Request, res as Response);
@@ -38,9 +44,15 @@ describe('Questions controllers', () => {
     });
 
     it('Get answer', async () => {
+        const a = getAnswer02();
         req = {
-            params: { hruid: 'id05', version: '1', seq: '2', seqAnswer: '2' },
-            query: { lang: Language.English, full: 'true' },
+            params: {
+                hruid: a.toQuestion.learningObjectHruid,
+                version: a.toQuestion.learningObjectVersion.toString(),
+                seq: a.toQuestion.sequenceNumber!.toString(),
+                seqAnswer: a.sequenceNumber!.toString(),
+            },
+            query: { lang: a.toQuestion.learningObjectLanguage, full: 'true' },
         };
 
         await getAnswerHandler(req as Request, res as Response);
@@ -68,11 +80,19 @@ describe('Questions controllers', () => {
         await expect(async () => getAnswerHandler(req as Request, res as Response)).rejects.toThrow(BadRequestException);
     });
 
-    it('Update question', async () => {
-        const newContent = 'updated question';
+    it('Update answer', async () => {
+        const a = getAnswer02();
+        const q = a.toQuestion;
+
+        const newContent = 'updated answer';
         req = {
-            params: { hruid: 'id05', version: '1', seq: '2', seqAnswer: '2' },
-            query: { lang: Language.English },
+            params: {
+                hruid: q.learningObjectHruid,
+                version: q.learningObjectVersion.toString(),
+                seq: q.sequenceNumber!.toString(),
+                seqAnswer: a.sequenceNumber!.toString(),
+            },
+            query: { lang: q.learningObjectLanguage },
             body: { content: newContent },
         };
 

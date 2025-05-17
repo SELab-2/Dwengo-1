@@ -15,13 +15,17 @@ import {
     deleteClassJoinRequestHandler,
     getStudentRequestHandler,
 } from '../../src/controllers/students.js';
-import { TEST_STUDENTS } from '../test_assets/users/students.testdata.js';
+import { getDireStraits, getNoordkaap, getTheDoors, TEST_STUDENTS } from '../test_assets/users/students.testdata.js';
 import { NotFoundException } from '../../src/exceptions/not-found-exception.js';
 import { BadRequestException } from '../../src/exceptions/bad-request-exception.js';
 import { ConflictException } from '../../src/exceptions/conflict-exception.js';
 import { EntityAlreadyExistsException } from '../../src/exceptions/entity-already-exists-exception.js';
 import { StudentDTO } from '@dwengo-1/common/interfaces/student';
-import { getClass02 } from '../test_assets/classes/classes.testdata';
+import { getClass02 } from '../test_assets/classes/classes.testdata.js';
+import { getClassJoinRequest02 } from '../test_assets/classes/class-join-requests.testdata.js';
+import { getTestGroup01 } from '../test_assets/assignments/groups.testdata.js';
+import { getSubmission01 } from '../test_assets/assignments/submission.testdata.js';
+import { getQuestion01 } from '../test_assets/questions/questions.testdata.js';
 
 describe('Student controllers', () => {
     let req: Partial<Request>;
@@ -41,7 +45,8 @@ describe('Student controllers', () => {
     });
 
     it('Get student', async () => {
-        req = { params: { username: 'DireStraits' } };
+        const student = getDireStraits();
+        req = { params: { username: student.username } };
 
         await getStudentHandler(req as Request, res as Response);
 
@@ -83,11 +88,12 @@ describe('Student controllers', () => {
     });
 
     it('Create duplicate student', async () => {
+        const student = getDireStraits();
         req = {
             body: {
-                username: 'DireStraits',
-                firstName: 'dupe',
-                lastName: 'dupe',
+                username: student.username,
+                firstName: student.firstName,
+                lastName: student.lastName,
             },
         };
 
@@ -111,14 +117,17 @@ describe('Student controllers', () => {
 
         // Check is DireStraits is part of the student list
         const studentUsernames = result.students.map((s: StudentDTO) => s.username);
-        expect(studentUsernames).toContain('DireStraits');
+
+        expect(studentUsernames).toContain(TEST_STUDENTS[0].username);
 
         // Check length, +1 because of create
         expect(result.students).toHaveLength(TEST_STUDENTS.length);
     });
 
     it('Student classes', async () => {
-        req = { params: { username: 'DireStraits' }, query: {} };
+        const class_ = getClass02();
+        const member = class_.students[0];
+        req = { params: { username: member.username }, query: {} };
 
         await getStudentClassesHandler(req as Request, res as Response);
 
@@ -129,7 +138,9 @@ describe('Student controllers', () => {
     });
 
     it('Student groups', async () => {
-        req = { params: { username: 'DireStraits' }, query: {} };
+        const group = getTestGroup01();
+        const member = group.members[0];
+        req = { params: { username: member.username }, query: {} };
 
         await getStudentGroupsHandler(req as Request, res as Response);
 
@@ -140,7 +151,8 @@ describe('Student controllers', () => {
     });
 
     it('Student submissions', async () => {
-        req = { params: { username: 'DireStraits' }, query: { full: 'true' } };
+        const submission = getSubmission01();
+        req = { params: { username: submission.submitter.username }, query: { full: 'true' } };
 
         await getStudentSubmissionsHandler(req as Request, res as Response);
 
@@ -151,7 +163,8 @@ describe('Student controllers', () => {
     });
 
     it('Student questions', async () => {
-        req = { params: { username: 'DireStraits' }, query: { full: 'true' } };
+        const question = getQuestion01();
+        req = { params: { username: question.author.username }, query: { full: 'true' } };
 
         await getStudentQuestionsHandler(req as Request, res as Response);
 
@@ -168,8 +181,9 @@ describe('Student controllers', () => {
     });
 
     it('Get join requests by student', async () => {
+        const jr = getClassJoinRequest02();
         req = {
-            params: { username: 'PinkFloyd' },
+            params: { username: jr.requester.username },
         };
 
         await getStudentRequestsHandler(req as Request, res as Response);
@@ -186,8 +200,9 @@ describe('Student controllers', () => {
     });
 
     it('Get join request by student and class', async () => {
+        const jr = getClassJoinRequest02();
         req = {
-            params: { username: 'PinkFloyd', classId: getClass02().classId },
+            params: { username: jr.requester.username, classId: jr.class.classId! },
         };
 
         await getStudentRequestHandler(req as Request, res as Response);
@@ -200,9 +215,11 @@ describe('Student controllers', () => {
     });
 
     it('Create and delete join request', async () => {
+        const student = getTheDoors();
+        const class_ = getClass02();
         req = {
-            params: { username: 'TheDoors' },
-            body: { classId: getClass02().classId },
+            params: { username: student.username },
+            body: { classId: class_.classId! },
         };
 
         await createStudentRequestHandler(req as Request, res as Response);
@@ -210,7 +227,7 @@ describe('Student controllers', () => {
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ request: expect.anything() }));
 
         req = {
-            params: { username: 'TheDoors', classId: getClass02().classId },
+            params: { username: student.username, classId: class_.classId! },
         };
 
         await deleteClassJoinRequestHandler(req as Request, res as Response);
@@ -221,18 +238,21 @@ describe('Student controllers', () => {
     });
 
     it('Create join request student already in class error', async () => {
+        const student = getNoordkaap();
+        const class_ = getClass02();
         req = {
-            params: { username: 'Noordkaap' },
-            body: { classId: getClass02().classId },
+            params: { username: student.username },
+            body: { classId: class_.classId! },
         };
 
         await expect(async () => createStudentRequestHandler(req as Request, res as Response)).rejects.toThrow(ConflictException);
     });
 
     it('Create join request duplicate', async () => {
+        const jr = getClassJoinRequest02();
         req = {
-            params: { username: 'Tool' },
-            body: { classId: getClass02().classId },
+            params: { username: jr.requester.username },
+            body: { classId: jr.class.classId! },
         };
 
         await expect(async () => createStudentRequestHandler(req as Request, res as Response)).rejects.toThrow(ConflictException);

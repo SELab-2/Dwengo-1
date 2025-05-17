@@ -7,12 +7,17 @@ let orm: MikroORM | undefined;
 export async function initORM(testingMode = false): Promise<MikroORM<IDatabaseDriver, EntityManager>> {
     const logger: Logger = getLogger();
 
-    logger.info('Initializing ORM');
-    logger.debug('MikroORM config is', config);
+    const options = config(testingMode);
 
-    orm = await MikroORM.init(config(testingMode));
+    logger.info('MikroORM config is', options);
+
+    logger.info('Initializing ORM');
+    orm = await MikroORM.init(options);
+    logger.info('MikroORM initialized');
+
     // Update the database scheme if necessary and enabled.
     if (getEnvVar(envVars.DbUpdate)) {
+        logger.info('MikroORM: Updating database schema');
         await orm.schema.updateSchema();
     } else {
         const diff = await orm.schema.getUpdateSchemaSQL();
