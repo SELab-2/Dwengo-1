@@ -106,7 +106,7 @@ export async function putAssignment(classid: string, id: number, assignmentData:
             throw new BadRequestException("Student can only be in one group");
         }
 
-        const studentLists = await Promise.all((assignmentData.groups! as string[][]).map(async group => await fetchStudents(group)));
+        const studentLists = await Promise.all((assignmentData.groups as string[][]).map(async group => await fetchStudents(group)));
 
         const groupRepository = getGroupRepository();
         await groupRepository.deleteAllByAssignment(assignment);
