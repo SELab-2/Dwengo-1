@@ -2,11 +2,11 @@ import { forkEntityManager, initORM } from '../src/orm.js';
 import dotenv from 'dotenv';
 import { makeTestStudents } from './test_assets/users/students.testdata.js';
 import { makeTestTeachers } from './test_assets/users/teachers.testdata.js';
-import { makeTestLearningObjects } from './test_assets/content/learning-objects.testdata.js';
+import { makeTestLearningObjects, testLearningObject01 } from './test_assets/content/learning-objects.testdata.js';
 import { makeTestLearningPaths } from './test_assets/content/learning-paths.testdata.js';
 import { makeTestClasses } from './test_assets/classes/classes.testdata.js';
-import { makeTestAssignemnts } from './test_assets/assignments/assignments.testdata.js';
-import { makeTestGroups } from './test_assets/assignments/groups.testdata.js';
+import { getAssignment01, getAssignment02, makeTestAssignemnts } from './test_assets/assignments/assignments.testdata.js';
+import { getTestGroup01, getTestGroup02, getTestGroup03, getTestGroup04, makeTestGroups } from './test_assets/assignments/groups.testdata.js';
 import { makeTestTeacherInvitations } from './test_assets/classes/teacher-invitations.testdata.js';
 import { makeTestClassJoinRequests } from './test_assets/classes/class-join-requests.testdata.js';
 import { makeTestAttachments } from './test_assets/content/attachments.testdata.js';
@@ -26,22 +26,26 @@ export async function setupTestApp(): Promise<void> {
     const teachers = makeTestTeachers(em);
     const learningObjects = makeTestLearningObjects(em);
     const learningPaths = makeTestLearningPaths(em);
-    const classes = makeTestClasses(em, students, teachers);
-    const assignments = makeTestAssignemnts(em, classes);
-    const groups = makeTestGroups(em, students, assignments);
+    const classes = makeTestClasses(em);
+    const assignments = makeTestAssignemnts(em);
+    const groups = makeTestGroups(em);
 
-    assignments[0].groups = new Collection<Group>(groups.slice(0, 3));
-    assignments[1].groups = new Collection<Group>(groups.slice(3, 4));
+    const groups1 = [getTestGroup01(), getTestGroup02(), getTestGroup03()];
+    const groups2 = [getTestGroup04()];
+    const assignment1 = getAssignment01();
+    const assignment2 = getAssignment02();
+    assignment1.groups = new Collection<Group>(groups1);
+    assignment2.groups = new Collection<Group>(groups2);
 
-    const teacherInvitations = makeTestTeacherInvitations(em, teachers, classes);
-    const classJoinRequests = makeTestClassJoinRequests(em, students, classes);
-    const attachments = makeTestAttachments(em, learningObjects);
+    const teacherInvitations = makeTestTeacherInvitations(em);
+    const classJoinRequests = makeTestClassJoinRequests(em);
+    const attachments = makeTestAttachments(em);
 
-    learningObjects[1].attachments = attachments;
+    testLearningObject01.attachments = attachments;
 
-    const questions = makeTestQuestions(em, students, groups);
-    const answers = makeTestAnswers(em, teachers, questions);
-    const submissions = makeTestSubmissions(em, students, groups);
+    const questions = makeTestQuestions(em);
+    const answers = makeTestAnswers(em);
+    const submissions = makeTestSubmissions(em);
 
     await em.persistAndFlush([
         ...students,

@@ -2,6 +2,7 @@ import { setupTestApp } from '../../setup-tests.js';
 import { describe, it, expect, beforeAll } from 'vitest';
 import { StudentRepository } from '../../../src/data/users/student-repository.js';
 import { getStudentRepository } from '../../../src/data/repositories.js';
+import { getNoordkaap } from '../../test_assets/users/students.testdata.js';
 
 const username = 'teststudent';
 const firstName = 'John';
@@ -21,11 +22,12 @@ describe('StudentRepository', () => {
     });
 
     it('should return student from the datbase', async () => {
-        const student = await studentRepository.findByUsername('Noordkaap');
+        const expectation = getNoordkaap();
+        const student = await studentRepository.findByUsername(expectation.username);
 
         expect(student).toBeTruthy();
-        expect(student?.firstName).toBe('Stijn');
-        expect(student?.lastName).toBe('Meuris');
+        expect(student?.firstName).toBe(expectation.firstName);
+        expect(student?.lastName).toBe(expectation.lastName);
     });
 
     it('should return the queried student after he was added', async () => {

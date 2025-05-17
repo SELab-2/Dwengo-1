@@ -43,19 +43,19 @@ let teacher03: Teacher;
 let teacher04: Teacher;
 let testleerkracht1: Teacher;
 
-export function getTeacher01(): Teacher {
+export function getFooFighters(): Teacher {
     return teacher01;
 }
 
-export function getTeacher02(): Teacher {
+export function getLimpBizkit(): Teacher {
     return teacher02;
 }
 
-export function getTeacher03(): Teacher {
+export function getStaind(): Teacher {
     return teacher03;
 }
 
-export function getTeacher04(): Teacher {
+export function getZesdeMetaal(): Teacher {
     return teacher04;
 }
 
