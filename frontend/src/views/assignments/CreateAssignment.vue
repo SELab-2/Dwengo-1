@@ -1,91 +1,101 @@
 <script setup lang="ts">
-    import { useI18n } from "vue-i18n";
-    import { computed, onMounted, ref, watch } from "vue";
-    import { assignmentTitleRules, classRules } from "@/utils/assignment-rules.ts";
-    import auth from "@/services/auth/auth-service.ts";
-    import { useTeacherClassesQuery } from "@/queries/teachers.ts";
-    import { useRouter, useRoute } from "vue-router";
-    import { useGetAllLearningPaths } from "@/queries/learning-paths.ts";
-    import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
-    import type { ClassesResponse } from "@/controllers/classes.ts";
-    import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
-    import { useCreateAssignmentMutation } from "@/queries/assignments.ts";
+import { useI18n } from "vue-i18n";
+import { computed, onMounted, ref, watch } from "vue";
+import { assignmentTitleRules, classRules } from "@/utils/assignment-rules.ts";
+import auth from "@/services/auth/auth-service.ts";
+import { useTeacherClassesQuery } from "@/queries/teachers.ts";
+import { useRouter, useRoute } from "vue-router";
+import { useGetAllLearningPaths } from "@/queries/learning-paths.ts";
+import UsingQueryResult from "@/components/UsingQueryResult.vue";
+import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
+import type { ClassesResponse } from "@/controllers/classes.ts";
+import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
+import { useCreateAssignmentMutation } from "@/queries/assignments.ts";
 
-    const route = useRoute();
-    const router = useRouter();
-    const { t, locale } = useI18n();
-    const role = ref(auth.authState.activeRole);
-    const username = ref<string>("");
+const route = useRoute();
+const router = useRouter();
+const { t, locale } = useI18n();
+const role = ref(auth.authState.activeRole);
+const username = ref<string>("");
 
-    onMounted(async () => {
-        if (role.value === "student") {
-            await router.push("/user");
-        }
-        const user = await auth.loadUser();
-        username.value = user?.profile?.preferred_username ?? "";
-    });
+onMounted(async () => {
+    if (role.value === "student") {
+        await router.push("/user");
+    }
+    const user = await auth.loadUser();
+    username.value = user?.profile?.preferred_username ?? "";
+});
 
-    const language = computed(() => locale.value);
-    const form = ref();
+const language = computed(() => locale.value);
+const form = ref();
 
-    const learningPathsQueryResults = useGetAllLearningPaths(language);
-    const classesQueryResults = useTeacherClassesQuery(username, true);
+const learningPathsQueryResults = useGetAllLearningPaths(language);
+const classesQueryResults = useTeacherClassesQuery(username, true);
 
-    const selectedClass = ref(undefined);
-    const assignmentTitle = ref("");
-    const selectedLearningPath = ref(route.query.hruid?.toString() || undefined);
+const selectedClass = ref(undefined);
+const assignmentTitle = ref("");
 
-    const lpIsSelected = route.query.hruid !== undefined;
+const selectedLearningPath = ref<LearningPath | undefined>(undefined);
+const lpIsSelected = ref(false);
+watch(learningPathsQueryResults.data, (data) => {
+    const hruidFromRoute = route.query.hruid?.toString();
+    if (!hruidFromRoute || !data) return;
 
-    const { mutate, data, isSuccess } = useCreateAssignmentMutation();
+    // Verify if the hruid given in the url is valid before accepting it
+    const matchedLP = data.find(lp => lp.hruid === hruidFromRoute);
+    if (matchedLP) {
+        selectedLearningPath.value = matchedLP;
+        lpIsSelected.value = true;
+    }
+});
 
-    watch([isSuccess, data], async ([success, newData]) => {
-        if (success && newData?.assignment) {
-            await router.push(`/assignment/${newData.assignment.within}/${newData.assignment.id}`);
-        }
-    });
+const { mutate, data, isSuccess } = useCreateAssignmentMutation();
 
-    async function submitFormHandler(): Promise<void> {
-        const { valid } = await form.value.validate();
-        if (!valid) return;
+watch([isSuccess, data], async ([success, newData]) => {
+    if (success && newData?.assignment) {
+        await router.push(`/assignment/${newData.assignment.within}/${newData.assignment.id}`);
+    }
+});
 
-        const lp = lpIsSelected
-            ? route.query.hruid
-            : selectedLearningPath.value?.hruid;
+async function submitFormHandler(): Promise<void> {
+    const { valid } = await form.value.validate();
+    if (!valid) return;
 
-        if (!lp) {
-            return;
-        }
+    const lp = lpIsSelected.value
+        ? route.query.hruid
+        : selectedLearningPath.value?.hruid;
 
-        console.log('Form values:', {
-            title: assignmentTitle.value,
-            class: selectedClass.value,
-            lp: selectedLearningPath.value
-        });
-
-        const assignmentDTO: AssignmentDTO = {
-            id: 0,
-            within: selectedClass.value?.id || "",
-            title: assignmentTitle.value.toString(),
-            description: "",
-            learningPath: lp.toString(),
-            language: language.value.toString(),
-            deadline: null,
-            groups: [],
-        };
-
-        mutate({ cid: assignmentDTO.within, data: assignmentDTO });
+    if (!lp) {
+        return;
     }
 
-    const learningPathRules = [
-        (value: any) => {
-            // Skip validation if LP is selected from query
-            if (route.query.hruid) return true;
-            // Original validation logic
-            return Boolean(value) || 'Learning path is required';
-        }
-    ];
+    const assignmentDTO: AssignmentDTO = {
+        id: 0,
+        within: selectedClass.value?.id || "",
+        title: assignmentTitle.value.toString(),
+        description: "",
+        learningPath: lp.toString(),
+        language: language.value.toString(),
+        deadline: null,
+        groups: [],
+    };
+
+    mutate({ cid: assignmentDTO.within, data: assignmentDTO });
+}
+
+const learningPathRules = [
+    (value: any) => {
+
+        if(lpIsSelected.value) return;
+
+        if (!value) return t("lp-required");
+
+        const allLPs = learningPathsQueryResults.data.value ?? [];
+        const valid = allLPs.some(lp => lp.hruid === value?.hruid);
+        return valid || t("lp-invalid");
+    }
+];
+
 </script>
 
 <template>
@@ -118,7 +128,6 @@
                         v-slot="{ data }: { data: LearningPath[] }"
                     >
                         <v-combobox
-                            v-model="selectedLearningPath"
                             :items="data"
                             :label="t('choose-lp')"
                             :rules="lpIsSelected ? [] : learningPathRules"
@@ -185,59 +194,59 @@
 </template>
 
 <style scoped>
-    .main-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: start;
-        padding-top: 32px;
-        text-align: center;
-    }
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    padding-top: 32px;
+    text-align: center;
+}
 
+.form-card {
+    width: 100%;
+    max-width: 720px;
+    border-radius: 16px;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+
+.step-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+@media (max-width: 1000px) {
     .form-card {
-        width: 100%;
-        max-width: 720px;
-        border-radius: 16px;
+        width: 85%;
+        padding: 1%;
     }
+}
 
-    .form-container {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-        width: 100%;
+@media (max-width: 600px) {
+    h1 {
+        font-size: 32px;
+        text-align: center;
+        margin-left: 0;
     }
+}
 
-    .step-container {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
+@media (max-width: 400px) {
+    h1 {
+        font-size: 24px;
+        text-align: center;
+        margin-left: 0;
     }
+}
 
-    @media (max-width: 1000px) {
-        .form-card {
-            width: 85%;
-            padding: 1%;
-        }
-    }
-
-    @media (max-width: 600px) {
-        h1 {
-            font-size: 32px;
-            text-align: center;
-            margin-left: 0;
-        }
-    }
-
-    @media (max-width: 400px) {
-        h1 {
-            font-size: 24px;
-            text-align: center;
-            margin-left: 0;
-        }
-    }
-
-    .v-card {
-        border: 2px solid #0e6942;
-        border-radius: 12px;
-    }
+.v-card {
+    border: 2px solid #0e6942;
+    border-radius: 12px;
+}
 </style>

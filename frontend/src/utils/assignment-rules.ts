@@ -1,3 +1,7 @@
+import {useI18n} from "vue-i18n";
+
+const { t } = useI18n();
+
 /**
  * Validation rule for the assignment title.
  *
@@ -8,7 +12,7 @@ export const assignmentTitleRules = [
         if (value?.length >= 1) {
             return true;
         } // Title must not be empty
-        return "Title cannot be empty.";
+        return t("title-required");
     },
 ];
 
@@ -23,7 +27,7 @@ export const classRules = [
         if (value) {
             return true;
         }
-        return "You must select at least one class.";
+        return t("class-required");
     },
 ];
 
@@ -34,30 +38,18 @@ export const classRules = [
  */
 export const deadlineRules = [
     (value: string): string | boolean => {
-        if (!value) {
-            return "You must set a deadline.";
-        }
 
         const selectedDateTime = new Date(value);
         const now = new Date();
 
         if (isNaN(selectedDateTime.getTime())) {
-            return "Invalid date or time.";
+            return t("deadline-invalid");
         }
 
         if (selectedDateTime <= now) {
-            return "The deadline must be in the future.";
+            return t("deadline-past");
         }
 
-        return true;
-    },
-];
-
-export const descriptionRules = [
-    (value: string): string | boolean => {
-        if (!value || value.trim() === "") {
-            return "Description cannot be empty.";
-        }
         return true;
     },
 ];

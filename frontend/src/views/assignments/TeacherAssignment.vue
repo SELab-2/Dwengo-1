@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, type Ref, ref, watch, watchEffect} from "vue";
+import {computed, ref, watch, watchEffect} from "vue";
 import {useI18n} from "vue-i18n";
 import {
     useAssignmentQuery,
@@ -12,11 +12,11 @@ import {useGetLearningPathQuery} from "@/queries/learning-paths.ts";
 import type {Language} from "@/data-objects/language.ts";
 import type {AssignmentResponse} from "@/controllers/assignments.ts";
 import type {GroupDTO, GroupDTOId} from "@dwengo-1/common/interfaces/group";
-import {descriptionRules} from "@/utils/assignment-rules.ts";
 import GroupSubmissionStatus from "@/components/GroupSubmissionStatus.vue";
 import GroupProgressRow from "@/components/GroupProgressRow.vue";
 import type {AssignmentDTO} from "@dwengo-1/common/dist/interfaces/assignment.ts";
 import GroupSelector from "@/components/assignments/GroupSelector.vue";
+import DeadlineSelector from "@/components/assignments/DeadlineSelector.vue";
 
 const props = defineProps<{
     classId: string;
@@ -33,6 +33,7 @@ const form = ref();
 
 const editingLearningPath = ref(learningPath);
 const description = ref("");
+const deadline = ref<Date | null>(null);
 const editGroups = ref(false);
 
 const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
@@ -51,6 +52,7 @@ watchEffect(() => {
     if (assignment) {
         learningPath.value = assignment.learningPath;
         lang.value = assignment.language as Language;
+        deadline.value = assignment.deadline ? new Date(assignment.deadline) : null;
 
         if (lpQueryResult.data.value) {
             editingLearningPath.value = lpQueryResult.data.value;
@@ -128,7 +130,7 @@ async function saveChanges(): Promise<void> {
 
     const assignmentDTO: AssignmentDTO = {
         description: description.value,
-        //deadline: new Date(),TODO: deadline aanpassen
+        deadline: deadline.value ?? null,
     };
 
     mutate({
@@ -244,7 +246,6 @@ async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
                                         </div>
                                     </div>
                                 </div>
-
                                 <v-card-title class="text-h4 assignmentTopTitle"
                                 >{{ assignmentResponse.data.assignment.title }}
                                 </v-card-title>
@@ -258,6 +259,7 @@ async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
                                             :to="goToLearningPathLink()"
                                             variant="tonal"
                                             color="primary"
+                                            :disabled="isEditing"
                                         >
                                             {{ t("learning-path") }}
                                         </v-btn>
@@ -269,7 +271,11 @@ async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
                                         </v-alert>
                                     </using-query-result>
                                 </v-card-subtitle>
-
+                                <v-card-text v-if="isEditing">
+                                    <deadline-selector
+                                        v-model:deadline="deadline"
+                                    />
+                                </v-card-text>
                                 <v-card-text
                                     v-if="!isEditing"
                                     class="description"
@@ -284,7 +290,6 @@ async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
                                         density="compact"
                                         auto-grow
                                         rows="3"
-                                        :rules="descriptionRules"
                                     ></v-textarea>
                                 </v-card-text>
                             </v-card>
