@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n';
-import DiscussionsSideBar from '@/components/DiscussionsSideBar.vue';
+    import { useI18n } from "vue-i18n";
+    import DiscussionsSideBar from "@/components/DiscussionsSideBar.vue";
 
-const { t } = useI18n();
-
+    const { t } = useI18n();
 </script>
 
 <template>
     <DiscussionsSideBar></DiscussionsSideBar>
     <div>
-        <p class="no-discussion-tip">{{t("no-discussion-tip")}}</p>
+        <p class="no-discussion-tip">{{ t("no-discussion-tip") }}</p>
     </div>
 </template>
 

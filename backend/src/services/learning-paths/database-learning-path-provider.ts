@@ -4,11 +4,7 @@ import { getLearningPathRepository } from '../../data/repositories.js';
 import learningObjectService from '../learning-objects/learning-object-service.js';
 import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
-import {
-    getLastSubmissionForGroup,
-    idFromLearningPathNode,
-    isTransitionPossible,
-} from './learning-path-personalization-util.js';
+import { getLastSubmissionForGroup, idFromLearningPathNode, isTransitionPossible } from './learning-path-personalization-util.js';
 import {
     FilteredLearningObject,
     LearningObjectNode,
@@ -41,9 +37,9 @@ async function getLearningObjectsForNodes(nodes: Collection<LearningPathNode>): 
                         version: node.version,
                         language: node.language,
                     })
-                    .then((learningObject) => [node, learningObject] as [LearningPathNode, FilteredLearningObject | null]),
-            ),
-        ),
+                    .then((learningObject) => [node, learningObject] as [LearningPathNode, FilteredLearningObject | null])
+            )
+        )
     );
 
     // Ignore all learning objects that cannot be found such that the rest of the learning path keeps working.
@@ -105,14 +101,14 @@ async function convertNode(
     node: LearningPathNode,
     learningObject: FilteredLearningObject,
     personalizedFor: Group | undefined,
-    nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>,
+    nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>
 ): Promise<LearningObjectNode> {
     const lastSubmission = personalizedFor ? await getLastSubmissionForGroup(idFromLearningPathNode(node), personalizedFor) : null;
     const transitions = node.transitions
         .filter(
             (trans) =>
                 !personalizedFor || // If we do not want a personalized learning path, keep all transitions
-                isTransitionPossible(trans, optionalJsonStringToObject(lastSubmission?.content)), // Otherwise remove all transitions that aren't possible.
+                isTransitionPossible(trans, optionalJsonStringToObject(lastSubmission?.content)) // Otherwise remove all transitions that aren't possible.
         )
         .map((trans, i) => {
             try {
@@ -145,10 +141,10 @@ async function convertNode(
  */
 async function convertNodes(
     nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>,
-    personalizedFor?: Group,
+    personalizedFor?: Group
 ): Promise<LearningObjectNode[]> {
     const nodesPromise = Array.from(nodesToLearningObjects.entries()).map(async (entry) =>
-        convertNode(entry[0], entry[1], personalizedFor, nodesToLearningObjects),
+        convertNode(entry[0], entry[1], personalizedFor, nodesToLearningObjects)
     );
     return await Promise.all(nodesPromise);
 }
@@ -175,7 +171,7 @@ function optionalJsonStringToObject(jsonString?: string): object | null {
 function convertTransition(
     transition: LearningPathTransition,
     index: number,
-    nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>,
+    nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>
 ): Transition {
     const nextNode = nodesToLearningObjects.get(transition.next);
     if (!nextNode) {
@@ -206,10 +202,10 @@ const databaseLearningPathProvider: LearningPathProvider = {
         const learningPathRepo = getLearningPathRepository();
 
         const learningPaths = (await Promise.all(hruids.map(async (hruid) => learningPathRepo.findByHruidAndLanguage(hruid, language)))).filter(
-            (learningPath) => learningPath !== null,
+            (learningPath) => learningPath !== null
         );
         const filteredLearningPaths = await Promise.all(
-            learningPaths.map(async (learningPath, index) => convertLearningPath(learningPath, index, personalizedFor)),
+            learningPaths.map(async (learningPath, index) => convertLearningPath(learningPath, index, personalizedFor))
         );
 
         return {

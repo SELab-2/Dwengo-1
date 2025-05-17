@@ -1,18 +1,16 @@
 <script setup lang="ts">
+    import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import DiscussionSideBarElement from "@/components/DiscussionSideBarElement.vue";
+    import { useI18n } from "vue-i18n";
+    import { useGetAllLearningPaths } from "@/queries/learning-paths.ts";
+    import { ref } from "vue";
 
-import type { LearningPath } from '@/data-objects/learning-paths/learning-path.ts';
-import UsingQueryResult from '@/components/UsingQueryResult.vue';
-import DiscussionSideBarElement from '@/components/DiscussionSideBarElement.vue';
-import { useI18n } from 'vue-i18n';
-import { useGetAllLearningPaths } from '@/queries/learning-paths.ts';
-import { ref } from 'vue';
+    const { t, locale } = useI18n();
 
-const { t, locale } = useI18n();
+    const navigationDrawerShown = ref(true);
 
-const navigationDrawerShown = ref(true);
-
-const allLearningPathsResult = useGetAllLearningPaths(locale.value);
-
+    const allLearningPathsResult = useGetAllLearningPaths(locale.value);
 </script>
 
 <template>
@@ -24,14 +22,15 @@ const allLearningPathsResult = useGetAllLearningPaths(locale.value);
         <div class="d-flex flex-column h-100">
             <v-list-item>
                 <template v-slot:title>
-                    <div class="title">{{ t('discussions') }}</div>
+                    <div class="title">{{ t("discussions") }}</div>
                 </template>
             </v-list-item>
             <v-divider></v-divider>
             <div>
                 <using-query-result
                     :query-result="allLearningPathsResult"
-                    v-slot="learningPaths: {data: LearningPath[]}">
+                    v-slot="learningPaths: { data: LearningPath[] }"
+                >
                     <DiscussionSideBarElement
                         v-for="learningPath in learningPaths.data"
                         :path="learningPath"
@@ -54,13 +53,11 @@ const allLearningPathsResult = useGetAllLearningPaths(locale.value);
 </template>
 
 <style scoped>
-.title {
-    color: #0e6942;
-    text-transform: uppercase;
-    font-weight: bolder;
-    padding-top: 2%;
-    font-size: 36px;
-}
-
-
+    .title {
+        color: #0e6942;
+        text-transform: uppercase;
+        font-weight: bolder;
+        padding-top: 2%;
+        font-size: 36px;
+    }
 </style>

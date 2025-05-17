@@ -66,7 +66,7 @@ export async function getLearningPaths(req: AuthenticatedRequest, res: Response)
 
             if (req.auth) {
                 const adminUsername = req.auth.username;
-                const userLearningPaths = await learningPathService.getLearningPathsAdministratedBy(adminUsername) || [];
+                const userLearningPaths = (await learningPathService.getLearningPathsAdministratedBy(adminUsername)) || [];
                 allLearningPaths = apiLearningPaths.concat(userLearningPaths);
             }
 
@@ -78,7 +78,7 @@ export async function getLearningPaths(req: AuthenticatedRequest, res: Response)
             hruidList,
             language as Language,
             `HRUIDs: ${hruidList.join(', ')}`,
-            forGroup,
+            forGroup
         );
         res.json(learningPaths.data);
     }

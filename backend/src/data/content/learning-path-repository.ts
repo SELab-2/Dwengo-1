@@ -7,10 +7,13 @@ import { LearningPathTransition } from '../../entities/content/learning-path-tra
 
 export class LearningPathRepository extends DwengoEntityRepository<LearningPath> {
     public async findByHruidAndLanguage(hruid: string, language: Language): Promise<LearningPath | null> {
-        return this.findOne({
-            hruid: hruid,
-            language: language,
-        }, { populate: ['nodes', 'nodes.transitions', 'admins'] });
+        return this.findOne(
+            {
+                hruid: hruid,
+                language: language,
+            },
+            { populate: ['nodes', 'nodes.transitions', 'admins'] }
+        );
     }
 
     /**

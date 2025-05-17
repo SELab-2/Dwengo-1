@@ -8,7 +8,6 @@
     import authService from "@/services/auth/auth-service";
     import { useI18n } from "vue-i18n";
 
-
     const { t } = useI18n();
 
     const props = defineProps<{
@@ -135,7 +134,7 @@
                     :key="answerIndex"
                     class="text-gray-600"
                 >
-                    <v-divider :thickness=2 />
+                    <v-divider :thickness="2" />
                     <div
                         class="flex justify-between items-center mb-2"
                         style="

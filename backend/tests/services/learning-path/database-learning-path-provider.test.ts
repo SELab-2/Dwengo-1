@@ -151,19 +151,13 @@ describe('DatabaseLearningPathProvider', () => {
     describe('searchLearningPathsByAdmin', () => {
         it('returns the learning path owned by the admin', async () => {
             const expectedLearningPath = mapToLearningPath(testLearningPath02, [mapToTeacherDTO(teacherB)]);
-            const result = await databaseLearningPathProvider.searchLearningPathsByAdmin(
-                [teacherB],
-                expectedLearningPath.language
-            );
+            const result = await databaseLearningPathProvider.searchLearningPathsByAdmin([teacherB], expectedLearningPath.language);
             expect(result.length).toBe(1);
             expect(result[0].title).toBe(expectedLearningPath.title);
             expect(result[0].description).toBe(expectedLearningPath.description);
         });
-        it('returns an empty result when querying admins that do not have custom learning paths', async() => {
-            const result = await databaseLearningPathProvider.searchLearningPathsByAdmin(
-                [teacherA],
-                testLearningPath.language
-            );
+        it('returns an empty result when querying admins that do not have custom learning paths', async () => {
+            const result = await databaseLearningPathProvider.searchLearningPathsByAdmin([teacherA], testLearningPath.language);
             expect(result.length).toBe(0);
         });
     });

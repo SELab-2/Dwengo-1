@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import type { QuestionDTO } from "@dwengo-1/common/interfaces/question";
     import SingleQuestion from "./SingleQuestion.vue";
-    import { useI18n } from 'vue-i18n';
+    import { useI18n } from "vue-i18n";
 
     const { t } = useI18n();
 
@@ -21,19 +21,19 @@
             </div>
         </div>
         <div v-else>
-            <p class="no-questions">{{t("no-questions")}}</p>
+            <p class="no-questions">{{ t("no-questions") }}</p>
         </div>
     </div>
 </template>
 <style scoped>
-.no-questions {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 40vh;
-    text-align: center;
-    font-size: 18px;
-    color: #666;
-    padding: 0 20px;
-}
+    .no-questions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40vh;
+        text-align: center;
+        font-size: 18px;
+        color: #666;
+        padding: 0 20px;
+    }
 </style>

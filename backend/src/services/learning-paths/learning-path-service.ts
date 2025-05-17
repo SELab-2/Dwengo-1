@@ -1,12 +1,7 @@
 import dwengoApiLearningPathProvider from './dwengo-api-learning-path-provider.js';
 import databaseLearningPathProvider from './database-learning-path-provider.js';
 import { envVars, getEnvVar } from '../../util/envVars.js';
-import {
-    LearningObjectNode,
-    LearningPath,
-    LearningPathIdentifier,
-    LearningPathResponse,
-} from '@dwengo-1/common/interfaces/learning-content';
+import { LearningObjectNode, LearningPath, LearningPathIdentifier, LearningPathResponse } from '@dwengo-1/common/interfaces/learning-content';
 import { Language } from '@dwengo-1/common/util/language';
 import { Group } from '../../entities/assignments/group.entity.js';
 import { LearningPath as LearningPathEntity } from '../../entities/content/learning-path.entity.js';
@@ -46,16 +41,16 @@ export function mapToLearningPath(dto: LearningPath, adminsDto: TeacherDTO[]): L
             startNode: nodeDto.start_node ?? false,
             createdAt: new Date(),
             updatedAt: new Date(),
-        }),
+        })
     );
     dto.nodes.forEach((nodeDto) => {
         const fromNode = nodes.find(
-            (it) => it.learningObjectHruid === nodeDto.learningobject_hruid && it.language === nodeDto.language && it.version === nodeDto.version,
+            (it) => it.learningObjectHruid === nodeDto.learningobject_hruid && it.language === nodeDto.language && it.version === nodeDto.version
         )!;
         const transitions = nodeDto.transitions.map((transDto, i) => {
             const toNode = nodes.find(
                 (it) =>
-                    it.learningObjectHruid === transDto.next.hruid && it.language === transDto.next.language && it.version === transDto.next.version,
+                    it.learningObjectHruid === transDto.next.hruid && it.language === transDto.next.language && it.version === transDto.next.version
             );
 
             if (toNode) {
@@ -99,7 +94,7 @@ const learningPathService = {
             nonUserContentHruids,
             language,
             source,
-            personalizedFor,
+            personalizedFor
         );
 
         const result = (userContentLearningPaths.data || []).concat(nonUserContentLearningPaths.data || []);
@@ -124,7 +119,7 @@ const learningPathService = {
      */
     async searchLearningPaths(query: string, language: Language, personalizedFor?: Group): Promise<LearningPath[]> {
         const providerResponses = await Promise.all(
-            allProviders.map(async (provider) => provider.searchLearningPaths(query, language, personalizedFor)),
+            allProviders.map(async (provider) => provider.searchLearningPaths(query, language, personalizedFor))
         );
         return providerResponses.flat();
     },

@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import { Language } from '@/data-objects/language.ts';
-import type { LearningPath } from '@/data-objects/learning-paths/learning-path.ts';
-import { computed, type ComputedRef, ref } from 'vue';
-import type { LearningObject } from '@/data-objects/learning-objects/learning-object.ts';
-import { useRoute, useRouter } from 'vue-router';
-import LearningObjectView from '@/views/learning-paths/learning-object/LearningObjectView.vue';
-import { useI18n } from 'vue-i18n';
-import LearningPathSearchField from '@/components/LearningPathSearchField.vue';
-import { useGetLearningPathQuery } from '@/queries/learning-paths.ts';
-import { useLearningObjectListForPathQuery } from '@/queries/learning-objects.ts';
-import UsingQueryResult from '@/components/UsingQueryResult.vue';
-import authService from '@/services/auth/auth-service.ts';
-import { LearningPathNode } from '@/data-objects/learning-paths/learning-path-node.ts';
-import LearningPathGroupSelector from '@/views/learning-paths/LearningPathGroupSelector.vue';
-import { useQuestionsQuery } from '@/queries/questions';
-import type { QuestionsResponse } from '@/controllers/questions';
-import type { LearningObjectIdentifierDTO } from '@dwengo-1/common/interfaces/learning-content';
-import QandA from '@/components/QandA.vue';
-import type { QuestionDTO } from '@dwengo-1/common/interfaces/question';
-import { useStudentAssignmentsQuery } from '@/queries/students';
-import type { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
-import QuestionNotification from '@/components/QuestionNotification.vue';
-import QuestionBox from '@/components/QuestionBox.vue';
+    import { Language } from "@/data-objects/language.ts";
+    import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
+    import { computed, type ComputedRef, ref } from "vue";
+    import type { LearningObject } from "@/data-objects/learning-objects/learning-object.ts";
+    import { useRoute, useRouter } from "vue-router";
+    import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
+    import { useI18n } from "vue-i18n";
+    import LearningPathSearchField from "@/components/LearningPathSearchField.vue";
+    import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
+    import { useLearningObjectListForPathQuery } from "@/queries/learning-objects.ts";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import authService from "@/services/auth/auth-service.ts";
+    import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
+    import LearningPathGroupSelector from "@/views/learning-paths/LearningPathGroupSelector.vue";
+    import { useQuestionsQuery } from "@/queries/questions";
+    import type { QuestionsResponse } from "@/controllers/questions";
+    import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
+    import QandA from "@/components/QandA.vue";
+    import type { QuestionDTO } from "@dwengo-1/common/interfaces/question";
+    import { useStudentAssignmentsQuery } from "@/queries/students";
+    import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
+    import QuestionNotification from "@/components/QuestionNotification.vue";
+    import QuestionBox from "@/components/QuestionBox.vue";
     import { AccountType } from "@dwengo-1/common/util/account-types";
 
-const router = useRouter();
+    const router = useRouter();
     const route = useRoute();
     const { t } = useI18n();
 
@@ -157,12 +157,16 @@ const router = useRouter();
         );
     });
 
-    const discussionLink = computed(() =>
-        "/discussion"
-        + "/" + props.hruid
-        + "/" + currentNode.value?.language
-        + "/" + currentNode.value?.learningobjectHruid);
-
+    const discussionLink = computed(
+        () =>
+            "/discussion" +
+            "/" +
+            props.hruid +
+            "/" +
+            currentNode.value?.language +
+            "/" +
+            currentNode.value?.learningobjectHruid,
+    );
 </script>
 
 <template>
@@ -302,10 +306,10 @@ const router = useRouter();
             ></learning-object-view>
         </div>
         <QuestionBox
-            :hruid=props.hruid
-            :language=props.language
-            :learningObjectHruid=props.learningObjectHruid
-            :forGroup=forGroup
+            :hruid="props.hruid"
+            :language="props.language"
+            :learningObjectHruid="props.learningObjectHruid"
+            :forGroup="forGroup"
         />
         <div class="navigation-buttons-container">
             <v-btn
@@ -329,15 +333,13 @@ const router = useRouter();
             :query-result="getQuestionsQuery"
             v-slot="questionsResponse: { data: QuestionsResponse }"
         >
-        <v-divider :thickness="6"></v-divider>
+            <v-divider :thickness="6"></v-divider>
             <div class="question-header">
-                <span class="question-title">{{t("questions")}}</span>
+                <span class="question-title">{{ t("questions") }}</span>
                 <span class="discussion-link-text">
-                    {{t("view-questions")}}
-                    <router-link
-                        :to=discussionLink
-                    >
-                        {{t("discussions")}}
+                    {{ t("view-questions") }}
+                    <router-link :to="discussionLink">
+                        {{ t("discussions") }}
                     </router-link>
                 </span>
             </div>

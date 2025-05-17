@@ -19,7 +19,7 @@ async function addProgressToLearningPath(learningPath: LearningPath, personalize
         learningPath.nodes.map(async (node) => {
             const lastSubmission = personalizedFor ? await getLastSubmissionForGroup(idFromLearningObjectNode(node), personalizedFor) : null;
             node.done = Boolean(lastSubmission);
-        }),
+        })
     );
 
     learningPath.num_nodes = learningPath.nodes.length;
