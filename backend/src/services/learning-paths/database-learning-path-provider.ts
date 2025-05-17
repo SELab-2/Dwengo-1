@@ -13,9 +13,11 @@ import {
     Transition,
 } from '@dwengo-1/common/interfaces/learning-content';
 import { Language } from '@dwengo-1/common/util/language';
+import { MatchMode } from '@dwengo-1/common/util/match-mode';
 import { Group } from '../../entities/assignments/group.entity';
 import { Collection } from '@mikro-orm/core';
 import { v4 } from 'uuid';
+import { Teacher } from '../../entities/users/teacher.entity';
 
 /**
  * Fetches the corresponding learning object for each of the nodes and creates a map that maps each node to its
@@ -34,9 +36,9 @@ async function getLearningObjectsForNodes(nodes: Collection<LearningPathNode>): 
                         version: node.version,
                         language: node.language,
                     })
-                    .then((learningObject) => [node, learningObject] as [LearningPathNode, FilteredLearningObject | null])
-            )
-        )
+                    .then((learningObject) => [node, learningObject] as [LearningPathNode, FilteredLearningObject | null]),
+            ),
+        ),
     );
     if (Array.from(nullableNodesToLearningObjects.values()).some((it) => it === null)) {
         throw new Error('At least one of the learning objects on this path could not be found.');
@@ -93,14 +95,14 @@ async function convertNode(
     node: LearningPathNode,
     learningObject: FilteredLearningObject,
     personalizedFor: Group | undefined,
-    nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>
+    nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>,
 ): Promise<LearningObjectNode> {
     const lastSubmission = personalizedFor ? await getLastSubmissionForGroup(node, personalizedFor) : null;
     const transitions = node.transitions
         .filter(
             (trans) =>
                 !personalizedFor || // If we do not want a personalized learning path, keep all transitions
-                isTransitionPossible(trans, optionalJsonStringToObject(lastSubmission?.content)) // Otherwise remove all transitions that aren't possible.
+                isTransitionPossible(trans, optionalJsonStringToObject(lastSubmission?.content)), // Otherwise remove all transitions that aren't possible.
         )
         .map((trans, i) => convertTransition(trans, i, nodesToLearningObjects));
     return {
@@ -125,10 +127,10 @@ async function convertNode(
  */
 async function convertNodes(
     nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>,
-    personalizedFor?: Group
+    personalizedFor?: Group,
 ): Promise<LearningObjectNode[]> {
     const nodesPromise = Array.from(nodesToLearningObjects.entries()).map(async (entry) =>
-        convertNode(entry[0], entry[1], personalizedFor, nodesToLearningObjects)
+        convertNode(entry[0], entry[1], personalizedFor, nodesToLearningObjects),
     );
     return await Promise.all(nodesPromise);
 }
@@ -155,7 +157,7 @@ function optionalJsonStringToObject(jsonString?: string): object | null {
 function convertTransition(
     transition: LearningPathTransition,
     index: number,
-    nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>
+    nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>,
 ): Transition {
     const nextNode = nodesToLearningObjects.get(transition.next);
     if (!nextNode) {
@@ -185,10 +187,10 @@ const databaseLearningPathProvider: LearningPathProvider = {
         const learningPathRepo = getLearningPathRepository();
 
         const learningPaths = (await Promise.all(hruids.map(async (hruid) => learningPathRepo.findByHruidAndLanguage(hruid, language)))).filter(
-            (learningPath) => learningPath !== null
+            (learningPath) => learningPath !== null,
         );
         const filteredLearningPaths = await Promise.all(
-            learningPaths.map(async (learningPath, index) => convertLearningPath(learningPath, index, personalizedFor))
+            learningPaths.map(async (learningPath, index) => convertLearningPath(learningPath, index, personalizedFor)),
         );
 
         return {
@@ -205,6 +207,13 @@ const databaseLearningPathProvider: LearningPathProvider = {
         const learningPathRepo = getLearningPathRepository();
 
         const searchResults = await learningPathRepo.findByQueryStringAndLanguage(query, language);
+        return await Promise.all(searchResults.map(async (result, index) => convertLearningPath(result, index, personalizedFor)));
+    },
+
+    async searchLearningPathsByAdmin(admins: Teacher[], language: Language, personalizedFor?: Group, matchMode?: MatchMode): Promise<LearningPath[]> {
+        const learningPathRepo = getLearningPathRepository();
+
+        const searchResults = await learningPathRepo.findByAdmins(admins, language, matchMode);
         return await Promise.all(searchResults.map(async (result, index) => convertLearningPath(result, index, personalizedFor)));
     },
 };

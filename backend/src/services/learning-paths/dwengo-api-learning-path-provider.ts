@@ -3,6 +3,8 @@ import { DWENGO_API_BASE } from '../../config.js';
 import { LearningPathProvider } from './learning-path-provider.js';
 import { getLogger, Logger } from '../../logging/initalize.js';
 import { LearningPath, LearningPathResponse } from '@dwengo-1/common/interfaces/learning-content';
+import { Teacher } from '../../entities/users/teacher.entity';
+import { Language } from '@dwengo-1/common/util/language';
 
 const logger: Logger = getLogger();
 
@@ -38,12 +40,22 @@ const dwengoApiLearningPathProvider: LearningPathProvider = {
             data: learningPaths,
         };
     },
+
     async searchLearningPaths(query: string, language: string): Promise<LearningPath[]> {
         const apiUrl = `${DWENGO_API_BASE}/learningPath/search`;
         const params = { all: query, language };
 
         const searchResults = await fetchWithLogging<LearningPath[]>(apiUrl, `Search learning paths with query "${query}"`, { params });
         return searchResults ?? [];
+    },
+
+    async searchLearningPathsByAdmin(admins: Teacher[], language: string): Promise<LearningPath[]> {
+        if (!admins || admins.length === 0) {
+            return this.searchLearningPaths('', language as Language);
+        }
+
+        // Dwengo API does not have the concept of admins, so we cannot filter by them.
+        return []
     },
 };
 

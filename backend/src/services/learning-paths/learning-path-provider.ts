@@ -1,6 +1,8 @@
 import { LearningPath, LearningPathResponse } from '@dwengo-1/common/interfaces/learning-content';
 import { Language } from '@dwengo-1/common/util/language';
+import { MatchMode } from '@dwengo-1/common/util/match-mode';
 import { Group } from '../../entities/assignments/group.entity';
+import { Teacher } from '../../entities/users/teacher.entity';
 
 /**
  * Generic interface for a service which provides access to learning paths from a data source.
@@ -15,4 +17,9 @@ export interface LearningPathProvider {
      * Search learning paths in the data source using the given search string.
      */
     searchLearningPaths(query: string, language: Language, personalizedFor?: Group): Promise<LearningPath[]>;
+
+    /**
+     * Fetch the learning paths for the given admins from the data source.
+     */
+    searchLearningPathsByAdmin(admins: Teacher[], language: Language, personalizedFor?: Group, matchMode?: MatchMode): Promise<LearningPath[]>;
 }

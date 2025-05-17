@@ -50,6 +50,15 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
         return;
     } else {
         hruidList = themes.flatMap((theme) => theme.hruids);
+        const apiLearningPaths = await learningPathService.fetchLearningPaths(hruidList, language as Language, 'All themes', forGroup);
+        // TODO Remove hardcoding
+        const userLearningPaths = await learningPathService.searchLearningPathsByAdmin(['testleerkracht1'], language as Language, forGroup);
+        if (!apiLearningPaths.data) {
+            res.json(userLearningPaths);
+            return;
+        }
+        res.json(apiLearningPaths.data.concat(userLearningPaths));
+        return;
     }
 
     const learningPaths = await learningPathService.fetchLearningPaths(hruidList, language as Language, `HRUIDs: ${hruidList.join(', ')}`, forGroup);

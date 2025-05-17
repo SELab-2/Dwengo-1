@@ -5,7 +5,7 @@ import { LearningObjectNode, LearningPath, LearningPathResponse } from '@dwengo-
 import { Language } from '@dwengo-1/common/util/language';
 import { Group } from '../../entities/assignments/group.entity.js';
 import { LearningPath as LearningPathEntity } from '../../entities/content/learning-path.entity.js';
-import { getLearningPathRepository } from '../../data/repositories.js';
+import { getLearningPathRepository, getTeacherRepository } from '../../data/repositories.js';
 import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
 import { base64ToArrayBuffer } from '../../util/base64-buffer-conversion.js';
@@ -37,11 +37,11 @@ export function mapToLearningPath(dto: LearningPath, adminsDto: TeacherDTO[]): L
             startNode: nodeDto.start_node ?? false,
             createdAt: new Date(),
             updatedAt: new Date(),
-        })
+        }),
     );
     dto.nodes.forEach((nodeDto) => {
         const fromNode = nodes.find(
-            (it) => it.learningObjectHruid === nodeDto.learningobject_hruid && it.language === nodeDto.language && it.version === nodeDto.version
+            (it) => it.learningObjectHruid === nodeDto.learningobject_hruid && it.language === nodeDto.language && it.version === nodeDto.version,
         )!;
         const transitions = nodeDto.transitions
             .map((transDto, i) => {
@@ -49,7 +49,7 @@ export function mapToLearningPath(dto: LearningPath, adminsDto: TeacherDTO[]): L
                     (it) =>
                         it.learningObjectHruid === transDto.next.hruid &&
                         it.language === transDto.next.language &&
-                        it.version === transDto.next.version
+                        it.version === transDto.next.version,
                 );
 
                 if (toNode) {
@@ -93,7 +93,7 @@ const learningPathService = {
             nonUserContentHruids,
             language,
             source,
-            personalizedFor
+            personalizedFor,
         );
 
         const result = (userContentLearningPaths.data || []).concat(nonUserContentLearningPaths.data || []);
@@ -110,7 +110,28 @@ const learningPathService = {
      */
     async searchLearningPaths(query: string, language: Language, personalizedFor?: Group): Promise<LearningPath[]> {
         const providerResponses = await Promise.all(
-            allProviders.map(async (provider) => provider.searchLearningPaths(query, language, personalizedFor))
+            allProviders.map(async (provider) => provider.searchLearningPaths(query, language, personalizedFor)),
+        );
+        return providerResponses.flat();
+    },
+
+    /**
+     * Fetch the learning paths for the given admins from the data source.
+     */
+    async searchLearningPathsByAdmin(adminsIds: string[], language: Language, personalizedFor?: Group): Promise<LearningPath[]> {
+        const teacherRepo = getTeacherRepository();
+        const admins = await Promise.all(
+            adminsIds.map(async (adminId) => {
+                const admin = await teacherRepo.findByUsername(adminId);
+                if (!admin) {
+                    throw new Error(`Admin with ID ${adminId} not found.`);
+                }
+                return admin;
+            }),
+        );
+
+        const providerResponses = await Promise.all(
+            allProviders.map(async (provider) => provider.searchLearningPathsByAdmin(admins, language, personalizedFor)),
         );
         return providerResponses.flat();
     },
