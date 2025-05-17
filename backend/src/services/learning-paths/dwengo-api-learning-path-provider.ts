@@ -1,4 +1,4 @@
-import { fetchWithLogging } from '../../util/api-helper.js';
+import { fetchRemote } from '../../util/api-helper.js';
 import { DWENGO_API_BASE } from '../../config.js';
 import { LearningPathProvider } from './learning-path-provider.js';
 import { getLogger, Logger } from '../../logging/initalize.js';
@@ -42,7 +42,7 @@ const dwengoApiLearningPathProvider: LearningPathProvider = {
         const apiUrl = `${DWENGO_API_BASE}/learningPath/getPathsFromIdList`;
         const params = { pathIdList: JSON.stringify({ hruids }), language };
 
-        const learningPaths = await fetchWithLogging<LearningPath[]>(apiUrl, `Learning paths for ${source}`, { params });
+        const learningPaths = await fetchRemote<LearningPath[]>(apiUrl, `Learning paths for ${source}`, { params });
 
         if (!learningPaths || learningPaths.length === 0) {
             logger.warn(`⚠️ WARNING: No learning paths found for ${source}.`);
@@ -66,12 +66,11 @@ const dwengoApiLearningPathProvider: LearningPathProvider = {
         const apiUrl = `${DWENGO_API_BASE}/learningPath/search`;
         const params = { all: query, language };
 
-        const searchResults = await fetchWithLogging<LearningPath[]>(apiUrl, `Search learning paths with query "${query}"`, { params });
+        const searchResults = await fetchRemote<LearningPath[]>(apiUrl, `Search learning paths with query "${query}"`, { params });
 
         if (searchResults) {
             await Promise.all(searchResults?.map(async (it) => addProgressToLearningPath(it, personalizedFor)));
         }
-
         return searchResults ?? [];
     },
 

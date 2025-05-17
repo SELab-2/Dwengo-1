@@ -157,6 +157,17 @@ services:
         volumes:
             - dwengo_grafana_data:/var/lib/grafana
 
+    caching:
+        image: memcached
+        restart: always
+        ports:
+            - '11211:11211'
+        command:
+            - --conn-limit=1024
+            - --memory-limit=2048
+            - -I 128m
+            - --threads=4
+
 volumes:
     dwengo_grafana_data:
     dwengo_letsencrypt:

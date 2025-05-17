@@ -5,6 +5,7 @@ const STUDENT_IDP_PREFIX = IDP_PREFIX + 'STUDENT_';
 const TEACHER_IDP_PREFIX = IDP_PREFIX + 'TEACHER_';
 const CORS_PREFIX = PREFIX + 'CORS_';
 const LOGGING_PREFIX = PREFIX + 'LOGGING_';
+const CACHE_PREFIX = PREFIX + 'CACHE_';
 
 interface EnvVar {
     key: string;
@@ -39,6 +40,11 @@ export const envVars: Record<string, EnvVar> = {
 
     LogLevel: { key: LOGGING_PREFIX + 'LEVEL', defaultValue: 'info' },
     LokiHost: { key: LOGGING_PREFIX + 'LOKI_HOST', defaultValue: 'http://localhost:3102' },
+
+    CacheHost: { key: CACHE_PREFIX + 'HOST' },
+    CachePort: { key: CACHE_PREFIX + 'PORT', defaultValue: 11211 },
+    CacheTTL: { key: CACHE_PREFIX + 'TTL', defaultValue: 60 * 60 * 24 }, // 24 hours
+    CacheKeyPrefix: { key: CACHE_PREFIX + 'KEY_PREFIX', defaultValue: 'dwengo' },
 } as const;
 
 /**
@@ -56,7 +62,7 @@ export function getEnvVar(envVar: EnvVar): string {
     } else if (envVar.required) {
         throw new Error(`Missing environment variable: ${envVar.key}`);
     } else {
-        return String(envVar.defaultValue) || '';
+        return envVar.defaultValue !== undefined ? String(envVar.defaultValue) || '' : '';
     }
 }
 
