@@ -18,6 +18,8 @@ import { EntityDTO } from '@mikro-orm/core';
 import { putObject } from './service-helper.js';
 import { fetchStudents } from './students.js';
 import { ServerErrorException } from '../exceptions/server-error-exception.js';
+import { createGroup, deleteGroup, fetchAllGroups } from './groups.js';
+import { BadRequestException } from '../exceptions/bad-request-exception.js';
 
 export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
     const classRepository = getClassRepository();
@@ -95,10 +97,31 @@ export async function getAssignment(classid: string, id: number): Promise<Assign
     return mapToAssignmentDTO(assignment);
 }
 
-export async function putAssignment(classid: string, id: number, assignmentData: Partial<EntityDTO<Assignment>>): Promise<AssignmentDTO> {
+export async function putAssignment(classid: string, id: number, assignmentData: Partial<AssignmentDTO>): Promise<AssignmentDTO> {
     const assignment = await fetchAssignment(classid, id);
 
-    await putObject<Assignment>(assignment, assignmentData, getAssignmentRepository());
+    if (assignmentData.groups) {
+        const hasDuplicates = (arr: string[]) => new Set(arr).size !== arr.length;
+        if (hasDuplicates(assignmentData.groups.flat() as string[])) {
+            throw new BadRequestException("Student can only be in one group");
+        }
+
+        const studentLists = await Promise.all((assignmentData.groups! as string[][]).map(async group => await fetchStudents(group)));
+
+        const groupRepository = getGroupRepository();
+        await groupRepository.deleteAllByAssignment(assignment);
+        await Promise.all(studentLists.map(async students => {
+            const newGroup = groupRepository.create({
+                assignment: assignment,
+                members: students,
+            });
+            await groupRepository.save(newGroup);
+        }));
+
+        delete assignmentData.groups;
+    }
+
+    await putObject<Assignment>(assignment, assignmentData as Partial<EntityDTO<Assignment>>, getAssignmentRepository());
 
     return mapToAssignmentDTO(assignment);
 }
