@@ -14,10 +14,12 @@ import {
     testLearningObjectMultipleChoice,
     testLearningObjectPnNotebooks,
 } from './learning-objects.testdata';
+import { getLimpBizkit } from '../users/teachers.testdata';
 
 export function makeTestLearningPaths(_em: EntityManager): LearningPath[] {
     const learningPath01 = mapToLearningPath(testLearningPath01, []);
     const learningPath02 = mapToLearningPath(testLearningPath02, []);
+    learningPath02.admins = [getLimpBizkit()];
 
     const partiallyDatabasePartiallyDwengoApiLearningPath = mapToLearningPath(testPartiallyDatabaseAndPartiallyDwengoApiLearningPath, []);
     const learningPathWithConditions = mapToLearningPath(testLearningPathWithConditions, []);

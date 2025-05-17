@@ -18,13 +18,14 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
             content: question.content,
             timestamp: new Date(),
         });
+        await this.insert(questionEntity);
         questionEntity.learningObjectHruid = question.loId.hruid;
         questionEntity.learningObjectLanguage = question.loId.language;
         questionEntity.learningObjectVersion = question.loId.version;
         questionEntity.author = question.author;
         questionEntity.inGroup = question.inGroup;
         questionEntity.content = question.content;
-        return await this.insert(questionEntity);
+        return questionEntity;
     }
     public async findAllQuestionsAboutLearningObject(loId: LearningObjectIdentifier): Promise<Question[]> {
         return this.findAll({

@@ -4,7 +4,7 @@
     "teacher": "leerkracht",
     "assignments": "Opdrachten",
     "classes": "Klassen",
-    "discussions": "discussies",
+    "discussions": "Discussies",
     "logout": "log uit",
     "error_title": "Fout",
     "previous": "Vorige",
@@ -167,4 +167,12 @@
     "targetAgesMandatory": "Doelleeftijden moeten worden opgegeven.",
     "hintRemoveIfUnconditionalTransition": "(verwijder dit voor onvoorwaardelijke overgangen)",
     "hintKeywordsSeparatedBySpaces": "Trefwoorden gescheiden door spaties"
+    "questions": "vragen",
+    "view-questions": "Bekijk vragen in ",
+    "question-input-placeholder": "vraag...",
+    "answer-input-placeholder": "antwoord...",
+    "answers-toggle-hide": "Verberg antwoorden",
+    "answers-toggle-show": "Toon antwoorden",
+    "no-questions": "Nog geen vragen gesteld",
+    "no-discussion-tip": "Kies een leerobject om zijn vragen te bekijken"
 }

@@ -4,7 +4,7 @@
     "teacher": "teacher",
     "assignments": "Assignments",
     "classes": "Classes",
-    "discussions": "discussions",
+    "discussions": "Discussions",
     "logout": "log out",
     "error_title": "Error",
     "previous": "Previous",
@@ -167,4 +167,12 @@
     "targetAgesMandatory": "Target ages must be specified.",
     "hintRemoveIfUnconditionalTransition": "(remove this if this should be an unconditional transition)",
     "hintKeywordsSeparatedBySpaces": "Keywords separated by spaces"
+    "questions": "questions",
+    "view-questions": "View questions in ",
+    "question-input-placeholder": "question...",
+    "answer-input-placeholder": "answer...",
+    "answers-toggle-hide": "Hide answers",
+    "answers-toggle-show": "Show answers",
+    "no-questions": "No questions asked yet",
+    "no-discussion-tip": "Choose a learning object to view its questions"
 }

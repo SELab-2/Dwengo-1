@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { themes } from '../data/themes.js';
 import { FALLBACK_LANG } from '../config.js';
 import learningPathService from '../services/learning-paths/learning-path-service.js';
@@ -15,7 +15,7 @@ import { requireFields } from './error-helper.js';
 /**
  * Fetch learning paths based on query parameters.
  */
-export async function getLearningPaths(req: Request, res: Response): Promise<void> {
+export async function getLearningPaths(req: AuthenticatedRequest, res: Response): Promise<void> {
     const admin = req.query.admin;
     if (admin) {
         const paths = await learningPathService.getLearningPathsAdministratedBy(admin as string);
@@ -59,6 +59,19 @@ export async function getLearningPaths(req: Request, res: Response): Promise<voi
             return;
         } else {
             hruidList = themes.flatMap((theme) => theme.hruids);
+
+            const apiLearningPathResponse = await learningPathService.fetchLearningPaths(hruidList, language as Language, 'All themes', forGroup);
+            const apiLearningPaths: LearningPath[] = apiLearningPathResponse.data || [];
+            let allLearningPaths: LearningPath[] = apiLearningPaths;
+
+            if (req.auth) {
+                const adminUsername = req.auth.username;
+                const userLearningPaths = (await learningPathService.getLearningPathsAdministratedBy(adminUsername)) || [];
+                allLearningPaths = apiLearningPaths.concat(userLearningPaths);
+            }
+
+            res.json(allLearningPaths);
+            return;
         }
 
         const learningPaths = await learningPathService.fetchLearningPaths(

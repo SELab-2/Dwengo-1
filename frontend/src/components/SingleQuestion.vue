@@ -6,16 +6,31 @@
     import type { AnswersResponse } from "@/controllers/answers";
     import type { AnswerData, AnswerDTO } from "@dwengo-1/common/interfaces/answer";
     import authService from "@/services/auth/auth-service";
-    import { AccountType } from "@dwengo-1/common/util/account-types";
+    import { useI18n } from "vue-i18n";
+
+    const { t } = useI18n();
 
     const props = defineProps<{
         question: QuestionDTO;
     }>();
 
     const expanded = ref(false);
+    const answersContainer = ref<HTMLElement | null>(null); // Ref for the answers container
 
     function toggle(): void {
         expanded.value = !expanded.value;
+
+        // Scroll to the answers container if expanded
+        if (expanded.value && answersContainer.value) {
+            setTimeout(() => {
+                if (answersContainer.value) {
+                    answersContainer.value.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                    });
+                }
+            }, 100);
+        }
     }
 
     function formatDate(timestamp: string | Date): string {
@@ -87,7 +102,7 @@
             <input
                 v-model="answer"
                 type="text"
-                placeholder="answer: ..."
+                :placeholder="t('answer-input-placeholder')"
                 class="answer-input"
             />
             <button
@@ -104,13 +119,14 @@
             <button
                 v-if="answersResponse.data.answers && answersResponse.data.answers.length > 0"
                 @click="toggle()"
-                class="text-blue-600 hover:underline text-sm"
+                class="toggle-answers-btn"
             >
-                {{ expanded ? "Hide Answers" : "Show Answers" }}
+                {{ expanded ? t("answers-toggle-hide") : t("answers-toggle-show") }}
             </button>
 
             <div
-                v-if="expanded"
+                v-show="expanded"
+                ref="answersContainer"
                 class="mt-3 pl-4 border-l-2 border-blue-200 space-y-2"
             >
                 <div
@@ -118,6 +134,7 @@
                     :key="answerIndex"
                     class="text-gray-600"
                 >
+                    <v-divider :thickness="2" />
                     <div
                         class="flex justify-between items-center mb-2"
                         style="
@@ -145,6 +162,24 @@
     </div>
 </template>
 <style scoped>
+    .toggle-answers-btn {
+        font-size: 0.875rem;
+        text-decoration: none;
+        background-color: #f0f4ff; /* subtle blue background */
+        border: none;
+        border-radius: 4px;
+        padding: 6px 12px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .toggle-answers-btn:hover {
+        background-color: #e0eaff; /* slightly darker on hover */
+        text-decoration: underline;
+    }
+    .answer-input-container {
+        margin: 5px;
+    }
     .answer-input {
         flex-grow: 1;
         outline: none;
