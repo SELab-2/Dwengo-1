@@ -89,9 +89,9 @@ function openGroupDetails(group: object): void {
 }
 
 
+const deleteAssignmentMutation = useDeleteAssignmentMutation();
 async function deleteAssignment(num: number, clsId: string): Promise<void> {
-    const {mutate} = useDeleteAssignmentMutation();
-    mutate(
+    deleteAssignmentMutation.mutate(
         {cid: clsId, an: num},
         {
             onSuccess: () => {
@@ -183,7 +183,7 @@ async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
                         >
                             <v-card
                                 v-if="assignmentResponse"
-                                class="assignment-card"
+                                class="assignment-card-teacher"
                             >
                                 <div class="top-buttons">
                                     <div class="top-buttons-wrapper">
@@ -368,7 +368,7 @@ async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
                                     </th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody v-if="allGroups.length > 0">
                                 <tr
                                     v-for="g in allGroups"
                                     :key="g.originalGroupNo"
@@ -414,6 +414,16 @@ async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
                                     </td>
                                 </tr>
                                 </tbody>
+                                <template v-else>
+                                    <tbody>
+                                    <tr>
+                                        <td colspan="4" class="empty-message">
+                                            <v-icon icon="mdi-information-outline" size="small" />
+                                            {{ t("currently-no-groups") }}
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </template>
                             </v-table>
                         </div>
                     </v-col>
@@ -453,16 +463,22 @@ async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
 <style scoped>
 @import "@/assets/assignment.css";
 
+.assignment-card-teacher {
+    width: 80%;
+    padding: 2%;
+    border-radius: 12px;
+}
+
 .table-scroll {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
 
 .header {
-    font-weight: bold !important;
+    font-weight: bold;
     background-color: #0e6942;
     color: white;
-    padding: 10px;
+    padding: 5px;
 }
 
 table thead th:first-child {
@@ -487,11 +503,6 @@ th {
     border-top: 1px solid #0e6942;
 }
 
-.table {
-    width: 90%;
-    padding-top: 10px;
-    border-collapse: collapse;
-}
 
 h1 {
     color: #0e6942;
@@ -504,13 +515,6 @@ h1 {
 h2 {
     color: #0e6942;
     font-size: 30px;
-}
-
-.join {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-top: 50px;
 }
 
 .link {
@@ -533,7 +537,7 @@ main {
     table-layout: auto;
 }
 
-@media screen and (max-width: 850px) {
+@media screen and (max-width: 1200px) {
     h1 {
         text-align: center;
         padding-left: 0;
@@ -546,7 +550,7 @@ main {
     }
 
     .sheet {
-        width: 100%;
+        width: 90%;
     }
 
     main {
@@ -574,6 +578,11 @@ main {
     .responsive-col {
         max-width: 100% !important;
         flex-basis: 100% !important;
+    }
+
+    .assignment-card-teacher {
+        width: 100%;
+        border-radius: 12px;
     }
 }
 

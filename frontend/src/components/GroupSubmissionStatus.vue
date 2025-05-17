@@ -39,7 +39,7 @@
         v-slot="{ data }: { data: SubmissionsResponse }"
     >
         <v-btn
-            :color="data.submissions.length > 0 ? 'green' : 'red'"
+            :color="data?.submissions?.length > 0 ? 'green' : 'red'"
             variant="text"
             :to="data.submissions.length > 0 ? goToGroupSubmissionLink(props.group.groupNo) : undefined"
             :disabled="data.submissions.length === 0"

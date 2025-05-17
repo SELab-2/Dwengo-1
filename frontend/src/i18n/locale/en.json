@@ -172,5 +172,15 @@
     "deadline-invalid": "Invalid date or time.",
     "deadline-past": "The deadline must be in the future.",
     "lp-required": "You must select a learning path.",
-    "lp-invalied": "The selected learning path doesn't exist."
+    "lp-invalid": "The selected learning path doesn't exist.",
+    "currently-no-groups": "There are no groups for this assignment.",
+    "random-grouping": "Randomly create groups",
+    "drag-and-drop": "Manualy create groups",
+    "generate-groups": "generate",
+    "auto-generate-groups": "Create groups of equal size",
+    "preview": "Preview",
+    "current-groups": "Current groups",
+    "group-size-label": "Group size",
+    "save": "Save",
+    "unassigned": "Unassigned"
 }
