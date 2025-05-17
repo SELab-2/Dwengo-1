@@ -6,11 +6,11 @@
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import type { AssignmentResponse } from "@/controllers/assignments.ts";
     import { asyncComputed } from "@vueuse/core";
-    import {useStudentGroupsQuery, useStudentsByUsernamesQuery} from "@/queries/students.ts";
+    import { useStudentGroupsQuery, useStudentsByUsernamesQuery } from "@/queries/students.ts";
     import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
     import type { Language } from "@/data-objects/language.ts";
     import { calculateProgress } from "@/utils/assignment-utils.ts";
-    import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
+    import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
 
     const props = defineProps<{
         classId: string;

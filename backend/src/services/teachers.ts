@@ -1,9 +1,4 @@
-import {
-    getAssignmentRepository,
-    getClassJoinRequestRepository,
-    getClassRepository,
-    getTeacherRepository,
-} from '../data/repositories.js';
+import { getAssignmentRepository, getClassJoinRequestRepository, getClassRepository, getTeacherRepository } from '../data/repositories.js';
 import { mapToClassDTO } from '../interfaces/class.js';
 import { mapToTeacher, mapToTeacherDTO } from '../interfaces/teacher.js';
 import { Teacher } from '../entities/users/teacher.entity.js';

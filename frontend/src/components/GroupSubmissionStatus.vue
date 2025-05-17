@@ -3,7 +3,7 @@
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import { useAssignmentSubmissionsQuery } from "@/queries/assignments.ts";
     import type { SubmissionsResponse } from "@/controllers/submissions.ts";
-    import {watch} from "vue";
+    import { watch } from "vue";
 
     const props = defineProps<{
         group: object;
@@ -29,7 +29,7 @@
                 emit("update:hasSubmission", data.submissions.length > 0);
             }
         },
-        { immediate: true }
+        { immediate: true },
     );
 </script>
 

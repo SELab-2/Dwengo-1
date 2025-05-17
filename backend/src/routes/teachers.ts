@@ -31,7 +31,6 @@ router.get('/:username/students', preventImpersonation, getTeacherStudentHandler
 
 router.get(`/:username/assignments`, getTeacherAssignmentsHandler);
 
-
 router.get('/:username/joinRequests/:classId', onlyAllowTeacherOfClass, getStudentJoinRequestHandler);
 
 router.put('/:username/joinRequests/:classId/:studentUsername', onlyAllowTeacherOfClass, updateStudentJoinRequestHandler);

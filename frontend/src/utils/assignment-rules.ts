@@ -1,10 +1,8 @@
-
 /**
  * Validation rule for the assignment title.
  *
  * Ensures that the title is not empty.
  */
-
 
 /**
  * Validation rule for the classes selection.
@@ -17,4 +15,3 @@
  *
  * Ensures that a valid deadline is selected and is in the future.
  */
-
