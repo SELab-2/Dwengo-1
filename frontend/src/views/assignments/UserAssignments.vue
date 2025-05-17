@@ -146,7 +146,7 @@
 
         <v-btn
             v-if="isTeacher"
-            color="primary"
+            :style="{ backgroundColor: '#0E6942' }"
             class="mb-4 center-btn"
             @click="goToCreateAssignment"
         >

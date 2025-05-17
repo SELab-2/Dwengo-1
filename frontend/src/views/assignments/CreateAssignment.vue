@@ -36,6 +36,7 @@ const assignmentTitle = ref("");
 
 const selectedLearningPath = ref<LearningPath | undefined>(undefined);
 const lpIsSelected = ref(false);
+
 watch(learningPathsQueryResults.data, (data) => {
     const hruidFromRoute = route.query.hruid?.toString();
     if (!hruidFromRoute || !data) return;
@@ -61,9 +62,8 @@ async function submitFormHandler(): Promise<void> {
     if (!valid) return;
 
     const lp = lpIsSelected.value
-        ? route.query.hruid
+        ? route.query.hruid?.toString()
         : selectedLearningPath.value?.hruid;
-
     if (!lp) {
         return;
     }
@@ -71,10 +71,10 @@ async function submitFormHandler(): Promise<void> {
     const assignmentDTO: AssignmentDTO = {
         id: 0,
         within: selectedClass.value?.id || "",
-        title: assignmentTitle.value.toString(),
+        title: assignmentTitle.value,
         description: "",
-        learningPath: lp.toString(),
-        language: language.value.toString(),
+        learningPath: lp,
+        language: language.value,
         deadline: null,
         groups: [],
     };
@@ -83,9 +83,9 @@ async function submitFormHandler(): Promise<void> {
 }
 
 const learningPathRules = [
-    (value: any) => {
+    (value: LearningPath): string | boolean => {
 
-        if(lpIsSelected.value) return;
+        if(lpIsSelected.value) return true;
 
         if (!value) return t("lp-required");
 
@@ -146,17 +146,17 @@ const classRules = [
                         v-slot="{ data }: { data: LearningPath[] }"
                     >
                         <v-combobox
+                            v-model="selectedLearningPath"
                             :items="data"
                             :label="t('choose-lp')"
                             :rules="lpIsSelected ? [] : learningPathRules"
                             variant="solo-filled"
                             clearable
-                            :model-value="lpIsSelected ? data.find(lp => lp.hruid === route.query.hruid?.toString()) : selectedLearningPath"
                             item-title="title"
-                            item-value="hruid"
                             :disabled="lpIsSelected"
                             return-object
                         />
+
                     </using-query-result>
 
                     <!-- Klas keuze -->

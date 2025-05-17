@@ -60,6 +60,9 @@ watchEffect(() => {
     }
 });
 
+const hasSubmissions = ref<boolean>(false);
+
+
 const allGroups = computed(() => {
     const groups = groupsQueryResult.data.value?.groups;
 
@@ -73,7 +76,7 @@ const allGroups = computed(() => {
         groupNo: index + 1, // New group number that will be used
         name: `${t("group")} ${index + 1}`,
         members: group.members,
-        originalGroupNo: group.groupNumber, // Keep original number if needed
+        originalGroupNo: group.groupNumber
     }));
 });
 
@@ -298,29 +301,42 @@ async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
                         <!-- A pop up to show group members -->
                         <v-dialog
                             v-model="dialog"
-                            max-width="50%"
+                            max-width="600"
+                            persistent
                         >
-                            <v-card>
-                                <v-card-title class="headline">{{ t("members") }}</v-card-title>
+                            <v-card class="pa-4 rounded-xl elevation-6 group-members-dialog">
+                                <v-card-title class="text-h6 font-weight-bold">
+                                    {{ t("members") }}
+                                </v-card-title>
+
+                                <v-divider class="my-2" />
+
                                 <v-card-text>
                                     <v-list>
                                         <v-list-item
                                             v-for="(member, index) in selectedGroup.members"
                                             :key="index"
+                                            class="py-2"
                                         >
                                             <v-list-item-content>
-                                                <v-list-item-title
-                                                >{{ member.firstName + " " + member.lastName }}
+                                                <v-list-item-title class="text-body-1">
+                                                    {{ member.firstName }} {{ member.lastName }}
                                                 </v-list-item-title>
                                             </v-list-item-content>
                                         </v-list-item>
                                     </v-list>
                                 </v-card-text>
-                                <v-card-actions>
+
+                                <v-divider class="my-2" />
+
+                                <v-card-actions class="justify-end">
                                     <v-btn
                                         color="primary"
+                                        variant="outlined"
                                         @click="dialog = false"
-                                    >Close
+                                        prepend-icon="mdi-close-circle"
+                                    >
+                                        {{ t("close") }}
                                     </v-btn>
                                 </v-card-actions>
                             </v-card>
@@ -345,6 +361,7 @@ async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
                                         <v-btn
                                             @click="editGroups = true"
                                             variant="text"
+                                            :disabled="hasSubmissions"
                                         >
                                             <v-icon>mdi-pencil</v-icon>
                                         </v-btn>
@@ -358,11 +375,9 @@ async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
                                 >
                                     <td>
                                         <v-btn
-                                            @click="openGroupDetails(g)"
                                             variant="text"
                                         >
                                             {{ g.name }}
-                                            <v-icon end>mdi-menu-right</v-icon>
                                         </v-btn>
                                     </td>
 
@@ -383,16 +398,18 @@ async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
                                             :class-id="classId"
                                             :language="lang"
                                             :go-to-group-submission-link="goToGroupSubmissionLink"
+                                            @update:hasSubmission="(hasSubmission) => hasSubmissions = hasSubmission"
+
                                         />
                                     </td>
 
                                     <!-- Edit icon -->
                                     <td>
                                         <v-btn
-                                            @click=""
+                                            @click="openGroupDetails(g)"
                                             variant="text"
                                         >
-                                            <v-icon color="red">mdi-delete</v-icon>
+                                            <v-icon>mdi-eye</v-icon>
                                         </v-btn>
                                     </td>
                                 </tr>
@@ -416,16 +433,18 @@ async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
                                 @close="editGroups = false"
                             />
                         </v-card-text>
+
+                        <v-divider></v-divider>
+
                         <v-card-actions>
-                            <v-btn
-                                text
-                                @click="editGroups = false"
-                            >{{ t("cancel") }}
-                            </v-btn
-                            >
+                            <v-spacer></v-spacer>
+                            <v-btn text @click="editGroups = false">
+                                {{ t("cancel") }}
+                            </v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
+
             </v-container>
         </using-query-result>
     </div>
@@ -557,4 +576,10 @@ main {
         flex-basis: 100% !important;
     }
 }
+
+.group-members-dialog {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
 </style>

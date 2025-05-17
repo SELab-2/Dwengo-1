@@ -3,6 +3,7 @@
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import { useAssignmentSubmissionsQuery } from "@/queries/assignments.ts";
     import type { SubmissionsResponse } from "@/controllers/submissions.ts";
+    import {watch} from "vue";
 
     const props = defineProps<{
         group: object;
@@ -11,12 +12,24 @@
         goToGroupSubmissionLink: (groupNo: number) => void;
     }>();
 
+    const emit = defineEmits<(e: "update:hasSubmission", hasSubmission: boolean) => void>();
+
     const { t } = useI18n();
     const submissionsQuery = useAssignmentSubmissionsQuery(
         () => props.classId,
         () => props.assignmentId,
         () => props.group.originalGroupNo,
         () => true,
+    );
+
+    watch(
+        () => submissionsQuery.data.value,
+        (data) => {
+            if (data) {
+                emit("update:hasSubmission", data.submissions.length > 0);
+            }
+        },
+        { immediate: true }
     );
 </script>
 

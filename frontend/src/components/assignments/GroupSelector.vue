@@ -355,7 +355,7 @@ function removeStudent(groupIndex: number, student: StudentItem): void {
 </script>
 
 <template>
-    <v-card class="pa-4">
+    <v-card class="pa-4 minimal-card">
         <!-- Current groups and unassigned students Preview -->
         <div v-if="showGroupsPreview" class="mb-6">
             <h3 class="mb-2">{{ t("current-groups") }}</h3>
@@ -364,20 +364,13 @@ function removeStudent(groupIndex: number, student: StudentItem): void {
                     <label>{{ currentGroups.length }}</label>
                 </div>
             </div>
-
-            <div v-if="unassignedStudents.length > 0" class="mt-3">
-                <strong>{{ t("unassigned-students") }}:</strong>
-                <div class="d-flex flex-wrap">
-                    <label>{{ unassignedStudents.length }}</label>
-                </div>
-            </div>
         </div>
 
         <v-row justify="center" class="mb-4">
-            <v-btn color="primary" @click="activeDialog = 'random'">
-                {{ t("randomly-create-groups") }}
+            <v-btn color="primary" @click="activeDialog = 'random'" prepend-icon="mdi-shuffle">
+                {{ t("random-grouping") }}
             </v-btn>
-            <v-btn color="secondary" class="ml-4" @click="activeDialog = 'dragdrop'">
+            <v-btn color="secondary" class="ml-4" @click="activeDialog = 'dragdrop'" prepend-icon="mdi-drag">
                 {{ t("drag-and-drop") }}
             </v-btn>
         </v-row>
@@ -388,8 +381,8 @@ function removeStudent(groupIndex: number, student: StudentItem): void {
             @update:model-value="(val) => (val ? (activeDialog = 'random') : (activeDialog = null))"
             max-width="600"
         >
-            <v-card>
-                <v-card-title>{{ t("randomly-create-groups") }}</v-card-title>
+            <v-card class="custom-dialog">
+                <v-card-title class="dialog-title">{{ t("auto-generate-groups") }}</v-card-title>
                 <v-card-text>
                     <v-row align="center">
                         <v-col cols="6">
@@ -442,7 +435,7 @@ function removeStudent(groupIndex: number, student: StudentItem): void {
                     </div>
                 </v-card-text>
 
-                <v-card-actions>
+                <v-card-actions class="dialog-actions">
                     <v-spacer/>
                     <v-btn text @click="activeDialog = null">{{ t("cancel") }}</v-btn>
                     <v-btn
@@ -462,8 +455,8 @@ function removeStudent(groupIndex: number, student: StudentItem): void {
             @update:model-value="(val) => (val ? (activeDialog = 'dragdrop') : (activeDialog = null))"
             max-width="900"
         >
-            <v-card>
-                <v-card-title class="d-flex justify-space-between align-center">
+            <v-card class="custom-dialog">
+                <v-card-title class=" dialog-title d-flex justify-space-between align-center">
                     <div>{{ t("drag-and-drop") }}</div>
                     <v-btn color="primary" small @click="addNewGroup">+</v-btn>
                 </v-card-title>
@@ -602,5 +595,61 @@ function removeStudent(groupIndex: number, student: StudentItem): void {
 .draggable-item .v-chip[style*="hidden"] {
     visibility: hidden;
     display: inline-block;
+}
+
+.custom-dialog {
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.dialog-title {
+    color: #00796b; /* teal-like green */
+    font-weight: bold;
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.v-btn.custom-green {
+    background-color: #43a047;
+    color: white;
+}
+
+.v-btn.custom-green:hover {
+    background-color: #388e3c
+}
+
+.v-btn.custom-blue {
+    background-color: #1e88e5;
+    color: white;
+}
+
+.v-btn.custom-blue:hover {
+    background-color: #1565c0 ;
+}
+
+.v-btn.cancel-button {
+    background-color: #e0f2f1;
+    color: #00695c;
+}
+
+.minimal-card {
+    box-shadow: none;           /* remove card shadow */
+    border: none;               /* remove border */
+    background-color: transparent;  /* make background transparent */
+    padding: 0;                 /* reduce padding */
+    margin-bottom: 1rem;        /* keep some spacing below */
+}
+
+/* Optionally, keep some padding only around buttons */
+.minimal-card > .v-row {
+    padding: 1rem 0;            /* give vertical padding around buttons */
 }
 </style>
