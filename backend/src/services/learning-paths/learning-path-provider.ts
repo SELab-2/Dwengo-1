@@ -22,9 +22,4 @@ export interface LearningPathProvider {
      * Get all learning paths which have the teacher with the given user as an administrator.
      */
     getLearningPathsAdministratedBy(adminUsername: string): Promise<LearningPath[]>;
-
-    /**
-     * Fetch the learning paths for the given admins from the data source.
-     */
-    searchLearningPathsByAdmin(admins: Teacher[], language: Language, personalizedFor?: Group, matchMode?: MatchMode): Promise<LearningPath[]>;
 }

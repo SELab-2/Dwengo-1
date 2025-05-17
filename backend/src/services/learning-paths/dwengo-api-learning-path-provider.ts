@@ -3,8 +3,6 @@ import { DWENGO_API_BASE } from '../../config.js';
 import { LearningPathProvider } from './learning-path-provider.js';
 import { getLogger, Logger } from '../../logging/initalize.js';
 import { LearningPath, LearningPathResponse } from '@dwengo-1/common/interfaces/learning-content';
-import { Teacher } from '../../entities/users/teacher.entity';
-import { Language } from '@dwengo-1/common/util/language';
 import { Group } from '../../entities/assignments/group.entity.js';
 import { getLastSubmissionForGroup, idFromLearningObjectNode } from './learning-path-personalization-util.js';
 
@@ -21,7 +19,7 @@ async function addProgressToLearningPath(learningPath: LearningPath, personalize
         learningPath.nodes.map(async (node) => {
             const lastSubmission = personalizedFor ? await getLastSubmissionForGroup(idFromLearningObjectNode(node), personalizedFor) : null;
             node.done = Boolean(lastSubmission);
-        })
+        }),
     );
 
     learningPath.num_nodes = learningPath.nodes.length;
@@ -78,16 +76,8 @@ const dwengoApiLearningPathProvider: LearningPathProvider = {
     },
 
     async getLearningPathsAdministratedBy(_adminUsername: string) {
-        return []; // Learning paths fetched from the Dwengo API cannot be administrated by a user.
-    },
-
-    async searchLearningPathsByAdmin(admins: Teacher[], language: string): Promise<LearningPath[]> {
-        if (!admins || admins.length === 0) {
-            return this.searchLearningPaths('', language as Language);
-        }
-
         // Dwengo API does not have the concept of admins, so we cannot filter by them.
-        return []
+        return [];
     },
 };
 

@@ -4,7 +4,11 @@ import { getLearningPathRepository } from '../../data/repositories.js';
 import learningObjectService from '../learning-objects/learning-object-service.js';
 import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
-import { getLastSubmissionForGroup, idFromLearningPathNode, isTransitionPossible } from './learning-path-personalization-util.js';
+import {
+    getLastSubmissionForGroup,
+    idFromLearningPathNode,
+    isTransitionPossible,
+} from './learning-path-personalization-util.js';
 import {
     FilteredLearningObject,
     LearningObjectNode,
@@ -13,12 +17,10 @@ import {
     Transition,
 } from '@dwengo-1/common/interfaces/learning-content';
 import { Language } from '@dwengo-1/common/util/language';
-import { MatchMode } from '@dwengo-1/common/util/match-mode';
 import { Group } from '../../entities/assignments/group.entity';
 import { Collection } from '@mikro-orm/core';
 import { v4 } from 'uuid';
 import { getLogger } from '../../logging/initalize.js';
-import { Teacher } from '../../entities/users/teacher.entity';
 
 const logger = getLogger();
 
@@ -233,13 +235,6 @@ const databaseLearningPathProvider: LearningPathProvider = {
         const learningPathRepo = getLearningPathRepository();
 
         const searchResults = await learningPathRepo.findByQueryStringAndLanguage(query, language);
-        return await Promise.all(searchResults.map(async (result, index) => convertLearningPath(result, index, personalizedFor)));
-    },
-
-    async searchLearningPathsByAdmin(admins: Teacher[], language: Language, personalizedFor?: Group, matchMode?: MatchMode): Promise<LearningPath[]> {
-        const learningPathRepo = getLearningPathRepository();
-
-        const searchResults = await learningPathRepo.findByAdmins(admins, language, matchMode);
         return await Promise.all(searchResults.map(async (result, index) => convertLearningPath(result, index, personalizedFor)));
     },
 };

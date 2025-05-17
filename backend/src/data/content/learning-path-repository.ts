@@ -1,11 +1,9 @@
 import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { LearningPath } from '../../entities/content/learning-path.entity.js';
 import { Language } from '@dwengo-1/common/util/language';
-import { MatchMode } from '@dwengo-1/common/util/match-mode';
 import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
 import { RequiredEntityData } from '@mikro-orm/core';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
-import { Teacher } from '../../entities/users/teacher.entity';
 
 export class LearningPathRepository extends DwengoEntityRepository<LearningPath> {
     public async findByHruidAndLanguage(hruid: string, language: Language): Promise<LearningPath | null> {
@@ -13,18 +11,6 @@ export class LearningPathRepository extends DwengoEntityRepository<LearningPath>
             hruid: hruid,
             language: language,
         }, { populate: ['nodes', 'nodes.transitions', 'admins'] });
-    }
-
-    public async findByAdmins(admins: Teacher[], language: Language, _matchMode?: MatchMode): Promise<LearningPath[]> {
-        return this.findAll({
-            where: {
-                language: language,
-                admins: {
-                    $in: admins,
-                },
-            },
-            populate: ['nodes', 'nodes.transitions'],
-        });
     }
 
     /**

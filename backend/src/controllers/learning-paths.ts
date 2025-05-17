@@ -66,7 +66,7 @@ export async function getLearningPaths(req: AuthenticatedRequest, res: Response)
 
             if (req.auth) {
                 const adminUsername = req.auth.username;
-                const userLearningPaths = await learningPathService.searchLearningPathsByAdmin([adminUsername], language as Language, forGroup) || [];
+                const userLearningPaths = await learningPathService.getLearningPathsAdministratedBy(adminUsername) || [];
                 allLearningPaths = apiLearningPaths.concat(userLearningPaths);
             }
 

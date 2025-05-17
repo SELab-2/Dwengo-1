@@ -130,22 +130,6 @@ const learningPathService = {
     },
 
     /**
-     * Fetch the learning paths for the given admins from the data source.
-     */
-    async searchLearningPathsByAdmin(adminsIds: string[], language: Language, personalizedFor?: Group): Promise<LearningPath[]> {
-        const teacherRepo = getTeacherRepository();
-        const admins = await Promise.all(
-            adminsIds .map(async (adminId) => await teacherRepo.findByUsername(adminId))
-        );
-        const adminsNotNull: Teacher[] = admins.filter((admin) => admin !== undefined) as Teacher[];
-
-        const providerResponses = await Promise.all(
-            allProviders.map(async (provider) => provider.searchLearningPathsByAdmin(adminsNotNull, language, personalizedFor)),
-        );
-        return providerResponses.flat();
-    },
-
-    /**
      * Add a new learning path to the database.
      * @param dto Learning path DTO from which the learning path will be created.
      * @param admins Teachers who should become an admin of the learning path.
