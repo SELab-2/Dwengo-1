@@ -181,7 +181,7 @@ export function useAssignmentSubmissionsQuery(
 
     return useQuery({
         queryKey: computed(() => assignmentSubmissionsQueryKey(cid!, an!, f)),
-        queryFn: async () => new AssignmentController(cid!).getSubmissions(gn!, f),
+        queryFn: async () => new AssignmentController(cid!).getSubmissions(an!, f),
         enabled: () => checkEnabled(cid, an, gn),
     });
 }

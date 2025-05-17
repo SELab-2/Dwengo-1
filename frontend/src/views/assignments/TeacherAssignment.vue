@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, type Ref, ref } from "vue";
+    import { computed, ref, watchEffect } from "vue";
     import { useI18n } from "vue-i18n";
     import { useAssignmentQuery, useDeleteAssignmentMutation } from "@/queries/assignments.ts";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
@@ -7,51 +7,50 @@
     import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
     import type { Language } from "@/data-objects/language.ts";
     import type { AssignmentResponse } from "@/controllers/assignments.ts";
-    import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
+    import type { GroupDTO, GroupDTOId } from "@dwengo-1/common/interfaces/group";
+    import GroupProgressRow from "@/components/GroupProgressRow.vue";
+    import GroupSubmissionStatus from "@/components/GroupSubmissionStatus.vue";
 
     const props = defineProps<{
         classId: string;
         assignmentId: number;
-        useGroupsWithProgress: (
-            groups: Ref<GroupDTO[]>,
-            hruid: Ref<string>,
-            language: Ref<Language>,
-        ) => { groupProgressMap: Map<number, number> };
     }>();
 
     const { t } = useI18n();
-    const groups = ref();
+    const lang = ref();
+    const groups = ref<GroupDTO[] | GroupDTOId[]>([]);
     const learningPath = ref();
 
     const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
-    learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
     // Get learning path object
     const lpQueryResult = useGetLearningPathQuery(
         computed(() => assignmentQueryResult.data.value?.assignment?.learningPath ?? ""),
-        computed(() => assignmentQueryResult.data.value?.assignment.language as Language),
+        computed(() => assignmentQueryResult.data.value?.assignment?.language as Language),
     );
 
     // Get all the groups withing the assignment
     const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
-    groups.value = groupsQueryResult.data.value?.groups;
+    groups.value = groupsQueryResult.data.value?.groups ?? [];
 
-    /* Crashes right now cause api data has inexistent hruid TODO: uncomment later and use it in progress bar
-Const {groupProgressMap} = props.useGroupsWithProgress(
-groups,
-learningPath,
-language
-);
-*/
+    watchEffect(() => {
+        learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
+        lang.value = assignmentQueryResult.data.value?.assignment?.language as Language;
+    });
 
     const allGroups = computed(() => {
         const groups = groupsQueryResult.data.value?.groups;
+
         if (!groups) return [];
 
-        return groups.map((group) => ({
-            name: `${t("group")} ${group.groupNumber}`,
-            progress: 0, //GroupProgressMap[group.groupNumber],
+        // Sort by original groupNumber
+        const sortedGroups = [...groups].sort((a, b) => a.groupNumber - b.groupNumber);
+
+        // Assign new sequential numbers starting from 1
+        return sortedGroups.map((group, index) => ({
+            groupNo: index + 1, // New group number that will be used
+            name: `${t("group")} ${index + 1}`,
             members: group.members,
-            submitted: false, //TODO: fetch from submission
+            originalGroupNo: group.groupNumber, // Keep original number if needed
         }));
     });
 
@@ -80,6 +79,22 @@ language
                 },
             },
         );
+    }
+
+    function goToLearningPathLink(): string | undefined {
+        const assignment = assignmentQueryResult.data.value?.assignment;
+        const lp = lpQueryResult.data.value;
+
+        if (!assignment || !lp) return undefined;
+
+        return `/learningPath/${lp.hruid}/${assignment.language}/${lp.startNode.learningobjectHruid}?assignmentNo=${props.assignmentId}&classId=${props.classId}`;
+    }
+
+    function goToGroupSubmissionLink(groupNo: number): string | undefined {
+        const lp = lpQueryResult.data.value;
+        if (!lp) return undefined;
+
+        return `/learningPath/${lp.hruid}/${lp.language}/${lp.startNode.learningobjectHruid}?forGroup=${groupNo}&assignmentNo=${props.assignmentId}&classId=${props.classId}`;
     }
 </script>
 
@@ -120,7 +135,7 @@ language
                     >
                         <v-btn
                             v-if="lpData"
-                            :to="`/learningPath/${lpData.hruid}/${assignmentQueryResult.data.value?.assignment.language}/${lpData.startNode.learningobjectHruid}?assignmentNo=${assignmentId}&classId=${classId}`"
+                            :to="goToLearningPathLink()"
                             variant="tonal"
                             color="primary"
                         >
@@ -153,26 +168,24 @@ language
                             </template>
 
                             <template #[`item.progress`]="{ item }">
-                                <v-progress-linear
-                                    :model-value="item.progress"
-                                    color="blue-grey"
-                                    height="25"
-                                >
-                                    <template v-slot:default="{ value }">
-                                        <strong>{{ Math.ceil(value) }}%</strong>
-                                    </template>
-                                </v-progress-linear>
+                                <GroupProgressRow
+                                    :group-number="item.originalGroupNo"
+                                    :learning-path="learningPath"
+                                    :language="lang"
+                                    :assignment-id="assignmentId"
+                                    :class-id="classId"
+                                />
                             </template>
 
                             <template #[`item.submission`]="{ item }">
-                                <v-btn
-                                    :to="item.submitted ? `${props.assignmentId}/submissions/` : undefined"
-                                    :color="item.submitted ? 'green' : 'red'"
-                                    variant="text"
-                                    class="text-capitalize"
-                                >
-                                    {{ item.submitted ? t("see-submission") : t("no-submission") }}
-                                </v-btn>
+                                <GroupSubmissionStatus
+                                    :lp-hruid="learningPath"
+                                    :group="item"
+                                    :assignmentId="assignmentId"
+                                    :class-id="classId"
+                                    :language="lang"
+                                    :go-to-group-submission-link="goToGroupSubmissionLink"
+                                />
                             </template>
                         </v-data-table>
                     </div>
