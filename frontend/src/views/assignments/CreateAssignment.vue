@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
     import { computed, onMounted, ref, watch } from "vue";
-    import { assignmentTitleRules, classRules, learningPathRules } from "@/utils/assignment-rules.ts";
+    import { assignmentTitleRules, classRules } from "@/utils/assignment-rules.ts";
     import auth from "@/services/auth/auth-service.ts";
     import { useTeacherClassesQuery } from "@/queries/teachers.ts";
     import { useRouter, useRoute } from "vue-router";
@@ -34,8 +34,7 @@
 
     const selectedClass = ref(undefined);
     const assignmentTitle = ref("");
-    console.log(route.query);
-    const selectedLearningPath = ref(route.query.hruid || undefined);
+    const selectedLearningPath = ref(route.query.hruid?.toString() || undefined);
 
     const lpIsSelected = route.query.hruid !== undefined;
 
@@ -125,7 +124,7 @@
                             :rules="lpIsSelected ? [] : learningPathRules"
                             variant="solo-filled"
                             clearable
-                            :model-value="lpIsSelected ? data.find(lp => lp.hruid === route.query.hruid) : selectedLearningPath"
+                            :model-value="lpIsSelected ? data.find(lp => lp.hruid === route.query.hruid?.toString()) : selectedLearningPath"
                             item-title="title"
                             item-value="hruid"
                             :disabled="lpIsSelected"

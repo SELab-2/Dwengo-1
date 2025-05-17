@@ -6,11 +6,11 @@
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import type { AssignmentResponse } from "@/controllers/assignments.ts";
     import { asyncComputed } from "@vueuse/core";
-    import { useStudentsByUsernamesQuery } from "@/queries/students.ts";
-    import { useGroupsQuery } from "@/queries/groups.ts";
+    import {useStudentGroupsQuery, useStudentsByUsernamesQuery} from "@/queries/students.ts";
     import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
     import type { Language } from "@/data-objects/language.ts";
     import { calculateProgress } from "@/utils/assignment-utils.ts";
+    import type {LearningPath} from "@/data-objects/learning-paths/learning-path.ts";
 
     const props = defineProps<{
         classId: string;
@@ -29,7 +29,7 @@
     const assignmentQueryResult = useAssignmentQuery(() => props.classId, props.assignmentId);
     learningPath.value = assignmentQueryResult.data.value?.assignment?.learningPath;
 
-    const groupsQueryResult = useGroupsQuery(props.classId, props.assignmentId, true);
+    const groupsQueryResult = useStudentGroupsQuery(username, true);
     const group = computed(() => {
         const groups = groupsQueryResult.data.value?.groups;
 
@@ -68,7 +68,7 @@
     );
 
     const progressColor = computed(() => {
-        const progress = calculateProgress(lpQueryResult.data.value);
+        const progress = calculateProgress(lpQueryResult.data.value as LearningPath);
         if (progress >= 100) return "success";
         if (progress >= 50) return "warning";
         return "error";

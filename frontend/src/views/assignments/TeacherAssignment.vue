@@ -21,11 +21,6 @@ import GroupSelector from "@/components/assignments/GroupSelector.vue";
 const props = defineProps<{
     classId: string;
     assignmentId: number;
-    useGroupsWithProgress: (
-        groups: Ref<GroupDTO[]>,
-        hruid: Ref<string>,
-        language: Ref<Language>,
-    ) => { groupProgressMap: Map<number, number> };
 }>();
 
 const isEditing = ref(false);
