@@ -34,7 +34,9 @@
 
     const selectedClass = ref(undefined);
     const assignmentTitle = ref("");
+    console.log(route.query);
     const selectedLearningPath = ref(route.query.hruid || undefined);
+
     const lpIsSelected = route.query.hruid !== undefined;
 
     const { mutate, data, isSuccess } = useCreateAssignmentMutation();
@@ -49,26 +51,42 @@
         const { valid } = await form.value.validate();
         if (!valid) return;
 
-        console.log(selectedLearningPath.value);
+        const lp = lpIsSelected
+            ? route.query.hruid
+            : selectedLearningPath.value?.hruid;
 
-        let lp = selectedLearningPath.value;
-        if (!lpIsSelected) {
-            lp = selectedLearningPath.value?.hruid;
+        if (!lp) {
+            return;
         }
+
+        console.log('Form values:', {
+            title: assignmentTitle.value,
+            class: selectedClass.value,
+            lp: selectedLearningPath.value
+        });
 
         const assignmentDTO: AssignmentDTO = {
             id: 0,
             within: selectedClass.value?.id || "",
-            title: assignmentTitle.value,
+            title: assignmentTitle.value.toString(),
             description: "",
-            learningPath: lp || "",
-            deadline: new Date(),
-            language: language.value,
+            learningPath: lp.toString(),
+            language: language.value.toString(),
+            deadline: null,
             groups: [],
         };
 
         mutate({ cid: assignmentDTO.within, data: assignmentDTO });
     }
+
+    const learningPathRules = [
+        (value: any) => {
+            // Skip validation if LP is selected from query
+            if (route.query.hruid) return true;
+            // Original validation logic
+            return Boolean(value) || 'Learning path is required';
+        }
+    ];
 </script>
 
 <template>
@@ -104,18 +122,14 @@
                             v-model="selectedLearningPath"
                             :items="data"
                             :label="t('choose-lp')"
-                            :rules="learningPathRules"
+                            :rules="lpIsSelected ? [] : learningPathRules"
                             variant="solo-filled"
                             clearable
-                            density="comfortable"
-                            chips
-                            hide-no-data
-                            hide-selected
+                            :model-value="lpIsSelected ? data.find(lp => lp.hruid === route.query.hruid) : selectedLearningPath"
                             item-title="title"
                             item-value="hruid"
                             :disabled="lpIsSelected"
-                            :filter="(item, query: string) => item.title.toLowerCase().includes(query.toLowerCase())"
-                            prepend-inner-icon="mdi-school"
+                            return-object
                         />
                     </using-query-result>
 

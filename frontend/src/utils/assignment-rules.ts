@@ -12,19 +12,6 @@ export const assignmentTitleRules = [
     },
 ];
 
-/**
- * Validation rule for the learning path selection.
- *
- * Ensures that a valid learning path is selected.
- */
-export const learningPathRules = [
-    (value: { hruid: string; title: string }): string | boolean => {
-        if (value && value.hruid) {
-            return true; // Valid if hruid is present
-        }
-        return "You must select a learning path.";
-    },
-];
 
 /**
  * Validation rule for the classes selection.

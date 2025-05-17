@@ -144,15 +144,8 @@ async function saveChanges(): Promise<void> {
 }
 
 async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
-    const formattedGroups = updatedGroups.map((members, index) => ({
-        groupNumber: index + 1,
-        class: assignmentQueryResult.data.value?.assignment.within,
-        assignment: assignmentQueryResult.data.value?.assignment.id,
-        members: members.map(username => ({ username })), // Convert to member objects
-        // Add other required GroupDTO fields if needed
-    }));
     const assignmentDTO: AssignmentDTO = {
-        groups: formattedGroups,
+        groups: updatedGroups,
     };
     mutate({
         cid: assignmentQueryResult.data.value?.assignment.within,
