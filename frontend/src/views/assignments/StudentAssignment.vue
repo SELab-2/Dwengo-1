@@ -152,7 +152,10 @@
                     </v-card-text>
                 </v-card-text>
 
-                <v-card-text class="group-section" v-if="group && studentQueries">
+                <v-card-text
+                    class="group-section"
+                    v-if="group && studentQueries"
+                >
                     <h3>{{ `${t("group")} ${group.groupNo}` }}</h3>
 
                     <div>
@@ -166,7 +169,10 @@
                         </ul>
                     </div>
                 </v-card-text>
-                <v-card-text class="group-section" v-else>
+                <v-card-text
+                    class="group-section"
+                    v-else
+                >
                     <h3>{{ t("group") }}</h3>
                     <div>
                         <v-alert class="empty-message">
