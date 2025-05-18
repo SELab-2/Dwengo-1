@@ -1,4 +1,4 @@
-import { AssignmentDTO, AssignmentDTOId } from '@dwengo-1/common/interfaces/assignment';
+import {AssignmentDTO, AssignmentDTOId} from '@dwengo-1/common/interfaces/assignment';
 import {
     getAssignmentRepository,
     getClassRepository,
@@ -6,20 +6,19 @@ import {
     getQuestionRepository,
     getSubmissionRepository,
 } from '../data/repositories.js';
-import { Assignment } from '../entities/assignments/assignment.entity.js';
-import { NotFoundException } from '../exceptions/not-found-exception.js';
-import { mapToAssignment, mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment.js';
-import { mapToQuestionDTO } from '../interfaces/question.js';
-import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
-import { fetchClass } from './classes.js';
-import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
-import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
-import { EntityDTO } from '@mikro-orm/core';
-import { putObject } from './service-helper.js';
-import { fetchStudents } from './students.js';
-import { ServerErrorException } from '../exceptions/server-error-exception.js';
-import { createGroup, deleteGroup, fetchAllGroups } from './groups.js';
-import { BadRequestException } from '../exceptions/bad-request-exception.js';
+import {Assignment} from '../entities/assignments/assignment.entity.js';
+import {NotFoundException} from '../exceptions/not-found-exception.js';
+import {mapToAssignment, mapToAssignmentDTO, mapToAssignmentDTOId} from '../interfaces/assignment.js';
+import {mapToQuestionDTO} from '../interfaces/question.js';
+import {mapToSubmissionDTO, mapToSubmissionDTOId} from '../interfaces/submission.js';
+import {fetchClass} from './classes.js';
+import {QuestionDTO, QuestionId} from '@dwengo-1/common/interfaces/question';
+import {SubmissionDTO, SubmissionDTOId} from '@dwengo-1/common/interfaces/submission';
+import {EntityDTO} from '@mikro-orm/core';
+import {putObject} from './service-helper.js';
+import {fetchStudents} from './students.js';
+import {ServerErrorException} from '../exceptions/server-error-exception.js';
+import {BadRequestException} from '../exceptions/bad-request-exception.js';
 
 export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
     const classRepository = getClassRepository();
@@ -45,8 +44,6 @@ export async function getAllAssignments(classid: string, full: boolean): Promise
     const assignmentRepository = getAssignmentRepository();
     const assignments = await assignmentRepository.findAllAssignmentsInClass(cls);
 
-    console.log(assignments);
-
     if (full) {
         return assignments.map(mapToAssignmentDTO);
     }
@@ -63,7 +60,7 @@ export async function createAssignment(classid: string, assignmentData: Assignme
 
     if (assignmentData.groups) {
         /*
-        For some reason when trying to add groups, it does not work when using the original assignment variable. 
+        For some reason when trying to add groups, it does not work when using the original assignment variable.
         The assignment needs to be refetched in order for it to work.
         */
 
@@ -97,11 +94,14 @@ export async function getAssignment(classid: string, id: number): Promise<Assign
     return mapToAssignmentDTO(assignment);
 }
 
+function hasDuplicates(arr: string[]): boolean {
+    return new Set(arr).size !== arr.length;
+}
+
 export async function putAssignment(classid: string, id: number, assignmentData: Partial<AssignmentDTO>): Promise<AssignmentDTO> {
     const assignment = await fetchAssignment(classid, id);
 
     if (assignmentData.groups) {
-        const hasDuplicates = (arr: string[]) => new Set(arr).size !== arr.length;
         if (hasDuplicates(assignmentData.groups.flat() as string[])) {
             throw new BadRequestException('Student can only be in one group');
         }

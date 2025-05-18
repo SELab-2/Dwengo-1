@@ -12,7 +12,7 @@ import type { ClassesResponse } from "@/controllers/classes.ts";
 import type { JoinRequestResponse, JoinRequestsResponse, StudentsResponse } from "@/controllers/students.ts";
 import type { TeacherDTO } from "@dwengo-1/common/interfaces/teacher";
 import { studentJoinRequestQueryKey, studentJoinRequestsQueryKey } from "@/queries/students.ts";
-import type { AssignmentResponse, AssignmentsResponse } from "@/controllers/assignments";
+import type { AssignmentsResponse } from "@/controllers/assignments";
 
 const teacherController = new TeacherController();
 
