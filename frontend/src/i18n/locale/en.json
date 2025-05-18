@@ -168,7 +168,7 @@
     "hintRemoveIfUnconditionalTransition": "(remove this if this should be an unconditional transition)",
     "hintKeywordsSeparatedBySpaces": "Keywords separated by spaces",
     "title-required": "Title cannot be empty.",
-    "class-required": "You must select at least one class.",
+    "class-required": "You must select a class.",
     "deadline-invalid": "Invalid date or time.",
     "deadline-past": "The deadline must be in the future.",
     "lp-required": "You must select a learning path.",
