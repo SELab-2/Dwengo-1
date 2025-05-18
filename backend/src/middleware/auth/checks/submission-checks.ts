@@ -7,6 +7,9 @@ import { authorize } from './auth-checks.js';
 import { FALLBACK_LANG } from '../../../config.js';
 import { mapToUsername } from '../../../interfaces/user.js';
 import { AccountType } from '@dwengo-1/common/util/account-types';
+import { fetchClass } from '../../../services/classes.js';
+import { fetchGroup } from '../../../services/groups.js';
+import { requireFields } from '../../../controllers/error-helper.js';
 
 export const onlyAllowSubmitter = authorize(
     (auth: AuthenticationInfo, req: AuthenticatedRequest) => (req.body as { submitter: string }).submitter === auth.username
@@ -25,4 +28,18 @@ export const onlyAllowIfHasAccessToSubmission = authorize(async (auth: Authentic
     }
 
     return submission.onBehalfOf.members.map(mapToUsername).includes(auth.username);
+});
+
+export const onlyAllowIfHasAccessToSubmissionFromParams = authorize(async (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
+    const { classId, assignmentId, groupId } = req.query;
+
+    requireFields({ classId, assignmentId, groupId });
+
+    if (auth.accountType === AccountType.Teacher) {
+        const cls = await fetchClass(classId as string);
+        return cls.teachers.map(mapToUsername).includes(auth.username);
+    }
+
+    const group = await fetchGroup(classId as string, Number(assignmentId as string), Number(groupId as string));
+    return group.members.map(mapToUsername).includes(auth.username);
 });
