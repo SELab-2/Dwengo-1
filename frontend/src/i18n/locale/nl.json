@@ -166,7 +166,7 @@
     "pathContainsNonExistingLearningObjects": "Ten minste één van de leerobjecten in dit pad bestaat niet.",
     "targetAgesMandatory": "Doelleeftijden moeten worden opgegeven.",
     "hintRemoveIfUnconditionalTransition": "(verwijder dit voor onvoorwaardelijke overgangen)",
-    "hintKeywordsSeparatedBySpaces": "Trefwoorden gescheiden door spaties"
+    "hintKeywordsSeparatedBySpaces": "Trefwoorden gescheiden door spaties",
     "questions": "vragen",
     "view-questions": "Bekijk vragen in ",
     "question-input-placeholder": "vraag...",

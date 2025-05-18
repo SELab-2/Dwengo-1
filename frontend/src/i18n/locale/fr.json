@@ -167,7 +167,7 @@
     "pathContainsNonExistingLearningObjects": "Au moins un des objets d’apprentissage référencés dans ce chemin n’existe pas.",
     "targetAgesMandatory": "Les âges cibles doivent être spécifiés.",
     "hintRemoveIfUnconditionalTransition": "(supprimer ceci s’il s’agit d’une transition inconditionnelle)",
-    "hintKeywordsSeparatedBySpaces": "Mots-clés séparés par des espaces"
+    "hintKeywordsSeparatedBySpaces": "Mots-clés séparés par des espaces",
     "questions": "Questions",
     "view-questions": "Voir les questions dans ",
     "question-input-placeholder": "question...",

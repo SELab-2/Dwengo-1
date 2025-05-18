@@ -166,7 +166,7 @@
     "pathContainsNonExistingLearningObjects": "At least one of the learning objects referenced in this path does not exist.",
     "targetAgesMandatory": "Target ages must be specified.",
     "hintRemoveIfUnconditionalTransition": "(remove this if this should be an unconditional transition)",
-    "hintKeywordsSeparatedBySpaces": "Keywords separated by spaces"
+    "hintKeywordsSeparatedBySpaces": "Keywords separated by spaces",
     "questions": "questions",
     "view-questions": "View questions in ",
     "question-input-placeholder": "question...",

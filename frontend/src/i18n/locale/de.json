@@ -166,7 +166,7 @@
     "pathContainsNonExistingLearningObjects": "Mindestens eines der in diesem Pfad referenzierten Lernobjekte existiert nicht.",
     "targetAgesMandatory": "Zielalter müssen angegeben werden.",
     "hintRemoveIfUnconditionalTransition": "(entfernen, wenn dies ein bedingungsloser Übergang sein soll)",
-    "hintKeywordsSeparatedBySpaces": "Schlüsselwörter durch Leerzeichen getrennt"
+    "hintKeywordsSeparatedBySpaces": "Schlüsselwörter durch Leerzeichen getrennt",
     "questions": "Fragen",
     "view-questions": "Fragen anzeigen auf ",
     "question-input-placeholder": "Frage...",

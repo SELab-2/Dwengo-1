@@ -12,7 +12,7 @@
     import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
     import { useLearningObjectListForPathQuery } from "@/queries/learning-objects.ts";
     import { useI18n } from "vue-i18n";
-    import { AccountType } from "@dwengo-1/common/src/util/account-types.ts";
+    import { AccountType } from "@dwengo-1/common/util/account-types.ts";
 
     const props = defineProps<{
         hruid: string;
