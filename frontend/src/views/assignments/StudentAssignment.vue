@@ -41,7 +41,7 @@
 
     const groupsQueryResult = useStudentGroupsQuery(username, true);
     const group = computed(() => {
-        const groups = groupsQueryResult.data.value?.groups;
+        const groups = groupsQueryResult.data.value?.groups as GroupDTO[];
 
         if (!groups) return undefined;
 
@@ -115,7 +115,7 @@
                             v-if="lpData"
                             :to="
                                 group
-                                    ? `/learningPath/${lpData.hruid}/${assignment.language}/${lpData.startNode.learningobjectHruid}?forGroup=${group.groupNo}&assignmentNo=${assignment.id}&classId=${assignment.within}`
+                                    ? `/learningPath/${lpData.hruid}/${assignment.language}/${lpData.startNode.learningobjectHruid}?forGroup=${group.groupNumber}&assignmentNo=${assignment.id}&classId=${assignment.within}`
                                     : undefined
                             "
                             :disabled="!group"
