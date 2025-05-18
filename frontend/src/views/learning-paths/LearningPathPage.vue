@@ -215,7 +215,7 @@
                         </p>
                     </template>
                 </v-list-item>
-                <v-list-itemF
+                <v-list-item
                     v-if="
                         query.classId && query.assignmentNo && authService.authState.activeRole === AccountType.Teacher
                     "
@@ -227,7 +227,7 @@
                             v-model="forGroupQueryParam"
                         />
                     </template>
-                </v-list-itemF>
+                </v-list-item>
                 <v-divider></v-divider>
                 <div>
                     <using-query-result
