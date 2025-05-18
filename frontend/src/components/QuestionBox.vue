@@ -59,10 +59,10 @@
 
     const questionInput = ref("");
 
-    const loID: LearningObjectIdentifierDTO = {
+    const loID: ComputedRef<LearningObjectIdentifierDTO> = computed(() => ({
         hruid: props.learningObjectHruid as string,
         language: props.language,
-    };
+    }));
     const createQuestionMutation = useCreateQuestionMutation(loID);
     const groupsQueryResult = useStudentGroupsQuery(authService.authState.user?.profile.preferred_username);
 
