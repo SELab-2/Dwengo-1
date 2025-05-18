@@ -34,7 +34,7 @@ export const onlyAllowIfHasAccessToSubmissionFromParams = authorize(async (auth:
     const { classId, assignmentId, groupId } = req.query;
 
     requireFields({ classId, assignmentId, groupId });
-    
+
     if (auth.accountType === AccountType.Teacher) {
         const cls = await fetchClass(classId as string);
         return cls.teachers.map(mapToUsername).includes(auth.username);
