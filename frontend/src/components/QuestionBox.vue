@@ -66,7 +66,9 @@
     const createQuestionMutation = useCreateQuestionMutation(loID);
     const groupsQueryResult = useStudentGroupsQuery(authService.authState.user?.profile.preferred_username);
 
-    const showQuestionBox = computed(() => authService.authState.activeRole === AccountType.Student && pathIsAssignment.value);
+    const showQuestionBox = computed(
+        () => authService.authState.activeRole === AccountType.Student && pathIsAssignment.value,
+    );
 
     function submitQuestion(): void {
         const assignments = studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[];
@@ -96,8 +98,11 @@
 </script>
 
 <template>
-    <h3 v-if="props.withTitle && showQuestionBox">{{ t('askAQuestion') }}:</h3>
-    <div class="question-box" v-if="showQuestionBox">
+    <h3 v-if="props.withTitle && showQuestionBox">{{ t("askAQuestion") }}:</h3>
+    <div
+        class="question-box"
+        v-if="showQuestionBox"
+    >
         <v-textarea
             :label="t('question-input-placeholder')"
             v-model="questionInput"
@@ -105,7 +110,8 @@
             density="compact"
             rows="1"
             variant="outlined"
-            auto-grow>
+            auto-grow
+        >
             <template v-slot:append-inner>
                 <v-btn
                     icon="mdi mdi-send"
@@ -113,7 +119,7 @@
                     variant="plain"
                     class="question-button"
                     @click="submitQuestion"
-                    />
+                />
             </template>
         </v-textarea>
     </div>
