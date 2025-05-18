@@ -308,12 +308,6 @@
                 v-if="currentNode"
             ></learning-object-view>
         </div>
-        <QuestionBox
-            :hruid="props.hruid"
-            :language="props.language"
-            :learningObjectHruid="props.learningObjectHruid"
-            :forGroup="forGroup"
-        />
         <div class="navigation-buttons-container">
             <v-btn
                 prepend-icon="mdi-chevron-left"
@@ -333,6 +327,7 @@
             </v-btn>
         </div>
         <using-query-result
+            v-if="forGroup"
             :query-result="getQuestionsQuery"
             v-slot="questionsResponse: { data: QuestionsResponse }"
         >
@@ -346,7 +341,12 @@
                     </router-link>
                 </span>
             </div>
-
+            <QuestionBox
+                :hruid="props.hruid"
+                :language="props.language"
+                :learningObjectHruid="props.learningObjectHruid"
+                :forGroup="forGroup"
+            />
             <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
         </using-query-result>
     </using-query-result>

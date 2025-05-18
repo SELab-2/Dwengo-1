@@ -169,10 +169,12 @@
     "hintKeywordsSeparatedBySpaces": "Keywords separated by spaces",
     "questions": "questions",
     "view-questions": "View questions in ",
-    "question-input-placeholder": "question...",
-    "answer-input-placeholder": "answer...",
+    "question-input-placeholder": "Your question...",
+    "answer-input-placeholder": "Your answer...",
     "answers-toggle-hide": "Hide answers",
     "answers-toggle-show": "Show answers",
     "no-questions": "No questions asked yet",
-    "no-discussion-tip": "Choose a learning object to view its questions"
+    "no-discussion-tip": "Choose a learning object to view its questions",
+    "askAQuestion": "Ask a question",
+    "questionsCapitalized": "Questions"
 }

@@ -169,10 +169,12 @@
     "hintKeywordsSeparatedBySpaces": "Trefwoorden gescheiden door spaties",
     "questions": "vragen",
     "view-questions": "Bekijk vragen in ",
-    "question-input-placeholder": "vraag...",
-    "answer-input-placeholder": "antwoord...",
+    "question-input-placeholder": "Uw vraag...",
+    "answer-input-placeholder": "Uw antwoord...",
     "answers-toggle-hide": "Verberg antwoorden",
     "answers-toggle-show": "Toon antwoorden",
     "no-questions": "Nog geen vragen gesteld",
-    "no-discussion-tip": "Kies een leerobject om zijn vragen te bekijken"
+    "no-discussion-tip": "Kies een leerobject om zijn vragen te bekijken",
+    "askAQuestion": "Stel een vraag",
+    "questionsCapitalized": "Vragen"
 }

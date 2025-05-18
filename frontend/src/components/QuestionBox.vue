@@ -19,6 +19,7 @@
         language: Language;
         learningObjectHruid?: string;
         forGroup?: GroupDTOId | undefined;
+        withTitle?: boolean;
     }>();
 
     const { t } = useI18n();
@@ -65,6 +66,8 @@
     const createQuestionMutation = useCreateQuestionMutation(loID);
     const groupsQueryResult = useStudentGroupsQuery(authService.authState.user?.profile.preferred_username);
 
+    const showQuestionBox = computed(() => authService.authState.activeRole === AccountType.Student && pathIsAssignment.value);
+
     function submitQuestion(): void {
         const assignments = studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[];
         const assignment = assignments.find(
@@ -93,24 +96,26 @@
 </script>
 
 <template>
-    <div
-        v-if="authService.authState.activeRole === AccountType.Student && pathIsAssignment"
-        class="question-box"
-    >
-        <div class="input-wrapper">
-            <input
-                type="text"
-                :placeholder="`${t(`question-input-placeholder`)}`"
-                class="question-input"
-                v-model="questionInput"
-            />
-            <button
-                @click="submitQuestion"
-                class="send-button"
-            >
-                ▶
-            </button>
-        </div>
+    <h3 v-if="props.withTitle && showQuestionBox">{{ t('askAQuestion') }}:</h3>
+    <div class="question-box" v-if="showQuestionBox">
+        <v-textarea
+            :label="t('question-input-placeholder')"
+            v-model="questionInput"
+            class="question-field"
+            density="compact"
+            rows="1"
+            variant="outlined"
+            auto-grow>
+            <template v-slot:append-inner>
+                <v-btn
+                    icon="mdi mdi-send"
+                    size="small"
+                    variant="plain"
+                    class="question-button"
+                    @click="submitQuestion"
+                    />
+            </template>
+        </v-textarea>
     </div>
 </template>
 
@@ -119,40 +124,5 @@
         width: 100%;
         max-width: 400px;
         margin: 20px auto;
-        font-family: sans-serif;
-    }
-
-    .input-wrapper {
-        display: flex;
-        align-items: center;
-        border: 1px solid #ccc;
-        border-radius: 999px;
-        padding: 8px 12px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .question-input {
-        flex: 1;
-        border: none;
-        outline: none;
-        font-size: 14px;
-        background-color: transparent;
-    }
-
-    .question-input::placeholder {
-        color: #999;
-    }
-
-    .send-button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        color: #555;
-        transition: color 0.2s ease;
-    }
-
-    .send-button:hover {
-        color: #000;
     }
 </style>

@@ -169,10 +169,12 @@
     "hintKeywordsSeparatedBySpaces": "Schlüsselwörter durch Leerzeichen getrennt",
     "questions": "Fragen",
     "view-questions": "Fragen anzeigen auf ",
-    "question-input-placeholder": "Frage...",
-    "answer-input-placeholder": "Antwort...",
+    "question-input-placeholder": "Ihre Frage...",
+    "answer-input-placeholder": "Ihre Antwort...",
     "answers-toggle-hide": "Antworten verstecken",
     "answers-toggle-show": "Antworten anzeigen",
     "no-questions": "Keine Fragen",
-    "no-discussion-tip": "Wählen Sie ein Lernobjekt aus, um dessen Fragen anzuzeigen"
+    "no-discussion-tip": "Wählen Sie ein Lernobjekt aus, um dessen Fragen anzuzeigen",
+    "askAQuestion": "Eine Frage stellen",
+    "questionsCapitalized": "Fragen"
 }

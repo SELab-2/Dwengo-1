@@ -15,6 +15,9 @@
     import type { QuestionDTO } from "@dwengo-1/common/interfaces/question";
     import DiscussionsSideBar from "@/components/DiscussionsSideBar.vue";
     import QuestionBox from "@/components/QuestionBox.vue";
+    import { useI18n } from "vue-i18n";
+
+    const { t } = useI18n();
 
     const route = useRoute();
 
@@ -120,21 +123,29 @@
 
 <template>
     <DiscussionsSideBar></DiscussionsSideBar>
-    <QuestionBox
-        :hruid="props.hruid"
-        :language="props.language"
-        :learningObjectHruid="props.learningObjectHruid"
-        :forGroup="forGroup"
-    />
-    <using-query-result
-        :query-result="getQuestionsQuery"
-        v-slot="questionsResponse: { data: QuestionsResponse }"
-    >
-        <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
-    </using-query-result>
+    <div class="discussions-container">
+        <QuestionBox
+            :hruid="props.hruid"
+            :language="props.language"
+            :learningObjectHruid="props.learningObjectHruid"
+            :forGroup="forGroup"
+            withTitle
+        />
+        <h3>{{ t("questionsCapitalized") }}:</h3>
+        <using-query-result
+            :query-result="getQuestionsQuery"
+            v-slot="questionsResponse: { data: QuestionsResponse }"
+        >
+            <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
+        </using-query-result>
+    </div>
 </template>
 
 <style scoped>
+    .discussions-container {
+        margin: 20px;
+    }
+
     .learning-path-title {
         white-space: normal;
     }

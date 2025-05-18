@@ -15,7 +15,6 @@
             <div
                 v-for="question in questions"
                 :key="(question.sequenceNumber, question.content)"
-                class="border rounded-2xl p-4 shadow-sm bg-white"
             >
                 <SingleQuestion :question="question"></SingleQuestion>
             </div>
