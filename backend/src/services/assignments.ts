@@ -1,4 +1,4 @@
-import {AssignmentDTO, AssignmentDTOId} from '@dwengo-1/common/interfaces/assignment';
+import { AssignmentDTO, AssignmentDTOId } from '@dwengo-1/common/interfaces/assignment';
 import {
     getAssignmentRepository,
     getClassRepository,
@@ -6,19 +6,19 @@ import {
     getQuestionRepository,
     getSubmissionRepository,
 } from '../data/repositories.js';
-import {Assignment} from '../entities/assignments/assignment.entity.js';
-import {NotFoundException} from '../exceptions/not-found-exception.js';
-import {mapToAssignment, mapToAssignmentDTO, mapToAssignmentDTOId} from '../interfaces/assignment.js';
-import {mapToQuestionDTO} from '../interfaces/question.js';
-import {mapToSubmissionDTO, mapToSubmissionDTOId} from '../interfaces/submission.js';
-import {fetchClass} from './classes.js';
-import {QuestionDTO, QuestionId} from '@dwengo-1/common/interfaces/question';
-import {SubmissionDTO, SubmissionDTOId} from '@dwengo-1/common/interfaces/submission';
-import {EntityDTO} from '@mikro-orm/core';
-import {putObject} from './service-helper.js';
-import {fetchStudents} from './students.js';
-import {ServerErrorException} from '../exceptions/server-error-exception.js';
-import {BadRequestException} from '../exceptions/bad-request-exception.js';
+import { Assignment } from '../entities/assignments/assignment.entity.js';
+import { NotFoundException } from '../exceptions/not-found-exception.js';
+import { mapToAssignment, mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment.js';
+import { mapToQuestionDTO } from '../interfaces/question.js';
+import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
+import { fetchClass } from './classes.js';
+import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
+import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
+import { EntityDTO } from '@mikro-orm/core';
+import { putObject } from './service-helper.js';
+import { fetchStudents } from './students.js';
+import { ServerErrorException } from '../exceptions/server-error-exception.js';
+import { BadRequestException } from '../exceptions/bad-request-exception.js';
 
 export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
     const classRepository = getClassRepository();
