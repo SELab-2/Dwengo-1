@@ -83,16 +83,18 @@
 </script>
 <template>
     <div class="space-y-4">
-        <v-card
-            class="question-card"
-        >
+        <v-card class="question-card">
             <v-card-title class="author-title">{{ displayNameFor(question.author) }}</v-card-title>
             <v-card-subtitle>{{ formatDate(question.timestamp) }}</v-card-subtitle>
             <v-card-text>
                 {{ question.content }}
             </v-card-text>
-            <template v-slot:actions
-                v-if="authService.authState.activeRole === AccountType.Teacher || answersQuery.data?.value?.answers?.length > 0"
+            <template
+                v-slot:actions
+                v-if="
+                    authService.authState.activeRole === AccountType.Teacher ||
+                    answersQuery.data?.value?.answers?.length > 0
+                "
             >
                 <div class="question-actions-container">
                     <v-textarea
@@ -103,7 +105,8 @@
                         density="compact"
                         rows="1"
                         variant="outlined"
-                        auto-grow>
+                        auto-grow
+                    >
                         <template v-slot:append-inner>
                             <v-btn
                                 icon="mdi mdi-send"
@@ -111,7 +114,7 @@
                                 variant="plain"
                                 class="answer-button"
                                 @click="submitAnswer"
-                                />
+                            />
                         </template>
                     </v-textarea>
                     <using-query-result
@@ -149,7 +152,6 @@
     </div>
 </template>
 <style scoped>
-
     .answer-field {
         max-width: 500px;
     }
