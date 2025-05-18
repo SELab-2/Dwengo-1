@@ -199,6 +199,10 @@
                 <v-row v-if="allAssignments.length === 0">
                     <v-col cols="12">
                         <div class="no-assignments">
+                            <v-icon
+                                icon="mdi-information-outline"
+                                size="small"
+                            />
                             {{ t("no-assignments") }}
                         </div>
                     </v-col>

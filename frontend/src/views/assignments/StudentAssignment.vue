@@ -152,10 +152,10 @@
                     </v-card-text>
                 </v-card-text>
 
-                <v-card-text class="group-section">
-                    <h3>{{ t("group") }}</h3>
+                <v-card-text class="group-section" v-if="group && studentQueries">
+                    <h3>{{ `${t("group")} ${group.groupNo}` }}</h3>
 
-                    <div v-if="group && studentQueries">
+                    <div>
                         <ul>
                             <li
                                 v-for="student in group.members"
@@ -165,8 +165,10 @@
                             </li>
                         </ul>
                     </div>
-
-                    <div v-else>
+                </v-card-text>
+                <v-card-text class="group-section" v-else>
+                    <h3>{{ t("group") }}</h3>
+                    <div>
                         <v-alert class="empty-message">
                             <v-icon
                                 icon="mdi-information-outline"
