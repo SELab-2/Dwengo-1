@@ -1,7 +1,7 @@
 import express from 'express';
 import { createSubmissionHandler, deleteSubmissionHandler, getSubmissionHandler, getSubmissionsHandler } from '../controllers/submissions.js';
 import { onlyAllowIfHasAccessToSubmission, onlyAllowIfHasAccessToSubmissionFromParams, onlyAllowSubmitter } from '../middleware/auth/checks/submission-checks.js';
-import { adminOnly, studentsOnly } from '../middleware/auth/checks/auth-checks.js';
+import { studentsOnly } from '../middleware/auth/checks/auth-checks.js';
 const router = express.Router({ mergeParams: true });
 
 router.get('/', onlyAllowIfHasAccessToSubmissionFromParams, getSubmissionsHandler);

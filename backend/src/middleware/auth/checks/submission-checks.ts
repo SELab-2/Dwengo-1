@@ -40,6 +40,6 @@ export const onlyAllowIfHasAccessToSubmissionFromParams = authorize(async (auth:
         return cls.teachers.map(mapToUsername).includes(auth.username);
     }
 
-    const group = await fetchGroup(classId as string, +(assignmentId as string), +(groupId as string));
+    const group = await fetchGroup(classId as string, Number(assignmentId as string), Number(groupId as string));
     return group.members.map(mapToUsername).includes(auth.username);
 });
