@@ -90,11 +90,6 @@
     }
 
     function saveRandomGroups(): void {
-        if (randomGroupsPreview.value.length === 0) {
-            alert(t("please-generate-groups-first"));
-            return;
-        }
-
         emit(
             "groupsUpdated",
             randomGroupsPreview.value.map((g) => g.map((s) => s.username)),
@@ -104,11 +99,11 @@
         emit("close");
     }
 
-    function addNewGroup() {
+    function addNewGroup(): void {
         currentGroups.value.push([]);
     }
 
-    function removeGroup(index: number) {
+    function removeGroup(index: number): void {
         // Move students back to unassigned
         unassignedStudents.value.push(...currentGroups.value[index]);
         currentGroups.value.splice(index, 1);
@@ -317,11 +312,6 @@
     }
 
     function saveDragDrop(): void {
-        if (unassignedStudents.value.length > 0) {
-            alert(t("please-assign-all-students"));
-            return;
-        }
-
         emit(
             "groupsUpdated",
             currentGroups.value.map((g) => g.map((s) => s.username)),
@@ -331,9 +321,7 @@
         emit("close");
     }
 
-    const showGroupsPreview = computed(() => {
-        return currentGroups.value.length > 0 || unassignedStudents.value.length > 0;
-    });
+    const showGroupsPreview = computed(() => currentGroups.value.length > 0 || unassignedStudents.value.length > 0);
 
     function removeStudent(groupIndex: number, student: StudentItem): void {
         const group = currentGroups.value[groupIndex];
