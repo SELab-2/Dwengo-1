@@ -149,7 +149,8 @@
             </template>
 
             <template v-slot:default="{ isActive }">
-                <v-card :title="t('logoutVerification')">
+                <v-card>
+                    <v-card-title class="logout-verification-title">{{ t("logoutVerification") }}</v-card-title>
                     <v-card-actions>
                         <v-spacer></v-spacer>
 
@@ -296,6 +297,13 @@
         z-index: 1;
         position: relative;
         margin-left: 10px;
+    }
+
+    .logout-verification-title {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        text-overflow: unset;
     }
 
     @media (max-width: 700px) {
