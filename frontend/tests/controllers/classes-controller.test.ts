@@ -22,7 +22,6 @@ describe("ClassController Tests", () => {
         expect(result.class).toHaveProperty("id", testClassId);
     });
 
-
     it("should fetch students for a class", async () => {
         const result = await controller.getStudents(testClassId, true);
         expect(result).toHaveProperty("students");

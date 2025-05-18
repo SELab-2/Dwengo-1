@@ -1,6 +1,6 @@
-import {LearningPathNode} from "@dwengo-1/backend/dist/entities/content/learning-path-node.entity";
-import {calculateProgress} from "../../src/utils/assignment-utils";
-import {LearningPath} from "../../src/data-objects/learning-paths/learning-path";
+import { LearningPathNode } from "@dwengo-1/backend/dist/entities/content/learning-path-node.entity";
+import { calculateProgress } from "../../src/utils/assignment-utils";
+import { LearningPath } from "../../src/data-objects/learning-paths/learning-path";
 import { describe, it, expect } from "vitest";
 
 describe("calculateProgress", () => {
@@ -67,7 +67,6 @@ describe("calculateProgress", () => {
 
         expect(calculateProgress(lp)).toBeCloseTo(66.666, 2);
     });
-
 
     it("should handle edge case where amountOfNodesLeft is negative", () => {
         const lp = new LearningPath({
