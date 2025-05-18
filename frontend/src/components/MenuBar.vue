@@ -150,7 +150,7 @@
 
             <template v-slot:default="{ isActive }">
                 <v-card>
-                    <v-card-title class="logout-verification-title">{{ t('logoutVerification')  }}</v-card-title>
+                    <v-card-title class="logout-verification-title">{{ t("logoutVerification") }}</v-card-title>
                     <v-card-actions>
                         <v-spacer></v-spacer>
 
