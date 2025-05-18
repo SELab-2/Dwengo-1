@@ -8,7 +8,6 @@ import {
     getStudentsByTeacher,
     getTeacher,
     getTeacherAssignments,
-    getTeacherQuestions,
     updateClassJoinRequestStatus,
 } from '../services/teachers.js';
 import { requireFields } from './error-helper.js';

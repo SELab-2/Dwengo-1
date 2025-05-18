@@ -11,8 +11,6 @@ import {
 import { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
 import { requireFields } from './error-helper.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
-import { Assignment } from '../entities/assignments/assignment.entity.js';
-import { EntityDTO } from '@mikro-orm/core';
 import { FALLBACK_LANG } from '../config.js';
 
 function getAssignmentParams(req: Request): { classid: string; assignmentNumber: number; full: boolean } {
@@ -68,7 +66,7 @@ export async function getAssignmentHandler(req: Request, res: Response): Promise
 export async function putAssignmentHandler(req: Request, res: Response): Promise<void> {
     const { classid, assignmentNumber } = getAssignmentParams(req);
 
-    const assignmentData = req.body as Partial<EntityDTO<Assignment>>;
+    const assignmentData = req.body as Partial<AssignmentDTO>;
     const assignment = await putAssignment(classid, assignmentNumber, assignmentData);
 
     res.json({ assignment });
