@@ -150,12 +150,6 @@
     const studentAssignmentsQueryResult = useStudentAssignmentsQuery(
         authService.authState.user?.profile.preferred_username,
     );
-    const pathIsAssignment = computed(() => {
-        const assignments = (studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[]) || [];
-        return assignments.some(
-            (assignment) => assignment.learningPath === props.hruid && assignment.language === props.language,
-        );
-    });
 
     const discussionLink = computed(
         () =>
@@ -354,9 +348,6 @@
         color: #0e6942;
         text-transform: uppercase;
         font-weight: bolder;
-        font-size: 32px;
-    }
-    .discussion-link-text {
         font-size: 24px;
     }
     .question-header {
