@@ -175,7 +175,7 @@
     "lp-invalid": "The selected learning path doesn't exist.",
     "currently-no-groups": "There are no groups for this assignment.",
     "random-grouping": "Randomly create groups",
-    "drag-and-drop": "Manualy create groups",
+    "drag-and-drop": "Manually create groups",
     "generate-groups": "generate",
     "auto-generate-groups": "Create groups of equal size",
     "preview": "Preview",
