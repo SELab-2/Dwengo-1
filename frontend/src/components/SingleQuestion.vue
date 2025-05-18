@@ -7,7 +7,7 @@
     import type { AnswerData, AnswerDTO } from "@dwengo-1/common/interfaces/answer";
     import authService from "@/services/auth/auth-service";
     import { useI18n } from "vue-i18n";
-    import { AccountType } from "@dwengo-1/common/util/account-types"
+    import { AccountType } from "@dwengo-1/common/util/account-types";
 
     const { t } = useI18n();
 
