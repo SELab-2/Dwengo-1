@@ -323,7 +323,6 @@
         emit("close");
     }
 
-
     const showGroupsPreview = computed(() => currentGroups.value.length > 0 || unassignedStudents.value.length > 0);
 
     function removeStudent(groupIndex: number, student: StudentItem): void {
