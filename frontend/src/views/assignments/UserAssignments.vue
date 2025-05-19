@@ -83,16 +83,35 @@
         await router.push(`/assignment/${clsId}/${id}`);
     }
 
-    const { mutate, data, isSuccess } = useDeleteAssignmentMutation();
-
-    watch([isSuccess, data], async ([success, oldData]) => {
-        if (success && oldData?.assignment) {
-            window.location.reload();
-        }
+    const snackbar = ref({
+        visible: false,
+        message: "",
+        color: "success",
     });
 
+    function showSnackbar(message: string, color: string): void {
+        snackbar.value.message = message;
+        snackbar.value.color = color;
+        snackbar.value.visible = true;
+    }
+
+    const deleteAssignmentMutation = useDeleteAssignmentMutation();
+
     async function goToDeleteAssignment(num: number, clsId: string): Promise<void> {
-        mutate({ cid: clsId, an: num });
+        deleteAssignmentMutation.mutate(
+            { cid: clsId, an: num },
+            {
+                onSuccess: (data) => {
+                    if (data?.assignment){
+                        window.location.reload();
+                    }
+                    showSnackbar(t("success") ,"success");
+                },
+                onError: (e) => {
+                    showSnackbar(t("failed") + ": " + e.response.data.error || e.message, "error");
+                },
+            }
+        );
     }
 
     function formatDate(date?: string | Date): string {
@@ -208,6 +227,13 @@
                     </v-col>
                 </v-row>
             </v-container>
+            <v-snackbar
+                v-model="snackbar.visible"
+                :color="snackbar.color"
+                timeout="3000"
+            >
+                {{ snackbar.message }}
+            </v-snackbar>
         </using-query-result>
     </div>
 </template>
