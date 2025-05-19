@@ -19,8 +19,6 @@ import { putObject } from './service-helper.js';
 import { fetchStudents } from './students.js';
 import { ServerErrorException } from '../exceptions/server-error-exception.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
-import { getQuestionsAboutLearningObjectInAssignment } from './questions';
-import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier';
 import { ConflictException } from '../exceptions/conflict-exception';
 
 export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
@@ -139,8 +137,10 @@ export async function deleteAssignment(classid: string, id: number): Promise<Ass
 
     try {
         await assignmentRepository.deleteByClassAndId(cls, id);
-    } catch (e: ForeignKeyConstraintViolationException) {
-        throw new ConflictException('Cannot delete assigment with questions or submissions');
+    } catch (e: unkown) {
+        if (e instanceof ForeignKeyConstraintViolationException)
+            {throw new ConflictException("Cannot delete assigment with questions or submissions");}
+        else {throw e;}
     }
 
     return mapToAssignmentDTO(assignment);
