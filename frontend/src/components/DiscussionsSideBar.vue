@@ -4,13 +4,18 @@
     import DiscussionSideBarElement from "@/components/DiscussionSideBarElement.vue";
     import { useI18n } from "vue-i18n";
     import { useGetAllLearningPaths } from "@/queries/learning-paths.ts";
-    import { ref } from "vue";
+    import { ref, watch } from 'vue';
 
     const { t, locale } = useI18n();
 
     const navigationDrawerShown = ref(true);
+    const currentLocale = ref(locale.value);
 
-    const allLearningPathsResult = useGetAllLearningPaths(locale.value);
+    watch(locale, (newLocale) => {
+        currentLocale.value = newLocale;
+    })
+
+    const allLearningPathsResult = useGetAllLearningPaths(() => currentLocale.value);
 </script>
 
 <template>
