@@ -31,7 +31,7 @@
                 </template>
             </v-list-item>
             <v-divider></v-divider>
-            <div>
+            <v-expansion-panels>
                 <using-query-result
                     :query-result="allLearningPathsResult"
                     v-slot="learningPaths: { data: LearningPath[] }"
@@ -44,7 +44,7 @@
                     >
                     </DiscussionSideBarElement>
                 </using-query-result>
-            </div>
+            </v-expansion-panels>
         </div>
     </v-navigation-drawer>
     <div class="control-bar-above-content">

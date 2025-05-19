@@ -29,24 +29,14 @@
             }
         }
     });
-
-    function toggleDropdown(): void {
-        dropdownEnabled.value = !dropdownEnabled.value;
-    }
 </script>
 
 <template>
-    <main>
-        <div
-            class="dropdown-toggle"
-            @click="toggleDropdown()"
-        >
-            ▼{{ path.title }}
-        </div>
-        <div
-            class="dropdown"
-            v-if="dropdownEnabled"
-        >
+    <v-expansion-panel>
+        <v-expansion-panel-title>
+            {{ path.title }}
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
             <using-query-result
                 :query-result="learningObjectListQueryResult"
                 v-slot="learningObjects: { data: LearningObject[] }"
@@ -67,36 +57,9 @@
                     </v-list-item>
                 </template>
             </using-query-result>
-        </div>
-    </main>
+        </v-expansion-panel-text>
+    </v-expansion-panel>
 </template>
 
 <style scoped>
-    .dropdown {
-        margin-left: 0.5rem;
-        padding-left: 1rem;
-        border-left: 2px solid #e0e0e0;
-        background-color: #f9f9f9;
-        border-radius: 4px;
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-    }
-    .dropdown-toggle {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        font-weight: 600;
-        user-select: none;
-        padding: 0.5rem;
-        transition: color 0.2s;
-    }
-
-    .dropdown-toggle:hover {
-        color: #27c53f;
-    }
-
-    .dropdown-icon {
-        margin-right: 0.5rem;
-        font-size: 0.9rem;
-    }
 </style>
