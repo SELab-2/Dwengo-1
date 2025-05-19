@@ -105,6 +105,10 @@
         );
     }
 
+    function refetchQuestions() {
+        getQuestionsQuery.refetch();
+    }
+
     const navigationDrawerShown = ref(true);
 
     function isLearningObjectCompleted(learningObject: LearningObject): boolean {
@@ -354,6 +358,7 @@
                 :language="props.language"
                 :learningObjectHruid="props.learningObjectHruid"
                 :forGroup="forGroup"
+                @updated="refetchQuestions"
             />
             <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
         </using-query-result>

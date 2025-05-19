@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import authService from "@/services/auth/auth-service.ts";
     import { Language } from "@/data-objects/language.ts";
-    import { computed, type ComputedRef, ref } from "vue";
+    import { computed, type ComputedRef, onUpdated, ref } from "vue";
     import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
     import { useStudentAssignmentsQuery, useStudentGroupsQuery } from "@/queries/students.ts";
     import type { GroupDTO, GroupDTOId } from "@dwengo-1/common/interfaces/group";
@@ -23,6 +23,8 @@
     }>();
 
     const { t } = useI18n();
+
+    const emit = defineEmits(["updated"]);
 
     const studentAssignmentsQueryResult = useStudentAssignmentsQuery(
         authService.authState.user?.profile.preferred_username,
@@ -87,6 +89,7 @@
                 onSuccess: async () => {
                     questionInput.value = ""; // Clear the input field after submission
                     await getQuestionsQuery.refetch(); // Reload the questions
+                    emit("updated");
                 },
                 onError: (_) => {
                     // TODO Handle error
