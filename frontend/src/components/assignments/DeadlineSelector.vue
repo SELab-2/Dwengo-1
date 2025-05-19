@@ -1,5 +1,8 @@
 <script setup lang="ts">
     import { ref, watch } from "vue";
+    import { useI18n } from 'vue-i18n';
+
+    const { t } = useI18n();
 
     const emit = defineEmits<(e: "update:deadline", value: Date | null) => void>();
     const props = defineProps<{ deadline: Date | null }>();
