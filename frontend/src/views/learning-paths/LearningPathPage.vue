@@ -13,7 +13,7 @@
     import authService from "@/services/auth/auth-service.ts";
     import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
     import LearningPathGroupSelector from "@/views/learning-paths/LearningPathGroupSelector.vue";
-    import {useQuestionsGroupQuery, useQuestionsQuery} from "@/queries/questions";
+    import { useQuestionsGroupQuery, useQuestionsQuery } from "@/queries/questions";
     import type { QuestionsResponse } from "@/controllers/questions";
     import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
     import QandA from "@/components/QandA.vue";
@@ -76,30 +76,32 @@
         return currentIndex < nodesList.value?.length ? nodesList.value?.[currentIndex - 1] : undefined;
     });
 
-
-
     let getQuestionsQuery;
-
-
 
     if (authService.authState.activeRole === AccountType.Student) {
         getQuestionsQuery = useQuestionsGroupQuery(
-            computed(() => ({
-                language: currentNode.value?.language,
-                hruid: currentNode.value?.learningobjectHruid,
-                version: currentNode.value?.version,
-            }) as LearningObjectIdentifierDTO),
+            computed(
+                () =>
+                    ({
+                        language: currentNode.value?.language,
+                        hruid: currentNode.value?.learningobjectHruid,
+                        version: currentNode.value?.version,
+                    }) as LearningObjectIdentifierDTO,
+            ),
             computed(() => query.value.classId ?? ""),
             computed(() => query.value.assignmentNo ?? ""),
-            computed(() => authService.authState.user?.profile.preferred_username ?? "")
+            computed(() => authService.authState.user?.profile.preferred_username ?? ""),
         );
     } else {
         getQuestionsQuery = useQuestionsQuery(
-            computed(() => ({
-                language: currentNode.value?.language,
-                hruid: currentNode.value?.learningobjectHruid,
-                version: currentNode.value?.version,
-            }) as LearningObjectIdentifierDTO)
+            computed(
+                () =>
+                    ({
+                        language: currentNode.value?.language,
+                        hruid: currentNode.value?.learningobjectHruid,
+                        version: currentNode.value?.version,
+                    }) as LearningObjectIdentifierDTO,
+            ),
         );
     }
 

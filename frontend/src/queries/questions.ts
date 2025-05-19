@@ -51,8 +51,22 @@ export function useQuestionsGroupQuery(
     full: MaybeRefOrGetter<boolean> = true,
 ): UseQueryReturnType<QuestionsResponse, Error> {
     return useQuery({
-        queryKey: computed(() => questionsGroupQueryKey(toValue(loId), toValue(full), toValue(classId), toValue(assignmentId), toValue(student))),
-        queryFn: async () => new QuestionController(toValue(loId)).getAllGroup( toValue(classId), toValue(assignmentId), toValue(student),toValue(full)),
+        queryKey: computed(() =>
+            questionsGroupQueryKey(
+                toValue(loId),
+                toValue(full),
+                toValue(classId),
+                toValue(assignmentId),
+                toValue(student),
+            ),
+        ),
+        queryFn: async () =>
+            new QuestionController(toValue(loId)).getAllGroup(
+                toValue(classId),
+                toValue(assignmentId),
+                toValue(student),
+                toValue(full),
+            ),
         enabled: () => Boolean(toValue(loId)),
     });
 }

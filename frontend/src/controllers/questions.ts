@@ -18,7 +18,12 @@ export class QuestionController extends BaseController {
         this.loId = loId;
     }
 
-    async getAllGroup(classId: string, assignmentId: string, forStudent: string, full = true): Promise<QuestionsResponse> {
+    async getAllGroup(
+        classId: string,
+        assignmentId: string,
+        forStudent: string,
+        full = true,
+    ): Promise<QuestionsResponse> {
         return this.get<QuestionsResponse>("/", { lang: this.loId.language, full, classId, assignmentId, forStudent });
     }
 
