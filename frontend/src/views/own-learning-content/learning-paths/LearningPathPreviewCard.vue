@@ -89,6 +89,15 @@
                 props.selectedLearningPath.language !== parsedLearningPath.value.language),
     );
 
+    const selectedLearningPathLink = computed(() => {
+        if (!props.selectedLearningPath) {
+            return undefined;
+        }
+        const { hruid, language } = props.selectedLearningPath;
+        const startNode = props.selectedLearningPath.nodes.find((it) => it.start_node);
+        return `/learningPath/${hruid}/${language}/${startNode.learningobject_hruid}`;
+    });
+
     function getErrorMessage(): string | null {
         if (postError.value) {
             return t(extractErrorMessage(postError.value));
@@ -128,7 +137,7 @@
                         variant="text"
                     />
                     <v-btn
-                        :href="`/learningPath/${props.selectedLearningPath?.hruid}/${props.selectedLearningPath?.language}/start`"
+                        :href="selectedLearningPathLink"
                         target="_blank"
                         prepend-icon="mdi mdi-open-in-new"
                         :disabled="!props.selectedLearningPath"
