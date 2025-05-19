@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import type { LearningObject } from '@/data-objects/learning-objects/learning-object';
-import type { LearningPath } from '@/data-objects/learning-paths/learning-path';
-import { useLearningObjectListForPathQuery } from '@/queries/learning-objects';
-import { useRoute } from 'vue-router';
-import UsingQueryResult from '@/components/UsingQueryResult.vue';
+    import type { LearningObject } from "@/data-objects/learning-objects/learning-object";
+    import type { LearningPath } from "@/data-objects/learning-paths/learning-path";
+    import { useLearningObjectListForPathQuery } from "@/queries/learning-objects";
+    import { useRoute } from "vue-router";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
 
-const route = useRoute();
+    const route = useRoute();
 
-const props = defineProps<{
-    path: LearningPath;
-    activeObjectId: string;
-}>();
-
+    const props = defineProps<{
+        path: LearningPath;
+        activeObjectId: string;
+    }>();
 </script>
 
 <template>
@@ -31,9 +30,9 @@ const props = defineProps<{
                     <v-list-item
                         link
                         :to="{
-                        path: `/discussion-reload/${props.path.hruid}/${node.language}/${node.key}`,
-                        query: route.query,
-                    }"
+                            path: `/discussion-reload/${props.path.hruid}/${node.language}/${node.key}`,
+                            query: route.query,
+                        }"
                         :title="node.title"
                         :active="node.key === props.activeObjectId"
                     >
@@ -44,5 +43,4 @@ const props = defineProps<{
     </v-expansion-panel>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
