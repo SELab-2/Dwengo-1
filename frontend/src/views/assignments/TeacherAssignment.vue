@@ -87,6 +87,18 @@
         dialog.value = true;
     }
 
+    const snackbar = ref({
+        visible: false,
+        message: "",
+        color: "success",
+    });
+
+    function showSnackbar(message: string, color: string): void {
+        snackbar.value.message = message;
+        snackbar.value.color = color;
+        snackbar.value.visible = true;
+    }
+
     const deleteAssignmentMutation = useDeleteAssignmentMutation();
     async function deleteAssignment(num: number, clsId: string): Promise<void> {
         deleteAssignmentMutation.mutate(
@@ -95,6 +107,9 @@
                 onSuccess: () => {
                     window.location.href = "/user/assignment";
                 },
+                onError: (e) => {
+                    showSnackbar(t("failed") + ": " + e.response.data.error || e.message, "error");
+                }
             },
         );
     }
@@ -458,6 +473,13 @@
                     </v-card>
                 </v-dialog>
             </v-container>
+            <v-snackbar
+                v-model="snackbar.visible"
+                :color="snackbar.color"
+                timeout="3000"
+            >
+                {{ snackbar.message }}
+            </v-snackbar>
         </using-query-result>
     </div>
 </template>
