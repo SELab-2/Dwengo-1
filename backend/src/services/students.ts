@@ -51,8 +51,7 @@ export async function fetchStudent(username: string): Promise<Student> {
 }
 
 export async function fetchStudents(usernames: string[]): Promise<Student[]> {
-    const members = await Promise.all(usernames.map(async (username) => await fetchStudent(username)));
-    return members;
+    return await Promise.all(usernames.map(async (username) => await fetchStudent(username)));
 }
 
 export async function getStudent(username: string): Promise<StudentDTO> {
@@ -105,7 +104,7 @@ export async function getStudentAssignments(username: string, full: boolean): Pr
 
     const groupRepository = getGroupRepository();
     const groups = await groupRepository.findAllGroupsWithStudent(student);
-    const assignments = await Promise.all(groups.map(async (group) => await fetchAssignment(group.assignment.within.classId, group.assignment.id)));
+    const assignments = await Promise.all(groups.map(async (group) => await fetchAssignment(group.assignment.within.classId!, group.assignment.id!)));
 
     if (full) {
         return assignments.map(mapToAssignmentDTO);
