@@ -314,7 +314,9 @@
     function saveDragDrop(): void {
         emit(
             "groupsUpdated",
-            currentGroups.value.map((g) => g.map((s) => s.username)),
+            currentGroups.value
+                .filter((g) => g.length > 0) // Filter out empty groups
+                .map((g) => g.map((s) => s.username)),
         );
         activeDialog.value = null;
         emit("done");
@@ -472,7 +474,13 @@
                                 v-if="currentGroups.length === 0"
                                 class="text-center py-4"
                             >
-                                <v-alert type="info">{{ t("no-groups-yet") }}</v-alert>
+                                <div>
+                                    <v-icon
+                                        icon="mdi-information-outline"
+                                        size="small"
+                                    />
+                                    {{ t("currently-no-groups") }}
+                                </div>
                             </div>
 
                             <template v-else>
