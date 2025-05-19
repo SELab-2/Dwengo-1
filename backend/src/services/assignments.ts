@@ -14,14 +14,14 @@ import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submissi
 import { fetchClass } from './classes.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
-import {EntityDTO, ForeignKeyConstraintViolationException} from '@mikro-orm/core';
+import { EntityDTO, ForeignKeyConstraintViolationException } from '@mikro-orm/core';
 import { putObject } from './service-helper.js';
 import { fetchStudents } from './students.js';
 import { ServerErrorException } from '../exceptions/server-error-exception.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
-import {getQuestionsAboutLearningObjectInAssignment} from "./questions";
-import {LearningObjectIdentifier} from "../entities/content/learning-object-identifier";
-import {ConflictException} from "../exceptions/conflict-exception";
+import { getQuestionsAboutLearningObjectInAssignment } from './questions';
+import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier';
+import { ConflictException } from '../exceptions/conflict-exception';
 
 export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
     const classRepository = getClassRepository();
@@ -140,9 +140,8 @@ export async function deleteAssignment(classid: string, id: number): Promise<Ass
     try {
         await assignmentRepository.deleteByClassAndId(cls, id);
     } catch (e: ForeignKeyConstraintViolationException) {
-        throw new ConflictException("Cannot delete assigment with questions or submissions")
+        throw new ConflictException('Cannot delete assigment with questions or submissions');
     }
-
 
     return mapToAssignmentDTO(assignment);
 }

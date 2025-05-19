@@ -26,7 +26,7 @@ import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-requ
 import { ConflictException } from '../exceptions/conflict-exception.js';
 import { Submission } from '../entities/assignments/submission.entity.js';
 import { mapToUsername } from '../interfaces/user.js';
-import {mapToAssignmentDTO, mapToAssignmentDTOId} from "../interfaces/assignment";
+import { mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment';
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();
@@ -105,7 +105,7 @@ export async function getStudentAssignments(username: string, full: boolean): Pr
 
     const groupRepository = getGroupRepository();
     const groups = await groupRepository.findAllGroupsWithStudent(student);
-    const assignments = await Promise.all(groups.map( async group => await fetchAssignment(group.assignment.within.classId, group.assignment.id)));
+    const assignments = await Promise.all(groups.map(async (group) => await fetchAssignment(group.assignment.within.classId, group.assignment.id)));
 
     if (full) {
         return assignments.map(mapToAssignmentDTO);

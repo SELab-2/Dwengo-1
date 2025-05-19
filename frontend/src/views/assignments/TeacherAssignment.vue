@@ -109,7 +109,7 @@
                 },
                 onError: (e) => {
                     showSnackbar(t("failed") + ": " + e.response.data.error || e.message, "error");
-                }
+                },
             },
         );
     }

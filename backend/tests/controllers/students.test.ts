@@ -13,7 +13,8 @@ import {
     createStudentRequestHandler,
     getStudentRequestsHandler,
     deleteClassJoinRequestHandler,
-    getStudentRequestHandler, getStudentAssignmentsHandler,
+    getStudentRequestHandler,
+    getStudentAssignmentsHandler,
 } from '../../src/controllers/students.js';
 import { getDireStraits, getNoordkaap, getTheDoors, TEST_STUDENTS } from '../test_assets/users/students.testdata.js';
 import { NotFoundException } from '../../src/exceptions/not-found-exception.js';
@@ -162,7 +163,6 @@ describe('Student controllers', () => {
         const result = jsonMock.mock.lastCall?.[0];
         expect(result.assignments).to.have.length.greaterThan(0);
     });
-
 
     it('Student submissions', async () => {
         const submission = getSubmission01();
