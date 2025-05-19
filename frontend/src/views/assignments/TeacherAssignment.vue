@@ -377,7 +377,7 @@
                                         <td>
                                             <GroupProgressRow
                                                 :group-number="g.originalGroupNo"
-                                                :learning-path="learningPath"
+                                                :learning-path="learningPath.hruid"
                                                 :language="lang"
                                                 :assignment-id="assignmentId"
                                                 :class-id="classId"
