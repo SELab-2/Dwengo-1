@@ -87,14 +87,13 @@
             >
                 {{ t("classes") }}
             </v-btn>
-            <!-- TODO Re-enable this button when the discussion page is ready -->
-            <!--            <v-btn-->
-            <!--                class="menu_item"-->
-            <!--                variant="text"-->
-            <!--                to="/user/discussion"-->
-            <!--            >-->
-            <!--                {{ t("discussions") }}-->
-            <!--            </v-btn>-->
+            <v-btn
+                class="menu_item"
+                variant="text"
+                to="/discussion"
+            >
+                {{ t("discussions") }}
+            </v-btn>
         </v-toolbar-items>
         <v-menu
             open-on-hover
@@ -231,7 +230,7 @@
             </v-list-item>
 
             <v-list-item
-                to="/user/discussion"
+                to="/discussion"
                 link
             >
                 <v-list-item-title class="menu_item">{{ t("discussions") }}</v-list-item-title>

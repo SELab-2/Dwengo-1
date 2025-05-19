@@ -17,11 +17,11 @@
     import type { QuestionsResponse } from "@/controllers/questions";
     import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
     import QandA from "@/components/QandA.vue";
-    import type { QuestionData, QuestionDTO } from "@dwengo-1/common/interfaces/question";
+    import type { QuestionDTO } from "@dwengo-1/common/interfaces/question";
     import { useStudentAssignmentsQuery, useStudentGroupsQuery } from "@/queries/students";
     import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
-    import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
     import QuestionNotification from "@/components/QuestionNotification.vue";
+    import QuestionBox from "@/components/QuestionBox.vue";
     import { AccountType } from "@dwengo-1/common/util/account-types";
 
     const router = useRouter();
@@ -150,12 +150,6 @@
     const studentAssignmentsQueryResult = useStudentAssignmentsQuery(
         authService.authState.user?.profile.preferred_username,
     );
-    const pathIsAssignment = computed(() => {
-        const assignments = (studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[]) || [];
-        return assignments.some(
-            (assignment) => assignment.learningPath === props.hruid && assignment.language === props.language,
-        );
-    });
 
     const loID: LearningObjectIdentifierDTO = {
         hruid: props.learningObjectHruid as string,
@@ -166,31 +160,16 @@
 
     const questionInput = ref("");
 
-    function submitQuestion(): void {
-        const assignments = studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[];
-        const assignment = assignments.find(
-            (assignment) => assignment.learningPath === props.hruid && assignment.language === props.language,
-        );
-        const groups = groupsQueryResult.data.value?.groups as GroupDTO[];
-        const group = groups?.find((group) => group.assignment === assignment?.id) as GroupDTO;
-        const questionData: QuestionData = {
-            author: authService.authState.user?.profile.preferred_username,
-            content: questionInput.value,
-            inGroup: group, //TODO: POST response zegt dat dit null is???
-        };
-        if (questionInput.value !== "") {
-            createQuestionMutation.mutate(questionData, {
-                onSuccess: async () => {
-                    questionInput.value = ""; // Clear the input field after submission
-                    await getQuestionsQuery.refetch(); // Reload the questions
-                },
-                onError: (_) => {
-                    // TODO Handle error
-                    // - console.error(e);
-                },
-            });
-        }
-    }
+    const discussionLink = computed(
+        () =>
+            "/discussion" +
+            "/" +
+            props.hruid +
+            "/" +
+            currentNode.value?.language +
+            "/" +
+            currentNode.value?.learningobjectHruid,
+    );
 </script>
 
 <template>
@@ -236,7 +215,7 @@
                         </p>
                     </template>
                 </v-list-item>
-                <v-list-itemF
+                <v-list-item
                     v-if="
                         query.classId && query.assignmentNo && authService.authState.activeRole === AccountType.Teacher
                     "
@@ -248,7 +227,7 @@
                             v-model="forGroupQueryParam"
                         />
                     </template>
-                </v-list-itemF>
+                </v-list-item>
                 <v-divider></v-divider>
                 <div>
                     <using-query-result
@@ -329,25 +308,6 @@
                 v-if="currentNode"
             ></learning-object-view>
         </div>
-        <div
-            v-if="authService.authState.activeRole === AccountType.Student && pathIsAssignment"
-            class="question-box"
-        >
-            <div class="input-wrapper">
-                <input
-                    type="text"
-                    placeholder="question : ..."
-                    class="question-input"
-                    v-model="questionInput"
-                />
-                <button
-                    @click="submitQuestion"
-                    class="send-button"
-                >
-                    ▶
-                </button>
-            </div>
-        </div>
         <div class="navigation-buttons-container">
             <v-btn
                 prepend-icon="mdi-chevron-left"
@@ -367,15 +327,43 @@
             </v-btn>
         </div>
         <using-query-result
+            v-if="forGroup"
             :query-result="getQuestionsQuery"
             v-slot="questionsResponse: { data: QuestionsResponse }"
         >
+            <v-divider :thickness="6"></v-divider>
+            <div class="question-header">
+                <span class="question-title">{{ t("questions") }}</span>
+                <span class="discussion-link-text">
+                    {{ t("view-questions") }}
+                    <router-link :to="discussionLink">
+                        {{ t("discussions") }}
+                    </router-link>
+                </span>
+            </div>
+            <QuestionBox
+                :hruid="props.hruid"
+                :language="props.language"
+                :learningObjectHruid="props.learningObjectHruid"
+                :forGroup="forGroup"
+            />
             <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
         </using-query-result>
     </using-query-result>
 </template>
 
 <style scoped>
+    .question-title {
+        color: #0e6942;
+        text-transform: uppercase;
+        font-weight: bolder;
+        font-size: 24px;
+    }
+    .question-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+    }
     .learning-path-title {
         white-space: normal;
     }
@@ -413,45 +401,6 @@
         font-size: 14px;
         text-transform: uppercase;
         z-index: 2; /* Less than modals/popups */
-    }
-    .question-box {
-        width: 100%;
-        max-width: 400px;
-        margin: 20px auto;
-        font-family: sans-serif;
-    }
-    .input-wrapper {
-        display: flex;
-        align-items: center;
-        border: 1px solid #ccc;
-        border-radius: 999px;
-        padding: 8px 12px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .question-input {
-        flex: 1;
-        border: none;
-        outline: none;
-        font-size: 14px;
-        background-color: transparent;
-    }
-
-    .question-input::placeholder {
-        color: #999;
-    }
-
-    .send-button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        color: #555;
-        transition: color 0.2s ease;
-    }
-
-    .send-button:hover {
-        color: #000;
     }
 
     .discussion-link {

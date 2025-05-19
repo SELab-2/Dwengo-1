@@ -5,17 +5,34 @@
     import UsingQueryResult from "./UsingQueryResult.vue";
     import type { AnswersResponse } from "@/controllers/answers";
     import type { AnswerData, AnswerDTO } from "@dwengo-1/common/interfaces/answer";
+    import type { UserDTO } from "@dwengo-1/common/interfaces/user";
     import authService from "@/services/auth/auth-service";
+    import { useI18n } from "vue-i18n";
     import { AccountType } from "@dwengo-1/common/util/account-types";
+
+    const { t } = useI18n();
 
     const props = defineProps<{
         question: QuestionDTO;
     }>();
 
     const expanded = ref(false);
+    const answersContainer = ref<HTMLElement | null>(null); // Ref for the answers container
 
     function toggle(): void {
         expanded.value = !expanded.value;
+
+        // Scroll to the answers container if expanded
+        if (expanded.value && answersContainer.value) {
+            setTimeout(() => {
+                if (answersContainer.value) {
+                    answersContainer.value.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                    });
+                }
+            }, 100);
+        }
     }
 
     function formatDate(timestamp: string | Date): string {
@@ -49,141 +66,121 @@
             createAnswerMutation.mutate(answerData, {
                 onSuccess: async () => {
                     answer.value = "";
+                    expanded.value = true;
                     await answersQuery.refetch();
                 },
             });
         }
     }
+
+    function displayNameFor(user: UserDTO) {
+        if (user.firstName && user.lastName) {
+            return `${user.firstName} ${user.lastName}`;
+        } else {
+            return user.username;
+        }
+    }
 </script>
 <template>
     <div class="space-y-4">
-        <div
-            class="flex justify-between items-center mb-2"
-            style="
-                margin-right: 5px;
-                margin-left: 5px;
-                font-weight: bold;
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-            "
-        >
-            <span class="font-semibold text-lg text-gray-800">{{
-                question.author.firstName + " " + question.author.lastName
-            }}</span>
-            <span class="text-sm text-gray-500">{{ formatDate(question.timestamp) }}</span>
-        </div>
-
-        <div
-            class="text-gray-700 mb-3"
-            style="margin-left: 10px"
-        >
-            {{ question.content }}
-        </div>
-        <div
-            v-if="authService.authState.activeRole === AccountType.Teacher"
-            class="answer-input-container"
-        >
-            <input
-                v-model="answer"
-                type="text"
-                placeholder="answer: ..."
-                class="answer-input"
-            />
-            <button
-                @click="submitAnswer"
-                class="submit-button"
+        <v-card class="question-card">
+            <v-card-title class="author-title">{{ displayNameFor(question.author) }}</v-card-title>
+            <v-card-subtitle>{{ formatDate(question.timestamp) }}</v-card-subtitle>
+            <v-card-text>
+                {{ question.content }}
+            </v-card-text>
+            <template
+                v-slot:actions
+                v-if="
+                    authService.authState.activeRole === AccountType.Teacher ||
+                    answersQuery.data?.value?.answers?.length > 0
+                "
             >
-                ▶
-            </button>
-        </div>
-        <using-query-result
-            :query-result="answersQuery"
-            v-slot="answersResponse: { data: AnswersResponse }"
-        >
-            <button
-                v-if="answersResponse.data.answers && answersResponse.data.answers.length > 0"
-                @click="toggle()"
-                class="text-blue-600 hover:underline text-sm"
-            >
-                {{ expanded ? "Hide Answers" : "Show Answers" }}
-            </button>
-
-            <div
-                v-if="expanded"
-                class="mt-3 pl-4 border-l-2 border-blue-200 space-y-2"
-            >
-                <div
-                    v-for="(answer, answerIndex) in answersResponse.data.answers as AnswerDTO[]"
-                    :key="answerIndex"
-                    class="text-gray-600"
-                >
-                    <div
-                        class="flex justify-between items-center mb-2"
-                        style="
-                            margin-right: 5px;
-                            margin-left: 5px;
-                            font-weight: bold;
-                            display: flex;
-                            flex-direction: row;
-                            justify-content: space-between;
-                        "
+                <div class="question-actions-container">
+                    <v-textarea
+                        v-if="authService.authState.activeRole === AccountType.Teacher"
+                        :label="t('answer-input-placeholder')"
+                        v-model="answer"
+                        class="answer-field"
+                        density="compact"
+                        rows="1"
+                        variant="outlined"
+                        auto-grow
                     >
-                        <span class="font-semibold text-lg text-gray-800">{{ answer.author.username }}</span>
-                        <span class="text-sm text-gray-500">{{ formatDate(answer.timestamp) }}</span>
-                    </div>
-
-                    <div
-                        class="text-gray-700 mb-3"
-                        style="margin-left: 10px"
+                        <template v-slot:append-inner>
+                            <v-btn
+                                icon="mdi mdi-send"
+                                size="small"
+                                variant="plain"
+                                class="answer-button"
+                                @click="submitAnswer"
+                            />
+                        </template>
+                    </v-textarea>
+                    <using-query-result
+                        :query-result="answersQuery"
+                        v-slot="answersResponse: { data: AnswersResponse }"
                     >
-                        {{ answer.content }}
-                    </div>
+                        <v-btn
+                            v-if="answersResponse.data.answers && answersResponse.data.answers.length > 0"
+                            @click="toggle()"
+                        >
+                            {{ expanded ? t("answers-toggle-hide") : t("answers-toggle-show") }}
+                        </v-btn>
+
+                        <div
+                            v-show="expanded"
+                            ref="answersContainer"
+                            class="mt-3 pl-4 border-l-2 border-blue-200 space-y-2"
+                        >
+                            <v-card
+                                v-for="(answer, answerIndex) in answersResponse.data.answers as AnswerDTO[]"
+                                :key="answerIndex"
+                                class="answer-card"
+                            >
+                                <v-card-title class="author-title">{{ displayNameFor(answer.author) }}</v-card-title>
+                                <v-card-subtitle>{{ formatDate(answer.timestamp) }}</v-card-subtitle>
+                                <v-card-text>
+                                    {{ answer.content }}
+                                </v-card-text>
+                            </v-card>
+                        </div>
+                    </using-query-result>
                 </div>
-            </div>
-        </using-query-result>
+            </template>
+        </v-card>
     </div>
 </template>
 <style scoped>
-    .answer-input {
-        flex-grow: 1;
-        outline: none;
-        border: none;
-        background: transparent;
-        color: #374151; /* gray-700 */
-        font-size: 0.875rem; /* smaller font size */
+    .answer-field {
+        max-width: 500px;
     }
 
-    .answer-input::placeholder {
-        color: #9ca3af; /* gray-400 */
+    .answer-button {
+        margin: auto;
     }
 
-    .submit-button {
-        margin-left: 0.25rem;
-        padding: 0.25rem;
-        background-color: #f3f4f6; /* gray-100 */
-        border-radius: 9999px;
-        transition: background-color 0.2s;
-        border: none;
-        cursor: pointer;
-    }
-
-    .submit-button:hover {
-        background-color: #e5e7eb; /* gray-200 */
-    }
-
-    .submit-icon {
-        width: 0.75rem;
-        height: 0.75rem;
-        color: #4b5563; /* gray-600 */
-    }
     .answer-input-container {
-        display: flex;
-        align-items: center;
-        border: 1px solid #d1d5db; /* gray-300 */
-        border-radius: 9999px;
-        padding: 0.5rem 1rem;
-        max-width: 28rem;
+        margin: 5px;
+    }
+
+    .question-card {
+        margin: 10px;
+    }
+
+    .question-actions-container {
         width: 100%;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .answer-card {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .author-title {
+        font-size: 14pt;
+        margin-bottom: -10px;
     }
 </style>

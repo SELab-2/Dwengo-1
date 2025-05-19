@@ -62,6 +62,7 @@ const dwengoApiLearningPathProvider: LearningPathProvider = {
             data: learningPaths,
         };
     },
+
     async searchLearningPaths(query: string, language: string, personalizedFor: Group): Promise<LearningPath[]> {
         const apiUrl = `${DWENGO_API_BASE}/learningPath/search`;
         const params = { all: query, language };
@@ -75,7 +76,8 @@ const dwengoApiLearningPathProvider: LearningPathProvider = {
     },
 
     async getLearningPathsAdministratedBy(_adminUsername: string) {
-        return []; // Learning paths fetched from the Dwengo API cannot be administrated by a user.
+        // Dwengo API does not have the concept of admins, so we cannot filter by them.
+        return [];
     },
 };
 

@@ -14,6 +14,8 @@ import UserHomePage from "@/views/homepage/UserHomePage.vue";
 import SingleTheme from "@/views/SingleTheme.vue";
 import LearningObjectView from "@/views/learning-paths/learning-object/LearningObjectView.vue";
 import authService from "@/services/auth/auth-service";
+import DiscussionForward from "@/views/discussions/DiscussionForward.vue";
+import NoDiscussion from "@/views/discussions/NoDiscussion.vue";
 import OwnLearningContentPage from "@/views/own-learning-content/OwnLearningContentPage.vue";
 import { allowRedirect, Redirect } from "@/utils/redirect.ts";
 
@@ -57,12 +59,6 @@ const router = createRouter({
                     name: "UserClasses",
                     component: UserClasses,
                 },
-                // TODO Re-enable this route when the discussion page is ready
-                // {
-                //     Path: "discussion",
-                //     Name: "UserDiscussions",
-                //     Component: UserDiscussions,
-                // },
             ],
         },
 
@@ -102,9 +98,23 @@ const router = createRouter({
             meta: { requiresAuth: true },
         },
         {
-            path: "/discussion/:id",
+            path: "/discussion",
+            name: "Discussions",
+            component: NoDiscussion,
+            meta: { requiresAuth: true },
+        },
+        {
+            path: "/discussion/:hruid/:language/:learningObjectHruid",
             name: "SingleDiscussion",
             component: SingleDiscussion,
+            props: true,
+            meta: { requiresAuth: true },
+        },
+        {
+            path: "/discussion-reload/:hruid/:language/:learningObjectHruid",
+            name: "DiscussionForwardWorkaround",
+            component: DiscussionForward,
+            props: true,
             meta: { requiresAuth: true },
         },
         {

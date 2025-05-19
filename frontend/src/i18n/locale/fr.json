@@ -182,5 +182,15 @@
     "current-groups": "Groupes actuels",
     "group-size-label": "Taille des groupes",
     "save": "Enregistrer",
-    "unassigned": "Non assigné"
+    "unassigned": "Non assigné",
+    "questions": "Questions",
+    "view-questions": "Voir les questions dans ",
+    "question-input-placeholder": "Votre question...",
+    "answer-input-placeholder": "Votre réponse...",
+    "answers-toggle-hide": "Masquer réponses",
+    "answers-toggle-show": "Afficher réponse",
+    "no-questions": "Aucune question trouvée",
+    "no-discussion-tip": "Sélectionnez un objet d'apprentissage pour afficher les questions qui s'y rapportent",
+    "askAQuestion": "Pose une question",
+    "questionsCapitalized": "Questions"
 }
