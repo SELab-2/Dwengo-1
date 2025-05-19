@@ -26,7 +26,7 @@ import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-requ
 import { ConflictException } from '../exceptions/conflict-exception.js';
 import { Submission } from '../entities/assignments/submission.entity.js';
 import { mapToUsername } from '../interfaces/user.js';
-import { mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment';
+import { mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment.js';
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();

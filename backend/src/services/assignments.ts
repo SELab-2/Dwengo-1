@@ -19,7 +19,8 @@ import { putObject } from './service-helper.js';
 import { fetchStudents } from './students.js';
 import { ServerErrorException } from '../exceptions/server-error-exception.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
-import { ConflictException } from '../exceptions/conflict-exception';
+import { ConflictException } from '../exceptions/conflict-exception.js';
+import { PostgreSqlExceptionConverter } from "@mikro-orm/postgresql";
 
 export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
     const classRepository = getClassRepository();
@@ -138,7 +139,7 @@ export async function deleteAssignment(classid: string, id: number): Promise<Ass
     try {
         await assignmentRepository.deleteByClassAndId(cls, id);
     } catch (e: unknown) {
-        if (e instanceof ForeignKeyConstraintViolationException) {
+        if (e instanceof ForeignKeyConstraintViolationException || e instanceof PostgreSqlExceptionConverter) {
             throw new ConflictException('Cannot delete assigment with questions or submissions');
         } else {
             throw e;
