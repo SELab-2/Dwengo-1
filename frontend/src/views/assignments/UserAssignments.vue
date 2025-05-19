@@ -180,9 +180,11 @@
                                 <div class="assignment-title">{{ assignment.title }}</div>
                                 <div class="assignment-class">
                                     {{ t("class") }}:
-                                    <span class="class-name">
+                                    <a
+                                        :href="`/class/${assignment?.class?.id}`"
+                                        class="class-name">
                                         {{ assignment?.class?.displayName }}
-                                    </span>
+                                    </a>
                                 </div>
                                 <div
                                     class="assignment-deadline"
@@ -289,6 +291,10 @@
         font-size: 0.95rem;
         color: #444;
         margin-bottom: 0.2rem;
+    }
+
+    .assignment-class a {
+        text-decoration: none;
     }
 
     .class-name {
