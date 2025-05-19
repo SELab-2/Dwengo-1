@@ -12,13 +12,11 @@ import { fetchGroup } from '../../../services/groups.js';
 import { requireFields } from '../../../controllers/error-helper.js';
 import { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
 
-export const onlyAllowSubmitter = authorize(
-    (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
-        const submittedFor = (req.body as SubmissionDTO).submitter.username;
-        const submittedBy = auth.username;
-        return submittedFor === submittedBy;
-    }
-);
+export const onlyAllowSubmitter = authorize((auth: AuthenticationInfo, req: AuthenticatedRequest) => {
+    const submittedFor = (req.body as SubmissionDTO).submitter.username;
+    const submittedBy = auth.username;
+    return submittedFor === submittedBy;
+});
 
 export const onlyAllowIfHasAccessToSubmission = authorize(async (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
     const { hruid: lohruid, id: submissionNumber } = req.params;
