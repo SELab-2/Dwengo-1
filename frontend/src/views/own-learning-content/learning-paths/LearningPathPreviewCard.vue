@@ -104,7 +104,41 @@
 </script>
 
 <template>
-    <v-card :title="props.selectedLearningPath ? t('editLearningPath') : t('newLearningPath')">
+    <v-card>
+        <template v-slot:title>
+            <div class="title-container">
+                <span class="title">{{ props.selectedLearningPath ? t('editLearningPath') : t('newLearningPath') }}</span>
+                <span class="actions">
+                    <v-btn
+                        @click="uploadLearningPath"
+                        prependIcon="mdi mdi-check"
+                        :loading="isPostPending || isPutPending"
+                        :disabled="parsedLearningPath.hruid === DEFAULT_LEARNING_PATH.hruid || isIdModified"
+                        variant="text"
+                    >
+                        {{ props.selectedLearningPath ? t("saveChanges") : t("create") }}
+                    </v-btn>
+                    <button-with-confirmation
+                        @confirm="deleteLearningPath"
+                        :disabled="!props.selectedLearningPath"
+                        :text="t('delete')"
+                        color="red"
+                        prependIcon="mdi mdi-delete"
+                        :confirmQueryText="t('learningPathDeleteQuery')"
+                        variant="text"
+                    />
+                    <v-btn
+                        :href="`/learningPath/${props.selectedLearningPath?.hruid}/${props.selectedLearningPath?.language}/start`"
+                        target="_blank"
+                        prepend-icon="mdi mdi-open-in-new"
+                        :disabled="!props.selectedLearningPath"
+                        variant="text"
+                    >
+                        {{ t("open") }}
+                    </v-btn>
+                </span>
+            </div>
+        </template>
         <template v-slot:text>
             <json-editor-vue v-model="learningPath"></json-editor-vue>
             <v-alert
@@ -115,33 +149,21 @@
                 :text="getErrorMessage()!"
             ></v-alert>
         </template>
-        <template v-slot:actions>
-            <v-btn
-                @click="uploadLearningPath"
-                prependIcon="mdi mdi-check"
-                :loading="isPostPending || isPutPending"
-                :disabled="parsedLearningPath.hruid === DEFAULT_LEARNING_PATH.hruid || isIdModified"
-            >
-                {{ props.selectedLearningPath ? t("saveChanges") : t("create") }}
-            </v-btn>
-            <button-with-confirmation
-                @confirm="deleteLearningPath"
-                :disabled="!props.selectedLearningPath"
-                :text="t('delete')"
-                color="red"
-                prependIcon="mdi mdi-delete"
-                :confirmQueryText="t('learningPathDeleteQuery')"
-            />
-            <v-btn
-                :href="`/learningPath/${props.selectedLearningPath?.hruid}/${props.selectedLearningPath?.language}/start`"
-                target="_blank"
-                prepend-icon="mdi mdi-open-in-new"
-                :disabled="!props.selectedLearningPath"
-            >
-                {{ t("open") }}
-            </v-btn>
-        </template>
     </v-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+    .title-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .title {
+        flex: 1;
+    }
+    .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+</style>
