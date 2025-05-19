@@ -1,12 +1,12 @@
-import { Collection, MikroORM } from '@mikro-orm/core';
+import { assign, Collection, MikroORM } from '@mikro-orm/core';
 import { forkEntityManager } from '../src/orm';
 import { makeTestStudents } from '../tests/test_assets/users/students.testdata';
 import { makeTestTeachers } from '../tests/test_assets/users/teachers.testdata';
 import { makeTestLearningObjects } from '../tests/test_assets/content/learning-objects.testdata';
 import { makeTestLearningPaths } from '../tests/test_assets/content/learning-paths.testdata';
 import { makeTestClasses } from '../tests/test_assets/classes/classes.testdata';
-import { makeTestAssignemnts } from '../tests/test_assets/assignments/assignments.testdata';
-import { getTestGroup01, getTestGroup02, getTestGroup03, getTestGroup04, makeTestGroups } from '../tests/test_assets/assignments/groups.testdata';
+import { getAssignment01, getAssignment02, getAssignment04, getConditionalPathAssignment, makeTestAssignemnts } from '../tests/test_assets/assignments/assignments.testdata';
+import { getGroup1ConditionalLearningPath, getTestGroup01, getTestGroup02, getTestGroup03, getTestGroup04, getTestGroup05, makeTestGroups } from '../tests/test_assets/assignments/groups.testdata';
 import { Group } from '../src/entities/assignments/group.entity';
 import { makeTestTeacherInvitations } from '../tests/test_assets/classes/teacher-invitations.testdata';
 import { makeTestClassJoinRequests } from '../tests/test_assets/classes/class-join-requests.testdata';
@@ -36,8 +36,14 @@ export async function seedORM(orm: MikroORM): Promise<void> {
 
     const groups = makeTestGroups(em);
 
-    assignments[0].groups = new Collection<Group>([getTestGroup01(), getTestGroup02(), getTestGroup03()]);
-    assignments[1].groups = new Collection<Group>([getTestGroup04()]);
+    let assignment = getAssignment01();
+    assignment.groups = new Collection<Group>([getTestGroup01(), getTestGroup02(), getTestGroup03()]);
+    assignment = getAssignment02();
+    assignment.groups = new Collection<Group>([getTestGroup04()]);
+    assignment = getAssignment04();
+    assignment.groups = new Collection<Group>([getTestGroup05()]);
+    assignment = getConditionalPathAssignment();
+    assignment.groups = new Collection<Group>([getGroup1ConditionalLearningPath()]);
 
     const teacherInvitations = makeTestTeacherInvitations(em);
     const classJoinRequests = makeTestClassJoinRequests(em);
@@ -68,3 +74,4 @@ export async function seedORM(orm: MikroORM): Promise<void> {
 
     logger.info('Development database seeded successfully!');
 }
+
