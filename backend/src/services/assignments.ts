@@ -20,7 +20,7 @@ import { fetchStudents } from './students.js';
 import { ServerErrorException } from '../exceptions/server-error-exception.js';
 import { BadRequestException } from '../exceptions/bad-request-exception.js';
 import { ConflictException } from '../exceptions/conflict-exception.js';
-import { PostgreSqlExceptionConverter } from "@mikro-orm/postgresql";
+import { PostgreSqlExceptionConverter } from '@mikro-orm/postgresql';
 
 export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
     const classRepository = getClassRepository();

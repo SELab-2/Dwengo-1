@@ -102,15 +102,15 @@
             { cid: clsId, an: num },
             {
                 onSuccess: (data) => {
-                    if (data?.assignment){
+                    if (data?.assignment) {
                         window.location.reload();
                     }
-                    showSnackbar(t("success") ,"success");
+                    showSnackbar(t("success"), "success");
                 },
                 onError: (e) => {
                     showSnackbar(t("failed") + ": " + e.response.data.error || e.message, "error");
                 },
-            }
+            },
         );
     }
 
