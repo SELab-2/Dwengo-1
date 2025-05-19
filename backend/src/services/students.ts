@@ -10,7 +10,7 @@ import { mapToClassDTO } from '../interfaces/class.js';
 import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToStudent, mapToStudentDTO } from '../interfaces/student.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
-import { getAllAssignments } from './assignments.js';
+import {fetchAssignment, getAllAssignments} from './assignments.js';
 import { mapToQuestionDTO, mapToQuestionDTOId } from '../interfaces/question.js';
 import { mapToStudentRequest, mapToStudentRequestDTO } from '../interfaces/student-request.js';
 import { Student } from '../entities/users/student.entity.js';
@@ -26,6 +26,7 @@ import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-requ
 import { ConflictException } from '../exceptions/conflict-exception.js';
 import { Submission } from '../entities/assignments/submission.entity.js';
 import { mapToUsername } from '../interfaces/user.js';
+import {mapToAssignmentDTO, mapToAssignmentDTOId} from "../interfaces/assignment";
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();
@@ -102,10 +103,14 @@ export async function getStudentClasses(username: string, full: boolean): Promis
 export async function getStudentAssignments(username: string, full: boolean): Promise<AssignmentDTO[] | AssignmentDTOId[]> {
     const student = await fetchStudent(username);
 
-    const classRepository = getClassRepository();
-    const classes = await classRepository.findByStudent(student);
+    const groupRepository = getGroupRepository();
+    const groups = await groupRepository.findAllGroupsWithStudent(student);
+    const assignments = await Promise.all(groups.map( async group => await fetchAssignment(group.assignment.within.classId, group.assignment.id)));
 
-    return (await Promise.all(classes.map(async (cls) => await getAllAssignments(cls.classId!, full)))).flat();
+    if (full) {
+        return assignments.map(mapToAssignmentDTO);
+    }
+    return assignments.map(mapToAssignmentDTOId);
 }
 
 export async function getStudentGroups(username: string, full: boolean): Promise<GroupDTO[] | GroupDTOId[]> {
