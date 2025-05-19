@@ -1,4 +1,4 @@
-import { assign, Collection, MikroORM } from '@mikro-orm/core';
+import { Collection, MikroORM } from '@mikro-orm/core';
 import { forkEntityManager } from '../src/orm';
 import { makeTestStudents } from '../tests/test_assets/users/students.testdata';
 import { makeTestTeachers } from '../tests/test_assets/users/teachers.testdata';

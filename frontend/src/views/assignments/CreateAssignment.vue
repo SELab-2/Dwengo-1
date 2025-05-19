@@ -10,6 +10,7 @@
     import type { ClassesResponse } from "@/controllers/classes.ts";
     import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
     import { useCreateAssignmentMutation } from "@/queries/assignments.ts";
+    import { AccountType } from '@dwengo-1/common/util/account-types';
 
     const route = useRoute();
     const router = useRouter();
@@ -18,7 +19,7 @@
     const username = ref<string>("");
 
     onMounted(async () => {
-        if (role.value === "student") {
+        if (role.value === AccountType.Student) {
             await router.push("/user");
         }
         const user = await auth.loadUser();
