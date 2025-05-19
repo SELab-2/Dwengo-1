@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { Language } from '@/data-objects/language.ts';
-import { computed, type ComputedRef, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import { useGetLearningPathQuery } from '@/queries/learning-paths.ts';
-import UsingQueryResult from '@/components/UsingQueryResult.vue';
-import { LearningPathNode } from '@/data-objects/learning-paths/learning-path-node.ts';
-import { useQuestionsQuery } from '@/queries/questions';
-import type { QuestionsResponse } from '@/controllers/questions';
-import type { LearningObjectIdentifierDTO } from '@dwengo-1/common/interfaces/learning-content';
-import QandA from '@/components/QandA.vue';
-import type { QuestionDTO } from '@dwengo-1/common/interfaces/question';
-import DiscussionsSideBar from '@/components/DiscussionsSideBar.vue';
-import QuestionBox from '@/components/QuestionBox.vue';
-import { useI18n } from 'vue-i18n';
+    import { Language } from "@/data-objects/language.ts";
+    import { computed, type ComputedRef, watch } from "vue";
+    import { useRoute } from "vue-router";
+    import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
+    import { useQuestionsQuery } from "@/queries/questions";
+    import type { QuestionsResponse } from "@/controllers/questions";
+    import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
+    import QandA from "@/components/QandA.vue";
+    import type { QuestionDTO } from "@dwengo-1/common/interfaces/question";
+    import DiscussionsSideBar from "@/components/DiscussionsSideBar.vue";
+    import QuestionBox from "@/components/QuestionBox.vue";
+    import { useI18n } from "vue-i18n";
 
-const { t } = useI18n();
+    const { t } = useI18n();
 
     const route = useRoute();
 
