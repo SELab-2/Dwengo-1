@@ -562,7 +562,6 @@
                     <v-btn
                         color="primary"
                         @click="saveDragDrop"
-                        :disabled="unassignedStudents.length > 0"
                     >
                         {{ t("save") }}
                     </v-btn>
