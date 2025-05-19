@@ -116,7 +116,9 @@
     <v-card>
         <template v-slot:title>
             <div class="title-container">
-                <span class="title">{{ props.selectedLearningPath ? t('editLearningPath') : t('newLearningPath') }}</span>
+                <span class="title">{{
+                    props.selectedLearningPath ? t("editLearningPath") : t("newLearningPath")
+                }}</span>
                 <span class="actions">
                     <v-btn
                         @click="uploadLearningPath"
