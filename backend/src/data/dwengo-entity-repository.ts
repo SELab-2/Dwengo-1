@@ -16,4 +16,13 @@ export abstract class DwengoEntityRepository<T extends object> extends EntityRep
             await em.flush();
         }
     }
+    public async deleteAllWhere(query: FilterQuery<T>): Promise<void> {
+        const toDelete = await this.find(query);
+        const em = this.getEntityManager();
+
+        if (toDelete) {
+            em.remove(toDelete);
+            await em.flush();
+        }
+    }
 }
