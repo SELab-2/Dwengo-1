@@ -17,6 +17,16 @@ export function questionsQueryKey(
     return ["questions", loId.hruid, loId.version!, loId.language, full];
 }
 
+export function questionsGroupQueryKey(
+    loId: LearningObjectIdentifierDTO,
+    classId: string,
+    assignmentId: string,
+    student: string,
+    full: boolean,
+): [string, string, number, string, boolean] {
+    return ["questions", loId.hruid, loId.version!, loId.language, full, classId, assignmentId, student];
+}
+
 export function questionQueryKey(questionId: QuestionId): [string, string, number, string, number] {
     const loId = questionId.learningObjectIdentifier;
     return ["question", loId.hruid, loId.version!, loId.language, questionId.sequenceNumber];
@@ -29,6 +39,20 @@ export function useQuestionsQuery(
     return useQuery({
         queryKey: computed(() => questionsQueryKey(toValue(loId), toValue(full))),
         queryFn: async () => new QuestionController(toValue(loId)).getAll(toValue(full)),
+        enabled: () => Boolean(toValue(loId)),
+    });
+}
+
+export function useQuestionsGroupQuery(
+    loId: MaybeRefOrGetter<LearningObjectIdentifierDTO>,
+    classId: MaybeRefOrGetter<string>,
+    assignmentId: MaybeRefOrGetter<string>,
+    student: MaybeRefOrGetter<string>,
+    full: MaybeRefOrGetter<boolean> = true,
+): UseQueryReturnType<QuestionsResponse, Error> {
+    return useQuery({
+        queryKey: computed(() => questionsGroupQueryKey(toValue(loId), toValue(full), toValue(classId), toValue(assignmentId), toValue(student))),
+        queryFn: async () => new QuestionController(toValue(loId)).getAllGroup( toValue(classId), toValue(assignmentId), toValue(student),toValue(full)),
         enabled: () => Boolean(toValue(loId)),
     });
 }
