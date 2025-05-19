@@ -5,8 +5,22 @@ import { makeTestTeachers } from '../tests/test_assets/users/teachers.testdata';
 import { makeTestLearningObjects } from '../tests/test_assets/content/learning-objects.testdata';
 import { makeTestLearningPaths } from '../tests/test_assets/content/learning-paths.testdata';
 import { makeTestClasses } from '../tests/test_assets/classes/classes.testdata';
-import { getAssignment01, getAssignment02, getAssignment04, getConditionalPathAssignment, makeTestAssignemnts } from '../tests/test_assets/assignments/assignments.testdata';
-import { getGroup1ConditionalLearningPath, getTestGroup01, getTestGroup02, getTestGroup03, getTestGroup04, getTestGroup05, makeTestGroups } from '../tests/test_assets/assignments/groups.testdata';
+import {
+    getAssignment01,
+    getAssignment02,
+    getAssignment04,
+    getConditionalPathAssignment,
+    makeTestAssignemnts,
+} from '../tests/test_assets/assignments/assignments.testdata';
+import {
+    getGroup1ConditionalLearningPath,
+    getTestGroup01,
+    getTestGroup02,
+    getTestGroup03,
+    getTestGroup04,
+    getTestGroup05,
+    makeTestGroups,
+} from '../tests/test_assets/assignments/groups.testdata';
 import { Group } from '../src/entities/assignments/group.entity';
 import { makeTestTeacherInvitations } from '../tests/test_assets/classes/teacher-invitations.testdata';
 import { makeTestClassJoinRequests } from '../tests/test_assets/classes/class-join-requests.testdata';
@@ -74,4 +88,3 @@ export async function seedORM(orm: MikroORM): Promise<void> {
 
     logger.info('Development database seeded successfully!');
 }
-
