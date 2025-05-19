@@ -10,7 +10,7 @@ import { mapToClassDTO } from '../interfaces/class.js';
 import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToStudent, mapToStudentDTO } from '../interfaces/student.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
-import {fetchAssignment, getAllAssignments} from './assignments.js';
+import { fetchAssignment } from './assignments.js';
 import { mapToQuestionDTO, mapToQuestionDTOId } from '../interfaces/question.js';
 import { mapToStudentRequest, mapToStudentRequestDTO } from '../interfaces/student-request.js';
 import { Student } from '../entities/users/student.entity.js';
