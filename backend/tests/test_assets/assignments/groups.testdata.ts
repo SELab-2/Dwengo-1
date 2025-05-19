@@ -51,7 +51,7 @@ export function makeTestGroups(em: EntityManager): Group[] {
      */
     group05 = em.create(Group, {
         assignment: getAssignment04(),
-        groupNumber: 21001,
+        groupNumber: 21006,
         members: [getNoordkaap(), getDireStraits()],
     });
 

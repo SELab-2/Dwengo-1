@@ -14,10 +14,13 @@ import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submissi
 import { fetchClass } from './classes.js';
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/submission';
-import { EntityDTO } from '@mikro-orm/core';
+import { EntityDTO, ForeignKeyConstraintViolationException } from '@mikro-orm/core';
 import { putObject } from './service-helper.js';
 import { fetchStudents } from './students.js';
 import { ServerErrorException } from '../exceptions/server-error-exception.js';
+import { BadRequestException } from '../exceptions/bad-request-exception.js';
+import { ConflictException } from '../exceptions/conflict-exception.js';
+import { PostgreSqlExceptionConverter } from '@mikro-orm/postgresql';
 
 export async function fetchAssignment(classid: string, assignmentNumber: number): Promise<Assignment> {
     const classRepository = getClassRepository();
@@ -59,7 +62,7 @@ export async function createAssignment(classid: string, assignmentData: Assignme
 
     if (assignmentData.groups) {
         /*
-        For some reason when trying to add groups, it does not work when using the original assignment variable. 
+        For some reason when trying to add groups, it does not work when using the original assignment variable.
         The assignment needs to be refetched in order for it to work.
         */
 
@@ -93,10 +96,36 @@ export async function getAssignment(classid: string, id: number): Promise<Assign
     return mapToAssignmentDTO(assignment);
 }
 
-export async function putAssignment(classid: string, id: number, assignmentData: Partial<EntityDTO<Assignment>>): Promise<AssignmentDTO> {
+function hasDuplicates(arr: string[]): boolean {
+    return new Set(arr).size !== arr.length;
+}
+
+export async function putAssignment(classid: string, id: number, assignmentData: Partial<AssignmentDTO>): Promise<AssignmentDTO> {
     const assignment = await fetchAssignment(classid, id);
 
-    await putObject<Assignment>(assignment, assignmentData, getAssignmentRepository());
+    if (assignmentData.groups) {
+        if (hasDuplicates(assignmentData.groups.flat() as string[])) {
+            throw new BadRequestException('Student can only be in one group');
+        }
+
+        const studentLists = await Promise.all((assignmentData.groups as string[][]).map(async (group) => await fetchStudents(group)));
+
+        const groupRepository = getGroupRepository();
+        await groupRepository.deleteAllByAssignment(assignment);
+        await Promise.all(
+            studentLists.map(async (students) => {
+                const newGroup = groupRepository.create({
+                    assignment: assignment,
+                    members: students,
+                });
+                await groupRepository.save(newGroup);
+            })
+        );
+
+        delete assignmentData.groups;
+    }
+
+    await putObject<Assignment>(assignment, assignmentData as Partial<EntityDTO<Assignment>>, getAssignmentRepository());
 
     return mapToAssignmentDTO(assignment);
 }
@@ -106,7 +135,16 @@ export async function deleteAssignment(classid: string, id: number): Promise<Ass
     const cls = await fetchClass(classid);
 
     const assignmentRepository = getAssignmentRepository();
-    await assignmentRepository.deleteByClassAndId(cls, id);
+
+    try {
+        await assignmentRepository.deleteByClassAndId(cls, id);
+    } catch (e: unknown) {
+        if (e instanceof ForeignKeyConstraintViolationException || e instanceof PostgreSqlExceptionConverter) {
+            throw new ConflictException('Cannot delete assigment with questions or submissions');
+        } else {
+            throw e;
+        }
+    }
 
     return mapToAssignmentDTO(assignment);
 }

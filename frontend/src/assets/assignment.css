@@ -18,10 +18,19 @@
     font-size: 1.1rem;
 }
 
-.top-right-btn {
-    position: absolute;
-    right: 2%;
-    color: red;
+.top-buttons-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    position: relative;
+}
+
+.right-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    color: #0e6942;
 }
 
 .group-section {
