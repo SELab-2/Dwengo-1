@@ -182,7 +182,8 @@
                                     {{ t("class") }}:
                                     <a
                                         :href="`/class/${assignment?.class?.id}`"
-                                        class="class-name">
+                                        class="class-name"
+                                    >
                                         {{ assignment?.class?.displayName }}
                                     </a>
                                 </div>
