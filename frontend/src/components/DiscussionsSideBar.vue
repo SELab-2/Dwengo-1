@@ -5,17 +5,21 @@
     import { useI18n } from "vue-i18n";
     import { useGetAllLearningPaths } from "@/queries/learning-paths.ts";
     import { ref, watch } from "vue";
+    import { useRoute } from 'vue-router';
 
     const { t, locale } = useI18n();
+    const route = useRoute();
 
     const navigationDrawerShown = ref(true);
     const currentLocale = ref(locale.value);
+    const expanded = ref([route.params.hruid])
 
     watch(locale, (newLocale) => {
         currentLocale.value = newLocale;
     });
 
     const allLearningPathsResult = useGetAllLearningPaths(() => currentLocale.value);
+
 </script>
 
 <template>
@@ -31,7 +35,9 @@
                 </template>
             </v-list-item>
             <v-divider></v-divider>
-            <v-expansion-panels>
+            <v-expansion-panels
+                v-model="expanded"
+            >
                 <using-query-result
                     :query-result="allLearningPathsResult"
                     v-slot="learningPaths: { data: LearningPath[] }"
