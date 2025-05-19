@@ -10,6 +10,10 @@
     const { t, locale } = useI18n();
     const route = useRoute();
 
+    const props = defineProps<{
+            learningObjectHruid: string;
+        }>();
+
     const navigationDrawerShown = ref(true);
     const currentLocale = ref(locale.value);
     const expanded = ref([route.params.hruid]);
@@ -42,7 +46,7 @@
                     <DiscussionSideBarElement
                         v-for="learningPath in learningPaths.data"
                         :path="learningPath"
-                        :activeObjectId="'' as string"
+                        :activeObjectId="props.learningObjectHruid"
                         :key="learningPath.hruid"
                     />
                 </using-query-result>
