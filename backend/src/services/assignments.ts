@@ -137,7 +137,7 @@ export async function deleteAssignment(classid: string, id: number): Promise<Ass
 
     try {
         await assignmentRepository.deleteByClassAndId(cls, id);
-    } catch (e: unkown) {
+    } catch (e: unknown) {
         if (e instanceof ForeignKeyConstraintViolationException) {
             throw new ConflictException('Cannot delete assigment with questions or submissions');
         } else {
