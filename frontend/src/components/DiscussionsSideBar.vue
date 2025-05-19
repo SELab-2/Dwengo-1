@@ -44,8 +44,7 @@
                         :path="learningPath"
                         :activeObjectId="'' as string"
                         :key="learningPath.hruid"
-                    >
-                    </DiscussionSideBarElement>
+                    />
                 </using-query-result>
             </v-expansion-panels>
         </div>

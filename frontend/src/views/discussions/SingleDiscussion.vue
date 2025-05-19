@@ -1,23 +1,20 @@
 <script setup lang="ts">
-    import { Language } from "@/data-objects/language.ts";
-    import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
-    import { computed, type ComputedRef, ref, watch } from "vue";
-    import type { LearningObject } from "@/data-objects/learning-objects/learning-object.ts";
-    import { useRoute } from "vue-router";
-    import { useGetAllLearningPaths, useGetLearningPathQuery } from "@/queries/learning-paths.ts";
-    import { useLearningObjectListForPathQuery } from "@/queries/learning-objects.ts";
-    import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
-    import { useQuestionsQuery } from "@/queries/questions";
-    import type { QuestionsResponse } from "@/controllers/questions";
-    import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
-    import QandA from "@/components/QandA.vue";
-    import type { QuestionDTO } from "@dwengo-1/common/interfaces/question";
-    import DiscussionsSideBar from "@/components/DiscussionsSideBar.vue";
-    import QuestionBox from "@/components/QuestionBox.vue";
-    import { useI18n } from "vue-i18n";
+import { Language } from '@/data-objects/language.ts';
+import { computed, type ComputedRef, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import { useGetLearningPathQuery } from '@/queries/learning-paths.ts';
+import UsingQueryResult from '@/components/UsingQueryResult.vue';
+import { LearningPathNode } from '@/data-objects/learning-paths/learning-path-node.ts';
+import { useQuestionsQuery } from '@/queries/questions';
+import type { QuestionsResponse } from '@/controllers/questions';
+import type { LearningObjectIdentifierDTO } from '@dwengo-1/common/interfaces/learning-content';
+import QandA from '@/components/QandA.vue';
+import type { QuestionDTO } from '@dwengo-1/common/interfaces/question';
+import DiscussionsSideBar from '@/components/DiscussionsSideBar.vue';
+import QuestionBox from '@/components/QuestionBox.vue';
+import { useI18n } from 'vue-i18n';
 
-    const { t } = useI18n();
+const { t } = useI18n();
 
     const route = useRoute();
 
@@ -45,50 +42,6 @@
         }
         return undefined;
     });
-
-    const allLearningPathsResult = useGetAllLearningPaths(props.language);
-
-    async function learningObjectHasQuestions(learningObject: LearningObject): Promise<boolean> {
-        const loid = {
-            hruid: learningObject.key,
-            version: learningObject.version,
-            language: learningObject.language,
-        } as LearningObjectIdentifierDTO;
-        const { data } = useQuestionsQuery(loid);
-        return (data.value?.questions.length ?? 0) > 0;
-    }
-
-    async function learningPathHasQuestions(learningPath: LearningPath): Promise<boolean> {
-        const learningPathQueryResult = useGetLearningPathQuery(
-            learningPath.hruid,
-            learningPath.language as Language,
-            forGroup,
-        );
-        const learningObjectListQueryResult = useLearningObjectListForPathQuery(learningPathQueryResult.data);
-        const learningObjects = learningObjectListQueryResult.data.value || [];
-        const hasQuestions = await Promise.all(
-            learningObjects.map(async (learningObject) => learningObjectHasQuestions(learningObject)),
-        );
-        return hasQuestions.some((hasQuestion) => hasQuestion);
-    }
-
-    const questionedLearningPaths = ref<LearningPath[] | null>(null);
-
-    watch(
-        () => allLearningPathsResult.data.value,
-        async (learningPaths) => {
-            if (learningPaths) {
-                const pathsWithQuestions = await Promise.all(
-                    learningPaths.map(async (learningPath) => {
-                        const hasQuestions = await learningPathHasQuestions(learningPath);
-                        return hasQuestions ? learningPath : null;
-                    }),
-                );
-                questionedLearningPaths.value = pathsWithQuestions.filter((path) => path !== null);
-            }
-        },
-        { immediate: true },
-    );
 
     const learningPathQueryResult = useGetLearningPathQuery(props.hruid, props.language, forGroup);
 

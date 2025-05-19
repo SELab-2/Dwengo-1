@@ -1,11 +1,11 @@
 <script setup lang="ts">
-    import type { LearningObject } from "@/data-objects/learning-objects/learning-object";
-    import type { LearningPath } from "@/data-objects/learning-paths/learning-path";
-    import { useLearningObjectListForPathQuery } from "@/queries/learning-objects";
-    import { useRoute } from "vue-router";
-    import UsingQueryResult from "@/components/UsingQueryResult.vue";
+import type { LearningObject } from '@/data-objects/learning-objects/learning-object';
+import type { LearningPath } from '@/data-objects/learning-paths/learning-path';
+import { useLearningObjectListForPathQuery } from '@/queries/learning-objects';
+import { useRoute } from 'vue-router';
+import UsingQueryResult from '@/components/UsingQueryResult.vue';
 
-    const route = useRoute();
+const route = useRoute();
 
     const props = defineProps<{
         path: LearningPath;
@@ -19,6 +19,7 @@
             {{ path.title }}
         </v-expansion-panel-title>
         <v-expansion-panel-text>
+          <v-lazy>
             <using-query-result
                 :query-result="useLearningObjectListForPathQuery(props.path)"
                 v-slot="learningObjects: { data: LearningObject[] }"
@@ -33,12 +34,13 @@
                             path: `/discussion-reload/${props.path.hruid}/${node.language}/${node.key}`,
                             query: route.query,
                         }"
-                        :title="node.title"
-                        :active="node.key === props.activeObjectId"
-                    >
-                    </v-list-item>
-                </template>
-            </using-query-result>
+                            :title="node.title"
+                            :active="node.key === props.activeObjectId"
+                        >
+                        </v-list-item>
+                    </template>
+                </using-query-result>
+            </v-lazy>
         </v-expansion-panel-text>
     </v-expansion-panel>
 </template>
