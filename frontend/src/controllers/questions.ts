@@ -14,7 +14,7 @@ export class QuestionController extends BaseController {
     loId: LearningObjectIdentifierDTO;
 
     constructor(loId: LearningObjectIdentifierDTO) {
-        super(`learningObject/${loId.hruid}/:${loId.version}/questions`);
+        super(`learningObject/${loId.hruid}/${loId.version}/questions`);
         this.loId = loId;
     }
 

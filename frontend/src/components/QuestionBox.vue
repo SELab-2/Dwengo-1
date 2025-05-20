@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import authService from "@/services/auth/auth-service.ts";
-    import { Language } from "@/data-objects/language.ts";
     import { computed, type ComputedRef, ref } from "vue";
     import type {  GroupDTOId } from "@dwengo-1/common/interfaces/group";
     import type { QuestionData } from "@dwengo-1/common/interfaces/question";
@@ -10,9 +9,9 @@
     import { AccountType } from "@dwengo-1/common/util/account-types.ts";
 
     const props = defineProps<{
-        hruid: string;
-        language: Language;
-        learningObjectHruid?: string;
+        learningObjectHruid: string;
+        learningObjectLanguage: string;
+        learningObjectVersion: number;
         forGroup?: GroupDTOId | undefined;
         withTitle?: boolean;
     }>();
@@ -25,7 +24,8 @@
 
     const loID: ComputedRef<LearningObjectIdentifierDTO> = computed(() => ({
         hruid: props.learningObjectHruid as string,
-        language: props.language,
+        language: props.learningObjectLanguage,
+        version: props.learningObjectVersion
     }));
     const createQuestionMutation = useCreateQuestionMutation(loID);
 
@@ -56,6 +56,7 @@
 
 <template>
     <h3 v-if="props.withTitle && showQuestionBox">{{ t("askAQuestion") }}:</h3>
+    {{ props.forGroup }}
     <div
         class="question-box"
         v-if="showQuestionBox"

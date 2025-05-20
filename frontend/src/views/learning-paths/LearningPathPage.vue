@@ -339,7 +339,7 @@
             </v-btn>
         </div>
         <using-query-result
-            v-if="forGroup"
+            v-if="currentNode && forGroup"
             :query-result="getQuestionsQuery"
             v-slot="questionsResponse: { data: QuestionsResponse }"
         >
@@ -354,10 +354,10 @@
                 </span>
             </div>
             <QuestionBox
-                :hruid="props.hruid"
-                :language="props.language"
-                :learningObjectHruid="props.learningObjectHruid"
-                :forGroup="forGroup"
+                :learningObjectHruid="currentNode.learningobjectHruid"
+                :learningObjectLanguage="currentNode.language"
+                :learningObjectVersion="currentNode.version"
+                :forGroup="{assignment: forGroup.assignmentNo, class: forGroup.classId, groupNumber: forGroup.forGroup}"
                 @updated="refetchQuestions"
             />
             <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
