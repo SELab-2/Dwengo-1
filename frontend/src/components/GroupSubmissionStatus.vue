@@ -2,12 +2,12 @@
     import { useI18n } from "vue-i18n";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import type { SubmissionsResponse } from "@/controllers/submissions.ts";
-    import { ref, watch } from 'vue';
-    import { useGetLearningPathQuery } from '@/queries/learning-paths.ts';
+    import { ref, watch } from "vue";
+    import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
 
     const props = defineProps<{
         learningPathHruid: string;
-        language: string,
+        language: string;
         group: object;
         assignmentId: number;
         classId: string;
