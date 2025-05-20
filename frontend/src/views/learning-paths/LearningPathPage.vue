@@ -56,9 +56,12 @@
     const learningObjectListQueryResult = useLearningObjectListForPathQuery(learningPathQueryResult.data);
 
     const nodesList: ComputedRef<LearningPathNode[] | null> = computed(
-        () => learningPathQueryResult.data.value?.nodesAsList.filter(node =>
-            authService.authState.activeRole === AccountType.Teacher || !getLearningObjectForNode(node)?.teacherExclusive
-        ) ?? null,
+        () =>
+            learningPathQueryResult.data.value?.nodesAsList.filter(
+                (node) =>
+                    authService.authState.activeRole === AccountType.Teacher ||
+                    !getLearningObjectForNode(node)?.teacherExclusive,
+            ) ?? null,
     );
 
     const currentNode = computed(() => {
@@ -110,8 +113,9 @@
     const navigationDrawerShown = ref(true);
 
     function getLearningObjectForNode(node: LearningPathNode): LearningObject | undefined {
-        return learningObjectListQueryResult.data.value?.find(obj =>
-            obj.key === node.learningobjectHruid && obj.language === node.language && obj.version === node.version
+        return learningObjectListQueryResult.data.value?.find(
+            (obj) =>
+                obj.key === node.learningobjectHruid && obj.language === node.language && obj.version === node.version,
         );
     }
 

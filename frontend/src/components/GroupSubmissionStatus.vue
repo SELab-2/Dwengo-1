@@ -1,11 +1,13 @@
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import { useAssignmentSubmissionsQuery } from "@/queries/assignments.ts";
     import type { SubmissionsResponse } from "@/controllers/submissions.ts";
-    import { watch } from "vue";
+    import { ref, watch } from "vue";
+    import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
 
     const props = defineProps<{
+        learningPathHruid: string;
+        language: string;
         group: object;
         assignmentId: number;
         classId: string;
@@ -15,18 +17,24 @@
     const emit = defineEmits<(e: "update:hasSubmission", hasSubmission: boolean) => void>();
 
     const { t } = useI18n();
-    const submissionsQuery = useAssignmentSubmissionsQuery(
-        () => props.classId,
-        () => props.assignmentId,
-        () => props.group.originalGroupNo,
-        () => true,
+    const hasMadeProgress = ref(false);
+
+    const getLearningPathQuery = useGetLearningPathQuery(
+        () => props.learningPathHruid,
+        () => props.language,
+        () => ({
+            forGroup: props.group.originalGroupNo,
+            assignmentNo: props.assignmentId,
+            classId: props.classId,
+        }),
     );
 
     watch(
-        () => submissionsQuery.data.value,
-        (data) => {
-            if (data) {
-                emit("update:hasSubmission", data.submissions.length > 0);
+        () => getLearningPathQuery.data.value,
+        (learningPath) => {
+            if (learningPath) {
+                hasMadeProgress.value = learningPath.amountOfNodes !== learningPath.amountOfNodesLeft;
+                emit("update:hasSubmission", hasMadeProgress.value);
             }
         },
         { immediate: true },
@@ -35,16 +43,16 @@
 
 <template>
     <using-query-result
-        :query-result="submissionsQuery"
+        :query-result="getLearningPathQuery"
         v-slot="{ data }: { data: SubmissionsResponse }"
     >
         <v-btn
-            :color="data?.submissions?.length > 0 ? 'green' : 'red'"
+            :color="hasMadeProgress ? 'green' : 'red'"
             variant="text"
-            :to="data.submissions.length > 0 ? goToGroupSubmissionLink(props.group.originalGroupNo) : undefined"
-            :disabled="data.submissions.length === 0"
+            :to="hasMadeProgress ? goToGroupSubmissionLink(props.group.originalGroupNo) : undefined"
+            :disabled="!hasMadeProgress"
         >
-            {{ data.submissions.length > 0 ? t("submission") : t("noSubmissionsYet") }}
+            {{ hasMadeProgress ? t("submission") : t("noSubmissionsYet") }}
         </v-btn>
     </using-query-result>
 </template>
