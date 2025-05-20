@@ -191,10 +191,13 @@
      * in the query parameters are shown. This is relevant for teachers since they can view questions of all groups.
      */
     function filterQuestions(questions?: QuestionDTO[]): QuestionDTO[] {
-        return questions?.filter(q =>
-            q.inGroup.groupNumber === forGroup.value?.forGroup
-            && q.inGroup.assignment === forGroup.value?.assignmentNo
-        ) ?? []
+        return (
+            questions?.filter(
+                (q) =>
+                    q.inGroup.groupNumber === forGroup.value?.forGroup &&
+                    q.inGroup.assignment === forGroup.value?.assignmentNo,
+            ) ?? []
+        );
     }
 </script>
 
