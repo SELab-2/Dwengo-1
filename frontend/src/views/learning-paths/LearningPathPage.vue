@@ -181,6 +181,17 @@
             "/" +
             currentNode.value?.learningobjectHruid,
     );
+
+    /**
+     * Filter the given list of questions such that only the questions for the assignment and group specified
+     * in the query parameters are shown. This is relevant for teachers since they can view questions of all groups.
+     */
+    function filterQuestions(questions?: QuestionDTO[]): QuestionDTO[] {
+        return questions?.filter(q =>
+            q.inGroup.groupNumber === forGroup.value?.forGroup
+            && q.inGroup.assignment === forGroup.value?.assignmentNo
+        ) ?? []
+    }
 </script>
 
 <template>
@@ -362,7 +373,7 @@
                     groupNumber: forGroup.forGroup,
                 }"
             />
-            <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
+            <QandA :questions="filterQuestions(questionsResponse.data.questions as QuestionDTO[])" />
         </using-query-result>
     </using-query-result>
 </template>
