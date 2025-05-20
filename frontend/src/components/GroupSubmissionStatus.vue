@@ -33,7 +33,7 @@
         () => getLearningPathQuery.data.value,
         (learningPath) => {
             if (learningPath) {
-                hasMadeProgress.value = learningPath.amountOfNodes === learningPath.amountOfNodesLeft;
+                hasMadeProgress.value = learningPath.amountOfNodes !== learningPath.amountOfNodesLeft;
                 emit("update:hasSubmission", hasMadeProgress.value);
             }
         },
