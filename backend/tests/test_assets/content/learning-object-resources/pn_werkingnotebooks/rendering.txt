@@ -17,4 +17,4 @@ Dit zijn de twee notebooks waarin je resp. een overzicht krijgt van de opbouw en
 <p>Je ziet er ook een map <em>images</em> met de afbeeldingen die in de notebooks getoond worden.</p>
 <p>In deze eerste twee notebooks leer je hoe de notebooks zijn opgevat en hoe je ermee aan de slag kan.
 Na het doorlopen van beide notebooks heb je een goed idee van hoe onze Python notebooks zijn opgevat.</p>
-<p><a href="https://kiks.ilabt.imec.be/hub/tmplogin?id=0101" target="_blank" title="Notebooks Werking"><img alt="" src="Knop.png"></a></p>
+<p><a href="https://kiks.ilabt.imec.be/hub/tmplogin?id=0101" target="_blank" title="Notebooks Werking"><img src="Knop.png" alt=""></a></p>
