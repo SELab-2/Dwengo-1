@@ -54,7 +54,6 @@
 
 <template>
     <h3 v-if="props.withTitle && showQuestionBox">{{ t("askAQuestion") }}:</h3>
-    {{ props.forGroup }}
     <div
         class="question-box"
         v-if="showQuestionBox"

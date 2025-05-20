@@ -9,6 +9,7 @@ import {
     useQueryClient,
     type UseQueryReturnType,
 } from "@tanstack/vue-query";
+import type { Language } from "@dwengo-1/common/util/language";
 
 export function questionsQueryKey(
     loId: LearningObjectIdentifierDTO,
@@ -23,7 +24,7 @@ export function questionsGroupQueryKey(
     assignmentId: string,
     student: string,
     full: boolean,
-): [string, string, number, string, boolean] {
+): [string, string, number, Language, boolean, string, string, string] {
     return ["questions", loId.hruid, loId.version!, loId.language, full, classId, assignmentId, student];
 }
 
@@ -54,10 +55,10 @@ export function useQuestionsGroupQuery(
         queryKey: computed(() =>
             questionsGroupQueryKey(
                 toValue(loId),
-                toValue(full),
                 toValue(classId),
                 toValue(assignmentId),
                 toValue(student),
+                toValue(full),
             ),
         ),
         queryFn: async () =>

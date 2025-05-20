@@ -105,10 +105,6 @@
         );
     }
 
-    function refetchQuestions() {
-        getQuestionsQuery.refetch();
-    }
-
     const navigationDrawerShown = ref(true);
 
     function isLearningObjectCompleted(learningObject: LearningObject): boolean {
@@ -292,7 +288,7 @@
                 </v-list-item>
                 <v-list-item>
                     <div
-                        v-if="authService.authState.activeRole === AccountType.Student && pathIsAssignment"
+                        v-if="authService.authState.activeRole === AccountType.Student && forGroup"
                         class="assignment-indicator"
                     >
                         {{ t("assignmentIndicator") }}
@@ -358,7 +354,6 @@
                 :learningObjectLanguage="currentNode.language"
                 :learningObjectVersion="currentNode.version"
                 :forGroup="{assignment: forGroup.assignmentNo, class: forGroup.classId, groupNumber: forGroup.forGroup}"
-                @updated="refetchQuestions"
             />
             <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
         </using-query-result>

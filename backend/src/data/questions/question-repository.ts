@@ -18,8 +18,8 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
             content: question.content,
             timestamp: new Date(),
         });
-        console.log(questionEntity)
-        await this.save(questionEntity, { preventOverwrite: true });
+        // Don't check for overwrite since this is impossible anyway due to autoincrement.
+        await this.save(questionEntity, { preventOverwrite: false });
         return questionEntity;
     }
     public async findAllQuestionsAboutLearningObject(loId: LearningObjectIdentifier): Promise<Question[]> {
