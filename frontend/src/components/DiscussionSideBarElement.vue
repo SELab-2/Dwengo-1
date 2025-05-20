@@ -12,6 +12,8 @@
         path: LearningPath;
         activeObjectId: string;
     }>();
+
+    const learningObjectsQuery = useLearningObjectListForPathQuery(props.path);
 </script>
 
 <template>
@@ -22,7 +24,7 @@
         <v-expansion-panel-text>
             <v-lazy>
                 <using-query-result
-                    :query-result="useLearningObjectListForPathQuery(props.path)"
+                    :query-result="learningObjectsQuery"
                     v-slot="learningObjects: { data: LearningObject[] }"
                 >
                     <template
