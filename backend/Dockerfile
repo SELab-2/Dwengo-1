@@ -1,3 +1,5 @@
+#syntax=docker/dockerfile:1.7-labs
+
 FROM node:22 AS build-stage
 
 WORKDIR /app/dwengo
@@ -17,7 +19,7 @@ RUN npm install --silent
 # Root tsconfig.json
 COPY tsconfig.json tsconfig.build.json ./
 
-COPY backend ./backend
+COPY --exclude=backend/tests/ backend ./backend
 COPY common ./common
 COPY docs ./docs
 
