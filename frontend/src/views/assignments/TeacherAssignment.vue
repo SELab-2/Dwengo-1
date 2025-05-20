@@ -149,7 +149,7 @@
                     const message = err.response?.data?.error || err.message || t("unknownError");
                     showSnackbar(t("failed") + ": " + message, "error");
                 },
-            }
+            },
         );
     }
 

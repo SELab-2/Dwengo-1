@@ -103,7 +103,6 @@ function hasDuplicates(arr: string[]): boolean {
 export async function putAssignment(classid: string, id: number, assignmentData: Partial<AssignmentDTO>): Promise<AssignmentDTO> {
     const assignment = await fetchAssignment(classid, id);
 
-
     if (assignmentData.groups) {
         if (hasDuplicates(assignmentData.groups.flat() as string[])) {
             throw new BadRequestException('Student can only be in one group');
@@ -124,7 +123,7 @@ export async function putAssignment(classid: string, id: number, assignmentData:
                     await groupRepository.save(newGroup);
                 })
             );
-        } catch(e: unknown) {
+        } catch (e: unknown) {
             if (e instanceof ForeignKeyConstraintViolationException || e instanceof PostgreSqlExceptionConverter) {
                 throw new ConflictException('Cannot update assigment with questions or submissions');
             } else {
