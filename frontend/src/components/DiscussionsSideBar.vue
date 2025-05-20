@@ -38,12 +38,13 @@
                 </template>
             </v-list-item>
             <v-divider></v-divider>
-            <v-expansion-panels v-model="expanded">
-                <using-query-result
-                    :query-result="allLearningPathsResult"
-                    v-slot="learningPaths: { data: LearningPath[] }"
-                >
-                    <v-expansion-panel
+            <div class="nav-scroll-area">
+                <v-expansion-panels v-model="expanded">
+                    <using-query-result
+                        :query-result="allLearningPathsResult"
+                        v-slot="learningPaths: { data: LearningPath[] }"
+                    >
+                        <v-expansion-panel
                         v-for="learningPath in learningPaths.data"
                         :key="learningPath.hruid"
                         :value="learningPath.hruid"
@@ -59,9 +60,10 @@
                                 />
                             </v-lazy>
                         </v-expansion-panel-text>
-                    </v-expansion-panel>
-                </using-query-result>
-            </v-expansion-panels>
+                        </v-expansion-panel>
+                    </using-query-result>
+                </v-expansion-panels>
+            </div>
         </div>
     </v-navigation-drawer>
     <div class="control-bar-above-content">
@@ -81,5 +83,11 @@
         font-weight: bolder;
         padding-top: 2%;
         font-size: 36px;
+    }
+
+    .nav-scroll-area {
+        overflow-y: auto;
+        flex-grow: 1;
+        min-height: 0;
     }
 </style>

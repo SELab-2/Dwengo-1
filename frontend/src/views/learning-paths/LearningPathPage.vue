@@ -13,13 +13,11 @@
     import authService from "@/services/auth/auth-service.ts";
     import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
     import LearningPathGroupSelector from "@/views/learning-paths/LearningPathGroupSelector.vue";
-    import { useCreateQuestionMutation, useQuestionsQuery } from "@/queries/questions";
+    import { useQuestionsQuery } from "@/queries/questions";
     import type { QuestionsResponse } from "@/controllers/questions";
     import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
     import QandA from "@/components/QandA.vue";
     import type { QuestionDTO } from "@dwengo-1/common/interfaces/question";
-    import { useStudentAssignmentsQuery, useStudentGroupsQuery } from "@/queries/students";
-    import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
     import QuestionNotification from "@/components/QuestionNotification.vue";
     import QuestionBox from "@/components/QuestionBox.vue";
     import { AccountType } from "@dwengo-1/common/util/account-types";
@@ -147,19 +145,6 @@
         });
     }
 
-    const studentAssignmentsQueryResult = useStudentAssignmentsQuery(
-        authService.authState.user?.profile.preferred_username,
-    );
-
-    const loID: LearningObjectIdentifierDTO = {
-        hruid: props.learningObjectHruid as string,
-        language: props.language,
-    };
-    const createQuestionMutation = useCreateQuestionMutation(loID);
-    const groupsQueryResult = useStudentGroupsQuery(authService.authState.user?.profile.preferred_username);
-
-    const questionInput = ref("");
-
     const discussionLink = computed(
         () =>
             "/discussion" +
@@ -229,7 +214,7 @@
                     </template>
                 </v-list-item>
                 <v-divider></v-divider>
-                <div>
+                <div class="nav-scroll-area">
                     <using-query-result
                         :query-result="learningObjectListQueryResult"
                         v-slot="learningObjects: { data: LearningObject[] }"
@@ -416,5 +401,11 @@
 
     .discussion-link a:hover {
         text-decoration: underline;
+    }
+
+    .nav-scroll-area {
+        overflow-y: auto;
+        flex-grow: 1;
+        min-height: 0;
     }
 </style>
