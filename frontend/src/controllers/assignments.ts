@@ -25,7 +25,7 @@ export class AssignmentController extends BaseController {
         return this.get<AssignmentResponse>(`/${num}`);
     }
 
-    async createAssignment(data: AssignmentDTO): Promise<AssignmentResponse> {
+    async createAssignment(data: Partial<AssignmentDTO>): Promise<AssignmentResponse> {
         return this.post<AssignmentResponse>(`/`, data);
     }
 
@@ -47,5 +47,13 @@ export class AssignmentController extends BaseController {
 
     async getGroups(assignmentNumber: number, full = true): Promise<GroupsResponse> {
         return this.get<GroupsResponse>(`/${assignmentNumber}/groups`, { full });
+    }
+
+    async getSubmissionsByGroup(
+        assignmentNumber: number,
+        groupNumber: number,
+        full = true,
+    ): Promise<SubmissionsResponse> {
+        return this.get<SubmissionsResponse>(`/${assignmentNumber}/groups/${groupNumber}/submissions`, { full });
     }
 }

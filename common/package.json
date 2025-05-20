@@ -1,6 +1,6 @@
 {
     "name": "@dwengo-1/common",
-    "version": "0.2.0",
+    "version": "1.0.0",
     "description": "Common types and utilities for Dwengo-1",
     "private": true,
     "type": "module",

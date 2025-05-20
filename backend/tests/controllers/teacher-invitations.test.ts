@@ -12,6 +12,9 @@ import { TeacherInvitationData } from '@dwengo-1/common/interfaces/teacher-invit
 import { getClassHandler } from '../../src/controllers/classes';
 import { BadRequestException } from '../../src/exceptions/bad-request-exception';
 import { ClassStatus } from '@dwengo-1/common/util/class-join-request';
+import { getTeacherInvitation01 } from '../test_assets/classes/teacher-invitations.testdata.js';
+import { getLimpBizkit, getTestleerkracht1 } from '../test_assets/users/teachers.testdata.js';
+import { getClass02 } from '../test_assets/classes/classes.testdata.js';
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
@@ -31,7 +34,8 @@ describe('Teacher controllers', () => {
     });
 
     it('Get teacher invitations by', async () => {
-        req = { params: { username: 'LimpBizkit' }, query: { sent: 'true' } };
+        const ti = getTeacherInvitation01();
+        req = { params: { username: ti.sender.username }, query: { sent: 'true' } };
 
         await getAllInvitationsHandler(req as Request, res as Response);
 
@@ -43,7 +47,8 @@ describe('Teacher controllers', () => {
     });
 
     it('Get teacher invitations for', async () => {
-        req = { params: { username: 'FooFighters' }, query: { by: 'false' } };
+        const ti = getTeacherInvitation01();
+        req = { params: { username: ti.receiver.username }, query: { by: 'false' } };
 
         await getAllInvitationsHandler(req as Request, res as Response);
 
@@ -54,10 +59,13 @@ describe('Teacher controllers', () => {
     });
 
     it('Create and delete invitation', async () => {
+        const sender = getLimpBizkit();
+        const receiver = getTestleerkracht1();
+        const class_ = getClass02();
         const body = {
-            sender: 'LimpBizkit',
-            receiver: 'testleerkracht1',
-            class: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89',
+            sender: sender.username,
+            receiver: receiver.username,
+            class: class_.classId,
         } as TeacherInvitationData;
         req = { body };
 
@@ -65,9 +73,9 @@ describe('Teacher controllers', () => {
 
         req = {
             params: {
-                sender: 'LimpBizkit',
-                receiver: 'testleerkracht1',
-                classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89',
+                sender: sender.username,
+                receiver: receiver.username,
+                classId: class_.classId!,
             },
             body: { accepted: 'false' },
         };
@@ -76,11 +84,12 @@ describe('Teacher controllers', () => {
     });
 
     it('Get invitation', async () => {
+        const ti = getTeacherInvitation01();
         req = {
             params: {
-                sender: 'LimpBizkit',
-                receiver: 'FooFighters',
-                classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89',
+                sender: ti.sender.username,
+                receiver: ti.receiver.username,
+                classId: ti.class.classId!,
             },
         };
         await getInvitationHandler(req as Request, res as Response);
@@ -97,10 +106,11 @@ describe('Teacher controllers', () => {
     });
 
     it('Accept invitation', async () => {
+        const ti = getTeacherInvitation01();
         const body = {
-            sender: 'LimpBizkit',
-            receiver: 'FooFighters',
-            class: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89',
+            sender: ti.sender.username,
+            receiver: ti.receiver.username,
+            class: ti.class.classId,
         } as TeacherInvitationData;
         req = { body };
 
@@ -111,13 +121,13 @@ describe('Teacher controllers', () => {
 
         req = {
             params: {
-                id: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89',
+                id: ti.class.classId!,
             },
         };
 
         await getClassHandler(req as Request, res as Response);
 
         const result = jsonMock.mock.lastCall?.[0];
-        expect(result.class.teachers).toContain('FooFighters');
+        expect(result.class.teachers).toContain(ti.receiver.username);
     });
 });

@@ -2,6 +2,8 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { ClassRepository } from '../../../src/data/classes/class-repository';
 import { setupTestApp } from '../../setup-tests';
 import { getClassRepository } from '../../../src/data/repositories';
+import { getClass01, getClass04 } from '../../test_assets/classes/classes.testdata';
+import { getClass01, getClass04 } from '../../test_assets/classes/classes.testdata';
 
 describe('ClassRepository', () => {
     let classRepository: ClassRepository;
@@ -18,16 +20,18 @@ describe('ClassRepository', () => {
     });
 
     it('should return requested class', async () => {
-        const classVar = await classRepository.findById('8764b861-90a6-42e5-9732-c0d9eb2f55f9');
+        const expected = getClass01();
+        const classVar = await classRepository.findById(expected.classId!);
 
         expect(classVar).toBeTruthy();
-        expect(classVar?.displayName).toBe('class01');
+        expect(classVar?.displayName).toBe(expected.displayName);
     });
 
     it('class should be gone after deletion', async () => {
-        await classRepository.deleteById('33d03536-83b8-4880-9982-9bbf2f908ddf');
+        const deleted = getClass04();
+        await classRepository.deleteById(deleted.classId!);
 
-        const classVar = await classRepository.findById('33d03536-83b8-4880-9982-9bbf2f908ddf');
+        const classVar = await classRepository.findById(deleted.classId!);
 
         expect(classVar).toBeNull();
     });

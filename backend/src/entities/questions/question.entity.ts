@@ -6,6 +6,9 @@ import { Group } from '../assignments/group.entity.js';
 
 @Entity({ repository: () => QuestionRepository })
 export class Question {
+    @PrimaryKey({ type: 'integer', autoincrement: true })
+    sequenceNumber?: number;
+
     @PrimaryKey({ type: 'string' })
     learningObjectHruid!: string;
 
@@ -17,9 +20,6 @@ export class Question {
 
     @PrimaryKey({ type: 'number' })
     learningObjectVersion = 1;
-
-    @PrimaryKey({ type: 'integer', autoincrement: true })
-    sequenceNumber?: number;
 
     @ManyToOne({ entity: () => Group })
     inGroup!: Group;

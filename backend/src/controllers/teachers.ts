@@ -7,7 +7,7 @@ import {
     getJoinRequestsByClass,
     getStudentsByTeacher,
     getTeacher,
-    getTeacherQuestions,
+    getTeacherAssignments,
     updateClassJoinRequestStatus,
 } from '../services/teachers.js';
 import { requireFields } from './error-helper.js';
@@ -60,6 +60,16 @@ export async function getTeacherClassHandler(req: Request, res: Response): Promi
     res.json({ classes });
 }
 
+export async function getTeacherAssignmentsHandler(req: Request, res: Response): Promise<void> {
+    const username = req.params.username;
+    const full = req.query.full === 'true';
+    requireFields({ username });
+
+    const assignments = await getTeacherAssignments(username, full);
+
+    res.json({ assignments });
+}
+
 export async function getTeacherStudentHandler(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
     const full = req.query.full === 'true';
@@ -68,16 +78,6 @@ export async function getTeacherStudentHandler(req: Request, res: Response): Pro
     const students = await getStudentsByTeacher(username, full);
 
     res.json({ students });
-}
-
-export async function getTeacherQuestionHandler(req: Request, res: Response): Promise<void> {
-    const username = req.params.username;
-    const full = req.query.full === 'true';
-    requireFields({ username });
-
-    const questions = await getTeacherQuestions(username, full);
-
-    res.json({ questions });
 }
 
 export async function getStudentJoinRequestHandler(req: Request, res: Response): Promise<void> {

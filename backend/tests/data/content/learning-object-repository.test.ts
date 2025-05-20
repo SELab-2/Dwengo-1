@@ -37,7 +37,8 @@ describe('LearningObjectRepository', () => {
     let newerExample: LearningObject;
 
     it('should allow a learning object with the same id except a different version to be added', async () => {
-        const testLearningObject01Newer = structuredClone(testLearningObject01);
+        // StructeredClone failed on teacher, this copies all fields to a json object
+        const testLearningObject01Newer = { ...testLearningObject01 };
         testLearningObject01Newer.version = 10;
         testLearningObject01Newer.title += ' (nieuw)';
         testLearningObject01Newer.uuid = v4();

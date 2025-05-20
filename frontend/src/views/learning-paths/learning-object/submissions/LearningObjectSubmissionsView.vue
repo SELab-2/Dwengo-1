@@ -18,6 +18,15 @@
         version: number;
         group: { forGroup: number; assignmentNo: number; classId: string };
     }>();
+
+    function parseContent(content: string): SubmissionData {
+        if (content === "") {
+            return [];
+        }
+
+        return JSON.parse(content);
+    }
+
     const emit = defineEmits<(e: "update:submissionData", value: SubmissionData) => void>();
 
     const submissionQuery = useSubmissionsQuery(
@@ -35,7 +44,7 @@
     }
 
     function emitSubmission(submission: SubmissionDTO): void {
-        emitSubmissionData(JSON.parse(submission.content));
+        emitSubmissionData(parseContent(submission.content));
     }
 
     watch(submissionQuery.data, () => {
@@ -47,12 +56,13 @@
         }
     });
 
-    const lastSubmission = computed<SubmissionData>(() => {
+    const lastSubmission = computed<SubmissionData | undefined>(() => {
         const submissions = submissionQuery.data.value;
         if (!submissions || submissions.length === 0) {
             return undefined;
         }
-        return JSON.parse(submissions[submissions.length - 1].content);
+
+        return parseContent(submissions[submissions.length - 1].content);
     });
 
     const showSubmissionTable = computed(() => props.submissionData !== undefined && props.submissionData.length > 0);

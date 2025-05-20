@@ -14,8 +14,17 @@ export class QuestionController extends BaseController {
     loId: LearningObjectIdentifierDTO;
 
     constructor(loId: LearningObjectIdentifierDTO) {
-        super(`learningObject/${loId.hruid}/:${loId.version}/questions`);
+        super(`learningObject/${loId.hruid}/${loId.version}/questions`);
         this.loId = loId;
+    }
+
+    async getAllGroup(
+        classId: string,
+        assignmentId: string,
+        forStudent: string,
+        full = true,
+    ): Promise<QuestionsResponse> {
+        return this.get<QuestionsResponse>("/", { lang: this.loId.language, full, classId, assignmentId, forStudent });
     }
 
     async getAll(full = true): Promise<QuestionsResponse> {

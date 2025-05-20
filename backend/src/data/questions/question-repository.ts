@@ -3,9 +3,9 @@ import { Question } from '../../entities/questions/question.entity.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { Student } from '../../entities/users/student.entity.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
+import { Group } from '../../entities/assignments/group.entity.js';
 import { Assignment } from '../../entities/assignments/assignment.entity.js';
 import { Loaded } from '@mikro-orm/core';
-import { Group } from '../../entities/assignments/group.entity';
 
 export class QuestionRepository extends DwengoEntityRepository<Question> {
     public async createQuestion(question: { loId: LearningObjectIdentifier; author: Student; inGroup: Group; content: string }): Promise<Question> {
@@ -18,13 +18,9 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
             content: question.content,
             timestamp: new Date(),
         });
-        questionEntity.learningObjectHruid = question.loId.hruid;
-        questionEntity.learningObjectLanguage = question.loId.language;
-        questionEntity.learningObjectVersion = question.loId.version;
-        questionEntity.author = question.author;
-        questionEntity.inGroup = question.inGroup;
-        questionEntity.content = question.content;
-        return await this.insert(questionEntity);
+        // Don't check for overwrite since this is impossible anyway due to autoincrement.
+        await this.save(questionEntity, { preventOverwrite: false });
+        return questionEntity;
     }
     public async findAllQuestionsAboutLearningObject(loId: LearningObjectIdentifier): Promise<Question[]> {
         return this.findAll({

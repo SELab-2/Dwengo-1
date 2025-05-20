@@ -1,48 +1,39 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { setupTestApp } from '../../setup-tests';
 import { AnswerRepository } from '../../../src/data/questions/answer-repository';
-import { getAnswerRepository, getQuestionRepository, getTeacherRepository } from '../../../src/data/repositories';
-import { QuestionRepository } from '../../../src/data/questions/question-repository';
-import { LearningObjectIdentifier } from '../../../src/entities/content/learning-object-identifier';
-import { Language } from '@dwengo-1/common/util/language';
-import { TeacherRepository } from '../../../src/data/users/teacher-repository';
+import { getAnswerRepository } from '../../../src/data/repositories';
+import { getQuestion01, getQuestion02 } from '../../test_assets/questions/questions.testdata';
+import { getAnswer01, getAnswer02, getAnswer03 } from '../../test_assets/questions/answers.testdata';
+import { getFooFighters } from '../../test_assets/users/teachers.testdata';
 
 describe('AnswerRepository', () => {
     let answerRepository: AnswerRepository;
-    let questionRepository: QuestionRepository;
-    let teacherRepository: TeacherRepository;
 
     beforeAll(async () => {
         await setupTestApp();
         answerRepository = getAnswerRepository();
-        questionRepository = getQuestionRepository();
-        teacherRepository = getTeacherRepository();
     });
 
     it('should find all answers to a question', async () => {
-        const id = new LearningObjectIdentifier('id05', Language.English, 1);
-        const questions = await questionRepository.findAllQuestionsAboutLearningObject(id);
+        const question = getQuestion02();
+        const a1 = getAnswer01();
+        const a2 = getAnswer02();
 
-        const question = questions.find((it) => it.sequenceNumber === 2);
-
-        const answers = await answerRepository.findAllAnswersToQuestion(question!);
+        const answers = await answerRepository.findAllAnswersToQuestion(question);
 
         expect(answers).toBeTruthy();
         expect(answers).toHaveLength(2);
-        expect(answers[0].content).toBeOneOf(['answer', 'answer2']);
-        expect(answers[1].content).toBeOneOf(['answer', 'answer2']);
+        expect(answers[0].content).toBeOneOf([a1.content, a2.content]);
+        expect(answers[1].content).toBeOneOf([a1.content, a2.content]);
     });
 
     it('should create an answer to a question', async () => {
-        const teacher = await teacherRepository.findByUsername('FooFighters');
-        const id = new LearningObjectIdentifier('id05', Language.English, 1);
-        const questions = await questionRepository.findAllQuestionsAboutLearningObject(id);
-
-        const question = questions[0];
+        const teacher = getFooFighters();
+        const question = getQuestion01();
 
         await answerRepository.createAnswer({
             toQuestion: question,
-            author: teacher!,
+            author: teacher,
             content: 'created answer',
         });
 
@@ -54,12 +45,11 @@ describe('AnswerRepository', () => {
     });
 
     it('should not find a removed answer', async () => {
-        const id = new LearningObjectIdentifier('id04', Language.English, 1);
-        const questions = await questionRepository.findAllQuestionsAboutLearningObject(id);
+        const deleted = getAnswer03();
 
-        await answerRepository.removeAnswerByQuestionAndSequenceNumber(questions[0], 1);
+        await answerRepository.removeAnswerByQuestionAndSequenceNumber(deleted.toQuestion, deleted.sequenceNumber!);
 
-        const emptyList = await answerRepository.findAllAnswersToQuestion(questions[0]);
+        const emptyList = await answerRepository.findAllAnswersToQuestion(deleted.toQuestion);
 
         expect(emptyList).toHaveLength(0);
     });

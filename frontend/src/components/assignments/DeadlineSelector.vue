@@ -1,49 +1,54 @@
 <script setup lang="ts">
-    import { ref, computed } from "vue";
-    import { deadlineRules } from "@/utils/assignment-rules.ts";
+    import { ref, watch } from "vue";
+    import { useI18n } from "vue-i18n";
 
-    const date = ref("");
-    const time = ref("23:59");
-    const emit = defineEmits(["update:deadline"]);
+    const { t } = useI18n();
 
-    const formattedDeadline = computed(() => {
-        if (!date.value || !time.value) return "";
-        return `${date.value} ${time.value}`;
+    const emit = defineEmits<(e: "update:deadline", value: Date | null) => void>();
+    const props = defineProps<{ deadline: Date | null }>();
+
+    const datetime = ref("");
+
+    datetime.value = props.deadline ? new Date(props.deadline).toISOString().slice(0, 16) : "";
+
+    // Watch the datetime value and emit the update
+    watch(datetime, (val) => {
+        const newDate = new Date(val);
+        if (!isNaN(newDate.getTime())) {
+            emit("update:deadline", newDate);
+        } else {
+            emit("update:deadline", null);
+        }
     });
 
-    function updateDeadline(): void {
-        if (date.value && time.value) {
-            emit("update:deadline", formattedDeadline.value);
-        }
-    }
+    const deadlineRules = [
+        (value: string): string | boolean => {
+            const selectedDateTime = new Date(value);
+            const now = new Date();
+
+            if (isNaN(selectedDateTime.getTime())) {
+                return t("deadline-invalid");
+            }
+
+            if (selectedDateTime <= now) {
+                return t("deadline-past");
+            }
+
+            return true;
+        },
+    ];
 </script>
 
 <template>
-    <div>
-        <v-card-text>
-            <v-text-field
-                v-model="date"
-                label="Select Deadline Date"
-                type="date"
-                variant="outlined"
-                density="compact"
-                :rules="deadlineRules"
-                required
-                @update:modelValue="updateDeadline"
-            ></v-text-field>
-        </v-card-text>
-
-        <v-card-text>
-            <v-text-field
-                v-model="time"
-                label="Select Deadline Time"
-                type="time"
-                variant="outlined"
-                density="compact"
-                @update:modelValue="updateDeadline"
-            ></v-text-field>
-        </v-card-text>
-    </div>
+    <v-card-text>
+        <v-text-field
+            v-model="datetime"
+            type="datetime-local"
+            label="Select Deadline"
+            variant="outlined"
+            density="compact"
+            :rules="deadlineRules"
+            required
+        />
+    </v-card-text>
 </template>
-
-<style scoped></style>

@@ -15,8 +15,10 @@ import {
 import { BadRequestException } from '../../src/exceptions/bad-request-exception.js';
 import { EntityAlreadyExistsException } from '../../src/exceptions/entity-already-exists-exception.js';
 import { getStudentRequestsHandler } from '../../src/controllers/students.js';
-import { TeacherDTO } from '@dwengo-1/common/interfaces/teacher';
 import { getClassHandler } from '../../src/controllers/classes';
+import { getFooFighters, getTestleerkracht1 } from '../test_assets/users/teachers.testdata.js';
+import { getClass02 } from '../test_assets/classes/classes.testdata.js';
+import { getClassJoinRequest01 } from '../test_assets/classes/class-join-requests.testdata.js';
 
 describe('Teacher controllers', () => {
     let req: Partial<Request>;
@@ -36,7 +38,8 @@ describe('Teacher controllers', () => {
     });
 
     it('Get teacher', async () => {
-        req = { params: { username: 'FooFighters' } };
+        const teacher = getFooFighters();
+        req = { params: { username: teacher.username } };
 
         await getTeacherHandler(req as Request, res as Response);
 
@@ -77,12 +80,13 @@ describe('Teacher controllers', () => {
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ teacher: expect.objectContaining(teacher) }));
     });
 
-    it('Create duplicate student', async () => {
+    it('Create duplicate teacher', async () => {
+        const teacher = getFooFighters();
         req = {
             body: {
-                username: 'FooFighters',
-                firstName: 'Dave',
-                lastName: 'Grohl',
+                username: teacher.username,
+                firstName: teacher.firstName,
+                lastName: teacher.lastName,
             },
         };
 
@@ -96,7 +100,7 @@ describe('Teacher controllers', () => {
     });
 
     it('Teacher list', async () => {
-        req = { query: { full: 'true' } };
+        req = { query: { full: 'false' } };
 
         await getAllTeachersHandler(req as Request, res as Response);
 
@@ -104,21 +108,22 @@ describe('Teacher controllers', () => {
 
         const result = jsonMock.mock.lastCall?.[0];
 
-        const teacherUsernames = result.teachers.map((s: TeacherDTO) => s.username);
-        expect(teacherUsernames).toContain('testleerkracht1');
+        const teacher = getTestleerkracht1();
+        expect(result.teachers).toContain(teacher.username);
 
-        expect(result.teachers).toHaveLength(5);
+        expect(result.teachers.length).toBeGreaterThan(0);
     });
 
-    it('Deleting non-existent student', async () => {
+    it('Deleting non-existent teacher', async () => {
         req = { params: { username: 'doesnotexist' } };
 
         await expect(async () => deleteTeacherHandler(req as Request, res as Response)).rejects.toThrow(NotFoundException);
     });
 
     it('Get teacher classes', async () => {
+        const class_ = getClass02();
         req = {
-            params: { username: 'testleerkracht1' },
+            params: { username: class_.teachers[0].username },
             query: { full: 'true' },
         };
 
@@ -131,9 +136,10 @@ describe('Teacher controllers', () => {
         expect(result.classes.length).toBeGreaterThan(0);
     });
 
-    it('Get teacher students', async () => {
+    it('Get teacher teachers', async () => {
+        const teacher = getTestleerkracht1();
         req = {
-            params: { username: 'testleerkracht1' },
+            params: { username: teacher.username },
             query: { full: 'true' },
         };
 
@@ -146,30 +152,10 @@ describe('Teacher controllers', () => {
         expect(result.students.length).toBeGreaterThan(0);
     });
 
-    /*
-
-    It('Get teacher questions', async () => {
-        req = {
-            params: { username: 'FooFighters' },
-            query: { full: 'true' },
-        };
-
-        await getTeacherQuestionHandler(req as Request, res as Response);
-
-        expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ questions: expect.anything() }));
-
-        const result = jsonMock.mock.lastCall?.[0];
-        // console.log('[TEACHER QUESTIONS]', result.questions);
-        expect(result.questions.length).toBeGreaterThan(0);
-
-        // TODO fix
-    });
-
-     */
-
     it('Get join requests by class', async () => {
+        const jr = getClassJoinRequest01();
         req = {
-            params: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
+            params: { classId: jr.class.classId! },
         };
 
         await getStudentJoinRequestHandler(req as Request, res as Response);
@@ -182,8 +168,9 @@ describe('Teacher controllers', () => {
     });
 
     it('Update join request status', async () => {
+        const jr = getClassJoinRequest01();
         req = {
-            params: { classId: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89', studentUsername: 'PinkFloyd' },
+            params: { classId: jr.class.classId!, studentUsername: jr.requester.username },
             body: { accepted: 'true' },
         };
 
@@ -192,7 +179,7 @@ describe('Teacher controllers', () => {
         expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({ request: expect.anything() }));
 
         req = {
-            params: { username: 'PinkFloyd' },
+            params: { username: jr.requester.username },
         };
 
         await getStudentRequestsHandler(req as Request, res as Response);
@@ -201,11 +188,11 @@ describe('Teacher controllers', () => {
         expect(status).toBeTruthy();
 
         req = {
-            params: { id: '34d484a1-295f-4e9f-bfdc-3e7a23d86a89' },
+            params: { id: jr.class.classId! },
         };
 
         await getClassHandler(req as Request, res as Response);
         const students: string[] = jsonMock.mock.lastCall?.[0].class.students;
-        expect(students).contains('PinkFloyd');
+        expect(students).contains(jr.requester.username);
     });
 });

@@ -2,7 +2,7 @@ import swaggerAutogen from 'swagger-autogen';
 
 const doc = {
     info: {
-        version: '0.1.0',
+        version: '1.0.0',
         title: 'Dwengo-1 Backend API',
         description: 'Dwengo-1 Backend API using Express, based on VZW Dwengo',
         license: {
@@ -26,7 +26,59 @@ const doc = {
     ],
     components: {
         securitySchemes: {
-            student: {
+            studentDev: {
+                type: 'oauth2',
+                flows: {
+                    implicit: {
+                        authorizationUrl: 'http://localhost:7080/realms/student/protocol/openid-connect/auth',
+                        scopes: {
+                            openid: 'openid',
+                            profile: 'profile',
+                            email: 'email',
+                        },
+                    },
+                },
+            },
+            teacherDev: {
+                type: 'oauth2',
+                flows: {
+                    implicit: {
+                        authorizationUrl: 'http://localhost:7080/realms/teacher/protocol/openid-connect/auth',
+                        scopes: {
+                            openid: 'openid',
+                            profile: 'profile',
+                            email: 'email',
+                        },
+                    },
+                },
+            },
+            studentStaging: {
+                type: 'oauth2',
+                flows: {
+                    implicit: {
+                        authorizationUrl: 'http://localhost/idp/realms/student/protocol/openid-connect/auth',
+                        scopes: {
+                            openid: 'openid',
+                            profile: 'profile',
+                            email: 'email',
+                        },
+                    },
+                },
+            },
+            teacherStaging: {
+                type: 'oauth2',
+                flows: {
+                    implicit: {
+                        authorizationUrl: 'http://localhost/idp/realms/teacher/protocol/openid-connect/auth',
+                        scopes: {
+                            openid: 'openid',
+                            profile: 'profile',
+                            email: 'email',
+                        },
+                    },
+                },
+            },
+            studentProduction: {
                 type: 'oauth2',
                 flows: {
                     implicit: {
@@ -39,7 +91,7 @@ const doc = {
                     },
                 },
             },
-            teacher: {
+            teacherProduction: {
                 type: 'oauth2',
                 flows: {
                     implicit: {

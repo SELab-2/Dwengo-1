@@ -4,7 +4,7 @@ import { getLearningPathRepository } from '../../data/repositories.js';
 import learningObjectService from '../learning-objects/learning-object-service.js';
 import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
-import { getLastSubmissionForGroup, isTransitionPossible } from './learning-path-personalization-util.js';
+import { getLastSubmissionForGroup, idFromLearningPathNode, isTransitionPossible } from './learning-path-personalization-util.js';
 import {
     FilteredLearningObject,
     LearningObjectNode,
@@ -16,6 +16,9 @@ import { Language } from '@dwengo-1/common/util/language';
 import { Group } from '../../entities/assignments/group.entity';
 import { Collection } from '@mikro-orm/core';
 import { v4 } from 'uuid';
+import { getLogger } from '../../logging/initalize.js';
+
+const logger = getLogger();
 
 /**
  * Fetches the corresponding learning object for each of the nodes and creates a map that maps each node to its
@@ -38,8 +41,13 @@ async function getLearningObjectsForNodes(nodes: Collection<LearningPathNode>): 
             )
         )
     );
-    if (Array.from(nullableNodesToLearningObjects.values()).some((it) => it === null)) {
-        throw new Error('At least one of the learning objects on this path could not be found.');
+
+    // Ignore all learning objects that cannot be found such that the rest of the learning path keeps working.
+    for (const [key, value] of nullableNodesToLearningObjects) {
+        if (value === null) {
+            logger.warn(`Learning object ${key.learningObjectHruid}/${key.language}/${key.version} not found!`);
+            nullableNodesToLearningObjects.delete(key);
+        }
     }
     return nullableNodesToLearningObjects as Map<LearningPathNode, FilteredLearningObject>;
 }
@@ -62,6 +70,8 @@ async function convertLearningPath(learningPath: LearningPathEntity, order: numb
     // Convert the learning object notes as retrieved from the database into the expected response format-
     const convertedNodes = await convertNodes(nodesToLearningObjects, personalizedFor);
 
+    const nodesActuallyOnPath = traverseLearningPath(convertedNodes);
+
     return {
         _id: `${learningPath.hruid}/${learningPath.language}`, // For backwards compatibility with the original Dwengo API.
         __order: order,
@@ -71,8 +81,8 @@ async function convertLearningPath(learningPath: LearningPathEntity, order: numb
         image: image,
         title: learningPath.title,
         nodes: convertedNodes,
-        num_nodes: learningPath.nodes.length,
-        num_nodes_left: convertedNodes.filter((it) => !it.done).length,
+        num_nodes: nodesActuallyOnPath.length,
+        num_nodes_left: nodesActuallyOnPath.filter((it) => !it.done).length,
         keywords: keywords.join(' '),
         target_ages: targetAges,
         max_age: Math.max(...targetAges),
@@ -95,14 +105,22 @@ async function convertNode(
     personalizedFor: Group | undefined,
     nodesToLearningObjects: Map<LearningPathNode, FilteredLearningObject>
 ): Promise<LearningObjectNode> {
-    const lastSubmission = personalizedFor ? await getLastSubmissionForGroup(node, personalizedFor) : null;
+    const lastSubmission = personalizedFor ? await getLastSubmissionForGroup(idFromLearningPathNode(node), personalizedFor) : null;
     const transitions = node.transitions
         .filter(
             (trans) =>
                 !personalizedFor || // If we do not want a personalized learning path, keep all transitions
                 isTransitionPossible(trans, optionalJsonStringToObject(lastSubmission?.content)) // Otherwise remove all transitions that aren't possible.
         )
-        .map((trans, i) => convertTransition(trans, i, nodesToLearningObjects));
+        .map((trans, i) => {
+            try {
+                return convertTransition(trans, i, nodesToLearningObjects);
+            } catch (_: unknown) {
+                logger.error(`Transition could not be resolved: ${JSON.stringify(trans)}`);
+                return undefined; // Do not crash on invalid transitions, just ignore them so the rest of the learning path keeps working.
+            }
+        })
+        .filter((it) => it !== undefined);
     return {
         _id: learningObject.uuid,
         language: learningObject.language,
@@ -175,6 +193,29 @@ function convertTransition(
 }
 
 /**
+ * Start from the start node and then always take the first transition until there are no transitions anymore.
+ * Returns the traversed nodes as an array. (This effectively filters outs nodes that cannot be reached.)
+ */
+function traverseLearningPath(nodes: LearningObjectNode[]): LearningObjectNode[] {
+    const traversedNodes: LearningObjectNode[] = [];
+    let currentNode = nodes.find((it) => it.start_node);
+
+    while (currentNode) {
+        traversedNodes.push(currentNode);
+
+        const next = currentNode.transitions[0]?.next;
+
+        if (next) {
+            currentNode = nodes.find((it) => it.learningobject_hruid === next.hruid && it.language === next.language && it.version === next.version);
+        } else {
+            currentNode = undefined;
+        }
+    }
+
+    return traversedNodes;
+}
+
+/**
  * Service providing access to data about learning paths from the database.
  */
 const databaseLearningPathProvider: LearningPathProvider = {
@@ -196,6 +237,15 @@ const databaseLearningPathProvider: LearningPathProvider = {
             data: await Promise.all(filteredLearningPaths),
             source,
         };
+    },
+
+    /**
+     * Returns all the learning paths which have the user with the given username as an administrator.
+     */
+    async getLearningPathsAdministratedBy(adminUsername: string): Promise<LearningPath[]> {
+        const repo = getLearningPathRepository();
+        const paths = await repo.findAllByAdminUsername(adminUsername);
+        return await Promise.all(paths.map(async (result, index) => convertLearningPath(result, index)));
     },
 
     /**

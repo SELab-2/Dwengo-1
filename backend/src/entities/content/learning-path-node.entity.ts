@@ -1,4 +1,4 @@
-import { Collection, Entity, Enum, ManyToOne, OneToMany, PrimaryKey, Property, Rel } from '@mikro-orm/core';
+import { Cascade, Collection, Entity, Enum, ManyToOne, OneToMany, PrimaryKey, Property, Rel } from '@mikro-orm/core';
 import { LearningPath } from './learning-path.entity.js';
 import { LearningPathTransition } from './learning-path-transition.entity.js';
 import { Language } from '@dwengo-1/common/util/language';
@@ -26,7 +26,7 @@ export class LearningPathNode {
     @Property({ type: 'bool' })
     startNode!: boolean;
 
-    @OneToMany({ entity: () => LearningPathTransition, mappedBy: 'node' })
+    @OneToMany({ entity: () => LearningPathTransition, mappedBy: 'node', cascade: [Cascade.ALL] })
     transitions!: Collection<LearningPathTransition>;
 
     @Property({ length: 3 })

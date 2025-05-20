@@ -7,13 +7,17 @@
 
     // Import assets
     import dwengoLogo from "../../../assets/img/dwengo-groen-zwart.svg";
+    import { useLocale } from "vuetify";
 
     const { t, locale } = useI18n();
+    const { current: vuetifyLocale } = useLocale();
 
     const role = auth.authState.activeRole;
     const _router = useRouter(); // Zonder '_' gaf dit een linter error voor unused variable
 
     const name: string = auth.authState.user!.profile.name!;
+    const username = auth.authState.user!.profile.preferred_username!;
+    const email = auth.authState.user!.profile.email;
     const initials: string = name
         .split(" ")
         .map((n) => n[0])
@@ -30,6 +34,7 @@
     // Logic to change the language of the website to the selected language
     function changeLanguage(langCode: string): void {
         locale.value = langCode;
+        vuetifyLocale.value = langCode;
         localStorage.setItem("user-lang", langCode);
     }
 
@@ -82,39 +87,41 @@
             >
                 {{ t("classes") }}
             </v-btn>
-            <!-- TODO Re-enable this button when the discussion page is ready -->
-            <!--            <v-btn-->
-            <!--                class="menu_item"-->
-            <!--                variant="text"-->
-            <!--                to="/user/discussion"-->
-            <!--            >-->
-            <!--                {{ t("discussions") }}-->
-            <!--            </v-btn>-->
-            <v-menu open-on-hover>
-                <template v-slot:activator="{ props }">
-                    <v-btn
-                        v-bind="props"
-                        icon
-                        variant="text"
-                    >
-                        <v-icon
-                            icon="mdi-translate"
-                            size="small"
-                            color="#0e6942"
-                        ></v-icon>
-                    </v-btn>
-                </template>
-                <v-list>
-                    <v-list-item
-                        v-for="(language, index) in languages"
-                        :key="index"
-                        @click="changeLanguage(language.code)"
-                    >
-                        <v-list-item-title>{{ language.name }}</v-list-item-title>
-                    </v-list-item>
-                </v-list>
-            </v-menu>
+            <v-btn
+                class="menu_item"
+                variant="text"
+                to="/discussion"
+            >
+                {{ t("discussions") }}
+            </v-btn>
         </v-toolbar-items>
+        <v-menu
+            open-on-hover
+            open-on-click
+        >
+            <template v-slot:activator="{ props }">
+                <v-btn
+                    v-bind="props"
+                    icon
+                    variant="text"
+                >
+                    <v-icon
+                        icon="mdi-translate"
+                        size="small"
+                        color="#0e6942"
+                    ></v-icon>
+                </v-btn>
+            </template>
+            <v-list>
+                <v-list-item
+                    v-for="(language, index) in languages"
+                    :key="index"
+                    @click="changeLanguage(language.code)"
+                >
+                    <v-list-item-title>{{ language.name }}</v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </v-menu>
         <v-spacer></v-spacer>
         <v-dialog max-width="500">
             <template v-slot:activator="{ props: activatorProps }">
@@ -141,7 +148,8 @@
             </template>
 
             <template v-slot:default="{ isActive }">
-                <v-card :title="t('logoutVerification')">
+                <v-card>
+                    <v-card-title class="logout-verification-title">{{ t("logoutVerification") }}</v-card-title>
                     <v-card-actions>
                         <v-spacer></v-spacer>
 
@@ -158,12 +166,48 @@
                 </v-card>
             </template>
         </v-dialog>
-        <v-avatar
-            size="large"
-            color="#0e6942"
-            class="user-button"
-            >{{ initials }}</v-avatar
-        >
+        <v-menu min-width="200px">
+            <template v-slot:activator="{ props }">
+                <v-btn
+                    icon
+                    v-bind="props"
+                >
+                    <v-avatar
+                        color="#0e6942"
+                        size="large"
+                        class="user-button"
+                    >
+                        <span>{{ initials }}</span>
+                    </v-avatar>
+                </v-btn>
+            </template>
+            <v-card>
+                <v-card-text>
+                    <div class="mx-auto text-center">
+                        <v-avatar
+                            color="#0e6942"
+                            size="large"
+                            class="user-button mb-3"
+                        >
+                            <span>{{ initials }}</span>
+                        </v-avatar>
+                        <h3>{{ name }}</h3>
+                        <p class="text-caption mt-1">{{ username }}</p>
+                        <p class="text-caption mt-1">{{ email }}</p>
+                        <v-divider class="my-3"></v-divider>
+                        <v-btn
+                            variant="text"
+                            rounded
+                            append-icon="mdi-logout"
+                            @click="performLogout"
+                            to="/login"
+                            >{{ t("logout") }}</v-btn
+                        >
+                        <v-divider class="my-3"></v-divider>
+                    </div>
+                </v-card-text>
+            </v-card>
+        </v-menu>
     </v-app-bar>
     <v-navigation-drawer
         v-model="drawer"
@@ -186,7 +230,7 @@
             </v-list-item>
 
             <v-list-item
-                to="/user/discussion"
+                to="/discussion"
                 link
             >
                 <v-list-item-title class="menu_item">{{ t("discussions") }}</v-list-item-title>
@@ -246,6 +290,19 @@
         text-decoration: none;
         font-size: large;
         text-transform: none;
+    }
+
+    .translate-button {
+        z-index: 1;
+        position: relative;
+        margin-left: 10px;
+    }
+
+    .logout-verification-title {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        text-overflow: unset;
     }
 
     @media (max-width: 700px) {

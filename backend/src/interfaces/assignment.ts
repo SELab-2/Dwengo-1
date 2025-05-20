@@ -20,6 +20,7 @@ export function mapToAssignmentDTO(assignment: Assignment): AssignmentDTO {
         description: assignment.description,
         learningPath: assignment.learningPathHruid,
         language: assignment.learningPathLanguage,
+        deadline: assignment.deadline ?? null,
         groups: assignment.groups.map((group) => mapToGroupDTO(group, assignment.within)),
     };
 }
@@ -31,6 +32,7 @@ export function mapToAssignment(assignmentData: AssignmentDTO, cls: Class): Assi
         description: assignmentData.description,
         learningPathHruid: assignmentData.learningPath,
         learningPathLanguage: languageMap[assignmentData.language],
+        deadline: assignmentData.deadline,
         groups: [],
     });
 }

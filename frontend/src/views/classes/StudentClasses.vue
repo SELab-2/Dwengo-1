@@ -2,7 +2,7 @@
     import { useI18n } from "vue-i18n";
     import authState from "@/services/auth/auth-service.ts";
     import { computed, onMounted, ref } from "vue";
-    import { validate, version } from "uuid";
+    import { useRoute } from "vue-router";
     import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
     import { useCreateJoinRequestMutation, useStudentClassesQuery } from "@/queries/students";
     import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
@@ -12,8 +12,10 @@
     import { useClassStudentsQuery, useClassTeachersQuery } from "@/queries/classes";
     import type { StudentsResponse } from "@/controllers/students";
     import type { TeachersResponse } from "@/controllers/teachers";
+    import "../../assets/common.css";
 
     const { t } = useI18n();
+    const route = useRoute();
 
     // Username of logged in student
     const username = ref<string | undefined>(undefined);
@@ -36,6 +38,11 @@
             errorMessage.value = error instanceof Error ? error.message : String(error);
         } finally {
             isLoading.value = false;
+        }
+
+        const queryCode = route.query.code as string | undefined;
+        if (queryCode) {
+            code.value = queryCode;
         }
     });
 
@@ -74,11 +81,15 @@
 
     // The code a student sends in to join a class needs to be formatted as v4 to be valid
     // These rules are used to display a message to the user if they use a code that has an invalid format
+    function codeRegex(value: string): boolean {
+        return /^[a-zA-Z0-9]{6}$/.test(value);
+    }
+
     const codeRules = [
         (value: string | undefined): string | boolean => {
             if (value === undefined || value === "") {
                 return true;
-            } else if (value !== undefined && validate(value) && version(value) === 4) {
+            } else if (codeRegex(value)) {
                 return true;
             }
             return t("invalidFormat");
@@ -91,7 +102,7 @@
     // Function called when a student submits a code to join a class
     function submitCode(): void {
         // Check if the code is valid
-        if (code.value !== undefined && validate(code.value) && version(code.value) === 4) {
+        if (code.value !== undefined && codeRegex(code.value)) {
             mutate(
                 { username: username.value!, classId: code.value },
                 {
@@ -99,7 +110,7 @@
                         showSnackbar(t("sent"), "success");
                     },
                     onError: (e) => {
-                        showSnackbar(t("failed") + ": " + e.message, "error");
+                        showSnackbar(t("failed") + ": " + e.response.data.error || e.message, "error");
                     },
                 },
             );
@@ -135,7 +146,7 @@
             ></v-empty-state>
         </div>
         <div v-else>
-            <h1 class="title">{{ t("classes") }}</h1>
+            <h1 class="h1">{{ t("classes") }}</h1>
             <using-query-result
                 :query-result="classesQuery"
                 v-slot="classResponse: { data: ClassesResponse }"
@@ -161,7 +172,7 @@
                                         <th class="header">{{ t("members") }}</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody v-if="classResponse.data.classes.length">
                                     <tr
                                         v-for="c in classResponse.data.classes as ClassDTO[]"
                                         :key="c.id"
@@ -178,6 +189,21 @@
                                             @click="openStudentDialog(c)"
                                         >
                                             {{ c.students.length }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody v-else>
+                                    <tr>
+                                        <td
+                                            colspan="3"
+                                            class="empty-message"
+                                        >
+                                            <v-icon
+                                                icon="mdi-information-outline"
+                                                size="small"
+                                            >
+                                            </v-icon>
+                                            {{ t("no-classes-found") }}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -244,7 +270,7 @@
                             <v-text-field
                                 label="CODE"
                                 v-model="code"
-                                placeholder="XXXXXXXX-XXXX-4XXX-XXXX-XXXXXXXXXXXX"
+                                placeholder="XXXXXX"
                                 :rules="codeRules"
                                 variant="outlined"
                             ></v-text-field>
@@ -271,49 +297,6 @@
     </main>
 </template>
 <style scoped>
-    .header {
-        font-weight: bold !important;
-        background-color: #0e6942;
-        color: white;
-        padding: 10px;
-    }
-
-    table thead th:first-child {
-        border-top-left-radius: 10px;
-    }
-
-    .table thead th:last-child {
-        border-top-right-radius: 10px;
-    }
-
-    .table tbody tr:nth-child(odd) {
-        background-color: white;
-    }
-
-    .table tbody tr:nth-child(even) {
-        background-color: #f6faf2;
-    }
-
-    td,
-    th {
-        border-bottom: 1px solid #0e6942;
-        border-top: 1px solid #0e6942;
-    }
-
-    .table {
-        width: 90%;
-        padding-top: 10px;
-        border-collapse: collapse;
-    }
-
-    h1 {
-        color: #0e6942;
-        text-transform: uppercase;
-        font-weight: bolder;
-        padding-top: 2%;
-        font-size: 50px;
-    }
-
     h2 {
         color: #0e6942;
         font-size: 30px;
@@ -321,6 +304,7 @@
 
     .join {
         display: flex;
+        margin-left: 1%;
         flex-direction: column;
         gap: 20px;
         margin-top: 50px;
@@ -331,16 +315,7 @@
         text-decoration: underline;
     }
 
-    main {
-        margin-left: 30px;
-    }
-
     @media screen and (max-width: 800px) {
-        h1 {
-            text-align: center;
-            padding-left: 0;
-        }
-
         .join {
             text-align: center;
             align-items: center;

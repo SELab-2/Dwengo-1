@@ -13,8 +13,8 @@ export interface QuestionDTO {
 
 export interface QuestionData {
     author?: string;
-    content: string;
     inGroup: GroupDTO;
+    content: string;
 }
 
 export interface QuestionId {

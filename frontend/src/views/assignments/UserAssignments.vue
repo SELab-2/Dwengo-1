@@ -1,56 +1,79 @@
 <script setup lang="ts">
-    import { ref, computed, onMounted, watch } from "vue";
+    import { ref, computed, onMounted } from "vue";
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
+    import authState from "@/services/auth/auth-service.ts";
     import auth from "@/services/auth/auth-service.ts";
-    import { useTeacherClassesQuery } from "@/queries/teachers.ts";
-    import { useStudentClassesQuery } from "@/queries/students.ts";
-    import { ClassController } from "@/controllers/classes.ts";
-    import type { ClassDTO } from "@dwengo-1/common/interfaces/class";
-    import { asyncComputed } from "@vueuse/core";
+    import { useTeacherAssignmentsQuery, useTeacherClassesQuery } from "@/queries/teachers.ts";
+    import { useStudentAssignmentsQuery, useStudentClassesQuery } from "@/queries/students.ts";
     import { useDeleteAssignmentMutation } from "@/queries/assignments.ts";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
 
-    const { t } = useI18n();
+    const { t, locale } = useI18n();
     const router = useRouter();
 
     const role = ref(auth.authState.activeRole);
-    const username = ref<string>("");
-
     const isTeacher = computed(() => role.value === "teacher");
+    const username = ref<string | undefined>(undefined);
+    const isLoading = ref(false);
+    const isError = ref(false);
+    const errorMessage = ref<string>("");
 
-    // Fetch and store all the teacher's classes
-    let classesQueryResults = undefined;
+    // Load current user before rendering the page
+    onMounted(async () => {
+        isLoading.value = true;
+        try {
+            const userObject = await authState.loadUser();
+            username.value = userObject!.profile.preferred_username;
+        } catch (error) {
+            isError.value = true;
+            errorMessage.value = error instanceof Error ? error.message : String(error);
+        } finally {
+            isLoading.value = false;
+        }
+    });
 
-    if (isTeacher.value) {
-        classesQueryResults = useTeacherClassesQuery(username, true);
-    } else {
-        classesQueryResults = useStudentClassesQuery(username, true);
-    }
+    const classesQueryResult = isTeacher.value
+        ? useTeacherClassesQuery(username, true)
+        : useStudentClassesQuery(username, true);
 
-    //TODO: remove later
-    const classController = new ClassController();
+    const assignmentsQueryResult = isTeacher.value
+        ? useTeacherAssignmentsQuery(username, true)
+        : useStudentAssignmentsQuery(username, true);
 
-    //TODO: replace by query that fetches all user's assignment
-    const assignments = asyncComputed(async () => {
-        const classes = classesQueryResults?.data?.value?.classes;
+    const allAssignments = computed(() => {
+        const assignments = assignmentsQueryResult.data.value?.assignments;
+        if (!assignments) return [];
+
+        const classes = classesQueryResult.data.value?.classes;
         if (!classes) return [];
-        const result = await Promise.all(
-            (classes as ClassDTO[]).map(async (cls) => {
-                const { assignments } = await classController.getAssignments(cls.id);
-                return assignments.map((a) => ({
-                    id: a.id,
-                    class: cls,
-                    title: a.title,
-                    description: a.description,
-                    learningPath: a.learningPath,
-                    language: a.language,
-                    groups: a.groups,
-                }));
-            }),
-        );
 
-        return result.flat();
-    }, []);
+        const result = assignments.map((a) => ({
+            id: a.id,
+            class: classes.find((cls) => cls?.id === a.within) ?? undefined,
+            title: a.title,
+            description: a.description,
+            learningPath: a.learningPath,
+            language: a.language,
+            deadline: a.deadline,
+            groups: a.groups,
+        }));
+
+        // Order the assignments by deadline
+        return result.flat().sort((a, b) => {
+            const now = Date.now();
+            const aTime = new Date(a.deadline).getTime();
+            const bTime = new Date(b.deadline).getTime();
+
+            const aIsPast = aTime < now;
+            const bIsPast = bTime < now;
+
+            if (aIsPast && !bIsPast) return 1;
+            if (!aIsPast && bIsPast) return -1;
+
+            return aTime - bTime;
+        });
+    });
 
     async function goToCreateAssignment(): Promise<void> {
         await router.push("/assignment/create");
@@ -60,17 +83,70 @@
         await router.push(`/assignment/${clsId}/${id}`);
     }
 
-    const { mutate, data, isSuccess } = useDeleteAssignmentMutation();
-
-    watch([isSuccess, data], async ([success, oldData]) => {
-        if (success && oldData?.assignment) {
-            window.location.reload();
-        }
+    const snackbar = ref({
+        visible: false,
+        message: "",
+        color: "success",
     });
 
-    async function goToDeleteAssignment(num: number, clsId: string): Promise<void> {
-        mutate({ cid: clsId, an: num });
+    function showSnackbar(message: string, color: string): void {
+        snackbar.value.message = message;
+        snackbar.value.color = color;
+        snackbar.value.visible = true;
     }
+
+    const deleteAssignmentMutation = useDeleteAssignmentMutation();
+
+    async function goToDeleteAssignment(num: number, clsId: string): Promise<void> {
+        deleteAssignmentMutation.mutate(
+            { cid: clsId, an: num },
+            {
+                onSuccess: async (data) => {
+                    if (data?.assignment) {
+                        await assignmentsQueryResult.refetch();
+                    }
+                    showSnackbar(t("success"), "success");
+                },
+                onError: (e) => {
+                    showSnackbar(t("failed") + ": " + e.response.data.error || e.message, "error");
+                },
+            },
+        );
+    }
+
+    function formatDate(date?: string | Date): string {
+        if (!date) return "–";
+        const d = new Date(date);
+
+        // Choose locale based on selected language
+        const currentLocale = locale.value;
+
+        return d.toLocaleDateString(currentLocale, {
+            weekday: "short",
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+        });
+    }
+
+    function getDeadlineClass(deadline?: string | Date): string {
+        if (!deadline) return "";
+
+        const date = new Date(deadline);
+        const now = new Date();
+        const in24Hours = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+
+        if (date.getTime() < now.getTime()) return "deadline-passed";
+        if (date.getTime() <= in24Hours.getTime()) return "deadline-in24hours";
+        return "deadline-upcoming";
+    }
+
+    onMounted(async () => {
+        const user = await auth.loadUser();
+        username.value = user?.profile?.preferred_username ?? "";
+    });
 
     onMounted(async () => {
         const user = await auth.loadUser();
@@ -80,58 +156,88 @@
 
 <template>
     <div class="assignments-container">
-        <h1>{{ t("assignments") }}</h1>
+        <h1 class="h1">{{ t("assignments") }}</h1>
 
         <v-btn
             v-if="isTeacher"
-            color="primary"
+            :style="{ backgroundColor: '#0E6942' }"
             class="mb-4 center-btn"
             @click="goToCreateAssignment"
         >
             {{ t("new-assignment") }}
         </v-btn>
 
-        <v-container>
-            <v-row>
-                <v-col
-                    v-for="assignment in assignments"
-                    :key="assignment.id"
-                    cols="12"
-                >
-                    <v-card class="assignment-card">
-                        <div class="top-content">
-                            <div class="assignment-title">{{ assignment.title }}</div>
-                            <div class="assignment-class">
-                                {{ t("class") }}:
-                                <span class="class-name">
-                                    {{ assignment.class.displayName }}
-                                </span>
+        <using-query-result :query-result="assignmentsQueryResult">
+            <v-container>
+                <v-row>
+                    <v-col
+                        v-for="assignment in allAssignments"
+                        :key="assignment.id"
+                        cols="12"
+                    >
+                        <v-card class="assignment-card">
+                            <div class="top-content">
+                                <div class="assignment-title">{{ assignment.title }}</div>
+                                <div class="assignment-class">
+                                    {{ t("class") }}:
+                                    <a
+                                        :href="`/class/${assignment?.class?.id}`"
+                                        class="class-name"
+                                    >
+                                        {{ assignment?.class?.displayName }}
+                                    </a>
+                                </div>
+                                <div
+                                    class="assignment-deadline"
+                                    :class="getDeadlineClass(assignment.deadline)"
+                                >
+                                    {{ t("deadline") }}:
+                                    <span>{{ formatDate(assignment.deadline) }}</span>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="spacer"></div>
+                            <div class="spacer"></div>
 
-                        <div class="button-row">
-                            <v-btn
-                                color="primary"
-                                variant="text"
-                                @click="goToAssignmentDetails(assignment.id, assignment.class.id)"
-                            >
-                                {{ t("view-assignment") }}
-                            </v-btn>
-                            <v-btn
-                                v-if="isTeacher"
-                                color="red"
-                                variant="text"
-                                @click="goToDeleteAssignment(assignment.id, assignment.class.id)"
-                            >
-                                {{ t("delete") }}
-                            </v-btn>
+                            <div class="button-row">
+                                <v-btn
+                                    color="primary"
+                                    variant="text"
+                                    @click="goToAssignmentDetails(assignment.id, assignment?.class?.id)"
+                                >
+                                    {{ t("view-assignment") }}
+                                </v-btn>
+                                <v-btn
+                                    v-if="isTeacher"
+                                    color="red"
+                                    variant="text"
+                                    @click="goToDeleteAssignment(assignment.id, assignment?.class?.id)"
+                                >
+                                    {{ t("delete") }}
+                                </v-btn>
+                            </div>
+                        </v-card>
+                    </v-col>
+                </v-row>
+                <v-row v-if="allAssignments.length === 0">
+                    <v-col cols="12">
+                        <div class="no-assignments">
+                            <v-icon
+                                icon="mdi-information-outline"
+                                size="small"
+                            />
+                            {{ t("no-assignments") }}
                         </div>
-                    </v-card>
-                </v-col>
-            </v-row>
-        </v-container>
+                    </v-col>
+                </v-row>
+            </v-container>
+            <v-snackbar
+                v-model="snackbar.visible"
+                :color="snackbar.color"
+                timeout="3000"
+            >
+                {{ snackbar.message }}
+            </v-snackbar>
+        </using-query-result>
     </div>
 </template>
 
@@ -139,23 +245,72 @@
     .assignments-container {
         width: 100%;
         margin: 0 auto;
-        padding: 2% 4%;
         box-sizing: border-box;
     }
 
     .center-btn {
         display: block;
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 auto 2rem auto;
+        font-weight: 600;
+        background-color: #10ad61;
+        color: white;
+        transition: background-color 0.2s;
+    }
+
+    .center-btn:hover {
+        background-color: #0e6942;
     }
 
     .assignment-card {
-        padding: 1rem;
+        padding: 1.25rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        background-color: white;
+        transition:
+            transform 0.2s,
+            box-shadow 0.2s;
+    }
+
+    .assignment-card:hover {
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
     }
 
     .top-content {
         margin-bottom: 1rem;
         word-break: break-word;
+    }
+
+    .assignment-title {
+        font-weight: 700;
+        font-size: 1.4rem;
+        color: #0e6942;
+        margin-bottom: 0.3rem;
+    }
+
+    .assignment-class,
+    .assignment-deadline {
+        font-size: 0.95rem;
+        color: #444;
+        margin-bottom: 0.2rem;
+    }
+
+    .assignment-class a {
+        text-decoration: none;
+    }
+
+    .class-name {
+        font-weight: 600;
+        color: #097180;
+    }
+
+    .assignment-deadline.deadline-passed {
+        color: #d32f2f;
+        font-weight: bold;
+    }
+
+    .assignment-deadline.deadline-in24hours {
+        color: #f57c00;
+        font-weight: bold;
     }
 
     .spacer {
@@ -165,24 +320,14 @@
     .button-row {
         display: flex;
         justify-content: flex-end;
-        gap: 0.5rem;
+        gap: 0.75rem;
         flex-wrap: wrap;
     }
 
-    .assignment-title {
-        font-weight: bold;
-        font-size: 1.5rem;
-        margin-bottom: 0.1rem;
-        word-break: break-word;
-    }
-
-    .assignment-class {
-        color: #666;
-        font-size: 0.95rem;
-    }
-
-    .class-name {
-        font-weight: 500;
-        color: #333;
+    .no-assignments {
+        text-align: center;
+        font-size: 1.2rem;
+        color: #777;
+        padding: 3rem 0;
     }
 </style>

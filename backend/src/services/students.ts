@@ -10,7 +10,7 @@ import { mapToClassDTO } from '../interfaces/class.js';
 import { mapToGroupDTO, mapToGroupDTOId } from '../interfaces/group.js';
 import { mapToStudent, mapToStudentDTO } from '../interfaces/student.js';
 import { mapToSubmissionDTO, mapToSubmissionDTOId } from '../interfaces/submission.js';
-import { getAllAssignments } from './assignments.js';
+import { fetchAssignment } from './assignments.js';
 import { mapToQuestionDTO, mapToQuestionDTOId } from '../interfaces/question.js';
 import { mapToStudentRequest, mapToStudentRequestDTO } from '../interfaces/student-request.js';
 import { Student } from '../entities/users/student.entity.js';
@@ -24,7 +24,9 @@ import { SubmissionDTO, SubmissionDTOId } from '@dwengo-1/common/interfaces/subm
 import { QuestionDTO, QuestionId } from '@dwengo-1/common/interfaces/question';
 import { ClassJoinRequestDTO } from '@dwengo-1/common/interfaces/class-join-request';
 import { ConflictException } from '../exceptions/conflict-exception.js';
-import { Submission } from '../entities/assignments/submission.entity';
+import { Submission } from '../entities/assignments/submission.entity.js';
+import { mapToUsername } from '../interfaces/user.js';
+import { mapToAssignmentDTO, mapToAssignmentDTOId } from '../interfaces/assignment.js';
 
 export async function getAllStudents(full: boolean): Promise<StudentDTO[] | string[]> {
     const studentRepository = getStudentRepository();
@@ -34,7 +36,7 @@ export async function getAllStudents(full: boolean): Promise<StudentDTO[] | stri
         return users.map(mapToStudentDTO);
     }
 
-    return users.map((user) => user.username);
+    return users.map(mapToUsername);
 }
 
 export async function fetchStudent(username: string): Promise<Student> {
@@ -42,15 +44,14 @@ export async function fetchStudent(username: string): Promise<Student> {
     const user = await studentRepository.findByUsername(username);
 
     if (!user) {
-        throw new NotFoundException('Student with username not found');
+        throw new NotFoundException(`Student with username ${username} not found`);
     }
 
     return user;
 }
 
 export async function fetchStudents(usernames: string[]): Promise<Student[]> {
-    const members = await Promise.all(usernames.map(async (username) => await fetchStudent(username)));
-    return members;
+    return await Promise.all(usernames.map(async (username) => await fetchStudent(username)));
 }
 
 export async function getStudent(username: string): Promise<StudentDTO> {
@@ -64,7 +65,7 @@ export async function createStudent(userData: StudentDTO): Promise<StudentDTO> {
     const newStudent = mapToStudent(userData);
     await studentRepository.save(newStudent, { preventOverwrite: true });
 
-    return userData;
+    return mapToStudentDTO(newStudent);
 }
 
 export async function createOrUpdateStudent(userData: StudentDTO): Promise<StudentDTO> {
@@ -101,10 +102,14 @@ export async function getStudentClasses(username: string, full: boolean): Promis
 export async function getStudentAssignments(username: string, full: boolean): Promise<AssignmentDTO[] | AssignmentDTOId[]> {
     const student = await fetchStudent(username);
 
-    const classRepository = getClassRepository();
-    const classes = await classRepository.findByStudent(student);
+    const groupRepository = getGroupRepository();
+    const groups = await groupRepository.findAllGroupsWithStudent(student);
+    const assignments = await Promise.all(groups.map(async (group) => await fetchAssignment(group.assignment.within.classId!, group.assignment.id!)));
 
-    return (await Promise.all(classes.map(async (cls) => await getAllAssignments(cls.classId!, full)))).flat();
+    if (full) {
+        return assignments.map(mapToAssignmentDTO);
+    }
+    return assignments.map(mapToAssignmentDTOId);
 }
 
 export async function getStudentGroups(username: string, full: boolean): Promise<GroupDTO[] | GroupDTOId[]> {

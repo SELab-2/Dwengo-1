@@ -4,18 +4,23 @@ import { Language } from '@dwengo-1/common/util/language';
 import { LearningPathNode } from '../../entities/content/learning-path-node.entity.js';
 import { RequiredEntityData } from '@mikro-orm/core';
 import { LearningPathTransition } from '../../entities/content/learning-path-transition.entity.js';
-import { EntityAlreadyExistsException } from '../../exceptions/entity-already-exists-exception.js';
 
 export class LearningPathRepository extends DwengoEntityRepository<LearningPath> {
     public async findByHruidAndLanguage(hruid: string, language: Language): Promise<LearningPath | null> {
-        return this.findOne({ hruid: hruid, language: language }, { populate: ['nodes', 'nodes.transitions'] });
+        return this.findOne(
+            {
+                hruid: hruid,
+                language: language,
+            },
+            { populate: ['nodes', 'nodes.transitions', 'admins'] }
+        );
     }
 
     /**
      * Returns all learning paths which have the given language and whose title OR description contains the
      * query string.
      *
-     * @param query The query string we want to seach for in the title or description.
+     * @param query The query string we want to search for in the title or description.
      * @param language The language of the learning paths we want to find.
      */
     public async findByQueryStringAndLanguage(query: string, language: Language): Promise<LearningPath[]> {
@@ -24,7 +29,21 @@ export class LearningPathRepository extends DwengoEntityRepository<LearningPath>
                 language: language,
                 $or: [{ title: { $like: `%${query}%` } }, { description: { $like: `%${query}%` } }],
             },
-            populate: ['nodes', 'nodes.transitions'],
+            populate: ['nodes', 'nodes.transitions', 'admins'],
+        });
+    }
+
+    /**
+     * Returns all learning paths which have the user with the given username as an administrator.
+     */
+    public async findAllByAdminUsername(adminUsername: string): Promise<LearningPath[]> {
+        return this.findAll({
+            where: {
+                admins: {
+                    username: adminUsername,
+                },
+            },
+            populate: ['nodes', 'nodes.transitions', 'admins'],
         });
     }
 
@@ -36,18 +55,15 @@ export class LearningPathRepository extends DwengoEntityRepository<LearningPath>
         return this.em.create(LearningPathTransition, transitionData);
     }
 
-    public async saveLearningPathNodesAndTransitions(
-        path: LearningPath,
-        nodes: LearningPathNode[],
-        transitions: LearningPathTransition[],
-        options?: { preventOverwrite?: boolean }
-    ): Promise<void> {
-        if (options?.preventOverwrite && (await this.findOne(path))) {
-            throw new EntityAlreadyExistsException('A learning path with this hruid/language combination already exists.');
+    /**
+     * Deletes the learning path with the given hruid and language.
+     * @returns the deleted learning path or null if it was not found.
+     */
+    public async deleteByHruidAndLanguage(hruid: string, language: Language): Promise<LearningPath | null> {
+        const path = await this.findByHruidAndLanguage(hruid, language);
+        if (path) {
+            await this.em.removeAndFlush(path);
         }
-        const em = this.getEntityManager();
-        await em.persistAndFlush(path);
-        await Promise.all(nodes.map(async (it) => em.persistAndFlush(it)));
-        await Promise.all(transitions.map(async (it) => em.persistAndFlush(it)));
+        return path;
     }
 }

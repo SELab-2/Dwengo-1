@@ -37,6 +37,33 @@ export abstract class BaseController {
         return response.data;
     }
 
+    /**
+     * Sends a POST-request with a form-data body with the given file.
+     *
+     * @param path Relative path in the api to send the request to.
+     * @param formFieldName The name of the form field in which the file should be.
+     * @param file The file to upload.
+     * @param queryParams The query parameters.
+     * @returns The response the POST request generated.
+     */
+    protected async postFile<T>(
+        path: string,
+        formFieldName: string,
+        file: File,
+        queryParams?: QueryParams,
+    ): Promise<T> {
+        const formData = new FormData();
+        formData.append(formFieldName, file);
+        const response = await apiClient.post<T>(this.absolutePathFor(path), formData, {
+            params: queryParams,
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        BaseController.assertSuccessResponse(response);
+        return response.data;
+    }
+
     protected async delete<T>(path: string, queryParams?: QueryParams): Promise<T> {
         const response = await apiClient.delete<T>(this.absolutePathFor(path), { params: queryParams });
         BaseController.assertSuccessResponse(response);

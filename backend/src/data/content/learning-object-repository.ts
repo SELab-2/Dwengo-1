@@ -2,7 +2,6 @@ import { DwengoEntityRepository } from '../dwengo-entity-repository.js';
 import { LearningObject } from '../../entities/content/learning-object.entity.js';
 import { LearningObjectIdentifier } from '../../entities/content/learning-object-identifier.js';
 import { Language } from '@dwengo-1/common/util/language';
-import { Teacher } from '../../entities/users/teacher.entity.js';
 
 export class LearningObjectRepository extends DwengoEntityRepository<LearningObject> {
     public async findByIdentifier(identifier: LearningObjectIdentifier): Promise<LearningObject | null> {
@@ -13,7 +12,7 @@ export class LearningObjectRepository extends DwengoEntityRepository<LearningObj
                 version: identifier.version,
             },
             {
-                populate: ['keywords'],
+                populate: ['keywords', 'admins'],
             }
         );
     }
@@ -33,10 +32,22 @@ export class LearningObjectRepository extends DwengoEntityRepository<LearningObj
         );
     }
 
-    public async findAllByTeacher(teacher: Teacher): Promise<LearningObject[]> {
+    public async findAllByAdmin(adminUsername: string): Promise<LearningObject[]> {
         return this.find(
-            { admins: teacher },
+            {
+                admins: {
+                    username: adminUsername,
+                },
+            },
             { populate: ['admins'] } // Make sure to load admin relations
         );
+    }
+
+    public async removeByIdentifier(identifier: LearningObjectIdentifier): Promise<LearningObject | null> {
+        const learningObject = await this.findByIdentifier(identifier);
+        if (learningObject) {
+            await this.em.removeAndFlush(learningObject);
+        }
+        return learningObject;
     }
 }

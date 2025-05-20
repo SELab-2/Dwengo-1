@@ -9,7 +9,6 @@ export const TEST_STUDENTS = [
     { username: 'SmashingPumpkins', firstName: 'Billy', lastName: 'Corgan' },
     { username: 'PinkFloyd', firstName: 'David', lastName: 'Gilmoure' },
     { username: 'TheDoors', firstName: 'Jim', lastName: 'Morisson' },
-    // ⚠️ Deze mag niet gebruikt worden in elke test!
     { username: 'Nirvana', firstName: 'Kurt', lastName: 'Cobain' },
     // Makes sure when logged in as leerling1, there exists a corresponding user
     { username: 'testleerling1', firstName: 'Gerald', lastName: 'Schmittinger' },
@@ -24,5 +23,33 @@ export function makeTestStudents(em: EntityManager): Student[] {
 }
 
 export function getTestleerling1(): Student {
-    return testStudents.find((it) => it.username === 'testleerling1');
+    return testStudents.find((it) => it.username === 'testleerling1')!;
+}
+
+export function getNoordkaap(): Student {
+    return testStudents.find((it) => it.username === 'Noordkaap')!;
+}
+
+export function getDireStraits(): Student {
+    return testStudents.find((it) => it.username === 'DireStraits')!;
+}
+
+export function getTool(): Student {
+    return testStudents.find((it) => it.username === 'Tool')!;
+}
+
+export function getSmashingPumpkins(): Student {
+    return testStudents.find((it) => it.username === 'SmashingPumpkins')!;
+}
+
+export function getPinkFloyd(): Student {
+    return testStudents.find((it) => it.username === 'PinkFloyd')!;
+}
+
+export function getTheDoors(): Student {
+    return testStudents.find((it) => it.username === 'TheDoors')!;
+}
+
+export function getNirvana(): Student {
+    return testStudents.find((it) => it.username === 'Nirvana')!;
 }

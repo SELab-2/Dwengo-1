@@ -13,15 +13,14 @@
     import authService from "@/services/auth/auth-service.ts";
     import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
     import LearningPathGroupSelector from "@/views/learning-paths/LearningPathGroupSelector.vue";
-    import { useCreateQuestionMutation, useQuestionsQuery } from "@/queries/questions";
+    import { useQuestionsGroupQuery, useQuestionsQuery } from "@/queries/questions";
     import type { QuestionsResponse } from "@/controllers/questions";
     import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
     import QandA from "@/components/QandA.vue";
-    import type { QuestionData, QuestionDTO } from "@dwengo-1/common/interfaces/question";
-    import { useStudentAssignmentsQuery, useStudentGroupsQuery } from "@/queries/students";
-    import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
-    import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
+    import type { QuestionDTO } from "@dwengo-1/common/interfaces/question";
     import QuestionNotification from "@/components/QuestionNotification.vue";
+    import QuestionBox from "@/components/QuestionBox.vue";
+    import { AccountType } from "@dwengo-1/common/util/account-types";
 
     const router = useRouter();
     const route = useRoute();
@@ -57,7 +56,12 @@
     const learningObjectListQueryResult = useLearningObjectListForPathQuery(learningPathQueryResult.data);
 
     const nodesList: ComputedRef<LearningPathNode[] | null> = computed(
-        () => learningPathQueryResult.data.value?.nodesAsList ?? null,
+        () =>
+            learningPathQueryResult.data.value?.nodesAsList.filter(
+                (node) =>
+                    authService.authState.activeRole === AccountType.Teacher ||
+                    !getLearningObjectForNode(node)?.teacherExclusive,
+            ) ?? null,
     );
 
     const currentNode = computed(() => {
@@ -77,18 +81,43 @@
         return currentIndex < nodesList.value?.length ? nodesList.value?.[currentIndex - 1] : undefined;
     });
 
-    const getQuestionsQuery = useQuestionsQuery(
-        computed(
-            () =>
-                ({
-                    language: currentNode.value?.language,
-                    hruid: currentNode.value?.learningobjectHruid,
-                    version: currentNode.value?.version,
-                }) as LearningObjectIdentifierDTO,
-        ),
-    );
+    let getQuestionsQuery;
+
+    if (authService.authState.activeRole === AccountType.Student) {
+        getQuestionsQuery = useQuestionsGroupQuery(
+            computed(
+                () =>
+                    ({
+                        language: currentNode.value?.language,
+                        hruid: currentNode.value?.learningobjectHruid,
+                        version: currentNode.value?.version,
+                    }) as LearningObjectIdentifierDTO,
+            ),
+            computed(() => query.value.classId ?? ""),
+            computed(() => query.value.assignmentNo ?? ""),
+            computed(() => authService.authState.user?.profile.preferred_username ?? ""),
+        );
+    } else {
+        getQuestionsQuery = useQuestionsQuery(
+            computed(
+                () =>
+                    ({
+                        language: currentNode.value?.language,
+                        hruid: currentNode.value?.learningobjectHruid,
+                        version: currentNode.value?.version,
+                    }) as LearningObjectIdentifierDTO,
+            ),
+        );
+    }
 
     const navigationDrawerShown = ref(true);
+
+    function getLearningObjectForNode(node: LearningPathNode): LearningObject | undefined {
+        return learningObjectListQueryResult.data.value?.find(
+            (obj) =>
+                obj.key === node.learningobjectHruid && obj.language === node.language && obj.version === node.version,
+        );
+    }
 
     function isLearningObjectCompleted(learningObject: LearningObject): boolean {
         if (learningObjectListQueryResult.isSuccess) {
@@ -146,49 +175,29 @@
         });
     }
 
-    const studentAssignmentsQueryResult = useStudentAssignmentsQuery(
-        authService.authState.user?.profile.preferred_username,
+    const discussionLink = computed(
+        () =>
+            "/discussion" +
+            "/" +
+            props.hruid +
+            "/" +
+            currentNode.value?.language +
+            "/" +
+            currentNode.value?.learningobjectHruid,
     );
-    const pathIsAssignment = computed(() => {
-        const assignments = (studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[]) || [];
-        return assignments.some(
-            (assignment) => assignment.learningPath === props.hruid && assignment.language === props.language,
+
+    /**
+     * Filter the given list of questions such that only the questions for the assignment and group specified
+     * in the query parameters are shown. This is relevant for teachers since they can view questions of all groups.
+     */
+    function filterQuestions(questions?: QuestionDTO[]): QuestionDTO[] {
+        return (
+            questions?.filter(
+                (q) =>
+                    q.inGroup.groupNumber === forGroup.value?.forGroup &&
+                    q.inGroup.assignment === forGroup.value?.assignmentNo,
+            ) ?? []
         );
-    });
-
-    const loID: LearningObjectIdentifierDTO = {
-        hruid: props.learningObjectHruid as string,
-        language: props.language,
-    };
-    const createQuestionMutation = useCreateQuestionMutation(loID);
-    const groupsQueryResult = useStudentGroupsQuery(authService.authState.user?.profile.preferred_username);
-
-    const questionInput = ref("");
-
-    function submitQuestion(): void {
-        const assignments = studentAssignmentsQueryResult.data.value?.assignments as AssignmentDTO[];
-        const assignment = assignments.find(
-            (assignment) => assignment.learningPath === props.hruid && assignment.language === props.language,
-        );
-        const groups = groupsQueryResult.data.value?.groups as GroupDTO[];
-        const group = groups?.find((group) => group.assignment === assignment?.id) as GroupDTO;
-        const questionData: QuestionData = {
-            author: authService.authState.user?.profile.preferred_username,
-            content: questionInput.value,
-            inGroup: group, //TODO: POST response zegt dat dit null is???
-        };
-        if (questionInput.value !== "") {
-            createQuestionMutation.mutate(questionData, {
-                onSuccess: async () => {
-                    questionInput.value = ""; // Clear the input field after submission
-                    await getQuestionsQuery.refetch(); // Reload the questions
-                },
-                onError: (_) => {
-                    // TODO Handle error
-                    // - console.error(e);
-                },
-            });
-        }
     }
 </script>
 
@@ -236,7 +245,9 @@
                     </template>
                 </v-list-item>
                 <v-list-item
-                    v-if="query.classId && query.assignmentNo && authService.authState.activeRole === 'teacher'"
+                    v-if="
+                        query.classId && query.assignmentNo && authService.authState.activeRole === AccountType.Teacher
+                    "
                 >
                     <template v-slot:default>
                         <learning-path-group-selector
@@ -247,7 +258,7 @@
                     </template>
                 </v-list-item>
                 <v-divider></v-divider>
-                <div v-if="props.learningObjectHruid">
+                <div class="nav-scroll-area">
                     <using-query-result
                         :query-result="learningObjectListQueryResult"
                         v-slot="learningObjects: { data: LearningObject[] }"
@@ -259,7 +270,9 @@
                                 :title="node.title"
                                 :active="node.key === props.learningObjectHruid"
                                 :key="node.key"
-                                v-if="!node.teacherExclusive || authService.authState.activeRole === 'teacher'"
+                                v-if="
+                                    !node.teacherExclusive || authService.authState.activeRole === AccountType.Teacher
+                                "
                             >
                                 <template v-slot:prepend>
                                     <v-icon
@@ -283,10 +296,12 @@
                     </using-query-result>
                 </div>
                 <v-spacer></v-spacer>
-                <v-list-item v-if="authService.authState.activeRole === 'teacher'">
+                <v-list-item v-if="authService.authState.activeRole === AccountType.Teacher">
                     <template v-slot:default>
                         <v-btn
                             class="button-in-nav"
+                            width="100%"
+                            :color="COLORS.teacherExclusive"
                             @click="assign()"
                             >{{ t("assignLearningPath") }}</v-btn
                         >
@@ -294,7 +309,7 @@
                 </v-list-item>
                 <v-list-item>
                     <div
-                        v-if="authService.authState.activeRole === 'student' && pathIsAssignment"
+                        v-if="authService.authState.activeRole === AccountType.Student && forGroup"
                         class="assignment-indicator"
                     >
                         {{ t("assignmentIndicator") }}
@@ -322,25 +337,6 @@
                 v-if="currentNode"
             ></learning-object-view>
         </div>
-        <div
-            v-if="authService.authState.activeRole === 'student' && pathIsAssignment"
-            class="question-box"
-        >
-            <div class="input-wrapper">
-                <input
-                    type="text"
-                    placeholder="question : ..."
-                    class="question-input"
-                    v-model="questionInput"
-                />
-                <button
-                    @click="submitQuestion"
-                    class="send-button"
-                >
-                    ▶
-                </button>
-            </div>
-        </div>
         <div class="navigation-buttons-container">
             <v-btn
                 prepend-icon="mdi-chevron-left"
@@ -360,15 +356,47 @@
             </v-btn>
         </div>
         <using-query-result
+            v-if="currentNode && forGroup"
             :query-result="getQuestionsQuery"
             v-slot="questionsResponse: { data: QuestionsResponse }"
         >
-            <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
+            <v-divider :thickness="6"></v-divider>
+            <div class="question-header">
+                <span class="question-title">{{ t("questions") }}</span>
+                <span class="discussion-link-text">
+                    {{ t("view-questions") }}
+                    <router-link :to="discussionLink">
+                        {{ t("discussions") }}
+                    </router-link>
+                </span>
+            </div>
+            <QuestionBox
+                :learningObjectHruid="currentNode.learningobjectHruid"
+                :learningObjectLanguage="currentNode.language"
+                :learningObjectVersion="currentNode.version"
+                :forGroup="{
+                    assignment: forGroup.assignmentNo,
+                    class: forGroup.classId,
+                    groupNumber: forGroup.forGroup,
+                }"
+            />
+            <QandA :questions="filterQuestions(questionsResponse.data.questions as QuestionDTO[])" />
         </using-query-result>
     </using-query-result>
 </template>
 
 <style scoped>
+    .question-title {
+        color: #0e6942;
+        text-transform: uppercase;
+        font-weight: bolder;
+        font-size: 24px;
+    }
+    .question-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+    }
     .learning-path-title {
         white-space: normal;
     }
@@ -407,45 +435,6 @@
         text-transform: uppercase;
         z-index: 2; /* Less than modals/popups */
     }
-    .question-box {
-        width: 100%;
-        max-width: 400px;
-        margin: 20px auto;
-        font-family: sans-serif;
-    }
-    .input-wrapper {
-        display: flex;
-        align-items: center;
-        border: 1px solid #ccc;
-        border-radius: 999px;
-        padding: 8px 12px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .question-input {
-        flex: 1;
-        border: none;
-        outline: none;
-        font-size: 14px;
-        background-color: transparent;
-    }
-
-    .question-input::placeholder {
-        color: #999;
-    }
-
-    .send-button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        color: #555;
-        transition: color 0.2s ease;
-    }
-
-    .send-button:hover {
-        color: #000;
-    }
 
     .discussion-link {
         margin-top: 8px;
@@ -460,5 +449,11 @@
 
     .discussion-link a:hover {
         text-decoration: underline;
+    }
+
+    .nav-scroll-area {
+        overflow-y: auto;
+        flex-grow: 1;
+        min-height: 0;
     }
 </style>

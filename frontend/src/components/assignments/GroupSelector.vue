@@ -1,75 +1,680 @@
 <script setup lang="ts">
-    import { ref } from "vue";
+    import { computed, ref, watch } from "vue";
     import { useI18n } from "vue-i18n";
-    import UsingQueryResult from "@/components/UsingQueryResult.vue";
-    import type { StudentsResponse } from "@/controllers/students.ts";
-    import { useClassStudentsQuery } from "@/queries/classes.ts";
+    import { useClassStudentsQuery } from "@/queries/classes";
 
     const props = defineProps<{
         classId: string | undefined;
-        groups: string[][];
+        groups: object[];
     }>();
-    const emit = defineEmits(["groupCreated"]);
+    const emit = defineEmits(["close", "groupsUpdated", "done"]);
     const { t } = useI18n();
 
-    const selectedStudents = ref([]);
-
-    const studentQueryResult = useClassStudentsQuery(() => props.classId, true);
-
-    function filterStudents(data: StudentsResponse): { title: string; value: string }[] {
-        const students = data.students;
-        const studentsInGroups = props.groups.flat();
-
-        return students
-            ?.map((st) => ({
-                title: `${st.firstName} ${st.lastName}`,
-                value: st.username,
-            }))
-            .filter((student) => !studentsInGroups.includes(student.value));
+    interface StudentItem {
+        username: string;
+        fullName: string;
     }
 
-    function createGroup(): void {
-        if (selectedStudents.value.length) {
-            // Extract only usernames (student.value)
-            const usernames = selectedStudents.value.map((student) => student.value);
-            emit("groupCreated", usernames);
-            selectedStudents.value = []; // Reset selection after creating group
+    const { data: studentsData } = useClassStudentsQuery(() => props.classId, true);
+
+    // Dialog states for group editing
+    const activeDialog = ref<"random" | "dragdrop" | null>(null);
+
+    // Drag state for the drag and drop
+    const draggedItem = ref<{ groupIndex: number; studentIndex: number } | null>(null);
+
+    const currentGroups = ref<StudentItem[][]>([]);
+    const unassignedStudents = ref<StudentItem[]>([]);
+    const allStudents = ref<StudentItem[]>([]);
+
+    // Random groups state
+    const groupSize = ref(1);
+    const randomGroupsPreview = ref<StudentItem[][]>([]);
+
+    // Initialize data
+    watch(
+        () => [studentsData.value, props.groups],
+        ([studentsVal, existingGroups]) => {
+            if (!studentsVal) return;
+
+            // Initialize all students
+            allStudents.value = studentsVal.students.map((s) => ({
+                username: s.username,
+                fullName: `${s.firstName} ${s.lastName}`,
+            }));
+
+            // Initialize groups if they exist
+            if (existingGroups && existingGroups.length > 0) {
+                currentGroups.value = existingGroups.map((group) =>
+                    group.members.map((member) => ({
+                        username: member.username,
+                        fullName: `${member.firstName} ${member.lastName}`,
+                    })),
+                );
+                const assignedUsernames = new Set(
+                    existingGroups.flatMap((g) => g.members.map((m: StudentItem) => m.username)),
+                );
+                unassignedStudents.value = allStudents.value.filter((s) => !assignedUsernames.has(s.username));
+            } else {
+                currentGroups.value = [];
+                unassignedStudents.value = [...allStudents.value];
+            }
+
+            randomGroupsPreview.value = [...currentGroups.value];
+        },
+        { immediate: true },
+    );
+
+    /** Random groups functions */
+    function generateRandomGroups(): void {
+        if (groupSize.value < 1) return;
+
+        // Shuffle students
+        const shuffled = [...allStudents.value].sort(() => Math.random() - 0.5);
+
+        // Create new groups
+        const newGroups: StudentItem[][] = [];
+        const groupCount = Math.ceil(shuffled.length / groupSize.value);
+
+        for (let i = 0; i < groupCount; i++) {
+            newGroups.push([]);
         }
+
+        // Distribute students
+        shuffled.forEach((student, index) => {
+            const groupIndex = index % groupCount;
+            newGroups[groupIndex].push(student);
+        });
+
+        randomGroupsPreview.value = newGroups;
+    }
+
+    function saveRandomGroups(): void {
+        emit(
+            "groupsUpdated",
+            randomGroupsPreview.value.map((g) => g.map((s) => s.username)),
+        );
+        activeDialog.value = null;
+        emit("done");
+        emit("close");
+    }
+
+    function addNewGroup(): void {
+        currentGroups.value.push([]);
+    }
+
+    function removeGroup(index: number): void {
+        // Move students back to unassigned
+        unassignedStudents.value.push(...currentGroups.value[index]);
+        currentGroups.value.splice(index, 1);
+    }
+
+    /** Drag and drop functions */
+
+    // Touch state interface
+    interface TouchState {
+        isDragging: boolean;
+        startX: number;
+        startY: number;
+        currentGroupIndex: number;
+        currentStudentIndex: number;
+        element: HTMLElement | null;
+        clone: HTMLElement | null;
+        originalRect: DOMRect | null;
+        hasMoved: boolean;
+    }
+
+    const touchState = ref<TouchState>({
+        isDragging: false,
+        startX: 0,
+        startY: 0,
+        currentGroupIndex: -1,
+        currentStudentIndex: -1,
+        element: null,
+        clone: null,
+        originalRect: null,
+        hasMoved: false,
+    });
+
+    function handleTouchStart(event: TouchEvent, groupIndex: number, studentIndex: number): void {
+        if (event.touches.length > 1) return;
+
+        const touch = event.touches[0];
+        const target = event.target as HTMLElement;
+        // Target the chip directly instead of the draggable container
+        const chip = target.closest(".v-chip") as HTMLElement;
+
+        if (!chip) return;
+
+        // Get the chip's position relative to the viewport
+        const rect = chip.getBoundingClientRect();
+
+        touchState.value = {
+            isDragging: true,
+            startX: touch.clientX,
+            startY: touch.clientY,
+            currentGroupIndex: groupIndex,
+            currentStudentIndex: studentIndex,
+            element: chip,
+            clone: null,
+            originalRect: rect,
+            hasMoved: false,
+        };
+
+        // Clone only the chip
+        const clone = chip.cloneNode(true) as HTMLElement;
+        clone.classList.add("drag-clone");
+        clone.style.position = "fixed";
+        clone.style.zIndex = "10000";
+        clone.style.opacity = "0.9";
+        clone.style.pointerEvents = "none";
+        clone.style.width = `${rect.width}px`;
+        clone.style.height = `${rect.height}px`;
+        clone.style.left = `${rect.left}px`;
+        clone.style.top = `${rect.top}px`;
+        clone.style.transform = "scale(1.05)";
+        clone.style.boxShadow = "0 4px 8px rgba(0,0,0,0.3)";
+        clone.style.transition = "transform 0.1s";
+
+        // Ensure the clone has the same chip styling
+        clone.style.backgroundColor = getComputedStyle(chip).backgroundColor;
+        clone.style.color = getComputedStyle(chip).color;
+        clone.style.borderRadius = getComputedStyle(chip).borderRadius;
+        clone.style.padding = getComputedStyle(chip).padding;
+        clone.style.margin = "0"; // Remove any margin
+
+        document.body.appendChild(clone);
+        touchState.value.clone = clone;
+        chip.style.visibility = "hidden";
+
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    function handleTouchMove(event: TouchEvent): void {
+        if (!touchState.value.isDragging || !touchState.value.clone || event.touches.length > 1) return;
+
+        const touch = event.touches[0];
+        const clone = touchState.value.clone;
+
+        const dx = Math.abs(touch.clientX - touchState.value.startX);
+        const dy = Math.abs(touch.clientY - touchState.value.startY);
+
+        if (dx > 5 || dy > 5) {
+            touchState.value.hasMoved = true;
+        }
+
+        clone.style.left = `${touch.clientX - clone.offsetWidth / 2}px`;
+        clone.style.top = `${touch.clientY - clone.offsetHeight / 2}px`;
+
+        document.querySelectorAll(".group-box").forEach((el) => {
+            el.classList.remove("highlight");
+        });
+
+        const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+        const dropTarget = elements.find((el) => el.classList.contains("group-box"));
+
+        if (dropTarget) {
+            dropTarget.classList.add("highlight");
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    function handleTouchEnd(event: TouchEvent): void {
+        if (!touchState.value.isDragging) return;
+
+        const { currentGroupIndex, currentStudentIndex, clone, element, hasMoved } = touchState.value;
+
+        document.querySelectorAll(".group-box").forEach((el) => {
+            el.classList.remove("highlight");
+        });
+
+        if (clone?.parentNode) {
+            clone.parentNode.removeChild(clone);
+        }
+
+        if (element) {
+            element.style.visibility = "visible";
+        }
+
+        if (hasMoved && event.changedTouches.length > 0) {
+            const touch = event.changedTouches[0];
+            const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+            const dropTarget = elements.find((el) => el.classList.contains("group-box"));
+
+            if (dropTarget) {
+                const groupBoxes = document.querySelectorAll(".group-box");
+                const targetGroupIndex = Array.from(groupBoxes).indexOf(dropTarget);
+
+                if (targetGroupIndex !== currentGroupIndex) {
+                    const sourceArray =
+                        currentGroupIndex === -1 ? unassignedStudents.value : currentGroups.value[currentGroupIndex];
+                    const targetArray =
+                        targetGroupIndex === -1 ? unassignedStudents.value : currentGroups.value[targetGroupIndex];
+
+                    if (sourceArray && targetArray) {
+                        const [movedStudent] = sourceArray.splice(currentStudentIndex, 1);
+                        targetArray.push(movedStudent);
+                    }
+                }
+            }
+        }
+
+        touchState.value = {
+            isDragging: false,
+            startX: 0,
+            startY: 0,
+            currentGroupIndex: -1,
+            currentStudentIndex: -1,
+            element: null,
+            clone: null,
+            originalRect: null,
+            hasMoved: false,
+        };
+
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    function handleDragStart(event: DragEvent, groupIndex: number, studentIndex: number): void {
+        draggedItem.value = { groupIndex, studentIndex };
+        if (event.dataTransfer) {
+            event.dataTransfer.effectAllowed = "move";
+            event.dataTransfer.setData("text/plain", "");
+        }
+    }
+
+    function handleDragOver(e: DragEvent, _: number): void {
+        e.preventDefault();
+        if (e.dataTransfer) {
+            e.dataTransfer.dropEffect = "move";
+        }
+    }
+
+    function handleDrop(e: DragEvent, targetGroupIndex: number, targetStudentIndex?: number): void {
+        e.preventDefault();
+        if (!draggedItem.value) return;
+
+        const { groupIndex: sourceGroupIndex, studentIndex: sourceStudentIndex } = draggedItem.value;
+        const sourceArray = sourceGroupIndex === -1 ? unassignedStudents.value : currentGroups.value[sourceGroupIndex];
+        const targetArray = targetGroupIndex === -1 ? unassignedStudents.value : currentGroups.value[targetGroupIndex];
+
+        const [movedStudent] = sourceArray.splice(sourceStudentIndex, 1);
+        if (targetStudentIndex !== undefined) {
+            targetArray.splice(targetStudentIndex, 0, movedStudent);
+        } else {
+            targetArray.push(movedStudent);
+        }
+
+        draggedItem.value = null;
+    }
+
+    function saveDragDrop(): void {
+        emit(
+            "groupsUpdated",
+            currentGroups.value
+                .filter((g) => g.length > 0) // Filter out empty groups
+                .map((g) => g.map((s) => s.username)),
+        );
+        activeDialog.value = null;
+        emit("done");
+        emit("close");
+    }
+
+    const showGroupsPreview = computed(() => currentGroups.value.length > 0 || unassignedStudents.value.length > 0);
+
+    function removeStudent(groupIndex: number, student: StudentItem): void {
+        const group = currentGroups.value[groupIndex];
+        currentGroups.value[groupIndex] = group.filter((s) => s.username !== student.username);
+        unassignedStudents.value.push(student);
     }
 </script>
 
 <template>
-    <using-query-result
-        :query-result="studentQueryResult"
-        v-slot="{ data }: { data: StudentsResponse }"
-    >
-        <h3>{{ t("create-groups") }}</h3>
-        <v-card-text>
-            <v-combobox
-                v-model="selectedStudents"
-                :items="filterStudents(data)"
-                item-title="title"
-                item-value="value"
-                :label="t('choose-students')"
-                variant="outlined"
-                clearable
-                multiple
-                hide-details
-                density="compact"
-                chips
-                append-inner-icon="mdi-magnify"
-            ></v-combobox>
+    <v-card class="pa-4 minimal-card">
+        <!-- Current groups and unassigned students Preview -->
+        <div
+            v-if="showGroupsPreview"
+            class="mb-6"
+        >
+            <h3 class="mb-2">{{ t("current-groups") }}</h3>
+            <div>
+                <div class="d-flex flex-wrap">
+                    <label>{{ currentGroups.length }}</label>
+                </div>
+            </div>
+        </div>
 
+        <v-row
+            justify="center"
+            class="mb-4"
+        >
             <v-btn
-                @click="createGroup"
                 color="primary"
-                class="mt-2"
-                size="small"
+                @click="activeDialog = 'random'"
+                prepend-icon="mdi-shuffle"
             >
-                {{ t("create-group") }}
+                {{ t("random-grouping") }}
             </v-btn>
-        </v-card-text>
-    </using-query-result>
+            <v-btn
+                color="secondary"
+                class="ml-4"
+                @click="activeDialog = 'dragdrop'"
+                prepend-icon="mdi-drag"
+            >
+                {{ t("drag-and-drop") }}
+            </v-btn>
+        </v-row>
+
+        <!-- Random Groups selection Dialog -->
+        <v-dialog
+            :model-value="activeDialog === 'random'"
+            @update:model-value="(val) => (val ? (activeDialog = 'random') : (activeDialog = null))"
+            max-width="600"
+        >
+            <v-card class="custom-dialog">
+                <v-card-title class="dialog-title">{{ t("auto-generate-groups") }}</v-card-title>
+                <v-card-text>
+                    <v-row align="center">
+                        <v-col cols="6">
+                            <v-text-field
+                                v-model.number="groupSize"
+                                type="number"
+                                min="1"
+                                :max="allStudents.length"
+                                :label="t('group-size-label')"
+                                dense
+                            />
+                        </v-col>
+                        <v-col cols="6">
+                            <v-btn
+                                color="primary"
+                                @click="generateRandomGroups"
+                                :disabled="groupSize < 1 || groupSize > allStudents.length"
+                                block
+                            >
+                                {{ t("generate-groups") }}
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+
+                    <div class="mt-4">
+                        <div class="d-flex justify-space-between align-center mb-2">
+                            <strong>{{ t("preview") }}</strong>
+                            <span class="text-caption"> {{ randomGroupsPreview.length }} {{ t("groups") }} </span>
+                        </div>
+
+                        <v-expansion-panels>
+                            <v-expansion-panel
+                                v-for="(group, index) in randomGroupsPreview"
+                                :key="'random-preview-' + index"
+                            >
+                                <v-expansion-panel-title>
+                                    {{ t("group") }} {{ index + 1 }} ({{ group.length }} {{ t("members") }})
+                                </v-expansion-panel-title>
+                                <v-expansion-panel-text>
+                                    <v-chip
+                                        v-for="student in group"
+                                        :key="student.username"
+                                        class="ma-1"
+                                    >
+                                        {{ student.fullName }}
+                                    </v-chip>
+                                </v-expansion-panel-text>
+                            </v-expansion-panel>
+                        </v-expansion-panels>
+                    </div>
+                </v-card-text>
+
+                <v-card-actions class="dialog-actions">
+                    <v-spacer />
+                    <v-btn
+                        text
+                        @click="activeDialog = null"
+                        >{{ t("cancel") }}</v-btn
+                    >
+                    <v-btn
+                        color="success"
+                        @click="saveRandomGroups"
+                        :disabled="randomGroupsPreview.length === 0"
+                    >
+                        {{ t("save") }}
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <!-- Drag and Drop Dialog -->
+        <v-dialog
+            :model-value="activeDialog === 'dragdrop'"
+            @update:model-value="(val) => (val ? (activeDialog = 'dragdrop') : (activeDialog = null))"
+            max-width="900"
+        >
+            <v-card class="custom-dialog">
+                <v-card-title class="dialog-title d-flex justify-space-between align-center">
+                    <div>{{ t("drag-and-drop") }}</div>
+                    <v-btn
+                        color="primary"
+                        small
+                        @click="addNewGroup"
+                        >+</v-btn
+                    >
+                </v-card-title>
+
+                <v-card-text>
+                    <v-row>
+                        <!-- Groups Column -->
+                        <v-col
+                            cols="12"
+                            md="8"
+                        >
+                            <div
+                                v-if="currentGroups.length === 0"
+                                class="text-center py-4"
+                            >
+                                <div>
+                                    <v-icon
+                                        icon="mdi-information-outline"
+                                        size="small"
+                                    />
+                                    {{ t("currently-no-groups") }}
+                                </div>
+                            </div>
+
+                            <template v-else>
+                                <div
+                                    v-for="(group, groupIndex) in currentGroups"
+                                    :key="groupIndex"
+                                    class="mb-4"
+                                    @dragover.prevent="handleDragOver($event, groupIndex)"
+                                    @drop="handleDrop($event, groupIndex)"
+                                >
+                                    <div class="d-flex justify-space-between align-center mb-2">
+                                        <strong>{{ t("group") }} {{ groupIndex + 1 }}</strong>
+                                        <v-btn
+                                            icon
+                                            small
+                                            color="error"
+                                            @click="removeGroup(groupIndex)"
+                                        >
+                                            <v-icon>mdi-delete</v-icon>
+                                        </v-btn>
+                                    </div>
+
+                                    <div class="group-box pa-2">
+                                        <div
+                                            v-for="(student, studentIndex) in group"
+                                            :key="student.username"
+                                            class="draggable-item ma-1"
+                                            draggable="true"
+                                            @touchstart="handleTouchStart($event, groupIndex, studentIndex)"
+                                            @touchmove="handleTouchMove($event)"
+                                            @touchend="handleTouchEnd($event)"
+                                            @dragstart="handleDragStart($event, groupIndex, studentIndex)"
+                                            @dragover.prevent="handleDragOver($event, groupIndex)"
+                                            @drop="handleDrop($event, groupIndex, studentIndex)"
+                                        >
+                                            <v-chip
+                                                close
+                                                @click:close="removeStudent(groupIndex, student)"
+                                            >
+                                                {{ student.fullName }}
+                                            </v-chip>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </v-col>
+
+                        <!-- Unassigned Students Column -->
+                        <v-col
+                            cols="12"
+                            md="4"
+                            @dragover.prevent="handleDragOver($event, -1)"
+                            @drop="handleDrop($event, -1)"
+                        >
+                            <div class="mb-2">
+                                <strong>{{ t("unassigned") }}</strong>
+                                <span class="text-caption ml-2">({{ unassignedStudents.length }})</span>
+                            </div>
+
+                            <div class="group-box pa-2">
+                                <div
+                                    v-for="(student, studentIndex) in unassignedStudents"
+                                    :key="student.username"
+                                    class="draggable-item ma-1"
+                                    draggable="true"
+                                    @touchstart="handleTouchStart($event, -1, studentIndex)"
+                                    @touchmove="handleTouchMove($event)"
+                                    @touchend="handleTouchEnd($event)"
+                                    @dragstart="handleDragStart($event, -1, studentIndex)"
+                                    @dragover.prevent="handleDragOver($event, -1)"
+                                    @drop="handleDrop($event, -1, studentIndex)"
+                                >
+                                    <v-chip>{{ student.fullName }}</v-chip>
+                                </div>
+                            </div>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+
+                <v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                        text
+                        @click="activeDialog = null"
+                        >{{ t("cancel") }}</v-btn
+                    >
+                    <v-btn
+                        color="primary"
+                        @click="saveDragDrop"
+                    >
+                        {{ t("save") }}
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </v-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+    .group-box {
+        min-height: 100px;
+        max-height: 200px;
+        overflow-y: auto;
+        background-color: #fafafa;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+
+    .group-box.highlight {
+        background-color: #e3f2fd;
+        border: 2px dashed #2196f3;
+    }
+
+    .v-expansion-panel-text {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .drag-clone {
+        z-index: 10000;
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        transition: transform 0.1s;
+        will-change: transform;
+        pointer-events: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        background-color: inherit;
+    }
+
+    .draggable-item {
+        display: inline-block;
+    }
+
+    .draggable-item .v-chip[style*="hidden"] {
+        visibility: hidden;
+        display: inline-block;
+    }
+
+    .custom-dialog {
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .dialog-title {
+        color: #00796b; /* teal-like green */
+        font-weight: bold;
+        font-size: 1.25rem;
+        margin-bottom: 16px;
+    }
+
+    .dialog-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    .v-btn.custom-green {
+        background-color: #43a047;
+        color: white;
+    }
+
+    .v-btn.custom-green:hover {
+        background-color: #388e3c;
+    }
+
+    .v-btn.custom-blue {
+        background-color: #1e88e5;
+        color: white;
+    }
+
+    .v-btn.custom-blue:hover {
+        background-color: #1565c0;
+    }
+
+    .v-btn.cancel-button {
+        background-color: #e0f2f1;
+        color: #00695c;
+    }
+
+    .minimal-card {
+        box-shadow: none; /* remove card shadow */
+        border: none; /* remove border */
+        background-color: transparent; /* make background transparent */
+        padding: 0; /* reduce padding */
+        margin-bottom: 1rem; /* keep some spacing below */
+    }
+
+    /* Optionally, keep some padding only around buttons */
+    .minimal-card > .v-row {
+        padding: 1rem 0; /* give vertical padding around buttons */
+    }
+</style>

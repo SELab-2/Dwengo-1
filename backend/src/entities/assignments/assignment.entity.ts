@@ -26,6 +26,9 @@ export class Assignment {
     @Property({ type: 'string' })
     learningPathHruid!: string;
 
+    @Property({ type: 'datetime', nullable: true })
+    deadline?: Date;
+
     @Enum({
         items: () => Language,
     })
