@@ -43,9 +43,11 @@
                     :query-result="allLearningPathsResult"
                     v-slot="learningPaths: { data: LearningPath[] }"
                 >
-                    <v-expansion-panel v-for="learningPath in learningPaths.data"
-                                       :key="learningPath.hruid"
-                                       :value="learningPath.hruid">
+                    <v-expansion-panel
+                        v-for="learningPath in learningPaths.data"
+                        :key="learningPath.hruid"
+                        :value="learningPath.hruid"
+                    >
                         <v-expansion-panel-title>
                             {{ learningPath.title }}
                         </v-expansion-panel-title>
