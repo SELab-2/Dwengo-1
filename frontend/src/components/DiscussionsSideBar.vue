@@ -11,8 +11,8 @@
     const route = useRoute();
 
     const props = defineProps<{
-            learningObjectHruid: string;
-        }>();
+        learningObjectHruid: string;
+    }>();
 
     const navigationDrawerShown = ref(true);
     const currentLocale = ref(locale.value);

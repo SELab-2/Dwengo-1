@@ -75,9 +75,7 @@
 </script>
 
 <template>
-    <DiscussionsSideBar
-        :learningObjectHruid="props.learningObjectHruid">
-    </DiscussionsSideBar>
+    <DiscussionsSideBar :learningObjectHruid="props.learningObjectHruid"> </DiscussionsSideBar>
     <div class="discussions-container">
         <QuestionBox
             :hruid="props.hruid"
