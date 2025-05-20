@@ -357,7 +357,11 @@
                 :learningObjectHruid="currentNode.learningobjectHruid"
                 :learningObjectLanguage="currentNode.language"
                 :learningObjectVersion="currentNode.version"
-                :forGroup="{assignment: forGroup.assignmentNo, class: forGroup.classId, groupNumber: forGroup.forGroup}"
+                :forGroup="{
+                    assignment: forGroup.assignmentNo,
+                    class: forGroup.classId,
+                    groupNumber: forGroup.forGroup,
+                }"
                 @updated="refetchQuestions"
             />
             <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />

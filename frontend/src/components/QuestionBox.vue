@@ -25,7 +25,7 @@
     const loID: ComputedRef<LearningObjectIdentifierDTO> = computed(() => ({
         hruid: props.learningObjectHruid as string,
         language: props.learningObjectLanguage,
-        version: props.learningObjectVersion
+        version: props.learningObjectVersion,
     }));
     const createQuestionMutation = useCreateQuestionMutation(loID);
 

@@ -18,7 +18,7 @@ export class QuestionRepository extends DwengoEntityRepository<Question> {
             content: question.content,
             timestamp: new Date(),
         });
-        console.log(questionEntity)
+        console.log(questionEntity);
         await this.save(questionEntity, { preventOverwrite: true });
         return questionEntity;
     }
