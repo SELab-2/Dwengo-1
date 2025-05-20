@@ -62,7 +62,10 @@
         const { valid } = await form.value.validate();
         if (!valid) return;
 
-        const lp = lpIsSelected.value ? route.query.hruid?.toString() : selectedLearningPath.value?.hruid;
+        const lp = lpIsSelected.value
+                    ? { hruid: route.query.hruid!.toString(), language: language.value }
+                    : { hruid: selectedLearningPath.value!.hruid, language: selectedLearningPath.value!.language };
+
         if (!lp) {
             return;
         }
@@ -72,8 +75,8 @@
             within: selectedClass.value?.id || "",
             title: assignmentTitle.value,
             description: "",
-            learningPath: lp,
-            language: language.value,
+            learningPath: lp.hruid,
+            language: lp.language,
             deadline: null,
             groups: [],
         };
