@@ -56,7 +56,7 @@
         }
     });
 
-    const lastSubmission = computed<SubmissionData|undefined>(() => {
+    const lastSubmission = computed<SubmissionData | undefined>(() => {
         const submissions = submissionQuery.data.value;
         if (!submissions || submissions.length === 0) {
             return undefined;

@@ -76,7 +76,7 @@ export async function getSubmissionsForLearningObjectAndAssignment(
             submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndAssignment(loId, assignment);
         }
         return submissions.map((s) => mapToSubmissionDTO(s));
-    } catch(e) {
+    } catch (e) {
         return [];
     }
 }
