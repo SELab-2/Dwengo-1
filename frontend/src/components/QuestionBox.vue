@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import authService from "@/services/auth/auth-service.ts";
     import { computed, type ComputedRef, ref } from "vue";
-    import type {  GroupDTOId } from "@dwengo-1/common/interfaces/group";
+    import type { GroupDTOId } from "@dwengo-1/common/interfaces/group";
     import type { QuestionData } from "@dwengo-1/common/interfaces/question";
     import type { LearningObjectIdentifierDTO } from "@dwengo-1/interfaces/learning-content";
     import { useCreateQuestionMutation } from "@/queries/questions.ts";
@@ -29,9 +29,7 @@
     }));
     const createQuestionMutation = useCreateQuestionMutation(loID);
 
-    const showQuestionBox = computed(
-        () => authService.authState.activeRole === AccountType.Student && props.forGroup,
-    );
+    const showQuestionBox = computed(() => authService.authState.activeRole === AccountType.Student && props.forGroup);
 
     function submitQuestion(): void {
         if (props.forGroup && questionInput.value !== "") {

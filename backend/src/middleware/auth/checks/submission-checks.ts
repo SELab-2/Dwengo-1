@@ -34,15 +34,15 @@ export const onlyAllowIfHasAccessToSubmission = authorize(async (auth: Authentic
 });
 
 export const onlyAllowIfHasAccessToSubmissionFromParams = authorize(async (auth: AuthenticationInfo, req: AuthenticatedRequest) => {
-    const { classId, assignmentId, groupId } = req.query;
+    const { classId, assignmentId, forGroup } = req.query;
 
-    requireFields({ classId, assignmentId, groupId });
+    requireFields({ classId, assignmentId, forGroup });
 
     if (auth.accountType === AccountType.Teacher) {
         const cls = await fetchClass(classId as string);
         return cls.teachers.map(mapToUsername).includes(auth.username);
     }
 
-    const group = await fetchGroup(classId as string, Number(assignmentId as string), Number(groupId as string));
+    const group = await fetchGroup(classId as string, Number(assignmentId as string), Number(forGroup as string));
     return group.members.map(mapToUsername).includes(auth.username);
 });
