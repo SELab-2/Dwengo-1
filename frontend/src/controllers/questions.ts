@@ -28,7 +28,6 @@ export class QuestionController extends BaseController {
     }
 
     async getAll(full = true): Promise<QuestionsResponse> {
-        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAa");
         return this.get<QuestionsResponse>("/", { lang: this.loId.language, full });
     }
 
