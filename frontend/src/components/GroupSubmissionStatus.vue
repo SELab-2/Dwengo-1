@@ -41,7 +41,7 @@
         <v-btn
             :color="data?.submissions?.length > 0 ? 'green' : 'red'"
             variant="text"
-            :to="data.submissions.length > 0 ? goToGroupSubmissionLink(props.group.groupNo) : undefined"
+            :to="data.submissions.length > 0 ? goToGroupSubmissionLink(props.group.originalGroupNo) : undefined"
             :disabled="data.submissions.length === 0"
         >
             {{ data.submissions.length > 0 ? t("submission") : t("noSubmissionsYet") }}
