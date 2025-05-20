@@ -23,7 +23,14 @@ export class SubmissionController extends BaseController {
         groupId?: number,
         full = true,
     ): Promise<SubmissionsResponse> {
-        return this.get<SubmissionsResponse>(`/`, { language, version, classId, assignmentId, forGroup: groupId, full });
+        return this.get<SubmissionsResponse>(`/`, {
+            language,
+            version,
+            classId,
+            assignmentId,
+            forGroup: groupId,
+            full,
+        });
     }
 
     async getByNumber(
