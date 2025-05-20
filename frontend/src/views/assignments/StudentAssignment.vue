@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { computed, type ComputedRef, ref, watchEffect } from 'vue';
-import auth from '@/services/auth/auth-service.ts';
-import { useI18n } from 'vue-i18n';
-import UsingQueryResult from '@/components/UsingQueryResult.vue';
-import { asyncComputed } from '@vueuse/core';
-import { useStudentsByUsernamesQuery } from '@/queries/students.ts';
-import { useGetLearningPathQuery } from '@/queries/learning-paths.ts';
-import type { Language } from '@/data-objects/language.ts';
-import { calculateProgress } from '@/utils/assignment-utils.ts';
-import type { LearningPath } from '@/data-objects/learning-paths/learning-path.ts';
-import type { GroupDTO } from '@dwengo-1/common/interfaces/group';
-import { useAssignmentQuery } from '@/queries/assignments.ts';
-import type { AssignmentDTO } from '@dwengo-1/common/interfaces/assignment';
-import type { StudentDTO } from '@dwengo-1/common/interfaces/student';
+    import { computed, type ComputedRef, ref, watchEffect } from "vue";
+    import auth from "@/services/auth/auth-service.ts";
+    import { useI18n } from "vue-i18n";
+    import UsingQueryResult from "@/components/UsingQueryResult.vue";
+    import { asyncComputed } from "@vueuse/core";
+    import { useStudentsByUsernamesQuery } from "@/queries/students.ts";
+    import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
+    import type { Language } from "@/data-objects/language.ts";
+    import { calculateProgress } from "@/utils/assignment-utils.ts";
+    import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
+    import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
+    import { useAssignmentQuery } from "@/queries/assignments.ts";
+    import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
+    import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
 
-const props = defineProps<{
+    const props = defineProps<{
         classId: string;
         assignmentId: number;
     }>();
@@ -30,7 +30,9 @@ const props = defineProps<{
 
     const assignmentQueryResult = useAssignmentQuery(props.classId, props.assignmentId);
 
-    const assignment: ComputedRef<AssignmentDTO | undefined> = computed(() => assignmentQueryResult.data.value?.assignment);
+    const assignment: ComputedRef<AssignmentDTO | undefined> = computed(
+        () => assignmentQueryResult.data.value?.assignment,
+    );
 
     learningPath.value = assignment.value?.learningPath;
 
@@ -42,8 +44,8 @@ const props = defineProps<{
         // To "normalize" the group numbers, sort the groups and then renumber them
         const renumbered = [...groups]
             .sort((a, b) => a.groupNumber - b.groupNumber)
-            .map((group, index) => ({ ...group, groupNo: index + 1}));
-        return renumbered .find((group) => group.members?.some((m) => (m as StudentDTO).username === username.value));
+            .map((group, index) => ({ ...group, groupNo: index + 1 }));
+        return renumbered.find((group) => group.members?.some((m) => (m as StudentDTO).username === username.value));
     });
 
     watchEffect(() => {
