@@ -1,6 +1,6 @@
 {
     "name": "dwengo-1-frontend",
-    "version": "0.2.0",
+    "version": "1.0.0",
     "description": "Frontend for Dwengo-1",
     "private": true,
     "type": "module",

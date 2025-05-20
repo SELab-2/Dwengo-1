@@ -2,7 +2,7 @@ import swaggerAutogen from 'swagger-autogen';
 
 const doc = {
     info: {
-        version: '0.1.0',
+        version: '1.0.0',
         title: 'Dwengo-1 Backend API',
         description: 'Dwengo-1 Backend API using Express, based on VZW Dwengo',
         license: {
