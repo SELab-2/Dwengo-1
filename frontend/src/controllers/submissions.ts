@@ -23,7 +23,7 @@ export class SubmissionController extends BaseController {
         groupId?: number,
         full = true,
     ): Promise<SubmissionsResponse> {
-        return this.get<SubmissionsResponse>(`/`, { language, version, classId, assignmentId, groupId, full });
+        return this.get<SubmissionsResponse>(`/`, { language, version, classId, assignmentId, forGroup: groupId, full });
     }
 
     async getByNumber(
@@ -39,7 +39,7 @@ export class SubmissionController extends BaseController {
             version,
             classId,
             assignmentId,
-            groupId,
+            forGroup: groupId,
         });
     }
 
