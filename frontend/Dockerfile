@@ -1,3 +1,5 @@
+#syntax=docker/dockerfile:1.7-labs
+
 FROM node:22 AS build-stage
 
 # install simple http server for serving static content
