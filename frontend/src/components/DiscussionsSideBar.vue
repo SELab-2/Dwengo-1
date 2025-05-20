@@ -10,6 +10,10 @@
     const { t, locale } = useI18n();
     const route = useRoute();
 
+    const props = defineProps<{
+        learningObjectHruid: string;
+    }>();
+
     const navigationDrawerShown = ref(true);
     const currentLocale = ref(locale.value);
     const expanded = ref([route.params.hruid]);
@@ -40,12 +44,23 @@
                         :query-result="allLearningPathsResult"
                         v-slot="learningPaths: { data: LearningPath[] }"
                     >
-                        <DiscussionSideBarElement
+                        <v-expansion-panel
                             v-for="learningPath in learningPaths.data"
-                            :path="learningPath"
-                            :activeObjectId="'' as string"
                             :key="learningPath.hruid"
-                        />
+                            :value="learningPath.hruid"
+                        >
+                            <v-expansion-panel-title>
+                                {{ learningPath.title }}
+                            </v-expansion-panel-title>
+                            <v-expansion-panel-text>
+                                <v-lazy>
+                                    <DiscussionSideBarElement
+                                        :path="learningPath"
+                                        :activeObjectId="props.learningObjectHruid"
+                                    />
+                                </v-lazy>
+                            </v-expansion-panel-text>
+                        </v-expansion-panel>
                     </using-query-result>
                 </v-expansion-panels>
             </div>
