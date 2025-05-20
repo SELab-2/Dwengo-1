@@ -56,7 +56,9 @@
     const learningObjectListQueryResult = useLearningObjectListForPathQuery(learningPathQueryResult.data);
 
     const nodesList: ComputedRef<LearningPathNode[] | null> = computed(
-        () => learningPathQueryResult.data.value?.nodesAsList ?? null,
+        () => learningPathQueryResult.data.value?.nodesAsList.filter(node =>
+            authService.authState.activeRole === AccountType.Teacher || !getLearningObjectForNode(node)?.teacherExclusive
+        ) ?? null,
     );
 
     const currentNode = computed(() => {
@@ -106,6 +108,12 @@
     }
 
     const navigationDrawerShown = ref(true);
+
+    function getLearningObjectForNode(node: LearningPathNode): LearningObject | undefined {
+        return learningObjectListQueryResult.data.value?.find(obj =>
+            obj.key === node.learningobjectHruid && obj.language === node.language && obj.version === node.version
+        );
+    }
 
     function isLearningObjectCompleted(learningObject: LearningObject): boolean {
         if (learningObjectListQueryResult.isSuccess) {
@@ -353,7 +361,6 @@
                     class: forGroup.classId,
                     groupNumber: forGroup.forGroup,
                 }"
-                @updated="refetchQuestions"
             />
             <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
         </using-query-result>
