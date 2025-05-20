@@ -415,7 +415,7 @@
                                                 :class-id="classId"
                                                 :go-to-group-submission-link="goToGroupSubmissionLink"
                                                 @update:hasSubmission="
-                                                    (hasSubmission) => (hasSubmissions = hasSubmission)
+                                                    (hasSubmission) => (hasSubmissions = hasSubmissions || hasSubmission)
                                                 "
                                             />
                                         </td>
