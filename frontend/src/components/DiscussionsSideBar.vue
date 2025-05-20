@@ -45,21 +45,21 @@
                         v-slot="learningPaths: { data: LearningPath[] }"
                     >
                         <v-expansion-panel
-                        v-for="learningPath in learningPaths.data"
-                        :key="learningPath.hruid"
-                        :value="learningPath.hruid"
-                    >
-                        <v-expansion-panel-title>
-                            {{ learningPath.title }}
-                        </v-expansion-panel-title>
-                        <v-expansion-panel-text>
-                            <v-lazy>
-                                <DiscussionSideBarElement
-                                    :path="learningPath"
-                                    :activeObjectId="props.learningObjectHruid"
-                                />
-                            </v-lazy>
-                        </v-expansion-panel-text>
+                            v-for="learningPath in learningPaths.data"
+                            :key="learningPath.hruid"
+                            :value="learningPath.hruid"
+                        >
+                            <v-expansion-panel-title>
+                                {{ learningPath.title }}
+                            </v-expansion-panel-title>
+                            <v-expansion-panel-text>
+                                <v-lazy>
+                                    <DiscussionSideBarElement
+                                        :path="learningPath"
+                                        :activeObjectId="props.learningObjectHruid"
+                                    />
+                                </v-lazy>
+                            </v-expansion-panel-text>
                         </v-expansion-panel>
                     </using-query-result>
                 </v-expansion-panels>
