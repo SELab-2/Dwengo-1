@@ -4,9 +4,10 @@ import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { mapToSubmission, mapToSubmissionDTO } from '../interfaces/submission.js';
 import { SubmissionDTO } from '@dwengo-1/common/interfaces/submission';
 import { fetchStudent } from './students.js';
-import { getExistingGroupFromGroupDTO } from './groups.js';
+import { fetchGroup, getExistingGroupFromGroupDTO } from './groups.js';
 import { Submission } from '../entities/assignments/submission.entity.js';
 import { Language } from '@dwengo-1/common/util/language';
+import { fetchAssignment } from './assignments.js';
 
 export async function fetchSubmission(loId: LearningObjectIdentifier, submissionNumber: number): Promise<Submission> {
     const submissionRepository = getSubmissionRepository();
@@ -64,15 +65,18 @@ export async function getSubmissionsForLearningObjectAndAssignment(
     groupId?: number
 ): Promise<SubmissionDTO[]> {
     const loId = new LearningObjectIdentifier(learningObjectHruid, language, version);
-    const assignment = await getAssignmentRepository().findByClassIdAndAssignmentId(classId, assignmentId);
 
-    let submissions: Submission[];
-    if (groupId !== undefined) {
-        const group = await getGroupRepository().findByAssignmentAndGroupNumber(assignment!, groupId);
-        submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndGroup(loId, group!);
-    } else {
-        submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!);
+    try {
+        let submissions: Submission[];
+        if (groupId !== undefined) {
+            const group = await fetchGroup(classId, assignmentId, groupId!);
+            submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndGroup(loId, group!);
+        } else {
+            const assignment = await fetchAssignment(classId, assignmentId);
+            submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!);
+        }
+        return submissions.map((s) => mapToSubmissionDTO(s));
+    } catch(e) {
+        return [];
     }
-
-    return submissions.map((s) => mapToSubmissionDTO(s));
 }
