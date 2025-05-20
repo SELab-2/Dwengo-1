@@ -1,4 +1,4 @@
-import { getAssignmentRepository, getGroupRepository, getSubmissionRepository } from '../data/repositories.js';
+import { getSubmissionRepository } from '../data/repositories.js';
 import { LearningObjectIdentifier } from '../entities/content/learning-object-identifier.js';
 import { NotFoundException } from '../exceptions/not-found-exception.js';
 import { mapToSubmission, mapToSubmissionDTO } from '../interfaces/submission.js';
@@ -69,14 +69,14 @@ export async function getSubmissionsForLearningObjectAndAssignment(
     try {
         let submissions: Submission[];
         if (groupId !== undefined) {
-            const group = await fetchGroup(classId, assignmentId, groupId!);
-            submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndGroup(loId, group!);
+            const group = await fetchGroup(classId, assignmentId, groupId);
+            submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndGroup(loId, group);
         } else {
             const assignment = await fetchAssignment(classId, assignmentId);
-            submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!);
+            submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndAssignment(loId, assignment);
         }
         return submissions.map((s) => mapToSubmissionDTO(s));
-    } catch(e) {
+    } catch (_) {
         return [];
     }
 }
