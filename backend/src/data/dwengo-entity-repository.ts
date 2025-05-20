@@ -14,7 +14,7 @@ export abstract class DwengoEntityRepository<T extends object> extends EntityRep
             // The faulty query is then retried everytime something is persisted. By clearing the entity
             // Manager in that case, we make sure that future queries will work.
             if (e instanceof SyntaxErrorException) {
-                getLogger().error("SyntaxErrorException caught => entity manager cleared.");
+                getLogger().error('SyntaxErrorException caught => entity manager cleared.');
                 this.em.clear();
             } else {
                 throw e;
