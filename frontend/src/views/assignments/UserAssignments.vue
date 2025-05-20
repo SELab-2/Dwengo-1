@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref, computed, onMounted, watch } from "vue";
+    import { ref, computed, onMounted } from "vue";
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
     import authState from "@/services/auth/auth-service.ts";
@@ -101,9 +101,9 @@
         deleteAssignmentMutation.mutate(
             { cid: clsId, an: num },
             {
-                onSuccess: (data) => {
+                onSuccess: async (data) => {
                     if (data?.assignment) {
-                        window.location.reload();
+                        await assignmentsQueryResult.refetch();
                     }
                     showSnackbar(t("success"), "success");
                 },
