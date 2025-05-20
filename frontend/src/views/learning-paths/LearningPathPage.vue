@@ -13,7 +13,7 @@
     import authService from "@/services/auth/auth-service.ts";
     import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
     import LearningPathGroupSelector from "@/views/learning-paths/LearningPathGroupSelector.vue";
-    import { useQuestionsGroupQuery, useQuestionsQuery } from "@/queries/questions";
+    import { useQuestionsQuery } from "@/queries/questions";
     import type { QuestionsResponse } from "@/controllers/questions";
     import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
     import QandA from "@/components/QandA.vue";
@@ -163,11 +163,6 @@
         });
     }
 
-    const loID: LearningObjectIdentifierDTO = {
-        hruid: props.learningObjectHruid as string,
-        language: props.language,
-    };
-
     const discussionLink = computed(
         () =>
             "/discussion" +
@@ -237,7 +232,7 @@
                     </template>
                 </v-list-item>
                 <v-divider></v-divider>
-                <div>
+                <div class="nav-scroll-area">
                     <using-query-result
                         :query-result="learningObjectListQueryResult"
                         v-slot="learningObjects: { data: LearningObject[] }"
@@ -429,5 +424,11 @@
 
     .discussion-link a:hover {
         text-decoration: underline;
+    }
+
+    .nav-scroll-area {
+        overflow-y: auto;
+        flex-grow: 1;
+        min-height: 0;
     }
 </style>
