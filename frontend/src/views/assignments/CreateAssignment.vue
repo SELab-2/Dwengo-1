@@ -63,8 +63,8 @@
         if (!valid) return;
 
         const lp = lpIsSelected.value
-                    ? { hruid: route.query.hruid!.toString(), language: language.value }
-                    : { hruid: selectedLearningPath.value!.hruid, language: selectedLearningPath.value!.language };
+            ? { hruid: route.query.hruid!.toString(), language: language.value }
+            : { hruid: selectedLearningPath.value!.hruid, language: selectedLearningPath.value!.language };
 
         if (!lp) {
             return;
