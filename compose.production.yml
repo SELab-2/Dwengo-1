@@ -60,7 +60,7 @@ services:
         extends:
             file: ./compose.yml
             service: idp
-        command: ['start', '--http-port', '7080', '--https-port', '7443', '--import-realm']
+        command: ['start', '--http-port', '7080', '--https-port', '7443']
         networks:
             - dwengo-1
         labels:
