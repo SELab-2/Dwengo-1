@@ -69,11 +69,11 @@ export async function getSubmissionsForLearningObjectAndAssignment(
     try {
         let submissions: Submission[];
         if (groupId !== undefined) {
-            const group = await fetchGroup(classId, assignmentId, groupId!);
-            submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndGroup(loId, group!);
+            const group = await fetchGroup(classId, assignmentId, groupId);
+            submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndGroup(loId, group);
         } else {
             const assignment = await fetchAssignment(classId, assignmentId);
-            submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndAssignment(loId, assignment!);
+            submissions = await getSubmissionRepository().findAllSubmissionsForLearningObjectAndAssignment(loId, assignment);
         }
         return submissions.map((s) => mapToSubmissionDTO(s));
     } catch(e) {
