@@ -229,7 +229,7 @@
                     </template>
                 </v-list-item>
                 <v-divider></v-divider>
-                <div>
+                <div class="nav-scroll-area">
                     <using-query-result
                         :query-result="learningObjectListQueryResult"
                         v-slot="learningObjects: { data: LearningObject[] }"
@@ -416,5 +416,11 @@
 
     .discussion-link a:hover {
         text-decoration: underline;
+    }
+
+    .nav-scroll-area {
+        overflow-y: auto;
+        flex-grow: 1;
+        min-height: 0;
     }
 </style>
