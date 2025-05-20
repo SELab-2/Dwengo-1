@@ -26,7 +26,7 @@ RUN npm run build --workspace=common
 
 WORKDIR /app/dwengo/frontend
 
-COPY frontend ./
+COPY --exclude=frontend/tests/ frontend ./
 
 RUN npx vite build
 

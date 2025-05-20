@@ -17,7 +17,7 @@ RUN npm install --silent
 # Root tsconfig.json
 COPY tsconfig.json tsconfig.build.json ./
 
-COPY backend ./backend
+COPY --exclude=backend/tests/ backend ./backend
 COPY common ./common
 COPY docs ./docs
 
