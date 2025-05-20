@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, ref, watch, watchEffect } from "vue";
+    import { computed, ref, watchEffect } from "vue";
     import { useI18n } from "vue-i18n";
     import {
         useAssignmentQuery,
@@ -14,7 +14,7 @@
     import type { GroupDTO, GroupDTOId } from "@dwengo-1/common/interfaces/group";
     import GroupSubmissionStatus from "@/components/GroupSubmissionStatus.vue";
     import GroupProgressRow from "@/components/GroupProgressRow.vue";
-    import type { AssignmentDTO } from "@dwengo-1/common/dist/interfaces/assignment.ts";
+    import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
     import GroupSelector from "@/components/assignments/GroupSelector.vue";
     import DeadlineSelector from "@/components/assignments/DeadlineSelector.vue";
 
@@ -130,13 +130,28 @@
         return `/learningPath/${lp.hruid}/${lp.language}/${lp.startNode.learningobjectHruid}?forGroup=${groupNo}&assignmentNo=${props.assignmentId}&classId=${props.classId}`;
     }
 
-    const { mutate, data, isSuccess } = useUpdateAssignmentMutation();
+    const updateAssignmentMutate = useUpdateAssignmentMutation();
 
-    watch([isSuccess, data], async ([success, newData]) => {
-        if (success && newData?.assignment) {
-            await assignmentQueryResult.refetch();
-        }
-    });
+    function updateAssignment(assignmentDTO): void {
+        updateAssignmentMutate.mutate(
+            {
+                cid: assignmentQueryResult.data.value?.assignment.within,
+                an: assignmentQueryResult.data.value?.assignment.id,
+                data: assignmentDTO,
+            },
+            {
+                onSuccess: async (newData) => {
+                    if (newData?.assignment) {
+                        await assignmentQueryResult.refetch();
+                    }
+                },
+                onError: (err: any) => {
+                    const message = err.response?.data?.error || err.message || t("unknownError");
+                    showSnackbar(t("failed") + ": " + message, "error");
+                },
+            },
+        );
+    }
 
     async function saveChanges(): Promise<void> {
         const { valid } = await form.value.validate();
@@ -149,22 +164,14 @@
             deadline: deadline.value ?? null,
         };
 
-        mutate({
-            cid: assignmentQueryResult.data.value?.assignment.within,
-            an: assignmentQueryResult.data.value?.assignment.id,
-            data: assignmentDTO,
-        });
+        updateAssignment(assignmentDTO);
     }
 
     async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
         const assignmentDTO: AssignmentDTO = {
             groups: updatedGroups,
         };
-        mutate({
-            cid: assignmentQueryResult.data.value?.assignment.within,
-            an: assignmentQueryResult.data.value?.assignment.id,
-            data: assignmentDTO,
-        });
+        updateAssignment(assignmentDTO);
     }
 </script>
 
@@ -401,13 +408,15 @@
 
                                         <td>
                                             <GroupSubmissionStatus
+                                                :learning-path-hruid="learningPath.hruid"
+                                                :language="lang"
                                                 :group="g"
                                                 :assignment-id="assignmentId"
                                                 :class-id="classId"
-                                                :language="lang"
                                                 :go-to-group-submission-link="goToGroupSubmissionLink"
                                                 @update:hasSubmission="
-                                                    (hasSubmission) => (hasSubmissions = hasSubmission)
+                                                    (hasSubmission) =>
+                                                        (hasSubmissions = hasSubmissions || hasSubmission)
                                                 "
                                             />
                                         </td>

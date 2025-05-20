@@ -13,7 +13,7 @@
     import authService from "@/services/auth/auth-service.ts";
     import { LearningPathNode } from "@/data-objects/learning-paths/learning-path-node.ts";
     import LearningPathGroupSelector from "@/views/learning-paths/LearningPathGroupSelector.vue";
-    import { useQuestionsQuery } from "@/queries/questions";
+    import { useQuestionsGroupQuery, useQuestionsQuery } from "@/queries/questions";
     import type { QuestionsResponse } from "@/controllers/questions";
     import type { LearningObjectIdentifierDTO } from "@dwengo-1/common/interfaces/learning-content";
     import QandA from "@/components/QandA.vue";
@@ -56,7 +56,12 @@
     const learningObjectListQueryResult = useLearningObjectListForPathQuery(learningPathQueryResult.data);
 
     const nodesList: ComputedRef<LearningPathNode[] | null> = computed(
-        () => learningPathQueryResult.data.value?.nodesAsList ?? null,
+        () =>
+            learningPathQueryResult.data.value?.nodesAsList.filter(
+                (node) =>
+                    authService.authState.activeRole === AccountType.Teacher ||
+                    !getLearningObjectForNode(node)?.teacherExclusive,
+            ) ?? null,
     );
 
     const currentNode = computed(() => {
@@ -76,18 +81,43 @@
         return currentIndex < nodesList.value?.length ? nodesList.value?.[currentIndex - 1] : undefined;
     });
 
-    const getQuestionsQuery = useQuestionsQuery(
-        computed(
-            () =>
-                ({
-                    language: currentNode.value?.language,
-                    hruid: currentNode.value?.learningobjectHruid,
-                    version: currentNode.value?.version,
-                }) as LearningObjectIdentifierDTO,
-        ),
-    );
+    let getQuestionsQuery;
+
+    if (authService.authState.activeRole === AccountType.Student) {
+        getQuestionsQuery = useQuestionsGroupQuery(
+            computed(
+                () =>
+                    ({
+                        language: currentNode.value?.language,
+                        hruid: currentNode.value?.learningobjectHruid,
+                        version: currentNode.value?.version,
+                    }) as LearningObjectIdentifierDTO,
+            ),
+            computed(() => query.value.classId ?? ""),
+            computed(() => query.value.assignmentNo ?? ""),
+            computed(() => authService.authState.user?.profile.preferred_username ?? ""),
+        );
+    } else {
+        getQuestionsQuery = useQuestionsQuery(
+            computed(
+                () =>
+                    ({
+                        language: currentNode.value?.language,
+                        hruid: currentNode.value?.learningobjectHruid,
+                        version: currentNode.value?.version,
+                    }) as LearningObjectIdentifierDTO,
+            ),
+        );
+    }
 
     const navigationDrawerShown = ref(true);
+
+    function getLearningObjectForNode(node: LearningPathNode): LearningObject | undefined {
+        return learningObjectListQueryResult.data.value?.find(
+            (obj) =>
+                obj.key === node.learningobjectHruid && obj.language === node.language && obj.version === node.version,
+        );
+    }
 
     function isLearningObjectCompleted(learningObject: LearningObject): boolean {
         if (learningObjectListQueryResult.isSuccess) {
@@ -155,6 +185,20 @@
             "/" +
             currentNode.value?.learningobjectHruid,
     );
+
+    /**
+     * Filter the given list of questions such that only the questions for the assignment and group specified
+     * in the query parameters are shown. This is relevant for teachers since they can view questions of all groups.
+     */
+    function filterQuestions(questions?: QuestionDTO[]): QuestionDTO[] {
+        return (
+            questions?.filter(
+                (q) =>
+                    q.inGroup.groupNumber === forGroup.value?.forGroup &&
+                    q.inGroup.assignment === forGroup.value?.assignmentNo,
+            ) ?? []
+        );
+    }
 </script>
 
 <template>
@@ -265,7 +309,7 @@
                 </v-list-item>
                 <v-list-item>
                     <div
-                        v-if="authService.authState.activeRole === AccountType.Student && pathIsAssignment"
+                        v-if="authService.authState.activeRole === AccountType.Student && forGroup"
                         class="assignment-indicator"
                     >
                         {{ t("assignmentIndicator") }}
@@ -312,7 +356,7 @@
             </v-btn>
         </div>
         <using-query-result
-            v-if="forGroup"
+            v-if="currentNode && forGroup"
             :query-result="getQuestionsQuery"
             v-slot="questionsResponse: { data: QuestionsResponse }"
         >
@@ -327,12 +371,16 @@
                 </span>
             </div>
             <QuestionBox
-                :hruid="props.hruid"
-                :language="props.language"
-                :learningObjectHruid="props.learningObjectHruid"
-                :forGroup="forGroup"
+                :learningObjectHruid="currentNode.learningobjectHruid"
+                :learningObjectLanguage="currentNode.language"
+                :learningObjectVersion="currentNode.version"
+                :forGroup="{
+                    assignment: forGroup.assignmentNo,
+                    class: forGroup.classId,
+                    groupNumber: forGroup.forGroup,
+                }"
             />
-            <QandA :questions="(questionsResponse.data.questions as QuestionDTO[]) ?? []" />
+            <QandA :questions="filterQuestions(questionsResponse.data.questions as QuestionDTO[])" />
         </using-query-result>
     </using-query-result>
 </template>

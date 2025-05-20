@@ -16,18 +16,14 @@
 
     const groupsQuery = useGroupsQuery(props.classId, props.assignmentNumber, true);
 
-    interface GroupSelectorOption {
-        groupNumber: number | undefined;
-        label: string;
+    function sortedGroups(groups: GroupDTO[]): GroupDTO[] {
+        return [...groups].sort((a, b) => a.groupNumber - b.groupNumber);
     }
-
-    function groupOptions(groups: GroupDTO[]): GroupSelectorOption[] {
-        return [...groups]
-            .sort((a, b) => a.groupNumber - b.groupNumber)
-            .map((group, index) => ({
-                groupNumber: group.groupNumber,
-                label: `${index + 1}`,
-            }));
+    function groupOptions(groups: GroupDTO[]): number[] {
+        return sortedGroups(groups).map((group) => group.groupNumber);
+    }
+    function labelForGroup(groups: GroupDTO[], groupId: number): string {
+        return `${sortedGroups(groups).findIndex((group) => group.groupNumber === groupId) + 1}`;
     }
 </script>
 
@@ -40,7 +36,8 @@
             :label="t('viewAsGroup')"
             :items="groupOptions(data.groups)"
             v-model="model"
-            item-title="label"
+            :item-title="(item) => labelForGroup(data.groups, parseInt(`${item}`))"
+            :item-value="(item) => item"
             class="group-selector-cb"
             variant="outlined"
             clearable

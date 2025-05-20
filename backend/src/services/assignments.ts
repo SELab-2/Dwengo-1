@@ -110,17 +110,26 @@ export async function putAssignment(classid: string, id: number, assignmentData:
 
         const studentLists = await Promise.all((assignmentData.groups as string[][]).map(async (group) => await fetchStudents(group)));
 
-        const groupRepository = getGroupRepository();
-        await groupRepository.deleteAllByAssignment(assignment);
-        await Promise.all(
-            studentLists.map(async (students) => {
-                const newGroup = groupRepository.create({
-                    assignment: assignment,
-                    members: students,
-                });
-                await groupRepository.save(newGroup);
-            })
-        );
+        try {
+            const groupRepository = getGroupRepository();
+            await groupRepository.deleteAllByAssignment(assignment);
+
+            await Promise.all(
+                studentLists.map(async (students) => {
+                    const newGroup = groupRepository.create({
+                        assignment: assignment,
+                        members: students,
+                    });
+                    await groupRepository.save(newGroup);
+                })
+            );
+        } catch (e: unknown) {
+            if (e instanceof ForeignKeyConstraintViolationException || e instanceof PostgreSqlExceptionConverter) {
+                throw new ConflictException('Cannot update assigment with questions or submissions');
+            } else {
+                throw e;
+            }
+        }
 
         delete assignmentData.groups;
     }

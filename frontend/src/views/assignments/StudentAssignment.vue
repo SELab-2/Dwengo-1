@@ -1,18 +1,18 @@
 <script setup lang="ts">
-    import { ref, computed, watchEffect } from "vue";
+    import { computed, type ComputedRef, ref, watchEffect } from "vue";
     import auth from "@/services/auth/auth-service.ts";
     import { useI18n } from "vue-i18n";
     import UsingQueryResult from "@/components/UsingQueryResult.vue";
     import { asyncComputed } from "@vueuse/core";
-    import {
-        useStudentAssignmentsQuery,
-        useStudentGroupsQuery,
-        useStudentsByUsernamesQuery,
-    } from "@/queries/students.ts";
+    import { useStudentsByUsernamesQuery } from "@/queries/students.ts";
     import { useGetLearningPathQuery } from "@/queries/learning-paths.ts";
     import type { Language } from "@/data-objects/language.ts";
     import { calculateProgress } from "@/utils/assignment-utils.ts";
     import type { LearningPath } from "@/data-objects/learning-paths/learning-path.ts";
+    import type { GroupDTO } from "@dwengo-1/common/interfaces/group";
+    import { useAssignmentQuery } from "@/queries/assignments.ts";
+    import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
+    import type { StudentDTO } from "@dwengo-1/common/interfaces/student";
 
     const props = defineProps<{
         classId: string;
@@ -28,32 +28,24 @@
         return user?.profile?.preferred_username ?? undefined;
     });
 
-    const assignmentsQueryResult = useStudentAssignmentsQuery(username, true);
+    const assignmentQueryResult = useAssignmentQuery(props.classId, props.assignmentId);
 
-    const assignment = computed(() => {
-        const assignments = assignmentsQueryResult.data.value?.assignments;
-        if (!assignments) return undefined;
-
-        return assignments.find((a) => a.id === props.assignmentId && a.within === props.classId);
-    });
+    const assignment: ComputedRef<AssignmentDTO | undefined> = computed(
+        () => assignmentQueryResult.data.value?.assignment,
+    );
 
     learningPath.value = assignment.value?.learningPath;
 
-    const groupsQueryResult = useStudentGroupsQuery(username, true);
     const group = computed(() => {
-        const groups = groupsQueryResult.data.value?.groups as GroupDTO[];
+        const groups = assignment.value?.groups as GroupDTO[];
 
         if (!groups) return undefined;
 
-        // Sort by original groupNumber
-        const sortedGroups = [...groups].sort((a, b) => a.groupNumber - b.groupNumber);
-
-        return sortedGroups
-            .map((group, index) => ({
-                ...group,
-                groupNo: index + 1, // Renumbered index
-            }))
-            .find((group) => group.members?.some((m) => m.username === username.value));
+        // To "normalize" the group numbers, sort the groups and then renumber them
+        const renumbered = [...groups]
+            .sort((a, b) => a.groupNumber - b.groupNumber)
+            .map((group, index) => ({ ...group, groupNo: index + 1 }));
+        return renumbered.find((group) => group.members?.some((m) => (m as StudentDTO).username === username.value));
     });
 
     watchEffect(() => {
@@ -89,7 +81,7 @@
 
 <template>
     <div class="container">
-        <using-query-result :query-result="assignmentsQueryResult">
+        <using-query-result :query-result="assignmentQueryResult">
             <v-card
                 v-if="assignment"
                 class="assignment-card"
