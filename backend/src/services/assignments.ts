@@ -103,6 +103,7 @@ function hasDuplicates(arr: string[]): boolean {
 export async function putAssignment(classid: string, id: number, assignmentData: Partial<AssignmentDTO>): Promise<AssignmentDTO> {
     const assignment = await fetchAssignment(classid, id);
 
+
     if (assignmentData.groups) {
         if (hasDuplicates(assignmentData.groups.flat() as string[])) {
             throw new BadRequestException('Student can only be in one group');
@@ -110,17 +111,26 @@ export async function putAssignment(classid: string, id: number, assignmentData:
 
         const studentLists = await Promise.all((assignmentData.groups as string[][]).map(async (group) => await fetchStudents(group)));
 
-        const groupRepository = getGroupRepository();
-        await groupRepository.deleteAllByAssignment(assignment);
-        await Promise.all(
-            studentLists.map(async (students) => {
-                const newGroup = groupRepository.create({
-                    assignment: assignment,
-                    members: students,
-                });
-                await groupRepository.save(newGroup);
-            })
-        );
+        try {
+            const groupRepository = getGroupRepository();
+            await groupRepository.deleteAllByAssignment(assignment);
+
+            await Promise.all(
+                studentLists.map(async (students) => {
+                    const newGroup = groupRepository.create({
+                        assignment: assignment,
+                        members: students,
+                    });
+                    await groupRepository.save(newGroup);
+                })
+            );
+        } catch(e: unknown) {
+            if (e instanceof ForeignKeyConstraintViolationException || e instanceof PostgreSqlExceptionConverter) {
+                throw new ConflictException('Cannot update assigment with questions or submissions');
+            } else {
+                throw e;
+            }
+        }
 
         delete assignmentData.groups;
     }

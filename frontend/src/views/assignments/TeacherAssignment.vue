@@ -130,13 +130,28 @@
         return `/learningPath/${lp.hruid}/${lp.language}/${lp.startNode.learningobjectHruid}?forGroup=${groupNo}&assignmentNo=${props.assignmentId}&classId=${props.classId}`;
     }
 
-    const { mutate, data, isSuccess } = useUpdateAssignmentMutation();
+    const updateAssignmentMutate = useUpdateAssignmentMutation();
 
-    watch([isSuccess, data], async ([success, newData]) => {
-        if (success && newData?.assignment) {
-            await assignmentQueryResult.refetch();
-        }
-    });
+    function updateAssignment(assignmentDTO) {
+        updateAssignmentMutate.mutate(
+            {
+                cid: assignmentQueryResult.data.value?.assignment.within,
+                an: assignmentQueryResult.data.value?.assignment.id,
+                data: assignmentDTO,
+            },
+            {
+                onSuccess: async (newData) => {
+                    if (newData?.assignment) {
+                        await assignmentQueryResult.refetch();
+                    }
+                },
+                onError: (err: any) => {
+                    const message = err.response?.data?.error || err.message || t("unknownError");
+                    showSnackbar(t("failed") + ": " + message, "error");
+                },
+            }
+        );
+    }
 
     async function saveChanges(): Promise<void> {
         const { valid } = await form.value.validate();
@@ -149,22 +164,14 @@
             deadline: deadline.value ?? null,
         };
 
-        mutate({
-            cid: assignmentQueryResult.data.value?.assignment.within,
-            an: assignmentQueryResult.data.value?.assignment.id,
-            data: assignmentDTO,
-        });
+        updateAssignment(assignmentDTO);
     }
 
     async function handleGroupsUpdated(updatedGroups: string[][]): Promise<void> {
         const assignmentDTO: AssignmentDTO = {
             groups: updatedGroups,
         };
-        mutate({
-            cid: assignmentQueryResult.data.value?.assignment.within,
-            an: assignmentQueryResult.data.value?.assignment.id,
-            data: assignmentDTO,
-        });
+        updateAssignment(assignmentDTO);
     }
 </script>
 
