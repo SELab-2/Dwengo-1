@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, ref, watch, watchEffect } from "vue";
+    import { computed, ref, watchEffect } from "vue";
     import { useI18n } from "vue-i18n";
     import {
         useAssignmentQuery,
@@ -14,7 +14,7 @@
     import type { GroupDTO, GroupDTOId } from "@dwengo-1/common/interfaces/group";
     import GroupSubmissionStatus from "@/components/GroupSubmissionStatus.vue";
     import GroupProgressRow from "@/components/GroupProgressRow.vue";
-    import type { AssignmentDTO } from "@dwengo-1/common/dist/interfaces/assignment.ts";
+    import type { AssignmentDTO } from "@dwengo-1/common/interfaces/assignment";
     import GroupSelector from "@/components/assignments/GroupSelector.vue";
     import DeadlineSelector from "@/components/assignments/DeadlineSelector.vue";
 
@@ -132,7 +132,7 @@
 
     const updateAssignmentMutate = useUpdateAssignmentMutation();
 
-    function updateAssignment(assignmentDTO) {
+    function updateAssignment(assignmentDTO): void {
         updateAssignmentMutate.mutate(
             {
                 cid: assignmentQueryResult.data.value?.assignment.within,
@@ -408,10 +408,11 @@
 
                                         <td>
                                             <GroupSubmissionStatus
+                                                :learning-path-hruid="learningPath.hruid"
+                                                :language="lang"
                                                 :group="g"
                                                 :assignment-id="assignmentId"
                                                 :class-id="classId"
-                                                :language="lang"
                                                 :go-to-group-submission-link="goToGroupSubmissionLink"
                                                 @update:hasSubmission="
                                                     (hasSubmission) => (hasSubmissions = hasSubmission)
